@@ -2,6 +2,7 @@
 
 Copyright (c) 2017 John Talbot (www.BeNiceGames.com)
 
+
 - Inspired by jsmin from Douglas Crockford (www.crockford.com)
 - As compared to his, This jsmin leaves the output uncompacted
   so that it is legible and ONLY removes C & C++ style comments.
