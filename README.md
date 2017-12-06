@@ -1,6 +1,8 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types!
 
 
+
+
 **Cmd4** is a plugin for [Homebridge] that lets you see what Homebridge and Homekit are all about, without actually owning a single accessory!  For the more advanced user, Cmd4 brings CLI support for all accessories.
 
 
@@ -9,23 +11,23 @@ Table of Contents
 -----------------
 
 
-* [**About the Cmd4 Plugin**](#about)
-* [**How the Cmd4 Plugin Works**](#how)
+* [**About the Cmd4 Plugin**](#about-the-cmd4-plugin)
+* [**How the Cmd4 Plugin Works**](#how-the-cmd4-plugin-works)
 * [**Features**](#features)
 * [**Screenshots**](#screenshots)
-* [**Installation**](#Installation)
+* [**Installation**](#installation)
 * [**Developer**](#developer)
 * [**Todo**](#todo)
 * [**Contributing**](#contributing)
-* [**Inspiration and special thanks**](#thanks)
+* [**Inspiration and special thanks**](#inspiration-and-special-thanks)
 * [**License**](#license)
-* [**FAQ / Troubleshooting**](#faq)
+* [**FAQ / Troubleshooting**](#faq--troubleshooting)
 * [**Rationale**](#rationale)
-* [**Inspiration**](#inspiration)
+
 
 <BR />
 
-[**About**]<a name="about"></a>
+
 About the Cmd4 Plugin
 ---------------------
 This plugin allows you see what Homebridge is all about, without having any home control accessories.  If you can run Homebridge and then install this plugin, all the possible accessories are now available to you within HomeKit or Eve. (Except Camera Streaming).
@@ -33,14 +35,14 @@ This plugin allows you see what Homebridge is all about, without having any home
 Similiar to other command plugins, you can use Cmd4 to execute command line interface (CLI) scripts, but with CMD4 the devices don't just appear in HomeKit as a Switch or a Light, but now they can appear as a Garage Door openner, Air Purifier ... and you can cntrol all of their characteristics too.
 
 
-[**How the Plugin Works**]<a name="how"></a>
-How the Plugin Works
---------------------
+
+How the Cmd4 Plugin Works
+-------------------------
 Cmd4 comes with a fully populated and documented config.json file that points to a fully populated and configured State.js file that you put in a Cmd4Scripts subdirectory of your .homebridge directory.
 The Cmd4 Plugin reads and understands the config.json file containing every possible HomeKit type. When you point HomeKit to Homebridge, all the devices become populated, and between the homebridge-cmd4 plugin and the State.js command file, HomeKit acts and behaves if you actually have the Accessory you don't actually have.
 
 
-[**Features**]<a name="features"></a>
+
 Features
 --------
 
@@ -52,41 +54,43 @@ Cmd4 can be configured to respond to actual devices directly or by modofying the
 
 
 
-[**Installation**]<a name="installation"></a>
 Installation
 ------------
 
 
-<a name="install-step1"></a>
 ### Step 1 `Homebridge`
 
  Install homebridge using `npm install -g homebridge`.
 
-<a name="install-step2"></a>
+
 ### Step 2 `CMD4 Plugin`
 
  Install this plugin using `npm install -g homebridge-cmd4`.
 
-<a name="install-step3"></a>
+
 ### Step 3 `Install State.js`
 
  mkdir .homebridge/Cmd4Scripts<BR>
  cp State.js .homebridge/Cmd4Scripts/State.js<BR>
  chmod 700 .homebridge/Cmd4Scripts/State.js
 
-<a name="install-step4"></a>
+
 ### Step 4 `Install/Update config.json`
 
  Use the provided config.json file or add it to your own.
 
-<a name="install-step5"></a>
+
 ### Step 5 `Install/Restart homebridge`
 
  Start/Restart Homebridge as you normally would.
+ 
+ ### Step 6 `Try Homekit`
+
+ If you are not already familiar with Homekit, you may wish to look at the documentation for Homebridge and how to configure it with Homekit. The gist of it is that you entet the manual code defined in the config.json file. I chose 5555555 for simplicity.
 
 <br />
 
-### That's it! You're done. ✅
+### That's it! Enjoy all your new Virtual Accessories!. ✅
 
 <br />
 
@@ -94,10 +98,6 @@ Installation
 
 If you installed and setup things correctly you should now see icons in the Homekit app for you to play with.
 
-
-
-
-<a name="developer"></a>
 Developer
 ---------
 1. The provided jsmin differs from others in that the resulting file format is
@@ -118,11 +118,10 @@ Developer
 ----
 
 
-[**Todo**]<a name="todo"></a>
 * [ ] Referred devices, i.e. a smoke detectors battery is not yet linked.
 
 
-[**FAQ**]<a name="faq"></a>
+
 FAQ / Troubleshooting
 ---------------------
 
@@ -131,19 +130,21 @@ FAQ / Troubleshooting
 2) The State.js command file must be executable. it can be tested via:<BR>
 &nbsp;&nbsp;&nbsp; cd $HOME <BR>
 &nbsp;&nbsp;&nbsp; node .homebridge/Cmd4Scripts/State.js Get My_Fan On <BR>
-&nbsp;&nbsp;&nbsp; this should output: 0
+&nbsp;&nbsp;&nbsp; this should output: 0<BR>
+ 
+3) Have a look at the State.js file, all the settable characteristics are very well documented there.
 
 
 
 ## Screenshots
 
-See [Screenshots]
+
 <h3 align="center">
-![ScreenShot](https://github.com/ztalbot2000/homebridge-cmd4/screenshots/Homekit_screenshot.png)
+[ScreenShot](screenshots/Homekit_screenshot.png)
 </h3>
 
 <h3 align="center">
-![ScreenShot](https://github.com/ztalbot2000/homebridge-cmd4/screenshots/Eve_screenshot.png)
+[ScreenShot](screenshots/Eve_screenshot.png)
 </h3>
 
 Contributing
@@ -169,7 +170,6 @@ Contributions and Pull Requests are welcome.
 
 
 
-[**Rationale**]<a name="rationale"></a>
 Rationale
 ---------
 
@@ -177,9 +177,7 @@ After playing with homebridge-cmd and then homebridge-cmdswitch2, I really wante
 If you were wondering what happenned to version 3, well I learned a lot, hence the working cmd4.
 
 
-[**Rationale**]<a name="rationale"></a>
 
-[**Thanks**]<a name="thanks"></a>
 Inspiration and special thanks
 ------------------------------
 Based on the best of:<br>
@@ -193,4 +191,30 @@ License
 -------
 
 See [LICENSE](LICENSE)
+
+
+
+<!---
+Link References
+-->
+
+
+
+[about-the-cmd4-plugin]:https://github.com/ztalbot2000/homebridge-cmd4#about-the-cmd4-plugin
+[how-the-cmd4-plugin-works]:https://github.com/ztalbot2000/homebridge-cmd4#how-the-cmd4-plugin-works
+[features]:https://github.com/ztalbot2000/homebridge-cmd4#features
+[screenshots]:https://github.com/ztalbot2000/homebridge-cmd4#screenshots
+[installation]:https://github.com/ztalbot2000/homebridge-cmd4#installation
+[developer]:https://github.com/ztalbot2000/homebridge-cmd4#developer
+[todo]:https://github.com/ztalbot2000/homebridge-cmd4#todo
+[contributing]:https://github.com/ztalbot2000/homebridge-cmd4#contributing
+[inspiration-and-special-thanks]:https://github.com/ztalbot2000/homebridge-cmd4#inspiration-and-special-thanks
+[license]:https://github.com/ztalbot2000/homebridge-cmd4#license
+[faq--troubleshootingting]:https://github.com/ztalbot2000/homebridge-cmd4#faq--troubleshooting
+[rationale]:https://github.com/ztalbot2000/homebridge-cmd4#rationale
+[inspiration]:https://github.com/ztalbot2000/homebridge-cmd4#inspiration
+
+[homekit]:https://github.com/ztalbot2000/homebridge-cmd4/screenshots/Homekit_screenshot.png
+
+
 
