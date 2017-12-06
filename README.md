@@ -140,11 +140,11 @@ FAQ / Troubleshooting
 
 
 <h3 align="center">
-[ScreenShot](screenshots/Homekit_screenshot.png)
+  <img src="https://github.com/ztalbot2000/homebridge-cmd4/raw/master/screenshots/Homekit_screenshot.png">
 </h3>
 
 <h3 align="center">
-[ScreenShot](screenshots/Eve_screenshot.png)
+  <img src="https://github.com/ztalbot2000/homebridge-cmd4/raw/master/screenshots/Eve_screenshot.png">
 </h3>
 
 Contributing
@@ -214,7 +214,8 @@ Link References
 [rationale]:https://github.com/ztalbot2000/homebridge-cmd4#rationale
 [inspiration]:https://github.com/ztalbot2000/homebridge-cmd4#inspiration
 
-[homekit]:https://github.com/ztalbot2000/homebridge-cmd4/screenshots/Homekit_screenshot.png
+[homekit_screenshot]:https://github.com/ztalbot2000/homebridge-cmd4/raw/master/screenshots/Homekit_screenshot.png
+[eve_screenshot]:https://github.com/ztalbot2000/homebridge-cmd4/raw/master/screenshots/Eve_screenshot.png
 
 
 
