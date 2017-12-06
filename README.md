@@ -1,12 +1,6 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types!
 
 
-[![GitHub version][img-version-badge]][badge-version]
-[![CodeClimate][img-code-climate-badge]][code-climate]
-[![Issue Count][img-code-climate-issues-badge]][code-climate-issues]
-[![Code of Conduct][img-coc-badge]][coc]
-[![PRs Welcome][img-prs-badge]][prs]
-
 **Cmd4** is a plugin for [Homebridge] that lets you see what Homebridge and Homekit are all about, without actually owning a single accessory!  For the more advanced user, Cmd4 brings CLI support for all accessories.
 
 
@@ -24,7 +18,6 @@ Table of Contents
 * [**Todo**](#todo)
 * [**Contributing**](#contributing)
 * [**Inspiration and special thanks**](#thanks)
-* [**Todo**](#todo)
 * [**License**](#license)
 * [**FAQ / Troubleshooting**](#faq)
 * [**Rationale**](#rationale)
@@ -146,11 +139,11 @@ FAQ / Troubleshooting
 
 See [Screenshots]
 <h3 align="center">
-  <img src="https://github.com/ztalbot2000/homebridge-cmd4/screenshots/Homekit.png" alt="Homekit" />
+  <img src="https://github.com/ztalbot2000/homebridge-cmd4/screenshots/Homekit_screenshot.png" alt="Homekit_screenshot" />
 </h3>
 
 <h3 align="center">
-  <img src="https://github.com/ztalbot2000/homebridge-cmd4/screenshots/Eve.png" alt="Eve Screenshot" />
+  <img src="https://github.com/ztalbot2000/homebridge-cmd4/screenshots/Eve_screenshot.png" alt="Eve_screenshot" />
 </h3>
 
 Contributing
