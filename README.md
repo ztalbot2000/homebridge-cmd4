@@ -139,11 +139,11 @@ FAQ / Troubleshooting
 
 See [Screenshots]
 <h3 align="center">
-  <img src="https://github.com/ztalbot2000/homebridge-cmd4/screenshots/Homekit_screenshot.png" alt="Homekit_screenshot" />
+![ScreenShot](https://github.com/ztalbot2000/homebridge-cmd4/screenshots/Homekit_screenshot.png)
 </h3>
 
 <h3 align="center">
-  <img src="https://github.com/ztalbot2000/homebridge-cmd4/screenshots/Eve_screenshot.png" alt="Eve_screenshot" />
+![ScreenShot](https://github.com/ztalbot2000/homebridge-cmd4/screenshots/Eve_screenshot.png)
 </h3>
 
 Contributing
