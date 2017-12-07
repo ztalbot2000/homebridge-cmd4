@@ -1,0 +1,73 @@
+{
+  "_from": "homebridge-cmd4@1.1.3",
+  "_id": "homebridge-cmd4@1.1.3",
+  "_inBundle": false,
+  "_integrity": "sha512-Q39XXNNaxpBENc4AXvqoWoW+5OVZE24OLYLm+4RqCxJmyQDAGLNsokL+dh2JU++YaZRdycASfnG/8sylpocGAg==",
+  "_location": "/homebridge-cmd4",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "homebridge-cmd4@1.1.3",
+    "name": "homebridge-cmd4",
+    "escapedName": "homebridge-cmd4",
+    "rawSpec": "1.1.3",
+    "saveSpec": null,
+    "fetchSpec": "1.1.3"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/homebridge-cmd4/-/homebridge-cmd4-1.1.3.tgz",
+  "_shasum": "4f49b51f70192c7df314cf88ea9022f0ec3025e7",
+  "_spec": "homebridge-cmd4@1.1.3",
+  "_where": "/private/var/root",
+  "author": {
+    "name": "John Talbot"
+  },
+  "bugs": {
+    "url": "https://github.com/ztalbot2000/homebridge-cmd4/issues",
+    "email": "info@BeNiceGames.com"
+  },
+  "bundleDependencies": false,
+  "dependencies": {},
+  "deprecated": false,
+  "description": "Exec Plugin for Homebridge",
+  "devDependencies": {
+    "semistandard": "^8.0.0"
+  },
+  "engines": {
+    "homebridge": ">=0.4.0",
+    "node": ">=4.4.0"
+  },
+  "homepage": "https://github.com/ztalbot2000/homebridge-cmd4#readme",
+  "keywords": [
+    "homebridge-plugin",
+    "homebridge",
+    "exec",
+    "command",
+    "switch",
+    "light",
+    "security",
+    "temperature",
+    "virtual",
+    "Eve",
+    "Homekit",
+    "siri",
+    "home"
+  ],
+  "license": "MIT",
+  "name": "homebridge-cmd4",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ztalbot2000/homebridge-cmd4.git"
+  },
+  "scripts": {
+    "debug": "DEBUG=* homebridge --debug --plugin-path .",
+    "postversion": "git push && git push --tags",
+    "preversion": "npm test",
+    "test": "semistandard"
+  },
+  "version": "1.1.3"
+}

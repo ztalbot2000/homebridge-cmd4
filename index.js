@@ -1243,7 +1243,9 @@ Cmd4Accessory.prototype = {
    setValue:function (value, characteristicString, characteristic, callback)
    {
       var self = this;
-      var cmd = this.state_cmd + " Set " + this.name + " " + characteristicString  + " " + value;
+      var cmd = this.state_cmd + " Set '" + this.name + "' '" + characteristicString  + "' '" + value  + "'";
+      // self.log("DEBUG: Cmd4 setValue %s function for: %s cmd: %s", characteristicString, self.name, cmd);
+
 
       // Execute command to Set a characteristic value for an accessory
       exec(cmd, {timeout: self.timeout}, function (error, stdout, stderr)
@@ -1255,7 +1257,6 @@ Cmd4Accessory.prototype = {
             callback(error);
 
          } else {
-            self.log("Cmd4: setValue %s function for: %s cmd: %s", characteristicString, self.name, cmd);
 
             // Since we are in an exec, make sure we reply
             // with the corresponding getValue.
@@ -1493,9 +1494,10 @@ Cmd4Accessory.prototype = {
    getValue:function (characteristicString, callback)
    {
       var self = this;
-      var cmd = this.state_cmd + " Get " + self.name + " " + characteristicString;
+      var cmd = this.state_cmd + " Get '" + this.name + "' '" + characteristicString  + "'";
 
-      self.log("Cmd4: getValue %s function for: %s cmd: %s", characteristicString, self.name, cmd);
+
+      // self.log("DEBUG: Cmd4 getValue %s function for: %s cmd: %s", characteristicString, self.name, cmd);
 
       // Execute command to Get a characteristics value for an accessory
       var child = exec(cmd, {timeout:self.timeout}, function (error, stdout, stderr)

@@ -50,7 +50,8 @@ var fs = require('fs');
 
 // The files created within Cmd4StatesPath contain just a value of the accessories last state,
 // so they are very small in size.
-var Cmd4StatesPath = ".homebridge/Cmd4Scripts/Cmd4States";
+var home = process.env.HOME;	
+var Cmd4StatesPath =  ".homebridge/Cmd4Scripts/Cmd4States";
 
 var length = process.argv.length;
 var device = "";
@@ -105,6 +106,7 @@ switch(io)
       switch (device)
       {
          case "My_Fan":
+         case "My v1 Fan":
          case "My_v1Fan":
          case "My_v2Fan":   // There is no need to duplicate everything
          {                  // for more accessories of the same type.
@@ -3715,6 +3717,7 @@ switch(io)
       switch(device)
       {
          case "My_Fan":
+         case "My v1 Fan":
          case "My_v1Fan":
          case "My_v2Fan":
          {

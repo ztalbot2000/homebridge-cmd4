@@ -1,0 +1,411 @@
+{
+   "bridge":
+   {
+      "name": "MAC Test Homebridge",
+      "username": "CC:22:3D:E3:CE:30",
+      "port": 51826,
+      "pin": "555-55-555"
+   },
+    "platforms":
+   [
+      {
+         "platform": "config",
+         "name": "Config",
+         "port": 8080,
+         "log": "/tmp/homebridge.log",
+         "error_log": "/tmp/homebridge_error.log",
+         "restart": "/bin/launchctl unload /Library/LaunchDaemons/com.homebridge.server.plist;/bin/launchctl load -w -F /Library/LaunchDaemons/com.homebridge.server.plist"
+      },
+      {
+          "platform": "Cmd4",
+          "name": "Cmd4",
+          "accessories":
+          [
+             {
+                "type": "Fan",
+                "name": "My v1 Fan",
+                "rotationDirection": 1,
+                "rotationSpeed": 100,
+                "stateChangeResponseTime": 1,
+                "polling": false,
+                "interval": 10,
+                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+             },
+             {
+                "type": "Fanv2",
+                "name": "My_v2Fan",
+                "active": 1,
+                "currentFanState": 1,
+                "targetFanState": 1,
+                "rotationDirection": 1,
+                "rotationSpeed": 100,
+                "swingMode": 1,
+                "lockPhysicalControls": 0,
+                "polling": false,
+                "interval": 10,
+                "stateChangeResponseTime": 1,
+                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                "type": "GarageDoorOpener",
+                "name": "My_GarageDoorOpener",
+                "lockCurrentState": 0,
+                "lockTargetState": 0,
+                 "polling": false,
+                 "interval": 10,
+                 "stateChangeResponseTime": 10,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "Lightbulb",
+                 "name": "My_OnOff_Light",
+                 "polling": false,
+                 "interval": 10,
+                 "stateChangeResponseTime": 1,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "Lightbulb",
+                 "name": "My_Dimmable_Light",
+                 "brightness":8,
+                 "saturation":8,
+                 "hue":8,
+                 "colorTemperature":8,
+                 "polling": false,
+                 "interval": 10,
+                 "stateChangeResponseTime": 1,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "LockManagement",
+                 "name": "My_LockManagement",
+                 "lockControlPoint":"0",
+                 "logs":"AVersion",
+                 "audioFeedback":"0",
+                 "lockManagementAutoSecurityTimeout":"20",
+                 "administorOnlyAccess": 0,
+                 "lockLastKnownAction": 0,
+                 "currentDoorState": 0,
+                 "motionDetected": 0,
+                 "polling": false,
+                 "interval": 10,
+                 "stateChangeResponseTime": 1,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+               {
+                 "type": "LockMechanism",
+                 "name": "My_LockMechanism",
+                 "lockCurrentState": 0,
+                 "lockTargetState": 0,
+                 "stateChangeResponseTime": 3,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "Outlet",
+                 "name": "My_Outlet",
+                 "on": false,
+                 "outletInUse": false,
+                 "stateChangeResponseTime": 1,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "Switch",
+                 "name": "My_Switch",
+                 "on": false,
+                 "stateChangeResponseTime": 1,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "Thermostat",
+                 "name": "My_Thermostat",
+                 "currentHeatingCoolingState": 0,
+                 "targetHeatingCoolingState": 0,
+                 "currentTemperature": 50.0,
+                 "targetTemperature": 50.0,
+                 "temperatureDisplayUnits": 0,
+                 "coolingThresholdTemperature": 32.4,
+                 "currentRelativeHumidity": 60.2,
+                 "heatingThresholdTemperature": 25.2,
+                 "targettRelativeHumidity": 60.2,
+                 "timeout": 3000,
+                 "polling": false,
+                 "interval": 100,
+                 "TargetTemperature ": 32,
+                 "stateChangeResponseTime": 10,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "AirQualitySensor",
+                 "name": "My_AirQualitySensor",
+                 "airQuality": 1,
+                 "OzoneDensity": 50.0,
+                 "nitrogenDioxideDensity": 50.0,
+                 "sulphurDioxideDensity": 50.0,
+                 "PM2_5Density": 50.0,
+                 "PM10Density": 50.0,
+                 "VOCDensity": 50.0,
+                 "statusActive": 1,
+                 "statusFault": 0,
+                 "statusTampered": 0,
+                 "statusLowBattery": 0,
+                 "stateChangeResponseTime": 1,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "SecuritySystem",
+                 "name": "My_SecuritySystem",
+                 "securitySystemCurrentState": 3,
+                 "securitySystemAlarmType": 0,
+                 "statusFault": 0,
+                 "statusTampered": 0,
+                 "timeout": 3000,
+                 "xpolling": true,
+                 "interval": 10,
+                 "stateChangeResponseTime": 3,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "CarbonMonoxideSensor",
+                 "name": "My_CarbonMonoxideSensor",
+                 "carbonMonoxideDetected": 0,
+                 "statusActive": 1,
+                 "statusFault": 0,
+                 "statusTampered": 0,
+                 "statusLowBattery": 0,
+                 "carbonMonoxideLevel": 0,
+                 "carbonMonoxidePeakLevel": 0,
+                 "stateChangeResponseTime": 1,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "ContactSensor",
+                 "name": "My_ContactSensor",
+                 "contactSensorState": 0,
+                 "statusActive": 1,
+                 "statusFault": 0,
+                 "statusTampered": 0,
+                 "statusLowBattery": 0,
+                 "stateChangeResponseTime": 1,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "Door",
+                 "name": "My_Door",
+                 "currentPosition": 0,
+                 "targetPosition": 0,
+                 "positionState": 0,
+                 "holdPosition": 0,
+                 "obstructionDetected": 0,
+                 "stateChangeResponseTime": 3,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "HumiditySensor",
+                 "name": "My_HumiditySensor",
+                 "currentRelativeHumidity": 1,
+                 "statusActive": 1,
+                 "statusFault": 0,
+                 "statusTampered": 0,
+                 "statusLowBattery": 0,
+                 "stateChangeResponseTime": 1,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "LeakSensor",
+                 "name": "My_LeakSensor",
+                 "leakDetected": 0,
+                 "statusActive": 1,
+                 "statusFault": 0,
+                 "statusTampered": 0,
+                 "statusLowBattery": 0,
+                 "stateChangeResponseTime": 1,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "LightSensor",
+                 "name": "My_LightSensor",
+                 "currentAmbientLightLevel": 1,
+                 "statusActive": 1,
+                 "statusFault": 0,
+                 "statusTampered": 0,
+                 "statusLowBattery": 0,
+                 "stateChangeResponseTime": 1,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "MotionSensor",
+                 "name": "My_MotionSensor",
+                 "motionDetected": 0,
+                 "statusActive": 1,
+                 "statusFault": 0,
+                 "statusTampered": 0,
+                 "statusLowBattery": 0,
+                 "stateChangeResponseTime": 1,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "OccupancySensor",
+                 "name": "My_OccupancySensor",
+                 "occupancyDetected": 0,
+                 "statusActive": 1,
+                 "statusFault": 0,
+                 "statusTampered": 0,
+                 "statusLowBattery": 0,
+                 "stateChangeResponseTime": 1,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "SmokeSensor",
+                 "name": "My_SmokeSensor",
+                 "smokeDetected": 0,
+                 "statusActive": 1,
+                 "statusFault": 0,
+                 "statusTampered": 0,
+                 "statusLowBattery": 0,
+                 "stateChangeResponseTime": 1,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "StatelessProgrammableSwitch",
+                 "name": "My_StatelessProgrammableSwitch",
+                 "programmableSwitchEvent": 0,
+                 "serviceLabelIndex": 0,
+                 "serviceLabelNamespace": 0,
+                 "stateChangeResponseTime": 1,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "TemperatureSensor",
+                 "name": "My_TemperatureSensor",
+                 "currentTemperature": 50.0,
+                 "statusActive": 1,
+                 "statusFault": 0,
+                 "statusTampered": 0,
+                 "statusLowBattery": 0,
+                 "stateChangeResponseTime": 1,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type":"Window",
+                 "name": "My_Window",
+                 "currentPosition": 0,
+                 "targetPosition": 0,
+                 "positionState": 2,
+                 "holdPosition": 0,
+                 "obstructionDetected": 0,
+                 "stateChangeResponseTime": 3,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "WindowCovering",
+                 "name": "My_WindowCovering",
+                 "currentPosition": 0,
+                 "targetPosition": 0,
+                 "positionState": 2,
+                 "holdPosition": 0,
+                 "currentHorizontalTiltAngle": 0,
+                 "targetHorizontalTiltAngle": 0,
+                 "currentVerticalTiltAngle": 0,
+                 "targetVerticalTiltAngle": 0,
+                 "obstructionDetected": 0,
+                 "stateChangeResponseTime": 3,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "BatteryService",
+                 "name": "My_BatteryService",
+                 "batteryLevel": 50,
+                 "chargingState": 0,
+                 "statusLowBattery": 0,
+                 "stateChangeResponseTime": 1,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "CarbonDioxideSensor",
+                 "name": "My_CarbonDioxideSensor",
+                 "carbonDioxideDetected": 0,
+                 "statusActive": 1,
+                 "statusFault": 0,
+                 "statusTampered": 0,
+                 "statusLowBattery": 0,
+                 "carbonDioxideLevel": 0,
+                 "carbonDioxidePeakLevel": 0,
+                 "stateChangeResponseTime": 1,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "Microphone",
+                 "name": "My_Microphone",
+                 "mute": 0,
+                 "volume": 0,
+                 "stateChangeResponseTime": 1,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "Speaker",
+                 "name": "My_Speaker",
+                 "mute": 0,
+                 "volume": 0,
+                 "stateChangeResponseTime": 1,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "DoorBell",
+                 "name": "My_DoorBell",
+                 "programmableSwitchEvent": 0,
+                 "volume": 0,
+                 "brightness": 0,
+                 "stateChangeResponseTime": 1,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "Slat",
+                 "name": "My_Slat",
+                 "currentSlatType": 0,
+                 "slatType": 0,
+                 "swingMode": 0,
+                 "currentTiltAngle": 0,
+                 "targetTiltAngle": 0,
+                 "stateChangeResponseTime": 1,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "FilterMaintenance",
+                 "name": "My_FilterMaintenance",
+                 "filterChangeIndication": 0,
+                 "filterLifeLevel": 50,
+                 "resetFilterIndication": 1,
+                 "stateChangeResponseTime": 3,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "AirPurifier",
+                 "name": "My_AirPurifier",
+                 "statusActive": 1,
+                 "currentAirPurifierState": 0,
+                 "targetAirPurifierState": 0,
+                 "rotationSpeed": 0,
+                 "swingMode": 0,
+                 "lockPhysicalControls": 0,
+                 "stateChangeResponseTime": 3,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "ServiceLabel",
+                 "name": "My_ServiceLabel",
+                 "serviceLabelNamespace": 0,
+                 "stateChangeResponseTime": 1,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "TV",
+                 "name": "My_TV",
+                 "currentChannel": "13",
+                 "volume": "45",
+                 "stateChangeResponseTime": 1,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              }
+           ]
+       }
+   ]
+}

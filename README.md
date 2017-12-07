@@ -120,13 +120,11 @@ Developer
 4. Using the provided jsmin tool to strip out the comments, your ready to go
    and try Fans, Switches, Garage Doors, Locks, Sensors ....Todo<a name="todo"></a>
    
-5. The device names must be one complete word so that it can be parsed as an argument. 
-   I will add this as a ToDo.
 ----
 
 
 * [ ] Referred devices, i.e. a smoke detectors battery is not yet linked.
-* [ ] Support multi word device names.
+* [X] Support multi word device names.
 
 
 
