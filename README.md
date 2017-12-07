@@ -63,7 +63,7 @@ Installation
  Install homebridge using `npm install -g homebridge`.
 
 
-### Step 2 `CMD4 Plugin`
+### Step 2 `Cmd4 Plugin`
 
  Install this plugin using `npm install -g homebridge-cmd4`.
 
@@ -72,12 +72,16 @@ Installation
 
  mkdir .homebridge/Cmd4Scripts<BR>
  cp State.js .homebridge/Cmd4Scripts/State.js<BR>
- chmod 700 .homebridge/Cmd4Scripts/State.js
+ chmod 700 .homebridge/Cmd4Scripts/State.js<BR>
+ <BR>
+   There is a copy of State.js in the Extras folder that comes with the homebridge-cmd4 plugin.
 
 
-### Step 4 `Install/Update config.json`
+### Step 4 `Install/Update your config.json file.`
 
- Use the provided config.json file or add it to your own.
+ Use the provided config.json file or add it to your own.<BR>
+ <BR>
+   There is a fully populated copy of both config.min.json and config.json in the Extras folder that comes with the homebridge-cmd4 plugin. You can use it, or copy from it as it is a lot of typing.
 
 
 ### Step 5 `Install/Restart homebridge`
@@ -132,7 +136,10 @@ FAQ / Troubleshooting
 &nbsp;&nbsp;&nbsp; node .homebridge/Cmd4Scripts/State.js Get My_Fan On <BR>
 &nbsp;&nbsp;&nbsp; this should output: 0<BR>
  
-3) Have a look at the State.js file, all the settable characteristics are very well documented there.
+3) Have a look at the State.js file, all the settable characteristics are very well documented there.<BR>
+
+4) You can also run: DEBUG=* homebridge -I
+
 
 
 
