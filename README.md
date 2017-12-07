@@ -119,10 +119,14 @@ Developer
    
 4. Using the provided jsmin tool to strip out the comments, your ready to go
    and try Fans, Switches, Garage Doors, Locks, Sensors ....Todo<a name="todo"></a>
+   
+5. The device names must be one complete word so that it can be parsed as an argument. 
+   I will add this as a ToDo.
 ----
 
 
 * [ ] Referred devices, i.e. a smoke detectors battery is not yet linked.
+* [ ] Support multi word device names.
 
 
 
@@ -137,8 +141,16 @@ FAQ / Troubleshooting
 &nbsp;&nbsp;&nbsp; this should output: 0<BR>
  
 3) Have a look at the State.js file, all the settable characteristics are very well documented there.<BR>
+<BR>
+4) You can also run: DEBUG=* homebridge -I<BR>
 
-4) You can also run: DEBUG=* homebridge -I
+5) Try executing the State.js script
+<BR>
+ &nbsp;&nbsp;&nbsp;cd $HOME
+ &nbsp;&nbsp;&nbsp;node .homebridge/Cmd4Scripts/State.js Get My_Fan On
+ <BR>
+ This should output '0' or '1'
+
 
 
 
