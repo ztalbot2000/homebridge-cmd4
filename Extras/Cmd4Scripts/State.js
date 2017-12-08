@@ -43,15 +43,16 @@
 //                    can play with HomeKit and not have any physical devices at all.  Cool Eh!
 //
 
-//'use strict';
+'use strict';
 
 // FileSystem requirements.
 var fs = require('fs');
+var path = require('path');
+var os = require('os');
 
 // The files created within Cmd4StatesPath contain just a value of the accessories last state,
 // so they are very small in size.
-var home = process.env.HOME;	
-var Cmd4StatesPath =  ".homebridge/Cmd4Scripts/Cmd4States";
+var Cmd4StatesPath =  path.join(os.homedir(), ".homebridge/Cmd4Scripts/Cmd4States");
 
 var length = process.argv.length;
 var device = "";
