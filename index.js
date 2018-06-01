@@ -1351,7 +1351,7 @@ Cmd4Accessory.prototype = {
                         callback();
                      }, self.stateChangeResponseTime * 1000);
                   }
-                  if (characteristicStrincharacteristicString == "TargetTemperature")
+                  if (characteristicString == "TargetTemperature")
                   {
                      responded  = true;
                      setTimeout(() => {
