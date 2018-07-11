@@ -1536,8 +1536,16 @@ Cmd4Accessory.prototype = {
 
                if (isNumeric(words[0]))
                {
-                  value =  parseInt(words[0], 10);
-                  //self.log( "Cmd4 - getValue Retrieved %s %s for: %s. translated to %d", characteristicString, words[0], self.name, value);
+                  // Fix support for decimal temperatures
+                  // parseFloat will change "15" "15.0" to "15"
+                  // but keeps numbers like "15.5"
+                  // So whatever is sent from the device
+                  // is used.
+                  // HomeKit and HomeBridge seems okay with this.
+                  // Eve sees the decimal numbers.
+                  value =  parseFloat(words[0], 10);
+                  //self.log( "Cmd4 - getValue Retrieved %s %s for: %s. translated to %f", characteristicString, words[0], self.name, value);
+
                   callback(null,value);
                } else {
                   var lowerCaseWord = words[0].toLowerCase();
