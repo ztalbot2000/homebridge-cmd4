@@ -1,6 +1,6 @@
 {
-  "_from": "homebridge-cmd4@1.2.0",
-  "_id": "homebridge-cmd4@1.2.0",
+  "_from": "homebridge-cmd4@1.2.1",
+  "_id": "homebridge-cmd4@1.2.2",
   "_inBundle": false,
   "_integrity": "sha512-Q39XXNNaxpBENc4AXvqoWoW+5OVZE24OLYLm+4RqCxJmyQDAGLNsokL+dh2JU++YaZRdycASfnG/8sylpocGAg==",
   "_location": "/homebridge-cmd4",
@@ -8,20 +8,20 @@
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "homebridge-cmd4@1.2.0",
+    "raw": "homebridge-cmd4@1.2.2",
     "name": "homebridge-cmd4",
     "escapedName": "homebridge-cmd4",
-    "rawSpec": "1.2.0",
+    "rawSpec": "1.2.2",
     "saveSpec": null,
-    "fetchSpec": "1.2.0"
+    "fetchSpec": "1.2.2"
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/homebridge-cmd4/-/homebridge-cmd4-1.2.0.tgz",
+  "_resolved": "https://registry.npmjs.org/homebridge-cmd4/-/homebridge-cmd4-1.2.2.tgz",
   "_shasum": "4f49b51f70192c7df314cf88ea9022f0ec3025e7",
-  "_spec": "homebridge-cmd4@1.2.0",
+  "_spec": "homebridge-cmd4@1.2.2",
   "_where": "/private/var/root",
   "author": {
     "name": "John Talbot"
@@ -69,5 +69,5 @@
     "preversion": "npm test",
     "test": "semistandard"
   },
-  "version": "1.2.0"
+  "version": "1.2.2"
 }
