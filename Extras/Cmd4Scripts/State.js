@@ -1,4 +1,4 @@
-//  State.js
+//  State.js 
 //
 // Description:
 //   This script *CAN* be called by the HomeBridge plugin Cmd4 as defined in your config.json
