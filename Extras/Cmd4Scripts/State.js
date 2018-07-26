@@ -74,29 +74,69 @@ if (length >= 4) characteristic  = process.argv[4];
 if (length >= 5) option  = process.argv[5];
 
 // Placing the states in a subdirectory makes things look cleaner.
-fs.mkdir(Cmd4StatesPath);
+// Some platforms require an exception handler
+const mkdirSync = function (dirPath)
+{
+   try {
+      fs.mkdirSync(dirPath)
+   } catch (err) {
+      if (err.code !== 'EEXIST')
+      {
+         console.log("mkdir failed: " + dirPath);
+         throw err;
+      } else {
+         // directory already exists - OK
+      }
+   }
+}
+
+mkdirSync(Cmd4StatesPath);
 
 
 // Such a simple way to store state information that is small and fast!
-
+// Put exception handling here too. Just in case! 
 function writeData(a,b,c)
 {
-    var fn = Cmd4StatesPath + "/Status_" + a  + "_" + b;
+   var fn = Cmd4StatesPath + "/Status_" + a  + "_" + b;
 
-    fs.writeFileSync(fn,c);
-    return;
-
+   try {
+      fs.writeFileSync(fn,c);
+   } catch (err) { 
+      if (err.code !== 'EEXIST')
+      {  
+         console.log("write data failed: " + fn + " data:" + c);
+         throw err;
+      } else {
+         // file already exists - OK
+      }
+   }
 }
+
+// Read the state information.  If there is none, just return what
+// was expected.
+// Put exception handling here too. Just in case! 
 function readData(a,b)
 {
     var fn = Cmd4StatesPath + "/Status_" + a  + "_" + b;
     var c = "";
-    if (!fs.existsSync(fn))
-    {
-        return c;
-    }
-    c = String(fs.readFileSync(fn, 'utf8'));
-    return c;
+  
+    try {
+       c = String(fs.readFileSync(fn, 'utf8'));
+    } catch (err) { 
+       if (err.code === 'ENOENT') {
+          // This is OK. just return what was expected.
+          return c;
+       } else 
+       if (err.code !== 'EEXIST')
+       {  
+          console.log("read data failed: " + fn);
+          throw err;
+       } else {
+          // file already exists - OK
+       }
+   }
+
+   return c;
  }
 
 
