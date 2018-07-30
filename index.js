@@ -179,7 +179,7 @@ Cmd4Platform.prototype.statePolling = function (accessory) {
           self.service.getCharacteristic(Characteristic.CurrentPosition).getValue();
           break;
       }
-      case  "BatteruServoce":
+      case  "BatteryServoce":
       {
           self.service.getCharacteristic(CharacteristicBatteryLevelStatusActive).getValue();
           break;
