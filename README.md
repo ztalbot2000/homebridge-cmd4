@@ -16,7 +16,7 @@ Table of Contents
 * [**Features**](#features)
 * [**Screenshots**](#screenshots)
 * [**Installation**](#installation)
-* [**Migrating from Homebridge-cmdswitch2**](#migration)
+* [**Migrating from Homebridge-cmdswitch2**](#migrating-from-homebridge-cmdswitch2)
 * [**Developer**](#developer)
 * [**Todo**](#todo)
 * [**Contributing**](#contributing)
@@ -366,7 +366,7 @@ Link References
 [features]:https://github.com/ztalbot2000/homebridge-cmd4#features
 [screenshots]:https://github.com/ztalbot2000/homebridge-cmd4#screenshots
 [installation]:https://github.com/ztalbot2000/homebridge-cmd4#installation
-[migration]:https://github.com/ztalbot2000/homebridge-cmd4#migration
+[migrating-from-homebridge-cmdswitch2]:https://github.com/ztalbot2000/homebridge-cmd4#migrating-from-homebridge-cmdswitch2
 [developer]:https://github.com/ztalbot2000/homebridge-cmd4#developer
 [todo]:https://github.com/ztalbot2000/homebridge-cmd4#todo
 [contributing]:https://github.com/ztalbot2000/homebridge-cmd4#contributing
