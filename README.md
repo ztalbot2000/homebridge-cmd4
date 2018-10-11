@@ -199,11 +199,11 @@ if [ "$1" = "Set" ]; then
    # $3 would be the the charactersistic 'On'
    # $4 would be '0' for 'On' and '1' for 'Off'
 
-   if [ "$4" = "0" ]; then
+   if [ "$4" = "true" ]; then
       ps4-waker
       exit $?
    fi
-   if [ "$4" = "1" ]; then
+   if [ "$4" = "false" ]; then
       ps4-waker standby
       exit $?
    fi
@@ -221,6 +221,13 @@ $1 - Either 'Get'  or 'Set'
 $2 - The name of the device as defined in your config.json file.  Note: DO NOT USE SPACES IN THE NAME.  Scripting is much more difficult.
 $3 - The HAP specification characteristic parameter. In this case 'On'
 $4 - In the case of 'Set' the value to be set.
+
+   ***Important***
+   Homebridge-cmd4 just outputs the value to be set.  For whatever reason the lower layers of homebridge set on/off to be "true" and "false" instead of 0 & 1, which is incorrect, but changing it would break others scripts.  Homebridge-cmd4 has always recognized either 0/1 or true/false when receiving the devices value.
+When in doubt, check the parameters yourself.
+   Thanks Florian for pointing out the original documented bash script was incorrect
+
+
 
 The response of the script is two-fold.  The first being the returned value as defined by the HAP spec.  The second is the exit status of the script.
 In this case the output is the echo of "0" for On and "1" for Off.
