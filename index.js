@@ -1324,6 +1324,8 @@ Cmd4Accessory.prototype = {
                   break;
                }
                case "Door":
+               case "Window":
+               case "WindowCovering":
                {
                   if (self.config.stateChangeResponseTime === undefined)
                      self.stateChangeResponseTime = 3;
@@ -1454,18 +1456,19 @@ Cmd4Accessory.prototype = {
                   // trying to delete the bridge.
                   self.log("Cmd4: Warning, characteristic is null for name:%s type: %s.",
                           self.name, self.config.type);
-                  callback();
                } else if (self.service.getCharacteristic(characteristic) == undefined)
                {
                   // I have seen this once where Homebridge dies, possibly after
                   // trying to delete the bridge.
                   self.log("Cmd4: Warning, service is null for name:%s type:%s.",
                           self.name, self.config.type);
-                  callback();
-               } else
+               } 
+               // A little bit of a speed boost, depending on the config
+               if (self.config.stateChangeResponseTime === undefined)
                {
+                  callback();
+               } else {
                   setTimeout(() => {
-                     self.service.getCharacteristic(characteristic).getValue();
                      callback();
                   }, self.stateChangeResponseTime * 1000);
                }
@@ -1544,7 +1547,7 @@ Cmd4Accessory.prototype = {
                   // HomeKit and HomeBridge seems okay with this.
                   // Eve sees the decimal numbers.
                   value =  parseFloat(words[0], 10);
-                  //self.log( "Cmd4 - getValue Retrieved %s %s for: %s. translated to %f", characteristicString, words[0], self.name, value);
+                  // self.log( "Cmd4 - getValue Retrieved %s %s for: %s. translated to %f", characteristicString, words[0], self.name, value);
 
                   callback(null,value);
                } else {
@@ -1552,16 +1555,16 @@ Cmd4Accessory.prototype = {
 
                   if (lowerCaseWord  == "true" || lowerCaseWord == "on")
                   {
-                     //self.log( "Cmd4 - getValue Retrieved %s %s for: %s. translated to 1", characteristicString, words[0], self.name);
+                     // self.log( "Cmd4 - getValue Retrieved %s %s for: %s. translated to 1", characteristicString, words[0], self.name);
                      value = 1;
                      callback(null,value);
                   } else if (lowerCaseWord == "false" || lowerCaseWord == "off")
                   {
-                     //self.log( "Cmd4 - getValue Retrieved %s %s for: %s. translated to 0", characteristicString, words[0], self.name);
+                     // self.log( "Cmd4 - getValue Retrieved %s %s for: %s. translated to 0", characteristicString, words[0], self.name);
                      value = 0;
                      callback(null,value);
                   } else {
-                     //self.log( "Cmd4 - getValue Retrieved %s %s for: %s.", characteristicString, words[0], self.name);
+                     // self.log( "Cmd4 - getValue Retrieved %s %s for: %s.", characteristicString, words[0], self.name);
                      value = words[0];
                      callback(null,value);
                   }
