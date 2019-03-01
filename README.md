@@ -22,7 +22,8 @@ Table of Contents
 * [**Contributing**](#contributing)
 * [**Inspiration and special thanks**](#inspiration-and-special-thanks)
 * [**License**](#license)
-* [**FAQ / Troubleshooting**](#faq--troubleshooting)
+* [**FAQ-Troubleshooting**](#faq-troubleshooting)
+* [**Raspbian-Stretch**](#raspbian-stretch)
 * [**Rationale**](#rationale)
 
 
@@ -59,56 +60,52 @@ Installation
 ------------
 
 
-### Step 1 `Homebridge`
+### Step 1 `Install Homebridge`
 
-  Install homebridge using `npm install -g homebridge`.
+   SHELL> sudo npm install -g --unsafe-perm homebridge
 
 
-### Step 2 `Cmd4 Plugin`
+### Step 2 `Install Cmd4 Plugin`
 
-  Install this plugin using `npm install -g homebridge-cmd4`.
+  SHELL> sudo npm install -g --unsafe-perm homebridge-cmd4
 
 
 ### Step 3 `Install State.js`
 
-  mkdir .homebridge/Cmd4Scripts<BR>
-  cp State.js .homebridge/Cmd4Scripts/State.js<BR>
-  chmod 700 .homebridge/Cmd4Scripts/State.js<BR>
-  <BR>
-  There is a copy of State.js in the Extras folder that comes with the homebridge-cmd4 plugin.
+  SHELL> mkdir $HOME/.homebridge<BR>
+  SHELL> mkdir $HOME/.homebridge/Cmd4Scripts<BR>
+  SHELL> cp /usr/lib/node_modules/homebridge-cmd4/Extras/Cmd4Scripts/State.js $HOME/.homebridge/Cmd4Scripts/<BR>
+  SHELL> chmod 700 .homebridge/Cmd4Scripts/State.js<BR>
 
 
 ### Step 4 `Install/Update your config.json file.`
 
   Use the provided config.json file or add it to your own.<BR>
   <BR>
-  There is a fully populated copy of both config.min.json and config.json in the Extras folder that comes with the homebridge-cmd4 plugin. You can use it, or copy from it as it is a lot of typing.
+  There is a fully populated copy of both config.min.json and config.json in the Extras folder that comes with the homebridge-cmd4 plugin. You can use it, or copy from it as it is a lot of typing. <BR>
+  SHELL> cp /usr/lib/node_modules/homebridge-cmd4/Extras/config.json $HOME/.homebridge/<BR>
 
 
 ### Step 5 `Install/Restart homebridge`
 
-  Start/Restart Homebridge as you normally would.
+  Start/Restart Homebridge as you normally would.<BR>
+  SHELL> homebrige<BR>
  
 ### Step 6 `Try Homekit`
 
   If you are not already familiar with Homekit, you may wish to look at the documentation for Homebridge and how to configure it with Homekit. The gist of it is that you entet the manual code defined in the config.json file. I chose 5555555 for simplicity.
 
-<br>
+<BR>
 
 ### That's it! Enjoy all your new Virtual Accessories!. ✅
 
-<br>
-
-## Usage
-
-If you installed and setup things correctly you should now see icons in the Homekit app for you to play with.
 
 Migrating from Homebridge-cmdswitch2
 ------------------------------------
   Homebridge-cmdswitch2 is great if you just want to turn something On or Off; Hence the switch reference in its name. In fact, there is no need to migrate if that is all you want to do. As a plugin, Homebridge-cmd4 easily coexists with Homebridge-cmdswitch2 or any other homebridge plugin. However, if you want to do something more finite, like adjusting the brightness or getting the value of a DAC, then Homebridge-Cmd4 is for you.
    If you do wish to move anyway to Cmd4 or wish to see another example of interfacing to a real device, here is a very simple example without any parameter checking on how it would be done for a switch.
 
-### Step 1 `config.json`
+### Step 1 `homebridge-cmdswitch2 config.json`
 
    Homebridge-cmdswitch2 defines their *REQUIRED* fields in their config.json as:
 
@@ -137,7 +134,10 @@ Migrating from Homebridge-cmdswitch2
 
 ```
 
-   Homebridge-cmd4 only uses one command string, that being:
+### Step 2 `homebridge-cmd4 config.json`
+
+   Homebridge-cmd4 only uses one command string as there are many 
+   options beyond on/off. This command string is:
 
    ...
    "state_cmd": "< path to some executable or script >"
@@ -146,7 +146,10 @@ Migrating from Homebridge-cmdswitch2
    In this example, we will use:
    "state_cmd": "bash .homebridge/Cmd4Scripts/PS4.sh"
 
-   Our config.json file for homebridge now looks like:
+   Note: for the device name, DO NOT USE SPACES as this
+         will cause problems parsing the command line.
+
+   The config.json file for homebridge-cmd4 now looks like:
 
 ```
    ...
@@ -157,7 +160,7 @@ Migrating from Homebridge-cmdswitch2
       [
          {
              "type": "Switch",
-             "name": "PS4",
+             "name": "PS_4",
              "on": false,
              "state_cmd": "bash .homebridge/Cmd4Scripts/PS4.sh"
              "polling": true,
@@ -170,44 +173,74 @@ Migrating from Homebridge-cmdswitch2
 
 ```
 
-   Edit a new file called $HOME/.homebridge/Cmd4Scripts/PS4.sh
-
 ### Step 3 `Contents of PS4.sh`
 
+Edit a new file called $HOME/.homebridge/Cmd4Scripts/PS4.sh
+
 The PS4.sh must accept and respond to homebridge-cmd4 as defined by the HAP spec for a switch, this being just the ON characteristic.
-The corresponding script would then contain the following:
+The corresponding script would then contain the following::
+ (It is also included in the Extras/Cmd4Scripts directory of your installation)
 
 ```
 #!/bin/bash
 
+# Notes
+# 1) This script is called as defined by the config.json file as:
+#    "state_cmd": "bash .homebridge/Cmd4Scripts/PS4.sh"
+#    $1 = 'Get'
+#    $2 = <Device name>    DO NOT USE SPACES IN DEVICE NAME. It causes problems parsing the command line.
+#    $3 = <Characteristic>
+#    $4 = <Device option>
+#
+# 2) For a set of On, the command issued would be:
+#    bash $HOME/.homebridge/Cmd4Scripts/PS4.sh Set PS_4 On false
+#       or
+#    bash $HOME/.homebridge/Cmd4Scripts/PS4.sh Set PS_4 On true
+#
+# 3) For a Get of On, the command issued would be:
+#    bash $HOME/.homebridge/Cmd4Scripts/PS4.sh Get PS_4 On 
+#  
+#    Homebridge-cmd4 will interpret the result of false to be 1
+#    and true to be 0 so either 0/1  or true/false can be returned.
+
+
+# echo "\$1='$1' \$2='$2' \$3='$3' \$4='$4'"
+
 if [ "$1" = "Get" ]; then
-   # $2 would be the name 'PS4'
-   # $3 would be the charactersistic 'On'
-   ps4-waker search | grep -i '200 Ok'
+   # This line is commented out and would be
+   # interchangeable with ps4-waker. It is here
+   # as an example
+   # ps4-waker search | grep -i '200 Ok'
+   cat /tmp/fileVariableHolder
    rc=$?
    if [ "$rc" = "0" ]; then
-      echo "$rc"
       exit 0
    else
-      echo "1"
-      exit 0
+      echo "failed"
+      exit -1
    fi
 fi
 
 if [ "$1" = "Set" ]; then
-   # $2 would be the name 'PS4'
-   # $3 would be the the charactersistic 'On'
-   # $4 would be '0' for 'On' and '1' for 'Off'
-
-   if [ "$4" = "true" ]; then
-      ps4-waker
-      exit $?
-   fi
-   if [ "$4" = "false" ]; then
-      ps4-waker standby
-      exit $?
+   if [ "$3" = "On" ]; then
+      if [ "$4" = "true" ]; then
+         # This line is commented out and would be
+         # interchangeable with ps4-waker. It is here
+         # as an example
+         # ps4-waker
+         echo $4 > /tmp/fileVariableHolder
+         exit $?
+      else
+         # This line is commented out and would be
+         # interchangeable with ps4-waker. It is here
+         # as an example
+         # ps4-waker standby
+         echo $4 > /tmp/fileVariableHolder
+         exit $?
+      fi
    fi
 fi
+
 
 exit -1
 ```
@@ -237,38 +270,37 @@ The second is the exit status of the script, which happens to be almost the same
 
    You can also test how homebridge-cmd4 will respond by running your scripts from the command line.  If you see the expected output, then things should behave as well from within homebridge.
 
-   In this example for setting the device On:
-   cd $HOME
-   bash .homebridge/Cmd4Scripts/PS4.sh Set PS4 On 0
-   
-   Setting the device off
-   bash .homebridge/Cmd4Scripts/PS4.sh Set PS4 On 1
-
-   Getting the device Status
-   bash .homebridge/Cmd4Scripts/PS4.sh Get PS4 On
-      will output "0" and have an exit status of 0 if the device is On
-      will output "1" and have an exit status of 0 if the device is Off
+   In this example for setting the device On:<BR>
+   SHELL> bash $HOME/.homebridge/Cmd4Scripts/PS4.sh Set PS4 On true<BR>
+   <BR>
+   Setting the device off<BR>
+   SHELL> bash $HOME/.homebridge/Cmd4Scripts/PS4.sh Set PS4 On false<BR>
+   <BR>
+   Getting the device Status<BR>
+   SHELL> bash $HOME/.homebridge/Cmd4Scripts/PS4.sh Get PS4 On <BR>
+      will output "0" and have an exit status of 0 if the device is On <BR>
+      will output "1" and have an exit status of 0 if the device is Off <BR>
     
-   For On, the commands seem quite redundant, but On is a characteristic. Consider the following for a light where the characteristic is Brightness
-      node ./homebridge/Cmd4Scripts/State.js Set My_Dimmable_Light Brightness 40
-   This makes more sense.
+   For On, the commands seem quite redundant, but On is a characteristic. Consider the following for a light where the characteristic is Brightness <BR>
+      SHELL> node $HOME/./homebridge/Cmd4Scripts/State.js Set My_Dimmable_Light Brightness 40 <BR>
+   This makes more sense. <BR>
 
 Developer
 ---------
-1. The provided jsmin differs from others in that the resulting file format is
+### Step 1  The provided jsmin differs from others in that the resulting file format is
    still readable. Only C and C++ comments are removed. The includ config.json is created via: <BR>
-   &nbsp;&nbsp;&nbsp; jsmin < config.min.json > config.json
+   &nbsp;&nbsp;&nbsp; SHELL> jsmin < config.min.json > config.json
    
-2. The parameters to the script pointed to by the 'state_cmd' in your
+### Step 2  The parameters to the script pointed to by the 'state_cmd' in your
    config.json file (Default being the provided State.js file) are:<BR>
    &nbsp;&nbsp;&nbsp;Get < Accessory Name > < Characteristic > <BR>
    &nbsp;&nbsp;&nbsp;Set < Accessory Name > < Characteristic > < Value > <BR>
        
-3. Polling is supported, but even without polling, care was taken so that
+### Step 3  Polling is supported, but even without polling, care was taken so that
    even after closing a garage door for instance, Homekit gets updated that
    the door was closed.
    
-4. Using the provided jsmin tool to strip out the comments, your ready to go
+### Step 4  Using the provided jsmin tool to strip out the comments, your ready to go
    and try Fans, Switches, Garage Doors, Locks, Sensors ....Todo<a name="todo"></a>
    
 ----
@@ -279,28 +311,74 @@ Developer
 
 
 
-FAQ / Troubleshooting
----------------------
+FAQ-Troubleshooting
+-------------------
 
-1) Homebridge is expected to run from a users home directory. where it can find the .homebridge directory and indirectly the homebridge/Cmd4Scripts.State.js command file.
+### Step 1  Homebridge is expected to run from a users home directory. where it can find the .homebridge directory and indirectly the homebridge/Cmd4Scripts.State.js command file.
 
-2) The State.js command file must be executable. it can be tested via:<BR>
-&nbsp;&nbsp;&nbsp; cd $HOME <BR>
-&nbsp;&nbsp;&nbsp; node .homebridge/Cmd4Scripts/State.js Get My_Fan On <BR>
-&nbsp;&nbsp;&nbsp; this should output: 0<BR>
+### Step 2  The State.js command file must be executable. it can be tested via:<BR>
+&nbsp;&nbsp;&nbsp; SHELL> cd $HOME <BR>
+&nbsp;&nbsp;&nbsp; SHELL> node .homebridge/Cmd4Scripts/State.js Get My_Fan On <BR>
+&nbsp;&nbsp;&nbsp; this should output: 0 or 'true'<BR>
  
-3) Have a look at the State.js file, all the settable characteristics are very well documented there.<BR>
+### Step 3 Have a look at the State.js file, all the settable characteristics are very well documented there.<BR>
 <BR>
-4) You can also run: DEBUG=* homebridge -I<BR>
+### Step 4 You can also run:<BR>
+    SHELL> DEBUG=* homebridge -D $HOME/ <BR>
 
-5) Try executing the State.js script
+### Step 5  Try executing the State.js script
 <BR>
- &nbsp;&nbsp;&nbsp;cd $HOME
- &nbsp;&nbsp;&nbsp;node .homebridge/Cmd4Scripts/State.js Get My_Fan On
+ &nbsp;&nbsp;&nbsp;SHELL> cd $HOME
+ &nbsp;&nbsp;&nbsp;SHELL> node .homebridge/Cmd4Scripts/State.js Get My_Fan On
  <BR>
- This should output '0' or '1'
+ This should output '0' or '1' or 'true' or 'false'
+ <BR>
+ &nbsp;&nbsp;&nbsp;SHELL> node .homebridge/Cmd4Scripts/State.js Set My_Fan On false
+ <BR>
+ &nbsp;&nbsp;&nbsp;SHELL> node .homebridge/Cmd4Scripts/State.js Set My_Fan On true
 
 
+Raspbian-Stretch
+----------------
+Please consult the Raspbian documentation first. Here are my notes though:<BR>
+
+Raspbian Stretch (2018-11-13-raspbian-stretch-full.img)
+has old version (v8.11.1) and no npm by default
+
+### Step 1  Update system packages
+SHELL> sudo apt-get update
+
+### Step 2  Update installed  packages
+SHELL> sudo apt-get dist-upgrade
+
+apt-get node.js npm would install npm version 1.4.21 and result in the error:
+Os.tmpDir() is depricated.
+
+### Step 3  Add the two following lines to the top of the source list, commentiing out the others and save the file
+SHELL> sudo vim /etc/apt/sources.list
+
+deb https://deb.nodesource.com/node_9.x stretch main
+deb-src https://deb.nodesource.com/node_9.x stretch main
+
+### Step 4  Update sources or you wil not be able to download npm
+SHELL> sudo apt-get update
+
+### Step 5  Check what will be installed. (It ahould return >=8.11.1
+SHELL> apt-cache policy nodejs
+
+### Step 6  Remove old packages
+SHELL> sudo apt-get remove nodejs npm
+
+### Step 7  Install nodejs (v9 installs npm too)
+SHELL> sudo apt-get install nodejs
+
+### Step 8  Check versions of node and npm
+SHELL> node -v   (Should return >=v9.11.2
+SHELL> npm -v    (Should return >=5.6.0
+
+### Step 9  Install homebridge
+SHELL> sudo npm install -g --unsafe-perm homebridge
+SHELL> sudo npm install -g --unsafe-perm homebridge-cmd4
 
 
 
@@ -379,7 +457,8 @@ Link References
 [contributing]:https://github.com/ztalbot2000/homebridge-cmd4#contributing
 [inspiration-and-special-thanks]:https://github.com/ztalbot2000/homebridge-cmd4#inspiration-and-special-thanks
 [license]:https://github.com/ztalbot2000/homebridge-cmd4#license
-[faq--troubleshootingting]:https://github.com/ztalbot2000/homebridge-cmd4#faq--troubleshooting
+[faq-troubleshooting]:https://github.com/ztalbot2000/homebridge-cmd4#faq-troubleshooting
+[raspbian-stretch]:https://github.com/ztalbot2000/homebridge-cmd4#raspbian-stretch
 [rationale]:https://github.com/ztalbot2000/homebridge-cmd4#rationale
 [inspiration]:https://github.com/ztalbot2000/homebridge-cmd4#inspiration
 
