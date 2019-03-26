@@ -147,7 +147,6 @@ switch(io)
       switch (device)
       {
          case "My_Fan":
-         case "My v1 Fan":
          case "My_v1Fan":
          case "My_v2Fan":   // There is no need to duplicate everything
          {                  // for more accessories of the same type.
@@ -3758,7 +3757,6 @@ switch(io)
       switch(device)
       {
          case "My_Fan":
-         case "My v1 Fan":
          case "My_v1Fan":
          case "My_v2Fan":
          {

@@ -1,7 +1,16 @@
 'use strict';
-var exec = require("child_process").exec;
+const exec = require("child_process").exec;
+const moment = require('moment');
 
-var Accessory, Service, Characteristic;
+const FAKEGATO_TYPE_ENERGY  = 'energy',
+      FAKEGATO_TYPE_ROOM    = 'room',
+      FAKEGATO_TYPE_WEATHER = 'weather', 
+      FAKEGATO_TYPE_DOOR    = 'door',
+      FAKEGATO_TYPE_MOTION  = 'motion',
+      FAKEGATO_TYPE_THERMO  = 'thermo',
+      FAKEGATO_TYPE_AQUA    = 'aqua';   
+
+var Accessory, Service, Characteristic, UUIDGen, FakeGatoHistoryService;
 
 module.exports = function (homebridge) {
    // Accessory must be created from PlatformAccessory Constructor
@@ -9,6 +18,8 @@ module.exports = function (homebridge) {
 
    Service = homebridge.hap.Service;
    Characteristic = homebridge.hap.Characteristic;
+   
+   UUIDGen = homebridge.hap.uuid;
 
    // If you see these lines in other plugins with true, at the end,
    // you would provide a configurationRequestHandler to add/Remove
@@ -16,6 +27,9 @@ module.exports = function (homebridge) {
    // does not let you do this anymore.  
    homebridge.registerAccessory('homebridge-cmd4', 'Cmd4', Cmd4Accessory);
    homebridge.registerPlatform('homebridge-cmd4', 'Cmd4', Cmd4Platform);
+
+   FakeGatoHistoryService = require('fakegato-history')(homebridge);
+
 };
 
 // Platform definitions
@@ -26,11 +40,51 @@ function Cmd4Platform(log, config, api) {
    this.reachable = true;
    this.foundAccessories = [];
    this.ListOfPollingAccessories = {};
+   
+   
+   //this.storage     = undefined;               // Default - disabled
+   //this.storagePath = undefined;               // Default path for storage of 'fs'
+   
+   //this.folder.     = undefined;               // Default for storage of 'GoogleDrive'
+   //this.keypath     = undefined;               // Default for storage of 'GoogleDrive'
 
+   // Define platform config for fakegato-history
+   if ( config.storage != undefined )
+   {
+      if ( config.storage == "fs" )
+      {
+         this.storage = config.storage;
+      } else if ( config.storage == "googleDrive" )
+      {
+         this.storage = config.storage;
+      } else {
+         this.log("WARNING: Cmd4: Unknown platform.config.storage '%s'. Expected 'fs' or 'googleDrive' ", config.storage);
+      }
+   } 
+   
+   // Define platform config storagePath for fakegato-history
+   if ( config.storagePath != undefined )
+   {
+      this.storagePath = config.storagePath;
+   }
+   
+   // Define platform config folder for fakegato-history 
+   if ( config.folder != undefined )
+   {
+      this.folder = config.folder;
+   }
+   
+   // Define platform config keyPath for fakegato-history
+   if ( config.keyPath != undefined )
+   {
+      this.keyPath = config.keyPath;
+   }
 }
 
-Cmd4Platform.prototype = {
-   accessories: function(callback) {
+Cmd4Platform.prototype =
+{
+   accessories: function(callback) 
+   {
       var that = this;
 
 
@@ -54,7 +108,8 @@ Cmd4Platform.prototype = {
    }
 }
 
-Cmd4Platform.prototype.statePolling = function (accessory) {
+Cmd4Platform.prototype.statePolling = function (accessory) 
+{
    var thisSwitch = accessory.config;
    var self = accessory;
 
@@ -66,172 +121,308 @@ Cmd4Platform.prototype.statePolling = function (accessory) {
       case  "Fan":
       case  "Fanv1":
       {
-          self.service.getCharacteristic(Characteristic.On).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.On
+          ).getValue();
+
           break;
       }
       case "GarageDoorOpener":
       {
-          self.service.getCharacteristic(Characteristic.CurrentDoorState).getValue();
-          break;
+         self.service.getCharacteristic
+         (
+            Characteristic.CurrentDoorState
+         ).getValue();
+      
+         break;
       }
       case  "Lightbulb":
       {
-          self.service.getCharacteristic(Characteristic.On).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.On
+          ).getValue();
+
           break;
       }
       case "LockManagement":
       {
-          self.service.getCharacteristic(Characteristic.LockCurrentState).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.LockCurrentState
+          ).getValue();
+
           break;
       }
       case "LockMechanism":
       {
-          self.service.getCharacteristic(Characteristic.LockCurrentState).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.LockCurrentState
+          ).getValue();
+
           break;
       }
       case  "Outlet":
       {
-          self.service.getCharacteristic(Characteristic.On).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.On
+          ).getValue();
+
           break;
       } 
       case  "Switch":
       {
-          self.service.getCharacteristic(Characteristic.On).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.On
+          ).getValue();
+
           break;
       }
       case "Thermostat":
       {
-          self.service.getCharacteristic(Characteristic.CurrentTemperature).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.CurrentTemperature
+          ).getValue();
+
           break;
       }
       case  "AirQualitySensor":
       {
-          self.service.getCharacteristic(Characteristic.AirQuality).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.AirQuality
+          ).getValue();
+
           break;
       }
       case  "SecuritySystem":
       {   
-          self.service.getCharacteristic(Characteristic.SecuritySystemCurrentState).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.SecuritySystemCurrentState
+          ).getValue();
+
           break;
       }
       case  "CarbonMonoxideDetector":
       {
-          self.service.getCharacteristic(Characteristic.CarbonMonoxideDetected).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.CarbonMonoxideDetected
+          ).getValue();
+
           break;
       }
       case  "ContactSensor":
       {
-          self.service.getCharacteristic(Characteristic.ContactSensorState).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.ContactSensorState
+          ).getValue();
+
           break;
       }
       case  "Door":
       {
-          self.service.getCharacteristic(Characteristic.CurrentDoorState).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.CurrentDoorState
+          ).getValue();
+
           break;
       }
       case  "HumiditySensor":
       {
-          self.service.getCharacteristic(Characteristic.CurrentRelativeHumidity).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.CurrentRelativeHumidity
+          ).getValue();
+
           break;
       }
       case  "LeakSensor":
       {
-          self.service.getCharacteristic(Characteristic.LeakDetected).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.LeakDetected
+          ).getValue();
+
           break;
       }
       case  "LightSensor":
       {
-          self.service.getCharacteristic(Characteristic.CurrentAmbientLightLevel).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.CurrentAmbientLightLevel
+          ).getValue();
+
           break;
       }
       case  "MotionSensor":
       {
-          self.service.getCharacteristic(Characteristic.MotionDetected).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.MotionDetected
+          ).getValue();
+
           break;
       }
       case  "OccupancySensor":
       {
-          self.service.getCharacteristic(Characteristic.OccupancyDetected).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.OccupancyDetected
+          ).getValue();
+
           break;
       }
       case  "SmokeSensor":
       {
-          self.service.getCharacteristic(Characteristic.SmokeDetected).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.SmokeDetected
+          ).getValue();
+
           break;
       }
       case  "StatelessProgrammableSwitch":
       {
-          self.service.getCharacteristic(Characteristic.ProgrammableSwitchEvent).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.ProgrammableSwitchEvent
+          ).getValue();
+
           break;
       }
       case  "TemperatureSensor":
       {
-          self.service.getCharacteristic(Characteristic.CurrentTemperature).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.CurrentTemperature
+          ).getValue();
+
           break;
       }
       case  "Window":
       {
-          self.service.getCharacteristic(Characteristic.CurrentPosition).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.CurrentPosition
+          ).getValue();
+
           break;
       }
       case  "WindowCovering":
       {
-          self.service.getCharacteristic(Characteristic.CurrentPosition).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.CurrentPosition
+          ).getValue();
+
           break;
       }
-      case  "BatteryServoce":
+      case  "BatteryService":
       {
-          self.service.getCharacteristic(CharacteristicBatteryLevelStatusActive).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.StatusLowBattery
+          ).getValue();
+
           break;
       }
       case  "CarbonDioxideSensor":
       {
-          self.service.getCharacteristic(Characteristic.CarbonDioxideDetected).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.CarbonDioxideDetected
+          ).getValue();
+
           break;
       }
       case  "RTPCameraStreamManagement":
       {
-          self.service.getCharacteristic(Characteristic.StatusActive).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.StatusActive
+          ).getValue();
+
           break;
       }
       case  "Microphone":
       {
-          self.service.getCharacteristic(Characteristic.Mute).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.Mute
+          ).getValue();
+
           break;
       }
       case  "Speaker":
       {
-          self.service.getCharacteristic(Characteristic.Mute).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.Mute
+          ).getValue();
+
           break;
       }
       case  "Doorbell":
       {
-          self.service.getCharacteristic(Characteristic.ProgrammableSwitchEvent).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.ProgrammableSwitchEvent
+          ).getValue();
+
           break;
       }
       case  "Fanv2":
       {
-          self.service.getCharacteristic(Characteristic.Active).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.Active
+          ).getValue();
+
           break;
       }
       case  "Slat":
       {
-          self.service.getCharacteristic(Characteristic.CurrentSlatType).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.CurrentSlatState
+          ).getValue();
+
           break;
       }
       case  "FilterMaintenance":
       {
-          self.service.getCharacteristic(Characteristic.FilterChangeIndication).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.FilterChangeIndication
+          ).getValue();
+
           break;
       }
       case  "AirPurifier":
       {
-          self.service.getCharacteristic(Characteristic.Active).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.Active
+          ).getValue();
+
           break;
       }
       case  "ServiceLabel":
       {
-          self.service.getCharacteristic(Characteristic.ServiceLabelNamespace).getValue();
+          self.service.getCharacteristic
+          (
+             Characteristic.ServiceLabelNamespace
+          ).getValue();
+
           break;
       }
       default:
@@ -256,6 +447,7 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
     // The default interval is 1 minute. Timers are in milliseconds
     this.timeout = parseInt(this.timeout, 10) || 60000;
     this.name = this.config.name;
+    this.displayName = this.name;  //fakegato-history uses displayName
     this.model = this.config.model;
 
     // this.reachable = true; // What is reachable ???
@@ -273,6 +465,8 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
       .setCharacteristic(Characteristic.Manufacturer, "Cmd4")
       .setCharacteristic(Characteristic.Model, this.model )
       .setCharacteristic(Characteristic.SerialNumber, "Cmd4 " + this.config.type);
+   
+   this.UUID = UUIDGen.generate(this.name);
       
    // Explanation:
    // If you are wondering why this is done this way as compared to
@@ -293,6 +487,57 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
    //        in Homebridge :-)    If you find it useful, send
    //        me a like ;-)
 
+   //this.storage     = undefined;               // Default - disabled
+   //this.storagePath = undefined;               // Default path for storage of 'fs'
+   
+   //this.folder.     = undefined;               // Default for storage of 'GoogleDrive'
+   //this.keypath     = undefined;               // Default for storage of 'GoogleDrive'
+   
+   // Accessory config comes first
+   if ( this.config.storage != undefined )
+   {
+      if ( this.config.storage == "fs" )
+         this.storage = this.config.storage;
+      else if ( this.config.storage == "googleDrive" )
+         this.storage = this.config.storage;
+      else
+         this.log("WARNING: Cmd4: Unknown accessory.config.storage '%s'. Expected 'fs' or 'googleDrive' for '%s'", 
+            this.config.storage, this.name);
+
+   } else if ( platformConfig.storage != undefined )
+   {
+      this.storage = platformConfig.storage;
+   }
+   
+   // Define the storagePath for fakegato-history
+   // - Accessory config takes precedence over Platform config.
+   if ( this.config.storagePath != undefined )
+      this.storagePath = this.config.storagePath;
+   else if (platformConfig.storagePath != undefined )
+      this.storagePath = platformConfig.storagePath;
+   else
+      this.storagePath = "";
+
+   // Define the folder for fakegato-history
+   // - Accessory config takes precedence over Platform config.
+   if ( this.config.folder != undefined )
+      this.folder = this.config.folder;
+   else if (platformConfig.folder != undefined )
+      this.folder = platformConfig.folder;
+   else
+      this.folder = "";
+      
+
+   // Define the keyPath for fakegato-history
+   // - Accessory config takes precedence over Platform config.
+   if ( this.config.keyPath != undefined )
+      this.keyPath = this.config.keyPath;
+   else if (platformConfig.keyPath != undefined )
+      this.keyPath = platformConfig.keyPath;
+   else
+      this.keyPath = "";
+      
+   
 
    switch( this.config.type )
    {
@@ -319,6 +564,10 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.Fan(this.name, this.name);
          this.setupFanv1Service(this.service);
+         
+         // Eve Door (ContactSensor service)
+         // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_DOOR);         
          break;
       }
       case "GarageDoorOpener":
@@ -348,6 +597,10 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.GarageDoorOpener(this.name, this.name);
          this.setupGarageDoorOpenerService(this.service);
+         
+         // Eve Door (ContactSensor service)
+         // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_DOOR);
          break;
       }
       case "Lightbulb":
@@ -375,6 +628,10 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
     
          this.service = new Service.Lightbulb(this.name, this.name);
          this.setupLightBulbService(this.service);
+         
+         // Eve Door (ContactSensor service)
+         // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_DOOR);
          break;
       }
       case "LockManagement":
@@ -415,6 +672,10 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.LockManagement(this.name, this.name);
          this.setupLockManagementService(this.service);
+         
+         // Eve Door (ContactSensor service)
+         // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_DOOR);
          break;
       }
 
@@ -432,6 +693,10 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.LockMechanism(this.name, this.name);
          this.setupLockMechanismService(this.service);
+         
+         // Eve Door (ContactSensor service)
+         // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_DOOR);
          break;
       }
       case "Outlet": 
@@ -448,6 +713,10 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.Outlet(this.name, this.name);
          this.setupOutletService(this.service);
+         
+         // Eve Door (ContactSensor service)
+         // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_DOOR);
          break;
       }
       case "Switch":
@@ -459,6 +728,10 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.Switch(this.name, this.name);
          this.setupSwitchService(this.service);
+         
+         // Eve Door (ContactSensor service)
+         // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_DOOR);
          break;
       }
       case "Thermostat":
@@ -506,6 +779,10 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.Thermostat(this.name, this.name);
          this.setupThermostatService(this.service);
+         
+         // Eve Room (TempSensor, HumiditySensor and AirQuality Services)
+         // i.e. loggingService.addEntry({time: moment().unix(), currentTemp:this.currentTemp, setTemp:this.setTemp, valvePosition:this.valvePosition});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_THERMO);
          break;
       }
       case "AirQualitySensor":
@@ -557,6 +834,10 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.AirQualitySensor(this.name, this.name);
          this.setupAirQualitySensorService(this.service);
+         
+         // Eve Room (TempSensor, HumiditySensor and AirQuality Services)
+         // i.e. loggingService.addEntry({time: moment().unix(), temp:this.temperature, humidity:this.humidity, ppm:this.ppm});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_ROOM);
          break;
       }
       case "SecuritySystem":
@@ -586,6 +867,10 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
          // Optional
          this.service = new Service.SecuritySystem(this.name, this.name);
          this.setupSecuritySystemService(this.service);
+         
+         // Eve Door (ContactSensor service)
+         // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_DOOR);
          break;
       }
       case "CarbonMonoxideSensor":
@@ -617,6 +902,10 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.CarbonMonoxideSensor(this.name, this.name);
          this.setupCarbonMonoxideSensorService(this.service);
+         
+         // Eve Room (TempSensor, HumiditySensor and AirQuality Services)
+         // i.e. loggingService.addEntry({time: moment().unix(), temp:this.temperature, humidity:this.humidity, ppm:this.ppm});  
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_ROOM);
          break;
       }
       case "ContactSensor":
@@ -644,6 +933,10 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.ContactSensor(this.name, this.name);
          this.setupContactSensorService(this.service);
+         
+         // Eve Door (ContactSensor service)
+         // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_DOOR);
          break;
       }
       case "Door":
@@ -673,6 +966,10 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.Door(this.name, this.name);
          this.setupDoorService(this.service);
+         
+         // Eve Door (ContactSensor service)
+         // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_DOOR);
          break;
       }
       case "HumiditySensor":
@@ -700,6 +997,10 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.HumiditySensor(this.name, this.name);
          this.setupHumiditySensorService(this.service);
+         
+         // Eve Room (TempSensor, HumiditySensor and AirQuality Services) 
+         // i.e. loggingService.addEntry({time: moment().unix(), temp:this.temperature, humidity:this.humidity, ppm:this.ppm});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_ROOM);
          break;
       }
       case "LeakSensor":
@@ -727,6 +1028,10 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.LeakSensor(this.name, this.name);
          this.setupLeakSensorService(this.service);
+         
+         // Eve Door (ContactSensor service)
+         // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_DOOR);
          break;
       }
       case "LightSensor":
@@ -750,6 +1055,10 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.LightSensor(this.name, this.name);
          this.setupLightSensorService(this.service);
+         
+         // Eve Door (ContactSensor service)
+         // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_DOOR);
          break;
       }
       case "MotionSensor":
@@ -777,6 +1086,10 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.MotionSensor(this.name, this.name);
          this.setupMotionSensorService(this.service);
+         
+         // Eve Motion (MotionSensor service) 
+         // loggingService.addEntry({time: moment().unix(), status: this.status});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_MOTION);
          break;
       }
       case "OccupancySensor":
@@ -804,6 +1117,10 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.OccupancySensor(this.name, this.name);
          this.setupOccupancySensorService(this.service);
+         
+         // Eve Motion (MotionSensor service) 
+         // loggingService.addEntry({time: moment().unix(), status: this.status});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_MOTION);
          break;
       }
       case "SmokeSensor":
@@ -831,6 +1148,10 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.SmokeSensor(this.name, this.name);
          this.setupSmokeSensorService(this.service);
+         
+         // Eve Door (ContactSensor service) 
+         // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_DOOR);
          break;
       }
       case "StatelessProgrammableSwitch": 
@@ -850,6 +1171,10 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.StatelessProgrammableSwitch(this.name, this.name);
          this.setupStatelessProgrammableSwitchService(this.service);
+         
+         // Eve Door (ContactSensor service)
+         // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_DOOR);
          break;
       }
       case "TemperatureSensor": 
@@ -877,6 +1202,10 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.TemperatureSensor(this.name, this.name);
          this.setupTemperatureSensorService(this.service);
+         
+         // Eve Room (TempSensor, HumiditySensor and AirQuality Services) 
+         // i.e. loggingService.addEntry({time: moment().unix(), temp:this.temperature, humidity:this.humidity, ppm:this.ppm});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_ROOM);
          break;
       }
       case "Window":
@@ -906,6 +1235,10 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.Window(this.name, this.name);
          this.setupWindowService(this.service);
+         
+         // Eve Door (ContactSensor service)
+         // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_DOOR);
          break;
       }
       case "WindowCovering":
@@ -951,6 +1284,10 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.WindowCovering(this.name, this.name);
          this.setupWindowCoveringService(this.service);
+         
+         // Eve Door (ContactSensor service)
+         // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_DOOR);
          break;
       }
       case "BatteryService":
@@ -972,6 +1309,9 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.BatteryService(this.name, this.name);
          this.setupBatteryService(this.service);
+         
+         // Eve Energy (Outlet service)
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_ENERGY);
          break;
       }
       case "CarbonDioxideSensor": 
@@ -1007,12 +1347,20 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.CarbonDioxideSensor(this.name, this.name);
          this.setupCarbonDioxideSensorService(this.service);
+         
+         // Eve Room (TempSensor, HumiditySensor and AirQuality Services)    
+         // i.e. loggingService.addEntry({time: moment().unix(), temp:this.temperature, humidity:this.humidity, ppm:this.ppm});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_ROOM);
          break;
       }
       case "CameraRTPStreamManagement":
       {
          this.service = new Service.CameraRTPStreamManagement(this.name, this.name);
          this.setupCameraRTPStreamManagementService(this.service);
+         
+         // Eve Door (ContactSensor service)
+         // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_DOOR);
          break;
       }
       case "Microphone":
@@ -1029,6 +1377,10 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.Microphone(this.name, this.name);
          this.setupMicrophoneService(this.service);
+         
+         // Eve Door (ContactSensor service)
+         // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_DOOR);
          break;
       }
       case "Speaker":
@@ -1045,6 +1397,10 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.Speaker(this.name, this.name);
          this.setupSpeakerService(this.service);
+         
+         // Eve Door (ContactSensor service)
+         // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_DOOR);
          break;
       }
       case "DoorBell":
@@ -1064,6 +1420,10 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.Doorbell(this.name, this.name);
          this.setupDoorbellService(this.service);
+         
+         // Eve Door (ContactSensor service)
+         // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_DOOR);
          break;
       }
       case "Fanv2":
@@ -1095,6 +1455,10 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.Fanv2(this.name, this.name);
          this.setupFanv2Service(this.service);
+         
+         // Eve Door (ContactSensor service)
+         // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_DOOR);
          break;
       }
       case "Slat":
@@ -1123,6 +1487,10 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.Slat(this.name, this.name);
          this.setupSlatService(this.service);
+         
+         // Eve Door (ContactSensor service)
+         // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_DOOR);
          break;
       }
       case "FilterMaintenance":
@@ -1142,6 +1510,10 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.FilterMaintenance(this.name, this.name);
          this.setupFilterMaintenanceService(this.service);
+         
+         // Eve Door (ContactSensor service)
+         // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_DOOR);
          break;
       } 
       case "AirPurifier":
@@ -1175,12 +1547,20 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
 
          this.service = new Service.AirPurifier(this.name, this.name);
          this.setupAirPurifierService(this.service);
+         
+         // Eve Door (ContactSensor service)
+         // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_DOOR);
          break;
       }
       case "ServiceLabel":
       {
          this.service = new Service.ServiceLabel(this.name, this.name);
          this.setupServiceLabelService(this.service);
+         
+         // Eve Door (ContactSensor service)
+         // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_DOOR);
          break;
       }
       default:
@@ -1202,8 +1582,15 @@ Cmd4Accessory.prototype = {
        callback();
    },
 
-   getServices: function () {
-      return [this.informationService, this.service];
+   getServices: function () 
+   {   
+      // For the accessory, only acknowledge available services
+      if (this.loggingService) 
+      {
+         return [this.informationService, this.service, this.loggingService];
+      } 
+      
+      return [this.informationService, this.service]; 
    },
 
    // ***********************************************
@@ -1244,7 +1631,7 @@ Cmd4Accessory.prototype = {
    {
       var self = this;
       var cmd = this.state_cmd + " Set '" + this.name + "' '" + characteristicString  + "' '" + value  + "'";
-      // self.log("DEBUG: Cmd4 setValue %s function for: %s cmd: %s", characteristicString, self.name, cmd);
+      self.log.debug("DEBUG: Cmd4 setValue %s function for: %s cmd: %s", characteristicString, self.name, cmd);
 
 
       // Execute command to Set a characteristic value for an accessory
@@ -1500,7 +1887,7 @@ Cmd4Accessory.prototype = {
       var cmd = this.state_cmd + " Get '" + this.name + "' '" + characteristicString  + "'";
 
 
-      // self.log("DEBUG: Cmd4 getValue %s function for: %s cmd: %s", characteristicString, self.name, cmd);
+      self.log.debug("DEBUG Cmd4: getValue %s function for: %s cmd: %s", characteristicString, self.name, cmd);
 
       // Execute command to Get a characteristics value for an accessory
       var child = exec(cmd, {timeout:self.timeout}, function (error, stdout, stderr)
@@ -1548,6 +1935,9 @@ Cmd4Accessory.prototype = {
                   // Eve sees the decimal numbers.
                   value =  parseFloat(words[0], 10);
                   // self.log( "Cmd4 - getValue Retrieved %s %s for: %s. translated to %f", characteristicString, words[0], self.name, value);
+                  
+                  // Store history using fakegato if set up
+                  self.addAccessoryHistoryEventLog();
 
                   callback(null,value);
                } else {
@@ -1557,15 +1947,27 @@ Cmd4Accessory.prototype = {
                   {
                      // self.log( "Cmd4 - getValue Retrieved %s %s for: %s. translated to 1", characteristicString, words[0], self.name);
                      value = 1;
+                     
+                     // Store history using fakegato if set up
+                     self.addAccessoryHistoryEventLog();
+                     
                      callback(null,value);
                   } else if (lowerCaseWord == "false" || lowerCaseWord == "off")
                   {
                      // self.log( "Cmd4 - getValue Retrieved %s %s for: %s. translated to 0", characteristicString, words[0], self.name);
                      value = 0;
+                     
+                     // Store history using fakegato if set up
+                     self.addAccessoryHistoryEventLog();
+                     
                      callback(null,value);
                   } else {
                      // self.log( "Cmd4 - getValue Retrieved %s %s for: %s.", characteristicString, words[0], self.name);
                      value = words[0];
+                     
+                     // Store history using fakegato if set up
+                     self.addAccessoryHistoryEventLog();
+                     
                      callback(null,value);
                   }
                }
@@ -1644,7 +2046,7 @@ Cmd4Accessory.prototype = {
          });
       }
    },
-
+   
    setupLightBulbService: function (service)
    {  
       service.getCharacteristic(Characteristic.On)
@@ -3021,7 +3423,241 @@ Cmd4Accessory.prototype = {
       .on('get', (callback) => {
          this.getValue("ServiceLabelNamespace", callback);
       });
-   } 
+   },
+   
+   setupAccessoryFakeGatoService: function ( eveType )
+   {
+      // Optional
+      if ( this.storage != undefined )
+      {      
+         if (this.storage == 'fs')
+         {
+            this.loggingService = new FakeGatoHistoryService
+            (
+               eveType, 
+               this, 
+              { storage: 'fs',
+                path: this.storagePath }
+            );
+         
+         } else if (this.storage == 'googleDrive')
+         {
+            this.loggingService = new FakeGatoHistoryService
+            (
+               eveType, 
+               this, 
+               { storage: 'googleDrive',
+                 folder: this.folder, 
+                 keyPath: this.keyPath }
+            );
+         } else
+         {
+            this.log("WARNING: Cmd4 Unknown accessory config.storage '%s'. Expected 'fs' or 'googlrDrive for '%s' ", this.storage, this.name);
+         }
+      }
+      
+      if (this.loggingService)
+      {
+         if (this.polling == undefined ||
+             this.polling == false)
+         {
+            this.log("Cmd4: Warning config.storage='%s' for '%s' set but polling is not enabled.",
+              this.storage, this.name); 
+            this.log("      History will not be updated continiously.");
+               
+         } else if ( this.interval > 10 * 60)
+         {
+            this.log("Cmd4: Warning config.interval='%s' seconds for '%s'.",
+               this.interval, this.name);
+            this.log("      When 'storage' is set this should be < 10 minutes.");
+         }
+      }
+   },
+
+   addAccessoryHistoryEventLog: function ()
+   {
+      if ( ! this.loggingService ) 
+      {
+         return;
+      }
+         
+      switch(this.config.type)
+      {
+         case  "Fan":
+         case  "Fanv1":
+         {
+            // Note: Instead of moment().unix(), I could have used: Math.floor(new Date()/1000)
+            //       but fakegato-history requires moment so lets go with it.
+            this.loggingService.addEntry({time: moment().unix(), status: this.on});
+            break;
+         }
+         case "GarageDoorOpener":
+         {
+            //console.log(moment().unix());
+
+            this.loggingService.addEntry({time: moment().unix(), status: this.currentDoorState});
+            break;
+         }
+         case  "Lightbulb":
+         {
+            this.loggingService.addEntry({time: moment().unix(), status: this.on});
+            break;
+         }
+         case "LockManagement":
+         {
+            this.loggingService.addEntry({time: moment().unix(), status: this.lockControlPoint});
+            break;
+         }
+         case "LockMechanism":
+         {
+            this.loggingService.addEntry({time: moment().unix(), status: this.lockCurrentState});
+            break;
+         }
+         case  "Outlet":
+         {
+            this.loggingService.addEntry({time: moment().unix(), status: this.on});
+            break;
+         } 
+         case  "Switch":
+         {
+            this.loggingService.addEntry({time: moment().unix(), status: this.on});
+            break;
+         }
+         case "Thermostat":
+         {
+            // Thermostats do not have valve positions in HAP Spec
+            this.loggingService.addEntry({time: moment().unix(), currentTemp:this.currentTemperature, setTemp:this.targetTemperature, valvePosition:this.currentHeatingCoolingState});
+            break;
+         }
+         case  "AirQualitySensor":
+         {
+            this.loggingService.addEntry({time: moment().unix(), temp:this.temperature, humidity:this.humidity, ppm:this.ppm});
+            break;
+         }
+         case  "SecuritySystem":
+         {   
+            this.loggingService.addEntry({time: moment().unix(), status: this.securitySystemCurrentState});
+            break;
+         }
+         case  "CarbonMonoxideDetector":
+         {
+            this.loggingService.addEntry({time: moment().unix(), temp:this.temperature, humidity:this.humidity, ppm:this.carbonMonoxideLevel});
+            break;
+         }
+         case  "ContactSensor":
+         {
+            this.loggingService.addEntry({time: moment().unix(), status: this.statusActive});
+            break;
+         }
+         case  "Door":
+         {
+            this.loggingService.addEntry({time: moment().unix(), status: this.currentPosition});
+            break;
+         }
+         case  "HumiditySensor":
+         {
+            this.loggingService.addEntry({time: moment().unix(), temp:this.temperature, humidity:this.humidity, ppm:this.ppm});
+            break;
+         }
+         case  "LeakSensor":
+         {
+            this.loggingService.addEntry({time: moment().unix(), status: this.statusActive});
+            break;
+         }
+         case  "LightSensor":
+         {
+            this.loggingService.addEntry({time: moment().unix(), status: this.statusActive});
+            break;
+         }
+         case  "MotionSensor":
+         {
+            this.loggingService.addEntry({time: moment().unix(), status: this.statusActive});
+            break;
+         }
+         case  "OccupancySensor":
+         {
+            this.loggingService.addEntry({time: moment().unix(), status: this.statusActive});
+            break;
+         }
+         case  "SmokeSensor":
+         {
+            this.loggingService.addEntry({time: moment().unix(), status: this.statusActive});
+            break;
+         }
+         case  "StatelessProgrammableSwitch":
+         {
+            break;
+         }
+         case  "TemperatureSensor":
+         {
+            this.loggingService.addEntry({time: moment().unix(), temp:this.temperature, humidity:this.humidity, ppm:this.ppm});
+            break;
+         }
+         case  "Window":
+         {
+            this.loggingService.addEntry({time: moment().unix(), status: this.currentPosition});
+            break;
+         }
+         case  "WindowCovering":
+         {
+            this.loggingService.addEntry({time: moment().unix(), status: this.currentPosition});
+            break;
+         }
+         case  "BatteryService":
+         {
+            this.loggingService.addEntry({time: moment().unix(), status: this.on});
+            break;
+         }
+         case  "CarbonDioxideSensor":
+         {
+            break;
+         }
+         case  "RTPCameraStreamManagement":
+         {
+            break;
+         }
+         case  "Microphone":
+         {
+            this.loggingService.addEntry({time: moment().unix(), status: this.mute});
+            break;
+         }
+         case  "Speaker":
+         {
+            this.loggingService.addEntry({time: moment().unix(), status: this.mute});
+            break;
+         }
+         case  "Doorbell":
+         {
+            this.loggingService.addEntry({time: moment().unix(), status: this.volume});
+            break;
+         }
+         case  "Fanv2":
+         {
+            this.loggingService.addEntry({time: moment().unix(), status: this.active});
+            break;
+         }
+         case  "Slat":
+         {
+            this.loggingService.addEntry({time: moment().unix(), status: this.currentSlatState});
+            break;
+         }
+         case  "FilterMaintenance":
+         {
+            this.loggingService.addEntry({time: moment().unix(), status: this.filterChangeIndication});
+            break;
+         }
+         case  "AirPurifier":
+         {
+            this.loggingService.addEntry({time: moment().unix(), status: this.active});
+            break;
+         }
+         case  "ServiceLabel":
+         {
+            break;
+         }
+         default:
+      }
+   }
 }
 
 function isNumeric(num){

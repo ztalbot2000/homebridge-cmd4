@@ -27,3 +27,19 @@ if (package.version.includes('1.2.3') ||
   console.log("   John Talbot");
   console.log("\nP.S. If you really enjoy homebridge-cmd4, please star it on GitHub\n");
 }
+
+if (package.version.includes('1.3.0'))
+{
+  console.log("\n%sHomeBridge-Cmd4%s", KUND, KEND);
+  console.log("%sWARNING%s: The included config.json file has been changed to fix an issue with spacing in the name 'My v1 Fan' to 'My_v1Fan'.", KYEL, KEND);
+  console.log("Spaces in the accessory name alters the number of shell command line arguments and should be used with caution; please copy it to:");
+  console.log("%s  $HOME/.homebridge/%s", KGRN, KEND);
+  console.log("or take the appropriate actions.");
+  console.log("\n");
+  console.log("This version adds in functionality of fakegato-history for the Eve app.\n");
+  console.log("Fakegato-history is quite new.  Please inform me if there is problems as fakegato-history evolves.\n");
+  console.log("\n");
+  console.log("\nThanks");
+  console.log("   John Talbot");
+  console.log("\nP.S. If you really enjoy homebridge-cmd4, please star it on GitHub\n");
+}

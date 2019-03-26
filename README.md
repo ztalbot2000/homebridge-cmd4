@@ -14,9 +14,11 @@ Table of Contents
 * [**About the Cmd4 Plugin**](#about-the-cmd4-plugin)
 * [**How the Cmd4 Plugin Works**](#how-the-cmd4-plugin-works)
 * [**Features**](#features)
+* [**Whats new in 2.30**](#whats-new-in-2-30)
 * [**Screenshots**](#screenshots)
 * [**Installation**](#installation)
 * [**Migrating from Homebridge-cmdswitch2**](#migrating-from-homebridge-cmdswitch2)
+* [**Adding in fakegato history**](#adding-in-fakegato-history)
 * [**Developer**](#developer)
 * [**Todo**](#todo)
 * [**Contributing**](#contributing)
@@ -54,7 +56,9 @@ Features
 
 Cmd4 can be configured to respond to actual devices directly or by modofying the script file it calls.
 
-
+Whats new in 2.30
+-----------------
+This release adds in fakegato-history support, which is available in the Eve app.
 
 Installation
 ------------
@@ -206,6 +210,11 @@ The corresponding script would then contain the following::
 
 # echo "\$1='$1' \$2='$2' \$3='$3' \$4='$4'"
 
+# This is only here for the first run.
+if [ ! -f "/tmp/fileVariableHolder" ]; then
+   echo "0" > "/tmp/fileVariableHolder"
+fi
+
 if [ "$1" = "Get" ]; then
    # This line is commented out and would be
    # interchangeable with ps4-waker. It is here
@@ -284,6 +293,31 @@ The second is the exit status of the script, which happens to be almost the same
    For On, the commands seem quite redundant, but On is a characteristic. Consider the following for a light where the characteristic is Brightness <BR>
       SHELL> node $HOME/./homebridge/Cmd4Scripts/State.js Set My_Dimmable_Light Brightness 40 <BR>
    This makes more sense. <BR>
+
+Adding in fakegato-history
+--------------------------
+See [fakegato-history](https://github.com/simont77/fakegato-history)<BR>
+<BR>
+Not all accessories are supported by Eve or fakegato-history. As more and more are, they can easily be added to Homebridge-Cmd4 if they are not already by following these step.<BR>
+
+### Step 1
+Add to the CMD4 platform config for history to be written to a local filesystem:<BR>
+"storage": "fs",<BR>
+"storagePath": ".homebridge/Cmd4StoragePath",<BR>
+For all supported devices to have fakegato-hitory or add the same lines to the accessory config for history of just that device.
+
+### And/Or Step 2
+Add to the CMD4 platform config for history to be written to Google Drive:<BR>
+"storage": "googleDrive",<BR>
+"folder": "a google folder",<BR>
+"keyPath": "a google key path",<BR>
+<BR>
+### Step 3
+For history to be collected you will have to enable polling and interval for the accesory, and according to the fakegato-hitory documents it should be less than 10 minutes (600 seconds).<BR>
+"polling": true,<BR>
+"interval": 540,<BR>
+<BR>
+Note: Any paths or folders must already exist for history to be stored by fakegato-history.<BR>
 
 Developer
 ---------
@@ -449,9 +483,11 @@ Link References
 [about-the-cmd4-plugin]:https://github.com/ztalbot2000/homebridge-cmd4#about-the-cmd4-plugin
 [how-the-cmd4-plugin-works]:https://github.com/ztalbot2000/homebridge-cmd4#how-the-cmd4-plugin-works
 [features]:https://github.com/ztalbot2000/homebridge-cmd4#features
+[whats new in 2.30]:https://github.com/ztalbot2000/homebridge-cmd4#whats-new-in-2-30
 [screenshots]:https://github.com/ztalbot2000/homebridge-cmd4#screenshots
 [installation]:https://github.com/ztalbot2000/homebridge-cmd4#installation
 [migrating-from-homebridge-cmdswitch2]:https://github.com/ztalbot2000/homebridge-cmd4#migrating-from-homebridge-cmdswitch2
+[adding in fakegato-history]:https://github.com/ztalbot2000/homebridge-cmd4#adding-in-fakegato-history
 [developer]:https://github.com/ztalbot2000/homebridge-cmd4#developer
 [todo]:https://github.com/ztalbot2000/homebridge-cmd4#todo
 [contributing]:https://github.com/ztalbot2000/homebridge-cmd4#contributing

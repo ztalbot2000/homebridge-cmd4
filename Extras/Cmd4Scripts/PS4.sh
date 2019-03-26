@@ -9,17 +9,20 @@
 #    $4 = <Device option>
 #
 # 2) For a set of On, the command issued would be:
-#    bash $HOME/.homebridge/Cmd4Scripts/PS4.sh Set PS_4 On false
+#    bash .homebridge/Cmd4Scripts/PS4.sh Set PS_4 On false
 #       or
-#    bash $HOME/.homebridge/Cmd4Scripts/PS4.sh Set PS_4 On true
+#    bash .homebridge/Cmd4Scripts/PS4.sh Set PS_4 On true
 #
 # 3) For a Get of On, the command issued would be:
-#    bash $HOME/.homebridge/Cmd4Scripts/PS4.sh Get PS_4 On
+#    bash .homebridge/Cmd4Scripts/PS4.sh Get PS_4 On
 #  
 #    Homebridge-cmd4 will interpret the result of false to be 1
 #    and true to be 0
 
-
+# This is only here for the first run.
+if [ ! -f "/tmp/fileVariableHolder" ]; then
+   echo "0" > "/tmp/fileVariableHolder"
+fi
 
 # echo "\$1='$1' \$2='$2' \$3='$3' \$4='$4'"
 
