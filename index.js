@@ -1914,9 +1914,12 @@ Cmd4Accessory.prototype = {
                callback( -1, 0 );
             } else {
                if (words.length >=2)
-                {
-                   self.log("Cmd4 - Warning, Retrieving %s, expected only one word value for: %s, using first of: '%s'", characteristicString,self.name, stdout);
-                }
+               {
+                  self.log("Cmd4 - Warning, Retrieving %s, expected only one word value for: %s, using first of: '%s'", characteristicString,self.name, stdout);
+               }
+                
+               self.log.debug("DEBUG Cmd4: getValue %s function for: %s returned: '%s'", characteristicString, self.name, words[0]);
+                
 
                var value;
 
@@ -1937,7 +1940,7 @@ Cmd4Accessory.prototype = {
                   // self.log( "Cmd4 - getValue Retrieved %s %s for: %s. translated to %f", characteristicString, words[0], self.name, value);
                   
                   // Store history using fakegato if set up
-                  self.addAccessoryHistoryEventLog();
+                  self.updateAccessoryAttribute(characteristicString, value);
 
                   callback(null,value);
                } else {
@@ -1949,7 +1952,7 @@ Cmd4Accessory.prototype = {
                      value = 1;
                      
                      // Store history using fakegato if set up
-                     self.addAccessoryHistoryEventLog();
+                     self.updateAccessoryAttribute(characteristicString, value);
                      
                      callback(null,value);
                   } else if (lowerCaseWord == "false" || lowerCaseWord == "off")
@@ -1958,7 +1961,7 @@ Cmd4Accessory.prototype = {
                      value = 0;
                      
                      // Store history using fakegato if set up
-                     self.addAccessoryHistoryEventLog();
+                     self.updateAccessoryAttribute(characteristicString, value);
                      
                      callback(null,value);
                   } else {
@@ -1966,7 +1969,7 @@ Cmd4Accessory.prototype = {
                      value = words[0];
                      
                      // Store history using fakegato if set up
-                     self.addAccessoryHistoryEventLog();
+                     self.updateAccessoryAttribute(characteristicString, value);
                      
                      callback(null,value);
                   }
@@ -3474,142 +3477,1002 @@ Cmd4Accessory.prototype = {
       }
    },
 
-   addAccessoryHistoryEventLog: function ()
-   {
-      if ( ! this.loggingService ) 
-      {
-         return;
-      }
-         
+   updateAccessoryAttribute: function (characteristicString, value)
+   {     
       switch(this.config.type)
       {
          case  "Fan":
          case  "Fanv1":
          {
-            // Note: Instead of moment().unix(), I could have used: Math.floor(new Date()/1000)
-            //       but fakegato-history requires moment so lets go with it.
-            this.loggingService.addEntry({time: moment().unix(), status: this.on});
+            switch ( characteristicString )
+            {
+               case "On": // (V1only)
+               {
+                  this.on = value;
+                  break;
+               }                              
+               case "RotationDirection": // Optional
+               {   
+                  this.rotationDirection = value;
+                  break;
+               }
+               case "RotationSpeed": // Optional
+               {   
+                  this.rotationSpeed = value;
+                  break;
+               }  
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);              
+            }
+            if ( this.loggingService ) 
+            {        
+               // Note: Instead of moment().unix(), I could have used: Math.floor(new Date()/1000)
+               //       but fakegato-history requires moment so lets go with it.
+               this.loggingService.addEntry({time: moment().unix(), status: this.on});
+            }
             break;
          }
          case "GarageDoorOpener":
          {
-            //console.log(moment().unix());
-
-            this.loggingService.addEntry({time: moment().unix(), status: this.currentDoorState});
+            switch ( characteristicString )
+            {
+               case "CurrentDoorState":
+               {   
+                  this.currentDoorState = value;                 
+                  break;
+               }
+               case "TargetDoorState":
+               {   
+                  this.targetDoorState = value;
+                  break;
+               }
+               case "ObstructionDetected":
+               {   
+                  this.obstructionDetected = value;
+                  break;
+               }
+               case "LockCurrentState": // Optional
+               {   
+                  this.lockCurrentState = value;
+                  break;
+               }
+               case "LockTargetState": // Optional
+               {   
+                  this.lockTargetState = value;
+                  break;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+               
+            }
+            if ( this.loggingService ) 
+            {                       
+               this.loggingService.addEntry({time: moment().unix(), status: this.currentDoorState});
+            }
             break;
          }
          case  "Lightbulb":
          {
-            this.loggingService.addEntry({time: moment().unix(), status: this.on});
+            switch ( characteristicString )
+            {
+               case "On":
+               {   
+                  this.on = value;
+                  break;
+               }
+               case "Brightness": // Optional
+               {   
+                  this.brightness = value;
+                  break;
+               }
+               case "Hue": // Optional
+               {   
+                  this.hue = value;
+                  break;
+               }
+               case "Saturation": // Optional
+               {   
+                  this.saturation = value;
+                  break;
+               }
+               case "ColorTemperature": // Optional
+               {   
+                  this.colorTemperature = value;
+                  break;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+            }
+            if ( this.loggingService ) 
+            {               
+               this.loggingService.addEntry({time: moment().unix(), status: this.on});
+            }
             break;
          }
          case "LockManagement":
          {
-            this.loggingService.addEntry({time: moment().unix(), status: this.lockControlPoint});
+            switch ( characteristicString )
+            {
+               case "LockControlPoint":
+               {   
+                  this.lockControlPoint = value;
+                  break;
+               }
+               case "Version":
+               {   
+                  this.version = value;
+                  break;
+               }
+               case "Logs": // Optional
+               {   
+                  this.logs = value;
+                  break;
+               }
+               case "AudioFeedback": // Optional
+               {   
+                  this.audioFeedback = value;
+                  break;
+               }
+               case "LockManagementAutoSecurityTimeout": // Optional
+               {   
+                  this.lockManagementAutoSecurityTimeout = value;
+                  break;
+               }
+               case "AdministorOnlyAccess": // Optional
+               {   
+                  this.administorOnlyAccess = value;
+                  break;
+               }
+               case "LockLastKnownAction": // Optional
+               {   
+                  this.lockLastKnownAction = value;
+                  break;
+               }
+               case "CurrentDoorState": // Optional
+               {   
+                  this.currentDoorState = value;
+                  break;
+               }
+               case "MotionDetected": // Optional
+               {   
+                  this.motionDetected = value;
+                  break;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+               
+            }
+            if ( this.loggingService ) 
+            {               
+               this.loggingService.addEntry({time: moment().unix(), status: this.lockControlPoint});
+            }
             break;
          }
          case "LockMechanism":
          {
-            this.loggingService.addEntry({time: moment().unix(), status: this.lockCurrentState});
+            switch ( characteristicString )
+            {
+               case "LockCurrentState":
+               {
+                  this.lockCurrentState = value;
+                  break;
+               }
+               case "LockTargetState":
+               {
+                  this.lockTargetState = value;
+                  break;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+               
+            }
+            if ( this.loggingService ) 
+            {             
+               this.loggingService.addEntry({time: moment().unix(), status: this.lockCurrentState});
+            }
             break;
          }
          case  "Outlet":
          {
-            this.loggingService.addEntry({time: moment().unix(), status: this.on});
+            switch ( characteristicString )
+            {
+               case "On":
+               {
+                  this.on = value;
+                  break;
+               }
+               case "OutletInUse":
+               {
+                  this.outletInUse = value;
+                  break;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+               
+            }
+            if ( this.loggingService ) 
+            {                       
+               this.loggingService.addEntry({time: moment().unix(), status: this.on});
+            }
             break;
          } 
          case  "Switch":
          {
-            this.loggingService.addEntry({time: moment().unix(), status: this.on});
+            switch ( characteristicString )
+            {
+               case "On":
+               {
+                  this.on = value;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+               
+            }
+            if ( this.loggingService ) 
+            {                    
+               this.loggingService.addEntry({time: moment().unix(), status: this.on});
+            }
             break;
          }
          case "Thermostat":
          {
-            // Thermostats do not have valve positions in HAP Spec
-            this.loggingService.addEntry({time: moment().unix(), currentTemp:this.currentTemperature, setTemp:this.targetTemperature, valvePosition:this.currentHeatingCoolingState});
+            switch ( characteristicString )
+            {
+               case "CurrentHeatingCoolingState":
+               {   
+                  this.currentHeatingCoolingState = value;
+                  break;
+               }
+               case "TargetHeatingCoolingState":
+               {   
+                  this.targetHeatingCoolingState = value;
+                  break;
+               }
+               case "CurrentTemperature":
+               {   
+                  this.currentTemperature = value;
+                  break;
+               }
+               case "TargetTemperature":
+               {   
+                  this.targetTemperature = value;
+                  break;
+               }
+               case "TemperatureDisplayUnits":
+               {   
+                  this.temperatureDisplayUnits = value;
+                  break;
+               }
+               case "CoolingThresholdTemperature": // Optional
+               {   
+                  this.coolingThresholdTemperature = value;
+                  break;
+               }
+               case "CurrentRelativeHumidity": // Optional
+               {   
+                  this.currentRelativeHumidity = value;
+                  break;
+               }
+               case "HeatingThresholdTemperature": // Optional
+               {   
+                  this.heatingThresholdTemperature = value;
+                  break;
+               }
+               case "TargettRelativeHumidity": // Optional
+               {   
+                  this.targettRelativeHumidity = value;
+                  break;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+              
+            }
+            if ( this.loggingService ) 
+            {                       
+               // Thermostats do not have valve positions in HAP Spec
+               this.loggingService.addEntry({time: moment().unix(), currentTemp:this.currentTemperature, setTemp:this.targetTemperature, valvePosition:this.currentHeatingCoolingState});
+            }
             break;
          }
          case  "AirQualitySensor":
          {
-            this.loggingService.addEntry({time: moment().unix(), temp:this.temperature, humidity:this.humidity, ppm:this.ppm});
+            switch ( characteristicString )
+            {
+               case "AirQuality":
+               {   
+                  this.airQuality = value;
+                  break;
+               }
+               case "OzoneDensity": // Optional
+               {   
+                  this.OzoneDensity = value;
+                  break;
+               }
+               case "NitrogenDioxideDensity": // Optional
+               {   
+                  this.nitrogenDioxideDensity = value;
+                  break;
+               }
+               case "SulphurDioxideDensity": // Optional
+               {   
+                  this.sulphurDioxideDensity = value;
+                  break;
+               }
+               case "PM2_5Density": // Optional
+               {   
+                  this.PM2_5Density = value;
+                  break;
+               }
+               case "PM10Density": // Optional
+               {   
+                  this.PM10Density = value;
+                  break;
+               }
+               case "VOCDensity": // Optional
+               {   
+                  this.VOCDensity = value;
+                  break;
+               }
+               case "StatusActive": // Optional
+               {   
+                  this.statusActive = value;
+                  break;
+               }
+               case "StatusFault": // Optional
+               {   
+                  this.statusFault = value;
+                  break;
+               }
+               case "StatusTampered": // Optional
+               {   
+                  this.statusTampered = value;
+                  break;
+               }
+               case "StatusLowBattery": // Optional
+               {   
+                  this.statusLowBattery = value;
+                  break;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+               
+            }
+            if ( this.loggingService ) 
+            {                      
+               this.loggingService.addEntry({time: moment().unix(), temp:this.temperature, humidity:this.humidity, ppm:this.ppm});
+            }
             break;
          }
          case  "SecuritySystem":
          {   
-            this.loggingService.addEntry({time: moment().unix(), status: this.securitySystemCurrentState});
+            switch ( characteristicString )
+            {
+               case "SecuritySystemCurrentState":
+               {   
+                  this.securitySystemCurrentState = value;
+                  break;
+               }
+               case "SecuritySystemTargetState":
+               {   
+                  this.securitySystemTargetState = value;
+                  break;
+               }
+               case "SecuritySystemAlarmType": // Optional
+               {   
+                  this.securitySystemAlarmType = value;
+                  break;
+               }
+               case "StatusFault": // Optional
+               {   
+                  this.statusFault = value;
+                  break;
+               }
+               case "StatusTampered": // Optional
+               {   
+                  this.statusTampered = value;
+                  break;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+               
+            }
+            if ( this.loggingService ) 
+            {                
+               this.loggingService.addEntry({time: moment().unix(), status: this.securitySystemCurrentState});
+            }
             break;
          }
          case  "CarbonMonoxideDetector":
          {
-            this.loggingService.addEntry({time: moment().unix(), temp:this.temperature, humidity:this.humidity, ppm:this.carbonMonoxideLevel});
+            switch ( characteristicString )
+            {
+               case "CarbonMonoxideDetected":
+               {   
+                  this.carbonMonoxideDetected = value;
+                  break;
+               }
+               case "StatusActive": // Optional
+               {   
+                  this.statusActive = value;
+                  break;
+               }
+               case "StatusFault": // Optional
+               {   
+                  this.statusFault = value;
+                  break;
+               }
+               case "StatusTampered": // Optional
+               {   
+                  this.statusTampered = value;
+                  break;
+               }
+               case "StatusLowBattery": // Optional
+               {   
+                  this.statusLowBattery = value;
+                  break;
+               }
+               case "CarbonMonoxideLevel": // Optional
+               {
+                  this.carbonMonoxideLevel = value;
+                  break;
+               }
+               case "CarbonMonoxidePeakLevel":
+               {
+                  this.carbonMonoxidePeakLevel = value;
+                  break;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+               
+            }
+            if ( this.loggingService ) 
+            {                       
+               this.loggingService.addEntry({time: moment().unix(), temp:this.temperature, humidity:this.humidity, ppm:this.carbonMonoxideLevel});
+            }
             break;
          }
          case  "ContactSensor":
          {
-            this.loggingService.addEntry({time: moment().unix(), status: this.statusActive});
+            switch ( characteristicString )
+            {
+               case "ContactSensorState":
+               {
+                  this.contactSensorState = value;
+                  break;
+               }
+               case "StatusActive":
+               {
+                  this.statusActive = value;
+                  break;
+               }
+               case "StatusFault": // Optional
+               {   
+                  this.statusFault = value;
+                  break;
+               }
+               case "StatusTampered": // Optional
+               {   
+                  this.statusTampered = value;
+                  break;
+               }
+               case "StatusLowBattery": // Optional
+               {   
+                  this.statusLowBattery = value;
+                  break;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+               
+            }
+            if ( this.loggingService ) 
+            {                       
+               this.loggingService.addEntry({time: moment().unix(), status: this.statusActive});
+            }
             break;
          }
          case  "Door":
          {
-            this.loggingService.addEntry({time: moment().unix(), status: this.currentPosition});
+            switch ( characteristicString )
+            {
+               case "CurrentPosition":
+               {
+                  this.currentPosition = value;
+                  break;
+               }
+               case "TargetPosition":
+               {
+                  this.targetPosition = value;
+                  break;
+               }
+               case "PositionState":
+               {
+                  this.positionState = value;
+                  break;
+               }
+               case "HoldPosition": // Optional
+               {
+                  this.holdPosition = value;
+                  break;
+               }
+               case "ObstructionDetected": // Optional
+               {
+                  this.obstructionDetected = value;
+                  break;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+               
+            }
+            if ( this.loggingService ) 
+            {                       
+               this.loggingService.addEntry({time: moment().unix(), status: this.currentPosition});
+            }
             break;
          }
          case  "HumiditySensor":
          {
-            this.loggingService.addEntry({time: moment().unix(), temp:this.temperature, humidity:this.humidity, ppm:this.ppm});
+            switch ( characteristicString )
+            {
+               case "CurrentRelativeHumidity":
+               {
+                  this.currentRelativeHumidity = value;
+                  break;
+               }
+               case "StatusActive": // Optional
+               {
+                  this.statusActive = value;
+                  break;
+               }
+               case "StatusFault": // Optional
+               {   
+                  this.statusFault = value;
+                  break;
+               }
+               case "StatusTampered": // Optional
+               {   
+                  this.statusTampered = value;
+                  break;
+               }
+               case "StatusLowBattery": // Optional
+               {   
+                  this.statusLowBattery = value;
+                  break;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+               
+            }
+            if ( this.loggingService ) 
+            {                       
+               this.loggingService.addEntry({time: moment().unix(), temp:this.temperature, humidity:this.humidity, ppm:this.ppm});
+            }
             break;
          }
          case  "LeakSensor":
          {
-            this.loggingService.addEntry({time: moment().unix(), status: this.statusActive});
+            switch ( characteristicString )
+            {
+               case "LeakDetected":
+               {
+                  this.leakDetected = value;
+                  break;
+               }
+               case "StatusActive": // Optional
+               {
+                  this.statusActive = value;
+                  break;
+               }
+               case "StatusFault": // Optional
+               {   
+                  this.statusFault = value;
+                  break;
+               }
+               case "StatusTampered": // Optional
+               {   
+                  this.statusTampered = value;
+                  break;
+               }
+               case "StatusLowBattery": // Optional
+               {   
+                  this.statusLowBattery = value;
+                  break;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+               
+            }
+            if ( this.loggingService ) 
+            {                       
+               this.loggingService.addEntry({time: moment().unix(), status: this.statusActive});
+            }
             break;
          }
          case  "LightSensor":
          {
-            this.loggingService.addEntry({time: moment().unix(), status: this.statusActive});
+            switch ( characteristicString )
+            {
+               case "CurrentAmbientLightLevel":
+               {
+                  this.currentAmbientLightLevel = value;
+                  break;
+               }
+               case "StatusActive": // Optional
+               {
+                  this.statusActive = value;
+                  break;
+               }
+               case "StatusFault": // Optional
+               {   
+                  this.statusFault = value;
+                  break;
+               }
+               case "StatusTampered": // Optional
+               {   
+                  this.statusTampered = value;
+                  break;
+               }
+               case "StatusLowBattery": // Optional
+               {   
+                  this.statusLowBattery = value;
+                  break;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+               
+            }
+            if ( this.loggingService ) 
+            {                       
+               this.loggingService.addEntry({time: moment().unix(), status: this.statusActive});
+            }
             break;
          }
          case  "MotionSensor":
          {
-            this.loggingService.addEntry({time: moment().unix(), status: this.statusActive});
+            switch ( characteristicString )
+            {               
+               case "MotionDetected":
+               {
+                  this.motionDetected = value;
+                  break;
+               }
+               case "StatusActive": // Optional
+               {
+                  this.statusActive = value;
+                  break;
+               }
+               case "StatusFault": // Optional
+               {   
+                  this.statusFault = value;
+                  break;
+               }
+               case "StatusTampered": // Optional
+               {   
+                  this.statusTampered = value;
+                  break;
+               }
+               case "StatusLowBattery": // Optional
+               {   
+                  this.statusLowBattery = value;
+                  break;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+               
+            }
+            if ( this.loggingService ) 
+            {                      
+               this.loggingService.addEntry({time: moment().unix(), status: this.statusActive});
+            }
             break;
          }
          case  "OccupancySensor":
          {
-            this.loggingService.addEntry({time: moment().unix(), status: this.statusActive});
+            switch ( characteristicString )
+            {                              
+               case "occupancyDetected":
+               {
+                  this.occupancyDetected = value;
+                  break;
+               }
+               case "StatusActive": // Optional
+               {
+                  this.statusActive = value;
+                  break;
+               }
+               case "StatusFault": // Optional
+               {   
+                  this.statusFault = value;
+                  break;
+               }
+               case "StatusTampered": // Optional
+               {   
+                  this.statusTampered = value;
+                  break;
+               }
+               case "StatusLowBattery": // Optional
+               {   
+                  this.statusLowBattery = value;
+                  break;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+            }
+            if ( this.loggingService ) 
+            {                 
+               this.loggingService.addEntry({time: moment().unix(), status: this.statusActive});
+            }
             break;
          }
          case  "SmokeSensor":
          {
-            this.loggingService.addEntry({time: moment().unix(), status: this.statusActive});
+            switch ( characteristicString )
+            {               
+               case "SmokeDetected":
+               {
+                  this.smokeDetected = value;
+                  break;
+               }
+               case "StatusActive": // Optional
+               {
+                  this.statusActive = value;
+                  break;
+               }
+               case "StatusFault": // Optional
+               {   
+                  this.statusFault = value;
+                  break;
+               }
+               case "StatusTampered": // Optional
+               {   
+                  this.statusTampered = value;
+                  break;
+               }
+               case "StatusLowBattery": // Optional
+               {   
+                  this.statusLowBattery = value;
+                  break;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+            }
+            if ( this.loggingService ) 
+            {                       
+               this.loggingService.addEntry({time: moment().unix(), status: this.statusActive});
+            }
             break;
          }
          case  "StatelessProgrammableSwitch":
          {
+            switch ( characteristicString )
+            {
+               case "ProgrammableSwitchEvent":
+               {
+                  this.programmableSwitchEvent = value;
+                  break;
+               }
+               case "ServiceLabelIndex": // Optional
+               {
+                  this.serviceLabelIndex = value;
+                  break;
+               }
+               case "ServiceLabelNamespace": // Optional
+               {
+                  this.serviceLabelNamespace = value;
+                  break;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+               
+            }
             break;
          }
          case  "TemperatureSensor":
          {
-            this.loggingService.addEntry({time: moment().unix(), temp:this.temperature, humidity:this.humidity, ppm:this.ppm});
+            switch ( characteristicString )
+            {                             
+               case "CurrentTemperature":
+               {
+                  this.currentTemperature = value;
+                  break;
+               }
+               case "StatusActive": // Optional
+               {
+                  this.statusActive = value;
+                  break;
+               }
+               case "StatusFault": // Optional
+               {   
+                  this.statusFault = value;
+                  break;
+               }
+               case "StatusTampered": // Optional
+               {   
+                  this.statusTampered = value;
+                  break;
+               }
+               case "StatusLowBattery": // Optional
+               {   
+                  this.statusLowBattery = value;
+                  break;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+            }
+            if ( this.loggingService ) 
+            {                      
+               this.loggingService.addEntry({time: moment().unix(), temp:this.temperature, humidity:this.humidity, ppm:this.ppm});
+            }
             break;
          }
          case  "Window":
          {
-            this.loggingService.addEntry({time: moment().unix(), status: this.currentPosition});
+            switch ( characteristicString )
+            {
+               case "CurrentPosition":
+               {
+                  this.currentPosition = value;
+                  break;
+               }
+               case "TargetPosition":
+               {
+                  this.targetPosition = value;
+                  break;
+               }
+               case "PositionState":
+               {
+                  this.positionState = value;
+                  break;
+               }
+               case "HoldPosition": // Optional
+               {
+                  this.holdPosition = value;
+                  break;
+               }
+               case "ObstructionDetected": // Optional
+               {
+                  this.obstructionDetected = value;
+                  break;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+               
+            }
+            if ( this.loggingService ) 
+            {                       
+               this.loggingService.addEntry({time: moment().unix(), status: this.currentPosition});
+            }
             break;
          }
          case  "WindowCovering":
          {
-            this.loggingService.addEntry({time: moment().unix(), status: this.currentPosition});
+            switch ( characteristicString )
+            {
+               case "TargetPosition":
+               {
+                  this.targetPosition = value;
+                  break;
+               }
+               case "CurrentPosition":
+               {
+                  this.currentPosition = value;
+                  break;
+               }
+               case "PositionState":
+               {
+                  this.positionState = value;
+                  break;
+               }
+               case "HoldPosition": // Optional
+               {
+                  this.holdPosition = value;
+                  break;
+               }
+               case "CurrentHorizontalTiltAngle": // Optional
+               {
+                  this.currentHorizontalTiltAngle = value;
+                  break;
+               }
+               case "TargetHorizontalTiltAngle": // Optional
+               {
+                  this.targetHorizontalTiltAngle = value;
+                  break;
+               }
+               case "CurrentVerticalTiltAngle": // Optional
+               {
+                  this.currentVerticalTiltAngle = value;
+                  break;
+               }
+               case "TargetVerticalTiltAngle": // Optional
+               {
+                  this.targetVerticalTiltAngle = value;
+                  break;
+               }
+               case "ObstructionDetected": // Optional
+               {
+                  this.obstructionDetected = value;
+                  break;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+               
+            }
+            if ( this.loggingService ) 
+            {                       
+               this.loggingService.addEntry({time: moment().unix(), status: this.currentPosition});
+            }
             break;
          }
          case  "BatteryService":
          {
-            this.loggingService.addEntry({time: moment().unix(), status: this.on});
+            switch ( characteristicString )
+            {
+               case "BatteryLevel":
+               {
+                  this.batteryLevel = value;
+                  break;
+               }
+               case "ChargingState":
+               {
+                  this.chargingState = value;
+                  break;
+               }
+               case "StatusLowBattery":
+               {
+                  this.statusLowBattery = value;
+                  break;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+               
+            }
+            if ( this.loggingService ) 
+            {                       
+               this.loggingService.addEntry({time: moment().unix(), status: this.on});
+            }
             break;
          }
          case  "CarbonDioxideSensor":
          {
+            switch ( characteristicString )
+            {                            
+               case "CarbonDioxideDetected":
+               {
+                  this.carbonDioxideDetected = value;
+                  break;
+               }
+               case "StatusActive": // Optional
+               {
+                  this.statusActive = value;
+                  break;
+               }
+               case "statusFault": // Optional
+               {   
+                  this.statusFault = value;
+                  break;
+               }
+               case "StatusTampered": // Optional
+               {   
+                  this.statusTampered = value;
+                  break;
+               }
+               case "StatusLowBattery": // Optional
+               {   
+                  this.statusLowBattery = value;
+                  break;
+               }
+               case "CarbonDioxideLevel": // Optional
+               {
+                  this.carbonDioxideLevel = value;
+                  break;
+               }
+               case "CarbonDioxidePeakLevel": // Optional
+               {
+                  this.carbonDioxidePeakLevel = value;
+                  break;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+            }
             break;
          }
          case  "RTPCameraStreamManagement":
@@ -3618,44 +4481,256 @@ Cmd4Accessory.prototype = {
          }
          case  "Microphone":
          {
-            this.loggingService.addEntry({time: moment().unix(), status: this.mute});
+            switch ( characteristicString)
+            {
+               case "Mute":
+               {
+                  this.mute = value;
+                  break;
+               }
+               case "Volume":
+               {
+                  this.volume = value;
+                  break;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+               
+            }
+            if ( this.loggingService ) 
+            {                       
+               this.loggingService.addEntry({time: moment().unix(), status: this.mute});
+            }
             break;
          }
          case  "Speaker":
          {
-            this.loggingService.addEntry({time: moment().unix(), status: this.mute});
+            switch ( characteristicString )
+            {
+               case "Mute":
+               {
+                  this.mute = value;
+                  break;
+               }
+               case "Volume":
+               {
+                  this.volume = value;
+                  break;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+               
+            }
+            if ( this.loggingService ) 
+            {                       
+               this.loggingService.addEntry({time: moment().unix(), status: this.mute});
+            }
             break;
          }
          case  "Doorbell":
          {
-            this.loggingService.addEntry({time: moment().unix(), status: this.volume});
+            switch ( characteristicString )
+            {
+               case "ProgrammableSwitchEvent":
+               {
+                  this.programmableSwitchEvent = value;
+                  break;
+               }
+               case "Volume": // Optional
+               {
+                  this.volume = value;
+                  break;
+               }
+               case "Brightness": // Optional
+               {
+                  this.brightness = value;
+                  break;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+                  
+            }
+            if ( this.loggingService ) 
+            {                       
+               this.loggingService.addEntry({time: moment().unix(), status: this.volume});
+            }
             break;
          }
          case  "Fanv2":
          {
-            this.loggingService.addEntry({time: moment().unix(), status: this.active});
+            switch ( characteristicString )
+            {
+               case "On": // (V1only)
+               {
+                  this.on = value;
+                  break;
+               }
+               case "Active": // (V2)
+               {
+                  this.active = value;
+                  break;
+               }
+               case "CurrentFanState": // Optional (V2)
+               {   
+                  this.currentFanState = value;
+                  break;
+               }
+               case "TargetFanState": // Optional (V2)
+               {   
+                  this.targetFanState = value;
+                  break;
+               }
+               case "RotationDirection": // Optional
+               {   
+                  this.rotationDirection = value;
+                  break;
+               }
+               case "RotationSpeed": // Optional
+               {  
+                  this.rotationSpeed = value;
+                  break;
+               }
+               case "SwingMode": // Optional (V2)
+               {    
+                  this.swingMode = value;
+                  break;
+               }
+               case "LockPhysicalControls": // Optional (V2)
+               {
+                  this.lockPhysicalControls = value;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+            }
+            if ( this.loggingService ) 
+            {                       
+               this.loggingService.addEntry({time: moment().unix(), status: this.active});
+            }
             break;
          }
          case  "Slat":
          {
-            this.loggingService.addEntry({time: moment().unix(), status: this.currentSlatState});
+            switch ( characteristicString )
+            {
+               case "CurrentSlatType":
+               {
+                  this.currentSlatType = value;
+                  break;
+               }
+               case "SlatType":
+               {
+                  this.slatType = value;
+                  break;
+               }
+               case "SwingMode": // Optional
+               {
+                  this.swingMode = value;
+                  break;
+               }
+               case "CurrentTiltAngle": // Optional
+               {
+                  this.currentTiltAngle = value;
+                  break;
+               }
+               case "TargetTiltAngle": // Optional
+               {
+                  this.targetTiltAngle = value;
+                  break;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+               
+            }
+            if ( this.loggingService ) 
+            {                       
+               this.loggingService.addEntry({time: moment().unix(), status: this.currentSlatState});
+            }
             break;
          }
          case  "FilterMaintenance":
          {
-            this.loggingService.addEntry({time: moment().unix(), status: this.filterChangeIndication});
+            switch ( characteristicString )
+            {
+               case "FilterChangeIndication":
+               {
+                  this.filterChangeIndication = value;
+                  break;
+               }
+               case "FilterLifeLevel": // Optional
+               {
+                  this.filterLifeLevel = value;
+                  break;
+               }
+               case "ResetFilterIndication": // Optional
+               {
+                  this.resetFilterIndication = value;
+                  break;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+               
+            }
+            if ( this.loggingService ) 
+            {                       
+               this.loggingService.addEntry({time: moment().unix(), status: this.filterChangeIndication});
+            }
             break;
          }
          case  "AirPurifier":
          {
-            this.loggingService.addEntry({time: moment().unix(), status: this.active});
+            switch ( characteristicString )
+            {
+               case "Active":
+               {
+                  this.active = value;
+                  break;
+               }
+               case "CurrentAirPurifierState":
+               {
+                  this.currentAirPurifierState = value;
+                  break;
+               }
+               case "TargetAirPurifierState":
+               {
+                  this.targetAirPurifierState = value;
+                  break;
+               }
+               case "RotationSpeed": // Optional
+               {
+                  this.rotationSpeed = value;
+                  break;
+               }
+               case "SwingMode": // Optional
+               {
+                  this.swingMode = value;
+                  break;
+               }
+               case "LockPhysicalControls": // Optional
+               {
+                  this.lockPhysicalControls = value;
+                  break;
+               }
+               default:
+                  this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
+               
+            }
+            if ( this.loggingService ) 
+            {                       
+               this.loggingService.addEntry({time: moment().unix(), status: this.active});
+            }
             break;
          }
          case  "ServiceLabel":
          {
+            //switch ( characteristicString )
+            //{
+            //   this.value = value;
+            //}
             break;
          }
          default:
+            this.log("Cmd4 Warning: Unknown accessory:'%s'", this.config.type);
+         
       }
    }
 }

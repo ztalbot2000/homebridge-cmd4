@@ -18,8 +18,8 @@
                 "name": "PS_4",
                 "on": false,
                 "state_cmd": "bash .homebridge/Cmd4Scripts/PS4.sh",
-                "polling": true,
-                "interval": 5,
+                "polling": false,
+                "interval": 540,
                 "timeout": 2000
              },
              {
@@ -28,7 +28,7 @@
                 "rotationDirection": 1,
                 "rotationSpeed": 100,
                 "stateChangeResponseTime": 1,
-                "polling": true,
+                "polling": false,
                 "interval": 10,
                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
              },
@@ -60,7 +60,7 @@
               {
                  "type": "Lightbulb",
                  "name": "My_OnOff_Light",
-                 "polling": true,
+                 "polling": false,
                  "interval": 540,
                  "stateChangeResponseTime": 1,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -72,7 +72,7 @@
                  "saturation":8,
                  "hue":8,
                  "colorTemperature":8,
-                 "polling": true,
+                 "polling": false,
                  "interval": 540,
                  "stateChangeResponseTime": 1,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -88,7 +88,7 @@
                  "lockLastKnownAction": 0,
                  "currentDoorState": 0,
                  "motionDetected": 0,
-                 "polling": true,
+                 "polling": false,
                  "interval": 540,
                  "stateChangeResponseTime": 1,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -98,7 +98,7 @@
                  "name": "My_LockMechanism",
                  "lockCurrentState": 0,
                  "lockTargetState": 0,
-                 "polling": true,
+                 "polling": false,
                  "interval": 540,
                  "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -108,7 +108,7 @@
                  "name": "My_Outlet",
                  "on": false,
                  "outletInUse": false,
-                 "polling": true,
+                 "polling": false,
                  "interval": 540,
                  "stateChangeResponseTime": 1,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -117,7 +117,7 @@
                  "type": "Switch",
                  "name": "My_Switch",
                  "on": false,
-                 "polling": true,
+                 "polling": false,
                  "interval": 540,
                  "stateChangeResponseTime": 1,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -136,7 +136,7 @@
                  "targettRelativeHumidity": 60.2,
                  "timeout": 3000,
                  "polling": true,
-                 "interval": 100,
+                 "interval": 60,
                  "stateChangeResponseTime": 10,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js",
                  "storage": "fs",
@@ -156,7 +156,7 @@
                  "statusFault": 0,
                  "statusTampered": 0,
                  "statusLowBattery": 0,
-                 "polling": true,
+                 "polling": false,
                  "interval": 540,
                  "stateChangeResponseTime": 1,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -169,7 +169,7 @@
                  "statusFault": 0,
                  "statusTampered": 0,
                  "timeout": 3000,
-                 "polling": true,
+                 "polling": false,
                  "interval": 540,
                  "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -184,7 +184,7 @@
                  "statusLowBattery": 0,
                  "carbonMonoxideLevel": 0,
                  "carbonMonoxidePeakLevel": 0,
-                 "polling": true,
+                 "polling": false,
                  "interval": 540,
                  "stateChangeResponseTime": 1,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -197,7 +197,7 @@
                  "statusFault": 0,
                  "statusTampered": 0,
                  "statusLowBattery": 0,
-                 "polling": true,
+                 "polling": false,
                  "interval": 540,
                  "stateChangeResponseTime": 1,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -210,7 +210,7 @@
                  "positionState": 0,
                  "holdPosition": 0,
                  "obstructionDetected": 0,
-                 "polling": true,
+                 "polling": false,
                  "interval": 540,
                  "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -223,7 +223,7 @@
                  "statusFault": 0,
                  "statusTampered": 0,
                  "statusLowBattery": 0,
-                 "polling": true,
+                 "polling": false,
                  "interval": 540,
                  "stateChangeResponseTime": 1,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -236,7 +236,7 @@
                  "statusFault": 0,
                  "statusTampered": 0,
                  "statusLowBattery": 0,
-                 "polling": true,
+                 "polling": false,
                  "interval": 540,
                  "stateChangeResponseTime": 1,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -249,7 +249,7 @@
                  "statusFault": 0,
                  "statusTampered": 0,
                  "statusLowBattery": 0,
-                 "polling": true,
+                 "polling": false,
                  "interval": 540,
                  "stateChangeResponseTime": 1,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -262,7 +262,7 @@
                  "statusFault": 0,
                  "statusTampered": 0,
                  "statusLowBattery": 0,
-                 "polling": true,
+                 "polling": false,
                  "interval": 540,
                  "stateChangeResponseTime": 1,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -275,7 +275,7 @@
                  "statusFault": 0,
                  "statusTampered": 0,
                  "statusLowBattery": 0,
-                 "polling": true,
+                 "polling": false,
                  "interval": 540,
                  "stateChangeResponseTime": 1,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -288,7 +288,7 @@
                  "statusFault": 0,
                  "statusTampered": 0,
                  "statusLowBattery": 0,
-                 "polling": true,
+                 "polling": false,
                  "interval": 60,
                  "stateChangeResponseTime": 1,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -323,7 +323,7 @@
                  "positionState": 2,
                  "holdPosition": 0,
                  "obstructionDetected": 0,
-                 "polling": true,
+                 "polling": false,
                  "interval": 540,
                  "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -340,7 +340,7 @@
                  "currentVerticalTiltAngle": 0,
                  "targetVerticalTiltAngle": 0,
                  "obstructionDetected": 0,
-                 "polling": true,
+                 "polling": false,
                  "interval": 540,
                  "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -351,7 +351,7 @@
                  "batteryLevel": 50,
                  "chargingState": 0,
                  "statusLowBattery": 0,
-                 "polling": true,
+                 "polling": false,
                  "interval": 540,
                  "stateChangeResponseTime": 1,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -366,7 +366,7 @@
                  "statusLowBattery": 0,
                  "carbonDioxideLevel": 0,
                  "carbonDioxidePeakLevel": 0,
-                 "polling": true,
+                 "polling": false,
                  "interval": 540,
                  "stateChangeResponseTime": 1,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -376,7 +376,7 @@
                  "name": "My_Microphone",
                  "mute": 0,
                  "volume": 0,
-                 "polling": true,
+                 "polling": false,
                  "interval": 540,
                  "stateChangeResponseTime": 1,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -386,7 +386,7 @@
                  "name": "My_Speaker",
                  "mute": 0,
                  "volume": 0,
-                 "polling": true,
+                 "polling": false,
                  "interval": 540,
                  "stateChangeResponseTime": 1,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -397,7 +397,7 @@
                  "programmableSwitchEvent": 0,
                  "volume": 0,
                  "brightness": 0,
-                 "polling": true,
+                 "polling": false,
                  "interval": 540,
                  "stateChangeResponseTime": 1,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -410,7 +410,7 @@
                  "swingMode": 0,
                  "currentTiltAngle": 0,
                  "targetTiltAngle": 0,
-                 "polling": true,
+                 "polling": false,
                  "interval": 540,
                  "stateChangeResponseTime": 1,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -421,7 +421,7 @@
                  "filterChangeIndication": 0,
                  "filterLifeLevel": 50,
                  "resetFilterIndication": 1,
-                 "polling": true,
+                 "polling": false,
                  "interval": 540,
                  "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -435,7 +435,7 @@
                  "rotationSpeed": 0,
                  "swingMode": 0,
                  "lockPhysicalControls": 0,
-                 "polling": true,
+                 "polling": false,
                  "interval": 540,
                  "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
