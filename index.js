@@ -781,7 +781,7 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
          this.setupThermostatService(this.service);
          
          // Eve Room (TempSensor, HumiditySensor and AirQuality Services)
-         // i.e. loggingService.addEntry({time: moment().unix(), currentTemp:this.currentTemp, setTemp:this.setTemp, valvePosition:this.valvePosition});
+         // i.e. loggingService.addEntry({time: moment().unix(), temp:this.temperature, humidity:this.humidity, ppm:this.ppm});
          this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_THERMO);
          break;
       }
@@ -835,9 +835,9 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
          this.service = new Service.AirQualitySensor(this.name, this.name);
          this.setupAirQualitySensorService(this.service);
          
-         // Eve Room (TempSensor, HumiditySensor and AirQuality Services)
-         // i.e. loggingService.addEntry({time: moment().unix(), temp:this.temperature, humidity:this.humidity, ppm:this.ppm});
-         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_ROOM);
+         // Eve Door (ContactSensor service)
+         // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_DOOR);
          break;
       }
       case "SecuritySystem":
@@ -903,9 +903,9 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
          this.service = new Service.CarbonMonoxideSensor(this.name, this.name);
          this.setupCarbonMonoxideSensorService(this.service);
          
-         // Eve Room (TempSensor, HumiditySensor and AirQuality Services)
-         // i.e. loggingService.addEntry({time: moment().unix(), temp:this.temperature, humidity:this.humidity, ppm:this.ppm});  
-         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_ROOM);
+         // Eve Door (ContactSensor service)
+         // i.e loggingService.addEntry({time: moment().unix(), status: this.status});  
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_DOOR);
          break;
       }
       case "ContactSensor":
@@ -1348,9 +1348,9 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
          this.service = new Service.CarbonDioxideSensor(this.name, this.name);
          this.setupCarbonDioxideSensorService(this.service);
          
-         // Eve Room (TempSensor, HumiditySensor and AirQuality Services)    
-         // i.e. loggingService.addEntry({time: moment().unix(), temp:this.temperature, humidity:this.humidity, ppm:this.ppm});
-         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_ROOM);
+         // Eve Door (ContactSensor service)
+         // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+         this.setupAccessoryFakeGatoService(FAKEGATO_TYPE_DOOR);
          break;
       }
       case "CameraRTPStreamManagement":
@@ -3508,6 +3508,9 @@ Cmd4Accessory.prototype = {
             {        
                // Note: Instead of moment().unix(), I could have used: Math.floor(new Date()/1000)
                //       but fakegato-history requires moment so lets go with it.
+               
+               // Eve Door (ContactSensor service)
+               // i.e loggingService.addEntry({time: moment().unix(), status: this.status});         
                this.loggingService.addEntry({time: moment().unix(), status: this.on});
             }
             break;
@@ -3547,6 +3550,9 @@ Cmd4Accessory.prototype = {
             }
             if ( this.loggingService ) 
             {                       
+               // Eve Door (ContactSensor service)
+               // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+               
                this.loggingService.addEntry({time: moment().unix(), status: this.currentDoorState});
             }
             break;
@@ -3585,6 +3591,9 @@ Cmd4Accessory.prototype = {
             }
             if ( this.loggingService ) 
             {               
+               // Eve Door (ContactSensor service)
+               // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+               
                this.loggingService.addEntry({time: moment().unix(), status: this.on});
             }
             break;
@@ -3644,6 +3653,9 @@ Cmd4Accessory.prototype = {
             }
             if ( this.loggingService ) 
             {               
+               // Eve Door (ContactSensor service)
+               // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+               
                this.loggingService.addEntry({time: moment().unix(), status: this.lockControlPoint});
             }
             break;
@@ -3668,6 +3680,9 @@ Cmd4Accessory.prototype = {
             }
             if ( this.loggingService ) 
             {             
+               // Eve Door (ContactSensor service)
+               // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+               
                this.loggingService.addEntry({time: moment().unix(), status: this.lockCurrentState});
             }
             break;
@@ -3692,6 +3707,9 @@ Cmd4Accessory.prototype = {
             }
             if ( this.loggingService ) 
             {                       
+               // Eve Door (ContactSensor service)
+               // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+               
                this.loggingService.addEntry({time: moment().unix(), status: this.on});
             }
             break;
@@ -3710,6 +3728,9 @@ Cmd4Accessory.prototype = {
             }
             if ( this.loggingService ) 
             {                    
+               // Eve Door (ContactSensor service)
+               // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+               
                this.loggingService.addEntry({time: moment().unix(), status: this.on});
             }
             break;
@@ -3768,9 +3789,11 @@ Cmd4Accessory.prototype = {
               
             }
             if ( this.loggingService ) 
-            {                       
-               // Thermostats do not have valve positions in HAP Spec
-               this.loggingService.addEntry({time: moment().unix(), currentTemp:this.currentTemperature, setTemp:this.targetTemperature, valvePosition:this.currentHeatingCoolingState});
+            {
+               // Eve Room (TempSensor, HumiditySensor and AirQuality Services) 
+               // i.e. loggingService.addEntry({time: moment().unix(), temp:this.temperature, humidity:this.humidity, ppm:this.ppm});
+
+               this.loggingService.addEntry({time: moment().unix(), temp:this.currentTemperature, humidity:this.currentRelativeHumidity, ppm:0});
             }
             break;
          }
@@ -3838,8 +3861,12 @@ Cmd4Accessory.prototype = {
                
             }
             if ( this.loggingService ) 
-            {                      
-               this.loggingService.addEntry({time: moment().unix(), temp:this.temperature, humidity:this.humidity, ppm:this.ppm});
+            {
+// help
+               // Eve Door (ContactSensor service)
+               // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+               
+               this.loggingService.addEntry({time: moment().unix(), status: this.statusActive});
             }
             break;
          }
@@ -3878,6 +3905,9 @@ Cmd4Accessory.prototype = {
             }
             if ( this.loggingService ) 
             {                
+               // Eve Door (ContactSensor service)
+               // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+               
                this.loggingService.addEntry({time: moment().unix(), status: this.securitySystemCurrentState});
             }
             break;
@@ -3926,8 +3956,11 @@ Cmd4Accessory.prototype = {
                
             }
             if ( this.loggingService ) 
-            {                       
-               this.loggingService.addEntry({time: moment().unix(), temp:this.temperature, humidity:this.humidity, ppm:this.carbonMonoxideLevel});
+            {  
+               // Eve Door (ContactSensor service)
+               // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+               
+               this.loggingService.addEntry({time: moment().unix(), status: this.statusActive});
             }
             break;
          }
@@ -3966,6 +3999,9 @@ Cmd4Accessory.prototype = {
             }
             if ( this.loggingService ) 
             {                       
+               // Eve Door (ContactSensor service)
+               // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+               
                this.loggingService.addEntry({time: moment().unix(), status: this.statusActive});
             }
             break;
@@ -4005,6 +4041,9 @@ Cmd4Accessory.prototype = {
             }
             if ( this.loggingService ) 
             {                       
+               // Eve Door (ContactSensor service)
+               // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+               
                this.loggingService.addEntry({time: moment().unix(), status: this.currentPosition});
             }
             break;
@@ -4043,8 +4082,11 @@ Cmd4Accessory.prototype = {
                
             }
             if ( this.loggingService ) 
-            {                       
-               this.loggingService.addEntry({time: moment().unix(), temp:this.temperature, humidity:this.humidity, ppm:this.ppm});
+            {
+               // Eve Room (TempSensor, HumiditySensor and AirQuality Services) 
+               // i.e. loggingService.addEntry({time: moment().unix(), temp:this.temperature, humidity:this.humidity, ppm:this.ppm});
+               
+               this.loggingService.addEntry({time: moment().unix(), temp:0, humidity:this.currentRelativeHumidity, ppm:0});
             }
             break;
          }
@@ -4083,6 +4125,9 @@ Cmd4Accessory.prototype = {
             }
             if ( this.loggingService ) 
             {                       
+               // Eve Door (ContactSensor service)
+               // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+               
                this.loggingService.addEntry({time: moment().unix(), status: this.statusActive});
             }
             break;
@@ -4122,6 +4167,9 @@ Cmd4Accessory.prototype = {
             }
             if ( this.loggingService ) 
             {                       
+               // Eve Door (ContactSensor service)
+               // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+               
                this.loggingService.addEntry({time: moment().unix(), status: this.statusActive});
             }
             break;
@@ -4161,7 +4209,10 @@ Cmd4Accessory.prototype = {
             }
             if ( this.loggingService ) 
             {                      
-               this.loggingService.addEntry({time: moment().unix(), status: this.statusActive});
+               // Eve Motion (MotionSensor service)
+               // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+               
+               this.loggingService.addEntry({time: moment().unix(), status: this.motionDetected});
             }
             break;
          }
@@ -4199,7 +4250,10 @@ Cmd4Accessory.prototype = {
             }
             if ( this.loggingService ) 
             {                 
-               this.loggingService.addEntry({time: moment().unix(), status: this.statusActive});
+               // Eve Motion (MotionSensor service)
+               // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+               
+               this.loggingService.addEntry({time: moment().unix(), status: this.occupancyDetected});
             }
             break;
          }
@@ -4237,6 +4291,9 @@ Cmd4Accessory.prototype = {
             }
             if ( this.loggingService ) 
             {                       
+               // Eve Door (ContactSensor service)
+               // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+               
                this.loggingService.addEntry({time: moment().unix(), status: this.statusActive});
             }
             break;
@@ -4299,8 +4356,11 @@ Cmd4Accessory.prototype = {
                   this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
             }
             if ( this.loggingService ) 
-            {                      
-               this.loggingService.addEntry({time: moment().unix(), temp:this.temperature, humidity:this.humidity, ppm:this.ppm});
+            {
+               // Eve Room (TempSensor, HumiditySensor and AirQuality Services) 
+               // i.e. loggingService.addEntry({time: moment().unix(), temp:this.temperature, humidity:this.humidity, ppm:this.ppm});
+               
+               this.loggingService.addEntry({time: moment().unix(), temp:this.currentTemperature, humidity:0, ppm:0});
             }
             break;
          }
@@ -4339,6 +4399,9 @@ Cmd4Accessory.prototype = {
             }
             if ( this.loggingService ) 
             {                       
+               // Eve Door (ContactSensor service)
+               // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+               
                this.loggingService.addEntry({time: moment().unix(), status: this.currentPosition});
             }
             break;
@@ -4398,6 +4461,9 @@ Cmd4Accessory.prototype = {
             }
             if ( this.loggingService ) 
             {                       
+               // Eve Door (ContactSensor service)
+               // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+               
                this.loggingService.addEntry({time: moment().unix(), status: this.currentPosition});
             }
             break;
@@ -4427,7 +4493,10 @@ Cmd4Accessory.prototype = {
             }
             if ( this.loggingService ) 
             {                       
-               this.loggingService.addEntry({time: moment().unix(), status: this.on});
+               // Eve Energy (Outlet service)
+               // i.e loggingService.addEntry({time: moment().unix(), power: this.power});
+               
+               this.loggingService.addEntry({time: moment().unix(), power: this.batteryLevel});
             }
             break;
          }
@@ -4473,6 +4542,13 @@ Cmd4Accessory.prototype = {
                default:
                   this.log("Cmd4 Warning: Unknown characteritic '%s' to update for accessory '%s'", characteristicString, this.name);
             }
+            if ( this.loggingService ) 
+            {                       
+               // Eve Door (ContactSensor service)
+               // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+               
+               this.loggingService.addEntry({time: moment().unix(), status: this.statusActive});
+            }
             break;
          }
          case  "RTPCameraStreamManagement":
@@ -4499,6 +4575,9 @@ Cmd4Accessory.prototype = {
             }
             if ( this.loggingService ) 
             {                       
+               // Eve Door (ContactSensor service)
+               // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+               
                this.loggingService.addEntry({time: moment().unix(), status: this.mute});
             }
             break;
@@ -4523,6 +4602,9 @@ Cmd4Accessory.prototype = {
             }
             if ( this.loggingService ) 
             {                       
+               // Eve Door (ContactSensor service)
+               // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+               
                this.loggingService.addEntry({time: moment().unix(), status: this.mute});
             }
             break;
@@ -4552,6 +4634,9 @@ Cmd4Accessory.prototype = {
             }
             if ( this.loggingService ) 
             {                       
+               // Eve Door (ContactSensor service)
+               // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+               
                this.loggingService.addEntry({time: moment().unix(), status: this.volume});
             }
             break;
@@ -4604,6 +4689,9 @@ Cmd4Accessory.prototype = {
             }
             if ( this.loggingService ) 
             {                       
+               // Eve Door (ContactSensor service)
+               // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+               
                this.loggingService.addEntry({time: moment().unix(), status: this.active});
             }
             break;
@@ -4643,6 +4731,9 @@ Cmd4Accessory.prototype = {
             }
             if ( this.loggingService ) 
             {                       
+               // Eve Door (ContactSensor service)
+               // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+               
                this.loggingService.addEntry({time: moment().unix(), status: this.currentSlatState});
             }
             break;
@@ -4672,6 +4763,9 @@ Cmd4Accessory.prototype = {
             }
             if ( this.loggingService ) 
             {                       
+               // Eve Door (ContactSensor service)
+               // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+               
                this.loggingService.addEntry({time: moment().unix(), status: this.filterChangeIndication});
             }
             break;
@@ -4716,6 +4810,9 @@ Cmd4Accessory.prototype = {
             }
             if ( this.loggingService ) 
             {                       
+               // Eve Door (ContactSensor service)
+               // i.e loggingService.addEntry({time: moment().unix(), status: this.status});
+               
                this.loggingService.addEntry({time: moment().unix(), status: this.active});
             }
             break;
