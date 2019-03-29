@@ -20,7 +20,7 @@ module.exports = function (homebridge) {
    Characteristic = homebridge.hap.Characteristic;
    
    UUIDGen = homebridge.hap.uuid;
-
+   
    // If you see these lines in other plugins with true, at the end,
    // you would provide a configurationRequestHandler to add/Remove
    // individual accessories. I believe this is old school as HomeKit
@@ -188,6 +188,15 @@ Cmd4Platform.prototype.statePolling = function (accessory)
           (
              Characteristic.CurrentTemperature
           ).getValue();
+          
+          // Poll for currentRelativeHumidity if defined
+          if (self.currentRelativeHumidity)
+          {
+             self.service.getCharacteristic
+             (
+                Characteristic.CurrentRelativeHumidity
+             ).getValue();
+          }
 
           break;
       }
@@ -459,15 +468,17 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
     if ( this.config.stateChangeResponseTime != undefined)
        this.stateChangeResponseTime = this.config.stateChangeResponseTime ;
 
-    // The information service  
+    // The information service
+    // For multiple accessories of the same type, it is important that the accessory
+    // has a unique serial number, so append the config.name.
     this.informationService = new Service.AccessoryInformation();
     this.informationService
       .setCharacteristic(Characteristic.Manufacturer, "Cmd4")
       .setCharacteristic(Characteristic.Model, this.model )
-      .setCharacteristic(Characteristic.SerialNumber, "Cmd4 " + this.config.type);
+      .setCharacteristic(Characteristic.SerialNumber, "Cmd4 " + this.config.type + this.config.name);
    
    this.UUID = UUIDGen.generate(this.name);
-      
+   
    // Explanation:
    // If you are wondering why this is done this way as compared to
    // other plugins that do the switch and a bind in their getServices
@@ -3434,25 +3445,25 @@ Cmd4Accessory.prototype = {
       if ( this.storage != undefined )
       {      
          if (this.storage == 'fs')
-         {
-            this.loggingService = new FakeGatoHistoryService
-            (
-               eveType, 
-               this, 
-              { storage: 'fs',
-                path: this.storagePath }
-            );
+         {  
+               this.loggingService = new FakeGatoHistoryService
+               (
+                  eveType, 
+                  this, 
+                  { storage: 'fs',
+                    path: this.storagePath }
+                );
          
          } else if (this.storage == 'googleDrive')
-         {
-            this.loggingService = new FakeGatoHistoryService
-            (
-               eveType, 
-               this, 
-               { storage: 'googleDrive',
-                 folder: this.folder, 
-                 keyPath: this.keyPath }
-            );
+            {
+               this.loggingService = new FakeGatoHistoryService
+               (
+                  eveType, 
+                  this, 
+                  { storage: 'googleDrive',
+                    folder: this.folder, 
+                    keyPath: this.keyPath }
+               );
          } else
          {
             this.log("WARNING: Cmd4 Unknown accessory config.storage '%s'. Expected 'fs' or 'googlrDrive for '%s' ", this.storage, this.name);

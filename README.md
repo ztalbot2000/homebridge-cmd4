@@ -58,7 +58,8 @@ Cmd4 can be configured to respond to actual devices directly or by modofying the
 
 Whats new in 2.30
 -----------------
-This release adds in fakegato-history support, which is available in the Eve app.
+This release adds in fakegato-history support, which is available only in the Eve app.<BR>
+Thanks Timofeyk for this suggestion and all your help implementing it. I could not have done it without your invaluable assistance.
 
 Installation
 ------------
@@ -341,6 +342,7 @@ Developer
 
 
 * [ ] Referred devices, i.e. a smoke detectors battery is not yet linked.
+* [ ] Support for custom characteristics for an accessory.
 * [X] Support multi word device names.
 
 

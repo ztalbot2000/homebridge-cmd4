@@ -861,6 +861,9 @@ switch(io)
             break;
          }
          case "My_Thermostat":
+         case "My_Thermostat1":  // Added for testing multiple devices of same type
+         case "My_Thermostat2":  // Added for testing multiple devices of same type
+         case "My_Thermostat3":  // Added for testing multiple devices of same type
          {
             //==============================
             //    THERMOSTAT (GET)
@@ -2524,6 +2527,9 @@ switch(io)
             break;
          }
          case "My_TemperatureSensor":
+         case "My_TemperatureSensor1":  // Added for testing multiple devices of same type
+         case "My_TemperatureSensor2":  // Added for testing multiple devices of same type
+         case "My_TemperatureSensor3":  // Added for testing multiple devices of same type
          {
             //==============================
             //    TEMPERATURE SENSOR (GET)
@@ -4070,6 +4076,9 @@ switch(io)
            break;
         }
          case "My_Thermostat":
+         case "My_Thermostat1":  // Added for testing multiple devices of same type
+         case "My_Thermostat2":  // Added for testing multiple devices of same type
+         case "My_Thermostat3":  // Added for testing multiple devices of same type
          {
             //==============================
             //    THERMOSTAT  (SET)
@@ -4826,6 +4835,9 @@ switch(io)
             break;
          }
          case "My_TemperatureSensor":
+         case "My_TemperatureSensor1":  // Added for testing multiple devices of same type
+         case "My_TemperatureSensor2":  // Added for testing multiple devices of same type
+         case "My_TemperatureSensor3":  // Added for testing multiple devices of same type
          {
             //==============================
             //    TEMPERATURE SENSOR (SET)
