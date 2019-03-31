@@ -1,6 +1,6 @@
 {
-  "_from": "homebridge-cmd4@1.2.7",
-  "_id": "homebridge-cmd4@1.3.0",
+  "_from": "homebridge-cmd4@1.3.0",
+  "_id": "homebridge-cmd4@1.3.1",
   "_inBundle": false,
   "_integrity": "sha512-Q39XXNNaxpBENc4AXvqoWoW+5OVZE24OLYLm+4RqCxJmyQDAGLNsokL+dh2JU++YaZRdycASfnG/8sylpocGAg==",
   "_location": "/homebridge-cmd4",
@@ -8,20 +8,20 @@
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "homebridge-cmd4@1.3.0",
+    "raw": "homebridge-cmd4@1.3.1",
     "name": "homebridge-cmd4",
     "escapedName": "homebridge-cmd4",
-    "rawSpec": "1.3.0",
+    "rawSpec": "1.3.1",
     "saveSpec": null,
-    "fetchSpec": "1.3.0"
+    "fetchSpec": "1.3.1"
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/homebridge-cmd4/-/homebridge-cmd4-1.3.0.tgz",
-  "_shasum": "4f49b51f701.3.0df314cf88ea9022f0ec3025e7",
-  "_spec": "homebridge-cmd4@1.3.0",
+  "_resolved": "https://registry.npmjs.org/homebridge-cmd4/-/homebridge-cmd4-1.3.1.tgz",
+  "_shasum": "4f49b51f701.3.1df314cf88ea9022f0ec3025e7",
+  "_spec": "homebridge-cmd4@1.3.1",
   "_where": "/private/var/root",
   "author": {
     "name": "John Talbot"
@@ -76,5 +76,5 @@
     "test": "semistandard",
     "postinstall": "node postinstall.js"
   },
-  "version": "1.3.0"
+  "version": "1.3.1"
 }
