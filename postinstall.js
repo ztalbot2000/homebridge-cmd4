@@ -48,3 +48,17 @@ if (package.version.includes('1.3.0') ||
   console.log("   John Talbot");
   console.log("\nP.S. If you really enjoy homebridge-cmd4, please star it on GitHub\n");
 }
+if (package.version.includes('2.0'))
+{
+  console.log("\n%sHomeBridge-Cmd4%s Version 2.0 Notes", KUND, KEND);
+  console.log("This version changes the philosophy of homebridge-Cmd4 from Accessories that have known characteristics as per the HAP Spec to assigning any characteristic to any Accessory.\n");
+  console.log("By default only the known characteristics are assigned to each accessory, achieving the prevous results.");
+  console.log("For the more adventurous though, you may be able to configure accessories with new capabilities !!!");
+  console.log("\nThe format of the config.json file is the same, except for the recently added fakegato services. See the README.md file for the new rules. They are more aligned with fakegato and also more configurable.");
+  console.log("\nYou will find that Cmd4 2.0 is much more configurable than the past with 160 characteristics possible, compared to the previous 100 and the ability to poll for anything at any interval to be much more convenient.");
+  console.log("\nFor those with their own scripts, nothing changes as the format sent and received is exactly the same.");
+  console.log("\nThis new version also supports, TV, TV Speaker, Input Source, Irrigation, Faucet and many others.  You will need to copy the included config.json file and State.js file to their appropriate locations.");
+  console.log("\nEnjoy");
+  console.log("   John Talbot");
+  console.log("\nP.S. If you really enjoy homebridge-cmd4, please star it on GitHub\n");
+}

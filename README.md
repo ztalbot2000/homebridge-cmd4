@@ -14,7 +14,7 @@ Table of Contents
 * [**About the Cmd4 Plugin**](#about-the-cmd4-plugin)
 * [**How the Cmd4 Plugin Works**](#how-the-cmd4-plugin-works)
 * [**Features**](#features)
-* [**Whats new in 2.30**](#whats-new-in-2-30)
+* [**Whats new in 2.0**](#whats-new-in-2-0)
 * [**Screenshots**](#screenshots)
 * [**Installation**](#installation)
 * [**Migrating from Homebridge-cmdswitch2**](#migrating-from-homebridge-cmdswitch2)
@@ -50,16 +50,18 @@ How the Cmd4 Plugin Works
 Features
 --------
 
-   Cmd4 supports, Lights, Garage Door Openners, Lights, Outlets, Switches, Lock Maintenance Systems, Lock Management Systems, Humidity Sensors, Doors, Light Sensors, Temperature Sensors, Contact Sensors, Motion Sensors, Thermostats, Security Systems, Battery Services, Filter Maintenance Systems, Air Purifiers ... everything but Camera Streaming since it is not pliable to a command line Interface.
+   Cmd4 supports, Lights, Garage Door Openners, Lights, Outlets, Switches, Lock Maintenance Systems, Lock Management Systems, Humidity Sensors, Doors, Light Sensors, Temperature Sensors, Contact Sensors, Motion Sensors, Thermostats, Security Systems, Battery Services, Filter Maintenance Systems, Air Purifiers, Television, Television Speaker, Input Sources, Irrigation Systems,  ... everything but Camera Streaming since it is not pliable to a command line Interface.
 
    Cmd4 also supports polling, though care was taken to make sure accessories get updated after an adjustable response time so that accessories like a garage door is updated in HomeKit after it was closed or openned.
 
 Cmd4 can be configured to respond to actual devices directly or by modofying the script file it calls.
 
-Whats new in 2.30
+Look closely at State.js and config.min.json as in them they have most of all the characteristics defined.
+
+Whats new in 2.0
 -----------------
-This release adds in fakegato-history support, which is available only in the Eve app.<BR>
-Thanks Timofeyk for this suggestion and all your help implementing it. I could not have done it without your invaluable assistance.
+This release hanges the philosophy of homebridge-Cmd4 from Accessories that have known characteristics as per the HAP Spec to assigning any characteristic to any Accessory.<BR>
+There are 160 possible characteristics, 60 more than the previous version.  Also TV, TV Speaker, Input Source, Irrigation, Faucets and many other accessories are now available.
 
 Installation
 ------------
@@ -168,7 +170,9 @@ Migrating from Homebridge-cmdswitch2
              "name": "PS_4",
              "on": false,
              "state_cmd": "bash .homebridge/Cmd4Scripts/PS4.sh"
-             "polling": true,
+             "polling": true,     <OR>
+             "polling": [{"on": false, "interval": 5, "timeout":2000}
+                        ],
              "interval": 5,
              "timeout": 2000,
           }
@@ -302,28 +306,38 @@ See [fakegato-history](https://github.com/simont77/fakegato-history)<BR>
 Not all accessories are supported by Eve or fakegato-history. As more and more are, they can easily be added to Homebridge-Cmd4 if they are not already by following these step.<BR>
 
 ### Step 1
-Add to the CMD4 platform config for history to be written to a local filesystem:<BR>
-"storage": "fs",<BR>
-"storagePath": ".homebridge/Cmd4StoragePath",<BR>
-For all supported devices to have fakegato-hitory or add the same lines to the accessory config for history of just that device.
+Add to the accessory config portion the following lines:<BR>
+```
+"fakegato":{"eve":"thermo",
+            "currentTemp": "currentTemperature",
+            "setTemp": "targetTemperature",
+            "valvePosition": "0",
+            "storage": "fs",
+            "storagePath": ".homebridge/FakegatoStorage",
+            "folder": "folderName",
+            "keyPath": "/place/to/store/my/keys/"
+           }
+```
 
-### And/Or Step 2
-Add to the CMD4 platform config for history to be written to Google Drive:<BR>
-"storage": "googleDrive",<BR>
-"folder": "a google folder",<BR>
-"keyPath": "a google key path",<BR>
+### Step 2
+If you notice, the parameters follow the fakegato-history spec.<BR>
+The only difference is that the characteristics value will be substituted for the fakegato keys. In this example "currentTemperature" will be substituted with 50.0 if that is what was returned to Cmd4. <BR>
+The value "0" should be used for any characteristics value which is not possible to retrieve.
 <BR>
 ### Step 3
-For history to be collected you will have to enable polling and interval for the accesory, and according to the fakegato-hitory documents it should be less than 10 minutes (600 seconds).<BR>
-"polling": true,<BR>
-"interval": 540,<BR>
-<BR>
-Note: Any paths or folders must already exist for history to be stored by fakegato-history.<BR>
+For history to be collected you will have to enable polling and interval for the accesory, and according to the fakegato-hitory documents it should be less than 10 minutes (600 seconds). The new polling config section allows for each characteristic to be polled at their individual times.<BR>
+```
+"polling": [{"currentHeatingCoolingState": 0,
+             "interval": 540,  "timeout": 2000},
+            {"currentTemperature": 50.0,
+             "interval": 60,   "timeout": 2000}
+           ],
+```
 
 Developer
 ---------
 ### Step 1  The provided jsmin differs from others in that the resulting file format is
-   still readable. Only C and C++ comments are removed. The includ config.json is created via: <BR>
+   still readable. Only C and C++ comments are removed. The included config.json is created via: <BR>
    &nbsp;&nbsp;&nbsp; SHELL> jsmin < config.min.json > config.json
    
 ### Step 2  The parameters to the script pointed to by the 'state_cmd' in your
@@ -467,6 +481,8 @@ Based on the best of:<br>
 * [homebridge-cmdswitch2]https://github.com/luisiam/homebridge-cmdswitch2.git<BR>
 * [homebridge-real-fake-garage-doors]https://github.com/plasticrake/homebridge-real-fake-garage-doors.git<BR>
 * [homebridge-homeseer]https://github.com/jrhubott/homebridge-homeseer.git<BR>
+<BR>
+* Thanks to TimofeyK for all his help with fakegato and for suggesting it.<BR>
 
 
 License
@@ -485,7 +501,7 @@ Link References
 [about-the-cmd4-plugin]:https://github.com/ztalbot2000/homebridge-cmd4#about-the-cmd4-plugin
 [how-the-cmd4-plugin-works]:https://github.com/ztalbot2000/homebridge-cmd4#how-the-cmd4-plugin-works
 [features]:https://github.com/ztalbot2000/homebridge-cmd4#features
-[whats new in 2.30]:https://github.com/ztalbot2000/homebridge-cmd4#whats-new-in-2-30
+[whats new in 2.30]:https://github.com/ztalbot2000/homebridge-cmd4#whats-new-in-2-0
 [screenshots]:https://github.com/ztalbot2000/homebridge-cmd4#screenshots
 [installation]:https://github.com/ztalbot2000/homebridge-cmd4#installation
 [migrating-from-homebridge-cmdswitch2]:https://github.com/ztalbot2000/homebridge-cmd4#migrating-from-homebridge-cmdswitch2
