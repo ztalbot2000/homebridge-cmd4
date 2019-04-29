@@ -1,4 +1,4 @@
-# Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types!
+# Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
 
 
 
