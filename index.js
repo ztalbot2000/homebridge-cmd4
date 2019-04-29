@@ -2,6 +2,15 @@
 const exec = require("child_process").exec;
 const moment = require('moment');
 
+
+const SLOW_STATE_CHANGE_RESPONSE_TIME   = 10000;  // 10 seconds
+const MEDIUM_STATE_CHANGE_RESPONSE_TIME = 3000;   // 3 seconds
+const FAST_STATE_CHANGE_RESPONSE_TIME   = 1000;   // 1 second
+
+const DEFAULT_TIMEOUT = 60000; /// 1 minute
+
+const DEFAULT_INTERVAL = 60000; /// 1 minute
+
 const FAKEGATO_TYPE_ENERGY  = 'energy',
       FAKEGATO_TYPE_ROOM    = 'room',
       FAKEGATO_TYPE_WEATHER = 'weather',
@@ -10,392 +19,240 @@ const FAKEGATO_TYPE_ENERGY  = 'energy',
       FAKEGATO_TYPE_THERMO  = 'thermo',
       FAKEGATO_TYPE_AQUA    = 'aqua';
 
-const CMD4_ACC_TYPE_AccessoryInformation         = 'AccessoryInformation',
-      CMD4_ACC_TYPE_AirPurifier                  = 'AirPurifier',
-      CMD4_ACC_TYPE_AirQualitySensor             = 'AirQualitySensor',
-      CMD4_ACC_TYPE_BatteryService               = 'BatteryService',
-      CMD4_ACC_TYPE_BridgeConfiguration          = 'BridgeConfiguration',
-      CMD4_ACC_TYPE_BridgingState                = 'BridgingState',
-      CMD4_ACC_TYPE_CameraControl                = 'CameraControl',
-      CMD4_ACC_TYPE_CameraRTPStreamManagement    = 'CameraRTPStreamManagement',
-      CMD4_ACC_TYPE_CarbonDioxideSensor          = 'CarbonDioxideSensor',
-      CMD4_ACC_TYPE_CarbonMonoxideSensor         = 'CarbonMonoxideSensor',
-      CMD4_ACC_TYPE_ContactSensor                = 'ContactSensor',
-      CMD4_ACC_TYPE_Door                         = 'Door',
-      CMD4_ACC_TYPE_DoorBell                     = 'DoorBell',
-      CMD4_ACC_TYPE_Fan                          = 'Fan',
-      CMD4_ACC_TYPE_Fanv1                        = 'Fanv1',
-      CMD4_ACC_TYPE_Fanv2                        = 'Fanv2',
-      CMD4_ACC_TYPE_FilterMaintenance            = 'FilterMaintenance',
-      CMD4_ACC_TYPE_Faucet                       = 'Faucet',
-      CMD4_ACC_TYPE_GarageDoorOpener             = 'GarageDoorOpener',
-      CMD4_ACC_TYPE_HeaterCooler                 = 'HeaterCooler',
-      CMD4_ACC_TYPE_HumidifierDehumidifier       = 'HumidifierDehumidifier',
-      CMD4_ACC_TYPE_HumiditySensor               = 'HumiditySensor',
-      CMD4_ACC_TYPE_InputSource                  = 'InputSource',
-      CMD4_ACC_TYPE_IrrigationSystem             = 'IrrigationSystem',
-      CMD4_ACC_TYPE_LeakSensor                   = 'LeakSensor',
-      CMD4_ACC_TYPE_LightSensor                  = 'LightSensor',
-      CMD4_ACC_TYPE_Lightbulb                    = 'Lightbulb',
-      CMD4_ACC_TYPE_LockManagement               = 'LockManagement',
-      CMD4_ACC_TYPE_LockMechanism                = 'LockMechanism',
-      CMD4_ACC_TYPE_Microphone                   = 'Microphone',
-      CMD4_ACC_TYPE_MotionSensor                 = 'MotionSensor',
-      CMD4_ACC_TYPE_OccupancySensor              = 'OccupancySensor',
-      CMD4_ACC_TYPE_Outlet                       = 'Outlet',
-      CMD4_ACC_TYPE_Pairing                      = 'Pairing',
-      CMD4_ACC_TYPE_ProtocolInformation          = 'ProtocolInformation',
-      CMD4_ACC_TYPE_Relay                        = 'Relay',
-      CMD4_ACC_TYPE_SecuritySystem               = 'SecuritySystem',
-      CMD4_ACC_TYPE_ServiceLabel                 = 'ServiceLabel',
-      CMD4_ACC_TYPE_Slat                         = 'Slat',
-      CMD4_ACC_TYPE_SmokeSensor                  = 'SmokeSensor',
-      CMD4_ACC_TYPE_Speaker                      = 'Speaker',
-      CMD4_ACC_TYPE_StatefulProgrammableSwitch   = 'StatefulProgrammableSwitch',
-      CMD4_ACC_TYPE_StatelessProgrammableSwitch  = 'StatelessProgrammableSwitch',
-      CMD4_ACC_TYPE_Switch                       = 'Switch',
-      CMD4_ACC_TYPE_Television                   = 'Television',
-      CMD4_ACC_TYPE_TelevisionSpeaker            = 'TelevisionSpeaker',
-      CMD4_ACC_TYPE_TemperatureSensor            = 'TemperatureSensor',
-      CMD4_ACC_TYPE_Thermostat                   = 'Thermostat',
-      CMD4_ACC_TYPE_TimeInformation              = 'TimeInformation',
-      CMD4_ACC_TYPE_TunneledBTLEAccessoryService = 'TunneledBTLEAccessoryService',
-      CMD4_ACC_TYPE_Valve                        = 'Valve',
-      CMD4_ACC_TYPE_Window                       = 'Window',
-      CMD4_ACC_TYPE_WindowCovering               = 'WindowCovering';
+var  CMD4_DEVICE_TYPE_ENUM =
+{
+   AccessoryInformation:                0,
+   AirPurifier:                         1,
+   AirQualitySensor:                    2,
+   BatteryService:                      3,
+   BridgeConfiguration:                 4,
+   BridgingState:                       5,
+   CameraControl:                       6,
+   CameraRTPStreamManagement:           7,
+   CarbonDioxideSensor:                 8,
+   CarbonMonoxideSensor:                9,
+   ContactSensor:                      10,
+   Door:                               11,
+   DoorBell:                           12,
+   Fan:                                13,
+   Fanv1:                              14,
+   Fanv2:                              15,
+   Faucet:                             16,
+   FilterMaintenance:                  17,
+   GarageDoorOpener:                   18,
+   HeaterCooler:                       19,
+   HumidifierDehumidifier:             20,
+   HumiditySensor:                     21,
+   InputSource:                        22,
+   IrrigationSystem:                   23,
+   LeakSensor:                         24,
+   LightSensor:                        25,
+   Lightbulb:                          26,
+   LockManagement:                     27,
+   LockMechanism:                      28,
+   Microphone:                         29,
+   MotionSensor:                       30,
+   OccupancySensor:                    31,
+   Outlet:                             32,
+   Pairing:                            33,
+   ProtocolInformation:                34,
+   Relay:                              35,
+   SecuritySystem:                     36,
+   ServiceLabel:                       37,
+   Slat:                               38,
+   SmokeSensor:                        39,
+   Speaker:                            40,
+   StatefulProgrammableSwitch:         41,
+   StatelessProgrammableSwitch:        42,
+   Switch:                             43,
+   Television:                         44,
+   TelevisionSpeaker:                  45,
+   TemperatureSensor:                  46,
+   Thermostat:                         47,
+   TimeInformation:                    48,
+   TunneledBTLEAccessoryService:       49,
+   Valve:                              50,
+   Window:                             51,
+   WindowCovering:                     52,
+
+   properties:{}
+};
 
 
-const
-   CMD4_AccessoryFlags =                       "AccessoryFlags",
-   CMD4_Active =                               "Active",
-   CMD4_ActiveIdentifier =                     "ActiveIdentifier",
-   CMD4_AccessoryIdentifier =                  "AccessoryIdentifier",
-   CMD4_AdministratorOnlyAccess =              "AdministratorOnlyAccess",
-   CMD4_AirParticulateDensity =                "AirParticulateDensity",
-   CMD4_AirParticulateSize =                   "AirParticulateSize",
-   CMD4_AirQuality =                           "AirQuality",
-   CMD4_AudioFeedback =                        "AudioFeedback",
-   CMD4_BatteryLevel =                         "BatteryLevel",            // 10
-   CMD4_Brightness =                           "Brightness",
-   CMD4_CarbonDioxideDetected =                "CarbonDioxideDetected",
-   CMD4_CarbonDioxideLevel =                   "CarbonDioxideLevel",
-   CMD4_CarbonDioxidePeakLevel =               "CarbonDioxidePeakLevel",
-   CMD4_CarbonMonoxideDetected =               "CarbonMonoxideDetected",
-   CMD4_CarbonMonoxideLevel =                  "CarbonMonoxideLevel",
-   CMD4_CarbonMonoxidePeakLevel =              "CarbonMonoxidePeakLevel",
-   CMD4_Category =                             "Category",
-   CMD4_ChargingState =                        "ChargingState",
-   CMD4_ClosedCaptions =                       "ClosedCaptions",         // 20
-   CMD4_ColorTemperature =                     "ColorTemperature",
-   CMD4_ConfiguredName =                       "ConfiguredName",
-   CMD4_ConfigureBridgedAccessoryStatus =      "ConfigureBridgedAccessoryStatus",
-   CMD4_ConfigureBridgedAccessory =            "ConfigureBridgedAccessory",
-   CMD4_ContactSensorState =                   "ContactSensorState",
-   CMD4_CoolingThresholdTemperature =          "CoolingThresholdTemperature",
-   CMD4_CurrentAirPurifierState =              "CurrentAirPurifierState",
-   CMD4_CurrentAmbientLightLevel =             "CurrentAmbientLightLevel",
-   CMD4_CurrentDoorState =                     "CurrentDoorState",
-   CMD4_CurrentFanState =                      "CurrentFanState",                 // 30
-   CMD4_CurrentHeaterCoolerState =             "CurrentHeaterCoolerState",
-   CMD4_CurrentHeatingCoolingState =           "CurrentHeatingCoolingState",
-   CMD4_CurrentHorizontalTiltAngle =           "CurrentHorizontalTiltAngle",
-   CMD4_CurrentHumidifierDehumidifierState =   "CurrentHumidifierDehumidifierState",
-   CMD4_CurrentMediaState =                    "CurrentMediaState",
-   CMD4_CurrentPosition =                      "CurrentPosition",
-   CMD4_CurrentRelativeHumidity =              "CurrentRelativeHumidity",
-   CMD4_CurrentSlatState =                     "CurrentSlatState",
-   CMD4_CurrentTemperature =                   "CurrentTemperature",
-   CMD4_CurrentTiltAngle =                     "CurrentTiltAngle",                // 40
-   CMD4_CurrentTime =                          "CurrentTime",
-   CMD4_CurrentVerticalTiltAngle =             "CurrentVerticalTiltAngle",
-   CMD4_CurrentVisibilityState =               "CurrentVisibilityState",
-   CMD4_DayoftheWeek =                         "DayoftheWeek",
-   CMD4_DigitalZoom =                          "DigitalZoom",
-   CMD4_DiscoverBridgedAccessories =           "DiscoverBridgedAccessories",
-   CMD4_DiscoveredBridgedAccessories =         "DiscoveredBridgedAccessories",
-   CMD4_DisplayOrder =                         "DisplayOrder",
-   CMD4_FilterChangeIndication =               "FilterChangeIndication",
-   CMD4_FilterLifeLevel =                      "FilterLifeLevel",                 // 50
-   CMD4_FirmwareRevision =                     "FirmwareRevision",
-   CMD4_HardwareRevision =                     "HardwareRevision",
-   CMD4_HeatingThresholdTemperature =          "HeatingThresholdTemperature",
-   CMD4_HoldPosition =                         "HoldPosition",
-   CMD4_Hue =                                  "Hue",
-   CMD4_Identify =                             "Identify",
-   CMD4_ImageMirroring =                       "ImageMirroring",
-   CMD4_ImageRotation =                        "ImageRotation",
-   CMD4_InputDeviceType =                      "InputDeviceType",
-   CMD4_InputSourceType =                      "InputSourceType",               // 60
-   CMD4_InUse =                                "InUse",
-   CMD4_IsConfigured =                         "IsConfigured",
-   CMD4_LeakDetected =                         "LeakDetected",
-   CMD4_LinkQuality =                          "LinkQuality",
-   CMD4_LockControlPoint =                     "LockControlPoint",
-   CMD4_LockCurrentState =                     "LockCurrentState",
-   CMD4_LockLastKnownAction =                  "LockLastKnownAction",
-   CMD4_LockManagementAutoSecurityTimeout =    "LockManagementAutoSecurityTimeout",
-   CMD4_LockPhysicalControls =                 "LockPhysicalControls",
-   CMD4_LockTargetState =                      "LockTargetState",                // 70
-   CMD4_Logs =                                 "Logs",
-   CMD4_Manufacturer =                         "Manufacturer",
-   CMD4_Model =                                "Model",
-   CMD4_MotionDetected =                       "MotionDetected",
-   CMD4_Mute =                                 "Mute",
-   CMD4_Name =                                 "Name",
-   CMD4_NightVision =                          "NightVision",
-   CMD4_NitrogenDioxideDensity =               "NitrogenDioxideDensity",
-   CMD4_ObstructionDetected =                  "ObstructionDetected",
-   CMD4_OccupancyDetected =                    "OccupancyDetected",               // 80
-   CMD4_On =                                   "On",
-   CMD4_OpticalZoom =                          "OpticalZoom",
-   CMD4_OutletInUse =                          "OutletInUse",
-   CMD4_OzoneDensity =                         "OzoneDensity",
-   CMD4_PairSetup =                            "PairSetup",
-   CMD4_PairVerify =                           "PairVerify",
-   CMD4_PairingFeatures =                      "PairingFeatures",
-   CMD4_PairingPairings =                      "PairingPairings",
-   CMD4_PictureMode =                          "PictureMode",
-   CMD4_PM10Density =                          "PM10Density",                     // 90
-   CMD4_PM2_5Density =                         "PM2_5Density",
-   CMD4_PositionState =                        "PositionState",
-   CMD4_PowerModeSelection =                   "PowerModeSelection",
-   CMD4_ProgramMode =                          "ProgramMode",
-   CMD4_ProgrammableSwitchEvent =              "ProgrammableSwitchEvent",
-   CMD4_ProgrammableSwitchOutputState =        "ProgrammableSwitchOutputState",
-   CMD4_Reachable =                            "Reachable",
-   CMD4_RelativeHumidityDehumidifierThreshold ="RelativeHumidityDehumidifierThreshold",
-   CMD4_RelativeHumidityHumidifierThreshold =  "RelativeHumidityHumidifierThreshold",
-   CMD4_RelayEnabled =                         "RelayEnabled",                      // 100
-   CMD4_RelayState =                           "RelayState",
-   CMD4_RelayControlPoint =                    "RelayControlPoint",
-   CMD4_RemainingDuration =                    "RemainingDuration",
-   CMD4_RemoteKey =                            "RemoteKey",
-   CMD4_ResetFilterIndication =                "ResetFilterIndication",
-   CMD4_RotationDirection =                    "RotationDirection",
-   CMD4_RotationSpeed =                        "RotationSpeed",
-   CMD4_Saturation =                           "Saturation",
-   CMD4_SecuritySystemAlarmType =              "SecuritySystemAlarmType",
-   CMD4_SecuritySystemCurrentState =           "SecuritySystemCurrentState",         // 110
-   CMD4_SecuritySystemTargetState =            "SecuritySystemTargetState",
-   CMD4_SelectedRTPStreamConfiguration =       "SelectedRTPStreamConfiguration",
-   CMD4_SerialNumber =                         "SerialNumber",
-   CMD4_ServiceLabelIndex =                    "ServiceLabelIndex",
-   CMD4_ServiceLabelNamespace =                "ServiceLabelNamespace",
-   CMD4_SetDuration =                          "SetDuration",
-   CMD4_SetupEndpoints =                       "SetupEndpoints",
-   CMD4_SlatType =                             "SlatType",
-   CMD4_SleepDiscoveryMode =                   "SleepDiscoveryMode",
-   CMD4_SmokeDetected =                        "SmokeDetected",                      // 120
-   CMD4_StatusActive =                         "StatusActive",
-   CMD4_StatusFault =                          "StatusFault",
-   CMD4_StatusJammed =                         "StatusJammed",
-   CMD4_StatusLowBattery =                     "StatusLowBattery",
-   CMD4_StatusTampered =                       "StatusTampered",
-   CMD4_StreamingStatus =                      "StreamingStatus",
-   CMD4_SulphurDioxideDensity =                "SulphurDioxideDensity",
-   CMD4_SupportedAudioStreamConfiguration =    "SupportedAudioStreamConfiguration",
-   CMD4_SupportedRTPConfiguration =            "SupportedRTPConfiguration",
-   CMD4_SupportedVideoStreamConfiguration =    "SupportedVideoStreamConfiguration",     // 130
-   CMD4_SwingMode =                            "SwingMode",
-   CMD4_TargetAirPurifierState =               "TargetAirPurifierState",
-   CMD4_TargetAirQuality =                     "TargetAirQuality",
-   CMD4_TargetDoorState =                      "TargetDoorState",
-   CMD4_TargetFanState =                       "TargetFanState",
-   CMD4_TargetHeaterCoolerState =              "TargetHeaterCoolerState",
-   CMD4_TargetHeatingCoolingState =            "TargetHeatingCoolingState",
-   CMD4_TargetHorizontalTiltAngle =            "TargetHorizontalTiltAngle",
-   CMD4_TargetHumidifierDehumidifierState =    "TargetHumidifierDehumidifierState",
-   CMD4_TargetMediaState =                     "TargetMediaState",                      // 140
-   CMD4_TargetPosition =                       "TargetPosition",
-   CMD4_TargetRelativeHumidity =               "TargetRelativeHumidity",
-   CMD4_TargetSlatState =                      "TargetSlatState",
-   CMD4_TargetTemperature =                    "TargetTemperature",
-   CMD4_TargetTiltAngle =                      "TargetTiltAngle",
-   CMD4_TargetVerticalTiltAngle =              "TargetVerticalTiltAngle",
-   CMD4_TargetVisibilityState =                "TargetVisibilityState",
-   CMD4_TemperatureDisplayUnits =              "TemperatureDisplayUnits",
-   CMD4_TimeUpdate =                           "TimeUpdate",
-   CMD4_TunneledAccessoryAdvertising =         "TunneledAccessoryAdvertising",             // 160
-   CMD4_TunneledAccessoryConnected =           "TunneledAccessoryConnected",
-   CMD4_TunneledAccessoryStateNumber =         "TunneledAccessoryStateNumber",
-   CMD4_TunnelConnectionTimeout =              "TunnelConnectionTimeout",
-   CMD4_ValveType =                            "ValveType",
-   CMD4_Version =                              "Version",
-   CMD4_VOCDensity =                           "VOCDensity",
-   CMD4_Volume =                               "Volume",
-   CMD4_VolumeControlType =                    "VolumeControlType",
-   CMD4_VolumeSelector =                       "VolumeSelector",
-   CMD4_WaterLevel =                           "WaterLevel";                              // 169
-
-const accMapper = [
-   CMD4_AccessoryFlags,
-   CMD4_Active,
-   CMD4_ActiveIdentifier,
-   CMD4_AccessoryIdentifier,
-   CMD4_AdministratorOnlyAccess,
-   CMD4_AirParticulateDensity,
-   CMD4_AirParticulateSize,
-   CMD4_AirQuality,       
-   CMD4_AudioFeedback,   
-   CMD4_BatteryLevel,                          // 10 
-   CMD4_Brightness,
-   CMD4_CarbonDioxideDetected,
-   CMD4_CarbonDioxideLevel,
-   CMD4_CarbonDioxidePeakLevel,
-   CMD4_CarbonMonoxideDetected,
-   CMD4_CarbonMonoxideLevel,
-   CMD4_CarbonMonoxidePeakLevel,
-   CMD4_Category,
-   CMD4_ChargingState,
-   CMD4_ClosedCaptions,                        // 20
-   CMD4_ColorTemperature,
-   CMD4_ConfiguredName,
-   CMD4_ConfigureBridgedAccessoryStatus,
-   CMD4_ConfigureBridgedAccessory,
-   CMD4_ContactSensorState,
-   CMD4_CoolingThresholdTemperature,
-   CMD4_CurrentAirPurifierState,
-   CMD4_CurrentAmbientLightLevel,
-   CMD4_CurrentDoorState,   
-   CMD4_CurrentFanState,                                  // 30
-   CMD4_CurrentHeaterCoolerState,
-   CMD4_CurrentHeatingCoolingState,
-   CMD4_CurrentHorizontalTiltAngle,
-   CMD4_CurrentHumidifierDehumidifierState,
-   CMD4_CurrentMediaState,
-   CMD4_CurrentPosition,      
-   CMD4_CurrentRelativeHumidity,
-   CMD4_CurrentSlatState,   
-   CMD4_CurrentTemperature,
-   CMD4_CurrentTiltAngle,                      // 40
-   CMD4_CurrentTime,
-   CMD4_CurrentVerticalTiltAngle,
-   CMD4_CurrentVisibilityState,
-   CMD4_DayoftheWeek,
-   CMD4_DigitalZoom,
-   CMD4_DiscoverBridgedAccessories,
-   CMD4_DiscoveredBridgedAccessories,
-   CMD4_DisplayOrder,
-   CMD4_FilterChangeIndication,
-   CMD4_FilterLifeLevel,                   // 50
-   CMD4_FirmwareRevision,
-   CMD4_HardwareRevision,
-   CMD4_HeatingThresholdTemperature,
-   CMD4_HoldPosition,         
-   CMD4_Hue,
-   CMD4_Identify,
-   CMD4_ImageMirroring,     
-   CMD4_ImageRotation,
-   CMD4_InputDeviceType,
-   CMD4_InputSourceType,                      // 60
-   CMD4_InUse,
-   CMD4_IsConfigured,    
-   CMD4_LeakDetected,   
-   CMD4_LinkQuality,   
-   CMD4_LockControlPoint,
-   CMD4_LockCurrentState,
-   CMD4_LockLastKnownAction,
-   CMD4_LockManagementAutoSecurityTimeout,
-   CMD4_LockPhysicalControls,
-   CMD4_LockTargetState,                    // 70
-   CMD4_Logs,               
-   CMD4_Manufacturer,      
-   CMD4_Model,            
-   CMD4_MotionDetected,  
-   CMD4_Mute,
-   CMD4_Name,
-   CMD4_NightVision,   
-   CMD4_NitrogenDioxideDensity,
-   CMD4_ObstructionDetected,
-   CMD4_OccupancyDetected,                    // 80
-   CMD4_On,        
-   CMD4_OpticalZoom,
-   CMD4_OutletInUse,
-   CMD4_OzoneDensity,
-   CMD4_PairSetup,
-   CMD4_PairVerify,
-   CMD4_PairingFeatures,
-   CMD4_PairingPairings,
-   CMD4_PictureMode,
-   CMD4_PM10Density,                        // 90
-   CMD4_PM2_5Density,
-   CMD4_PositionState,
-   CMD4_PowerModeSelection,
-   CMD4_ProgramMode,
-   CMD4_ProgrammableSwitchEvent,
-   CMD4_ProgrammableSwitchOutputState,
-   CMD4_Reachable,
-   CMD4_RelativeHumidityDehumidifierThreshold,
-   CMD4_RelativeHumidityHumidifierThreshold,
-   CMD4_RelayEnabled,                        // 100
-   CMD4_RelayState,
-   CMD4_RelayControlPoint,
-   CMD4_RemainingDuration,
-   CMD4_RemoteKey,
-   CMD4_ResetFilterIndication,
-   CMD4_RotationDirection, 
-   CMD4_RotationSpeed,    
-   CMD4_Saturation,      
-   CMD4_SecuritySystemAlarmType,
-   CMD4_SecuritySystemCurrentState,         // 110
-   CMD4_SecuritySystemTargetState,
-   CMD4_SelectedRTPStreamConfiguration,
-   CMD4_SerialNumber,         
-   CMD4_ServiceLabelIndex,
-   CMD4_ServiceLabelNamespace,
-   CMD4_SetDuration,       
-   CMD4_SetupEndpoints,   
-   CMD4_SlatType,
-   CMD4_SleepDiscoveryMode,
-   CMD4_SmokeDetected,                      // 120
-   CMD4_StatusActive,  
-   CMD4_StatusFault,  
-   CMD4_StatusJammed,
-   CMD4_StatusLowBattery,
-   CMD4_StatusTampered,
-   CMD4_StreamingStatus,
-   CMD4_SulphurDioxideDensity,
-   CMD4_SupportedAudioStreamConfiguration,
-   CMD4_SupportedRTPConfiguration,
-   CMD4_SupportedVideoStreamConfiguration,     //130
-   CMD4_SwingMode,          
-   CMD4_TargetAirPurifierState,
-   CMD4_TargetAirQuality, 
-   CMD4_TargetDoorState,
-   CMD4_TargetFanState,
-   CMD4_TargetHeaterCoolerState,
-   CMD4_TargetHeatingCoolingState,
-   CMD4_TargetHorizontalTiltAngle,
-   CMD4_TargetHumidifierDehumidifierState,
-   CMD4_TargetMediaState,                        //140
-   CMD4_TargetPosition,       
-   CMD4_TargetRelativeHumidity,
-   CMD4_TargetSlatState,    
-   CMD4_TargetTemperature,
-   CMD4_TargetTiltAngle,
-   CMD4_TargetVerticalTiltAngle,
-   CMD4_TargetVisibilityState,
-   CMD4_TemperatureDisplayUnits,
-   CMD4_TimeUpdate,
-   CMD4_TunneledAccessoryAdvertising,            //150
-   CMD4_TunneledAccessoryConnected,
-   CMD4_TunneledAccessoryStateNumber,
-   CMD4_TunnelConnectionTimeout,
-   CMD4_ValveType,
-   CMD4_Version,
-   CMD4_VOCDensity,  
-   CMD4_Volume,
-   CMD4_VolumeControlType,
-   CMD4_VolumeSelector,
-   CMD4_WaterLevel                             //160
-];
+// Object.freeze(CMD4_DEVICE_TYPE_enum);
 
 
-var Accessory, Service, Characteristic, UUIDGen, FakeGatoHistoryService;
-var charMapper=[];
+var FakeGatoHistoryService;
+var Accessory, Service, Characteristic, UUIDGen;
+
+var  CMD4_ACC_TYPE_ENUM =
+{
+   AccessoryFlags:                        0,
+   Active:                                1,
+   ActiveIdentifier:                      2,
+   AccessoryIdentifier:                   3,
+   AdministratorOnlyAccess:               4,
+   AirParticulateDensity:                 5,
+   AirParticulateSize:                    6,
+   AirQuality:                            7,
+   AudioFeedback:                         8,
+   BatteryLevel:                          9,
+   Brightness:                            10,
+   CarbonDioxideDetected:                 11,
+   CarbonDioxideLevel:                    12,
+   CarbonDioxidePeakLevel:                13,
+   CarbonMonoxideDetected:                14,
+   CarbonMonoxideLevel:                   15,
+   CarbonMonoxidePeakLevel:               16,
+   Category:                              17,
+   ChargingState:                         18,
+   ClosedCaptions:                        19,
+   ColorTemperature:                      20,
+   ConfiguredName:                        21,
+   ConfigureBridgedAccessoryStatus:       22,
+   ConfigureBridgedAccessory:             23,
+   ContactSensorState:                    24,
+   CoolingThresholdTemperature:           25,
+   CurrentAirPurifierState:               26,
+   CurrentAmbientLightLevel:              27,
+   CurrentDoorState:                      28,
+   CurrentFanState:                       29,
+   CurrentHeaterCoolerState:              30,
+   CurrentHeatingCoolingState:            31,
+   CurrentHorizontalTiltAngle:            32,
+   CurrentHumidifierDehumidifierState:    33,
+   CurrentMediaState:                     34,
+   CurrentPosition:                       35,
+   CurrentRelativeHumidity:               36,
+   CurrentSlatState:                      37,
+   CurrentTemperature:                    38,
+   CurrentTiltAngle:                      39,
+   CurrentTime:                           40,
+   CurrentVerticalTiltAngle:              41,
+   CurrentVisibilityState:                42,
+   DayoftheWeek:                          43,
+   DigitalZoom:                           44,
+   DiscoverBridgedAccessories:            45,
+   DiscoveredBridgedAccessories:          46,
+   DisplayOrder:                          47,
+   FilterChangeIndication:                48,
+   FilterLifeLevel:                       49,
+   FirmwareRevision:                      50,
+   HardwareRevision:                      51,
+   HeatingThresholdTemperature:           52,
+   HoldPosition:                          53,
+   Hue:                                   54,
+   Identify:                              55,
+   ImageMirroring:                        56,
+   ImageRotation:                         57,
+   InputDeviceType:                       58,
+   InputSourceType:                       59,
+   InUse:                                 60,
+   IsConfigured:                          61,
+   LeakDetected:                          62,
+   LinkQuality:                           63,
+   LockControlPoint:                      64,
+   LockCurrentState:                      65,
+   LockLastKnownAction:                   66,
+   LockManagementAutoSecurityTimeout:     67,
+   LockPhysicalControls:                  68,
+   LockTargetState:                       69,
+   Logs:                                  70,
+   Manufacturer:                          71,
+   Model:                                 72,
+   MotionDetected:                        73,
+   Mute:                                  74,
+   Name:                                  75,
+   NightVision:                           76,
+   NitrogenDioxideDensity:                77,
+   ObstructionDetected:                   78,
+   OccupancyDetected:                     79,
+   On:                                    80,
+   OpticalZoom:                           81,
+   OutletInUse:                           82,
+   OzoneDensity:                          83,
+   PairSetup:                             84,
+   PairVerify:                            85,
+   PairingFeatures:                       86,
+   PairingPairings:                       87,
+   PictureMode:                           88,
+   PM10Density:                           89,
+   PM2_5Density:                          90,
+   PositionState:                         91,
+   PowerModeSelection:                    92,
+   ProgramMode:                           93,
+   ProgrammableSwitchEvent:               94,
+   ProgrammableSwitchOutputState:         95,
+   Reachable:                             96,
+   RelativeHumidityDehumidifierThreshold: 97,
+   RelativeHumidityHumidifierThreshold:   98,
+   RelayEnabled:                          99,
+   RelayState:                            100,
+   RelayControlPoint:                     101,
+   RemainingDuration:                     102,
+   RemoteKey:                             103,
+   ResetFilterIndication:                 104,
+   RotationDirection:                     105,
+   RotationSpeed:                         106,
+   Saturation:                            107,
+   SecuritySystemAlarmType:               108,
+   SecuritySystemCurrentState:            109,
+   SecuritySystemTargetState:             110,
+   SelectedRTPStreamConfiguration:        111,
+   SerialNumber:                          112,
+   ServiceLabelIndex:                     113,
+   ServiceLabelNamespace:                 114,
+   SetDuration:                           115,
+   SetupEndpoints:                        116,
+   SlatType:                              117,
+   SleepDiscoveryMode:                    118,
+   SmokeDetected:                         119,
+   StatusActive:                          120,
+   StatusFault:                           121,
+   StatusJammed:                          122,
+   StatusLowBattery:                      123,
+   StatusTampered:                        124,
+   StreamingStatus:                       125,
+   SulphurDioxideDensity:                 126,
+   SupportedAudioStreamConfiguration:     127,
+   SupportedRTPConfiguration:             128,
+   SupportedVideoStreamConfiguration:     129,
+   SwingMode:                             130,
+   TargetAirPurifierState:                131,
+   TargetAirQuality:                      132,
+   TargetDoorState:                       133,
+   TargetFanState:                        134,
+   TargetHeaterCoolerState:               135,
+   TargetHeatingCoolingState:             136,
+   TargetHorizontalTiltAngle:             137,
+   TargetHumidifierDehumidifierState:     138,
+   TargetMediaState:                      139,
+   TargetPosition:                        140,
+   TargetRelativeHumidity:                141,
+   TargetSlatState:                       142,
+   TargetTemperature:                     143,
+   TargetTiltAngle:                       144,
+   TargetVerticalTiltAngle:               145,
+   TargetVisibilityState:                 146,
+   TemperatureDisplayUnits:               147,
+   TimeUpdate:                            148,
+   TunneledAccessoryAdvertising:          149,
+   TunneledAccessoryConnected:            150,
+   TunneledAccessoryStateNumber:          151,
+   TunnelConnectionTimeout:               152,
+   ValveType:                             153,
+   Version:                               154,
+   VOCDensity:                            155,
+   Volume:                                156,
+   VolumeControlType:                     157,
+   VolumeSelector:                        158,
+   WaterLevel:                            159,
+   properties: {}
+};
 
 
 module.exports = function (homebridge) {
+
    // Accessory must be created from PlatformAccessory Constructor
    Accessory = homebridge.platformAccessory;
 
@@ -403,6 +260,7 @@ module.exports = function (homebridge) {
    Characteristic = homebridge.hap.Characteristic;
 
    UUIDGen = homebridge.hap.uuid;
+
 
    // If you see these lines in other plugins with true, at the end,
    // you would provide a configurationRequestHandler to add/Remove
@@ -413,173 +271,235 @@ module.exports = function (homebridge) {
 
    FakeGatoHistoryService = require('fakegato-history')(homebridge);
 
-   // This is for feature of CustomConfig, not implemented yet
-   charMapper =
-   [Characteristic.AccessoryFlags,
-    Characteristic.Active,
-    Characteristic.ActiveIdentifier,
-    Characteristic.AccessoryIdentifier,
-    Characteristic.AdministratorOnlyAccess,
-    Characteristic.AirParticulateDensity,
-    Characteristic.AirParticulateSize,
-    Characteristic.AirQuality,
-    Characteristic.AudioFeedback,
-    Characteristic.BatteryLevel,                  // 10
-    Characteristic.Brightness,
-    Characteristic.CarbonDioxideDetected,
-    Characteristic.CarbonDioxideLevel,
-    Characteristic.CarbonDioxidePeakLevel,
-    Characteristic.CarbonMonoxideDetected,
-    Characteristic.CarbonMonoxideLevel,
-    Characteristic.CarbonMonoxidePeakLevel,
-    Characteristic.Category,
-    Characteristic.ChargingState,
-    Characteristic.ClosedCaptions,                //20
-    Characteristic.ColorTemperature,
-    Characteristic.ConfiguredName,         
-    Characteristic.ConfigureBridgedAccessoryStatus,
-    Characteristic.ConfigureBridgedAccessory,
-    Characteristic.ContactSensorState,
-    Characteristic.CoolingThresholdTemperature,
-    Characteristic.CurrentAirPurifierState,
-    Characteristic.CurrentAmbientLightLevel,
-    Characteristic.CurrentDoorState,
-    Characteristic.CurrentFanState,                  // 30
-    Characteristic.CurrentHeaterCoolerState,
-    Characteristic.CurrentHeatingCoolingState,
-    Characteristic.CurrentHorizontalTiltAngle,
-    Characteristic.CurrentHumidifierDehumidifierState,
-    Characteristic.CurrentMediaState,
-    Characteristic.CurrentPosition,
-    Characteristic.CurrentRelativeHumidity,
-    Characteristic.CurrentSlatState,
-    Characteristic.CurrentTemperature,
-    Characteristic.CurrentTiltAngle,                 // 40
-    Characteristic.CurrentTime,
-    Characteristic.CurrentVerticalTiltAngle,
-    Characteristic.CurrentVisibilityState,
-    Characteristic.DayoftheWeek,
-    Characteristic.DigitalZoom,
-    Characteristic.DiscoverBridgedAccessories,
-    Characteristic.DiscoveredBridgedAccessories,
-    Characteristic.DisplayOrder,
-    Characteristic.FilterChangeIndication,
-    Characteristic.FilterLifeLevel,                  // 50
-    Characteristic.FirmwareRevision,
-    Characteristic.HardwareRevision,
-    Characteristic.HeatingThresholdTemperature,
-    Characteristic.HoldPosition,
-    Characteristic.Hue,
-    Characteristic.Identify,
-    Characteristic.ImageMirroring,
-    Characteristic.ImageRotation,
-    Characteristic.InputDeviceType,
-    Characteristic.InputSourceType,                  // 60
-    Characteristic.InUse,
-    Characteristic.IsConfigured,
-    Characteristic.LeakDetected,
-    Characteristic.LinkQuality,
-    Characteristic.LockControlPoint,
-    Characteristic.LockCurrentState,
-    Characteristic.LockLastKnownAction,
-    Characteristic.LockManagementAutoSecurityTimeout,
-    Characteristic.LockPhysicalControls,
-    Characteristic.LockTargetState,                   // 70
-    Characteristic.Logs,
-    Characteristic.Manufacturer,
-    Characteristic.Model,
-    Characteristic.MotionDetected,
-    Characteristic.Mute,
-    Characteristic.Name,
-    Characteristic.NightVision,
-    Characteristic.NitrogenDioxideDensity,
-    Characteristic.ObstructionDetected,
-    Characteristic.OccupancyDetected,                  // 80
-    Characteristic.On,
-    Characteristic.OpticalZoom,
-    Characteristic.OutletInUse,
-    Characteristic.OzoneDensity,
-    Characteristic.PairSetup,
-    Characteristic.PairVerify,
-    Characteristic.PairingFeatures,
-    Characteristic.PairingPairings,
-    Characteristic.PictureMode,
-    Characteristic.PM10Density,                        // 90
-    Characteristic.PM2_5Density,
-    Characteristic.PositionState,
-    Characteristic.PowerModeSelection,
-    Characteristic.ProgramMode,
-    Characteristic.ProgrammableSwitchOutputState,
-    Characteristic.Reachable,
-    Characteristic.ProgrammableSwitchEvent,
-    Characteristic.RelativeHumidityDehumidifierThreshold,
-    Characteristic.RelativeHumidityHumidifierThreshold,
-    Characteristic.RelayEnabled,                       // 100
-    Characteristic.RelayState,
-    Characteristic.ControlPoint,
-    Characteristic.RemainingDuration,
-    Characteristic.RemoteKey,
-    Characteristic.ResetFilterIndication,
-    Characteristic.RotationDirection,
-    Characteristic.RotationSpeed,
-    Characteristic.Saturation,
-    Characteristic.SecuritySystemAlarmType,
-    Characteristic.SecuritySystemCurrentState,           // 110
-    Characteristic.SecuritySystemTargetState,
-    Characteristic.SelectedRTPStreamConfiguration,
-    Characteristic.SerialNumber,
-    Characteristic.ServiceLabelIndex,
-    Characteristic.ServiceLabelNamespace,
-    Characteristic.SetDuration,
-    Characteristic.SetupEndpoints,
-    Characteristic.SlatType,
-    Characteristic.SleepDiscoveryMode,
-    Characteristic.SmokeDetected,                        // 120
-    Characteristic.StatusActive,
-    Characteristic.StatusFault,
-    Characteristic.StatusJammed,
-    Characteristic.StatusLowBattery,
-    Characteristic.StatusTampered,
-    Characteristic.StreamingStatus,
-    Characteristic.SulphurDioxideDensity,
-    Characteristic.SupportedAudioStreamConfiguration,
-    Characteristic.SupportedRTPConfiguration,
-    Characteristic.SupportedVideoStreamConfiguration,    // 130
-    Characteristic.SwingMode,
-    Characteristic.TargetAirPurifierState,
-    Characteristic.TargetAirQuality,
-    Characteristic.TargetDoorState,
-    Characteristic.TargetFanState,
-    Characteristic.TargetHeaterCoolerState,
-    Characteristic.TargetHeatingCoolingState,
-    Characteristic.TargetHorizontalTiltAngle,
-    Characteristic.TargetHumidifierDehumidifierState,
-    Characteristic.TargetMediaState,                     // 140
-    Characteristic.TargetPosition,
-    Characteristic.TargetRelativeHumidity,
-    Characteristic.TargetSlatState,
-    Characteristic.TargetTemperature,
-    Characteristic.TargetTiltAngle,
-    Characteristic.TargetVerticalTiltAngle,
-    Characteristic.TargetVisibilityState,
-    Characteristic.TemperatureDisplayUnits,
-    Characteristic.TimeUpdate,
-    Characteristic.TunneledAccessoryAdvertising,          // 150
-    Characteristic.TunneledAccessoryConnected,
-    Characteristic.TunneledAccessoryStateNumber,
-    Characteristic.TunnelConnectionTimeout,
-    Characteristic.ValveType,
-    Characteristic.Version,
-    Characteristic.VOCDensity,
-    Characteristic.Volume,
-    Characteristic.VolumeControlType,
-    Characteristic.VolumeSelector,
-    Characteristic.WaterLevel                             // 160
-   ];
+   // Fill in the properties of each device
+   CMD4_DEVICE_TYPE_ENUM.properties =
+   {
+       0: { deviceName:'AccessoryInformation',        characteristic: Characteristic.AccessoryInformation},
+       1: { deviceName:'AirPurifier',                 characteristic: Characteristic.AirPurifier},
+       2: { deviceName:'AirQualitySensor',            characteristic: Characteristic.AirQualitySensor},
+       3: { deviceName:'BatteryService',              characteristic: Characteristic.BatteryService},
+       4: { deviceName:'BridgeConfiguration',         characteristic: Characteristic.BridgeConfiguration},
+       5: { deviceName:'BridgingState',               characteristic: Characteristic.BridgingState},
+       6: { deviceName:'CameraControl',               characteristic: Characteristic.CameraControl},
+       7: { deviceName:'CameraRTPStreamManagement',   characteristic: Characteristic.CameraRTPStreamManagement},
+       8: { deviceName:'CarbonDioxideSensor',         characteristic: Characteristic.CarbonDioxideSensor},
+       9: { deviceName:'CarbonMonoxideSensor',        characteristic: Characteristic.CarbonMonoxideSensor},
+      10: { deviceName:'ContactSensor',               characteristic: Characteristic.ContactSensor},
+      11: { deviceName:'Door',                        characteristic: Characteristic.Door},
+      12: { deviceName:'DoorBell',                    characteristic: Characteristic.Doorbell},
+      13: { deviceName:'Fan',                         characteristic: Characteristic.Fan},
+      14: { deviceName:'Fanv1',                       characteristic: Characteristic.Fanv1},
+      15: { deviceName:'Fanv2',                       characteristic: Characteristic.Fanv2},
+      16: { deviceName:'Faucet',                      characteristic: Characteristic.Faucet},
+      17: { deviceName:'FilterMaintenance',           characteristic: Characteristic.FilterMaintenance},     
+      18: { deviceName:'GarageDoorOpener',            characteristic: Characteristic.GarageDoorOpener},
+      19: { deviceName:'HeaterCooler',                characteristic: Characteristic.HeaterCooler},
+      20: { deviceName:'HumidifierDehumidifier',      characteristic: Characteristic.HumidifierDehumidifier},
+      21: { deviceName:'HumiditySensor',              characteristic: Characteristic.HumiditySensor},
+      22: { deviceName:'InputSource',                 characteristic: Characteristic.OuputSource},
+      23: { deviceName:'IrrigationSystem',            characteristic: Characteristic.IrrigationSystem},
+      24: { deviceName:'LeakSensor',                  characteristic: Characteristic.LeakSensor},
+      25: { deviceName:'LightSensor',                 characteristic: Characteristic.LightSensor},
+      26: { deviceName:'Lightbulb',                   characteristic: Characteristic.Lightbulb},
+      27: { deviceName:'LockManagement',              characteristic: Characteristic.LockManagement},
+      28: { deviceName:'LockMechanism',               characteristic: Characteristic.LockMechanism},
+      29: { deviceName:'Microphone',                  characteristic: Characteristic.Microphone},
+      30: { deviceName:'MotionSensor',                characteristic: Characteristic.MotionSensor},
+      31: { deviceName:'OccupancySensor',             characteristic: Characteristic.OccupancySensor},
+      32: { deviceName:'Outlet',                      characteristic: Characteristic.Outlet},
+      33: { deviceName:'Pairing',                     characteristic: Characteristic.Pairing},
+      34: { deviceName:'ProtocolInformation',         characteristic: Characteristic.ProtocolInformation},
+      35: { deviceName:'Relay',                       characteristic: Characteristic.Relay},
+      36: { deviceName:'SecuritySystem',              characteristic: Characteristic.SecuritySystem},
+      37: { deviceName:'ServiceLabel',                characteristic: Characteristic.ServiceLabel},
+      38: { deviceName:'Slat',                        characteristic: Characteristic.Slat},
+      39: { deviceName:'SmokeSensor',                 characteristic: Characteristic.SmokeSensor},
+      40: { deviceName:'Speaker',                     characteristic: Characteristic.Speaker},
+      41: { deviceName:'StatefulProgrammableSwitch',  characteristic: Characteristic.StatefulProgrammableSwitch},
+      42: { deviceName:'StatelessProgrammableSwitch', characteristic: Characteristic.StatelessProgrammableSwitch},
+      43: { deviceName:'Switch',                      characteristic: Characteristic.Switch},
+      44: { deviceName:'Television',                  characteristic: Characteristic.Television},
+      45: { deviceName:'TelevisionSpeaker',           characteristic: Characteristic.TelevisionSpeaker},
+      46: { deviceName:'TemperatureSensor',           characteristic: Characteristic.TemperatureSensor},
+      47: { deviceName:'Thermostat',                  characteristic: Characteristic.Thermostat},
+      48: { deviceName:'TimeInformation',             characteristic: Characteristic.TimeInformation},
+      49: { deviceName:'TunneledBTLEAccessoryService', characteristic: Characteristic.TunneledBTLEAccessoryService},
+      50: { deviceName:'Valve',                       characteristic: Characteristic.Valve},
+      51: { deviceName:'Window',                      characteristic: Characteristic.Window},
+      52: { deviceName:'WindowCovering',              characteristic: Characteristic.WindowCovering},
+   };
+
+   // Fill in the properties of all possible characteristics
+   CMD4_ACC_TYPE_ENUM.properties =
+   {
+      0:   { name: "AccessoryFlags", characteristic: Characteristic.AccessoryFlags},
+      1:   { name: "Active", characteristic: Characteristic.Active },
+      2:   { name: "ActiveIdentifier", characteristic: Characteristic.ActiveIdentifier },
+      3:   { name: "AccessoryIdentifier", characteristic: Characteristic.AccessoryIdentifier },
+      4:   { name: "AdministratorOnlyAccess", characteristic: Characteristic.AdministratorOnlyAccess },
+      5:   { name: "AirParticulateDensity", characteristic: Characteristic.AirParticulateDensity },
+      6:   { name: "AirParticulateSize", characteristic: Characteristic.AirParticulateSize },
+      7:   { name: "AirQuality", characteristic: Characteristic.AirQuality },
+      8:   { name: "AudioFeedback", characteristic: Characteristic.AudioFeedback },
+      9:   { name: "BatteryLevel", characteristic: Characteristic.BatteryLevel },
+      10:  { name: "Brightness", characteristic: Characteristic.Brightness },
+      11:  { name: "CarbonDioxideDetected", characteristic: Characteristic.CarbonDioxideDetected },
+      12:  { name: "CarbonDioxideLevel", characteristic: Characteristic.CarbonDioxideLevel },
+      13:  { name: "CarbonDioxidePeakLevel", characteristic: Characteristic.CarbonDioxidePeakLevel },
+      14:  { name: "CarbonMonoxideDetected", characteristic: Characteristic.CarbonMonoxideDetected },
+      15:  { name: "CarbonMonoxideLevel", characteristic: Characteristic.CarbonMonoxideLevel },
+      16:  { name: "CarbonMonoxidePeakLevel", characteristic: Characteristic.CarbonMonoxidePeakLevel },
+      17:  { name: "Category", characteristic: Characteristic.Category },
+      18:  { name: "ChargingState", characteristic: Characteristic.ChargingState },
+      19:  { name: "ClosedCaptions", characteristic: Characteristic.ClosedCaptions },
+      20:  { name: "ColorTemperature", characteristic: Characteristic.ColorTemperature },
+      21:  { name: "ConfiguredName", characteristic: Characteristic.ConfiguredName },
+      22:  { name: "ConfigureBridgedAccessoryStatus", characteristic: Characteristic.ConfigureBridgedAccessoryStatus },
+      23:  { name: "ConfigureBridgedAccessory", characteristic: Characteristic.ConfigureBridgedAccessory },
+      24:  { name: "ContactSensorState", characteristic: Characteristic.ContactSensorState },
+      25:  { name: "CoolingThresholdTemperature", characteristic: Characteristic.CoolingThresholdTemperature },
+      26:  { name: "CurrentAirPurifierState", characteristic: Characteristic.CurrentAirPurifierState },
+      27:  { name: "CurrentAmbientLightLevel", characteristic: Characteristic.CurrentAmbientLightLevel },
+      28:  { name: "CurrentDoorState", characteristic: Characteristic.CurrentDoorState },
+      29:  { name: "CurrentFanState", characteristic: Characteristic.CurrentFanState },
+      30:  { name: "CurrentHeaterCoolerState", characteristic: Characteristic.CurrentHeaterCoolerState },
+      31:  { name: "CurrentHeatingCoolingState", characteristic: Characteristic.CurrentHeatingCoolingState },
+      32:  { name: "CurrentHorizontalTiltAngle", characteristic: Characteristic.CurrentHorizontalTiltAngle },
+      33:  { name: "CurrentHumidifierDehumidifierState", characteristic: Characteristic.CurrentHumidifierDehumidifierState },
+      34:  { name: "CurrentMediaState", characteristic: Characteristic.CurrentMediaState },
+      35:  { name: "CurrentPosition", characteristic: Characteristic.CurrentPosition },
+      36:  { name: "CurrentRelativeHumidity", characteristic: Characteristic.CurrentRelativeHumidity },
+      37:  { name: "CurrentSlatState", characteristic: Characteristic.CurrentSlatState },
+      38:  { name: "CurrentTemperature", characteristic: Characteristic.CurrentTemperature },
+      39:  { name: "CurrentTiltAngle", characteristic: Characteristic.CurrentTiltAngle },
+      40:  { name: "CurrentTime", characteristic: Characteristic.CurrentTime },
+      41:  { name: "CurrentVerticalTiltAngle", characteristic: Characteristic.CurrentVerticalTiltAngle },
+      42:  { name: "CurrentVisibilityState", characteristic: Characteristic.CurrentVisibilityState },
+      43:  { name: "DayoftheWeek", characteristic: Characteristic.DayoftheWeek },
+      44:  { name: "DigitalZoom", characteristic: Characteristic.DigitalZoom },
+      45:  { name: "DiscoverBridgedAccessories", characteristic: Characteristic.DiscoverBridgedAccessories },
+      46:  { name: "DiscoveredBridgedAccessories", characteristic: Characteristic.DiscoveredBridgedAccessories },
+      47:  { name: "DisplayOrder", characteristic: Characteristic.DisplayOrder },
+      48:  { name: "FilterChangeIndication", characteristic: Characteristic.FilterChangeIndication },
+      49:  { name: "FilterLifeLevel", characteristic: Characteristic.FilterLifeLevel },
+      50:  { name: "FirmwareRevision", characteristic: Characteristic.FirmwareRevision },
+      51:  { name: "HardwareRevision", characteristic: Characteristic.HardwareRevision },
+      52:  { name: "HeatingThresholdTemperature", characteristic: Characteristic.HeatingThresholdTemperature },
+      53:  { name: "HoldPosition", characteristic: Characteristic.HoldPosition },
+      54:  { name: "Hue", characteristic: Characteristic.Hue },
+      55:  { name: "Identify", characteristic: Characteristic.Identify },
+      56:  { name: "ImageMirroring", characteristic: Characteristic.ImageMirroring },
+      57:  { name: "ImageRotation", characteristic: Characteristic.ImageRotation },
+      58:  { name: "InputDeviceType", characteristic: Characteristic.InputDeviceType },
+      59:  { name: "InputSourceType", characteristic: Characteristic.InputSourceType },
+      60:  { name: "InUse", characteristic: Characteristic.InUse },
+      61:  { name: "IsConfigured", characteristic: Characteristic.IsConfigured },
+      62:  { name: "LeakDetected", characteristic: Characteristic.LeakDetected },
+      63:  { name: "LinkQuality", characteristic: Characteristic.LinkQuality },
+      64:  { name: "LockControlPoint", characteristic: Characteristic.LockControlPoint },
+      65:  { name: "LockCurrentState", characteristic: Characteristic.LockCurrentState },
+      66:  { name: "LockLastKnownAction", characteristic: Characteristic.LockLastKnownAction },
+      67:  { name: "LockManagementAutoSecurityTimeout", characteristic: Characteristic.LockManagementAutoSecurityTimeout },
+      68:  { name: "LockPhysicalControls", characteristic: Characteristic.LockPhysicalControls },
+      69:  { name: "LockTargetState", characteristic: Characteristic.LockTargetState },
+      70:  { name: "Logs", characteristic: Characteristic.Logs },
+      71:  { name: "Manufacturer", characteristic: Characteristic.Manufacturer },
+      72:  { name: "Model", characteristic: Characteristic.Model },
+      73:  { name: "MotionDetected", characteristic: Characteristic.MotionDetected },
+      74:  { name: "Mute", characteristic: Characteristic.Mute },
+      75:  { name: "Name", characteristic: Characteristic.Name },
+      76:  { name: "NightVision", characteristic: Characteristic.NightVision },
+      77:  { name: "NitrogenDioxideDensity", characteristic: Characteristic.NitrogenDioxideDensity },
+      78:  { name: "ObstructionDetected", characteristic: Characteristic.ObstructionDetected },
+      79:  { name: "OccupancyDetected", characteristic: Characteristic.OccupancyDetected },
+      80:  { name: "On", characteristic: Characteristic.On },
+      81:  { name: "OpticalZoom", characteristic: Characteristic.OpticalZoom },
+      82:  { name: "OutletInUse", characteristic: Characteristic.OutletInUse },
+      83:  { name: "OzoneDensity", characteristic: Characteristic.OzoneDensity },
+      84:  { name: "PairSetup", characteristic: Characteristic.PairSetup },
+      85:  { name: "PairVerify", characteristic: Characteristic.PairVerify },
+      86:  { name: "PairingFeatures", characteristic: Characteristic.PairingFeatures },
+      87:  { name: "PairingPairings", characteristic: Characteristic.PairingPairings },
+      88:  { name: "PictureMode", characteristic: Characteristic.PictureMode },
+      89:  { name: "PM10Density", characteristic: Characteristic.PM10Density },
+      90:  { name: "PM2_5Density", characteristic: Characteristic.PM2_5Density },
+      91:  { name: "PositionState", characteristic: Characteristic.PositionState },
+      92:  { name: "PowerModeSelection", characteristic: Characteristic.PowerModeSelection },
+      93:  { name: "ProgramMode", characteristic: Characteristic.ProgramMode },
+      94:  { name: "ProgrammableSwitchOutputState", characteristic: Characteristic.ProgrammableSwitchOutputState },
+      95:  { name: "Reachable", characteristic: Characteristic.Reachable },
+      96:  { name: "ProgrammableSwitchEvent", characteristic: Characteristic.ProgrammableSwitchEvent },
+      97:  { name: "RelativeHumidityDehumidifierThreshold", characteristic: Characteristic.RelativeHumidityDehumidifierThreshold },
+      98:  { name: "RelativeHumidityHumidifierThreshold", characteristic: Characteristic.RelativeHumidityHumidifierThreshold },
+      99:  { name: "RelayEnabled", characteristic: Characteristic.RelayEnabled },
+      100: { name: "RelayState", characteristic: Characteristic.RelayState },
+      101: { name: "RelayControlPoint", characteristic: Characteristic.RelayControlPoint },
+      102: { name: "RemainingDuration", characteristic: Characteristic.RemainingDuration },
+      103: { name: "RemoteKey", characteristic: Characteristic.RemoteKey },
+      104: { name: "ResetFilterIndication", characteristic: Characteristic.ResetFilterIndication },
+      105: { name: "RotationDirection", characteristic: Characteristic.RotationDirection },
+      106: { name: "RotationSpeed", characteristic: Characteristic.RotationSpeed },
+      107: { name: "Saturation", characteristic: Characteristic.Saturation },
+      108: { name: "SecuritySystemAlarmType", characteristic: Characteristic.SecuritySystemAlarmType },
+      109: { name: "SecuritySystemCurrentState", characteristic: Characteristic.SecuritySystemCurrentState },
+      110: { name: "SecuritySystemTargetState", characteristic: Characteristic.SecuritySystemTargetState },
+      111: { name: "SelectedRTPStreamConfiguration", characteristic: Characteristic.SelectedRTPStreamConfiguration },
+      112: { name: "SerialNumber", characteristic: Characteristic.SerialNumber },
+      113: { name: "ServiceLabelIndex", characteristic: Characteristic.ServiceLabelIndex },
+      114: { name: "ServiceLabelNamespace", characteristic: Characteristic.ServiceLabelNamespace },
+      115: { name: "SetDuration", characteristic: Characteristic.SetDuration },
+      116: { name: "SetupEndpoints", characteristic: Characteristic.SetupEndpoints },
+      117: { name: "SlatType", characteristic: Characteristic.SlatType },
+      118: { name: "SleepDiscoveryMode", characteristic: Characteristic.SleepDiscoveryMode },
+      119: { name: "SmokeDetected", characteristic: Characteristic.SmokeDetected },
+      120: { name: "StatusActive", characteristic: Characteristic.StatusActive },
+      121: { name: "StatusFault", characteristic: Characteristic.StatusFault },
+      122: { name: "StatusJammed", characteristic: Characteristic.StatusJammed },
+      123: { name: "StatusLowBattery", characteristic: Characteristic.StatusLowBattery },
+      124: { name: "StatusTampered", characteristic: Characteristic.StatusTampered },
+      125: { name: "StreamingStatus", characteristic: Characteristic.StreamingStatus },
+      126: { name: "SulphurDioxideDensity", characteristic: Characteristic.SulphurDioxideDensity },
+      127: { name: "SupportedAudioStreamConfiguration", characteristic: Characteristic.SupportedAudioStreamConfiguration },
+      128: { name: "SupportedRTPConfiguration", characteristic: Characteristic.SupportedRTPConfiguration },
+      129: { name: "SupportedVideoStreamConfiguration", characteristic: Characteristic.SupportedVideoStreamConfiguration },
+      130: { name: "SwingMode", characteristic: Characteristic.SwingMode },
+      131: { name: "TargetAirPurifierState", characteristic: Characteristic.TargetAirPurifierState },
+      132: { name: "TargetAirQuality", characteristic: Characteristic.TargetAirQuality },
+      133: { name: "TargetDoorState", characteristic: Characteristic.TargetDoorState },
+      134: { name: "TargetFanState", characteristic: Characteristic.TargetFanState },
+      135: { name: "TargetHeaterCoolerState", characteristic: Characteristic.TargetHeaterCoolerState },
+      136: { name: "TargetHeatingCoolingState", characteristic: Characteristic.TargetHeatingCoolingState },
+      137: { name: "TargetHorizontalTiltAngle", characteristic: Characteristic.TargetHorizontalTiltAngle },
+      138: { name: "TargetHumidifierDehumidifierState", characteristic: Characteristic.TargetHumidifierDehumidifierState },
+      139: { name: "TargetMediaState", characteristic: Characteristic.TargetMediaState },
+      140: { name: "TargetPosition", characteristic: Characteristic.TargetPosition },
+      141: { name: "TargetRelativeHumidity", characteristic: Characteristic.TargetRelativeHumidity },
+      142: { name: "TargetSlatState", characteristic: Characteristic.TargetSlatState },
+      143: { name: "TargetTemperature", characteristic: Characteristic.TargetTemperature },
+      144: { name: "TargetTiltAngle", characteristic: Characteristic.TargetTiltAngle },
+      145: { name: "TargetVerticalTiltAngle", characteristic: Characteristic.TargetVerticalTiltAngle },
+      146: { name: "TargetVisibilityState", characteristic: Characteristic.TargetVisibilityState },
+      147: { name: "TemperatureDisplayUnits", characteristic: Characteristic.TemperatureDisplayUnits },
+      148: { name: "TimeUpdate", characteristic: Characteristic.TimeUpdate },
+      149: { name: "TunneledAccessoryAdvertising", characteristic: Characteristic.TunneledAccessoryAdvertising },
+      150: { name: "TunneledAccessoryConnected", characteristic: Characteristic.TunneledAccessoryConnected },
+      151: { name: "TunneledAccessoryStateNumber", characteristic: Characteristic.TunneledAccessoryStateNumber },
+      152: { name: "TunnelConnectionTimeout", characteristic: Characteristic.TunnelConnectionTimeout },
+      153: { name: "ValveType", characteristic: Characteristic.ValveType },
+      154: { name: "Version", characteristic: Characteristic.Version },
+      155: { name: "VOCDensity", characteristic: Characteristic.VOCDensity },
+      156: { name: "Volume", characteristic: Characteristic.Volume },
+      157: { name: "VolumeControlType", characteristic: Characteristic.VolumeControlType },
+      158: { name: "VolumeSelector", characteristic: Characteristic.VolumeSelector },
+      159: { name: "WaterLevel", characteristic: Characteristic.WaterLevel }
+   };
+
+// Object.freeze(CMD4_DEVICE_TYPE_enum);
 
 
 
-};
+}
+
 
 // Platform definitions
 function Cmd4Platform(log, config, api) {
@@ -642,7 +562,6 @@ Cmd4Platform.prototype =
       this.log("Fetching config.json devices.");
       for( var i=0; i<this.config.accessories.length; i++ )
       {
-
          // This will create an accessory based on the Cmd4Accessory
          // definition bellow. This is not obvious for a newbie.
          this.log("Processing accessory " + this.config.accessories[i].name);
@@ -673,55 +592,42 @@ Cmd4Platform.prototype =
    }
 }
 
-Cmd4Platform.prototype.characteristicPolling = function (accessory, characteristicStringIndex, timeout, interval)
+Cmd4Platform.prototype.characteristicPolling = function (accessory, accTypeEnumIndex, timeout, interval)
 {
    var self = accessory;
 
 
-   // The default interval is 1 minute. Timers are in milliseconds
-   timeout = parseInt(timeout, 10) || 60000;
-
-   // The default interval is 10 seconds
-   interval = parseInt(interval, 10) || 10;
-
-
-   self.log.debug("Doing Poll of '%s' for '%s' '%s'", characteristicStringIndex,
-          accMapper[characteristicStringIndex], self.name);
+   self.log.debug("Doing Poll of index:%s characteristic:%s for '%s' timeout=%s interval=%s", accTypeEnumIndex,
+          CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].name, self.name, timeout, interval);
 
    // Make sure that the characteristic exists
-   if ( characteristicStringIndex < 0 )
+   if ( accTypeEnumIndex < 0 )
    {
-      self.log("CMD4 WARNING: No such polling characteristicIndex '%d' for '%s'",
-         characteristicStringIndex, self.name);
+      self.log("CMD4 WARNING: No such polling accTypeEnumIndex '%d' for '%s'",
+         accTypeEnumIndex, self.name);
       return;
    }
 
    // Clear polling
-   if (this.listOfPollingCharacteristics[ accessory.name + characteristicStringIndex ] == undefined)
-      clearTimeout(this.listOfPollingCharacteristics[ accessory.name + characteristicStringIndex ]);
+   if (this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] == undefined)
+      clearTimeout(this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ]);
 
    // i.e. Characteristic.On
    // i.e.  Characteristic.RotationDirection
    self.service.getCharacteristic(
-      charMapper[ characteristicStringIndex ]     
+      CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].characteristic
    ).getValue();
  
   
-    this.listOfPollingCharacteristics[ accessory.name + characteristicStringIndex ] =
+    this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
        setTimeout(this.characteristicPolling.bind(
-          this, accessory, characteristicStringIndex, timeout, interval), interval * 1000);
+          this, accessory, accTypeEnumIndex, timeout, interval), interval);
    
  }
 
  Cmd4Platform.prototype.setupCharacteristicPolling = function (accessory)
 {
    var self = accessory;
-
-   // The default interval is 1 minute. Timers are in milliseconds
-   self.timeout = parseInt(self.timeout, 10) || 60000;
-
-   // The default interval is 10 seconds
-   self.interval = parseInt(self.interval, 10) || 10;
 
    self.log.debug("Setting up '%s' polling characteristics of accessory '%s'",
       self.polling.length, self.name);
@@ -733,11 +639,11 @@ Cmd4Platform.prototype.characteristicPolling = function (accessory, characterist
       // *NEW* Characteristic polling is a json var
       var jsonPollingConfig = self.polling[jsonIndex];
 
-      // The default interval is 10 seconds
-      var interval = 10;
+      // The default timeout is 1 minute. Timeouts are in milliseconds
+      var timeout = DEFAULT_TIMEOUT;
 
-      // The default interval is 1 minute. Timers are in milliseconds
-      var timeout = 60000;
+      // The defaault interval is 1 minute. Intervals are in seconds
+      var interval = DEFAULT_INTERVAL;
 
       var ucKeyIndex = -1;
 
@@ -751,18 +657,18 @@ Cmd4Platform.prototype.characteristicPolling = function (accessory, characterist
             case "Timeout":
                // Timers are in milliseconds. A low value can result in failure to get/set values
                timeout = parseInt(value, 10);
-               if (timeout < 500)
+               if ( timeout < 500 )
                {
                    this.log.warn("Timeout for '%s' is in milliseconds. A value of '%d' seems pretty low.",
                           this.config.name, timeout);
                }
                break;
             case "Interval":
-               // The default interval is 10 seconds
-               interval = parseInt(value, 10);
+               // Intervals are in seconds
+               interval = parseInt(value, 10) * 1000;
                break;
             default:
-               ucKeyIndex = accMapper.indexOf(ucKey);
+               ucKeyIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.name === ucKey);
                if ( ucKeyIndex < 0 )
                {
                   self.log("CMD4 WARNING: No such polling characteristic '%s' for '%'",
@@ -772,493 +678,493 @@ Cmd4Platform.prototype.characteristicPolling = function (accessory, characterist
           }
       }
 
-      self.log.debug("Setting up '%s' for polling of '%s'",self.name, accMapper[ucKeyIndex]);
+      self.log.debug("Setting up '%s' for polling of '%s' timeout=%s interval=%s", self.name, CMD4_ACC_TYPE_ENUM.properties[ucKeyIndex].name, timeout, interval);
 
-      // The default interval is 10 seconds
-      interval = parseInt(interval, 10) || 10;
-
-      // The default interval is 1 minute. Timers are in milliseconds
-      timeout = parseInt(timeout, 10) || 60000;
-        
       this.listOfPollingCharacteristics[ accessory.name + ucKeyIndex ] =
-         setTimeout(this.characteristicPolling.bind(this, accessory, ucKeyIndex, timeout, interval), interval * 1000);
+         setTimeout(this.characteristicPolling.bind(this, accessory, ucKeyIndex, timeout, interval), interval);
 
    }
 }
 
 // Change polling per accessory to characteristic polling of state traits
+// Here we make sure that required characteristics are set.
 Cmd4Platform.prototype.setupStatePollingPerAccessory = function (accessory)
 {
    var self = accessory;
 
-   // The default interval is 1 minute. Timers are in milliseconds
-   self.timeout = parseInt(self.timeout, 10) || 60000;
+   var accTypeEnumIndex = -1;
 
-   // The default interval is 10 seconds
-   self.interval = parseInt(self.interval, 10) || 10;
-
-   var charStringIndex = -1;
-
-   switch(accessory.config.type)
+   switch(accessory.typeIndex)
    {
-      case CMD4_ACC_TYPE_AccessoryInformation:
+      case CMD4_DEVICE_TYPE_ENUM.AccessoryInformation:
       {
-         charStringIndex = accMapper.indexOf(CMD4_Identify);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Identify;
 
          break;
       }
-      case CMD4_ACC_TYPE_AirPurifier:
+      case CMD4_DEVICE_TYPE_ENUM.AirPurifier:
       {
-         charStringIndex = accMapper.indexOf(CMD4_Active);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Active;
 
          break;
       }
-      case CMD4_ACC_TYPE_AirQualitySensor:
+      case CMD4_DEVICE_TYPE_ENUM.AirQualitySensor:
       {
-         if ( accessory.getStoredValueForKey(CMD4_StatusActive) != undefined )
+         if ( accessory.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusActive) != undefined )
          {
-            charStringIndex = accMapper.indexOf(CMD4_StatusActive);
+            accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusActive;
      
-            this.listOfPollingCharacteristics[ accessory.name + charStringIndex ] =
+            this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
                setTimeout(this.characteristicPolling.bind(
-                  this, accessory, charStringIndex, self.timeout, self.interval), self.interval * 1000);
+                  this, accessory, accTypeEnumIndex, self.timeout, self.interval), self.interval);
          }
      
-         charStringIndex = accMapper.indexOf(CMD4_AirQuality);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AirQuality;
 
          break;
       }
-      case CMD4_ACC_TYPE_BatteryService:
+      case CMD4_DEVICE_TYPE_ENUM.BatteryService:
       {
-         charStringIndex = accMapper.indexOf(CMD4_StatusLowBattery);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusLowBattery;
 
          break;
       }
-      case CMD4_ACC_TYPE_BridgeConfiguration:
+      case CMD4_DEVICE_TYPE_ENUM.BridgeConfiguration:
       {
-         charStringIndex = CMD4_ConfigureBridgedAccessoryStatus;
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ConfigureBridgedAccessoryStatus;
          break;
       }
-      case CMD4_ACC_TYPE_BridgingState:
+      case CMD4_DEVICE_TYPE_ENUM.BridgingState:
       {
-         charStringIndex = CMD4_Reachable;
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Reachable;
          break;
       }
-      case CMD4_ACC_TYPE_CameraControl:
+      case CMD4_DEVICE_TYPE_ENUM.CameraControl:
       {
-         charStringIndex = CMD4_On;
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.On;
 
          break;
       }
-      case CMD4_ACC_TYPE_CameraRTPStreamManagement:
+      case CMD4_DEVICE_TYPE_ENUM.CameraRTPStreamManagement:
       {
-         charStringIndex = accMapper.indexOf(CMD4_StatusActive);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusActive;
 
          break;
       }
-      case CMD4_ACC_TYPE_CarbonDioxideSensor:
+      case CMD4_DEVICE_TYPE_ENUM.CarbonDioxideSensor:
       {
-         if ( accessory.getStoredValueForKey(CMD4_StatusActive) != undefined )
+         if ( accessory.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusActive) != undefined )
          {
-            charStringIndex = accMapper.indexOf(CMD4_StatusActive);
+            accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusActive;
      
-            this.listOfPollingCharacteristics[ accessory.name + charStringIndex ] =
+            this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
                setTimeout(this.characteristicPolling.bind(
-                  this, accessory, charStringIndex, self.timeout, self.interval), self.interval * 1000);
-         }
-  
-         charStringIndex = accMapper.indexOf(CMD4_CarbonDioxideDetected);
-
-         break;
-      }
-      case CMD4_ACC_TYPE_CarbonMonoxideSensor:
-      {
-         if ( accessory.getStoredValueForKey(CMD4_StatusActive) != undefined )
-         {
-            charStringIndex = accMapper.indexOf(CMD4_StatusActive);
-     
-            this.listOfPollingCharacteristics[ accessory.name + charStringIndex ] =
-               setTimeout(this.characteristicPolling.bind(
-                  this, accessory, charStringIndex, self.timeout, self.interval), self.interval * 1000);                  
+                  this, accessory, accTypeEnumIndex,
+                  self.timeout, self.interval), self.interval);
          }
   
-         charStringIndex = accMapper.indexOf(CMD4_CarbonMonoxideDetected);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CarbonDioxideDetected;
 
          break;
       }
-      case CMD4_ACC_TYPE_ContactSensor:
+      case CMD4_DEVICE_TYPE_ENUM.CarbonMonoxideSensor:
       {
-         if ( accessory.getStoredValueForKey(CMD4_StatusActive) != undefined )
+         if ( accessory.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusActive) != undefined )
          {
-            charStringIndex = accMapper.indexOf(CMD4_StatusActive);
+            accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusActive;
      
-            this.listOfPollingCharacteristics[ accessory.name + charStringIndex ] =
+            this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
                setTimeout(this.characteristicPolling.bind(
-                  this, accessory, charStringIndex, self.timeout, self.interval), self.interval * 1000);
+                  this, accessory, accTypeEnumIndex,
+                  self.timeout, self.interval), self.interval);                  
          }
   
-         charStringIndex = accMapper.indexOf(CMD4_ContactSensorState);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CarbonMonoxideDetected;
 
          break;
       }
-      case CMD4_ACC_TYPE_Door:
+      case CMD4_DEVICE_TYPE_ENUM.ContactSensor:
       {
-         charStringIndex = accMapper.indexOf(CMD4_CurrentDoorState);
+         if ( accessory.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusActive) != undefined )
+         {
+            accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusActive;
+     
+            this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
+               setTimeout(this.characteristicPolling.bind(
+                  this, accessory, accTypeEnumIndex,
+                  self.timeout, self.interval), self.interval);
+         }
+  
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ContactSensorState;
+
+         break;
+      }
+      case CMD4_DEVICE_TYPE_ENUM.Door:
+      {
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentDoorState;
      
          break;
       }
-      case CMD4_ACC_TYPE_DoorBell:
+      case CMD4_DEVICE_TYPE_ENUM.DoorBell:
       {
-         charStringIndex = accMapper.indexOf(CMD4_ProgrammableSwitchEvent);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent;
 
          break;
       }
-      case CMD4_ACC_TYPE_Fan:
-      case CMD4_ACC_TYPE_Fanv1:
+      case CMD4_DEVICE_TYPE_ENUM.Fan:
+      case CMD4_DEVICE_TYPE_ENUM.Fanv1:
       {
-         charStringIndex = accMapper.indexOf(CMD4_On);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.On;
 
          break;
       }
-      case CMD4_ACC_TYPE_Fanv2:
+      case CMD4_DEVICE_TYPE_ENUM.Fanv2:
       {
-         if ( accessory.getStoredValueForKey(CMD4_StatusActive) != undefined )
+         if ( accessory.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusActive) != undefined )
          {
-            charStringIndex = accMapper.indexOf(CMD4_StatusActive);
+            accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusActive;
          }
 
           break;
       }
-      case CMD4_ACC_TYPE_FilterMaintenance:
+      case CMD4_DEVICE_TYPE_ENUM.Faucet:
       {
-         charStringIndex = accMapper.indexOf(CMD4_FilterChangeIndication);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Active;
 
          break;
       }
-      case CMD4_ACC_TYPE_Faucet:
+      case CMD4_DEVICE_TYPE_ENUM.FilterMaintenance:
       {
-         charStringIndex = accMapper.indexOf(CMD4_Active);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.FilterChangeIndication;
 
          break;
-      }
-      case CMD4_ACC_TYPE_GarageDoorOpener:
+      }      
+      case CMD4_DEVICE_TYPE_ENUM.GarageDoorOpener:
       {
-         charStringIndex = accMapper.indexOf(CMD4_CurrentDoorState);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentDoorState;
   
          break;
       }
-      case CMD4_ACC_TYPE_HeaterCooler:
+      case CMD4_DEVICE_TYPE_ENUM.HeaterCooler:
       {
-         charStringIndex = accMapper.indexOf(CMD4_Active);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Active;
 
          break;
       }
-      case CMD4_ACC_TYPE_HumidifierDehumidifier:
+      case CMD4_DEVICE_TYPE_ENUM.HumidifierDehumidifier:
       {
-         charStringIndex = accMapper.indexOf(CMD4_Active);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Active;
 
          break;
       }
-      case CMD4_ACC_TYPE_HumiditySensor:
+      case CMD4_DEVICE_TYPE_ENUM.HumiditySensor:
       {
-         if ( accessory.getStoredValueForKey(CMD4_StatusActive) != undefined )
+         if ( accessory.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusActive) != undefined )
          {
-            charStringIndex = accMapper.indexOf(CMD4_StatusActive);
+            accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusActive;
   
-             this.listOfPollingCharacteristics[ accessory.name + charStringIndex ] =
+             this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
                setTimeout(this.characteristicPolling.bind(
-                  this, accessory, charStringIndex, self.timeout, self.interval), self.interval * 1000);
+                  this, accessory, accTypeEnumIndex,
+                  self.timeout, self.interval), self.interval);
          }
   
-         charStringIndex = accMapper.indexOf(CMD4_CurrentRelativeHumidity);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentRelativeHumidity;
 
          break;
       }
-      case CMD4_ACC_TYPE_InputSource:
+      case CMD4_DEVICE_TYPE_ENUM.InputSource:
       {
-         charStringIndex = CMD4_CurrentVisibilityState;
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentVisibilityState;
 
          break;
       }
-      case CMD4_ACC_TYPE_IrrigationSystem:
+      case CMD4_DEVICE_TYPE_ENUM.IrrigationSystem:
       {
-         charStringIndex = CMD4_Active;
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Active;
 
          break;
       }
-      case CMD4_ACC_TYPE_LeakSensor:
+      case CMD4_DEVICE_TYPE_ENUM.LeakSensor:
       {
-         if ( accessory.getStoredValueForKey(CMD4_StatusActive) != undefined )
+         if ( accessory.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusActive) != undefined )
          {
-            charStringIndex = accMapper.indexOf(CMD4_StatusActive);
+            accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusActive;
   
-            this.listOfPollingCharacteristics[ accessory.name + charStringIndex ] =
+            this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
                setTimeout(this.characteristicPolling.bind(
-                  this, accessory, charStringIndex, self.timeout, self.interval), self.interval * 1000);
+                  this, accessory, accTypeEnumIndex,
+                  self.timeout, self.interval), self.interval);
          }
   
-         charStringIndex = accMapper.indexOf(CMD4_LeakDetected);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.LeakDetected;
      
          break;
       }
-      case CMD4_ACC_TYPE_LightSensor:
+      case CMD4_DEVICE_TYPE_ENUM.LightSensor:
       {
-         if ( accessory.getStoredValueForKey(CMD4_StatusActive) != undefined )
+         if ( accessory.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusActive) != undefined )
          {
-            charStringIndex = accMapper.indexOf(CMD4_On);
+            accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.On;
      
-            this.listOfPollingCharacteristics[ accessory.name + charStringIndex ] =
+            this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
                setTimeout(this.characteristicPolling.bind(
-               this, accessory, charStringIndex, self.timeout, self.interval), self.interval * 1000);
+               this, accessory, accTypeEnumIndex,
+                  self.timeout, self.interval), self.interval);
          }
   
-         charStringIndex = accMapper.indexOf(CMD4_CurrentAmbientLightLevel);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentAmbientLightLevel;
                
          break;
       }
-      case CMD4_ACC_TYPE_Lightbulb:
+      case CMD4_DEVICE_TYPE_ENUM.Lightbulb:
       {
-         charStringIndex = accMapper.indexOf(CMD4_On);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.On;
 
          break;
       }
-      case CMD4_ACC_TYPE_LockManagement:
+      case CMD4_DEVICE_TYPE_ENUM.LockManagement:
       {
-         charStringIndex = accMapper.indexOf(CMD4_LockCurrentState);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.LockCurrentState;
 
          break;
       }
-      case CMD4_ACC_TYPE_LockMechanism:
+      case CMD4_DEVICE_TYPE_ENUM.LockMechanism:
       {
-         charStringIndex = accMapper.indexOf(CMD4_LockCurrentState);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.LockCurrentState;
   
          break;
       }
-      case CMD4_ACC_TYPE_Microphone:
+      case CMD4_DEVICE_TYPE_ENUM.Microphone:
       {
-         charStringIndex = accMapper.indexOf(CMD4_Mute);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
 
          break;
       }
-      case CMD4_ACC_TYPE_MotionSensor:
+      case CMD4_DEVICE_TYPE_ENUM.MotionSensor:
       {
-         if ( accessory.getStoredValueForKey(CMD4_StatusActive) != undefined )
+         if ( accessory.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusActive) != undefined )
          {
-            charStringIndex = accMapper.indexOf(CMD4_StatusActive);
+            accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusActive;
      
-            this.listOfPollingCharacteristics[ accessory.name + charStringIndex ] =
+            this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
                setTimeout(this.characteristicPolling.bind(
-                  this, accessory, charStringIndex, self.timeout, self.interval), self.interval * 1000);
+                  this, accessory, accTypeEnumIndex,
+                  self.timeout, self.interval), self.interval);
          }
   
-         charStringIndex = accMapper.indexOf(CMD4_MotionDetected);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.MotionDetected;
 
          break;
       }
-      case CMD4_ACC_TYPE_OccupancySensor:
+      case CMD4_DEVICE_TYPE_ENUM.OccupancySensor:
       {
-         if ( accessory.getStoredValueForKey(CMD4_StatusActive) != undefined )
+         if ( accessory.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusActive) != undefined )
          {
-            charStringIndex = accMapper.indexOf(CMD4_StatusActive);
+            accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusActive;
      
-            this.listOfPollingCharacteristics[ accessory.name + charStringIndex ] =
+            this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
                setTimeout(this.characteristicPolling.bind(
-                  this, accessory, charStringIndex, self.timeout, self.interval), self.interval * 1000);
+                  this, accessory, accTypeEnumIndex,
+                  self.timeout, self.interval), self.interval);
          }
   
-         charStringIndex = accMapper.indexOf(CMD4_OccupancyDetected);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.OccupancyDetected;
 
          break;
       }
-      case CMD4_ACC_TYPE_Outlet:
+      case CMD4_DEVICE_TYPE_ENUM.Outlet:
       {
-         charStringIndex = accMapper.indexOf(CMD4_On);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.On;
 
          break;
       }
-      case CMD4_ACC_TYPE_Pairing:
+      case CMD4_DEVICE_TYPE_ENUM.Pairing:
       {
          // The only thing that is not TLV8
-         charStringIndex = CMD4_PairingFeatures;
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.PairingFeatures;
 
          break;
       }
-      case CMD4_ACC_TYPE_ProtocolInformation:
+      case CMD4_DEVICE_TYPE_ENUM.ProtocolInformation:
       {
-         charStringIndex = CMD4_Version;
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Version;
 
          break;
       }
-      case CMD4_ACC_TYPE_Relay:
+      case CMD4_DEVICE_TYPE_ENUM.Relay:
       {
-         if ( accessory.getStoredValueForKey(CMD4_RelayEnabled) != undefined )
+         if ( accessory.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.RelayEnabled) != undefined )
          {
-            charStringIndex = accMapper.indexOf(CMD4_RelayEnabled);
+            accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.RelayEnabled;
 
-            this.listOfPollingCharacteristics[ accessory.name + charStringIndex ] =
+            this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
                setTimeout(this.characteristicPolling.bind(
-                  this, accessory, charStringIndex, self.timeout, self.interval), self.interval * 1000);
+                  this, accessory, accTypeEnumIndex,
+                  self.timeout, self.interval), self.interval);
          }
-         charStringIndex = CMD4_RelayState;
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.RelayState;
 
          break;
       }
-      case CMD4_ACC_TYPE_SecuritySystem:
+      case CMD4_DEVICE_TYPE_ENUM.SecuritySystem:
       {
-         charStringIndex = accMapper.indexOf(CMD4_SecuritySystemCurrentState);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SecuritySystemCurrentState;
     
          break;
       }
-      case CMD4_ACC_TYPE_ServiceLabel:
+      case CMD4_DEVICE_TYPE_ENUM.ServiceLabel:
       {
-         charStringIndex = accMapper.indexOf(CMD4_ServiceLabelNamespace);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ServiceLabelNamespace;
      
          break;
       }
-      case CMD4_ACC_TYPE_Slat:
+      case CMD4_DEVICE_TYPE_ENUM.Slat:
       {
-         charStringIndex = accMapper.indexOf(CMD4_CurrentSlatState);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentSlatState;
   
          break;
       }
-      case CMD4_ACC_TYPE_SmokeSensor:
+      case CMD4_DEVICE_TYPE_ENUM.SmokeSensor:
       {
-         if ( accessory.getStoredValueForKey(CMD4_StatusActive) != undefined )
+         if ( accessory.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusActive) != undefined )
          {
-            charStringIndex = accMapper.indexOf(CMD4_StatusActive);
+            accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusActive;
      
-            this.listOfPollingCharacteristics[ accessory.name + charStringIndex ] =
+            this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
                setTimeout(this.characteristicPolling.bind(
-                  this, accessory, charStringIndex, self.timeout, self.interval), self.interval * 1000);
+                  this, accessory, accTypeEnumIndex,
+                  self.timeout, self.interval), self.interval);
          }
   
-         charStringIndex = accMapper.indexOf(CMD4_SmokeDetected);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SmokeDetected;
 
          break;
       }
-      case CMD4_ACC_TYPE_Speaker:
+      case CMD4_DEVICE_TYPE_ENUM.Speaker:
       {
-         charStringIndex = accMapper.indexOf(CMD4_Mute);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
 
          break;
       }
-      case CMD4_ACC_TYPE_StatefulProgrammableSwitch:
+      case CMD4_DEVICE_TYPE_ENUM.StatefulProgrammableSwitch:
       {
-         charStringIndex = accMapper.indexOf(CMD4_ProgrammableSwitchEvent);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent;
 
          break;
       }
-      case CMD4_ACC_TYPE_StatelessProgrammableSwitch:
+      case CMD4_DEVICE_TYPE_ENUM.StatelessProgrammableSwitch:
       {
-         charStringIndex = accMapper.indexOf(CMD4_ProgrammableSwitchEvent);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent;
   
          break;
       }
-      case CMD4_ACC_TYPE_Switch:
+      case CMD4_DEVICE_TYPE_ENUM.Switch:
       {
-         charStringIndex = accMapper.indexOf(CMD4_On);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.On;
   
          break;
       }
-      case CMD4_ACC_TYPE_Television:
+      case CMD4_DEVICE_TYPE_ENUM.Television:
       {
-         charStringIndex = accMapper.indexOf(CMD4_Active);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Active;
 
          break;
       }
-      case CMD4_ACC_TYPE_TelevisionSpeaker:
+      case CMD4_DEVICE_TYPE_ENUM.TelevisionSpeaker:
       {
-         charStringIndex = accMapper.indexOf(CMD4_Active);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Active;
 
          break;
       }
-      case CMD4_ACC_TYPE_TemperatureSensor:
+      case CMD4_DEVICE_TYPE_ENUM.TemperatureSensor:
       {
-         if ( accessory.getStoredValueForKey(CMD4_StatusActive) != undefined )
+         if ( accessory.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusActive) != undefined )
          {
-            charStringIndex = accMapper.indexOf(CMD4_StatusActive);
+            accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusActive;
      
-            this.listOfPollingCharacteristics[ accessory.name + charStringIndex ] =
+            this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
                setTimeout(this.characteristicPolling.bind(
-                  this, accessory, charStringIndex, self.timeout, self.interval), self.interval * 1000);
+                  this, accessory, accTypeEnumIndex,
+                  self.timeout, self.interval), self.interval);
          }
   
-         charStringIndex = accMapper.indexOf(CMD4_CurrentTemperature);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentTemperature;
 
          break;
       }
-      case CMD4_ACC_TYPE_Thermostat:
+      case CMD4_DEVICE_TYPE_ENUM.Thermostat:
       {    
          // Poll for currentRelativeHumidity if defined
-         if ( accessory.getStoredValueForKey(CMD4_CurrentRelativeHumidity) != undefined )
+         if ( accessory.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentRelativeHumidity) != undefined )
          {
-            charStringIndex = accMapper.indexOf(CMD4_CurrentRelativeHumidity);
+            accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentRelativeHumidity;
      
-            this.listOfPollingCharacteristics[ accessory.name + charStringIndex ] =
-            setTimeout(this.characteristicPolling.bind(
-               this, accessory, charStringIndex, self.timeout, self.interval), self.interval * 1000);        
+            this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
+               setTimeout(this.characteristicPolling.bind(
+                  this, accessory, accTypeEnumIndex,
+                  self.timeout, self.interval), self.interval);
          }
   
-         charStringIndex = accMapper.indexOf(CMD4_CurrentTemperature);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentTemperature;
   
          break;
       }
-      case CMD4_ACC_TYPE_TimeInformation:
+      case CMD4_DEVICE_TYPE_ENUM.TimeInformation:
       {
-         charStringIndex = accMapper.indexOf(CMD4_CurrentTime);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentTime;
 
          break;
       }
-      case CMD4_ACC_TYPE_TunneledBTLEAccessoryService:
+      case CMD4_DEVICE_TYPE_ENUM.TunneledBTLEAccessoryService:
       {
-         charStringIndex = accMapper.indexOf(CMD4_TunneledAccessoryConnected);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TunneledAccessoryConnected;
 
          break;
       }
-      case CMD4_ACC_TYPE_Valve:
+      case CMD4_DEVICE_TYPE_ENUM.Valve:
       {
-         charStringIndex = accMapper.indexOf(CMD4_ValveType);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ValveType;
 
          break;
       }
-      case CMD4_ACC_TYPE_Window:
+      case CMD4_DEVICE_TYPE_ENUM.Window:
       {
-         charStringIndex = accMapper.indexOf(CMD4_CurrentPosition);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentPosition;
 
          break;
       }
-      case CMD4_ACC_TYPE_WindowCovering:
+      case CMD4_DEVICE_TYPE_ENUM.WindowCovering:
       {
-         charStringIndex = accMapper.indexOf(CMD4_CurrentPosition);
+         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentPosition;
   
          break;
       }
       default:
+         this.log("Internal error: unknown device index '%s'", accessory.typeIndex);
    }
 
-   if ( charStringIndex >= 0 )
-   {
-      this.listOfPollingCharacteristics[ accessory.name + charStringIndex ] =
-         setTimeout(this.characteristicPolling.bind(
-            this, accessory, charStringIndex, self.timeout, self.interval), self.interval * 1000);
-   }
+   if ( accTypeEnumIndex < 0 )
+      return;
 
+   this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
+      setTimeout(this.characteristicPolling.bind(
+         this, accessory, accTypeEnumIndex,
+         self.timeout, self.interval), self.interval);
 }
 
-function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
+function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) 
+{
 
     this.config = accessoryConfig;
     this.log = log;
 
     // Instead of local variables for every characteristic, create an array to
-    // hold values for  all characteristics.
-    this.storedValuesPerCharacteristic = new Array(accMapper.length).fill(null);
+    // hold values for  all characteristics based on the size of all possible characteristics.
+    this.storedValuesPerCharacteristic = new Array(CMD4_ACC_TYPE_ENUM.properties.length).fill(null);
 
     // If polling is defined it is set to true, otherwise false.
     this.polling = this.config.polling === true;
-
-    // this.reachable = true; // What is reachable ???
-    // Configured accessory is reachable
 
    for (var key in this.config)
    {
@@ -1273,6 +1179,13 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
       {
          case 'Type':
             this.type = value;
+            this.ucType = ucFirst(value);
+            this.typeIndex = CMD4_DEVICE_TYPE_ENUM.properties.indexOfEnum(i => i.deviceName === this.ucType);
+            if (this.typeIndex < 0)
+            {
+               this.log ("CMD4 Error: Unknown device type '%s' for %s", this.type, this.name);
+               process.exit(1);
+            }
             break;
          case 'Name':
             this.name = value;
@@ -1296,11 +1209,12 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
             this.polling = value;
             break;
          case 'Interval':
-            // The default interval is 10 seconds
-            this.interval = parseInt(value, 10);
+            // Intervals are in seconds
+            this.interval = parseInt(value, 10) * 1000;
             break;
          case 'StateChangeResponseTime':
-            this.stateChangeResponseTime = value;
+            // respnse time is in seconds
+            this.stateChangeResponseTime = value * 1000;
             break;
          case 'State_cmd':
             // What this plugin is all about
@@ -1320,22 +1234,27 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
             break;
          default:
          {
-            if (accMapper.indexOf(ucKey) < 0 )
+            var accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.name === ucKey);
+            
+            if (accTypeEnumIndex < 0 )
             {
               this.log("OOPS: '%s' not found. There something wrong with your config.json file?", key);
-              if (key == "administorOnlyAccess") {
+              if (ucKey == "AdministorOnlyAccess") 
+              {
                  this.log("administorOnlyAccess was incorrectly named");
                  this.log("It is corrected in the new config.json file as administratorOnlyAccess");
                  this.log("Please make the approperiate changes or use the new config.json file");
                  this.log("provided.");
               }
-              if (key == "targettRelativeHumidity") {
+              if (ucKey == "TargettRelativeHumidity") 
+              {
                  this.log("targettRelativeHumidity was incorrectly named");
                  this.log("It is corrected in the new config.json file as targetRelativeHumidity");
                  this.log("Please make the approperiate changes or use the new config.json file");
                  this.log("provided.");
               }
-              if (key == "currentSlatType") {
+              if (ucKey == "CurrentSlatType") 
+              {
                  this.log("currentSlatType was incorrectly named");
                  this.log("It is corrected in the new config.json file as currentSlatState");
                  this.log("Please make the approperiate changes or use the new config.json file");
@@ -1343,7 +1262,7 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
               }
               process.exit(1);
             } else {
-               this.setStoredValueForKey(ucKey, value);
+               this.setStoredValueForIndex(accTypeEnumIndex, value);
             }
          }
       }
@@ -1357,15 +1276,6 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
        .setCharacteristic(Characteristic.Manufacturer, "Cmd4")
        .setCharacteristic(Characteristic.Model, this.config.model )
        .setCharacteristic(Characteristic.SerialNumber, "Cmd4 " + this.config.type + this.config.name);
-
-   // The default interval is 10 seconds
-   this.interval = parseInt(this.interval, 10) || 10;
-
-   // The default interval is 1 minute. Timers are in milliseconds
-   this.timeout = parseInt(this.timeout, 10) || 60000;
-
-   // The default respnse time is 10 seconds.
-   this.stateChangeResponseTime = parseInt(this.stateChangeResponseTime, 10) || 10;
 
    // Explanation:
    // If you are wondering why this is done this way as compared to
@@ -1386,549 +1296,560 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
    //        in Homebridge :-)    If you find it useful, send
    //        me a like ;-)
 
-   switch( this.config.type )
+   switch( this.typeIndex )
    {
-      case CMD4_ACC_TYPE_AccessoryInformation:
+      case CMD4_DEVICE_TYPE_ENUM.AccessoryInformation:
          this.service = new Service.AccessoryInformation(this.name, this.name);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_Identify) == undefined )
-            this.setStoredValueForKey(CMD4_Identify, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Identify) == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Identify, 0);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_Manufacturer) == undefined )
-            this.setStoredValueForKey(CMD4_Manufacturer, "Cmd4");
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Manufacturer) == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Manufacturer, "Cmd4");
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_Model) == undefined )
-            this.setStoredValueForKey(CMD4_Model, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Model) == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Model, 0);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_Name) == undefined )
-            this.setStoredValueForKey(CMD4_Name, "My_AccessoryInformation");
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Name)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Name, "My_AccessoryInformation");
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_SerialNumber) == undefined )
-            this.setStoredValueForKey(CMD4_SerialNumber, "ABC001");
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SerialNumber)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SerialNumber, "ABC001");
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_FirmwareRevision) == undefined )
-            this.setStoredValueForKey(CMD4_FirmwareRevision, "100.1.1");
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.FirmwareRevision)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.FirmwareRevision, "100.1.1");
 
          break;
-      case CMD4_ACC_TYPE_AirPurifier:
+      case CMD4_DEVICE_TYPE_ENUM.AirPurifier:
          // Required
-         if ( this.getStoredValueForKey(CMD4_Active) == undefined )
-            this.setStoredValueForKey(CMD4_Active, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active, 0);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_CurrentAirPurifierState) == undefined )
-            this.setStoredValueForKey(CMD4_CurrentAirPurifierState, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentAirPurifierState) == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentAirPurifierState, 0);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_TargetAirPurifierState) == undefined )
-            this.setStoredValueForKey(CMD4_TargetAirPurifierState, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetAirPurifierState) == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetAirPurifierState, 0);
+            
+         // The default respnse time is in seconds
+         if ( ! this.stateChangeResponseTime )
+            this.stateChangeResponseTime = SLOW_STATE_CHANGE_RESPONSE_TIME;        
 
          this.service = new Service.AirPurifier(this.name, this.name);
   
          break;
-      case CMD4_ACC_TYPE_AirQualitySensor:
+      case CMD4_DEVICE_TYPE_ENUM.AirQualitySensor:
          // Required
-         if ( this.getStoredValueForKey(CMD4_AirQuality) == undefined )
-            this.setStoredValueForKey(CMD4_AirQuality, 1);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.AirQuality) == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.AirQuality, 1);
+            
+         // The default respnse time is in seconds
+         if ( ! this.stateChangeResponseTime )
+            this.stateChangeResponseTime = FAST_STATE_CHANGE_RESPONSE_TIME;
      
          this.service = new Service.AirQualitySensor(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_BatteryService:
+      case CMD4_DEVICE_TYPE_ENUM.BatteryService:
          // Required
-         if ( this.getStoredValueForKey(CMD4_BatteryLevel) == undefined )
-            this.setStoredValueForKey(CMD4_BatteryLevel, 50);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.BatteryLevel) == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.BatteryLevel, 50);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_ChargingState) == undefined )
-            this.setStoredValueForKey(CMD4_ChargingState, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ChargingState)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ChargingState, 0);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_StatusLowBattery) == undefined )
-            this.setStoredValueForKey(CMD4_StatusLowBattery, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusLowBattery) == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusLowBattery, 0);
   
          this.service = new Service.BatteryService(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_BridgeConfiguration:
-
+      case CMD4_DEVICE_TYPE_ENUM.BridgeConfiguration:
          this.service = new Service.BridgeConfiguration(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_BridgingState:
+      case CMD4_DEVICE_TYPE_ENUM.BridgingState:
 
          this.service = new Service.BridgeState(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_CameraControl:
+      case CMD4_DEVICE_TYPE_ENUM.CameraControl:
 
          this.service = new Service.CameraControl(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_CameraRTPStreamManagement:
+      case CMD4_DEVICE_TYPE_ENUM.CameraRTPStreamManagement:
          this.service = new Service.CameraRTPStreamManagement(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_CarbonDioxideSensor:
+      case CMD4_DEVICE_TYPE_ENUM.CarbonDioxideSensor:
          // Required
-         if ( this.getStoredValueForKey(CMD4_CarbonDioxideDetected) == undefined )
-             this.setStoredValueForKey(CMD4_CarbonDioxideDetected, 0); 
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CarbonDioxideDetected)  == undefined )
+             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CarbonDioxideDetected, 0); 
 
          this.service = new Service.CarbonDioxideSensor(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_CarbonMonoxideSensor:
+      case CMD4_DEVICE_TYPE_ENUM.CarbonMonoxideSensor:
          // Required
-         if ( this.getStoredValueForKey(CMD4_CarbonMonoxideDetected) == undefined )
-            this.setStoredValueForKey(CMD4_CarbonMonoxideDetected, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CarbonMonoxideDetected)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CarbonMonoxideDetected, 0);
      
          this.service = new Service.CarbonMonoxideSensor(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_ContactSensor:
+      case CMD4_DEVICE_TYPE_ENUM.ContactSensor:
          // Required
-         if ( this.getStoredValueForKey(CMD4_ContactSensorState) == undefined )
-            this.setStoredValueForKey(CMD4_ContactSensorState, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ContactSensorState)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ContactSensorState, 0);
 
          this.service = new Service.ContactSensor(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_Door:
+      case CMD4_DEVICE_TYPE_ENUM.Door:
          // Required
-         if ( this.getStoredValueForKey(CMD4_CurrentPosition) == undefined )
-            this.setStoredValueForKey(CMD4_CurrentPosition, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentPosition)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentPosition, 0);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_TargetPosition) == undefined )
-            this.setStoredValueForKey(CMD4_TargetPosition, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetPosition)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetPosition, 0);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_PositionState) == undefined )
-            this.setStoredValueForKey(CMD4_PositionState, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.PositionState)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.PositionState, 0);
 
          this.service = new Service.Door(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_DoorBell:
+      case CMD4_DEVICE_TYPE_ENUM.DoorBell:
          // Required
-         if ( this.getStoredValueForKey(CMD4_ProgrammableSwitchEvent) == undefined )
-            this.setStoredValueForKey(CMD4_ProgrammableSwitchEvent, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent, 0);
 
          // HomeKitTypes.js has this as 'Doorbell' (Small b)
          this.service = new Service.Doorbell(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_Fan:
-      case CMD4_ACC_TYPE_Fanv1:
+      case CMD4_DEVICE_TYPE_ENUM.Fan:
+      case CMD4_DEVICE_TYPE_ENUM.Fanv1:
          // So why do we do this? In the need for documentation,
          // this is done so that required characteristics
          // are set for the given accessory,
 
          // Required    
-         if ( this.getStoredValueForKey(CMD4_On) == undefined )
-            this.setStoredValueForKey(CMD4_On, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On, 0);
 
          this.service = new Service.Fan(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_Fanv2:
+      case CMD4_DEVICE_TYPE_ENUM.Fanv2:
          // Required
-         if ( this.getStoredValueForKey(CMD4_Active) == undefined )
-            this.setStoredValueForKey(CMD4_Active, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active, 0);
 
          this.service = new Service.Fanv2(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_FilterMaintenance:
+      case CMD4_DEVICE_TYPE_ENUM.Faucet:
          // Required
-         if ( this.getStoredValueForKey(CMD4_FilterChangeIndication) == undefined )
-            this.setStoredValueForKey(CMD4_FilterChangeIndication, 0);
-
-         this.service = new Service.FilterMaintenance(this.name, this.name);
-         break;
-      case CMD4_ACC_TYPE_Faucet:
-         // Required
-         if ( this.getStoredValueForKey(CMD4_Active) == undefined )
-            this.setStoredValueForKey(CMD4_Active, 1);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active, 1);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_StatusFault) == undefined )
-            this.setStoredValueForKey(CMD4_StatusFault, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusFault)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusFault, 0);
 
-         if ( this.getStoredValueForKey(CMD4_Name) == undefined )
-            this.setStoredValueForKey(CMD4_Name, "My_Faucet");
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Name)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Name, "My_Faucet");
 
          this.service = new Service.Faucet(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_GarageDoorOpener:
+      case CMD4_DEVICE_TYPE_ENUM.FilterMaintenance:
          // Required
-         if ( this.getStoredValueForKey(CMD4_CurrentDoorState ) == undefined )
-            this.setStoredValueForKey(CMD4_CurrentDoorState, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.FilterChangeIndication)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.FilterChangeIndication, 0);
+
+         this.service = new Service.FilterMaintenance(this.name, this.name);
+         break;
+      case CMD4_DEVICE_TYPE_ENUM.GarageDoorOpener:
+         // Required
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentDoorState)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentDoorState, 0);
   
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_TargetDoorState) == undefined )
-            this.setStoredValueForKey(CMD4_TargetDoorState, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetDoorState)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetDoorState, 0);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_ObstructionDetected) == undefined )
-            this.setStoredValueForKey(CMD4_ObstructionDetected, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ObstructionDetected)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ObstructionDetected, 0);
+            
+         // The default respnse time is in seconds
+         if ( ! this.stateChangeResponseTime )
+         this.stateChangeResponseTime = SLOW_STATE_CHANGE_RESPONSE_TIME; 
 
          this.service = new Service.GarageDoorOpener(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_HeaterCooler:
+      case CMD4_DEVICE_TYPE_ENUM.HeaterCooler:
 
          this.service = new Service.HeaterCooler(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_HumidifierDehumidifier:
+      case CMD4_DEVICE_TYPE_ENUM.HumidifierDehumidifier:
 
          this.service = new Service.HumidifierDehumidifier(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_HumiditySensor:
+      case CMD4_DEVICE_TYPE_ENUM.HumiditySensor:
          // Required
-         if ( this.getStoredValueForKey(CMD4_CurrentRelativeHumidity) == undefined )
-            this.setStoredValueForKey(CMD4_CurrentRelativeHumidity, 1);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentRelativeHumidity)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentRelativeHumidity, 1);
      
          this.service = new Service.HumiditySensor(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_InputSource:
+      case CMD4_DEVICE_TYPE_ENUM.InputSource:
          this.service = new Service.InputSource(this.name, this.name);
     
          // Required
-         if ( this.getStoredValueForKey(CMD4_ConfiguredName) == undefined )
-            this.setStoredValueForKey(CMD4_ConfiguredName, "My_InputSource");
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ConfiguredName)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ConfiguredName, "My_InputSource");
     
          // Required
-         if ( this.getStoredValueForKey(CMD4_InputSourceType) == undefined )
-            this.setStoredValueForKey(CMD4_InputSourceType, 1);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.InputSourceType)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.InputSourceType, 1);
     
          // Required
-         if ( this.getStoredValueForKey(CMD4_IsConfigured) == undefined )
-            this.setStoredValueForKey(CMD4_IsConfigured, 1);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.IsConfigured)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.IsConfigured, 1);
     
          // Required
-         if ( this.getStoredValueForKey(CMD4_CurrentVisibilityState) == undefined )
-            this.setStoredValueForKey(CMD4_CurrentVisibilityState, 2);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentVisibilityState)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentVisibilityState, 2);
   
          this.service = new Service.InputSource(this.name, this.name);
          break;
-       case CMD4_ACC_TYPE_IrrigationSystem:
+       case CMD4_DEVICE_TYPE_ENUM.IrrigationSystem:
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_Active) == undefined )
-            this.setStoredValueForKey(CMD4_Active, 1);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active, 1);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_ProgramMode) == undefined )
-            this.setStoredValueForKey(CMD4_ProgramMode, 1);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ProgramMode)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ProgramMode, 1);
   
          // Required
-         if ( this.getStoredValueForKey(CMD4_InUse) == undefined )
-            this.setStoredValueForKey(CMD4_InUse, 1);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.InUse)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.InUse, 1);
   
          this.service = new Service.IrrigationSystem(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_LeakSensor:
+      case CMD4_DEVICE_TYPE_ENUM.LeakSensor:
          // Required
-         if ( this.getStoredValueForKey(CMD4_LeakDetected) == undefined )
-            this.setStoredValueForKey(CMD4_LeakDetected, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.LeakDetected)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.LeakDetected, 0);
 
          this.service = new Service.LeakSensor(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_LightSensor:
+      case CMD4_DEVICE_TYPE_ENUM.LightSensor:
          // Required
-         if ( this.getStoredValueForKey(CMD4_CurrentAmbientLightLevel) == undefined )
-            this.setStoredValueForKey(CMD4_CurrentAmbientLightLevel, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentAmbientLightLevel)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentAmbientLightLevel, 0);
      
          this.service = new Service.LightSensor(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_Lightbulb:
+      case CMD4_DEVICE_TYPE_ENUM.Lightbulb:
          // Required
-         if ( this.getStoredValueForKey(CMD4_On) == undefined )
-            this.setStoredValueForKey(CMD4_On, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On, 0);
 
          this.service = new Service.Lightbulb(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_LockManagement:
+      case CMD4_DEVICE_TYPE_ENUM.LockManagement:
          // Required
-         if ( this.getStoredValueForKey(CMD4_LockControlPoint) == undefined )
-            this.setStoredValueForKey(CMD4_LockControlPoint, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.LockControlPoint)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.LockControlPoint, 0);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_Logs) == undefined )
-            this.setStoredValueForKey(CMD4_Logs, "OptionalLogs");
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Logs)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Logs, "OptionalLogs");
      
          this.service = new Service.LockManagement(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_LockMechanism:
+      case CMD4_DEVICE_TYPE_ENUM.LockMechanism:
          // Required
-         if ( this.getStoredValueForKey(CMD4_LockCurrentState) == undefined )
-            this.setStoredValueForKey(CMD4_LockCurrentState, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.LockCurrentState)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.LockCurrentState, 0);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_LockTargetState) == undefined )
-            this.setStoredValueForKey(CMD4_LockTargetState, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.LockTargetState)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.LockTargetState, 0);
 
          this.service = new Service.LockMechanism(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_Microphone:
+      case CMD4_DEVICE_TYPE_ENUM.Microphone:
          // Required
-         if ( this.getStoredValueForKey(CMD4_Mute) == undefined )
-            this.setStoredValueForKey(CMD4_Mute,0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Mute)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Mute,0);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_Volume) == undefined )
-            this.setStoredValueForKey(CMD4_Volume, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Volume)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Volume, 0);
 
          this.service = new Service.Microphone(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_MotionSensor:
+      case CMD4_DEVICE_TYPE_ENUM.MotionSensor:
          // Required
-         if ( this.getStoredValueForKey(CMD4_MotionDetected) == undefined )
-            this.setStoredValueForKey(CMD4_MotionDetected, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.MotionDetected) == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.MotionDetected, 0);
 
          this.service = new Service.MotionSensor(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_OccupancySensor:
+      case CMD4_DEVICE_TYPE_ENUM.OccupancySensor:
          // Required
-         if ( this.getStoredValueForKey(CMD4_OccupancyDetected) == undefined )
-            this.setStoredValueForKey(CMD4_OccupancyDetected, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.OccupancyDetected)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.OccupancyDetected, 0);
 
          this.service = new Service.OccupancySensor(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_Outlet:
+      case CMD4_DEVICE_TYPE_ENUM.Outlet:
          // Required
-         if ( this.getStoredValueForKey(CMD4_On) == undefined )
-            this.setStoredValueForKey(CMD4_On, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On, 0);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_OutletInUse) == undefined )
-            this.setStoredValueForKey(CMD4_OutletInUse, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.OutletInUse)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.OutletInUse, 0);
 
          this.service = new Service.Outlet(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_Pairing:
+      case CMD4_DEVICE_TYPE_ENUM.Pairing:
 
          this.service = new Service.Pairing(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_ProtocolInformation:
+      case CMD4_DEVICE_TYPE_ENUM.ProtocolInformation:
 
          this.service = new Service.ProtocolInformation(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_Relay:
+      case CMD4_DEVICE_TYPE_ENUM.Relay:
          // Required
-         if ( this.getStoredValueForKey(CMD4_RelayEnabled) == undefined )
-            this.setStoredValueForKey(CMD4_RelayEnabled, 1);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.RelayEnabled)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.RelayEnabled, 1);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_RelayState) == undefined )
-            this.setStoredValueForKey(CMD4_RelayState, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.RelayState)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.RelayState, 0);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_RelayControlPoint) == undefined )
-            this.setStoredValueForKey(CMD4_RelayControlPoint, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.RelayControlPoint)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.RelayControlPoint, 0);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_Name) == undefined )
-            this.setStoredValueForKey(CMD4_Name, "My_Relay");
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Name)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Name, "My_Relay");
 
 
          this.service = new Service.Relay(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_SecuritySystem:
+      case CMD4_DEVICE_TYPE_ENUM.SecuritySystem:
          // Required
-         if ( this.getStoredValueForKey(CMD4_SecuritySystemCurrentState) == undefined )
-            this.setStoredValueForKey(CMD4_SecuritySystemCurrentState, 3);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SecuritySystemCurrentState)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SecuritySystemCurrentState, 3);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_SecuritySystemTargetState) == undefined )
-             this.setStoredValueForKey(CMD4_SecuritySystemTargetState, 3);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SecuritySystemTargetState)  == undefined )
+             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SecuritySystemTargetState, 3);
   
          this.service = new Service.SecuritySystem(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_ServiceLabel:
+      case CMD4_DEVICE_TYPE_ENUM.ServiceLabel:
          this.service = new Service.ServiceLabel(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_Slat:
+      case CMD4_DEVICE_TYPE_ENUM.Slat:
          // Required
-         if ( this.getStoredValueForKey(CMD4_CurrentSlatState) == undefined )
-            this.setStoredValueForKey(CMD4_CurrentSlatState, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentSlatState)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentSlatState, 0);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_SlatType) == undefined )
-            this.setStoredValueForKey(CMD4_SlatType, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SlatType)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SlatType, 0);
 
          this.service = new Service.Slat(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_SmokeSensor:
+      case CMD4_DEVICE_TYPE_ENUM.SmokeSensor:
          // Required
-         if ( this.getStoredValueForKey(CMD4_SmokeDetected) == undefined )
-            this.setStoredValueForKey(CMD4_SmokeDetected, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SmokeDetected)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SmokeDetected, 0);
 
          this.service = new Service.SmokeSensor(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_Speaker:
+      case CMD4_DEVICE_TYPE_ENUM.Speaker:
          // Required
-         if ( this.getStoredValueForKey(CMD4_Mute) == undefined )
-            this.setStoredValueForKey(CMD4_Mute,0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Mute)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Mute,0);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_Volume) == undefined )
-            this.setStoredValueForKey(CMD4_Volume, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Volume)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Volume, 0);
 
          this.service = new Service.Speaker(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_StatefulProgrammableSwitch:
+      case CMD4_DEVICE_TYPE_ENUM.StatefulProgrammableSwitch:
          // Required
-         if ( this.getStoredValueForKey(CMD4_ProgrammableSwitchEvent) == undefined )
-            this.setStoredValueForKey(CMD4_ProgrammableSwitchEvent, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent, 0);
 
          this.service = new Service.StatefulProgrammableSwitch(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_StatelessProgrammableSwitch:
+      case CMD4_DEVICE_TYPE_ENUM.StatelessProgrammableSwitch:
          // Required
-         if ( this.getStoredValueForKey(CMD4_ProgrammableSwitchEvent) == undefined )
-            this.setStoredValueForKey(CMD4_ProgrammableSwitchEvent, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent, 0);
 
          this.service = new Service.StatelessProgrammableSwitch(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_Switch:
+      case CMD4_DEVICE_TYPE_ENUM.Switch:
          // Required
-         if ( this.getStoredValueForKey(CMD4_On) == undefined )
-            this.setStoredValueForKey(CMD4_On, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On, 0);
 
          this.service = new Service.Switch(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_Television:
+      case CMD4_DEVICE_TYPE_ENUM.Television:
          this.service = new Service.Television(this.name, this.name);
     
          // Required
-         if ( this.getStoredValueForKey(CMD4_Active) == undefined )
-            this.setStoredValueForKey(CMD4_Active, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active, 0);
     
          // Required
-         if ( this.getStoredValueForKey(CMD4_ActiveIdentifier) == undefined )
-            this.setStoredValueForKey(CMD4_ActiveIdentifier, "1234");
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ActiveIdentifier)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ActiveIdentifier, "1234");
    
          // Required
-         if ( this.getStoredValueForKey(CMD4_ConfiguredName) == undefined )
-            this.setStoredValueForKey(CMD4_ConfiguredName,'tv');
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ConfiguredName)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ConfiguredName,'tv');
    
          // Required
-         if ( this.getStoredValueForKey(CMD4_SleepDiscoveryMode) == undefined )
-            this.setStoredValueForKey(CMD4_SleepDiscoveryMode, "0");
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SleepDiscoveryMode)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SleepDiscoveryMode, "0");
     
          this.service = new Service.Television(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_TelevisionSpeaker:
+      case CMD4_DEVICE_TYPE_ENUM.TelevisionSpeaker:
          this.service = new Service.TelevisionSpeaker(this.name, this.name);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_Mute) == undefined )
-            this.setStoredValueForKey(CMD4_Mute, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Mute)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Mute, 0);
 
          this.service = new Service.TelevisionSpeaker(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_TemperatureSensor:
+      case CMD4_DEVICE_TYPE_ENUM.TemperatureSensor:
          // Required
-         if ( this.getStoredValueForKey(CMD4_CurrentTemperature) == undefined )
-            this.setStoredValueForKey(CMD4_CurrentTemperature, 50.0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentTemperature)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentTemperature, 50.0);
 
          this.service = new Service.TemperatureSensor(this.name, this.name); 
          break;
-      case CMD4_ACC_TYPE_Thermostat:
+      case CMD4_DEVICE_TYPE_ENUM.Thermostat:
          this.log("Setting up Thermostat default characteristics");
          // Required
-         if ( this.getStoredValueForKey(CMD4_CurrentHeatingCoolingState) == undefined )
-            this.setStoredValueForKey(CMD4_CurrentHeatingCoolingState, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentHeatingCoolingState)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentHeatingCoolingState, 0);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_TargetHeatingCoolingState) == undefined )
-            this.setStoredValueForKey(CMD4_TargetHeatingCoolingState, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetHeatingCoolingState)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetHeatingCoolingState, 0);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_CurrentTemperature) == undefined )
-            this.setStoredValueForKey(CMD4_CurrentTemperature, 50.0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentTemperature)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentTemperature, 50.0);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_TargetTemperature) == undefined )
-            this.setStoredValueForKey(CMD4_TargetTemperature, 50.0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetTemperature)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetTemperature, 50.0);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_TemperatureDisplayUnits) == undefined )
-            this.setStoredValueForKey(CMD4_TemperatureDisplayUnits, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TemperatureDisplayUnits)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TemperatureDisplayUnits, 0);
 
          this.service = new Service.Thermostat(this.name, this.name); 
          break;
-      case CMD4_ACC_TYPE_TimeInformation:
+      case CMD4_DEVICE_TYPE_ENUM.TimeInformation:
          // Required
-         if ( this.getStoredValueForKey(CMD4_CurrentTime) == undefined )
-            this.setStoredValueForKey(CMD4_CurrentTime, "11:15");
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentTime)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentTime, "11:15");
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_DayoftheWeek) == undefined )
-            this.setStoredValueForKey(CMD4_DayoftheWeek, 1);  // Monday
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.DayoftheWeek)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.DayoftheWeek, 1);  // Monday
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_TimeUpdate) == undefined )
-            this.setStoredValueForKey(CMD4_TimeUpdate, 0);   // false
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TimeUpdate)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TimeUpdate, 0);   // false
 
          this.service = new Service.TimeInformation(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_TunneledBTLEAccessoryService:
+      case CMD4_DEVICE_TYPE_ENUM.TunneledBTLEAccessoryService:
          // Required
-         if ( this.getStoredValueForKey(CMD4_Name) == undefined )
-            this.setStoredValueForKey(CMD4_Name, "TLB");
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Name)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Name, "TLB");
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_AccessoryIdentifier) == undefined )
-            this.setStoredValueForKey(CMD4_AccessoryIdentifier, "TLB");
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.AccessoryIdentifier)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.AccessoryIdentifier, "TLB");
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_TunneledAccessoryStateNumber) == undefined )
-            this.setStoredValueForKey(CMD4_TunneledAccessoryStateNumber, "0");
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TunneledAccessoryStateNumber)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TunneledAccessoryStateNumber, "0");
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_TunneledAccessoryConnected) == undefined )
-            this.setStoredValueForKey(CMD4_TunneledAccessoryConnected, "1");
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TunneledAccessoryConnected)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TunneledAccessoryConnected, "1");
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_TunneledAccessoryAdvertising) == undefined )
-            this.setStoredValueForKey(CMD4_TunneledAccessoryAdvertising, "1");
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TunneledAccessoryAdvertising)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TunneledAccessoryAdvertising, "1");
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_TunnelConnectionTimeout) == undefined )
-            this.setStoredValueForKey(CMD4_TunnelConnectionTimeout, "6000");
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TunnelConnectionTimeout)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TunnelConnectionTimeout, "6000");
 
          this.service = new Service.TunneledBTLEAccessoryService(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_Valve:
+      case CMD4_DEVICE_TYPE_ENUM.Valve:
          // Required
-         if ( this.getStoredValueForKey(CMD4_ValveType) == undefined )
-            this.setStoredValueForKey(CMD4_ValveType, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ValveType)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ValveType, 0);
 
          this.service = new Service.Valve(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_Window:
+      case CMD4_DEVICE_TYPE_ENUM.Window:
          // Required
-         if ( this.getStoredValueForKey(CMD4_CurrentPosition) == undefined )
-            this.setStoredValueForKey(CMD4_CurrentPosition, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentPosition)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentPosition, 0);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_TargetPosition) == undefined )
-            this.setStoredValueForKey(CMD4_TargetPosition, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetPosition)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetPosition, 0);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_PositionState) == undefined )
-            this.setStoredValueForKey(CMD4_PositionState, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.PositionState)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.PositionState, 0);
 
          this.service = new Service.Window(this.name, this.name);
          break;
-      case CMD4_ACC_TYPE_WindowCovering:
+      case CMD4_DEVICE_TYPE_ENUM.WindowCovering:
          // Required
-         if ( this.getStoredValueForKey(CMD4_CurrentPosition) == undefined )
-            this.setStoredValueForKey(CMD4_CurrentPosition, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentPosition)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentPosition, 0);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_TargetPosition) == undefined )
-            this.setStoredValueForKey(CMD4_TargetPosition, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetPosition)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetPosition, 0);
 
          // Required
-         if ( this.getStoredValueForKey(CMD4_PositionState) == undefined )
-            this.setStoredValueForKey(CMD4_PositionState, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.PositionState)  == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.PositionState, 0);
 
          this.service = new Service.WindowCovering(this.name, this.name);
          break;
@@ -1938,14 +1859,28 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) {
          this.log ("CMD4: Unknown type: %s for %s. Defaulting it to a Switch. Did you possibly spell it incorrectly?", this.type, this.name);
   
          // Required
-         if ( this.getStoredValueForKey(CMD4_On) == undefined )
-            this.setStoredValueForKey(CMD4_On, 0);
+         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On) == undefined )
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On, 0);
 
          this.service = new Service.Switch(this.name, this.name);
   
       }
 
    }
+   
+   // The default timeout is 1 minute. Timeouts are in milliseconds
+   if (! this.timeout )
+      this.timeout = DEFAULT_TIMEOUT;
+   
+            
+   // The defaault interval is 1 minute. Intervals are in seconds
+   if ( ! this.interval )
+      this.interval = DEFAULT_INTERVAL;
+
+   // The default respnse time is in seconds
+   if ( ! this.stateChangeResponseTime )
+      this.stateChangeResponseTime = MEDIUM_STATE_CHANGE_RESPONSE_TIME;
+         
 
    this.checkPollingConfigForUnsetCharacteristics(this.polling);
 
@@ -1979,34 +1914,33 @@ Cmd4Accessory.prototype = {
       return [this.informationService, this.service];
    },
 
-   setStoredValueForKey:function (key, value)
+   setStoredValueForIndex:function (accTypeEnumIndex, value)
    {
-      var index = accMapper.indexOf(key);
-
-      if (index < 0)
+      if (accTypeEnumIndex < 0 || accTypeEnumIndex > CMD4_ACC_TYPE_ENUM.properties.length )
       {
-         this.log ("CMD4 Error: setStoredValue - Characteristic '%s' for '%s' not known", key, this.name);
+         this.log ("CMD4 Warning: setStoredValue - Characteristic '%s' for '%s' not known", accTypeEnumIndex, this.name);
          this.log ("Check your json.config file for this error");
          process.exit(1);
       }
-      this.storedValuesPerCharacteristic[index] = value;
+      this.storedValuesPerCharacteristic[accTypeEnumIndex] = value;
    },
 
-   getStoredValueForKey:function (key)
+   getStoredValueForIndex:function (accTypeEnumIndex)
    {
-      var index = accMapper.indexOf(key);
-
-      if (index < 0)
+      if (accTypeEnumIndex < 0 || accTypeEnumIndex > CMD4_ACC_TYPE_ENUM.properties.length)
       {
-         this.log ("CMD4 Warning: getStoredValue - Characteristic '%s' for '%s' not known", key, this.name);
+         this.log ("CMD4 Warning: getStoredValue - Characteristic '%s' for '%s' not known", accTypeEnumIndex, this.name);
          this.log ("Check your json.config file for this error");
          process.exit(1);
       }
-      return this.storedValuesPerCharacteristic[index];
+      return this.storedValuesPerCharacteristic[accTypeEnumIndex];
    },
-   testStoredValueForKey:function (key)
+   testStoredValueForIndex:function (accTypeEnumIndex)
    {
-      return accMapper.indexOf(key);
+      if (accTypeEnumIndex < 0 || accTypeEnumIndex > CMD4_ACC_TYPE_ENUM.properties.length)
+         return -1;
+         
+      return this.storedValuesPerCharacteristic[accTypeEnumIndex];
    },
    checkPollingConfigForUnsetCharacteristics(pollingConfig)
    {
@@ -2048,22 +1982,25 @@ Cmd4Accessory.prototype = {
                   }
                   break;
                case "Interval":
-                  // The default interval is 10 seconds
-                  this.interval = parseInt(value, 10);
+                  // Intervals are in seconds
+                  this.interval = parseInt(value, 10) * 1000;
                   break;
                default:
-                  if (accMapper.indexOf(ucKey) < 0 )
+                  // findIndexOf
+                  var accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.name === ucKey);
+                  
+                  if (accTypeEnumIndex < 0 )
                   {
                     this.log("OOPS: '%s' not found. There something wrong with your config.json file?", key);
                     process.exit(1);
                   } else {
-                     if ( this.getStoredValueForKey(ucKey) == undefined )
+                     if ( this.getStoredValueForIndex(accTypeEnumIndex) == undefined )
                      {
                         this.log.warn("Polling for '%s' requested, but characteristic ", key);
                         this.log.warn("is not in your config.json file for '%s'", this.name);
                      }
 
-                     this.setStoredValueForKey(ucKey, value);
+                     this.setStoredValueForIndex(accTypeEnumIndex, value);
                   }
             }
          }
@@ -2077,46 +2014,42 @@ Cmd4Accessory.prototype = {
    //           to set a value.
    //
    //   The script will be passed:
-   //      Set <Device Name> <Characteristic> <Value>
+   //      Set <Device Name> <accTypeEnumIndex> <Value>
    //
    //
    //      Where:
    //         - Device name is the name in your
    //           config.json file.
-   //         - CharacteristicString represents
-   //           the characteristic to get.
-   //         - Characteristic is the characteristicString
+   //         - accTypeEnumIndex represents
+   //           the characteristic to get as in index into
+   //           the CMD4_ACC_TYPE_ENUM.
+   //         - Characteristic is the accTypeEnumIndex
    //           in HAP form.
    //         - Value is new characteristic value.
    //
    //  Notes:
    //    (1) In the special TARGET set characteristics, getValue
    //        is called to update HomeKit.
-   //          Example: Set My_Door TargetDoorState 1
-   //            calls: Get My_Door CurrentDoorState
+   //          Example: Set My_Door <TargetDoorState> 1
+   //            calls: Get My_Door <CurrentDoorState>
    //
-   //    (2) Both characteristicString and characteristic
-   //        represent the exact same thing. It is possible
-   //        that only one is required as a function argument,
-   //        but since characteristic is a complex composition
-   //        of types, functions, ... then comparing it may
-   //        not be a good thing.
-   //
-   //
-   //
+   //       - Where he value in <> is an one of CMD4_ACC_TYPE_ENUM
    // ***********************************************
-   setValue:function (value, characteristicString, characteristic, callback)
+   setValue:function (value, accTypeEnumIndex, characteristic, callback)
    {
       var self = this;
+
+      var characteristicString = CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].name;
+
       var cmd = this.state_cmd + " Set '" + this.name + "' '" + characteristicString  + "' '" + value  + "'";
-      self.log.debug("DEBUG: Cmd4 setValue %s function for: %s cmd: %s", characteristicString, self.name, cmd);
+      self.log.debug("setValue %s function for: %s cmd: %s", characteristicString, self.name, cmd);
 
 
       // Execute command to Set a characteristic value for an accessory
       exec(cmd, {timeout: self.timeout}, function (error, stdout, stderr)
       {
          if (error) {
-            self.log("Set %s function failed for %s Error:%s", characteristicString, self.name, error.message);
+            self.log("setGeneric %s function failed for %s Error:%s", characteristicString, self.name, error.message);
             self.log(stdout);
             self.log(stderr);
             callback(error);
@@ -2133,171 +2066,189 @@ Cmd4Accessory.prototype = {
             // wheels.
             // Documenting bugs are good.  Bonus points for me!
 // Double Check this ..
-            switch (self.config.type)
+            switch (accTypeEnumIndex)
             {
-               case CMD4_ACC_TYPE_AccessoryInformation:
-                  break;
-               case CMD4_ACC_TYPE_AirPurifier:
+               case CMD4_ACC_TYPE_ENUM.Active:  
                {
-                  if (self.config.stateChangeResponseTime === undefined)
-                     self.stateChangeResponseTime = 3;
-
-                  if (characteristicString == CMD4_TargetAirPurifierState )
-                  {
-                     responded  = true;
-                     setTimeout(() => {
-                        self.service.getCharacteristic(Characteristic.CurrentAirPurifierState).getValue();
-                        callback();
-                     }, self.stateChangeResponseTime * 1000);
-                  }
-                  if (characteristicString == CMD4_Active )
-                  {
-                     responded  = true;
-                     setTimeout(() => {
-                        self.service.getCharacteristic(Characteristic.CurrentAirPurifierState).getValue();
-
-                        // Not seemed to have been needed, but should have been.
-                        self.service.getCharacteristic(Characteristic.Active).getValue();
-                        callback();
-                     }, self.stateChangeResponseTime * 1000);
-                  }
-                  break;
-               }
-               case CMD4_ACC_TYPE_Door:
-               case CMD4_ACC_TYPE_Window:
-               case CMD4_ACC_TYPE_WindowCovering:
-               {
-                  if (self.config.stateChangeResponseTime === undefined)
-                     self.stateChangeResponseTime = 3;
-
-                  if (characteristicString == CMD4_TargetPosition )
-                  {
-                     responded  = true;
-                     setTimeout(() => {
-                        self.service.getCharacteristic(Characteristic.CurrentPosition).getValue();
-                        callback();
-                     }, self.stateChangeResponseTime * 1000);
-                  }
-                  break;
-               }
-               case CMD4_ACC_TYPE_Fan:
-               case CMD4_ACC_TYPE_Fanv1:
-               case CMD4_ACC_TYPE_Fanv2:
-               {
-                  if (self.config.stateChangeResponseTime === undefined)
-                     self.stateChangeResponseTime = 3;
-
-                  if (characteristicString == CMD4_TargetFanState )
-                  {
-                     responded  = true;
-                     setTimeout(() => {
-                        self.service.getCharacteristic(Characteristic.CurrentFanState).getValue();
-                        callback();
-                     }, self.stateChangeResponseTime * 1000);
-                  }
-                  break;
-               }
-               case CMD4_ACC_TYPE_FilterMaintenance:
-               {
-                  if (self.config.stateChangeResponseTime === undefined)
-                     self.stateChangeResponseTime = 3;
-           
                   responded  = true;
                   setTimeout(() => {
-                     self.service.getCharacteristic(Characteristic.FilterChangeIndication).getValue();
+                     self.service.getCharacteristic(Characteristic.Active).getValue();
                      callback();
-                  }, self.stateChangeResponseTime * 1000);
-
+                  }, self.stateChangeResponseTime);
                   break;
                }
-               case CMD4_ACC_TYPE_GarageDoorOpener:
+               case CMD4_ACC_TYPE_ENUM.LockTargetState:
                {
-                  if (self.config.stateChangeResponseTime === undefined)
-                     self.stateChangeResponseTime = 10;
-
-                  if (characteristicString == CMD4_TargetDoorState )
-                  {
-                     responded  = true;
-                     setTimeout(() => {
-                        self.service.getCharacteristic(Characteristic.CurrentDoorState).getValue();
-                        callback();
-                     }, self.stateChangeResponseTime * 1000);
-                  }
-
-                  if (characteristicString == CMD4_LockTargetState )
-                  {
-                     responded  = true;
-                     setTimeout(() => {
-                        self.service.getCharacteristic(Characteristic.LockCurrentState).getValue();
-                        callback();
-                     }, self.stateChangeResponseTime * 1000);
-                  }
-
+                  responded  = true;
+                  setTimeout(() => {
+                     self.service.getCharacteristic(Characteristic.LockCurrentState).getValue();
+                     callback();
+                  }, self.stateChangeResponseTime);
                   break;
                }
-               case CMD4_ACC_TYPE_LockMechanism:
+               case CMD4_ACC_TYPE_ENUM.SecuritySystemTargetState:
                {
-                  if (self.config.stateChangeResponseTime === undefined)
-                     self.stateChangeResponseTime = 3;
-
-                  if (characteristicString == CMD4_LockTargetState )
-                  {
-                     responded  = true;
-                     setTimeout(() => {
-                        self.service.getCharacteristic(Characteristic.LockCurrentState).getValue();
-                        callback();
-                     }, self.stateChangeResponseTime * 1000);
-                  }
-
+                  responded  = true;
+                  setTimeout(() => {
+                     self.service.getCharacteristic(Characteristic.SecuritySystemCurrentState).getValue();
+                     callback();
+                  }, self.stateChangeResponseTime);
                   break;
                }
-               case CMD4_ACC_TYPE_Thermostat:
+               case CMD4_ACC_TYPE_ENUM.TargetAirPurifierState:
                {
-                  if (self.config.stateChangeResponseTime === undefined)
-                     self.stateChangeResponseTime = 10;
+                  if ( self.config.stateChangeResponseTime === undefined)
+                     self.stateChangeResponseTime = MEDIUM_STATE_CHANGE_RESPONSE_TIME;
 
-                  if (characteristicString == CMD4_TargetHeatingCoolingState )
-                  {
                      responded  = true;
                      setTimeout(() => {
-                        self.service.getCharacteristic(Characteristic.CurrentHeatingCoolingState).getValue();
+                        self.service.getCharacteristic(Characteristic.CurrentAirPurifierState).getValue();
                         callback();
-                     }, self.stateChangeResponseTime * 1000);
-                  }
-                  if (characteristicString == CMD4_TargetTemperature )
-                  {
-                     responded  = true;
-                     setTimeout(() => {
-                        self.service.getCharacteristic(Characteristic.CurrentTemperature).getValue();
-                        callback();
-                     }, self.stateChangeResponseTime * 1000);
-                  }
-                  if (characteristicString == CMD4_TargetRelativeHumidity )
-                  {
-                     setTimeout(() => {
-                     responded  = true;
-                        self.service.getCharacteristic(Characteristic.CurrentRelativeHumidity).getValue();
-                        callback();
-                     }, self.stateChangeResponseTime * 1000);
-                  }
-                  break;
+                     }, self.stateChangeResponseTime);
+                     break;
                }
-               case CMD4_ACC_TYPE_SecuritySystem:
+               case CMD4_ACC_TYPE_ENUM.TargetAirQuality:
                {
-                  if (self.config.stateChangeResponseTime === undefined)
-                     self.stateChangeResponseTime = 3;
-
-                  if (characteristicString == CMD4_SecuritySystemTargetState )
-                  {
-                     responded  = true;
-                     setTimeout(() => {
-                        self.service.getCharacteristic(Characteristic.SecuritySystemCurrentState).getValue();
-                        callback();
-                     }, self.stateChangeResponseTime * 1000);
-
-                  }
+                  responded  = true;
+                  setTimeout(() => {
+                     self.service.getCharacteristic(Characteristic.AirQuality).getValue();
+                     callback();
+                  }, self.stateChangeResponseTime);
                   break;
                }
+               case CMD4_ACC_TYPE_ENUM.TargetDoorState:
+               {
+                  responded  = true;
+                  setTimeout(() => {
+                     self.service.getCharacteristic(Characteristic.CurrentDoorState).getValue();
+                     callback();
+                  }, self.stateChangeResponseTime);
+                  break;
+               }
+               case CMD4_ACC_TYPE_ENUM.TargetFanState:
+               {
+                  responded  = true;
+                  setTimeout(() => {
+                     self.service.getCharacteristic(Characteristic.CurrentFanState).getValue();
+                     callback();
+                  }, self.stateChangeResponseTime);
+                  break;
+               }
+               case CMD4_ACC_TYPE_ENUM.TargetHeaterCoolerState:
+               {
+                  responded  = true;
+                  setTimeout(() => {
+                     self.service.getCharacteristic(Characteristic.CurrentHeaterCoolerState).getValue();
+                     callback();
+                  }, self.stateChangeResponseTime);
+                  break;
+               }
+               case CMD4_ACC_TYPE_ENUM.TargetHeatingCoolingState:
+               {
+                  responded  = true;
+                  setTimeout(() => {
+                     self.service.getCharacteristic(Characteristic.CurrentHeatingCoolingState).getValue();
+                     callback();
+                  }, self.stateChangeResponseTime);
+                  break;
+               }
+               case CMD4_ACC_TYPE_ENUM.TargetHorizontalTiltAngle:
+               {
+                  responded  = true;
+                  setTimeout(() => {
+                     self.service.getCharacteristic(Characteristic.CurrentHorizontalTiltAngle).getValue();
+                     callback();
+                  }, self.stateChangeResponseTime);
+                  break;
+               }
+               case CMD4_ACC_TYPE_ENUM.TargetHumidifierDehumidifierState:
+               {
+                  responded  = true;
+                  setTimeout(() => {
+                     self.service.getCharacteristic(Characteristic.CurrentHumidifierDehumidifierState).getValue();
+                     callback();
+                  }, self.stateChangeResponseTime);
+                  break;
+               }
+               case CMD4_ACC_TYPE_ENUM.TargetMediaState:
+               {
+                  responded  = true;
+                  setTimeout(() => {
+                     self.service.getCharacteristic(Characteristic.CurrentMediaState).getValue();
+                     callback();
+                  }, self.stateChangeResponseTime);
+                  break;
+               }
+               case CMD4_ACC_TYPE_ENUM.TargetPosition:
+               {
+                  responded  = true;
+                  setTimeout(() => {
+                     self.service.getCharacteristic(Characteristic.CurrentPosition).getValue();
+                     callback();
+                  }, self.stateChangeResponseTime);
+                  break;
+               }
+               case CMD4_ACC_TYPE_ENUM.TargetRelativeHumidity:
+               {
+                  responded  = true;
+                  setTimeout(() => {
+                     self.service.getCharacteristic(Characteristic.CurrentRelativeHumidity).getValue();
+                     callback();
+                  }, self.stateChangeResponseTime);
+                  break;
+               }
+               case CMD4_ACC_TYPE_ENUM.TargetSlatState:
+               {
+                  responded  = true;
+                  setTimeout(() => {
+                     self.service.getCharacteristic(Characteristic.CurrentSlatState).getValue();
+                     callback();
+                  }, self.stateChangeResponseTime);
+                  break;
+               }
+               case CMD4_ACC_TYPE_ENUM.TargetTemperature:
+               {
+                  responded  = true;
+                  setTimeout(() => {
+                     self.service.getCharacteristic(Characteristic.CurrentTemperature).getValue();
+                     callback();
+                  }, self.stateChangeResponseTime);
+                  break;
+               }
+               case CMD4_ACC_TYPE_ENUM.TargetTiltAngle:
+               {
+                  responded  = true;
+                  setTimeout(() => {
+                     self.service.getCharacteristic(Characteristic.CurrentTiltAngle).getValue();
+                     callback();
+                  }, self.stateChangeResponseTime);
+                  break;
+               }
+               case CMD4_ACC_TYPE_ENUM.TargetVerticalTiltAngle:
+               {
+                  responded  = true;
+                  setTimeout(() => {
+                     self.service.getCharacteristic(Characteristic.CurrentVerticalTiltAngle).getValue();
+                     callback();
+                  }, self.stateChangeResponseTime);
+                  break;
+               }
+               case CMD4_ACC_TYPE_ENUM.TargetVisibilityState:
+               {
+                  responded  = true;
+                  setTimeout(() => {
+                     self.service.getCharacteristic(Characteristic.CurrentVisibilityState).getValue();
+                     callback();
+                  }, self.stateChangeResponseTime);
+                  break;
+               }  
+               
+               
+               
+               
+               
+               
+               
                default:
                {
                    // No Special action Required
@@ -2316,7 +2267,7 @@ Cmd4Accessory.prototype = {
                // The exceptions are handled above; Respond with the
                // corresponding getValue.
                if (self.config.stateChangeResponseTime === undefined)
-                  self.stateChangeResponseTime = 1;
+                  self.stateChangeResponseTime = FAST_STATE_CHANGE_RESPONSE_TIME;
 
                if (characteristic == undefined)
                {
@@ -2338,7 +2289,7 @@ Cmd4Accessory.prototype = {
                } else {
                   setTimeout(() => {
                      callback();
-                  }, self.stateChangeResponseTime * 1000);
+                  }, self.stateChangeResponseTime);
                }
             }
          }
@@ -2353,22 +2304,26 @@ Cmd4Accessory.prototype = {
    //           value.
    //
    //   The script will be passed:
-   //      Get <Device Name> <characteristicString>
+   //      Get <Device Name> <accTypeEnumIndex>
    //
    //      Where:
    //         - Device name is the name in your
    //           config.json file.
-   //         - CharacteristicString represents
-   //           the characteristic to get.
+   //         - accTypeEnumIndex represents
+   //           the characteristic to get as in index into
+   //           the CMD4_ACC_TYPE_ENUM.
    //
    // ***********************************************
-   getValue:function (characteristicString, callback)
+   getValue:function (accTypeEnumIndex, callback)
    {
       var self = this;
+
+      var characteristicString = CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].name;
+
       var cmd = this.state_cmd + " Get '" + this.name + "' '" + characteristicString  + "'";
 
 
-      self.log.debug("DEBUG Cmd4: getValue %s function for: %s cmd: %s", characteristicString, self.name, cmd);
+      self.log.debug("getValue %s function for: %s cmd: %s", characteristicString, self.name, cmd);
 
       // Execute command to Get a characteristics value for an accessory
       var child = exec(cmd, {timeout:self.timeout}, function (error, stdout, stderr)
@@ -2388,6 +2343,7 @@ Cmd4Accessory.prototype = {
                self.log("Nothing retured from stdout for %s %s", characteristicString, self.name);
                self.log(stderr);
                self.log(error);
+               self.log(stdout);
                callback( -1, 0 );
             } else if (words.length <= 0)
             {
@@ -2421,7 +2377,7 @@ Cmd4Accessory.prototype = {
                   // self.log( "getValue Retrieved %s %s for: %s. translated to %f", characteristicString, words[0], self.name, value);
            
                   // Store history using fakegato if set up
-                  self.updateAccessoryAttribute(characteristicString, value);
+                  self.updateAccessoryAttribute(accTypeEnumIndex, value);
 
                   callback(null,value);
                } else {
@@ -2433,7 +2389,7 @@ Cmd4Accessory.prototype = {
                      value = 1;
               
                      // Store history using fakegato if set up
-                     self.updateAccessoryAttribute(characteristicString, value);
+                     self.updateAccessoryAttribute(accTypeEnumIndex, value);
               
                      callback(null,value);
                   } else if (lowerCaseWord == "false" || lowerCaseWord == "off")
@@ -2442,7 +2398,7 @@ Cmd4Accessory.prototype = {
                      value = 0;
               
                      // Store history using fakegato if set up
-                     self.updateAccessoryAttribute(characteristicString, value);
+                     self.updateAccessoryAttribute(accTypeEnumIndex, value);
               
                      callback(null,value);
                   } else {
@@ -2450,7 +2406,7 @@ Cmd4Accessory.prototype = {
                      value = words[0];
               
                      // Store history using fakegato if set up
-                     self.updateAccessoryAttribute(characteristicString, value);
+                     self.updateAccessoryAttribute(accTypeEnumIndex, value);
               
                      callback(null,value);
                   }
@@ -2481,8 +2437,8 @@ Cmd4Accessory.prototype = {
         var perms = "";
  
         var characteristic = Characteristic.AccessoryFlags;
-        var characteristicString = CMD4_AccessoryFlags;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        var accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AccessoryFlags;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -2498,7 +2454,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_AccessoryFlags, Characteristic.AccessoryFlags, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.AccessoryFlags, Characteristic.AccessoryFlags, callback);
                         });
                 }
             }
@@ -2510,19 +2466,19 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_AccessoryFlags, Characteristic.AccessoryFlags, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.AccessoryFlags, Characteristic.AccessoryFlags, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.Active;
-        characteristicString = CMD4_Active;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Active;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
-                service.addCharacteristic( characteristic );
+                service.addCharacteristic( Characteristic.Active );
             }
      
             perms = service.getCharacteristic(characteristic).props.perms;
@@ -2534,7 +2490,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_Active, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.Active, callback);
                         });
                 }
             }
@@ -2546,15 +2502,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_Active, Characteristic.Active, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.Active, Characteristic.Active, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.ActiveIdentifier;
-        characteristicString = CMD4_ActiveIdentifier;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ActiveIdentifier;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -2570,7 +2526,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_ActiveIdentifier, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.ActiveIdentifier, callback);
                         });
                 }
             }
@@ -2582,15 +2538,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ActiveIdentifier, Characteristic.ActiveIdentifier, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ActiveIdentifier, Characteristic.ActiveIdentifier, callback);
                         });
                 }
             }
         }
 
         characteristic = Characteristic.AccessoryIdentifier;
-        characteristicString = CMD4_AccessoryIdentifier;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AccessoryIdentifier;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -2606,7 +2562,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_AccessoryIdentifier, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.AccessoryIdentifier, callback);
                         });
                 }
             }
@@ -2618,15 +2574,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_AccessoryIdentifier, Characteristic.AccessoryIdentifier, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.AccessoryIdentifier, Characteristic.AccessoryIdentifier, callback);
                         });
                 }
             }
         }
 
         characteristic = Characteristic.AdministratorOnlyAccess;
-        characteristicString = CMD4_AdministratorOnlyAccess;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AdministratorOnlyAccess;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -2642,7 +2598,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_AdministratorOnlyAccess, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.AdministratorOnlyAccess, callback);
                         });
                 }
             }
@@ -2654,15 +2610,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_AdministratorOnlyAccess, Characteristic.AdministratorOnlyAccess, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.AdministratorOnlyAccess, Characteristic.AdministratorOnlyAccess, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.AirParticulateDensity;
-        characteristicString = CMD4_AirParticulateDensity;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AirParticulateDensity;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -2678,7 +2634,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_AirParticulateDensity, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.AirParticulateDensity, callback);
                         });
                 }
             }
@@ -2690,15 +2646,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_AirParticulateDensity, Characteristic.AirParticulateDensity, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.AirParticulateDensity, Characteristic.AirParticulateDensity, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.AirParticulateSize;
-        characteristicString = CMD4_AirParticulateSize;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AirParticulateSize;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -2714,7 +2670,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_AirParticulateSize, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.AirParticulateSize, callback);
                         });
                 }
             }
@@ -2726,15 +2682,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_AirParticulateSize, Characteristic.AirParticulateSize, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.AirParticulateSize, Characteristic.AirParticulateSize, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.AirQuality;
-        characteristicString = CMD4_AirQuality;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AirQuality;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -2750,7 +2706,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_AirQuality, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.AirQuality, callback);
                         });
                 }
             }
@@ -2762,15 +2718,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_AirQuality, Characteristic.AirQuality, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.AirQuality, Characteristic.AirQuality, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.AudioFeedback;
-        characteristicString = CMD4_AudioFeedback;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AudioFeedback;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -2786,7 +2742,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_AudioFeedback, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.AudioFeedback, callback);
                         });
                 }
             }
@@ -2798,15 +2754,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_AudioFeedback, Characteristic.AudioFeedback, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.AudioFeedback, Characteristic.AudioFeedback, callback);
                         });
                 }
             }
         }
  
-        characteristic = Characteristic.BatteryLevel;  // 10
-        characteristicString = CMD4_BatteryLevel;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        characteristic = Characteristic.BatteryLevel;
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.BatteryLevel;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -2822,7 +2778,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_BatteryLevel, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.BatteryLevel, callback);
                         });
                 }
             }
@@ -2834,15 +2790,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_BatteryLevel, Characteristic.BatteryLevel, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.BatteryLevel, Characteristic.BatteryLevel, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.Brightness;
-        characteristicString = CMD4_Brightness;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Brightness;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -2858,7 +2814,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_Brightness, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.Brightness, callback);
                         });
                 }
             }
@@ -2870,15 +2826,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_Brightness, Characteristic.Brightness, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.Brightness, Characteristic.Brightness, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.CarbonDioxideDetected;
-        characteristicString = CMD4_CarbonDioxideDetected;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CarbonDioxideDetected;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -2894,7 +2850,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_CarbonDioxideDetected, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.CarbonDioxideDetected, callback);
                         });
                 }
             }
@@ -2906,15 +2862,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_CarbonDioxideDetected, Characteristic.CarbonDioxideDetected, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CarbonDioxideDetected, Characteristic.CarbonDioxideDetected, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.CarbonDioxideLevel;
-        characteristicString = CMD4_CarbonDioxideLevel;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CarbonDioxideLevel;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -2930,7 +2886,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_CarbonDioxideLevel, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.CarbonDioxideLevel, callback);
                         });
                 }
             }
@@ -2942,15 +2898,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_CarbonDioxideLevel, Characteristic.CarbonDioxideLevel, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CarbonDioxideLevel, Characteristic.CarbonDioxideLevel, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.CarbonDioxidePeakLevel;
-        characteristicString = CMD4_CarbonDioxidePeakLevel;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CarbonDioxidePeakLevel;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -2966,7 +2922,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_CarbonDioxidePeakLevel, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.CarbonDioxidePeakLevel, callback);
                         });
                 }
             }
@@ -2978,15 +2934,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_CarbonDioxidePeakLevel, Characteristic.CarbonDioxidePeakLevel, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CarbonDioxidePeakLevel, Characteristic.CarbonDioxidePeakLevel, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.CarbonMonoxideDetected;
-        characteristicString = CMD4_CarbonMonoxideDetected;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CarbonMonoxideDetected;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -3002,7 +2958,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_CarbonMonoxideDetected, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.CarbonMonoxideDetected, callback);
                         });
                 }
             }
@@ -3014,15 +2970,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_CarbonMonoxideDetected, Characteristic.CarbonMonoxideDetected, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CarbonMonoxideDetected, Characteristic.CarbonMonoxideDetected, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.CarbonMonoxideLevel;
-        characteristicString = CMD4_CarbonMonoxideLevel;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CarbonMonoxideLevel;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -3038,7 +2994,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_CarbonMonoxideLevel, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.CarbonMonoxideLevel, callback);
                         });
                 }
             }
@@ -3050,15 +3006,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_CarbonMonoxideLevel, Characteristic.CarbonMonoxideLevel, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CarbonMonoxideLevel, Characteristic.CarbonMonoxideLevel, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.CarbonMonoxidePeakLevel;
-        characteristicString = CMD4_CarbonMonoxidePeakLevel;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CarbonMonoxidePeakLevel;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -3074,7 +3030,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_CarbonMonoxidePeakLevel, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.CarbonMonoxidePeakLevel, callback);
                         });
                 }
             }
@@ -3086,15 +3042,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_CarbonMonoxidePeakLevel, Characteristic.CarbonMonoxidePeakLevel, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CarbonMonoxidePeakLevel, Characteristic.CarbonMonoxidePeakLevel, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.Category;
-        characteristicString = CMD4_Category;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Category;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -3110,7 +3066,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_Category, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.Category, callback);
                         });
                 }
             }
@@ -3122,15 +3078,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_Category, Characteristic.Category, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.Category, Characteristic.Category, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.ChargingState;
-        characteristicString = CMD4_ChargingState;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ChargingState;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -3146,7 +3102,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_ChargingState, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.ChargingState, callback);
                         });
                 }
             }
@@ -3158,15 +3114,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ChargingState, Characteristic.ChargingState, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ChargingState, Characteristic.ChargingState, callback);
                         });
                 }
             }
         }
  
-        characteristic = Characteristic.ClosedCaptions;         // 20
-        characteristicString = CMD4_ClosedCaptions;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        characteristic = Characteristic.ClosedCaptions;
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ClosedCaptions;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -3182,7 +3138,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_ClosedCaptions, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.ClosedCaptions, callback);
                         });
                 }
             }
@@ -3194,15 +3150,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ClosedCaptions, Characteristic.ClosedCaptions, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ClosedCaptions, Characteristic.ClosedCaptions, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.ColorTemperature;
-        characteristicString = CMD4_ColorTemperature;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ColorTemperature;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -3218,7 +3174,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_ColorTemperature, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.ColorTemperature, callback);
                         });
                 }
             }
@@ -3230,15 +3186,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ColorTemperature, Characteristic.ColorTemperature, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ColorTemperature, Characteristic.ColorTemperature, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.ConfiguredName;
-        characteristicString = CMD4_ConfiguredName;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ConfiguredName;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -3254,7 +3210,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_ConfiguredName, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.ConfiguredName, callback);
                         });
                 }
             }
@@ -3266,15 +3222,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ConfiguredName, Characteristic.ConfiguredName, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ConfiguredName, Characteristic.ConfiguredName, callback);
                         });
                 }
             }
         }
 
         characteristic = Characteristic.ConfigureBridgedAccessoryStatus;
-        characteristicString = CMD4_ConfigureBridgedAccessoryStatus;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ConfigureBridgedAccessoryStatus;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -3290,7 +3246,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_ConfigureBridgedAccessoryStatus, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.ConfigureBridgedAccessoryStatus, callback);
                         });
                 }
             }
@@ -3302,15 +3258,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ConfigureBridgedAccessoryStatus, Characteristic.ConfigureBridgedAccessoryStatus, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ConfigureBridgedAccessoryStatus, Characteristic.ConfigureBridgedAccessoryStatus, callback);
                         });
                 }
             }
         }
 
         characteristic = Characteristic.ConfigureBridgedAccessory;
-        characteristicString = CMD4_ConfigureBridgedAccessory;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ConfigureBridgedAccessory;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -3326,7 +3282,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_ConfigureBridgedAccessory, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.ConfigureBridgedAccessory, callback);
                         });
                 }
             }
@@ -3338,15 +3294,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ConfigureBridgedAccessory, Characteristic.ConfigureBridgedAccessory, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ConfigureBridgedAccessory, Characteristic.ConfigureBridgedAccessory, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.ContactSensorState;
-        characteristicString = CMD4_ContactSensorState;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ContactSensorState;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -3362,7 +3318,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_ContactSensorState, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.ContactSensorState, callback);
                         });
                 }
             }
@@ -3374,15 +3330,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ContactSensorState, Characteristic.ContactSensorState, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ContactSensorState, Characteristic.ContactSensorState, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.CoolingThresholdTemperature;
-        characteristicString = CMD4_CoolingThresholdTemperature;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CoolingThresholdTemperature;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -3398,7 +3354,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_CoolingThresholdTemperature, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.CoolingThresholdTemperature, callback);
                         });
                 }
             }
@@ -3410,15 +3366,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_CoolingThresholdTemperature, Characteristic.CoolingThresholdTemperature, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CoolingThresholdTemperature, Characteristic.CoolingThresholdTemperature, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.CurrentAirPurifierState;
-        characteristicString = CMD4_CurrentAirPurifierState;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentAirPurifierState;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -3434,7 +3390,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_CurrentAirPurifierState, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentAirPurifierState, callback);
                         });
                 }
             }
@@ -3446,15 +3402,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_CurrentAirPurifierState, Characteristic.CurrentAirPurifierState, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentAirPurifierState, Characteristic.CurrentAirPurifierState, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.CurrentAmbientLightLevel;
-        characteristicString = CMD4_CurrentAmbientLightLevel;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentAmbientLightLevel;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -3470,7 +3426,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_CurrentAmbientLightLevel, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentAmbientLightLevel, callback);
                         });
                 }
             }
@@ -3482,15 +3438,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_CurrentAmbientLightLevel, Characteristic.CurrentAmbientLightLevel, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentAmbientLightLevel, Characteristic.CurrentAmbientLightLevel, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.CurrentDoorState;
-        characteristicString = CMD4_CurrentDoorState;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentDoorState;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -3506,7 +3462,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_CurrentDoorState, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentDoorState, callback);
                         });
                 }
             }
@@ -3518,15 +3474,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_CurrentDoorState, Characteristic.CurrentDoorState, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentDoorState, Characteristic.CurrentDoorState, callback);
                         });
                 }
             }
         }
  
-        characteristic = Characteristic.CurrentFanState;             // 30
-        characteristicString = CMD4_CurrentFanState;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        characteristic = Characteristic.CurrentFanState;
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentFanState;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -3542,7 +3498,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_CurrentFanState, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentFanState, callback);
                         });
                 }
             }
@@ -3554,15 +3510,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_CurrentFanState, Characteristic.CurrentFanState, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentFanState, Characteristic.CurrentFanState, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.CurrentHeaterCoolerState;
-        characteristicString = CMD4_CurrentHeaterCoolerState;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentHeaterCoolerState;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -3578,7 +3534,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_CurrentHeaterCoolerState, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentHeaterCoolerState, callback);
                         });
                 }
             }
@@ -3590,15 +3546,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_CurrentHeaterCoolerState, Characteristic.CurrentHeaterCoolerState, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentHeaterCoolerState, Characteristic.CurrentHeaterCoolerState, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.CurrentHeatingCoolingState;
-        characteristicString = CMD4_CurrentHeatingCoolingState;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentHeatingCoolingState;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -3614,7 +3570,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_CurrentHeatingCoolingState, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentHeatingCoolingState, callback);
                         });
                 }
             }
@@ -3626,15 +3582,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_CurrentHeatingCoolingState, Characteristic.CurrentHeatingCoolingState, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentHeatingCoolingState, Characteristic.CurrentHeatingCoolingState, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.CurrentHorizontalTiltAngle;
-        characteristicString = CMD4_CurrentHorizontalTiltAngle;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentHorizontalTiltAngle;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -3650,7 +3606,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_CurrentHorizontalTiltAngle, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentHorizontalTiltAngle, callback);
                         });
                 }
             }
@@ -3662,15 +3618,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_CurrentHorizontalTiltAngle, Characteristic.CurrentHorizontalTiltAngle, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentHorizontalTiltAngle, Characteristic.CurrentHorizontalTiltAngle, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.CurrentHumidifierDehumidifierState;
-        characteristicString = CMD4_CurrentHumidifierDehumidifierState;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentHumidifierDehumidifierState;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -3686,7 +3642,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_CurrentHumidifierDehumidifierState, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentHumidifierDehumidifierState, callback);
                         });
                 }
             }
@@ -3698,15 +3654,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_CurrentHumidifierDehumidifierState, Characteristic.CurrentHumidifierDehumidifierState, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentHumidifierDehumidifierState, Characteristic.CurrentHumidifierDehumidifierState, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.CurrentMediaState;
-        characteristicString = CMD4_CurrentMediaState;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentMediaState;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -3722,7 +3678,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_CurrentMediaState, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentMediaState, callback);
                         });
                 }
             }
@@ -3734,15 +3690,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_CurrentMediaState, Characteristic.CurrentMediaState, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentMediaState, Characteristic.CurrentMediaState, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.CurrentPosition;
-        characteristicString = CMD4_CurrentPosition;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentPosition;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -3758,7 +3714,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_CurrentPosition, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentPosition, callback);
                         });
                 }
             }
@@ -3770,15 +3726,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_CurrentPosition, Characteristic.CurrentPosition, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentPosition, Characteristic.CurrentPosition, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.CurrentRelativeHumidity;
-        characteristicString = CMD4_CurrentRelativeHumidity;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentRelativeHumidity;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -3794,7 +3750,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_CurrentRelativeHumidity, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentRelativeHumidity, callback);
                         });
                 }
             }
@@ -3806,15 +3762,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_CurrentRelativeHumidity, Characteristic.CurrentRelativeHumidity, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentRelativeHumidity, Characteristic.CurrentRelativeHumidity, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.CurrentSlatState;
-        characteristicString = CMD4_CurrentSlatState;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentSlatState;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -3830,7 +3786,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_CurrentSlatState, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentSlatState, callback);
                         });
                 }
             }
@@ -3842,15 +3798,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_CurrentSlatState, Characteristic.CurrentSlatState, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentSlatState, Characteristic.CurrentSlatState, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.CurrentTemperature;
-        characteristicString = CMD4_CurrentTemperature;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentTemperature;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -3866,7 +3822,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_CurrentTemperature, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentTemperature, callback);
                         });
                 }
             }
@@ -3878,15 +3834,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_CurrentTemperature, Characteristic.CurrentTemperature, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentTemperature, Characteristic.CurrentTemperature, callback);
                         });
                 }
             }
         }
  
-        characteristic = Characteristic.CurrentTiltAngle;               // 40
-        characteristicString = CMD4_CurrentTiltAngle;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        characteristic = Characteristic.CurrentTiltAngle;
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentTiltAngle;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -3902,7 +3858,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_CurrentTiltAngle, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentTiltAngle, callback);
                         });
                 }
             }
@@ -3914,15 +3870,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_CurrentTiltAngle, Characteristic.CurrentTiltAngle, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentTiltAngle, Characteristic.CurrentTiltAngle, callback);
                         });
                 }
             }
         }
 
         characteristic = Characteristic.CurrentTime;
-        characteristicString = CMD4_CurrentTime;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentTime;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -3938,7 +3894,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_CurrentTime, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentTime, callback);
                         });
                 }
             }
@@ -3950,15 +3906,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_CurrentTime, Characteristic.CurrentTime, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentTime, Characteristic.CurrentTime, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.CurrentVerticalTiltAngle;
-        characteristicString = CMD4_CurrentVerticalTiltAngle;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentVerticalTiltAngle;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -3974,7 +3930,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_CurrentVerticalTiltAngle, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentVerticalTiltAngle, callback);
                         });
                 }
             }
@@ -3986,15 +3942,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_CurrentVerticalTiltAngle, Characteristic.CurrentVerticalTiltAngle, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentVerticalTiltAngle, Characteristic.CurrentVerticalTiltAngle, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.CurrentVisibilityState;
-        characteristicString = CMD4_CurrentVisibilityState;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentVisibilityState;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -4010,7 +3966,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_CurrentVisibilityState, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentVisibilityState, callback);
                         });
                 }
             }
@@ -4022,15 +3978,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_CurrentVisibilityState, Characteristic.CurrentVisibilityState, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentVisibilityState, Characteristic.CurrentVisibilityState, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.DayoftheWeek;
-        characteristicString = CMD4_DayoftheWeek;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.DayoftheWeek;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -4046,7 +4002,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_DayoftheWeek, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.DayoftheWeek, callback);
                         });
                 }
             }
@@ -4058,15 +4014,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_DayoftheWeek, Characteristic.DayoftheWeek, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.DayoftheWeek, Characteristic.DayoftheWeek, callback);
                         });
                 }
             }
         }
 
         characteristic = Characteristic.DigitalZoom;
-        characteristicString = CMD4_DigitalZoom;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.DigitalZoom;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -4082,7 +4038,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_DigitalZoom, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.DigitalZoom, callback);
                         });
                 }
             }
@@ -4094,15 +4050,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_DigitalZoom, Characteristic.DigitalZoom, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.DigitalZoom, Characteristic.DigitalZoom, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.DiscoverBridgedAccessories;
-        characteristicString = CMD4_DiscoverBridgedAccessories;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.DiscoverBridgedAccessories;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -4118,7 +4074,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_DiscoverBridgedAccessories, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.DiscoverBridgedAccessories, callback);
                         });
                 }
             }
@@ -4130,15 +4086,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_DiscoverBridgedAccessories, Characteristic.DiscoverBridgedAccessories, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.DiscoverBridgedAccessories, Characteristic.DiscoverBridgedAccessories, callback);
                         });
                 }
             }
         }
 
         characteristic = Characteristic.DiscoveredBridgedAccessories;
-        characteristicString = CMD4_DiscoveredBridgedAccessories;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.DiscoveredBridgedAccessories;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -4154,7 +4110,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_DiscoveredBridgedAccessories, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.DiscoveredBridgedAccessories, callback);
                         });
                 }
             }
@@ -4166,15 +4122,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_DiscoveredBridgedAccessories, Characteristic.DiscoveredBridgedAccessories, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.DiscoveredBridgedAccessories, Characteristic.DiscoveredBridgedAccessories, callback);
                         });
                 }
             }
         }
 
         characteristic = Characteristic.DisplayOrder;
-        characteristicString = CMD4_DisplayOrder;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.DisplayOrder;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -4190,7 +4146,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_DisplayOrder, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.DisplayOrder, callback);
                         });
                 }
             }
@@ -4202,15 +4158,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_DisplayOrder, Characteristic.DisplayOrder, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.DisplayOrder, Characteristic.DisplayOrder, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.FilterChangeIndication;
-        characteristicString = CMD4_FilterChangeIndication;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.FilterChangeIndication;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -4226,7 +4182,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_FilterChangeIndication, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.FilterChangeIndication, callback);
                         });
                 }
             }
@@ -4238,15 +4194,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_FilterChangeIndication, Characteristic.On, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.FilterChangeIndication, Characteristic.On, callback);
                         });
                 }
             }
         }
  
-        characteristic = Characteristic.FilterLifeLevel;        // 50
-        characteristicString = CMD4_FilterLifeLevel;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        characteristic = Characteristic.FilterLifeLevel;
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.FilterLifeLevel;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -4262,7 +4218,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_FilterLifeLevel, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.FilterLifeLevel, callback);
                         });
                 }
             }
@@ -4274,15 +4230,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_FilterLifeLevel, Characteristic.FilterLifeLevel, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.FilterLifeLevel, Characteristic.FilterLifeLevel, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.FirmwareRevision;
-        characteristicString = CMD4_FirmwareRevision;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.FirmwareRevision;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -4298,7 +4254,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_FirmwareRevision, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.FirmwareRevision, callback);
                         });
                 }
             }
@@ -4310,15 +4266,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_FirmwareRevision, Characteristic.FirmwareRevision, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.FirmwareRevision, Characteristic.FirmwareRevision, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.HardwareRevision;
-        characteristicString = CMD4_HardwareRevision;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.HardwareRevision;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -4334,7 +4290,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_HardwareRevision, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.HardwareRevision, callback);
                         });
                 }
             }
@@ -4346,15 +4302,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_HardwareRevision, Characteristic.HardwareRevision, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.HardwareRevision, Characteristic.HardwareRevision, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.HeatingThresholdTemperature;
-        characteristicString = CMD4_HeatingThresholdTemperature;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.HeatingThresholdTemperature;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -4370,7 +4326,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_HeatingThresholdTemperature, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.HeatingThresholdTemperature, callback);
                         });
                 }
             }
@@ -4382,15 +4338,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_HeatingThresholdTemperature, Characteristic.HeatingThresholdTemperature, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.HeatingThresholdTemperature, Characteristic.HeatingThresholdTemperature, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.HoldPosition;
-        characteristicString = CMD4_HoldPosition;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.HoldPosition;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -4406,7 +4362,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_HoldPosition, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.HoldPosition, callback);
                         });
                 }
             }
@@ -4418,15 +4374,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_HoldPosition, Characteristic.HoldPosition, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.HoldPosition, Characteristic.HoldPosition, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.Hue;
-        characteristicString = CMD4_Hue;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Hue;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -4442,7 +4398,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_Hue, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.Hue, callback);
                         });
                 }
             }
@@ -4454,15 +4410,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_Hue, Characteristic.Hue, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.Hue, Characteristic.Hue, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.Identify;
-        characteristicString = CMD4_Identify;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Identify;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -4478,7 +4434,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_Identify, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.Identify, callback);
                         });
                 }
             }
@@ -4490,15 +4446,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_Identify, Characteristic.Identify, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.Identify, Characteristic.Identify, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.ImageMirroring;
-        characteristicString = CMD4_ImageMirroring;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ImageMirroring;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -4514,7 +4470,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_ImageMirroring, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.ImageMirroring, callback);
                         });
                 }
             }
@@ -4526,15 +4482,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ImageMirroring, Characteristic.ImageMirroring, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ImageMirroring, Characteristic.ImageMirroring, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.ImageRotation;
-        characteristicString = CMD4_ImageRotation;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ImageRotation;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -4550,7 +4506,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_ImageRotation, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.ImageRotation, callback);
                         });
                 }
             }
@@ -4562,15 +4518,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ImageRotation, Characteristic.ImageRotation, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ImageRotation, Characteristic.ImageRotation, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.InputDeviceType;
-        characteristicString = CMD4_InputDeviceType;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.InputDeviceType;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -4586,7 +4542,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_InputDeviceType, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.InputDeviceType, callback);
                         });
                 }
             }
@@ -4598,15 +4554,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_InputDeviceType, Characteristic.InputDeviceType, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.InputDeviceType, Characteristic.InputDeviceType, callback);
                         });
                 }
             }
         }
  
-        characteristic = Characteristic.InputSourceType;        // 60
-        characteristicString = CMD4_InputSourceType;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        characteristic = Characteristic.InputSourceType;
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.InputSourceType;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -4622,7 +4578,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_InputSourceType, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.InputSourceType, callback);
                         });
                 }
             }
@@ -4634,15 +4590,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_InputSourceType, Characteristic.InputSourceType, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.InputSourceType, Characteristic.InputSourceType, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.InUse;
-        characteristicString = CMD4_InUse;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.InUse;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -4658,7 +4614,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_InUse, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.InUse, callback);
                         });
                 }
             }
@@ -4670,15 +4626,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_InUse, Characteristic.InUse, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.InUse, Characteristic.InUse, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.IsConfigured;
-        characteristicString = CMD4_IsConfigured;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.IsConfigured;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -4694,7 +4650,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_IsConfigured, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.IsConfigured, callback);
                         });
                 }
             }
@@ -4706,15 +4662,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_IsConfigured, Characteristic.IsConfigured, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.IsConfigured, Characteristic.IsConfigured, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.LeakDetected;
-        characteristicString = CMD4_LeakDetected;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.LeakDetected;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -4730,7 +4686,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_LeakDetected, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.LeakDetected, callback);
                         });
                 }
             }
@@ -4742,15 +4698,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_LeakDetected, Characteristic.LeakDetected, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.LeakDetected, Characteristic.LeakDetected, callback);
                         });
                 }
             }
         }
 
         characteristic = Characteristic.LinkQuality;
-        characteristicString = CMD4_LinkQuality;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.LinkQuality;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -4766,7 +4722,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_LinkQuality, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.LinkQuality, callback);
                         });
                 }
             }
@@ -4778,15 +4734,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_LinkQuality, Characteristic.LinkQuality, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.LinkQuality, Characteristic.LinkQuality, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.LockControlPoint;
-        characteristicString = CMD4_LockControlPoint;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.LockControlPoint;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -4802,7 +4758,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_LockControlPoint, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.LockControlPoint, callback);
                         });
                 }
             }
@@ -4814,15 +4770,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_LockControlPoint, Characteristic.LockControlPoint, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.LockControlPoint, Characteristic.LockControlPoint, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.LockCurrentState;
-        characteristicString = CMD4_LockCurrentState;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.LockCurrentState;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -4838,7 +4794,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_LockCurrentState, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.LockCurrentState, callback);
                         });
                 }
             }
@@ -4850,15 +4806,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_LockCurrentState, Characteristic.LockCurrentState, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.LockCurrentState, Characteristic.LockCurrentState, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.LockLastKnownAction;
-        characteristicString = CMD4_LockLastKnownAction;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.LockLastKnownAction;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -4874,7 +4830,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_LockLastKnownAction, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.properties[CMD4_ACC_TYPE_ENUM.LockLastKnownAction].name, callback);
                         });
                 }
             }
@@ -4886,15 +4842,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_LockLastKnownAction, Characteristic.LockLastKnownAction, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.LockLastKnownAction, Characteristic.LockLastKnownAction, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.LockManagementAutoSecurityTimeout;
-        characteristicString = CMD4_LockManagementAutoSecurityTimeout;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.LockManagementAutoSecurityTimeout;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -4910,7 +4866,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_LockManagementAutoSecurityTimeout, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.LockManagementAutoSecurityTimeout, callback);
                         });
                 }
             }
@@ -4922,15 +4878,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_LockManagementAutoSecurityTimeout, Characteristic.LockManagementAutoSecurityTimeout, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.LockManagementAutoSecurityTimeout, Characteristic.LockManagementAutoSecurityTimeout, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.LockPhysicalControls;
-        characteristicString = CMD4_LockPhysicalControls;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.LockPhysicalControls;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -4946,7 +4902,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_LockPhysicalControls, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.LockPhysicalControls, callback);
                         });
                 }
             }
@@ -4958,15 +4914,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_LockPhysicalControls, Characteristic.LockPhysicalControls, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.LockPhysicalControls, Characteristic.LockPhysicalControls, callback);
                         });
                 }
             }
         }
  
-        characteristic = Characteristic.LockTargetState;     // 70
-        characteristicString = CMD4_LockTargetState;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        characteristic = Characteristic.LockTargetState;
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.LockTargetState;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -4982,7 +4938,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_LockTargetState, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.LockTargetState, callback);
                         });
                 }
             }
@@ -4994,15 +4950,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_LockTargetState, Characteristic.LockTargetState, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.LockTargetState, Characteristic.LockTargetState, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.Logs;
-        characteristicString = CMD4_Logs;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Logs;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -5018,7 +4974,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_Logs, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.Logs, callback);
                         });
                 }
             }
@@ -5030,15 +4986,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_Manufacturer, Characteristic.Manufacturer, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.Manufacturer, Characteristic.Manufacturer, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.Model;
-        characteristicString = CMD4_Model;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Model;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -5054,7 +5010,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_Model, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.Model, callback);
                         });
                 }
             }
@@ -5066,15 +5022,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_On, Characteristic.Model, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.On, Characteristic.Model, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.Manufacturer;
-        characteristicString = CMD4_Manufacturer;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Manufacturer;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -5090,7 +5046,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_Manufacturer, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.Manufacturer, callback);
                         });
                 }
             }
@@ -5102,15 +5058,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_Manufacturer, Characteristic.Manufacturer, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.Manufacturer, Characteristic.Manufacturer, callback);
                         });
                 }
             }
         }
 
         characteristic = Characteristic.MotionDetected;
-        characteristicString = CMD4_MotionDetected;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.MotionDetected;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -5126,7 +5082,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_MotionDetected, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.MotionDetected, callback);
                         });
                 }
             }
@@ -5138,15 +5094,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_MotionDetected, Characteristic.MotionDetected, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.MotionDetected, Characteristic.MotionDetected, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.Mute;
-        characteristicString = CMD4_Mute;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -5162,7 +5118,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_Mute, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.Mute, callback);
                         });
                 }
             }
@@ -5174,15 +5130,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_Mute, Characteristic.Mute, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.Mute, Characteristic.Mute, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.Name;
-        characteristicString = CMD4_Name;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Name;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -5198,7 +5154,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_Name, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.Name, callback);
                         });
                 }
             }
@@ -5210,15 +5166,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_Name, Characteristic.Name, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.Name, Characteristic.Name, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.NightVision;
-        characteristicString = CMD4_NightVision;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.NightVision;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -5234,7 +5190,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_NightVision, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.NightVision, callback);
                         });
                 }
             }
@@ -5246,15 +5202,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_NightVision, Characteristic.NightVision, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.NightVision, Characteristic.NightVision, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.NitrogenDioxideDensity;
-        characteristicString = CMD4_NitrogenDioxideDensity;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.NitrogenDioxideDensity;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -5270,7 +5226,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_NitrogenDioxideDensity, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.NitrogenDioxideDensity, callback);
                         });
                 }
             }
@@ -5282,15 +5238,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_NitrogenDioxideDensity, Characteristic.NitrogenDioxideDensity, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.NitrogenDioxideDensity, Characteristic.NitrogenDioxideDensity, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.ObstructionDetected;
-        characteristicString = CMD4_ObstructionDetected;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ObstructionDetected;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -5306,7 +5262,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_ObstructionDetected, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.ObstructionDetected, callback);
                         });
                 }
             }
@@ -5318,15 +5274,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ObstructionDetected, Characteristic.ObstructionDetected, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ObstructionDetected, Characteristic.ObstructionDetected, callback);
                         });
                 }
             }
         }
  
-        characteristic = Characteristic.OccupancyDetected;            // 80
-        characteristicString = CMD4_OccupancyDetected;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        characteristic = Characteristic.OccupancyDetected;
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.OccupancyDetected;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -5342,7 +5298,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_OccupancyDetected, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.OccupancyDetected, callback);
                         });
                 }
             }
@@ -5354,15 +5310,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_OccupancyDetected, Characteristic.OccupancyDetected, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.OccupancyDetected, Characteristic.OccupancyDetected, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.On;
-        characteristicString = CMD4_On;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.On;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -5378,7 +5334,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue("On", callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.On, callback);
                         });
                 }
             }
@@ -5390,15 +5346,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_On, Characteristic.On, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.On, Characteristic.On, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.OpticalZoom;
-        characteristicString = CMD4_OpticalZoom;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.OpticalZoom;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -5414,7 +5370,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_OpticalZoom, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.OpticalZoom, callback);
                         });
                 }
             }
@@ -5426,15 +5382,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_OpticalZoom, Characteristic.OpticalZoom, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.OpticalZoom, Characteristic.OpticalZoom, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.OutletInUse;
-        characteristicString = CMD4_OutletInUse;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.OutletInUse;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -5450,7 +5406,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_OutletInUse, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.OutletInUse, callback);
                         });
                 }
             }
@@ -5462,15 +5418,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_OutletInUse, Characteristic.OutletInUse, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.OutletInUse, Characteristic.OutletInUse, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.OzoneDensity;
-        characteristicString = CMD4_OzoneDensity;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.OzoneDensity;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -5486,7 +5442,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_OzoneDensity, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.OzoneDensity, callback);
                         });
                 }
             }
@@ -5498,15 +5454,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_OzoneDensity, Characteristic.OzoneDensity, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.OzoneDensity, Characteristic.OzoneDensity, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.PairSetup;
-        characteristicString = CMD4_PairSetup;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.PairSetup;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -5522,7 +5478,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_PairSetup, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.PairSetup, callback);
                         });
                 }
             }
@@ -5534,15 +5490,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_PairSetup, Characteristic.PairSetup, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.PairSetup, Characteristic.PairSetup, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.PairVerify;
-        characteristicString = CMD4_PairVerify;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.PairVerify;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -5558,7 +5514,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_PairVerify, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.PairVerify, callback);
                         });
                 }
             }
@@ -5570,15 +5526,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_PairVerify, Characteristic.PairVerify, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.PairVerify, Characteristic.PairVerify, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.PairingFeatures;
-        characteristicString = CMD4_PairingFeatures;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.PairingFeatures;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -5594,7 +5550,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_PairingFeatures, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.PairingFeatures, callback);
                         });
                 }
             }
@@ -5606,15 +5562,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_PairingFeatures, Characteristic.PairingFeatures, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.PairingFeatures, Characteristic.PairingFeatures, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.PairingPairings;
-        characteristicString = CMD4_PairingPairings;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.PairingPairings;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -5630,7 +5586,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_PairingPairings, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.PairingPairings, callback);
                         });
                 }
             }
@@ -5642,15 +5598,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_PairingPairings, Characteristic.PairingPairings, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.PairingPairings, Characteristic.PairingPairings, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.PictureMode;
-        characteristicString = CMD4_PictureMode;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.PictureMode;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -5666,7 +5622,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_PictureMode, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.PictureMode, callback);
                         });
                 }
             }
@@ -5678,15 +5634,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_PictureMode, Characteristic.PictureMode, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.PictureMode, Characteristic.PictureMode, callback);
                         });
                 }
             }
         }
 
-        characteristic = Characteristic.PM10Density;      // 90
-        characteristicString = CMD4_PM10Density;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        characteristic = Characteristic.PM10Density;
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.PM10Density;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -5702,7 +5658,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_PM10Density, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.PM10Density, callback);
                         });
                 }
             }
@@ -5714,15 +5670,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_PM10Density, Characteristic.PM10Density, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.PM10Density, Characteristic.PM10Density, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.PM2_5Density;
-        characteristicString = CMD4_PM2_5Density;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.PM2_5Density;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -5738,7 +5694,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_PM2_5Density, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.PM2_5Density, callback);
                         });
                 }
             }
@@ -5750,15 +5706,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_PM2_5Density, Characteristic.PM2_5Density, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.PM2_5Density, Characteristic.PM2_5Density, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.PositionState;
-        characteristicString = CMD4_PositionState;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.PositionState;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -5774,7 +5730,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_PositionState, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.PositionState, callback);
                         });
                 }
             }
@@ -5786,15 +5742,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_PositionState, Characteristic.PositionState, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.PositionState, Characteristic.PositionState, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.PowerModeSelection;
-        characteristicString = CMD4_PowerModeSelection;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.PowerModeSelection;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -5810,7 +5766,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_PowerModeSelection, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.PowerModeSelection, callback);
                         });
                 }
             }
@@ -5822,15 +5778,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_PowerModeSelection, Characteristic.PowerModeSelection, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.PowerModeSelection, Characteristic.PowerModeSelection, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.ProgramMode;
-        characteristicString = CMD4_ProgramMode;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ProgramMode;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -5846,7 +5802,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_ProgramMode, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.ProgramMode, callback);
                         });
                 }
             }
@@ -5858,15 +5814,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ProgramMode, Characteristic.ProgramMode, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ProgramMode, Characteristic.ProgramMode, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.ProgrammableSwitchEvent;
-        characteristicString = CMD4_ProgrammableSwitchEvent;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -5882,7 +5838,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_ProgrammableSwitchEvent, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent, callback);
                         });
                 }
             }
@@ -5894,15 +5850,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ProgrammableSwitchEvent, Characteristic.ProgrammableSwitchEvent, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent, Characteristic.ProgrammableSwitchEvent, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.ProgrammableSwitchOutputState;
-        characteristicString = CMD4_ProgrammableSwitchOutputState;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ProgrammableSwitchOutputState;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -5918,7 +5874,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_ProgrammableSwitchOutputState, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.ProgrammableSwitchOutputState, callback);
                         });
                 }
             }
@@ -5930,15 +5886,16 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ProgrammableSwitchOutputState, Characteristic.ProgrammableSwitchOutputState, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ProgrammableSwitchOutputState, Characteristic.ProgrammableSwitchOutputState, callback);
                         });
                 }
             }
         }
 
         characteristic = Characteristic.Reachable;
-        characteristicString = CMD4_Reachable;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Reachable;
+        if ( this.getStoredValueForIndex(
+              accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -5954,7 +5911,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_Reachable, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.Reachable, callback);
                         });
                 }
             }
@@ -5966,15 +5923,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_Reachable, Characteristic.Reachable, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.Reachable, Characteristic.Reachable, callback);
                         });
                 }
             }
         }
 
         characteristic = Characteristic.RelativeHumidityDehumidifierThreshold;
-        characteristicString = CMD4_RelativeHumidityDehumidifierThreshold;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.RelativeHumidityDehumidifierThreshold;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -5990,7 +5947,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_RelativeHumidityDehumidifierThreshold, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.RelativeHumidityDehumidifierThreshold, callback);
                         });
                 }
             }
@@ -6002,15 +5959,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_RelativeHumidityDehumidifierThreshold,    Characteristic.RelativeHumidityDehumidifierThreshold, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.RelativeHumidityDehumidifierThreshold, Characteristic.RelativeHumidityDehumidifierThreshold, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.RelativeHumidityHumidifierThreshold;
-        characteristicString = CMD4_RelativeHumidityHumidifierThreshold;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.RelativeHumidityHumidifierThreshold;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -6026,7 +5983,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_RelativeHumidityHumidifierThreshold, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.RelativeHumidityHumidifierThreshold, callback);
                         });
                 }
             }
@@ -6038,15 +5995,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_RelativeHumidityHumidifierThreshold,    Characteristic.RelativeHumidityHumidifierThreshold, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.RelativeHumidityHumidifierThreshold, Characteristic.RelativeHumidityHumidifierThreshold, callback);
                         });
                 }
             }
         }
 
-        characteristic = Characteristic.RelayEnabled;    // 100
-        characteristicString = CMD4_RelayEnabled;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        characteristic = Characteristic.RelayEnabled;
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.RelayEnabled;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -6062,7 +6019,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_RelayEnabled, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.RelayEnabled, callback);
                         });
                 }
             }
@@ -6074,15 +6031,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_RelayEnabled, Characteristic.RelayEnabled, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.RelayEnabled, Characteristic.RelayEnabled, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.RelayState;
-        characteristicString = CMD4_RelayState;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.RelayState;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -6098,7 +6055,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_RelayState, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.RelayState, callback);
                         });
                 }
             }
@@ -6110,15 +6067,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_RelayState, Characteristic.RelayState, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.RelayState, Characteristic.RelayState, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.RelayControlPoint;
-        characteristicString = CMD4_RelayControlPoint;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.RelayControlPoint;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -6134,7 +6091,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_RelayControlPoint, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.RelayControlPoint, callback);
                         });
                 }
             }
@@ -6146,15 +6103,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_RelayControlPoint, Characteristic.RelayControlPoint, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.RelayControlPoint, Characteristic.RelayControlPoint, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.RemainingDuration;
-        characteristicString = CMD4_RemainingDuration;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.RemainingDuration;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -6170,7 +6127,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_RemainingDuration, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.RemainingDuration, callback);
                         });
                 }
             }
@@ -6182,15 +6139,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_RemainingDuration, Characteristic.RemainingDuration, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.RemainingDuration, Characteristic.RemainingDuration, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.RemoteKey;
-        characteristicString = CMD4_RemoteKey;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.RemoteKey;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -6206,7 +6163,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_RemoteKey, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.RemoteKey, callback);
                         });
                 }
             }
@@ -6218,15 +6175,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_RemoteKey, Characteristic.RemoteKey, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.RemoteKey, Characteristic.RemoteKey, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.ResetFilterIndication;
-        characteristicString = CMD4_ResetFilterIndication;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ResetFilterIndication;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -6242,7 +6199,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_ResetFilterIndication, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.ResetFilterIndication, callback);
                         });
                 }
             }
@@ -6254,15 +6211,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ResetFilterIndication, Characteristic.ResetFilterIndication, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ResetFilterIndication, Characteristic.ResetFilterIndication, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.RotationDirection;
-        characteristicString = CMD4_RotationDirection;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.RotationDirection;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -6278,7 +6235,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_RotationDirection, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.RotationDirection, callback);
                         });
                 }
             }
@@ -6290,15 +6247,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_RotationDirection, Characteristic.RotationDirection, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.RotationDirection, Characteristic.RotationDirection, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.RotationSpeed;
-        characteristicString = CMD4_RotationSpeed;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.RotationSpeed;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -6314,7 +6271,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_RotationSpeed, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.RotationSpeed, callback);
                         });
                 }
             }
@@ -6326,15 +6283,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_RotationSpeed, Characteristic.RotationSpeed, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.RotationSpeed, Characteristic.RotationSpeed, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.Saturation;
-        characteristicString = CMD4_Saturation;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Saturation;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -6350,7 +6307,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_Saturation, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.Saturation, callback);
                         });
                 }
             }
@@ -6362,15 +6319,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_Saturation, Characteristic.Saturation, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.Saturation, Characteristic.Saturation, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.SecuritySystemAlarmType;
-        characteristicString = CMD4_SecuritySystemAlarmType;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SecuritySystemAlarmType;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -6386,7 +6343,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_SecuritySystemAlarmType, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.SecuritySystemAlarmType, callback);
                         });
                 }
             }
@@ -6398,15 +6355,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_SecuritySystemAlarmType, Characteristic.SecuritySystemAlarmType, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SecuritySystemAlarmType, Characteristic.SecuritySystemAlarmType, callback);
                         });
                 }
             }
         }
  
-        characteristic = Characteristic.SecuritySystemCurrentState;       // 110
-        characteristicString = CMD4_SecuritySystemCurrentState;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        characteristic = Characteristic.SecuritySystemCurrentState;
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SecuritySystemCurrentState;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -6422,7 +6379,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_SecuritySystemCurrentState, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.SecuritySystemCurrentState, callback);
                         });
                 }
             }
@@ -6434,15 +6391,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_SecuritySystemCurrentState, Characteristic.SecuritySystemCurrentState, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SecuritySystemCurrentState, Characteristic.SecuritySystemCurrentState, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.SecuritySystemTargetState;
-        characteristicString = CMD4_SecuritySystemTargetState;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SecuritySystemTargetState;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -6458,7 +6415,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_SecuritySystemTargetState, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.SecuritySystemTargetState, callback);
                         });
                 }
             }
@@ -6470,15 +6427,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_SecuritySystemTargetState, Characteristic.SecuritySystemTargetState, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SecuritySystemTargetState, Characteristic.SecuritySystemTargetState, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.SelectedRTPStreamConfiguration;
-        characteristicString = CMD4_SelectedRTPStreamConfiguration;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SelectedRTPStreamConfiguration;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -6494,7 +6451,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_SelectedRTPStreamConfiguration, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.SelectedRTPStreamConfiguration, callback);
                         });
                 }
             }
@@ -6506,15 +6463,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_SelectedRTPStreamConfiguration,    Characteristic.SelectedRTPStreamConfiguration, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SelectedRTPStreamConfiguration,Characteristic.SelectedRTPStreamConfiguration, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.SerialNumber;
-        characteristicString = CMD4_SerialNumber;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SerialNumber;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -6530,7 +6487,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_SerialNumber, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.SerialNumber, callback);
                         });
                 }
             }
@@ -6542,15 +6499,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_SerialNumber, Characteristic.SerialNumber, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SerialNumber, Characteristic.SerialNumber, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.ServiceLabelIndex;
-        characteristicString = CMD4_ServiceLabelIndex;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ServiceLabelIndex;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -6566,7 +6523,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_ServiceLabelIndex, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.ServiceLabelIndex, callback);
                         });
                 }
             }
@@ -6578,15 +6535,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ServiceLabelIndex, Characteristic.ServiceLabelIndex, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ServiceLabelIndex, Characteristic.ServiceLabelIndex, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.ServiceLabelNamespace;
-        characteristicString = CMD4_ServiceLabelNamespace;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ServiceLabelNamespace;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -6602,7 +6559,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_ServiceLabelNamespace, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.ServiceLabelNamespace, callback);
                         });
                 }
             }
@@ -6614,15 +6571,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ServiceLabelNamespace, Characteristic.ServiceLabelNamespace, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ServiceLabelNamespace, Characteristic.ServiceLabelNamespace, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.SetDuration;
-        characteristicString = CMD4_SetDuration;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SetDuration;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -6638,7 +6595,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_SetDuration, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.SetDuration, callback);
                         });
                 }
             }
@@ -6650,15 +6607,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_SetDuration, Characteristic.SetDuration, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SetDuration, Characteristic.SetDuration, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.SetupEndpoints;
-        characteristicString = CMD4_SetupEndpoints;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SetupEndpoints;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -6674,7 +6631,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_SetupEndpoints, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.SetupEndpoints, callback);
                         });
                 }
             }
@@ -6686,15 +6643,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_SetupEndpoints, Characteristic.SetupEndpoints, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SetupEndpoints, Characteristic.SetupEndpoints, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.SlatType;
-        characteristicString = CMD4_SlatType;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SlatType;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -6710,7 +6667,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_SlatType, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.SlatType, callback);
                         });
                 }
             }
@@ -6722,15 +6679,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_SlatType, Characteristic.SlatType, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SlatType, Characteristic.SlatType, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.SleepDiscoveryMode;
-        characteristicString = CMD4_SleepDiscoveryMode;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SleepDiscoveryMode;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -6746,7 +6703,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_SleepDiscoveryMode, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.SleepDiscoveryMode, callback);
                         });
                 }
             }
@@ -6758,15 +6715,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_SleepDiscoveryMode, Characteristic.SleepDiscoveryMode, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SleepDiscoveryMode, Characteristic.SleepDiscoveryMode, callback);
                         });
                 }
             }
         }
  
-        characteristic = Characteristic.SmokeDetected;        // 120
-        characteristicString = CMD4_SmokeDetected;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        characteristic = Characteristic.SmokeDetected;
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SmokeDetected;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -6782,7 +6739,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_SmokeDetected, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.SmokeDetected, callback);
                         });
                 }
             }
@@ -6794,15 +6751,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_SmokeDetected, Characteristic.SmokeDetected, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SmokeDetected, Characteristic.SmokeDetected, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.StatusActive;
-        characteristicString = CMD4_StatusActive;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusActive;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -6818,7 +6775,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_StatusActive, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.StatusActive, callback);
                         });
                 }
             }
@@ -6830,15 +6787,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_StatusActive, Characteristic.StatusActive, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.StatusActive, Characteristic.StatusActive, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.StatusFault;
-        characteristicString = CMD4_StatusFault;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusFault;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -6854,7 +6811,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_StatusFault, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.StatusFault, callback);
                         });
                 }
             }
@@ -6866,15 +6823,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_StatusFault, Characteristic.StatusFault, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.StatusFault, Characteristic.StatusFault, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.StatusJammed;
-        characteristicString = CMD4_StatusJammed;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusJammed;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -6890,7 +6847,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_StatusJammed, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.StatusJammed, callback);
                         });
                 }
             }
@@ -6902,15 +6859,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_StatusJammed, Characteristic.StatusJammed, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.StatusJammed, Characteristic.StatusJammed, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.StatusLowBattery;
-        characteristicString = CMD4_StatusLowBattery;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusLowBattery;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -6926,7 +6883,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_StatusLowBattery, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.StatusLowBattery, callback);
                         });
                 }
             }
@@ -6938,15 +6895,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_StatusLowBattery, Characteristic.StatusLowBattery, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.StatusLowBattery, Characteristic.StatusLowBattery, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.StatusTampered;
-        characteristicString = CMD4_StatusTampered;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusTampered;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -6962,7 +6919,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_StatusTampered, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.StatusTampered, callback);
                         });
                 }
             }
@@ -6974,15 +6931,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_StatusTampered, Characteristic.StatusTampered, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.StatusTampered, Characteristic.StatusTampered, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.StreamingStatus;
-        characteristicString = CMD4_StreamingStatus;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StreamingStatus;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -6998,7 +6955,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_StreamingStatus, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.StreamingStatus, callback);
                         });
                 }
             }
@@ -7010,15 +6967,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_StreamingStatus, Characteristic.StreamingStatus, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.StreamingStatus, Characteristic.StreamingStatus, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.SulphurDioxideDensity;
-        characteristicString = CMD4_SulphurDioxideDensity;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SulphurDioxideDensity;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -7034,7 +6991,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_SulphurDioxideDensity, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.SulphurDioxideDensity, callback);
                         });
                 }
             }
@@ -7046,15 +7003,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_SulphurDioxideDensity, Characteristic.SulphurDioxideDensity, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SulphurDioxideDensity, Characteristic.SulphurDioxideDensity, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.SupportedAudioStreamConfiguration;
-        characteristicString = CMD4_SupportedAudioStreamConfiguration;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SupportedAudioStreamConfiguration;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -7070,7 +7027,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_SupportedAudioStreamConfiguration, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.SupportedAudioStreamConfiguration, callback);
                         });
                 }
             }
@@ -7082,15 +7039,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_SupportedAudioStreamConfiguration, Characteristic.SupportedAudioStreamConfiguration, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SupportedAudioStreamConfiguration, Characteristic.SupportedAudioStreamConfiguration, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.SupportedRTPConfiguration;
-        characteristicString = CMD4_SupportedRTPConfiguration;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SupportedRTPConfiguration;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -7106,7 +7063,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_SupportedRTPConfiguration, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.SupportedRTPConfiguration, callback);
                         });
                 }
             }
@@ -7118,15 +7075,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_SupportedRTPConfiguration, Characteristic.SupportedRTPConfiguration, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SupportedRTPConfiguration, Characteristic.SupportedRTPConfiguration, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.SupportedVideoStreamConfiguration;  // 130
-        characteristicString = CMD4_SupportedVideoStreamConfiguration;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SupportedVideoStreamConfiguration;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -7142,7 +7099,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_SupportedVideoStreamConfiguration, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.SupportedVideoStreamConfiguration, callback);
                         });
                 }
             }
@@ -7154,15 +7111,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_SupportedVideoStreamConfiguration, Characteristic.SupportedVideoStreamConfiguration, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SupportedVideoStreamConfiguration, Characteristic.SupportedVideoStreamConfiguration, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.SwingMode;
-        characteristicString = CMD4_SwingMode;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SwingMode;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -7178,7 +7135,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_SwingMode, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.SwingMode, callback);
                         });
                 }
             }
@@ -7190,15 +7147,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_SwingMode, Characteristic.SwingMode, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SwingMode, Characteristic.SwingMode, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.TargetAirPurifierState;
-        characteristicString = CMD4_TargetAirPurifierState;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetAirPurifierState;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -7214,7 +7171,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_TargetAirPurifierState, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetAirPurifierState, callback);
                         });
                 }
             }
@@ -7226,15 +7183,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_TargetAirPurifierState, Characteristic.TargetAirPurifierState, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetAirPurifierState, Characteristic.TargetAirPurifierState, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.TargetAirQuality;
-        characteristicString = CMD4_TargetAirQuality;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetAirQuality;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -7250,7 +7207,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_TargetAirQuality, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetAirQuality, callback);
                         });
                 }
             }
@@ -7262,15 +7219,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_TargetAirQuality, Characteristic.TargetAirQuality, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetAirQuality, Characteristic.TargetAirQuality, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.TargetDoorState;
-        characteristicString = CMD4_TargetDoorState;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetDoorState;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -7286,7 +7243,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_TargetDoorState, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetDoorState, callback);
                         });
                 }
             }
@@ -7298,15 +7255,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_TargetDoorState, Characteristic.TargetDoorState, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetDoorState, Characteristic.TargetDoorState, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.TargetFanState;
-        characteristicString = CMD4_TargetFanState;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetFanState;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -7322,7 +7279,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_TargetFanState, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetFanState, callback);
                         });
                 }
             }
@@ -7334,15 +7291,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_TargetFanState, Characteristic.TargetFanState, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetFanState, Characteristic.TargetFanState, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.TargetHeaterCoolerState;
-        characteristicString = CMD4_TargetHeaterCoolerState;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetHeaterCoolerState;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -7358,7 +7315,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_TargetHeaterCoolerState, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetHeaterCoolerState, callback);
                         });
                 }
             }
@@ -7370,15 +7327,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_TargetHeaterCoolerState, Characteristic.TargetHeaterCoolerState, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetHeaterCoolerState, Characteristic.TargetHeaterCoolerState, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.TargetHeatingCoolingState;
-        characteristicString = CMD4_TargetHeatingCoolingState;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetHeatingCoolingState;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -7394,7 +7351,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_TargetHeatingCoolingState, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetHeatingCoolingState, callback);
                         });
                 }
             }
@@ -7406,15 +7363,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_TargetHeatingCoolingState, Characteristic.TargetHeatingCoolingState, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetHeatingCoolingState, Characteristic.TargetHeatingCoolingState, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.TargetHorizontalTiltAngle;
-        characteristicString = CMD4_TargetHorizontalTiltAngle;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetHorizontalTiltAngle;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -7430,7 +7387,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue("On", callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetHorizontalTiltAngle, callback);
                         });
                 }
             }
@@ -7442,15 +7399,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_TargetHorizontalTiltAngle, Characteristic.TargetHorizontalTiltAngle, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetHorizontalTiltAngle, Characteristic.TargetHorizontalTiltAngle, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.TargetHumidifierDehumidifierState;
-        characteristicString = CMD4_TargetHumidifierDehumidifierState;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetHumidifierDehumidifierState;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -7466,7 +7423,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_TargetHumidifierDehumidifierState, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetHumidifierDehumidifierState, callback);
                         });
                 }
             }
@@ -7478,15 +7435,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_TargetHumidifierDehumidifierState, Characteristic.TargetHumidifierDehumidifierState, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetHumidifierDehumidifierState, Characteristic.TargetHumidifierDehumidifierState, callback);
                         });
                 }
             }
         }
  
-        characteristic = Characteristic.TargetMediaState;     // 140
-        characteristicString = CMD4_TargetMediaState;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        characteristic = Characteristic.TargetMediaState;
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetMediaState;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -7502,7 +7459,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_TargetMediaState, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetMediaState, callback);
                         });
                 }
             }
@@ -7514,15 +7471,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_TargetMediaState, Characteristic.CMD4_TargetMedia, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetMediaState, Characteristic.TargetMedia, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.TargetPosition;
-        characteristicString = CMD4_TargetPosition;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetPosition;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -7538,7 +7495,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_TargetPosition, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetPosition, callback);
                         });
                 }
             }
@@ -7550,15 +7507,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_TargetPosition, Characteristic.TargetPosition, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetPosition, Characteristic.TargetPosition, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.TargetRelativeHumidity;
-        characteristicString = CMD4_TargetRelativeHumidity;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetRelativeHumidity;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -7574,7 +7531,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_TargetRelativeHumidity, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetRelativeHumidity, callback);
                         });
                 }
             }
@@ -7586,15 +7543,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_TargetRelativeHumidity, Characteristic.TargetRelativeHumidity, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetRelativeHumidity, Characteristic.TargetRelativeHumidity, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.TargetSlatState;
-        characteristicString = CMD4_TargetSlatState;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetSlatState;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -7610,7 +7567,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_TargetSlatState, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetSlatState, callback);
                         });
                 }
             }
@@ -7622,15 +7579,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_TargetSlatState, Characteristic.TargetSlatState, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetSlatState, Characteristic.TargetSlatState, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.TargetTemperature;
-        characteristicString = CMD4_TargetTemperature;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetTemperature;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -7646,7 +7603,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_TargetTemperature, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetTemperature, callback);
                         });
                 }
             }
@@ -7658,15 +7615,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_TargetTemperature, Characteristic.TargetTemperature, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetTemperature, Characteristic.TargetTemperature, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.TargetTiltAngle;
-        characteristicString = CMD4_TargetTiltAngle;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetTiltAngle;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -7682,7 +7639,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_TargetTiltAngle, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetTiltAngle, callback);
                         });
                 }
             }
@@ -7694,15 +7651,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_TargetTiltAngle, Characteristic.TargetTiltAngle, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetTiltAngle, Characteristic.TargetTiltAngle, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.TargetVerticalTiltAngle;
-        characteristicString = CMD4_TargetVerticalTiltAngle;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetVerticalTiltAngle;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -7718,7 +7675,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_TargetVerticalTiltAngle, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetVerticalTiltAngle, callback);
                         });
                 }
             }
@@ -7730,15 +7687,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_TargetVerticalTiltAngle, Characteristic.TargetVerticalTiltAngle, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetVerticalTiltAngle, Characteristic.TargetVerticalTiltAngle, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.TargetVisibilityState;
-        characteristicString = CMD4_TargetVisibilityState;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetVisibilityState;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -7754,7 +7711,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_TargetVisibilityState, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetVisibilityState, callback);
                         });
                 }
             }
@@ -7766,15 +7723,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_TargetVisibilityState, Characteristic.CMD4_TargetVisibilityState, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetVisibilityState, Characteristic.CMD4_TargetVisibilityState, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.TemperatureDisplayUnits;
-        characteristicString = CMD4_TemperatureDisplayUnits;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TemperatureDisplayUnits;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -7790,7 +7747,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_TemperatureDisplayUnits, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.TemperatureDisplayUnits, callback);
                         });
                 }
             }
@@ -7802,15 +7759,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_TemperatureDisplayUnits, Characteristic.TemperatureDisplayUnits, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TemperatureDisplayUnits, Characteristic.TemperatureDisplayUnits, callback);
                         });
                 }
             }
         }
 
         characteristic = Characteristic.TimeUpdate;
-        characteristicString = CMD4_TimeUpdate;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TimeUpdate;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -7826,7 +7783,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_TimeUpdate, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.TimeUpdate, callback);
                         });
                 }
             }
@@ -7838,15 +7795,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_TimeUpdate, Characteristic.TimeUpdate, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TimeUpdate, Characteristic.TimeUpdate, callback);
                         });
                 }
             }
         }
  
-        characteristic = Characteristic.TunneledAccessoryAdvertising;       // 160
-        characteristicString = CMD4_TunneledAccessoryAdvertising;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        characteristic = Characteristic.TunneledAccessoryAdvertising;
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TunneledAccessoryAdvertising;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -7862,7 +7819,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_TunneledAccessoryAdvertising, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.TunneledAccessoryAdvertising, callback);
                         });
                 }
             }
@@ -7874,15 +7831,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_TunneledAccessoryAdvertising, Characteristic.TunneledAccessoryAdvertising, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TunneledAccessoryAdvertising, Characteristic.TunneledAccessoryAdvertising, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.TunneledAccessoryConnected;
-        characteristicString = CMD4_TunneledAccessoryConnected;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TunneledAccessoryConnected;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -7898,7 +7855,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_TunneledAccessoryConnected, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.TunneledAccessoryConnected, callback);
                         });
                 }
             }
@@ -7910,15 +7867,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_TunneledAccessoryConnected, Characteristic.TunneledAccessoryConnected, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TunneledAccessoryConnected, Characteristic.TunneledAccessoryConnected, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.TunneledAccessoryStateNumber;
-        characteristicString = CMD4_TunneledAccessoryStateNumber;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TunneledAccessoryStateNumber;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -7934,7 +7891,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_TunneledAccessoryStateNumber, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.TunneledAccessoryStateNumber, callback);
                         });
                 }
             }
@@ -7946,15 +7903,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_TunneledAccessoryStateNumber, Characteristic.TunneledAccessoryStateNumber, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TunneledAccessoryStateNumber, Characteristic.TunneledAccessoryStateNumber, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.TunnelConnectionTimeout;
-        characteristicString = CMD4_TunnelConnectionTimeout;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TunnelConnectionTimeout;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -7970,7 +7927,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_TunnelConnectionTimeout, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.TunnelConnectionTimeout, callback);
                         });
                 }
             }
@@ -7982,15 +7939,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_TunnelConnectionTimeout, Characteristic.TunnelConnectionTimeout, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TunnelConnectionTimeout, Characteristic.TunnelConnectionTimeout, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.ValveType;
-        characteristicString = CMD4_ValveType;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ValveType;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -8006,7 +7963,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_ValveType, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.ValveType, callback);
                         });
                 }
             }
@@ -8018,15 +7975,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ValveType, Characteristic.ValveType, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ValveType, Characteristic.ValveType, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.Version;
-        characteristicString = CMD4_Version;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Version;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -8042,7 +7999,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_Version, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.Version, callback);
                         });
                 }
             }
@@ -8054,15 +8011,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_Version, Characteristic.Version, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.Version, Characteristic.Version, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.VOCDensity;
-        characteristicString = CMD4_VOCDensity;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.VOCDensity;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -8078,7 +8035,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_VOCDensity, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.VOCDensity, callback);
                         });
                 }
             }
@@ -8090,15 +8047,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_VOCDensity, Characteristic.VOCDensity, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.VOCDensity, Characteristic.VOCDensity, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.Volume;
-        characteristicString = CMD4_Volume;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Volume;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -8114,7 +8071,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_Volume, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.Volume, callback);
                         });
                 }
             }
@@ -8126,15 +8083,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_Volume, Characteristic.Volume, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.Volume, Characteristic.Volume, callback);
                         });
                 }
             }
         }
  
         characteristic = Characteristic.VolumeControlType;
-        characteristicString = CMD4_VolumeControlType;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.VolumeControlType;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -8150,7 +8107,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_VolumeControlType, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.VolumeControlType, callback);
                         });
                 }
             }
@@ -8162,15 +8119,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_VolumeControlType, Characteristic.CMD4_VolumeControlType, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.VolumeControlType, Characteristic.VolumeControlType, callback);
                         });
                 }
             }
         }
 
         characteristic = Characteristic.VolumeSelector;
-        characteristicString = CMD4_VolumeSelector;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.VolumeSelector;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -8186,7 +8143,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_VolumeSelector, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.VolumeSelector, callback);
                         });
                 }
             }
@@ -8198,15 +8155,15 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_VolumeSelector, Characteristic.VolumeSelector, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.VolumeSelector, Characteristic.VolumeSelector, callback);
                         });
                 }
             }
         }
  
-        characteristic = Characteristic.WaterLevel;   // 170
-        characteristicString = CMD4_WaterLevel;
-        if ( this.getStoredValueForKey( characteristicString) != undefined)
+        characteristic = Characteristic.WaterLevel;
+        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.WaterLevel;
+        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
         {
             if ( ! service.testCharacteristic(characteristic))
             {
@@ -8222,7 +8179,7 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('get', (callback) => {
-                        this.getValue(CMD4_WaterLevel, callback);
+                        this.getValue(CMD4_ACC_TYPE_ENUM.WaterLevel, callback);
                         });
                 }
             }
@@ -8234,143 +8191,192 @@ Cmd4Accessory.prototype = {
                 {
                     service.getCharacteristic(characteristic)
                     .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_WaterLevel, Characteristic.WaterLevel, callback);
+                        this.setValue(value, CMD4_ACC_TYPE_ENUM.WaterLevel, Characteristic.WaterLevel, callback);
                         });
                 }
             }
         }
-    },
-   updateAccessoryAttribute: function (characteristicString, value)
+   },
+   updateAccessoryAttribute: function (accTypeEnumIndex, value)
    {
-      var index = accMapper.indexOf(characteristicString);
-
-      if (index < 0)
+      if (accTypeEnumIndex < 0 || accTypeEnumIndex > CMD4_ACC_TYPE_ENUM.properties.length )
       {
-         this.log ("CMD4 Warning: updateAccessoryAttribute - Characteristic '%s' for '%s' not known", characteristicString, this.name);
+         this.log ("Internal error.: updateAccessoryAttribute - accTypeEnumIndex '%s' for '%s' not known", accTypeEnumIndex, this.name);
          return;
       }
-      this.setStoredValueForKey(characteristicString, value);
+
+      this.setStoredValueForIndex(accTypeEnumIndex, value);
 
       if ( this.loggingService )
       {
+         var firstParm, secondParm, thirdParm;
+         var ucFirstParm, ucSecondParm, ucThirdParm;
+         var firstParmValue, secondParmValue, thirdParmValue = 0;
+         var firstParmIndex, secondParmIndex, thirdParmIndex;
+         
          switch (this.eve)
          {
             case FAKEGATO_TYPE_ENERGY:
-               var powerV   = this.fakegatoConfig['power']    || '0';
-               var ucPowerV = ucFirst(powerV)                 || '0';
+            {
+               firstParm   = this.fakegatoConfig['power']    || '0';
+               ucFirstParm = ucFirst(firstParm)              || '0';
+               
+               firstParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.name === ucFirstParm);
 
-               powerV = (this.testStoredValueForKey(ucPowerV) < 0) ?
-                      powerV : this.getStoredValueForKey(ucPowerV);
+               firstParmValue = (this.testStoredValueForIndex(firstParmIndex) < 0) ?
+                      firstParmValue : this.getStoredValueForIndex(firstParmIndex);
 
-               this.log.debug("Logging power '%s'", powerV);
+               this.log.debug("Logging power '%s'", firstParmValue);
                // Eve Energy (Outlet service)
                this.loggingService.addEntry({time: moment().unix(),
-                  power: powerV});
+                  power: firstParmValue});
                break;
+            }
             case FAKEGATO_TYPE_ROOM:
-               var tempV       = this.fakegatoConfig['temp']       || '0';
-               var humidityV   = this.fakegatoConfig['humidity']   || '0';
-               var ppmV        = this.fakegatoConfig['ppm']        || '0';
-               var ucTempV     = ucFirst(tempV)       || '0';
-               var ucHumidityV = ucFirst(humidityV)   || '0';
-               var ucPpmV      = ucFirst(ppmV)        || '0';
+            {
+               firstParm       = this.fakegatoConfig['temp']       || '0';
+               secondParm      = this.fakegatoConfig['humidity']   || '0';
+               thirdParm       = this.fakegatoConfig['ppm']        || '0';
+               ucFirstParm     = ucFirst(firstParm)       || '0';
+               ucSecondParm    = ucFirst(secondParm)      || '0';
+               ucThirdParm     = ucFirst(thirdParm)       || '0';
+               
+               firstParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.name === ucFirstParm);
+               secondParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.name === ucSecondParm);
+               thirdParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.name === ucThirdParm);
+               
 
-               tempV = (this.testStoredValueForKey(ucTempV) < 0) ?
-                      tempV : this.getStoredValueForKey(ucTempV);
-               humidityV = (this.testStoredValueForKey(ucHumidityV) < 0) ?
-                      humidityV : this.getStoredValueForKey(ucHumidityV);
-               ppmV = (this.testStoredValueForKey(ucPpmV) < 0) ?
-                      ppmV : this.getStoredValueForKey(ucPpmV);
+               firstParmValue = (this.testStoredValueForIndex(firstParmIndex) < 0) ?
+                  firstParmValue : this.getStoredValueForIndex(firstParmIndex);
+               secondParmValue = (this.testStoredValueForIndex(secondParmIndex) < 0) ?
+                  secondParmValue : this.getStoredValueForIndex(secondParmIndex);
+               thirdParmValue = (this.testStoredValueForIndex(thirdParmIndex) < 0) ?
+                  thirdParmValue : this.getStoredValueForIndex(thirdParmIndex);
+         
 
-               this.log.debug("Logging temp '%s' humidity '%s' ppm '%s'", tempV, humidityV, ppmV);
+               this.log.debug("Logging temp '%s' humidity '%s' ppm '%s'", firstParmValue, secondParmValue, thirdParmValue);
                // Eve Room (TempSensor, HumiditySensor and AirQuality Services)
                this.loggingService.addEntry({time: moment().unix(),
-                  temp:tempV,
-                  humidity:humidityV,
-                  ppm:ppmV});
+                  temp:firstParmValue,
+                  humidity:secondParmValue,
+                  ppm:thirdParmValue});
                break;
+            }
             case FAKEGATO_TYPE_WEATHER:
-               var tempV       = this.fakegatoConfig['temp']       || '0';
-               var pressureV   = this.fakegatoConfig['pressure']   || '0';
-               var humidityV   = this.fakegatoConfig['humidity']   || '0';
-               var ucTempV     = ucFirst(tempV)       || '0';
-               var ucPressureV = ucFirst(pressureV)   || '0';
-               var ucHumidityV = ucFirst(humidityV)   || '0';
+            {
+               firstParm       = this.fakegatoConfig['temp']       || '0';
+               secondParm      = this.fakegatoConfig['pressure']   || '0';
+               thirdParm       = this.fakegatoConfig['humidity']   || '0';
+               ucFirstParm     = ucFirst(firstParm)       || '0';
+               ucSecondParm    = ucFirst(secondParm)      || '0';
+               ucThirdParm     = ucFirst(thirdParm)       || '0';
+               
+               firstParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.name === ucFirstParm);
+               secondParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.name === ucSecondParm);
+               thirdParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.name === ucThirdParm);
 
-               tempV = (this.testStoredValueForKey(ucTempV) < 0) ?
-                      tempV : this.getStoredValueForKey(ucTempV);
-               pressureV = (this.testStoredValueForKey(ucPressureV) < 0) ?
-                      pressureV : this.getStoredValueForKey(ucPressureV);
-               humidityV = (this.testStoredValueForKey(ucHumidityV) < 0) ?
-                      humidityV : this.getStoredValueForKey(ucHumidityV);
+               firstParmValue = (this.testStoredValueForIndex(firstParmIndex) < 0) ?
+                  firstParmValue : this.getStoredValueForIndex(firstParmIndex);
+               secondParmValue = (this.testStoredValueForIndex(secondParmIndex) < 0) ?
+                  secondParmValue : this.getStoredValueForIndex(secondParmIndex);
+               thirdParmValue = (this.testStoredValueForIndex(thirdParmIndex) < 0) ?
+                  thirdParmValue : this.getStoredValueForIndex(thirdParmIndex);
+         
+               this.log.debug("Logging temp '%s' pressure '%s' humidity '%s'", firstParmValue, secondParmValue, thirdParmValue);
 
-               this.log.debug("Logging temp '%s' pressure '%s' humidity '%s'", tempV, pressureV, humidityV);
                // Eve Weather (TempSensor Service)
                this.loggingService.addEntry({time: moment().unix(),
-                  temp:tempV,
-                  pressure:pressureV,
-                  humidity:humidityV});
+                  temp:firstParmValue,
+                  pressure:secondParmValue,
+                  humidity:thirdParmValue});
                break;
+            }
             case FAKEGATO_TYPE_DOOR:
-               var statusV   = this.fakegatoConfig['status']   || '0';
-               var ucStatusV = ucFirst(statusV)                || '0';
+            {
+               firstParm   = this.fakegatoConfig['status']   || '0';
+               ucFirstParm = ucFirst(firstParm)              || '0';
+               
+               firstParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.name === ucFirstParm);
 
-               statusV = (this.testStoredValueForKey(ucStatusV) < 0) ?
-                      statusV : this.getStoredValueForKey(ucStatusV);
+               firstParmValue = (this.testStoredValueForIndex(firstParmIndex) < 0) ?
+                      firstParmValue : this.getStoredValueForIndex(firstParmIndex);
 
-               this.log.debug("logging status  %s", statusV);
-               // Eve Door (ContactSensor service)
+               this.log.debug("Logging status '%s'", firstParmValue);
+                      
                this.loggingService.addEntry({time: moment().unix(),
-                  status: statusV});
+                  status: firstParmValue});
                break;
+            }
             case FAKEGATO_TYPE_MOTION:
-               var statusV   = this.fakegatoConfig['status']   || '0';
-               var ucStatusV = ucFirst(statusV)                || '0';
+            {
+               firstParm   = this.fakegatoConfig['status']   || '0';
+               ucFirstParm = ucFirst(firstParm)              || '0';
+               firstParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.name === ucFirstParm);
+               
+               firstParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.name === ucFirstParm);
 
-               this.log.debug("logging status  %s", statusV);
-               // Eve Motion (MotionSensor service)
+               firstParmValue = (this.testStoredValueForIndex(firstParmIndex) < 0) ?
+                      firstParmValue : this.getStoredValueForIndex(firstParmIndex);
+
+               this.log.debug("Logging status '%s'", firstParmValue);
+                      
                this.loggingService.addEntry({time: moment().unix(),
-                  status: statusV});
+                  status: firstParmValue});
                break;
+            }
             case FAKEGATO_TYPE_THERMO:
-               var currentTempV     = this.fakegatoConfig['currentTemp']   || '0';
-               var setTempV         = this.fakegatoConfig['setTemp']       || '0';
-               var valvePositionV   = this.fakegatoConfig['valvePosition'] || '0';
-               var ucCurrentTempV   = ucFirst(currentTempV)   || '0';
-               var ucSetTempV       = ucFirst(setTempV)       || '0';
-               var ucValvePositionV = ucFirst(valvePositionV) || '0';
+            {
+               firstParm       = this.fakegatoConfig['currentTemp']     || '0';
+               secondParm      = this.fakegatoConfig['setTemp']         || '0';
+               thirdParm       = this.fakegatoConfig['valvePosition']   || '0';
+               ucFirstParm     = ucFirst(firstParm)       || '0';
+               ucSecondParm    = ucFirst(secondParm)      || '0';
+               ucThirdParm     = ucFirst(thirdParm)       || '0';
+               
+               firstParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.name === ucFirstParm);
+               secondParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.name === ucSecondParm);
+               thirdParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.name === ucThirdParm);
+               
 
-               currentTempV = (this.testStoredValueForKey(ucCurrentTempV) < 0) ?
-                      currentTempV : this.getStoredValueForKey(ucCurrentTempV);
-               setTempV = (this.testStoredValueForKey(ucSetTempV) < 0) ?
-                      setTempV : this.getStoredValueForKey(ucSetTempV);
-               valvePositionV = (this.testStoredValueForKey(ucValvePositionV) < 0) ?
-                      valvePositionV : this.getStoredValueForKey(ucValvePositionV);
-
-               this.log.debug("Logging currentTemp '%s' setTemp '%s' valvePosition '%s'", setTempV, currentTempV, valvePositionV);
+               firstParmValue = (this.testStoredValueForIndex(firstParmIndex) < 0) ?
+                  firstParmValue : this.getStoredValueForIndex(firstParmIndex);
+               secondParmValue = (this.testStoredValueForIndex(secondParmIndex) < 0) ?
+                  secondParmValue : this.getStoredValueForIndex(secondParmIndex);
+               thirdParmValue = (this.testStoredValueForIndex(thirdParmIndex) < 0) ?
+                  thirdParmValue : this.getStoredValueForIndex(thirdParmIndex);
+         
+               this.log.debug("Logging currentTemp '%s' setTemp '%s' valvePosition '%s'", firstParmValue, secondParmValue, thirdParmValue);
+               
                // Eve Thermo (Thermostat service)
                this.loggingService.addEntry({time: moment().unix(),
-                  currentTemp:currentTempV,
-                  setTemp:setTempV,
-                  valvePosition:valvePositionV});
+                  currentTemp:firstParmValue,
+                  setTemp:secondParmValue,
+                  valvePosition:thirdParmValue});
                break;
+            }
             case FAKEGATO_TYPE_AQUA:
-               var statusV        = this.fakegatoConfig['status']       || '0';
-               var waterAmountV   = this.fakegatoConfig['waterAmount']  || '0';
-               var ucStatusV      = ucFirst(statusV)                    || '0';
-               var ucWaterAmountV = ucFirst(waterAmountV)               || '0';
-
-               statusV = (this.testStoredValueForKey(ucStatusV) < 0) ?
-                      statusV : this.getStoredValueForKey(ucStatusV);
-               waterAmountV = (this.testStoredValueForKey(ucWaterAmountV) < 0) ?
-                      waterAmountV : this.getStoredValueForKey(ucWaterAmountV);
-
-               this.log.debug("Logging status '%s' waterAmount '%s'", statusV, waterAmountV);
+            {
+               firstParm       = this.fakegatoConfig['status']        || '0';
+               secondParm      = this.fakegatoConfig['waterAmount']   || '0';
+               ucFirstParm     = ucFirst(firstParm)       || '0';
+               ucSecondParm    = ucFirst(secondParm)      || '0';
+               
+               firstParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.name === ucFirstParm);
+               secondParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.name === ucSecondParm);
+               
+               firstParmValue = (this.testStoredValueForIndex(firstParmIndex) < 0) ?
+                  firstParmValue : this.getStoredValueForIndex(firstParmIndex);
+               secondParmValue = (this.testStoredValueForIndex(secondParmIndex) < 0) ?
+                  secondParmValue : this.getStoredValueForIndex(secondParmIndex);
+                  
+               this.log.debug("Logging status '%s' waterAmount '%s'", firstParmValue, secondParmValue);
+               
                // Eve Aqua (Valve service set to Irrigation Type)
                this.LoggingService.addEntry({ time: moment().unix(),
-                  status:statusV,
-                  waterAmount:waterAmountV});
+                  status:firstParmValue,
+                  waterAmount:secondParmValue});
                break;
+            }
          }
       }
    },
@@ -8417,9 +8423,9 @@ Cmd4Accessory.prototype = {
                 this.storage = fakegatoConfig[key];
                 break;
              case 'StoragePath': 
-                this.storagePAth = fakegatoConfig[key];
+                this.storagePath = fakegatoConfig[key];
                 break;
-             case 'KeyPath': 
+             case 'KeyPath':
                 this.keyPath = fakegatoConfig[key];
                 break;
              case 'Folder': 
@@ -8435,9 +8441,11 @@ Cmd4Accessory.prototype = {
              case 'CurrentTemp':
              case 'ValvePosition':
                  var ucValue = ucFirst(value);
+                 var accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.name === ucValue);
+                 
                  // make sure that the characteristic to log to fakegato is valid
                  // and if it is not 0 for not used.
-                 if (this.testStoredValueForKey(ucValue) < 0 && ucValue != '0')
+                 if (this.testStoredValueForIndex(accTypeEnumIndex) < 0 && ucValue != '0')
                     this.log.warn("Not a valid characteristic '%s' for fakegato to log of '%s'", value, key);
                  break;
              default:
@@ -8487,8 +8495,28 @@ Cmd4Accessory.prototype = {
          }
       }
    }
-
 }
+
+Object.defineProperty(Object.prototype, "indexOfEnum", {
+   value: function(predicate, fromIndex) {
+      var length = this == null ? 0 : Object.keys(this).length;
+      if (!length)
+         return -1;
+      
+      var index = fromIndex == null ? 0 : toInteger(fromIndex);
+      if (index < 0) {
+         index = nativeMax(length + index, 0);
+      }
+
+      for (var i=index; i < length; i++)
+      {
+         if (predicate(this[i], i, this)) {
+            return i;
+         }
+      }
+      return -1;
+    }
+});
 
 // Returns the index of the value if it exists, or undefined if not
 Object.defineProperty(Object.prototype, "assocIndexOf", {
@@ -8520,7 +8548,7 @@ function getType( oObj )
     }
 
     return 'String';
- }
+}
 
 function ucFirst(string)
 {
@@ -8546,4 +8574,3 @@ function isNumeric(num){
    num = "" + num; //coerce num to be a string
    return !isNaN(num) && !isNaN(parseFloat(num));
 }
-
