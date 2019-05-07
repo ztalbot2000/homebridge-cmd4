@@ -48,7 +48,8 @@ if (package.version.includes('1.3.0') ||
   console.log("   John Talbot");
   console.log("\nP.S. If you really enjoy homebridge-cmd4, please star it on GitHub\n");
 }
-if (package.version.includes('2.0'))
+if (package.version.includes('2.0.0') ||
+    package.version.includes('2.1.0'))
 {
   console.log("\n%sHomeBridge-Cmd4%s Version 2.0 Notes", KUND, KEND);
   console.log("This version changes the philosophy of homebridge-Cmd4 from Accessories that have known characteristics as per the HAP Spec to assigning any characteristic to any Accessory.\n");

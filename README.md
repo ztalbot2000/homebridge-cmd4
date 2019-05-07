@@ -14,6 +14,7 @@ Table of Contents
 * [**About the Cmd4 Plugin**](#about-the-cmd4-plugin)
 * [**How the Cmd4 Plugin Works**](#how-the-cmd4-plugin-works)
 * [**Features**](#features)
+* [**Whats new in 2.1**](#whats-new-in-2-1)
 * [**Whats new in 2.0**](#whats-new-in-2-0)
 * [**Screenshots**](#screenshots)
 * [**Installation**](#installation)
@@ -57,6 +58,11 @@ Features
 Cmd4 can be configured to respond to actual devices directly or by modofying the script file it calls.
 
 Look closely at State.js and config.min.json as in them they have most of all the characteristics defined.
+
+Whats new in 2.1
+-----------------
+This minor release fixes duplicate service calls for initializing an AccessoryInformation device, Television & TelevisionSpeaker. <BR>
+Mostly importantly it wipes out 5600 duplicate lines of code when setting up the characteristic getter & setter methods to a common bound function. <BR>
 
 Whats new in 2.0
 -----------------
@@ -501,7 +507,8 @@ Link References
 [about-the-cmd4-plugin]:https://github.com/ztalbot2000/homebridge-cmd4#about-the-cmd4-plugin
 [how-the-cmd4-plugin-works]:https://github.com/ztalbot2000/homebridge-cmd4#how-the-cmd4-plugin-works
 [features]:https://github.com/ztalbot2000/homebridge-cmd4#features
-[whats new in 2.30]:https://github.com/ztalbot2000/homebridge-cmd4#whats-new-in-2-0
+[whats new in 2.1]:https://github.com/ztalbot2000/homebridge-cmd4#whats-new-in-2-1
+[whats new in 2.0]:https://github.com/ztalbot2000/homebridge-cmd4#whats-new-in-2-0
 [screenshots]:https://github.com/ztalbot2000/homebridge-cmd4#screenshots
 [installation]:https://github.com/ztalbot2000/homebridge-cmd4#installation
 [migrating-from-homebridge-cmdswitch2]:https://github.com/ztalbot2000/homebridge-cmd4#migrating-from-homebridge-cmdswitch2
