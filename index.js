@@ -352,7 +352,7 @@ module.exports = function (homebridge) {
       17:  { name: "Category", characteristic: Characteristic.Category },
       18:  { name: "ChargingState", characteristic: Characteristic.ChargingState },
       19:  { name: "ClosedCaptions", characteristic: Characteristic.ClosedCaptions },
-      20:  { name: "ColorTemperature", characteristic: Characteristic.ColorTemperature },
+      20:  { name: "ColorTemperature", characteristic: Characteristic.ColorTemperature},
       21:  { name: "ConfiguredName", characteristic: Characteristic.ConfiguredName },
       22:  { name: "ConfigureBridgedAccessoryStatus", characteristic: Characteristic.ConfigureBridgedAccessoryStatus },
       23:  { name: "ConfigureBridgedAccessory", characteristic: Characteristic.ConfigureBridgedAccessory },
@@ -386,7 +386,7 @@ module.exports = function (homebridge) {
       51:  { name: "HardwareRevision", characteristic: Characteristic.HardwareRevision },
       52:  { name: "HeatingThresholdTemperature", characteristic: Characteristic.HeatingThresholdTemperature },
       53:  { name: "HoldPosition", characteristic: Characteristic.HoldPosition },
-      54:  { name: "Hue", characteristic: Characteristic.Hue },
+      54:  { name: "Hue", characteristic: Characteristic.Hue},
       55:  { name: "Identify", characteristic: Characteristic.Identify },
       56:  { name: "ImageMirroring", characteristic: Characteristic.ImageMirroring },
       57:  { name: "ImageRotation", characteristic: Characteristic.ImageRotation },
@@ -412,7 +412,7 @@ module.exports = function (homebridge) {
       77:  { name: "NitrogenDioxideDensity", characteristic: Characteristic.NitrogenDioxideDensity },
       78:  { name: "ObstructionDetected", characteristic: Characteristic.ObstructionDetected },
       79:  { name: "OccupancyDetected", characteristic: Characteristic.OccupancyDetected },
-      80:  { name: "On", characteristic: Characteristic.On },
+      80:  { name: "On", characteristic: Characteristic.On},
       81:  { name: "OpticalZoom", characteristic: Characteristic.OpticalZoom },
       82:  { name: "OutletInUse", characteristic: Characteristic.OutletInUse },
       83:  { name: "OzoneDensity", characteristic: Characteristic.OzoneDensity },
@@ -439,7 +439,7 @@ module.exports = function (homebridge) {
       104: { name: "ResetFilterIndication", characteristic: Characteristic.ResetFilterIndication },
       105: { name: "RotationDirection", characteristic: Characteristic.RotationDirection },
       106: { name: "RotationSpeed", characteristic: Characteristic.RotationSpeed },
-      107: { name: "Saturation", characteristic: Characteristic.Saturation },
+      107: { name: "Saturation", characteristic: Characteristic.Saturation},
       108: { name: "SecuritySystemAlarmType", characteristic: Characteristic.SecuritySystemAlarmType },
       109: { name: "SecuritySystemCurrentState", characteristic: Characteristic.SecuritySystemCurrentState },
       110: { name: "SecuritySystemTargetState", characteristic: Characteristic.SecuritySystemTargetState },
@@ -493,13 +493,7 @@ module.exports = function (homebridge) {
       158: { name: "VolumeSelector", characteristic: Characteristic.VolumeSelector },
       159: { name: "WaterLevel", characteristic: Characteristic.WaterLevel }
    };
-
-// Object.freeze(CMD4_DEVICE_TYPE_enum);
-
-
-
 }
-
 
 // Platform definitions
 function Cmd4Platform(log, config, api) {
@@ -556,16 +550,16 @@ Cmd4Platform.prototype =
 {
    accessories: function(callback)
    {
-      var that = this;
+      let that = this;
 
 
       this.log("Fetching config.json devices.");
-      for( var i=0; i<this.config.accessories.length; i++ )
+      for( let i=0; i<this.config.accessories.length; i++ )
       {
          // This will create an accessory based on the Cmd4Accessory
          // definition bellow. This is not obvious for a newbie.
          this.log("Processing accessory " + this.config.accessories[i].name);
-         var accessory = new Cmd4Accessory( that.log, that.config, this.config.accessories[i] );
+         let accessory = new Cmd4Accessory( that.log, that.config, this.config.accessories[i] );
 
          this.foundAccessories.push( accessory );
   
@@ -594,7 +588,7 @@ Cmd4Platform.prototype =
 
 Cmd4Platform.prototype.characteristicPolling = function (accessory, accTypeEnumIndex, timeout, interval)
 {
-   var self = accessory;
+   let self = accessory;
 
 
    self.log.debug("Doing Poll of index:%s characteristic:%s for '%s' timeout=%s interval=%s", accTypeEnumIndex,
@@ -627,30 +621,30 @@ Cmd4Platform.prototype.characteristicPolling = function (accessory, accTypeEnumI
 
  Cmd4Platform.prototype.setupCharacteristicPolling = function (accessory)
 {
-   var self = accessory;
+   let self = accessory;
 
    self.log.debug("Setting up '%s' polling characteristics of accessory '%s'",
       self.polling.length, self.name);
 
-   for ( var jsonIndex = 0;
+   for ( let jsonIndex = 0;
              jsonIndex < self.polling.length;
              jsonIndex ++ )
    {
-      // *NEW* Characteristic polling is a json var
-      var jsonPollingConfig = self.polling[jsonIndex];
+      // *NEW* Characteristic polling is a json type
+      let jsonPollingConfig = self.polling[jsonIndex];
 
       // The default timeout is 1 minute. Timeouts are in milliseconds
-      var timeout = DEFAULT_TIMEOUT;
+      let timeout = DEFAULT_TIMEOUT;
 
       // The defaault interval is 1 minute. Intervals are in seconds
-      var interval = DEFAULT_INTERVAL;
+      let interval = DEFAULT_INTERVAL;
 
-      var ucKeyIndex = -1;
+      let ucKeyIndex = -1;
 
-      for ( var key in jsonPollingConfig )
+      for ( let key in jsonPollingConfig )
       {
-         var ucKey = ucFirst(key);
-         var value = jsonPollingConfig[key];
+         let ucKey = ucFirst(key);
+         let value = jsonPollingConfig[key];
    
          switch (ucKey)
          {
@@ -690,9 +684,9 @@ Cmd4Platform.prototype.characteristicPolling = function (accessory, accTypeEnumI
 // Here we make sure that required characteristics are set.
 Cmd4Platform.prototype.setupStatePollingPerAccessory = function (accessory)
 {
-   var self = accessory;
+   let self = accessory;
 
-   var accTypeEnumIndex = -1;
+   let accTypeEnumIndex = -1;
 
    switch(accessory.typeIndex)
    {
@@ -1162,18 +1156,18 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status )
     // Instead of local variables for every characteristic, create an array to
     // hold values for  all characteristics based on the size of all possible characteristics.
     this.storedValuesPerCharacteristic = new Array(CMD4_ACC_TYPE_ENUM.properties.length).fill(null);
-
+    
     // If polling is defined it is set to true, otherwise false.
     this.polling = this.config.polling === true;
 
-   for (var key in this.config)
+   for (let key in this.config)
    {
-      var value = this.config[key];
+      let value = this.config[key];
 
       // I made the stupid mistake of not havin all characteristics in the config.json
       // file not upper case to match that in State.js. So instead of having everyone
       // fix the their scripts, fix it here.
-      var ucKey = ucFirst(key);
+      let ucKey = ucFirst(key);
 
       switch (ucKey)
       {
@@ -1234,7 +1228,7 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status )
             break;
          default:
          {
-            var accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.name === ucKey);
+            let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.name === ucKey);
             
             if (accTypeEnumIndex < 0 )
             {
@@ -1290,7 +1284,7 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status )
    // I could delve further into their implementation, but this works.
    // It was one of many methods I tried after examining and trying
    // many plugins.
-   // This method was taken from real-fake-garage-doors by
+   // This method was taken from homebridge-real-fake-garage-doors by
    // plasticrake.
    // P.S  - This is probably more documentation of code anywhere
    //        in Homebridge :-)    If you find it useful, send
@@ -1299,56 +1293,54 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status )
    switch( this.typeIndex )
    {
       case CMD4_DEVICE_TYPE_ENUM.AccessoryInformation:
-         this.service = new Service.AccessoryInformation(this.name, this.name);
-
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Identify) == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Identify ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Identify, 0);
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Manufacturer) == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Manufacturer ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Manufacturer, "Cmd4");
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Model) == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Model ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Model, 0);
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Name)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Name ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Name, "My_AccessoryInformation");
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SerialNumber)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SerialNumber ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SerialNumber, "ABC001");
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.FirmwareRevision)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.FirmwareRevision))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.FirmwareRevision, "100.1.1");
 
+         this.service = new Service.AccessoryInformation(this.name, this.name);            
          break;
       case CMD4_DEVICE_TYPE_ENUM.AirPurifier:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active, 0);
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentAirPurifierState) == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentAirPurifierState ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentAirPurifierState, 0);
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetAirPurifierState) == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetAirPurifierState ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetAirPurifierState, 0);
             
          // The default respnse time is in seconds
          if ( ! this.stateChangeResponseTime )
             this.stateChangeResponseTime = SLOW_STATE_CHANGE_RESPONSE_TIME;        
 
-         this.service = new Service.AirPurifier(this.name, this.name);
-  
+         this.service = new Service.AirPurifier(this.name, this.name);  
          break;
       case CMD4_DEVICE_TYPE_ENUM.AirQualitySensor:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.AirQuality) == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.AirQuality ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.AirQuality, 1);
             
          // The default respnse time is in seconds
@@ -1359,15 +1351,15 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status )
          break;
       case CMD4_DEVICE_TYPE_ENUM.BatteryService:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.BatteryLevel) == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.BatteryLevel ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.BatteryLevel, 50);
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ChargingState)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ChargingState ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ChargingState, 0);
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusLowBattery) == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusLowBattery ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusLowBattery, 0);
   
          this.service = new Service.BatteryService(this.name, this.name);
@@ -1376,11 +1368,9 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status )
          this.service = new Service.BridgeConfiguration(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.BridgingState:
-
          this.service = new Service.BridgeState(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.CameraControl:
-
          this.service = new Service.CameraControl(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.CameraRTPStreamManagement:
@@ -1388,43 +1378,43 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status )
          break;
       case CMD4_DEVICE_TYPE_ENUM.CarbonDioxideSensor:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CarbonDioxideDetected)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CarbonDioxideDetected ))
              this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CarbonDioxideDetected, 0); 
 
          this.service = new Service.CarbonDioxideSensor(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.CarbonMonoxideSensor:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CarbonMonoxideDetected)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CarbonMonoxideDetected ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CarbonMonoxideDetected, 0);
      
          this.service = new Service.CarbonMonoxideSensor(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.ContactSensor:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ContactSensorState)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ContactSensorState ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ContactSensorState, 0);
 
          this.service = new Service.ContactSensor(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.Door:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentPosition)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentPosition ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentPosition, 0);
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetPosition)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetPosition ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetPosition, 0);
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.PositionState)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.PositionState ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.PositionState, 0);
 
          this.service = new Service.Door(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.DoorBell:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent, 0);
 
          // HomeKitTypes.js has this as 'Doorbell' (Small b)
@@ -1437,61 +1427,56 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status )
          // are set for the given accessory,
 
          // Required    
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On, 0);
 
          this.service = new Service.Fan(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.Fanv2:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active, 0);
 
          this.service = new Service.Fanv2(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.Faucet:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active, 1);
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusFault)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusFault ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusFault, 0);
-
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Name)  == undefined )
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Name, "My_Faucet");
 
          this.service = new Service.Faucet(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.FilterMaintenance:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.FilterChangeIndication)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.FilterChangeIndication ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.FilterChangeIndication, 0);
 
          this.service = new Service.FilterMaintenance(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.GarageDoorOpener:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentDoorState)  == undefined )
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentDoorState, 0);
-  
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentDoorState ))
+            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentDoorState, 0); 
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetDoorState)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetDoorState ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetDoorState, 0);
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ObstructionDetected)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ObstructionDetected ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ObstructionDetected, 0);
             
          // The default respnse time is in seconds
          if ( ! this.stateChangeResponseTime )
-         this.stateChangeResponseTime = SLOW_STATE_CHANGE_RESPONSE_TIME; 
+            this.stateChangeResponseTime = SLOW_STATE_CHANGE_RESPONSE_TIME; 
 
          this.service = new Service.GarageDoorOpener(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.HeaterCooler:
-
          this.service = new Service.HeaterCooler(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.HumidifierDehumidifier:
@@ -1500,123 +1485,120 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status )
          break;
       case CMD4_DEVICE_TYPE_ENUM.HumiditySensor:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentRelativeHumidity)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentRelativeHumidity ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentRelativeHumidity, 1);
      
          this.service = new Service.HumiditySensor(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.InputSource:
-         this.service = new Service.InputSource(this.name, this.name);
-    
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ConfiguredName)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ConfiguredName ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ConfiguredName, "My_InputSource");
     
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.InputSourceType)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.InputSourceType ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.InputSourceType, 1);
     
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.IsConfigured)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.IsConfigured ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.IsConfigured, 1);
     
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentVisibilityState)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentVisibilityState ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentVisibilityState, 2);
   
          this.service = new Service.InputSource(this.name, this.name);
          break;
        case CMD4_DEVICE_TYPE_ENUM.IrrigationSystem:
-
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active, 1);
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ProgramMode)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ProgramMode ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ProgramMode, 1);
   
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.InUse)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.InUse ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.InUse, 1);
   
          this.service = new Service.IrrigationSystem(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.LeakSensor:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.LeakDetected)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.LeakDetected ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.LeakDetected, 0);
 
          this.service = new Service.LeakSensor(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.LightSensor:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentAmbientLightLevel)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentAmbientLightLevel ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentAmbientLightLevel, 0);
      
          this.service = new Service.LightSensor(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.Lightbulb:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On, 0);
 
          this.service = new Service.Lightbulb(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.LockManagement:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.LockControlPoint)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.LockControlPoint ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.LockControlPoint, 0);
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Logs)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Logs ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Logs, "OptionalLogs");
      
          this.service = new Service.LockManagement(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.LockMechanism:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.LockCurrentState)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.LockCurrentState ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.LockCurrentState, 0);
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.LockTargetState)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.LockTargetState ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.LockTargetState, 0);
 
          this.service = new Service.LockMechanism(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.Microphone:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Mute)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Mute ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Mute,0);
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Volume)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Volume ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Volume, 0);
 
          this.service = new Service.Microphone(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.MotionSensor:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.MotionDetected) == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.MotionDetected ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.MotionDetected, 0);
 
          this.service = new Service.MotionSensor(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.OccupancySensor:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.OccupancyDetected)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.OccupancyDetected ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.OccupancyDetected, 0);
 
          this.service = new Service.OccupancySensor(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.Outlet:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On, 0);
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.OutletInUse)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.OutletInUse ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.OutletInUse, 0);
 
          this.service = new Service.Outlet(this.name, this.name);
@@ -1626,36 +1608,34 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status )
          this.service = new Service.Pairing(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.ProtocolInformation:
-
          this.service = new Service.ProtocolInformation(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.Relay:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.RelayEnabled)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.RelayEnabled ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.RelayEnabled, 1);
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.RelayState)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.RelayState ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.RelayState, 0);
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.RelayControlPoint)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.RelayControlPoint ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.RelayControlPoint, 0);
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Name)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Name ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Name, "My_Relay");
-
 
          this.service = new Service.Relay(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.SecuritySystem:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SecuritySystemCurrentState)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SecuritySystemCurrentState ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SecuritySystemCurrentState, 3);
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SecuritySystemTargetState)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SecuritySystemTargetState ))
              this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SecuritySystemTargetState, 3);
   
          this.service = new Service.SecuritySystem(this.name, this.name);
@@ -1665,87 +1645,83 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status )
          break;
       case CMD4_DEVICE_TYPE_ENUM.Slat:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentSlatState)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentSlatState ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentSlatState, 0);
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SlatType)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SlatType ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SlatType, 0);
 
          this.service = new Service.Slat(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.SmokeSensor:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SmokeDetected)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SmokeDetected ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SmokeDetected, 0);
 
          this.service = new Service.SmokeSensor(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.Speaker:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Mute)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Mute ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Mute,0);
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Volume)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Volume ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Volume, 0);
 
          this.service = new Service.Speaker(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.StatefulProgrammableSwitch:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent, 0);
 
          this.service = new Service.StatefulProgrammableSwitch(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.StatelessProgrammableSwitch:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent, 0);
 
          this.service = new Service.StatelessProgrammableSwitch(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.Switch:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On, 0);
 
          this.service = new Service.Switch(this.name, this.name);
          break;
-      case CMD4_DEVICE_TYPE_ENUM.Television:
-         this.service = new Service.Television(this.name, this.name);
-    
+      case CMD4_DEVICE_TYPE_ENUM.Television:  
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active, 0);
     
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ActiveIdentifier)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ActiveIdentifier ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ActiveIdentifier, "1234");
    
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ConfiguredName)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ConfiguredName ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ConfiguredName,'tv');
    
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SleepDiscoveryMode)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SleepDiscoveryMode ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SleepDiscoveryMode, "0");
     
          this.service = new Service.Television(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.TelevisionSpeaker:
-         this.service = new Service.TelevisionSpeaker(this.name, this.name);
-
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Mute)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Mute ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Mute, 0);
 
          this.service = new Service.TelevisionSpeaker(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.TemperatureSensor:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentTemperature)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentTemperature ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentTemperature, 50.0);
 
          this.service = new Service.TemperatureSensor(this.name, this.name); 
@@ -1753,102 +1729,102 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status )
       case CMD4_DEVICE_TYPE_ENUM.Thermostat:
          this.log("Setting up Thermostat default characteristics");
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentHeatingCoolingState)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentHeatingCoolingState ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentHeatingCoolingState, 0);
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetHeatingCoolingState)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetHeatingCoolingState ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetHeatingCoolingState, 0);
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentTemperature)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentTemperature ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentTemperature, 50.0);
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetTemperature)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetTemperature ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetTemperature, 50.0);
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TemperatureDisplayUnits)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TemperatureDisplayUnits ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TemperatureDisplayUnits, 0);
 
          this.service = new Service.Thermostat(this.name, this.name); 
          break;
       case CMD4_DEVICE_TYPE_ENUM.TimeInformation:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentTime)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentTime ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentTime, "11:15");
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.DayoftheWeek)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.DayoftheWeek ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.DayoftheWeek, 1);  // Monday
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TimeUpdate)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TimeUpdate ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TimeUpdate, 0);   // false
 
          this.service = new Service.TimeInformation(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.TunneledBTLEAccessoryService:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Name)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Name ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Name, "TLB");
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.AccessoryIdentifier)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.AccessoryIdentifier ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.AccessoryIdentifier, "TLB");
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TunneledAccessoryStateNumber)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TunneledAccessoryStateNumber ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TunneledAccessoryStateNumber, "0");
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TunneledAccessoryConnected)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TunneledAccessoryConnected ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TunneledAccessoryConnected, "1");
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TunneledAccessoryAdvertising)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TunneledAccessoryAdvertising ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TunneledAccessoryAdvertising, "1");
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TunnelConnectionTimeout)  == undefined )
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TunnelConnectionTimeout, "6000");
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TunnelConnectionTimeout ))
+          this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TunnelConnectionTimeout, "6000");
 
          this.service = new Service.TunneledBTLEAccessoryService(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.Valve:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ValveType)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ValveType ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ValveType, 0);
 
          this.service = new Service.Valve(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.Window:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentPosition)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentPosition ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentPosition, 0);
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetPosition)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetPosition ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetPosition, 0);
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.PositionState)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.PositionState ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.PositionState, 0);
 
          this.service = new Service.Window(this.name, this.name);
          break;
       case CMD4_DEVICE_TYPE_ENUM.WindowCovering:
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentPosition)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentPosition ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentPosition, 0);
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetPosition)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetPosition ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetPosition, 0);
 
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.PositionState)  == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.PositionState ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.PositionState, 0);
 
          this.service = new Service.WindowCovering(this.name, this.name);
@@ -1859,7 +1835,7 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status )
          this.log ("CMD4: Unknown type: %s for %s. Defaulting it to a Switch. Did you possibly spell it incorrectly?", this.type, this.name);
   
          // Required
-         if ( this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On) == undefined )
+         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On ))
             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On, 0);
 
          this.service = new Service.Switch(this.name, this.name);
@@ -1958,17 +1934,17 @@ Cmd4Accessory.prototype = {
          return;
       }
 
-      for ( var jsonIndex = 0;
+      for ( let jsonIndex = 0;
                 jsonIndex < pollingConfig.length;
                 jsonIndex ++ )
       {
-          // *NEW* Characteristic polling is a json var
-          var jsonPollingConfig = pollingConfig[jsonIndex];
+          // *NEW* Characteristic polling is a json type
+          let jsonPollingConfig = pollingConfig[jsonIndex];
 
-         for ( var key in jsonPollingConfig )
+         for ( let key in jsonPollingConfig )
          {
-            var ucKey = ucFirst(key);
-            var value = jsonPollingConfig[key];
+            let ucKey = ucFirst(key);
+            let value = jsonPollingConfig[key];
      
             switch (ucKey)
             {
@@ -1986,8 +1962,8 @@ Cmd4Accessory.prototype = {
                   this.interval = parseInt(value, 10) * 1000;
                   break;
                default:
-                  // findIndexOf
-                  var accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.name === ucKey);
+               {
+                  let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.name === ucKey);
                   
                   if (accTypeEnumIndex < 0 )
                   {
@@ -2002,6 +1978,7 @@ Cmd4Accessory.prototype = {
 
                      this.setStoredValueForIndex(accTypeEnumIndex, value);
                   }
+               }
             }
          }
       }
@@ -2035,16 +2012,17 @@ Cmd4Accessory.prototype = {
    //
    //       - Where he value in <> is an one of CMD4_ACC_TYPE_ENUM
    // ***********************************************
-   setValue:function (value, accTypeEnumIndex, characteristic, callback)
-   {
-      var self = this;
+   setValue:function (five, context, accTypeEnumIndex, value , callback )
+   {      
+      let self = context;    
+      
+      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].name;
+      let characteristic = CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].characteristic;      
 
-      var characteristicString = CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].name;
-
-      var cmd = this.state_cmd + " Set '" + this.name + "' '" + characteristicString  + "' '" + value  + "'";
+      let cmd = self.state_cmd + " Set '" + self.name + "' '" + characteristicString  + "' '" + value  + "'";
       self.log.debug("setValue %s function for: %s cmd: %s", characteristicString, self.name, cmd);
 
-
+      
       // Execute command to Set a characteristic value for an accessory
       exec(cmd, {timeout: self.timeout}, function (error, stdout, stderr)
       {
@@ -2058,7 +2036,7 @@ Cmd4Accessory.prototype = {
 
             // Since we are in an exec, make sure we reply
             // with the corresponding getValue.
-            var responded  = false;
+            let responded  = false;
 
             // Setting *Target* states require a get afterwards
             // Why this is needed and must be set the same, I do
@@ -2316,17 +2294,17 @@ Cmd4Accessory.prototype = {
    // ***********************************************
    getValue:function (accTypeEnumIndex, callback)
    {
-      var self = this;
+      let self = this;
 
-      var characteristicString = CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].name;
+      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].name;
 
-      var cmd = this.state_cmd + " Get '" + this.name + "' '" + characteristicString  + "'";
+      let cmd = this.state_cmd + " Get '" + this.name + "' '" + characteristicString  + "'";
 
 
-      self.log.debug("getValue %s function for: %s cmd: %s", characteristicString, self.name, cmd);
+      self.log.debug("getValue accTypeEnumIndex:(%s)-'%s' function for: %s cmd: %s", accTypeEnumIndex, characteristicString, self.name, cmd);
 
       // Execute command to Get a characteristics value for an accessory
-      var child = exec(cmd, {timeout:self.timeout}, function (error, stdout, stderr)
+      let child = exec(cmd, {timeout:self.timeout}, function (error, stdout, stderr)
       {
          if (error) {
             self.log("getGeneric %s function for: %s cmd: %s failed.", characteristicString, self.name, cmd);
@@ -2335,7 +2313,7 @@ Cmd4Accessory.prototype = {
             self.log(stderr);
             callback( error, 0 );
          } else {
-            var words = stdout.match(/\S+/gi);
+            let words = stdout.match(/\S+/gi);
 
             // I'd rather trap here
             if (words == undefined)
@@ -2358,7 +2336,7 @@ Cmd4Accessory.prototype = {
                self.log.debug("getValue %s function for: %s returned: '%s'", characteristicString, self.name, words[0]);
          
 
-               var value;
+               let value = '';
 
                // Return the appropriate type
                // - IOS HomeKit does require a value over On/Off,
@@ -2381,7 +2359,7 @@ Cmd4Accessory.prototype = {
 
                   callback(null,value);
                } else {
-                  var lowerCaseWord = words[0].toLowerCase();
+                  let lowerCaseWord = words[0].toLowerCase();
 
                   if (lowerCaseWord  == "true" || lowerCaseWord == "on")
                   {
@@ -2424,5776 +2402,70 @@ Cmd4Accessory.prototype = {
     //           config.json file.
     //
     //
-    // Note: If it were ever possible to bind
-    //       the parameters to getValue, this functkion
-    //       oould be shrinked to one big for loop.
-    //
+    // Note: Tis code wipes out 5K of duplicate code.
+    //       by using a bound function.  It appears
+    //       to work on my iMac. 
     //
     // ***********************************************
     setupAllServices: function (service)
     {
         this.log.debug("Setting up services");
  
-        var perms = "";
- 
-        var characteristic = Characteristic.AccessoryFlags;
-        var accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AccessoryFlags;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.AccessoryFlags, Characteristic.AccessoryFlags, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.AccessoryFlags, Characteristic.AccessoryFlags, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.Active;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Active;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( Characteristic.Active );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.Active, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.Active, Characteristic.Active, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.ActiveIdentifier;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ActiveIdentifier;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.ActiveIdentifier, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ActiveIdentifier, Characteristic.ActiveIdentifier, callback);
-                        });
-                }
-            }
-        }
+        let perms = '';
 
-        characteristic = Characteristic.AccessoryIdentifier;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AccessoryIdentifier;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
+        for (let accTypeEnumIndex = 0;
+               accTypeEnumIndex < this.storedValuesPerCharacteristic.length; 
+               accTypeEnumIndex++ )
         {
-            if ( ! service.testCharacteristic(characteristic))
+            if ( this.storedValuesPerCharacteristic[accTypeEnumIndex] )
             {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.AccessoryIdentifier, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.AccessoryIdentifier, Characteristic.AccessoryIdentifier, callback);
-                        });
-                }
-            }
-        }
+               if ( ! service.testCharacteristic(
+                    CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].characteristic))
+               {
+                   service.addCharacteristic(
+                      CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].
+                      characteristic );
+               }
+                
+               perms = service.getCharacteristic(
+                  CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex]
+                  .characteristic).props.perms;
 
-        characteristic = Characteristic.AdministratorOnlyAccess;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AdministratorOnlyAccess;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
+               if ( service.getCharacteristic(
+                      CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex]
+                      .characteristic).listeners('get').length == 0 )
+               {
+                   // Add Read services for characterisitcs, if possible
+                   if (perms.indexOf(Characteristic.Perms.READ) != -1)
+                   {
+                       service.getCharacteristic(
+                         CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex]
+                         .characteristic)
+                            .on('get', this.getValue.bind(this, accTypeEnumIndex));
+                   }
+               }
      
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.AdministratorOnlyAccess, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.AdministratorOnlyAccess, Characteristic.AdministratorOnlyAccess, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.AirParticulateDensity;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AirParticulateDensity;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.AirParticulateDensity, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.AirParticulateDensity, Characteristic.AirParticulateDensity, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.AirParticulateSize;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AirParticulateSize;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.AirParticulateSize, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.AirParticulateSize, Characteristic.AirParticulateSize, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.AirQuality;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AirQuality;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.AirQuality, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.AirQuality, Characteristic.AirQuality, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.AudioFeedback;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AudioFeedback;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.AudioFeedback, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.AudioFeedback, Characteristic.AudioFeedback, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.BatteryLevel;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.BatteryLevel;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.BatteryLevel, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.BatteryLevel, Characteristic.BatteryLevel, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.Brightness;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Brightness;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.Brightness, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.Brightness, Characteristic.Brightness, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.CarbonDioxideDetected;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CarbonDioxideDetected;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.CarbonDioxideDetected, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CarbonDioxideDetected, Characteristic.CarbonDioxideDetected, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.CarbonDioxideLevel;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CarbonDioxideLevel;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.CarbonDioxideLevel, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CarbonDioxideLevel, Characteristic.CarbonDioxideLevel, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.CarbonDioxidePeakLevel;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CarbonDioxidePeakLevel;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.CarbonDioxidePeakLevel, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CarbonDioxidePeakLevel, Characteristic.CarbonDioxidePeakLevel, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.CarbonMonoxideDetected;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CarbonMonoxideDetected;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.CarbonMonoxideDetected, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CarbonMonoxideDetected, Characteristic.CarbonMonoxideDetected, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.CarbonMonoxideLevel;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CarbonMonoxideLevel;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.CarbonMonoxideLevel, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CarbonMonoxideLevel, Characteristic.CarbonMonoxideLevel, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.CarbonMonoxidePeakLevel;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CarbonMonoxidePeakLevel;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.CarbonMonoxidePeakLevel, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CarbonMonoxidePeakLevel, Characteristic.CarbonMonoxidePeakLevel, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.Category;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Category;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.Category, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.Category, Characteristic.Category, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.ChargingState;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ChargingState;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.ChargingState, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ChargingState, Characteristic.ChargingState, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.ClosedCaptions;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ClosedCaptions;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.ClosedCaptions, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ClosedCaptions, Characteristic.ClosedCaptions, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.ColorTemperature;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ColorTemperature;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.ColorTemperature, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ColorTemperature, Characteristic.ColorTemperature, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.ConfiguredName;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ConfiguredName;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.ConfiguredName, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ConfiguredName, Characteristic.ConfiguredName, callback);
-                        });
-                }
-            }
-        }
+               if ( service.getCharacteristic(
+                    CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex]
+                    .characteristic).listeners('set').length == 0 )
+               {
+                   // Add Write services for characterisitcs, if possible
+                   if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
+                   {
 
-        characteristic = Characteristic.ConfigureBridgedAccessoryStatus;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ConfigureBridgedAccessoryStatus;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.ConfigureBridgedAccessoryStatus, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ConfigureBridgedAccessoryStatus, Characteristic.ConfigureBridgedAccessoryStatus, callback);
-                        });
-                }
-            }
-        }
-
-        characteristic = Characteristic.ConfigureBridgedAccessory;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ConfigureBridgedAccessory;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.ConfigureBridgedAccessory, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ConfigureBridgedAccessory, Characteristic.ConfigureBridgedAccessory, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.ContactSensorState;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ContactSensorState;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.ContactSensorState, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ContactSensorState, Characteristic.ContactSensorState, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.CoolingThresholdTemperature;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CoolingThresholdTemperature;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.CoolingThresholdTemperature, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CoolingThresholdTemperature, Characteristic.CoolingThresholdTemperature, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.CurrentAirPurifierState;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentAirPurifierState;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentAirPurifierState, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentAirPurifierState, Characteristic.CurrentAirPurifierState, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.CurrentAmbientLightLevel;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentAmbientLightLevel;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentAmbientLightLevel, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentAmbientLightLevel, Characteristic.CurrentAmbientLightLevel, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.CurrentDoorState;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentDoorState;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentDoorState, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentDoorState, Characteristic.CurrentDoorState, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.CurrentFanState;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentFanState;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentFanState, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentFanState, Characteristic.CurrentFanState, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.CurrentHeaterCoolerState;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentHeaterCoolerState;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentHeaterCoolerState, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentHeaterCoolerState, Characteristic.CurrentHeaterCoolerState, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.CurrentHeatingCoolingState;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentHeatingCoolingState;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentHeatingCoolingState, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentHeatingCoolingState, Characteristic.CurrentHeatingCoolingState, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.CurrentHorizontalTiltAngle;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentHorizontalTiltAngle;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentHorizontalTiltAngle, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentHorizontalTiltAngle, Characteristic.CurrentHorizontalTiltAngle, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.CurrentHumidifierDehumidifierState;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentHumidifierDehumidifierState;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentHumidifierDehumidifierState, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentHumidifierDehumidifierState, Characteristic.CurrentHumidifierDehumidifierState, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.CurrentMediaState;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentMediaState;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentMediaState, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentMediaState, Characteristic.CurrentMediaState, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.CurrentPosition;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentPosition;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentPosition, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentPosition, Characteristic.CurrentPosition, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.CurrentRelativeHumidity;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentRelativeHumidity;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentRelativeHumidity, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentRelativeHumidity, Characteristic.CurrentRelativeHumidity, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.CurrentSlatState;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentSlatState;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentSlatState, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentSlatState, Characteristic.CurrentSlatState, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.CurrentTemperature;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentTemperature;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentTemperature, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentTemperature, Characteristic.CurrentTemperature, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.CurrentTiltAngle;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentTiltAngle;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentTiltAngle, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentTiltAngle, Characteristic.CurrentTiltAngle, callback);
-                        });
-                }
-            }
-        }
-
-        characteristic = Characteristic.CurrentTime;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentTime;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentTime, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentTime, Characteristic.CurrentTime, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.CurrentVerticalTiltAngle;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentVerticalTiltAngle;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentVerticalTiltAngle, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentVerticalTiltAngle, Characteristic.CurrentVerticalTiltAngle, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.CurrentVisibilityState;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentVisibilityState;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.CurrentVisibilityState, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.CurrentVisibilityState, Characteristic.CurrentVisibilityState, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.DayoftheWeek;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.DayoftheWeek;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.DayoftheWeek, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.DayoftheWeek, Characteristic.DayoftheWeek, callback);
-                        });
-                }
-            }
-        }
-
-        characteristic = Characteristic.DigitalZoom;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.DigitalZoom;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.DigitalZoom, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.DigitalZoom, Characteristic.DigitalZoom, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.DiscoverBridgedAccessories;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.DiscoverBridgedAccessories;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.DiscoverBridgedAccessories, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.DiscoverBridgedAccessories, Characteristic.DiscoverBridgedAccessories, callback);
-                        });
-                }
-            }
-        }
-
-        characteristic = Characteristic.DiscoveredBridgedAccessories;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.DiscoveredBridgedAccessories;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.DiscoveredBridgedAccessories, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.DiscoveredBridgedAccessories, Characteristic.DiscoveredBridgedAccessories, callback);
-                        });
-                }
-            }
-        }
-
-        characteristic = Characteristic.DisplayOrder;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.DisplayOrder;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.DisplayOrder, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.DisplayOrder, Characteristic.DisplayOrder, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.FilterChangeIndication;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.FilterChangeIndication;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.FilterChangeIndication, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.FilterChangeIndication, Characteristic.On, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.FilterLifeLevel;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.FilterLifeLevel;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.FilterLifeLevel, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.FilterLifeLevel, Characteristic.FilterLifeLevel, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.FirmwareRevision;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.FirmwareRevision;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.FirmwareRevision, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.FirmwareRevision, Characteristic.FirmwareRevision, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.HardwareRevision;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.HardwareRevision;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.HardwareRevision, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.HardwareRevision, Characteristic.HardwareRevision, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.HeatingThresholdTemperature;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.HeatingThresholdTemperature;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.HeatingThresholdTemperature, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.HeatingThresholdTemperature, Characteristic.HeatingThresholdTemperature, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.HoldPosition;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.HoldPosition;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.HoldPosition, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.HoldPosition, Characteristic.HoldPosition, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.Hue;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Hue;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.Hue, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.Hue, Characteristic.Hue, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.Identify;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Identify;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.Identify, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.Identify, Characteristic.Identify, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.ImageMirroring;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ImageMirroring;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.ImageMirroring, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ImageMirroring, Characteristic.ImageMirroring, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.ImageRotation;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ImageRotation;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.ImageRotation, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ImageRotation, Characteristic.ImageRotation, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.InputDeviceType;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.InputDeviceType;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.InputDeviceType, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.InputDeviceType, Characteristic.InputDeviceType, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.InputSourceType;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.InputSourceType;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.InputSourceType, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.InputSourceType, Characteristic.InputSourceType, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.InUse;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.InUse;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.InUse, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.InUse, Characteristic.InUse, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.IsConfigured;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.IsConfigured;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.IsConfigured, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.IsConfigured, Characteristic.IsConfigured, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.LeakDetected;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.LeakDetected;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.LeakDetected, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.LeakDetected, Characteristic.LeakDetected, callback);
-                        });
-                }
-            }
-        }
-
-        characteristic = Characteristic.LinkQuality;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.LinkQuality;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.LinkQuality, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.LinkQuality, Characteristic.LinkQuality, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.LockControlPoint;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.LockControlPoint;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.LockControlPoint, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.LockControlPoint, Characteristic.LockControlPoint, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.LockCurrentState;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.LockCurrentState;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.LockCurrentState, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.LockCurrentState, Characteristic.LockCurrentState, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.LockLastKnownAction;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.LockLastKnownAction;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.properties[CMD4_ACC_TYPE_ENUM.LockLastKnownAction].name, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.LockLastKnownAction, Characteristic.LockLastKnownAction, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.LockManagementAutoSecurityTimeout;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.LockManagementAutoSecurityTimeout;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.LockManagementAutoSecurityTimeout, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.LockManagementAutoSecurityTimeout, Characteristic.LockManagementAutoSecurityTimeout, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.LockPhysicalControls;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.LockPhysicalControls;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.LockPhysicalControls, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.LockPhysicalControls, Characteristic.LockPhysicalControls, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.LockTargetState;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.LockTargetState;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.LockTargetState, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.LockTargetState, Characteristic.LockTargetState, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.Logs;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Logs;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.Logs, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.Manufacturer, Characteristic.Manufacturer, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.Model;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Model;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.Model, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.On, Characteristic.Model, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.Manufacturer;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Manufacturer;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.Manufacturer, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.Manufacturer, Characteristic.Manufacturer, callback);
-                        });
-                }
-            }
-        }
-
-        characteristic = Characteristic.MotionDetected;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.MotionDetected;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.MotionDetected, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.MotionDetected, Characteristic.MotionDetected, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.Mute;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.Mute, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.Mute, Characteristic.Mute, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.Name;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Name;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.Name, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.Name, Characteristic.Name, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.NightVision;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.NightVision;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.NightVision, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.NightVision, Characteristic.NightVision, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.NitrogenDioxideDensity;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.NitrogenDioxideDensity;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.NitrogenDioxideDensity, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.NitrogenDioxideDensity, Characteristic.NitrogenDioxideDensity, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.ObstructionDetected;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ObstructionDetected;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.ObstructionDetected, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ObstructionDetected, Characteristic.ObstructionDetected, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.OccupancyDetected;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.OccupancyDetected;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.OccupancyDetected, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.OccupancyDetected, Characteristic.OccupancyDetected, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.On;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.On;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.On, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.On, Characteristic.On, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.OpticalZoom;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.OpticalZoom;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.OpticalZoom, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.OpticalZoom, Characteristic.OpticalZoom, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.OutletInUse;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.OutletInUse;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.OutletInUse, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.OutletInUse, Characteristic.OutletInUse, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.OzoneDensity;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.OzoneDensity;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.OzoneDensity, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.OzoneDensity, Characteristic.OzoneDensity, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.PairSetup;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.PairSetup;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.PairSetup, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.PairSetup, Characteristic.PairSetup, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.PairVerify;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.PairVerify;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.PairVerify, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.PairVerify, Characteristic.PairVerify, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.PairingFeatures;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.PairingFeatures;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.PairingFeatures, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.PairingFeatures, Characteristic.PairingFeatures, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.PairingPairings;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.PairingPairings;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.PairingPairings, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.PairingPairings, Characteristic.PairingPairings, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.PictureMode;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.PictureMode;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.PictureMode, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.PictureMode, Characteristic.PictureMode, callback);
-                        });
-                }
-            }
-        }
-
-        characteristic = Characteristic.PM10Density;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.PM10Density;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.PM10Density, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.PM10Density, Characteristic.PM10Density, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.PM2_5Density;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.PM2_5Density;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.PM2_5Density, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.PM2_5Density, Characteristic.PM2_5Density, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.PositionState;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.PositionState;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.PositionState, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.PositionState, Characteristic.PositionState, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.PowerModeSelection;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.PowerModeSelection;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.PowerModeSelection, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.PowerModeSelection, Characteristic.PowerModeSelection, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.ProgramMode;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ProgramMode;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.ProgramMode, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ProgramMode, Characteristic.ProgramMode, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.ProgrammableSwitchEvent;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent, Characteristic.ProgrammableSwitchEvent, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.ProgrammableSwitchOutputState;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ProgrammableSwitchOutputState;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.ProgrammableSwitchOutputState, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ProgrammableSwitchOutputState, Characteristic.ProgrammableSwitchOutputState, callback);
-                        });
-                }
-            }
-        }
-
-        characteristic = Characteristic.Reachable;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Reachable;
-        if ( this.getStoredValueForIndex(
-              accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.Reachable, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.Reachable, Characteristic.Reachable, callback);
-                        });
-                }
-            }
-        }
-
-        characteristic = Characteristic.RelativeHumidityDehumidifierThreshold;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.RelativeHumidityDehumidifierThreshold;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.RelativeHumidityDehumidifierThreshold, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.RelativeHumidityDehumidifierThreshold, Characteristic.RelativeHumidityDehumidifierThreshold, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.RelativeHumidityHumidifierThreshold;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.RelativeHumidityHumidifierThreshold;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.RelativeHumidityHumidifierThreshold, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.RelativeHumidityHumidifierThreshold, Characteristic.RelativeHumidityHumidifierThreshold, callback);
-                        });
-                }
-            }
-        }
-
-        characteristic = Characteristic.RelayEnabled;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.RelayEnabled;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.RelayEnabled, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.RelayEnabled, Characteristic.RelayEnabled, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.RelayState;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.RelayState;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.RelayState, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.RelayState, Characteristic.RelayState, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.RelayControlPoint;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.RelayControlPoint;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.RelayControlPoint, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.RelayControlPoint, Characteristic.RelayControlPoint, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.RemainingDuration;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.RemainingDuration;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.RemainingDuration, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.RemainingDuration, Characteristic.RemainingDuration, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.RemoteKey;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.RemoteKey;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.RemoteKey, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.RemoteKey, Characteristic.RemoteKey, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.ResetFilterIndication;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ResetFilterIndication;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.ResetFilterIndication, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ResetFilterIndication, Characteristic.ResetFilterIndication, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.RotationDirection;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.RotationDirection;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.RotationDirection, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.RotationDirection, Characteristic.RotationDirection, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.RotationSpeed;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.RotationSpeed;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.RotationSpeed, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.RotationSpeed, Characteristic.RotationSpeed, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.Saturation;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Saturation;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.Saturation, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.Saturation, Characteristic.Saturation, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.SecuritySystemAlarmType;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SecuritySystemAlarmType;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.SecuritySystemAlarmType, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SecuritySystemAlarmType, Characteristic.SecuritySystemAlarmType, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.SecuritySystemCurrentState;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SecuritySystemCurrentState;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.SecuritySystemCurrentState, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SecuritySystemCurrentState, Characteristic.SecuritySystemCurrentState, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.SecuritySystemTargetState;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SecuritySystemTargetState;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.SecuritySystemTargetState, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SecuritySystemTargetState, Characteristic.SecuritySystemTargetState, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.SelectedRTPStreamConfiguration;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SelectedRTPStreamConfiguration;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.SelectedRTPStreamConfiguration, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SelectedRTPStreamConfiguration,Characteristic.SelectedRTPStreamConfiguration, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.SerialNumber;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SerialNumber;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.SerialNumber, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SerialNumber, Characteristic.SerialNumber, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.ServiceLabelIndex;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ServiceLabelIndex;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.ServiceLabelIndex, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ServiceLabelIndex, Characteristic.ServiceLabelIndex, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.ServiceLabelNamespace;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ServiceLabelNamespace;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.ServiceLabelNamespace, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ServiceLabelNamespace, Characteristic.ServiceLabelNamespace, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.SetDuration;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SetDuration;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.SetDuration, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SetDuration, Characteristic.SetDuration, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.SetupEndpoints;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SetupEndpoints;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.SetupEndpoints, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SetupEndpoints, Characteristic.SetupEndpoints, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.SlatType;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SlatType;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.SlatType, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SlatType, Characteristic.SlatType, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.SleepDiscoveryMode;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SleepDiscoveryMode;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.SleepDiscoveryMode, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SleepDiscoveryMode, Characteristic.SleepDiscoveryMode, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.SmokeDetected;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SmokeDetected;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.SmokeDetected, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SmokeDetected, Characteristic.SmokeDetected, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.StatusActive;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusActive;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.StatusActive, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.StatusActive, Characteristic.StatusActive, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.StatusFault;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusFault;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.StatusFault, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.StatusFault, Characteristic.StatusFault, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.StatusJammed;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusJammed;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.StatusJammed, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.StatusJammed, Characteristic.StatusJammed, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.StatusLowBattery;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusLowBattery;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.StatusLowBattery, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.StatusLowBattery, Characteristic.StatusLowBattery, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.StatusTampered;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusTampered;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.StatusTampered, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.StatusTampered, Characteristic.StatusTampered, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.StreamingStatus;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StreamingStatus;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.StreamingStatus, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.StreamingStatus, Characteristic.StreamingStatus, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.SulphurDioxideDensity;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SulphurDioxideDensity;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.SulphurDioxideDensity, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SulphurDioxideDensity, Characteristic.SulphurDioxideDensity, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.SupportedAudioStreamConfiguration;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SupportedAudioStreamConfiguration;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.SupportedAudioStreamConfiguration, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SupportedAudioStreamConfiguration, Characteristic.SupportedAudioStreamConfiguration, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.SupportedRTPConfiguration;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SupportedRTPConfiguration;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.SupportedRTPConfiguration, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SupportedRTPConfiguration, Characteristic.SupportedRTPConfiguration, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.SupportedVideoStreamConfiguration;  // 130
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SupportedVideoStreamConfiguration;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.SupportedVideoStreamConfiguration, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SupportedVideoStreamConfiguration, Characteristic.SupportedVideoStreamConfiguration, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.SwingMode;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SwingMode;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.SwingMode, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.SwingMode, Characteristic.SwingMode, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.TargetAirPurifierState;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetAirPurifierState;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetAirPurifierState, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetAirPurifierState, Characteristic.TargetAirPurifierState, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.TargetAirQuality;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetAirQuality;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetAirQuality, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetAirQuality, Characteristic.TargetAirQuality, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.TargetDoorState;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetDoorState;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetDoorState, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetDoorState, Characteristic.TargetDoorState, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.TargetFanState;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetFanState;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetFanState, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetFanState, Characteristic.TargetFanState, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.TargetHeaterCoolerState;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetHeaterCoolerState;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetHeaterCoolerState, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetHeaterCoolerState, Characteristic.TargetHeaterCoolerState, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.TargetHeatingCoolingState;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetHeatingCoolingState;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetHeatingCoolingState, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetHeatingCoolingState, Characteristic.TargetHeatingCoolingState, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.TargetHorizontalTiltAngle;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetHorizontalTiltAngle;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetHorizontalTiltAngle, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetHorizontalTiltAngle, Characteristic.TargetHorizontalTiltAngle, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.TargetHumidifierDehumidifierState;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetHumidifierDehumidifierState;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetHumidifierDehumidifierState, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetHumidifierDehumidifierState, Characteristic.TargetHumidifierDehumidifierState, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.TargetMediaState;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetMediaState;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetMediaState, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetMediaState, Characteristic.TargetMedia, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.TargetPosition;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetPosition;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetPosition, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetPosition, Characteristic.TargetPosition, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.TargetRelativeHumidity;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetRelativeHumidity;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetRelativeHumidity, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetRelativeHumidity, Characteristic.TargetRelativeHumidity, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.TargetSlatState;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetSlatState;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetSlatState, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetSlatState, Characteristic.TargetSlatState, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.TargetTemperature;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetTemperature;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetTemperature, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetTemperature, Characteristic.TargetTemperature, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.TargetTiltAngle;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetTiltAngle;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetTiltAngle, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetTiltAngle, Characteristic.TargetTiltAngle, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.TargetVerticalTiltAngle;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetVerticalTiltAngle;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetVerticalTiltAngle, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetVerticalTiltAngle, Characteristic.TargetVerticalTiltAngle, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.TargetVisibilityState;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetVisibilityState;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.TargetVisibilityState, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TargetVisibilityState, Characteristic.CMD4_TargetVisibilityState, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.TemperatureDisplayUnits;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TemperatureDisplayUnits;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.TemperatureDisplayUnits, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TemperatureDisplayUnits, Characteristic.TemperatureDisplayUnits, callback);
-                        });
-                }
-            }
-        }
-
-        characteristic = Characteristic.TimeUpdate;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TimeUpdate;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.TimeUpdate, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TimeUpdate, Characteristic.TimeUpdate, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.TunneledAccessoryAdvertising;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TunneledAccessoryAdvertising;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.TunneledAccessoryAdvertising, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TunneledAccessoryAdvertising, Characteristic.TunneledAccessoryAdvertising, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.TunneledAccessoryConnected;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TunneledAccessoryConnected;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.TunneledAccessoryConnected, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TunneledAccessoryConnected, Characteristic.TunneledAccessoryConnected, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.TunneledAccessoryStateNumber;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TunneledAccessoryStateNumber;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.TunneledAccessoryStateNumber, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TunneledAccessoryStateNumber, Characteristic.TunneledAccessoryStateNumber, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.TunnelConnectionTimeout;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TunnelConnectionTimeout;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.TunnelConnectionTimeout, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.TunnelConnectionTimeout, Characteristic.TunnelConnectionTimeout, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.ValveType;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ValveType;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.ValveType, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.ValveType, Characteristic.ValveType, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.Version;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Version;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.Version, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.Version, Characteristic.Version, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.VOCDensity;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.VOCDensity;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.VOCDensity, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.VOCDensity, Characteristic.VOCDensity, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.Volume;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Volume;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.Volume, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.Volume, Characteristic.Volume, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.VolumeControlType;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.VolumeControlType;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.VolumeControlType, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.VolumeControlType, Characteristic.VolumeControlType, callback);
-                        });
-                }
-            }
-        }
-
-        characteristic = Characteristic.VolumeSelector;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.VolumeSelector;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.VolumeSelector, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.VolumeSelector, Characteristic.VolumeSelector, callback);
-                        });
-                }
-            }
-        }
- 
-        characteristic = Characteristic.WaterLevel;
-        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.WaterLevel;
-        if ( this.getStoredValueForIndex(accTypeEnumIndex) != undefined)
-        {
-            if ( ! service.testCharacteristic(characteristic))
-            {
-                service.addCharacteristic( characteristic );
-            }
-     
-            perms = service.getCharacteristic(characteristic).props.perms;
-     
-            if ( service.getCharacteristic(characteristic).listeners('get').length == 0 )
-            {
-                // Add Read services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('get', (callback) => {
-                        this.getValue(CMD4_ACC_TYPE_ENUM.WaterLevel, callback);
-                        });
-                }
-            }
-     
-            if ( service.getCharacteristic(characteristic).listeners('set').length == 0 )
-            {
-                // Add Write services for characterisitcs, if possible
-                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                {
-                    service.getCharacteristic(characteristic)
-                    .on('set', (value,callback) => {
-                        this.setValue(value, CMD4_ACC_TYPE_ENUM.WaterLevel, Characteristic.WaterLevel, callback);
-                        });
-                }
+                      // GetService has parameters:
+                      // five, context, accTypeEnumIndex, value , callback
+                      // Why this works, beats me.
+                      // five ends up equal to '2';                        
+                      let boundSetValue = this.setValue.bind(1, 2, this, accTypeEnumIndex);
+                        
+                      service.getCharacteristic(
+                         CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex]
+                         .characteristic).on('set', (value,callback) => {
+                           boundSetValue(value, callback);
+                      });   
+                   }
+               }
             }
         }
    },
@@ -8209,10 +2481,10 @@ Cmd4Accessory.prototype = {
 
       if ( this.loggingService )
       {
-         var firstParm, secondParm, thirdParm;
-         var ucFirstParm, ucSecondParm, ucThirdParm;
-         var firstParmValue, secondParmValue, thirdParmValue = 0;
-         var firstParmIndex, secondParmIndex, thirdParmIndex;
+         let firstParm, secondParm, thirdParm;
+         let ucFirstParm, ucSecondParm, ucThirdParm;
+         let firstParmValue, secondParmValue, thirdParmValue = 0;
+         let firstParmIndex, secondParmIndex, thirdParmIndex;
          
          switch (this.eve)
          {
@@ -8386,10 +2658,10 @@ Cmd4Accessory.prototype = {
       if ( fakegatoConfig == undefined )
          return;
 
-      for ( var key in fakegatoConfig )
+      for ( let key in fakegatoConfig )
       {
-          var ucKey = ucFirst ( key );
-          var value = fakegatoConfig[ key ];
+          let ucKey = ucFirst ( key );
+          let value = fakegatoConfig[ key ];
           switch (ucKey) 
           {
              case 'Eve': 
@@ -8440,15 +2712,17 @@ Cmd4Accessory.prototype = {
              case 'Pressure':
              case 'CurrentTemp':
              case 'ValvePosition':
-                 var ucValue = ucFirst(value);
-                 var accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.name === ucValue);
+             {
+                 let ucValue = ucFirst(value);
+                 let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.name === ucValue);
                  
                  // make sure that the characteristic to log to fakegato is valid
                  // and if it is not 0 for not used.
                  if (this.testStoredValueForIndex(accTypeEnumIndex) < 0 && ucValue != '0')
                     this.log.warn("Not a valid characteristic '%s' for fakegato to log of '%s'", value, key);
                  break;
-             default:
+              }
+              default:
                  this.log("Invalid fakegato key '%s' in json.config for %s ", key, this.name);
           }
       }
@@ -8499,35 +2773,20 @@ Cmd4Accessory.prototype = {
 
 Object.defineProperty(Object.prototype, "indexOfEnum", {
    value: function(predicate, fromIndex) {
-      var length = this == null ? 0 : Object.keys(this).length;
+      let length = this == null ? 0 : Object.keys(this).length;
       if (!length)
          return -1;
       
-      var index = fromIndex == null ? 0 : toInteger(fromIndex);
+      let index = fromIndex == null ? 0 : fromIndex;
       if (index < 0) {
-         index = nativeMax(length + index, 0);
+         index = Math.max(length + index, 0);
       }
 
-      for (var i=index; i < length; i++)
+      for (let i=index; i < length; i++)
       {
          if (predicate(this[i], i, this)) {
             return i;
          }
-      }
-      return -1;
-    }
-});
-
-// Returns the index of the value if it exists, or undefined if not
-Object.defineProperty(Object.prototype, "assocIndexOf", {
-   value: function(value) {
-      var index = 0;
-      for (var key in this)
-      {
-         if (key == value)
-            return index;
-
-         index++;
       }
       return -1;
     }
@@ -8549,7 +2808,7 @@ function getType( oObj )
 
     return 'String';
 }
-
+ 
 function ucFirst(string)
 {
    if (string)
@@ -8557,16 +2816,6 @@ function ucFirst(string)
    else {
       console.log("Asked to upper  case first character of NULL String");
       return "undefined";
-   }
-}
-
-function lcFirst(string)
-{
-   if (string)
-      return string.charAt(0).toLowerCase() + string.slice(1);
-   else {
-      console.log("Asked to lower case first character of NULL String");
-      return "ucdefined";
    }
 }
 
