@@ -43,10 +43,10 @@
                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
               {
-                "type": "GarageDoorOpener",
-                "name": "My_GarageDoorOpener",
-                "lockCurrentState": 0,
-                "lockTargetState": 0,
+                 "type": "GarageDoorOpener",
+                 "name": "My_GarageDoorOpener",
+                 "lockCurrentState": 0,
+                 "lockTargetState": 0,
                  "polling": [{"lockCurrentState": "0",
                               "interval": 540,
                               "timeout":2000
@@ -443,8 +443,8 @@
                  "targetMediaState":       2,
                  "pictureMode" :           1,
                  "remoteKey":              8,
-                 "polling":[{"active": 1, "interval": 50, "timeout":2000},
-                            {"currentMediaState": 2, "interval": 540, "timeout":2000}
+                 "polling":[{"active": 1, "interval": 50, "timeout":3000},
+                            {"currentMediaState": 2, "interval": 540, "timeout":3000}
                            ],
                  "stateChangeResponseTime": 1,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -457,8 +457,8 @@
                  "volume":                 5,
                  "volumeControlType":      3,
                  "volumeSelector":         0,
-                 "polling":[{"active": 1, "interval": 50, "timeout":2000},
-                            {"volume": 5, "interval": 50, "timeout":2000}
+                 "polling":[{"active": 1, "interval": 50, "timeout":3000},
+                            {"volume": 5, "interval": 50, "timeout":3000}
                            ],
                  "stateChangeResponseTime": 1,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -483,8 +483,8 @@
                  "InUse" :                 1,
                  "remainingDuration":      60,
                  "statusFault":            0,
-                 "polling":[{"active": 1, "interval": 50, "timeout":2000},
-                            {"statusFault": 0, "interval": 300, "timeout":2000}
+                 "polling":[{"active": 1, "interval": 50, "timeout":3000},
+                            {"statusFault": 0, "interval": 300, "timeout":3000}
                            ],
                  "stateChangeResponseTime": 1,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -494,8 +494,8 @@
                  "name": "My_Faucet",
                  "active":                 1,
                  "statusFault":            0,
-                 "polling":[{"active": 1, "interval": 50, "timeout":2000},
-                            {"statusFault": 0, "interval": 300, "timeout":2000}
+                 "polling":[{"active": 1, "interval": 50, "timeout":3000},
+                            {"statusFault": 0, "interval": 300, "timeout":3000}
                            ],
                  "stateChangeResponseTime": 1,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
