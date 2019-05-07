@@ -26,7 +26,7 @@
                 "name": "My_v1Fan",
                 "rotationDirection": 1,
                 "rotationSpeed": 100,
-                "stateChangeResponseTime": 1,
+                "stateChangeResponseTime": 3,
                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
              },
              {
@@ -39,7 +39,7 @@
                 "rotationSpeed": 100,
                 "swingMode":              1,
                 "lockPhysicalControls": 0,
-                "stateChangeResponseTime": 1,
+                "stateChangeResponseTime": 3,
                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
               {
@@ -57,7 +57,7 @@
               {
                  "type": "Lightbulb",
                  "name": "My_OnOff_Light",
-                 "stateChangeResponseTime": 1,
+                 "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
               {
@@ -67,7 +67,7 @@
                  "saturation":8,
                  "hue":8,
                  "colorTemperature":8,
-                 "stateChangeResponseTime": 1,
+                 "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
               {
@@ -81,7 +81,7 @@
                  "lockLastKnownAction": 0,
                  "currentDoorState": 0,
                  "motionDetected": 0,
-                 "stateChangeResponseTime": 1,
+                 "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
                {
@@ -97,14 +97,14 @@
                  "name": "My_Outlet",
                  "on": false,
                  "outletInUse": false,
-                 "stateChangeResponseTime": 1,
+                 "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
               {
                  "type": "Switch",
                  "name": "My_Switch",
                  "on": false,
-                 "stateChangeResponseTime": 1,
+                 "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
               {
@@ -150,7 +150,7 @@
                  "statusFault": 0,
                  "statusTampered": 0,
                  "statusLowBattery": 0,
-                 "stateChangeResponseTime": 1,
+                 "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
               {
@@ -173,7 +173,7 @@
                  "statusLowBattery": 0,
                  "carbonMonoxideLevel": 0,
                  "carbonMonoxidePeakLevel": 0,
-                 "stateChangeResponseTime": 1,
+                 "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
               {
@@ -184,7 +184,7 @@
                  "statusFault": 0,
                  "statusTampered": 0,
                  "statusLowBattery": 0,
-                 "stateChangeResponseTime": 1,
+                 "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
               {
@@ -216,7 +216,7 @@
                  "statusFault": 0,
                  "statusTampered": 0,
                  "statusLowBattery": 0,
-                 "stateChangeResponseTime": 1,
+                 "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js",
                  "fakegato":{"eve":"room",
                             "temp": "currentTemperature",
@@ -236,7 +236,7 @@
                  "statusFault": 0,
                  "statusTampered": 0,
                  "statusLowBattery": 0,
-                 "stateChangeResponseTime": 1,
+                 "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
               {
@@ -247,7 +247,7 @@
                  "statusFault": 0,
                  "statusTampered": 0,
                  "statusLowBattery": 0,
-                 "stateChangeResponseTime": 1,
+                 "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
               {
@@ -258,7 +258,7 @@
                  "statusFault": 0,
                  "statusTampered": 0,
                  "statusLowBattery": 0,
-                 "stateChangeResponseTime": 1,
+                 "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
               {
@@ -269,7 +269,7 @@
                  "statusFault": 0,
                  "statusTampered": 0,
                  "statusLowBattery": 0,
-                 "stateChangeResponseTime": 1,
+                 "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
               {
@@ -280,7 +280,7 @@
                  "statusFault": 0,
                  "statusTampered": 0,
                  "statusLowBattery": 0,
-                 "stateChangeResponseTime": 1,
+                 "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
               {
@@ -288,7 +288,7 @@
                  "name": "My_StatelessProgrammableSwitch",
                  "programmableSwitchEvent": 0,
                  "serviceLabelIndex": 0,
-                 "stateChangeResponseTime": 1,
+                 "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
               {
@@ -311,7 +311,7 @@
                              "folder": "folderName",
                              "keyPath": "/place/to/store/my/keys/"
                             },
-                 "stateChangeResponseTime": 1,
+                 "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
               {
@@ -346,7 +346,7 @@
                  "batteryLevel": 50,
                  "chargingState": 0,
                  "statusLowBattery": 0,
-                 "stateChangeResponseTime": 1,
+                 "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
               {
@@ -361,7 +361,7 @@
                  "carbonDioxidePeakLevel": 0,
                  "polling": false,
                  "interval": 540,
-                 "stateChangeResponseTime": 1,
+                 "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
               {
@@ -369,7 +369,7 @@
                  "name": "My_Microphone",
                  "mute":                   0,
                  "volume":                 5,
-                 "stateChangeResponseTime": 1,
+                 "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
               {
@@ -377,7 +377,7 @@
                  "name": "My_Speaker",
                  "mute":                   0,
                  "volume":                 5,
-                 "stateChangeResponseTime": 1,
+                 "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
               {
@@ -386,7 +386,7 @@
                  "programmableSwitchEvent": 0,
                  "volume":                 5,
                  "brightness":             8,
-                 "stateChangeResponseTime": 1,
+                 "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
               {
@@ -399,7 +399,7 @@
                  "targetTiltAngle": 0,
                  "polling": false,
                  "interval": 540,
-                 "stateChangeResponseTime": 1,
+                 "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
               {
@@ -427,7 +427,7 @@
                  "type": "ServiceLabel",
                  "name": "My_ServiceLabel",
                  "serviceLabelNamespace": 0,
-                 "stateChangeResponseTime": 1,
+                 "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
               {
@@ -446,7 +446,7 @@
                  "polling":[{"active": 1, "interval": 50, "timeout":3000},
                             {"currentMediaState": 2, "interval": 540, "timeout":3000}
                            ],
-                 "stateChangeResponseTime": 1,
+                 "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
               {
@@ -460,7 +460,7 @@
                  "polling":[{"active": 1, "interval": 50, "timeout":3000},
                             {"volume": 5, "interval": 50, "timeout":3000}
                            ],
-                 "stateChangeResponseTime": 1,
+                 "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
               {
@@ -472,7 +472,7 @@
                  "currentVisibilityState": 0,
                  "inputDeviceType":        1,
                  "targetVisibilityState":  1,
-                 "stateChangeResponseTime": 1,
+                 "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
               {
@@ -486,7 +486,7 @@
                  "polling":[{"active": 1, "interval": 50, "timeout":3000},
                             {"statusFault": 0, "interval": 300, "timeout":3000}
                            ],
-                 "stateChangeResponseTime": 1,
+                 "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
               {
@@ -497,7 +497,7 @@
                  "polling":[{"active": 1, "interval": 50, "timeout":3000},
                             {"statusFault": 0, "interval": 300, "timeout":3000}
                            ],
-                 "stateChangeResponseTime": 1,
+                 "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
               {
@@ -515,7 +515,7 @@
                  "currentTime":      "11:15",
                  "dayoftheWeek":     "1",
                  "timeUpdate":       "0",
-                 "stateChangeResponseTime": 1,
+                 "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               }
            ]
