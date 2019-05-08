@@ -1,6 +1,8 @@
 'use strict';
 const exec = require("child_process").exec;
 const moment = require('moment');
+const fs = require('fs');
+const commandExistsSync = require('command-exists').sync;
 
 
 const SLOW_STATE_CHANGE_RESPONSE_TIME   = 10000;  // 10 seconds
@@ -247,6 +249,7 @@ var  CMD4_ACC_TYPE_ENUM =
    VolumeControlType:                     157,
    VolumeSelector:                        158,
    WaterLevel:                            159,
+   EOL:                                   160,
    properties: {}
 };
 
@@ -1155,7 +1158,8 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status )
 
     // Instead of local variables for every characteristic, create an array to
     // hold values for  all characteristics based on the size of all possible characteristics.
-    this.storedValuesPerCharacteristic = new Array(CMD4_ACC_TYPE_ENUM.properties.length).fill(null);
+    this.storedValuesPerCharacteristic = new Array(CMD4_ACC_TYPE_ENUM.EOL).fill(null);
+    
     
     // If polling is defined it is set to true, otherwise false.
     this.polling = this.config.polling === true;
@@ -1213,6 +1217,57 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status )
          case 'State_cmd':
             // What this plugin is all about
             this.state_cmd = value;
+            
+            // Solve some issues people have encounterred who
+            // have had problems with shell completion which is
+            // only available from shell expansion.
+            
+            
+            // Split the state_cmd into words.
+            let cmdArray = this.state_cmd.match(/\S+/gi);
+            
+            // Assume no words
+            let arrayLength = 0;
+            
+            // Get the number of words
+            if (cmdArray )
+               arrayLength = cmdArray.length;
+               
+            // Check that the state_cmd is valid.
+            // The first word must be in the persons path
+            // The second word, if it exists must be a file
+            // and have the correct path.
+            switch (arrayLength)
+            { 
+                case 0:
+                    this.log.error("No state_cmd given");
+                    process.exit(1);
+                    break;
+                default:
+                {           
+                   let checkFile = cmdArray[arrayLength -1]; 
+            
+                   try {
+                      fs.accessSync(checkFile, fs.F_OK);
+                      // File exists - OK
+
+                   } catch (e) {
+                      // It isn't accessible
+                      this.log.warn("The file %s does not exist, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell.", checkFile);
+                   }    
+                 
+                    // Purposely fall through to check the command as well  
+                }
+                case 1:
+                {
+                   let checkCmd = cmdArray[0]; 
+                   if (! commandExistsSync(checkCmd)) {
+                      this.log.warn("The command %s does not exist, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell.", checkCmd);
+                   }
+                   break;
+                }
+             }           
+               
             break;
          case 'Storage':
          case 'StoragePath':
@@ -1892,7 +1947,7 @@ Cmd4Accessory.prototype = {
 
    setStoredValueForIndex:function (accTypeEnumIndex, value)
    {
-      if (accTypeEnumIndex < 0 || accTypeEnumIndex > CMD4_ACC_TYPE_ENUM.properties.length )
+      if (accTypeEnumIndex < 0 || accTypeEnumIndex > CMD4_ACC_TYPE_ENUM.EOL )
       {
          this.log ("CMD4 Warning: setStoredValue - Characteristic '%s' for '%s' not known", accTypeEnumIndex, this.name);
          this.log ("Check your json.config file for this error");
@@ -1903,7 +1958,7 @@ Cmd4Accessory.prototype = {
 
    getStoredValueForIndex:function (accTypeEnumIndex)
    {
-      if (accTypeEnumIndex < 0 || accTypeEnumIndex > CMD4_ACC_TYPE_ENUM.properties.length)
+      if (accTypeEnumIndex < 0 || accTypeEnumIndex > CMD4_ACC_TYPE_ENUM.EOL)
       {
          this.log ("CMD4 Warning: getStoredValue - Characteristic '%s' for '%s' not known", accTypeEnumIndex, this.name);
          this.log ("Check your json.config file for this error");
@@ -1913,7 +1968,7 @@ Cmd4Accessory.prototype = {
    },
    testStoredValueForIndex:function (accTypeEnumIndex)
    {
-      if (accTypeEnumIndex < 0 || accTypeEnumIndex > CMD4_ACC_TYPE_ENUM.properties.length)
+      if (accTypeEnumIndex < 0 || accTypeEnumIndex > CMD4_ACC_TYPE_ENUM.EOL)
          return -1;
          
       return this.storedValuesPerCharacteristic[accTypeEnumIndex];
@@ -2412,13 +2467,18 @@ Cmd4Accessory.prototype = {
         this.log.debug("Setting up services");
  
         let perms = '';
+        let len = this.storedValuesPerCharacteristic.length;
 
         for (let accTypeEnumIndex = 0;
-               accTypeEnumIndex < this.storedValuesPerCharacteristic.length; 
+               accTypeEnumIndex < len; 
                accTypeEnumIndex++ )
         {
-            if ( this.storedValuesPerCharacteristic[accTypeEnumIndex] )
+            if ( this.storedValuesPerCharacteristic[accTypeEnumIndex] != undefined)
             {
+               this.log("Found characteristic '%s' for '%s'", 
+               CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].name, this.name);
+               
+               
                if ( ! service.testCharacteristic(
                     CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].characteristic))
                {
@@ -2452,7 +2512,7 @@ Cmd4Accessory.prototype = {
                    // Add Write services for characterisitcs, if possible
                    if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
                    {
-
+                      
                       // GetService has parameters:
                       // five, context, accTypeEnumIndex, value , callback
                       // Why this works, beats me.
@@ -2460,7 +2520,7 @@ Cmd4Accessory.prototype = {
                       let boundSetValue = this.setValue.bind(1, 2, this, accTypeEnumIndex);
                         
                       service.getCharacteristic(
-                         CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex]
+                         CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex]     
                          .characteristic).on('set', (value,callback) => {
                            boundSetValue(value, callback);
                       });   
@@ -2471,7 +2531,7 @@ Cmd4Accessory.prototype = {
    },
    updateAccessoryAttribute: function (accTypeEnumIndex, value)
    {
-      if (accTypeEnumIndex < 0 || accTypeEnumIndex > CMD4_ACC_TYPE_ENUM.properties.length )
+      if (accTypeEnumIndex < 0 || accTypeEnumIndex > CMD4_ACC_TYPE_ENUM.EOL )
       {
          this.log ("Internal error.: updateAccessoryAttribute - accTypeEnumIndex '%s' for '%s' not known", accTypeEnumIndex, this.name);
          return;

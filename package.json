@@ -1,6 +1,6 @@
 {
   "_from": "homebridge-cmd4@2.1.0",
-  "_id": "homebridge-cmd4@2.1.0",
+  "_id": "homebridge-cmd4@2.1.1",
   "_inBundle": false,
   "_integrity": "sha512-Q39XXNNaxpBENc4AXvqoWoW+5OVZE24OLYLm+4RqCxJmyQDAGLNsokL+dh2JU++YaZRdycASfnG/8sylpocGAg==",
   "_location": "/homebridge-cmd4",
@@ -8,32 +8,33 @@
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "homebridge-cmd4@2.1.0",
+    "raw": "homebridge-cmd4@2.1.1",
     "name": "homebridge-cmd4",
     "escapedName": "homebridge-cmd4",
-    "rawSpec": "2.1.0",
+    "rawSpec": "2.1.1",
     "saveSpec": null,
-    "fetchSpec": "2.1.0"
+    "fetchSpec": "2.1.1"
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/homebridge-cmd4/-/homebridge-cmd4-2.1.0.tgz",
-  "_shasum": "4f49b51f702.1.0df314cf88ea9022.1.0ec3025e7",
-  "_spec": "homebridge-cmd4@2.1.0",
+  "_resolved": "https://registry.npmjs.org/homebridge-cmd4/-/homebridge-cmd4-2.1.1.tgz",
+  "_shasum": "4f49b51f702.1.1df314cf88ea9022.1.1ec3025e7",
+  "_spec": "homebridge-cmd4@2.1.1",
   "_where": "/private/var/root",
   "author": {
     "name": "John Talbot"
   },
   "bugs": {
-    "url": "https://github.com/ztalbot2.1.00/homebridge-cmd4/issues",
+    "url": "https://github.com/ztalbot2.1.10/homebridge-cmd4/issues",
     "email": "info@BeNiceGames.com"
   },
   "dependencies": {
     "moment": "*",
     "fakegato-history": ">=0.5.3",
-    "homebridge": ">=0.4.0"
+    "homebridge": ">=0.4.0",
+    "command-exists": ">=1.2.8"
   },
   "deprecated": false,
   "description": "Exec Plugin for Homebridge",
@@ -44,7 +45,7 @@
     "homebridge": ">=0.4.0",
     "node": ">=4.4.0"
   },
-  "homepage": "https://github.com/ztalbot2.1.00/homebridge-cmd4#readme",
+  "homepage": "https://github.com/ztalbot2.1.10/homebridge-cmd4#readme",
   "keywords": [
     "homebridge-plugin",
     "homebridge",
@@ -67,7 +68,7 @@
   "name": "homebridge-cmd4",
   "repository": {
     "type": "git",
-    "url": "git://github.com/ztalbot2.1.00/homebridge-cmd4.git"
+    "url": "git://github.com/ztalbot2.1.10/homebridge-cmd4.git"
   },
   "scripts": {
     "debug": "DEBUG=* homebridge --debug --plugin-path .",
@@ -76,5 +77,5 @@
     "test": "semistandard",
     "postinstall": "node postinstall.js"
   },
-  "version": "2.1.0"
+  "version": "2.1.1"
 }
