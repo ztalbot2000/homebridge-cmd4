@@ -1250,19 +1250,33 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status )
                    try {
                       fs.accessSync(checkFile, fs.F_OK);
                       // File exists - OK
-
-                   } catch (e) {
-                      // It isn't accessible
-                      this.log.warn("The file %s does not exist, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell.", checkFile);
-                   }    
-                 
+                      
+                   } catch (e) {         
+                          // It isn't accessible
+                          this.log.warn("The file %s does not exist, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell.", checkFile);                   
+                    }
+                    
                     // Purposely fall through to check the command as well  
                 }
                 case 1:
                 {
                    let checkCmd = cmdArray[0]; 
-                   if (! commandExistsSync(checkCmd)) {
-                      this.log.warn("The command %s does not exist, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell.", checkCmd);
+                                    
+                   // if the lone command is a path to a command
+                   // Then check if it exists, oTherwise check if it is
+                   // in Their path.
+                   if ( checkCmd.charAt( 0 ) == '/' )
+                   {
+                      try {
+                         fs.accessSync(checkCmd, fs.F_OK);
+                         // File exists - OK
+                      } catch (e) {                           
+                         this.log.warn("The command %s does not exist, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell.", checkCmd); 
+                      }                     
+                   } else
+                   {
+                      if ( ! commandExistsSync( checkCmd ) )
+                         this.log.warn("The command %s does not exist, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell.", checkCmd);
                    }
                    break;
                 }
