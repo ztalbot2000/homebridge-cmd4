@@ -22,8 +22,15 @@
                 "state_cmd": "bash .homebridge/Cmd4Scripts/PS4.sh"
              },
              {
-                "type": "Fan",
+                "type": "Fanv1",
                 "name": "My_v1Fan",
+                "on": false,
+                "stateChangeResponseTime": 3,
+                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+             },
+             {
+                "type": "Fan",
+                "name": "My_Fan",
                 "rotationDirection": 1,
                 "rotationSpeed": 100,
                 "stateChangeResponseTime": 3,
@@ -284,6 +291,14 @@
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               },
               {
+                 "type": "StatefulProgrammableSwitch",
+                 "name": "My_StatefulProgrammableSwitch",
+                 "programmableSwitchEvent": 0,
+                 "programmableSwitchOutputState": 0,
+                 "stateChangeResponseTime": 3,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
                  "type": "StatelessProgrammableSwitch",
                  "name": "My_StatelessProgrammableSwitch",
                  "programmableSwitchEvent": 0,
@@ -515,6 +530,35 @@
                  "currentTime":      "11:15",
                  "dayoftheWeek":     "1",
                  "timeUpdate":       "0",
+                 "stateChangeResponseTime": 3,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "Valve",
+                 "name": "My_Valve",
+                 "valveType":   "0",
+                 "active":      "1",
+                 "inUse":       "0",
+                 "stateChangeResponseTime": 3,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "HeaterCooler",
+                 "name": "My_HeaterCooler",
+                 "active":                  "1",
+                 "currentTemperature":      "50.0",
+                 "targetTemperature":       "50.0",
+                 "targetHeaterCoolerState": "0",
+                 "stateChangeResponseTime": 3,
+                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+              },
+              {
+                 "type": "HumidifierDehumidifier",
+                 "name": "My_HumidifierDehumidifier",
+                 "currentRelativeHumidity": 60.2,
+                 "targetHumidifierDehumidifierState": 1,
+                 "targetHeaterCoolerState": 1,
+                 "active":                  1,
                  "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
               }

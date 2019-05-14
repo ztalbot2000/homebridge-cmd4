@@ -1,3 +1,4 @@
+#!/usr/local/bin/node
 //  State.js 
 //
 // Description:
@@ -225,7 +226,7 @@ switch(io)
                 break;
             }
 
-            case "AdministorOnlyAccess": // Optional
+            case "AdministratorOnlyAccess": // Optional
             {
                 c = readData(device, characteristic);
                 
@@ -584,7 +585,7 @@ switch(io)
                 
                 break;
             }
-            case "CMD4_ConfigureBridgedAccessory": 
+            case "ConfigureBridgedAccessory": 
             {
                 c = readData(device, characteristic);
  
@@ -643,7 +644,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
                 
-                if (c == "") console.log(0); else console.log(c);
+                if (c == "") console.log(2); else console.log(c);
                 
                 // UUID: 000000A9-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.air-purifier.state.current
@@ -2696,7 +2697,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
                 
-                if (c == "") console.log(0); else console.log(c);
+                if (c == "") console.log(1); else console.log(c);
                 
                 // UUID: 000000A8-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.air-purifier.state.target
@@ -3315,7 +3316,7 @@ switch(io)
                 // Not settable in Hap Spec, here for debugging.
                 break;
             }
-            case "AdministorOnlyAccess": // Optional
+            case "AdministratorOnlyAccess": // Optional
             {
                 writeData(device, characteristic, option);
                 
@@ -3441,7 +3442,7 @@ switch(io)
                 // Not settable in Hap Spec, here for debugging.
                 break;
             }
-            case "CMD4_ConfigureBridgedAccessory":
+            case "ConfigureBridgedAccessory":
             {
                 writeData(device, characteristic, option);
                 
@@ -4309,7 +4310,7 @@ switch(io)
                 
                 break;
             }
-            case "TimeUpdte":
+            case "TimeUpdate":
             {
                 writeData(device, characteristic, option);
                 

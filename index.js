@@ -20,8 +20,8 @@ const FAKEGATO_TYPE_ENERGY  = 'energy',
       FAKEGATO_TYPE_MOTION  = 'motion',
       FAKEGATO_TYPE_THERMO  = 'thermo',
       FAKEGATO_TYPE_AQUA    = 'aqua';
-
-var  CMD4_DEVICE_TYPE_ENUM =
+      
+var CMD4_DEVICE_TYPE_ENUM =
 {
    AccessoryInformation:                0,
    AirPurifier:                         1,
@@ -76,18 +76,19 @@ var  CMD4_DEVICE_TYPE_ENUM =
    Valve:                              50,
    Window:                             51,
    WindowCovering:                     52,
+   EOL:                                53,
 
    properties:{}
 };
 
 
-// Object.freeze(CMD4_DEVICE_TYPE_enum);
-
-
 var FakeGatoHistoryService;
-var Accessory, Service, Characteristic, UUIDGen;
+var Accessory;
+var Service; 
+var Characteristic ;
+var UUIDGen;
 
-var  CMD4_ACC_TYPE_ENUM =
+var CMD4_ACC_TYPE_ENUM =
 {
    AccessoryFlags:                        0,
    Active:                                1,
@@ -254,8 +255,11 @@ var  CMD4_ACC_TYPE_ENUM =
 };
 
 
-module.exports = function (homebridge) {
-
+module.exports =
+{ 
+  default: function (homebridge)
+  {
+   
    // Accessory must be created from PlatformAccessory Constructor
    Accessory = homebridge.platformAccessory;
 
@@ -274,62 +278,804 @@ module.exports = function (homebridge) {
 
    FakeGatoHistoryService = require('fakegato-history')(homebridge);
 
-   // Fill in the properties of each device
+   // Fill in the properties of each device (Must be done at runtime)
    CMD4_DEVICE_TYPE_ENUM.properties =
    {
-       0: { deviceName:'AccessoryInformation',        characteristic: Characteristic.AccessoryInformation},
-       1: { deviceName:'AirPurifier',                 characteristic: Characteristic.AirPurifier},
-       2: { deviceName:'AirQualitySensor',            characteristic: Characteristic.AirQualitySensor},
-       3: { deviceName:'BatteryService',              characteristic: Characteristic.BatteryService},
-       4: { deviceName:'BridgeConfiguration',         characteristic: Characteristic.BridgeConfiguration},
-       5: { deviceName:'BridgingState',               characteristic: Characteristic.BridgingState},
-       6: { deviceName:'CameraControl',               characteristic: Characteristic.CameraControl},
-       7: { deviceName:'CameraRTPStreamManagement',   characteristic: Characteristic.CameraRTPStreamManagement},
-       8: { deviceName:'CarbonDioxideSensor',         characteristic: Characteristic.CarbonDioxideSensor},
-       9: { deviceName:'CarbonMonoxideSensor',        characteristic: Characteristic.CarbonMonoxideSensor},
-      10: { deviceName:'ContactSensor',               characteristic: Characteristic.ContactSensor},
-      11: { deviceName:'Door',                        characteristic: Characteristic.Door},
-      12: { deviceName:'DoorBell',                    characteristic: Characteristic.Doorbell},
-      13: { deviceName:'Fan',                         characteristic: Characteristic.Fan},
-      14: { deviceName:'Fanv1',                       characteristic: Characteristic.Fanv1},
-      15: { deviceName:'Fanv2',                       characteristic: Characteristic.Fanv2},
-      16: { deviceName:'Faucet',                      characteristic: Characteristic.Faucet},
-      17: { deviceName:'FilterMaintenance',           characteristic: Characteristic.FilterMaintenance},     
-      18: { deviceName:'GarageDoorOpener',            characteristic: Characteristic.GarageDoorOpener},
-      19: { deviceName:'HeaterCooler',                characteristic: Characteristic.HeaterCooler},
-      20: { deviceName:'HumidifierDehumidifier',      characteristic: Characteristic.HumidifierDehumidifier},
-      21: { deviceName:'HumiditySensor',              characteristic: Characteristic.HumiditySensor},
-      22: { deviceName:'InputSource',                 characteristic: Characteristic.OuputSource},
-      23: { deviceName:'IrrigationSystem',            characteristic: Characteristic.IrrigationSystem},
-      24: { deviceName:'LeakSensor',                  characteristic: Characteristic.LeakSensor},
-      25: { deviceName:'LightSensor',                 characteristic: Characteristic.LightSensor},
-      26: { deviceName:'Lightbulb',                   characteristic: Characteristic.Lightbulb},
-      27: { deviceName:'LockManagement',              characteristic: Characteristic.LockManagement},
-      28: { deviceName:'LockMechanism',               characteristic: Characteristic.LockMechanism},
-      29: { deviceName:'Microphone',                  characteristic: Characteristic.Microphone},
-      30: { deviceName:'MotionSensor',                characteristic: Characteristic.MotionSensor},
-      31: { deviceName:'OccupancySensor',             characteristic: Characteristic.OccupancySensor},
-      32: { deviceName:'Outlet',                      characteristic: Characteristic.Outlet},
-      33: { deviceName:'Pairing',                     characteristic: Characteristic.Pairing},
-      34: { deviceName:'ProtocolInformation',         characteristic: Characteristic.ProtocolInformation},
-      35: { deviceName:'Relay',                       characteristic: Characteristic.Relay},
-      36: { deviceName:'SecuritySystem',              characteristic: Characteristic.SecuritySystem},
-      37: { deviceName:'ServiceLabel',                characteristic: Characteristic.ServiceLabel},
-      38: { deviceName:'Slat',                        characteristic: Characteristic.Slat},
-      39: { deviceName:'SmokeSensor',                 characteristic: Characteristic.SmokeSensor},
-      40: { deviceName:'Speaker',                     characteristic: Characteristic.Speaker},
-      41: { deviceName:'StatefulProgrammableSwitch',  characteristic: Characteristic.StatefulProgrammableSwitch},
-      42: { deviceName:'StatelessProgrammableSwitch', characteristic: Characteristic.StatelessProgrammableSwitch},
-      43: { deviceName:'Switch',                      characteristic: Characteristic.Switch},
-      44: { deviceName:'Television',                  characteristic: Characteristic.Television},
-      45: { deviceName:'TelevisionSpeaker',           characteristic: Characteristic.TelevisionSpeaker},
-      46: { deviceName:'TemperatureSensor',           characteristic: Characteristic.TemperatureSensor},
-      47: { deviceName:'Thermostat',                  characteristic: Characteristic.Thermostat},
-      48: { deviceName:'TimeInformation',             characteristic: Characteristic.TimeInformation},
-      49: { deviceName:'TunneledBTLEAccessoryService', characteristic: Characteristic.TunneledBTLEAccessoryService},
-      50: { deviceName:'Valve',                       characteristic: Characteristic.Valve},
-      51: { deviceName:'Window',                      characteristic: Characteristic.Window},
-      52: { deviceName:'WindowCovering',              characteristic: Characteristic.WindowCovering},
+       0: { deviceName:'AccessoryInformation',        
+            service: Service.AccessoryInformation,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.Identify,
+                 CMD4_ACC_TYPE_ENUM.Manufacturer,
+                 CMD4_ACC_TYPE_ENUM.Model,
+                 CMD4_ACC_TYPE_ENUM.Name,
+                 CMD4_ACC_TYPE_ENUM.SerialNumber,
+                 CMD4_ACC_TYPE_ENUM.FirmwareRevision
+                ],
+            defaultValues:
+               [ 0,           // Format: Bool
+                 'Cmd4',      // Format: string
+                 0,           // Format: string
+                 'My_AccessoryInformation',  // Format: string
+                 'ABC001',    // Format: string
+                 '100.1.1'    // Format: string
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.Identify
+               ]
+          },
+       1: { deviceName:'AirPurifier',                 
+            service: Service.AirPurifier,
+            devicesStateChangeDefaultTime:SLOW_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.Active,
+                 CMD4_ACC_TYPE_ENUM.CurrentAirPurifierState,
+                 CMD4_ACC_TYPE_ENUM.TargetAirPurifierState],
+            defaultValues:
+               [ 1,    // Active
+                 2,    // Purifying Air
+                 1.    // Active
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.Active
+               ]
+          },
+       2: { deviceName:'AirQualitySensor',            
+            service: Service.AirQualitySensor,
+            devicesStateChangeDefaultTime:FAST_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.StatusActive,    // Added anyway
+                 CMD4_ACC_TYPE_ENUM.AirQuality],
+            defaultValues:
+               [ 0,   // false
+                 1.   // Good
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.StatusActive,
+                 CMD4_ACC_TYPE_ENUM.AirQuality
+               ]
+          },
+       3: { deviceName:'BatteryService',              
+            service: Service.BatteryService,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.BatteryLevel,
+                 CMD4_ACC_TYPE_ENUM.ChargingState,
+                 CMD4_ACC_TYPE_ENUM.StatusLowBattery],
+            defaultValues:
+               [ 50,  // Range 0-100
+                 0,   // Not Charging
+                 0.   // Battery Level is normal
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.StatusLowBattery
+               ]
+          },
+       4: { deviceName:'BridgeConfiguration',                       
+            service: Service.BridgeConfiguration,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.ConfigureBridgedAccessoryStatus],
+            defaultValues:
+               [ 0   // format TLV8
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.ConfigureBridgedAccessoryStatus
+               ]
+          },
+       5: { deviceName:'BridgingState',              
+            service: Service.BridgingState,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.Reachable],
+            defaultValues:
+               [ 0   // format Bool
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.Reachable
+               ]
+          },
+       6: { deviceName:'CameraControl',                             
+            service: Service.CameraControl,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [CMD4_ACC_TYPE_ENUM.On],
+            defaultValues:
+               [ 1   // format Bool
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.On
+               ]
+          },
+       7: { deviceName:'CameraRTPStreamManagement',   
+            service: Service.CameraRTPStreamManagement,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.SupportedVideoStreamConfiguration,
+                 CMD4_ACC_TYPE_ENUM.SupportedAudioStreamConfiguration,
+                 CMD4_ACC_TYPE_ENUM.SupportedRTPConfiguration,
+                 CMD4_ACC_TYPE_ENUM.SelectedRTPStreamConfiguration,
+                 CMD4_ACC_TYPE_ENUM.StreamingStatus,
+                 CMD4_ACC_TYPE_ENUM.SetupEndpoints,
+                 CMD4_ACC_TYPE_ENUM.StatusActive],  // Added as all are TLV8
+            defaultValues:
+               [ 0,   // format TLV8
+                 0,   // format TLV8
+                 0,   // format TLV8
+                 0,   // format TLV8
+                 0,   // format TLV8
+                 0,   // format TLV8
+                 0    // format Bool - false
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.StatusActive
+               ]
+          },
+       8: { deviceName:'CarbonDioxideSensor',         
+            service: Service.CarbonDioxideSensor,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.StatusActive,   // Added anyway
+                 CMD4_ACC_TYPE_ENUM.CarbonDioxideDetected],
+            defaultValues:
+               [ 0,   // format Bool - false
+                 0    // 0 - Normal, 1 - Abnormal
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.StatusActive,
+                 CMD4_ACC_TYPE_ENUM.CarbonDioxideDetected
+               ]
+          },
+       9: { deviceName:'CarbonMonoxideSensor',        
+            service: Service.CarbonMonoxideSensor,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.StatusActive,    // Added anyway
+                 CMD4_ACC_TYPE_ENUM.CarbonMonoxideDetected],
+            defaultValues:
+               [ 0,   // format Bool - false
+                 0    // 0 - Normal, 1 - Abnormal
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.StatusActive,
+                 CMD4_ACC_TYPE_ENUM.CarbonMonoxideDetected
+               ]
+          },
+      10: { deviceName:'ContactSensor',               
+            service: Service.ContactSensor,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.StatusActive,     // Added anyway
+                 CMD4_ACC_TYPE_ENUM.ContactSensorState],
+            defaultValues:
+               [ 0,   // format Bool - false
+                 0    // 0 - Contact Detected, 1 - Contact Not Detected
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.StatusActive,
+                 CMD4_ACC_TYPE_ENUM.ContactSensorState
+               ]
+          },
+      11: { deviceName:'Door',                        
+            service: Service.Door,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.CurrentPosition,
+                 CMD4_ACC_TYPE_ENUM.PositionState,
+                 CMD4_ACC_TYPE_ENUM.TargetPosition],
+            defaultValues:
+               [ 0,   // Range 0 - 100
+                 2,   // 0 - Decreasing, 1 - Increasing, 2 - Stopped
+                 0,   // Range 0 - 100
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.CurrentPosition
+               ]
+          },
+      12: { deviceName:'DoorBell',                    
+            service: Service.Doorbell,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent],
+            defaultValues:
+               [ 0   // 0 - Single Press, 1 - Double Press, 2 - Long Press 
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent
+               ]
+          },
+      13: { deviceName:'Fan',                         
+            service: Service.Fan,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.On],
+            defaultValues:
+               [ 0    // Format Bool
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.On
+               ]
+          },
+      14: { deviceName:'Fanv1',                       
+            service: Service.Fan,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.On],
+            defaultValues:
+               [ 0    // Format Bool
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.On
+               ]},
+      15: { deviceName:'Fanv2',                       
+            service: Service.Fanv2,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.Active],
+            defaultValues:
+               [ 1   // 0 - Inactive, 1 - Active 
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.Active
+               ]
+          },
+      16: { deviceName:'Faucet',                      
+            service: Service.Faucet,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.Active],
+            defaultValues:
+               [ 1   // 0 - Inactive, 1 - Active 
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.Active
+               ]
+          },
+      17: { deviceName:'FilterMaintenance',           
+            service: Service.FilterMaintenance,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.FilterChangeIndication],
+            defaultValues:
+               [ 0   // 0 - No change needed, 1 - Change needed
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.FilterChangeIndication
+               ]
+          },  
+      18: { deviceName:'GarageDoorOpener',            
+            service: Service.GarageDoorOpener,
+            devicesStateChangeDefaultTime:SLOW_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.CurrentDoorState,
+                 CMD4_ACC_TYPE_ENUM.TargetDoorState,
+                 CMD4_ACC_TYPE_ENUM.ObstructionDetected],
+            defaultValues:
+               [ 0,   // 0 - Open, 1 - Closed, 2 - Openning ...
+                 0,   // 0 - Open, 1 - Closed
+                 1    // format bool, 0 - false, 1 - true
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.CurrentDoorState
+               ]
+          },
+      19: { deviceName:'HeaterCooler',                
+            service: Service.HeaterCooler,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.Active,
+                 CMD4_ACC_TYPE_ENUM.CurrentHeaterCoolerState,
+                 CMD4_ACC_TYPE_ENUM.TargetHeaterCoolerState,
+                 CMD4_ACC_TYPE_ENUM.CurrentTemperature],
+            defaultValues:
+               [ 1,   // 0 - Inactive, 1 - Active 
+                 0,   // 0 - Inactive, 1 - Idle, 2 - Heating, 3 - Cooling
+                 1,   // 0 - Auto, 1 - Heat, 2 - Cool
+                 50.0 // format float, Range 0 - 100, step 0.1 (Celcius)
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.Active
+               ]
+          },
+      20: { deviceName:'HumidifierDehumidifier',      
+            service: Service.HumidifierDehumidifier,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.CurrentRelativeHumidity,
+                 CMD4_ACC_TYPE_ENUM.CurrentHumidifierDehumidifierState,
+                 CMD4_ACC_TYPE_ENUM.TargetHumidifierDehumidifierState,
+                 CMD4_ACC_TYPE_ENUM.Active],
+            defaultValues:
+               [ 60.2,   // format float, Range 0 - 100, step 1
+                 1,      // 0 - Inactive, 1 - Idle, 2 - Humidifying, 3 - Dehumid
+                 1,      // 0 Hum or DeHum, 1 - Hum, 2 - DeHum
+                 1       // 0 - Inactive, 1 - Active 
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.Active
+               ]
+          },
+      21: { deviceName:'HumiditySensor',              
+            service: Service.HumiditySensor,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.StatusActive,   // Added anyway
+                 CMD4_ACC_TYPE_ENUM.CurrentRelativeHumidity],
+            defaultValues:
+               [ 0,   // format Bool - false
+                 60.2 // format float, Range 1-100
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.StatusActive,
+                 CMD4_ACC_TYPE_ENUM.CurrentRelativeHumidity
+               ]
+          },
+      22: { deviceName:'InputSource',                 
+            service: Service.InputSource,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+              [ CMD4_ACC_TYPE_ENUM.ConfiguredName,
+                CMD4_ACC_TYPE_ENUM.InputSourceType,
+                CMD4_ACC_TYPE_ENUM.IsConfigured,
+                CMD4_ACC_TYPE_ENUM.CurrentVisibilityState],
+            defaultValues:
+               [ "My_TV", // Format String
+                 1,       // HOME_SCREEN
+                 1,       // 0 - Not Configured, 1 - Configured
+                 0        // 0 - Shown, 1 - Hidden, 2 - Stop, 3 - Rsvd
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.CurrentVisibilityState
+               ]
+          },
+      23: { deviceName:'IrrigationSystem',            
+            service: Service.IrrigationSystem,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.Active,
+                 CMD4_ACC_TYPE_ENUM.ProgramMode,
+                 CMD4_ACC_TYPE_ENUM.InUse],
+            defaultValues:
+               [ 1,  // 0 - Inactive, 1 - Active 
+                 0,  // 0 - None Scheduled, 1 - Scheduled, 2 - Manual Schedule
+                 1   // 0 - Not in use, 1 - In Use
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.Active
+               ]
+          },
+      24: { deviceName:'LeakSensor',                  
+            service: Service.LeakSensor,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.StatusActive,  // Added Anyway
+                 CMD4_ACC_TYPE_ENUM.LeakDetected],
+            defaultValues:
+               [ 0,   // format Bool - false
+                 0    // 0 - Leak not detected, 1 - Leak Detected
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.StatusActive,
+                 CMD4_ACC_TYPE_ENUM.LeakDetected
+               ]
+          },
+      25: { deviceName:'LightSensor',                 
+            service: Service.LightSensor,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.StatusActive,  // Added anyway
+                 CMD4_ACC_TYPE_ENUM.CurrentAmbientLightLevel],
+            defaultValues:
+               [ 0,   // format Bool - false
+                 1    // float, Range 0.0001 - 100000 (lux)
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.StatusActive,
+                 CMD4_ACC_TYPE_ENUM.CurrentAmbientLightLevel
+               ]
+          },
+      26: { deviceName:'Lightbulb',                   
+            service: Service.Lightbulb,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.On],
+            defaultValues:
+               [ 0   // Format bool, 0 - false, 1 - true
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.On
+               ]
+          },
+      27: { deviceName:'LockManagement',              
+            service: Service.LockManagement,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.CurrentDoorState,  // Added
+                 CMD4_ACC_TYPE_ENUM.LockControlPoint,
+                 CMD4_ACC_TYPE_ENUM.Version],
+            defaultValues:
+               [ 0,   // 0 - Open, 1 - Closed, 2 - Openning ...
+                 0,    // format TLV8
+                 0     // format string   
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.CurrentDoorState
+               ]
+          },
+      28: { deviceName:'LockMechanism',               
+            service: Service.LockMechanism,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.LockCurrentState,
+                 CMD4_ACC_TYPE_ENUM.LockTargetState],
+            defaultValues:
+               [ 0,   // 0 - Unsecured, 1 - Secured, 2 - Jammed ...
+                 0    // 0 - Unsecure,  1 - Secure
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.LockCurrentState
+               ]
+          },
+      29: { deviceName:'Microphone',                  
+            service: Service.Microphone,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.Mute],
+            defaultValues:
+               [ 0   // Format bool, 0 - Mute is off, 1 - Mute is on
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.Mute
+               ]
+          },
+      30: { deviceName:'MotionSensor',                
+            service: Service.MotionSensor,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.StatusActive,   // Added anyway
+                 CMD4_ACC_TYPE_ENUM.MotionDetected],
+            defaultValues:
+               [ 0,   // format Bool, 0 - false
+                 0    // format Bool, 0 - false
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.StatusActive,
+                 CMD4_ACC_TYPE_ENUM.MotionDetected
+               ]
+          },
+      31: { deviceName:'OccupancySensor',             
+            service: Service.OccupancySensor,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.StatusActive,  // Added anyway
+                 CMD4_ACC_TYPE_ENUM.OccupancyDetected],
+            defaultValues:
+               [ 0,   // format Bool, 0 - false
+                 0    // format Bool, 0 - false
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.StatusActive,
+                 CMD4_ACC_TYPE_ENUM.OccupancyDetected
+               ]
+          },
+      32: { deviceName:'Outlet',                      
+            service: Service.Outlet,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.On,
+                 CMD4_ACC_TYPE_ENUM.OutletInUse],
+            defaultValues:
+               [ 0,  // format Bool, 0 - false
+                 0   // format Bool, 0 - false
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.On
+               ]
+          },
+      33: { deviceName:'Pairing',                     
+            service: Service.Pairing,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.PairingFeatures],   // only not TLV8
+            defaultValues:
+               [ 1   // Format uint8. Values ???
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.PairingFeatures
+               ]
+          },
+      34: { deviceName:'ProtocolInformation',         
+            service: Service.ProtocolInformation,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.Version],
+            defaultValues:
+               [ '1.2.3'   // Format string
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.Version
+               ]
+          },
+      35: { deviceName:'Relay',                       
+            service: Service.Relay,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.RelayEnabled,
+                 CMD4_ACC_TYPE_ENUM.RelayState,
+                 CMD4_ACC_TYPE_ENUM.RelayControlPoint],
+            defaultValues:
+               [ 1,   // Format bool, 0 - false
+                 1,   // Format uint8, Values ???
+                 0    // TLV8
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.RelayEnabled,
+                 CMD4_ACC_TYPE_ENUM.RelayState,
+               ]
+          },
+      36: { deviceName:'SecuritySystem',              
+            service: Service.SecuritySystem,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.SecuritySystemCurrentState,
+                 CMD4_ACC_TYPE_ENUM.SecuritySystemTargetState],
+            defaultValues:
+               [ 3,   // 0 - Stay Arm, 1 - Away, 2 - Night Arm, 3 - Disarm ...
+                 0    // 0 - Stay Arm, 1 = Away, 2 - Night
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.SecuritySystemCurrentState
+               ]},
+      37: { deviceName:'ServiceLabel',                
+            service: Service.ServiceLabel,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.ServiceLabelNamespace],
+            defaultValues:
+               [ 0    // 0 - Dots, 1.- Arabic, 2+ - Rsvd
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.ServiceLabelNamespace
+               ]
+          },
+      38: { deviceName:'Slat',                        
+            service: Service.Slat,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.SlatType,
+                 CMD4_ACC_TYPE_ENUM.CurrentSlatState],
+            defaultValues:
+               [ 0,   // 0 - Horizontal, 1 - Vertical
+                 0    // 0 - Fixed, 1 - Jammed, 2 - Swinging
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.CurrentSlatState
+               ]
+          },
+      39: { deviceName:'SmokeSensor',                 
+            service: Service.SmokeSensor,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.StatusActive,   // Added anyway
+                 CMD4_ACC_TYPE_ENUM.SmokeDetected],
+            defaultValues:
+               [ 0,   // format Bool, 0 - false
+                 0    // format Bool, 0 - false
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.StatusActive,
+                 CMD4_ACC_TYPE_ENUM.SmokeDetected
+               ]
+          },
+      40: { deviceName:'Speaker',                     
+            service: Service.Speaker,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.Mute],
+            defaultValues:
+               [ 0   // Format bool, 0 - Mute is off, 1 - Mute is on
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.Mute
+               ]
+          },
+      41: { deviceName:'StatefulProgrammableSwitch',  
+            service: Service.StatefulProgrammableSwitch,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent,
+                 CMD4_ACC_TYPE_ENUM.ProgrammableSwitchOutputState],
+            defaultValues:
+               [ 0,   // 0 - Single Press, 1 - Double Press, 2 - Long Press
+                 0    // Min 0, Max 1
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent
+               ]
+          },
+      42: { deviceName:'StatelessProgrammableSwitch', 
+            service: Service.StatelessProgrammableSwitch,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent],
+            defaultValues:
+               [ 0   // 0 - Single Press, 1 - Double Press, 2 - Long Press
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent
+               ]
+          },
+      43: { deviceName:'Switch',                      
+            service: Service.Switch,
+            devicesStateChangeDefaultTime:FAST_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.On],
+            defaultValues:
+               [ 0   // Format bool, 0 - false, 1 - true
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.On
+               ]
+          },
+      44: { deviceName:'Television',                  
+            service: Service.Television,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.Active,
+                 CMD4_ACC_TYPE_ENUM.ActiveIdentifier,
+                 CMD4_ACC_TYPE_ENUM.ConfiguredName,
+                 CMD4_ACC_TYPE_ENUM.SleepDiscoveryMode],
+            defaultValues:
+               [ 1,         // 0 - Inactive, 1 - Active 
+                 123,       // Format uint32
+                 'My_Tv',   // Format string
+                 1          // 0 - Not Discoverable, 1 - Discoverable
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.Active
+               ]
+          },
+      45: { deviceName:'TelevisionSpeaker',           
+            service: Service.TelevisionSpeaker,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.Active,
+                 CMD4_ACC_TYPE_ENUM.Volume,
+                 CMD4_ACC_TYPE_ENUM.VolumeControlType,
+                 CMD4_ACC_TYPE_ENUM.VolumeSelector,
+                 CMD4_ACC_TYPE_ENUM.Name],
+            defaultValues:
+               [ 1,  // 0 - Inactive, 1 - Active 
+                 0,  // Min 0, Max 100, step 1
+                 0,  // 0 - None, 1 - Relative, 2 - RelativeCurrent 3 - Absolute
+                 1,  // 0 - Decrement, 1 - Increment
+                 'My_Speaker' // Format string
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.Active
+               ]
+          },
+      46: { deviceName:'TemperatureSensor',           
+            service: Service.TemperatureSensor,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.StatusActive,   // Added anyway
+                 CMD4_ACC_TYPE_ENUM.CurrentTemperature],
+            defaultValues:
+               [ 0,    // format Bool, 0 - false
+                 50.0  // format float, 0 - 100, by 0.1
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.StatusActive,
+                 CMD4_ACC_TYPE_ENUM.CurrentTemperature
+               ]
+          },
+      47: { deviceName:'Thermostat',                  
+            service: Service.Thermostat,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.CurrentHeatingCoolingState,
+                 CMD4_ACC_TYPE_ENUM.TargetHeatingCoolingState,
+                 CMD4_ACC_TYPE_ENUM.CurrentTemperature,
+                 CMD4_ACC_TYPE_ENUM.TargetTemperature,
+                 CMD4_ACC_TYPE_ENUM.TemperatureDisplayUnits],
+            defaultValues:
+               [ 0,    // 0 - Off, 1 - Heat, 2 - Cool
+                 0,    // 0 - Off, 1 - Heat, 2 - Cool
+                 50.0, // format float, Range 0 - 100, step 0.1 (Celcius
+                 50.0, // format float, Range 0 - 100, step 0.1 (Celcius
+                 0     // 0 - Celcius, 1 - Fehrenheit
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.CurrentTemperature
+               ]
+           },
+       48: { deviceName:'TimeInformation',             
+            service: Service.TimeInformation,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.CurrentTime,
+                 CMD4_ACC_TYPE_ENUM.DayoftheWeek,
+                 CMD4_ACC_TYPE_ENUM.TimeUpdate],
+            defaultValues:
+               [ '11:15',   // Format string
+                 1,         // Range 1 - 7
+                 0          // Format bool
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.CurrentTime
+               ]
+          },
+      49: { deviceName:'TunneledBTLEAccessoryService', 
+            service: Service.TunneledBTLEAccessoryService,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.Name,
+                 CMD4_ACC_TYPE_ENUM.AccessoryIdentifier,
+                 CMD4_ACC_TYPE_ENUM.TunneledAccessoryStateNumber,
+                 CMD4_ACC_TYPE_ENUM.TunneledAccessoryConnected,
+                 CMD4_ACC_TYPE_ENUM.TunneledAccessoryAdvertising,
+                 CMD4_ACC_TYPE_ENUM.TunnelConnectionTimeout],
+            defaultValues:
+               [ 'My_TunnelB', // Format string
+                 'TLB',         // Format string
+                 0.0,           // Format float
+                 0,             // Format bool, 0 - false
+                 0,             // Format bool, 0 - false
+                 5000           // Format uint32
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.TunneledAccessoryConnected
+               ]
+          },
+      50: { deviceName:'Valve',                       
+            service: Service.Valve,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.Active,
+                 CMD4_ACC_TYPE_ENUM.InUse,
+                 CMD4_ACC_TYPE_ENUM.ValveType],
+            defaultValues:
+               [ 1,  // 0 - Inactive, 1 - Active 
+                 1,  // 0 - Not in use, 1 - In use
+                 0   // 0 - Generic, 1 - Irrigation, 2 - Shower, 3 - Faucet
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.Active
+               ]
+          },
+      51: { deviceName:'Window',                      
+            service: Service.Window,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.CurrentPosition,
+                 CMD4_ACC_TYPE_ENUM.PositionState,
+                 CMD4_ACC_TYPE_ENUM.TargetPosition],
+            defaultValues:
+               [ 0,   // Range 0 - 100
+                 2,   // 0 - Decreasing, 1 - Increasing, 2 - Stopped
+                 0,   // Range 0 - 100
+               ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.CurrentPosition
+               ]
+          },
+      52: { deviceName:'WindowCovering',              
+            service: Service.WindowCovering,
+            devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
+            requiredCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.CurrentPosition,
+                 CMD4_ACC_TYPE_ENUM.PositionState,
+                 CMD4_ACC_TYPE_ENUM.TargetPosition],
+            defaultValues:
+               [ 0,   // Range 0 - 100
+                 2,   // 0 - Decreasing, 1 - Increasing, 2 - Stopped
+                 0,   // Range 0 - 100
+                ],
+            defaultPollingCharacteristics:
+               [ CMD4_ACC_TYPE_ENUM.CurrentPosition
+               ]
+          }
    };
 
    // Fill in the properties of all possible characteristics
@@ -496,7 +1242,24 @@ module.exports = function (homebridge) {
       158: { name: "VolumeSelector", characteristic: Characteristic.VolumeSelector },
       159: { name: "WaterLevel", characteristic: Characteristic.WaterLevel }
    };
+   
+   // This is not required by homebridge and does not affect it.  I use it for
+   // unit testing.
+   return {CMD4_ACC_TYPE_ENUM,
+           CMD4_DEVICE_TYPE_ENUM,
+           Accessory,
+           Service,
+           Characteristic,
+           UUIDGen};
+   },
+   CMD4_ACC_TYPE_ENUM: CMD4_ACC_TYPE_ENUM,
+   CMD4_DEVICE_TYPE_ENUM: CMD4_DEVICE_TYPE_ENUM,
+   Accessory: Accessory,
+   Service: Service,
+   Characteristic: Characteristic,
+   UUIDGen: UUIDGen
 }
+
 
 // Platform definitions
 function Cmd4Platform(log, config, api) {
@@ -684,485 +1447,35 @@ Cmd4Platform.prototype.characteristicPolling = function (accessory, accTypeEnumI
 }
 
 // Change polling per accessory to characteristic polling of state traits
-// Here we make sure that required characteristics are set.
+// Here we use the defaultPollingCharacteristics to set what characteristics
+// will be polled if accessory polling was defined in the config.json file.
 Cmd4Platform.prototype.setupStatePollingPerAccessory = function (accessory)
 {
-   let self = accessory;
-
-   let accTypeEnumIndex = -1;
-
-   switch(accessory.typeIndex)
+   // Make sure the defined characteristics will be polled
+   let pollingCharacteristicsArray = CMD4_DEVICE_TYPE_ENUM.properties[this.typeIndex].defaultPollingCharacteristics;
+   
+   for (let index = 0; index < pollingCharacteristicsArray.length; index++)
    {
-      case CMD4_DEVICE_TYPE_ENUM.AccessoryInformation:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Identify;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.AirPurifier:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Active;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.AirQualitySensor:
-      {
-         if ( accessory.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusActive) != undefined )
-         {
-            accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusActive;
-     
-            this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
+      let accTypeEnumIndex = pollingCharacteristicsArray[index];
+      this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
                setTimeout(this.characteristicPolling.bind(
-                  this, accessory, accTypeEnumIndex, self.timeout, self.interval), self.interval);
-         }
-     
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AirQuality;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.BatteryService:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusLowBattery;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.BridgeConfiguration:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ConfigureBridgedAccessoryStatus;
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.BridgingState:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Reachable;
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.CameraControl:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.On;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.CameraRTPStreamManagement:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusActive;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.CarbonDioxideSensor:
-      {
-         if ( accessory.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusActive) != undefined )
-         {
-            accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusActive;
-     
-            this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
-               setTimeout(this.characteristicPolling.bind(
-                  this, accessory, accTypeEnumIndex,
-                  self.timeout, self.interval), self.interval);
-         }
-  
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CarbonDioxideDetected;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.CarbonMonoxideSensor:
-      {
-         if ( accessory.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusActive) != undefined )
-         {
-            accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusActive;
-     
-            this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
-               setTimeout(this.characteristicPolling.bind(
-                  this, accessory, accTypeEnumIndex,
-                  self.timeout, self.interval), self.interval);                  
-         }
-  
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CarbonMonoxideDetected;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.ContactSensor:
-      {
-         if ( accessory.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusActive) != undefined )
-         {
-            accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusActive;
-     
-            this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
-               setTimeout(this.characteristicPolling.bind(
-                  this, accessory, accTypeEnumIndex,
-                  self.timeout, self.interval), self.interval);
-         }
-  
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ContactSensorState;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.Door:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentDoorState;
-     
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.DoorBell:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.Fan:
-      case CMD4_DEVICE_TYPE_ENUM.Fanv1:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.On;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.Fanv2:
-      {
-         if ( accessory.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusActive) != undefined )
-         {
-            accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusActive;
-         }
-
-          break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.Faucet:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Active;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.FilterMaintenance:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.FilterChangeIndication;
-
-         break;
-      }      
-      case CMD4_DEVICE_TYPE_ENUM.GarageDoorOpener:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentDoorState;
-  
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.HeaterCooler:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Active;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.HumidifierDehumidifier:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Active;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.HumiditySensor:
-      {
-         if ( accessory.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusActive) != undefined )
-         {
-            accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusActive;
-  
-             this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
-               setTimeout(this.characteristicPolling.bind(
-                  this, accessory, accTypeEnumIndex,
-                  self.timeout, self.interval), self.interval);
-         }
-  
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentRelativeHumidity;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.InputSource:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentVisibilityState;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.IrrigationSystem:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Active;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.LeakSensor:
-      {
-         if ( accessory.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusActive) != undefined )
-         {
-            accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusActive;
-  
-            this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
-               setTimeout(this.characteristicPolling.bind(
-                  this, accessory, accTypeEnumIndex,
-                  self.timeout, self.interval), self.interval);
-         }
-  
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.LeakDetected;
-     
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.LightSensor:
-      {
-         if ( accessory.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusActive) != undefined )
-         {
-            accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.On;
-     
-            this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
-               setTimeout(this.characteristicPolling.bind(
-               this, accessory, accTypeEnumIndex,
-                  self.timeout, self.interval), self.interval);
-         }
-  
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentAmbientLightLevel;
-               
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.Lightbulb:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.On;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.LockManagement:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.LockCurrentState;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.LockMechanism:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.LockCurrentState;
-  
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.Microphone:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.MotionSensor:
-      {
-         if ( accessory.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusActive) != undefined )
-         {
-            accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusActive;
-     
-            this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
-               setTimeout(this.characteristicPolling.bind(
-                  this, accessory, accTypeEnumIndex,
-                  self.timeout, self.interval), self.interval);
-         }
-  
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.MotionDetected;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.OccupancySensor:
-      {
-         if ( accessory.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusActive) != undefined )
-         {
-            accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusActive;
-     
-            this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
-               setTimeout(this.characteristicPolling.bind(
-                  this, accessory, accTypeEnumIndex,
-                  self.timeout, self.interval), self.interval);
-         }
-  
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.OccupancyDetected;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.Outlet:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.On;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.Pairing:
-      {
-         // The only thing that is not TLV8
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.PairingFeatures;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.ProtocolInformation:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Version;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.Relay:
-      {
-         if ( accessory.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.RelayEnabled) != undefined )
-         {
-            accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.RelayEnabled;
-
-            this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
-               setTimeout(this.characteristicPolling.bind(
-                  this, accessory, accTypeEnumIndex,
-                  self.timeout, self.interval), self.interval);
-         }
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.RelayState;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.SecuritySystem:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SecuritySystemCurrentState;
-    
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.ServiceLabel:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ServiceLabelNamespace;
-     
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.Slat:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentSlatState;
-  
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.SmokeSensor:
-      {
-         if ( accessory.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusActive) != undefined )
-         {
-            accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusActive;
-     
-            this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
-               setTimeout(this.characteristicPolling.bind(
-                  this, accessory, accTypeEnumIndex,
-                  self.timeout, self.interval), self.interval);
-         }
-  
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.SmokeDetected;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.Speaker:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.StatefulProgrammableSwitch:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.StatelessProgrammableSwitch:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent;
-  
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.Switch:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.On;
-  
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.Television:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Active;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.TelevisionSpeaker:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Active;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.TemperatureSensor:
-      {
-         if ( accessory.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusActive) != undefined )
-         {
-            accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.StatusActive;
-     
-            this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
-               setTimeout(this.characteristicPolling.bind(
-                  this, accessory, accTypeEnumIndex,
-                  self.timeout, self.interval), self.interval);
-         }
-  
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentTemperature;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.Thermostat:
-      {    
-         // Poll for currentRelativeHumidity if defined
-         if ( accessory.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentRelativeHumidity) != undefined )
-         {
-            accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentRelativeHumidity;
-     
-            this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
-               setTimeout(this.characteristicPolling.bind(
-                  this, accessory, accTypeEnumIndex,
-                  self.timeout, self.interval), self.interval);
-         }
-  
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentTemperature;
-  
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.TimeInformation:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentTime;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.TunneledBTLEAccessoryService:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TunneledAccessoryConnected;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.Valve:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ValveType;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.Window:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentPosition;
-
-         break;
-      }
-      case CMD4_DEVICE_TYPE_ENUM.WindowCovering:
-      {
-         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.CurrentPosition;
-  
-         break;
-      }
-      default:
-         this.log("Internal error: unknown device index '%s'", accessory.typeIndex);
+               this, accessory, accTypeEnumIndex, accessory.timeout, accessory.interval), accessory.interval);
    }
-
-   if ( accTypeEnumIndex < 0 )
-      return;
-
-   this.listOfPollingCharacteristics[ accessory.name + accTypeEnumIndex ] =
-      setTimeout(this.characteristicPolling.bind(
-         this, accessory, accTypeEnumIndex,
-         self.timeout, self.interval), self.interval);
 }
 
 function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) 
 {
 
-    this.config = accessoryConfig;
-    this.log = log;
+   this.config = accessoryConfig;
+   this.log = log;
 
-    // Instead of local variables for every characteristic, create an array to
-    // hold values for  all characteristics based on the size of all possible characteristics.
-    this.storedValuesPerCharacteristic = new Array(CMD4_ACC_TYPE_ENUM.EOL).fill(null);
+   // Instead of local variables for every characteristic, create an array to
+   // hold values for  all characteristics based on the size of all possible characteristics.
+   this.storedValuesPerCharacteristic = new Array(CMD4_ACC_TYPE_ENUM.EOL).fill(null);
     
     
-    // If polling is defined it is set to true, otherwise false.
-    this.polling = this.config.polling === true;
+   // If polling is defined it is set to true, otherwise false.
+   this.polling = this.config.polling === true;
 
    for (let key in this.config)
    {
@@ -1215,6 +1528,7 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status )
             this.stateChangeResponseTime = value * 1000;
             break;
          case 'State_cmd':
+         {
             // What this plugin is all about
             this.state_cmd = value;
             
@@ -1283,6 +1597,7 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status )
              }           
                
             break;
+         }
          case 'Storage':
          case 'StoragePath':
          case 'Folder':
@@ -1359,572 +1674,26 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status )
    //        in Homebridge :-)    If you find it useful, send
    //        me a like ;-)
 
-   switch( this.typeIndex )
+   // Make sure the default characteristics will be included
+   let properties = CMD4_DEVICE_TYPE_ENUM.properties[this.typeIndex];   
+   let numberOfRequiredCharacteristics = properties.requiredCharacteristics.length;
+   
+   for (let index = 0; index < numberOfRequiredCharacteristics; index ++)
    {
-      case CMD4_DEVICE_TYPE_ENUM.AccessoryInformation:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Identify ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Identify, 0);
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Manufacturer ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Manufacturer, "Cmd4");
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Model ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Model, 0);
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Name ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Name, "My_AccessoryInformation");
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SerialNumber ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SerialNumber, "ABC001");
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.FirmwareRevision))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.FirmwareRevision, "100.1.1");
-
-         this.service = new Service.AccessoryInformation(this.name, this.name);            
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.AirPurifier:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active, 0);
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentAirPurifierState ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentAirPurifierState, 0);
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetAirPurifierState ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetAirPurifierState, 0);
-            
-         // The default respnse time is in seconds
-         if ( ! this.stateChangeResponseTime )
-            this.stateChangeResponseTime = SLOW_STATE_CHANGE_RESPONSE_TIME;        
-
-         this.service = new Service.AirPurifier(this.name, this.name);  
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.AirQualitySensor:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.AirQuality ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.AirQuality, 1);
-            
-         // The default respnse time is in seconds
-         if ( ! this.stateChangeResponseTime )
-            this.stateChangeResponseTime = FAST_STATE_CHANGE_RESPONSE_TIME;
-     
-         this.service = new Service.AirQualitySensor(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.BatteryService:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.BatteryLevel ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.BatteryLevel, 50);
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ChargingState ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ChargingState, 0);
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusLowBattery ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusLowBattery, 0);
-  
-         this.service = new Service.BatteryService(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.BridgeConfiguration:
-         this.service = new Service.BridgeConfiguration(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.BridgingState:
-         this.service = new Service.BridgeState(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.CameraControl:
-         this.service = new Service.CameraControl(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.CameraRTPStreamManagement:
-         this.service = new Service.CameraRTPStreamManagement(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.CarbonDioxideSensor:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CarbonDioxideDetected ))
-             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CarbonDioxideDetected, 0); 
-
-         this.service = new Service.CarbonDioxideSensor(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.CarbonMonoxideSensor:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CarbonMonoxideDetected ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CarbonMonoxideDetected, 0);
-     
-         this.service = new Service.CarbonMonoxideSensor(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.ContactSensor:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ContactSensorState ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ContactSensorState, 0);
-
-         this.service = new Service.ContactSensor(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.Door:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentPosition ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentPosition, 0);
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetPosition ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetPosition, 0);
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.PositionState ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.PositionState, 0);
-
-         this.service = new Service.Door(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.DoorBell:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent, 0);
-
-         // HomeKitTypes.js has this as 'Doorbell' (Small b)
-         this.service = new Service.Doorbell(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.Fan:
-      case CMD4_DEVICE_TYPE_ENUM.Fanv1:
-         // So why do we do this? In the need for documentation,
-         // this is done so that required characteristics
-         // are set for the given accessory,
-
-         // Required    
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On, 0);
-
-         this.service = new Service.Fan(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.Fanv2:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active, 0);
-
-         this.service = new Service.Fanv2(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.Faucet:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active, 1);
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusFault ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.StatusFault, 0);
-
-         this.service = new Service.Faucet(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.FilterMaintenance:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.FilterChangeIndication ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.FilterChangeIndication, 0);
-
-         this.service = new Service.FilterMaintenance(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.GarageDoorOpener:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentDoorState ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentDoorState, 0); 
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetDoorState ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetDoorState, 0);
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ObstructionDetected ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ObstructionDetected, 0);
-            
-         // The default respnse time is in seconds
-         if ( ! this.stateChangeResponseTime )
-            this.stateChangeResponseTime = SLOW_STATE_CHANGE_RESPONSE_TIME; 
-
-         this.service = new Service.GarageDoorOpener(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.HeaterCooler:
-         this.service = new Service.HeaterCooler(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.HumidifierDehumidifier:
-
-         this.service = new Service.HumidifierDehumidifier(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.HumiditySensor:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentRelativeHumidity ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentRelativeHumidity, 1);
-     
-         this.service = new Service.HumiditySensor(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.InputSource:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ConfiguredName ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ConfiguredName, "My_InputSource");
-    
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.InputSourceType ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.InputSourceType, 1);
-    
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.IsConfigured ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.IsConfigured, 1);
-    
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentVisibilityState ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentVisibilityState, 2);
-  
-         this.service = new Service.InputSource(this.name, this.name);
-         break;
-       case CMD4_DEVICE_TYPE_ENUM.IrrigationSystem:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active, 1);
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ProgramMode ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ProgramMode, 1);
-  
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.InUse ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.InUse, 1);
-  
-         this.service = new Service.IrrigationSystem(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.LeakSensor:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.LeakDetected ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.LeakDetected, 0);
-
-         this.service = new Service.LeakSensor(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.LightSensor:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentAmbientLightLevel ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentAmbientLightLevel, 0);
-     
-         this.service = new Service.LightSensor(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.Lightbulb:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On, 0);
-
-         this.service = new Service.Lightbulb(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.LockManagement:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.LockControlPoint ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.LockControlPoint, 0);
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Logs ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Logs, "OptionalLogs");
-     
-         this.service = new Service.LockManagement(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.LockMechanism:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.LockCurrentState ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.LockCurrentState, 0);
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.LockTargetState ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.LockTargetState, 0);
-
-         this.service = new Service.LockMechanism(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.Microphone:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Mute ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Mute,0);
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Volume ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Volume, 0);
-
-         this.service = new Service.Microphone(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.MotionSensor:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.MotionDetected ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.MotionDetected, 0);
-
-         this.service = new Service.MotionSensor(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.OccupancySensor:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.OccupancyDetected ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.OccupancyDetected, 0);
-
-         this.service = new Service.OccupancySensor(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.Outlet:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On, 0);
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.OutletInUse ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.OutletInUse, 0);
-
-         this.service = new Service.Outlet(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.Pairing:
-
-         this.service = new Service.Pairing(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.ProtocolInformation:
-         this.service = new Service.ProtocolInformation(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.Relay:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.RelayEnabled ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.RelayEnabled, 1);
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.RelayState ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.RelayState, 0);
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.RelayControlPoint ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.RelayControlPoint, 0);
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Name ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Name, "My_Relay");
-
-         this.service = new Service.Relay(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.SecuritySystem:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SecuritySystemCurrentState ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SecuritySystemCurrentState, 3);
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SecuritySystemTargetState ))
-             this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SecuritySystemTargetState, 3);
-  
-         this.service = new Service.SecuritySystem(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.ServiceLabel:
-         this.service = new Service.ServiceLabel(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.Slat:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentSlatState ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentSlatState, 0);
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SlatType ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SlatType, 0);
-
-         this.service = new Service.Slat(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.SmokeSensor:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SmokeDetected ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SmokeDetected, 0);
-
-         this.service = new Service.SmokeSensor(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.Speaker:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Mute ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Mute,0);
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Volume ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Volume, 0);
-
-         this.service = new Service.Speaker(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.StatefulProgrammableSwitch:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent, 0);
-
-         this.service = new Service.StatefulProgrammableSwitch(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.StatelessProgrammableSwitch:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent, 0);
-
-         this.service = new Service.StatelessProgrammableSwitch(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.Switch:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On, 0);
-
-         this.service = new Service.Switch(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.Television:  
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Active, 0);
-    
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ActiveIdentifier ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ActiveIdentifier, "1234");
-   
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ConfiguredName ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ConfiguredName,'tv');
-   
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SleepDiscoveryMode ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.SleepDiscoveryMode, "0");
-    
-         this.service = new Service.Television(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.TelevisionSpeaker:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Mute ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Mute, 0);
-
-         this.service = new Service.TelevisionSpeaker(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.TemperatureSensor:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentTemperature ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentTemperature, 50.0);
-
-         this.service = new Service.TemperatureSensor(this.name, this.name); 
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.Thermostat:
-         this.log("Setting up Thermostat default characteristics");
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentHeatingCoolingState ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentHeatingCoolingState, 0);
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetHeatingCoolingState ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetHeatingCoolingState, 0);
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentTemperature ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentTemperature, 50.0);
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetTemperature ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetTemperature, 50.0);
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TemperatureDisplayUnits ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TemperatureDisplayUnits, 0);
-
-         this.service = new Service.Thermostat(this.name, this.name); 
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.TimeInformation:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentTime ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentTime, "11:15");
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.DayoftheWeek ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.DayoftheWeek, 1);  // Monday
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TimeUpdate ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TimeUpdate, 0);   // false
-
-         this.service = new Service.TimeInformation(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.TunneledBTLEAccessoryService:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Name ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.Name, "TLB");
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.AccessoryIdentifier ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.AccessoryIdentifier, "TLB");
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TunneledAccessoryStateNumber ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TunneledAccessoryStateNumber, "0");
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TunneledAccessoryConnected ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TunneledAccessoryConnected, "1");
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TunneledAccessoryAdvertising ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TunneledAccessoryAdvertising, "1");
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TunnelConnectionTimeout ))
-          this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TunnelConnectionTimeout, "6000");
-
-         this.service = new Service.TunneledBTLEAccessoryService(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.Valve:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ValveType ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.ValveType, 0);
-
-         this.service = new Service.Valve(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.Window:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentPosition ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentPosition, 0);
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetPosition ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetPosition, 0);
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.PositionState ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.PositionState, 0);
-
-         this.service = new Service.Window(this.name, this.name);
-         break;
-      case CMD4_DEVICE_TYPE_ENUM.WindowCovering:
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentPosition ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.CurrentPosition, 0);
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetPosition ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.TargetPosition, 0);
-
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.PositionState ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.PositionState, 0);
-
-         this.service = new Service.WindowCovering(this.name, this.name);
-         break;
-      default:
+      let value = properties.defaultValues[index];
+      let req = properties.requiredCharacteristics[index];
+      
+      if ( ! this.getStoredValueForIndex( req ))
       {
-         // The default is a lightBulb service
-         this.log ("CMD4: Unknown type: %s for %s. Defaulting it to a Switch. Did you possibly spell it incorrectly?", this.type, this.name);
-  
-         // Required
-         if ( ! this.getStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On ))
-            this.setStoredValueForIndex(CMD4_ACC_TYPE_ENUM.On, 0);
-
-         this.service = new Service.Switch(this.name, this.name);
-  
+         this.log("Adding default characteristic %s for %s", CMD4_ACC_TYPE_ENUM.properties[req].name, this.name);
+         this.setStoredValueForIndex(req, value);
       }
-
    }
-   
-   // The default timeout is 1 minute. Timeouts are in milliseconds
-   if (! this.timeout )
-      this.timeout = DEFAULT_TIMEOUT;
-   
-            
-   // The defaault interval is 1 minute. Intervals are in seconds
-   if ( ! this.interval )
-      this.interval = DEFAULT_INTERVAL;
+   this.service = new properties.service(this.name, this.name);
 
    // The default respnse time is in seconds
    if ( ! this.stateChangeResponseTime )
-      this.stateChangeResponseTime = MEDIUM_STATE_CHANGE_RESPONSE_TIME;
+      this.stateChangeResponseTime = CMD4_DEVICE_TYPE_ENUM.properties[this.typeIndex].devicesStateChangeDefaultTime;
          
 
    this.checkPollingConfigForUnsetCharacteristics(this.polling);
@@ -2489,9 +2258,8 @@ Cmd4Accessory.prototype = {
         {
             if ( this.storedValuesPerCharacteristic[accTypeEnumIndex] != undefined)
             {
-               this.log("Found characteristic '%s' for '%s'", 
-               CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].name, this.name);
-               
+               this.log.debug("Found characteristic '%s' for '%s'", 
+                  CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].name, this.name);             
                
                if ( ! service.testCharacteristic(
                     CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].characteristic))
@@ -2883,17 +2651,17 @@ function getType( oObj )
     return 'String';
 }
  
-function ucFirst(string)
+function ucFirst( string )
 {
-   if (string)
-      return string.charAt(0).toUpperCase() + string.slice(1);
+   if ( string )
+      return string.charAt(0).toUpperCase() + string.slice( 1 );
    else {
-      console.log("Asked to upper  case first character of NULL String");
+      console.log( "Asked to upper  case first character of NULL String" );
       return "undefined";
    }
 }
 
-function isNumeric(num){
-   num = "" + num; //coerce num to be a string
+function isNumeric( num ){
+   num = "" + num; // coerce num to be a string
    return !isNaN(num) && !isNaN(parseFloat(num));
 }
