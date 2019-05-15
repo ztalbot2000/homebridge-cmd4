@@ -1318,7 +1318,6 @@ Cmd4Platform.prototype =
    {
       let that = this;
 
-
       this.log("Fetching config.json devices.");
       for( let i=0; i<this.config.accessories.length; i++ )
       {
@@ -1331,13 +1330,13 @@ Cmd4Platform.prototype =
   
          if ( accessory.polling && accessory.state_cmd)
          {  
-            switch (getType(accessory.polling))
+            switch (typeof accessory.polling)
             {
-               case 'Array':
+               case 'object':
                   this.log.debug("Characteristic polling for '%s'", accessory.name);
                   this.setupCharacteristicPolling(accessory);
                   break;
-               case 'String':
+               case 'string':
                   this.log.debug("State polling for '%s'", accessory.name);
                   this.setupStatePollingPerAccessory(accessory);
                   break;
@@ -1355,7 +1354,6 @@ Cmd4Platform.prototype =
 Cmd4Platform.prototype.characteristicPolling = function (accessory, accTypeEnumIndex, timeout, interval)
 {
    let self = accessory;
-
 
    self.log.debug("Doing Poll of index:%s characteristic:%s for '%s' timeout=%s interval=%s", accTypeEnumIndex,
           CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].name, self.name, timeout, interval);
@@ -1465,7 +1463,6 @@ Cmd4Platform.prototype.setupStatePollingPerAccessory = function (accessory)
 
 function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) 
 {
-
    this.config = accessoryConfig;
    this.log = log;
 
@@ -1707,9 +1704,6 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status )
    this.setupAccessoryFakeGatoService(this.fakegatoConfig);
 }
 
-
-
-
 // Accessory definitions
 Cmd4Accessory.prototype = {
 
@@ -1766,7 +1760,7 @@ Cmd4Accessory.prototype = {
          return;
       }
 
-      if ( getType(pollingConfig) != 'Array' )
+      if ( typeof pollingConfig != 'object' )
       {
          this.log.debug("Polling config is old style. Nothing to check for unset polling characteristics");
          return;
@@ -2058,13 +2052,6 @@ Cmd4Accessory.prototype = {
                   }, self.stateChangeResponseTime);
                   break;
                }  
-               
-               
-               
-               
-               
-               
-               
                default:
                {
                    // No Special action Required
@@ -2231,7 +2218,6 @@ Cmd4Accessory.prototype = {
          }
       });
    },
-
 
     // ***********************************************
     //
@@ -2569,7 +2555,6 @@ Cmd4Accessory.prototype = {
           }
       }
 
-
       // Optional
       if ( this.storage != undefined )
       {
@@ -2634,23 +2619,6 @@ Object.defineProperty(Object.prototype, "indexOfEnum", {
     }
 });
 
-// Used to determine if polling is done by characteristic or by accessory
-function getType( oObj )
-{
-    if ( !!oObj && typeof oObj === "object" )
-    {
-       // Check if it is an alien object, for example created as {world:'hello'}
-       if ( typeof oObj.constructor !== "function" )
-       {      
-          return 'Object';
-       }
-
-      return oObj.constructor.name;
-    }
-
-    return 'String';
-}
- 
 function ucFirst( string )
 {
    if ( string )

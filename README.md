@@ -2,9 +2,7 @@
 
 
 
-
-**Cmd4** is a plugin for [Homebridge] that lets you see what Homebridge and Homekit are all about, without actually owning a single accessory!  For the more advanced user, Cmd4 brings CLI support for all accessories.
-
+**Cmd4** is a plugin for [Homebridge] that lets you see what Homebridge and Homekit are all about, without actually owning a single accessory!  For the more advanced user, Cmd4 brings CLI support for all device types (Accessories) and characteristics.
 
 
 Table of Contents
@@ -21,6 +19,7 @@ Table of Contents
 * [**Migrating from Homebridge-cmdswitch2**](#migrating-from-homebridge-cmdswitch2)
 * [**Adding in fakegato history**](#adding-in-fakegato-history)
 * [**Developer**](#developer)
+* [**Unit Testing**](#unit-testing)
 * [**Todo**](#todo)
 * [**Contributing**](#contributing)
 * [**Inspiration and special thanks**](#inspiration-and-special-thanks)
@@ -356,11 +355,30 @@ Developer
    the door was closed.
    
 ### Step 4  Using the provided jsmin tool to strip out the comments, your ready to go
-   and try Fans, Switches, Garage Doors, Locks, Sensors ....Todo<a name="todo"></a>
+   and try Fans, Switches, Garage Doors, Locks, Sensors ....
+
+
    
+
+Unit Testing
+------------
+   Unit testing is done using the Mocha framework for Javascript and was introduced in homebridge-cmd4 version 2.1.2. There are 2796 test cases and they all run successfully.  They test the homebridge-cmd4 module to make sure that all characteristics, services and names are correct. They also test the provided State.js and PS4.sh for their respective Get/Set characteristics.  The provided config.json is also tested for proper definitions of all the homebridge-cmd4 config parameters. <BR>
+   Unit testing is only possible in a development environment and can be achieved in the following manner. <BR>
+
+### Step 1  Install homebridge-cmd4 in a local environment.  This is done seperate from the global environment and does not impact the global environment.
+   SHELL> npm install homebridge-cmd4 --save-dev
+
+### Step 2  Change to the homebridge-cmd4 directory.
+   SHELL> cd homebridge-cmd4
+
+### Step 3  Run the provided test cases.
+   SHELL> npm test
+
+  Note: There is one bug where the testcases do not run correctly every second attempt.  It has something to do with synchronous tests for Get/Set.  Please ignore it at this time.  Just run it again.
+
+
+Todo
 ----
-
-
 * [ ] Referred devices, i.e. a smoke detectors battery is not yet linked.
 * [ ] Support for custom characteristics for an accessory.
 * [X] Support multi word device names.
@@ -370,9 +388,9 @@ Developer
 FAQ-Troubleshooting
 -------------------
 
-### Step 1  Homebridge is expected to run from a users home directory. where it can find the .homebridge directory and indirectly the homebridge/Cmd4Scripts.State.js command file.
+### Step 1  Homebridge is expected to run from a users home directory. where it can find the .homebridge directory and indirectly the homebridge/Cmd4Scripts/State.js command file.
 
-### Step 2  The State.js command file must be executable. it can be tested via:<BR>
+### Step 2  The State.js command file must be executable. It can be tested via:<BR>
 &nbsp;&nbsp;&nbsp; SHELL> cd $HOME <BR>
 &nbsp;&nbsp;&nbsp; SHELL> node .homebridge/Cmd4Scripts/State.js Get My_Fan On <BR>
 &nbsp;&nbsp;&nbsp; this should output: 0 or 'true'<BR>
@@ -393,6 +411,12 @@ FAQ-Troubleshooting
  <BR>
  &nbsp;&nbsp;&nbsp;SHELL> node .homebridge/Cmd4Scripts/State.js Set My_Fan On true
 
+### Step 7  Testing your own scripts
+  It is EXTREMELY important that you understand that scripts run by homebridge-Cmd4 or any background process do not interpret any environment settings you may have in your .profile or .bashrc.  This includes any variables that starts with a $ sign (including $HOME) or the tilda character.  It is wisest to test your scripts from a blank configuration and starting from your home directory.. <BR>
+i.e.<BR>
+&nbsp;&nbsp;&nbsp;SHELL> cd $HOME; bash --noprofile --norc
+&nbsp;&nbsp;&nbsp;SHELL> node .homebridge/Cmd4Scripts/State.js Get My_Fan On
+  
 
 Raspbian-Stretch
 ----------------
@@ -507,13 +531,14 @@ Link References
 [about-the-cmd4-plugin]:https://github.com/ztalbot2000/homebridge-cmd4#about-the-cmd4-plugin
 [how-the-cmd4-plugin-works]:https://github.com/ztalbot2000/homebridge-cmd4#how-the-cmd4-plugin-works
 [features]:https://github.com/ztalbot2000/homebridge-cmd4#features
-[whats new in 2.1]:https://github.com/ztalbot2000/homebridge-cmd4#whats-new-in-2-1
-[whats new in 2.0]:https://github.com/ztalbot2000/homebridge-cmd4#whats-new-in-2-0
+[whats-new-in-2.1]:https://github.com/ztalbot2000/homebridge-cmd4#whats-new-in-2-1
+[whats-new-in-2.0]:https://github.com/ztalbot2000/homebridge-cmd4#whats-new-in-2-0
 [screenshots]:https://github.com/ztalbot2000/homebridge-cmd4#screenshots
 [installation]:https://github.com/ztalbot2000/homebridge-cmd4#installation
 [migrating-from-homebridge-cmdswitch2]:https://github.com/ztalbot2000/homebridge-cmd4#migrating-from-homebridge-cmdswitch2
 [adding in fakegato-history]:https://github.com/ztalbot2000/homebridge-cmd4#adding-in-fakegato-history
 [developer]:https://github.com/ztalbot2000/homebridge-cmd4#developer
+[unit-testing]:https://github.com/ztalbot2000/homebridge-cmd4#unit-testing
 [todo]:https://github.com/ztalbot2000/homebridge-cmd4#todo
 [contributing]:https://github.com/ztalbot2000/homebridge-cmd4#contributing
 [inspiration-and-special-thanks]:https://github.com/ztalbot2000/homebridge-cmd4#inspiration-and-special-thanks
