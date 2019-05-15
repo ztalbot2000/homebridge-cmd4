@@ -366,12 +366,15 @@ Unit Testing
    Unit testing is only possible in a development environment and can be achieved in the following manner. <BR>
 
 ### Step 1  Install homebridge-cmd4 in a local environment.  This is done seperate from the global environment and does not impact the global environment.
-   SHELL> npm install homebridge-cmd4 --save-dev
+   SHELL> npm install homebridge-cmd4
 
 ### Step 2  Change to the homebridge-cmd4 directory.
    SHELL> cd homebridge-cmd4
 
-### Step 3  Run the provided test cases.
+### Step 3  Install homebridge-cmd4 development dependancies
+   SHELL> npm install --save-dev
+
+### Step 4  Run the provided test cases.
    SHELL> npm test
 
   Note: There is one bug where the testcases do not run correctly every second attempt.  It has something to do with synchronous tests for Get/Set.  Please ignore it at this time.  Just run it again.
