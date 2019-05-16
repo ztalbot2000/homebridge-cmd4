@@ -12,8 +12,8 @@ Table of Contents
 * [**About the Cmd4 Plugin**](#about-the-cmd4-plugin)
 * [**How the Cmd4 Plugin Works**](#how-the-cmd4-plugin-works)
 * [**Features**](#features)
-* [**Whats new in 2.1**](#whats-new-in-2-1)
-* [**Whats new in 2.0**](#whats-new-in-2-0)
+* [**Whats new in 2.1**]
+* [**Whats new in 2.0**]
 * [**Screenshots**](#screenshots)
 * [**Installation**](#installation)
 * [**Migrating from Homebridge-cmdswitch2**](#migrating-from-homebridge-cmdswitch2)
@@ -534,8 +534,6 @@ Link References
 [about-the-cmd4-plugin]:https://github.com/ztalbot2000/homebridge-cmd4#about-the-cmd4-plugin
 [how-the-cmd4-plugin-works]:https://github.com/ztalbot2000/homebridge-cmd4#how-the-cmd4-plugin-works
 [features]:https://github.com/ztalbot2000/homebridge-cmd4#features
-[whats-new-in-2.1]:https://github.com/ztalbot2000/homebridge-cmd4#whats-new-in-2-1
-[whats-new-in-2.0]:https://github.com/ztalbot2000/homebridge-cmd4#whats-new-in-2-0
 [screenshots]:https://github.com/ztalbot2000/homebridge-cmd4#screenshots
 [installation]:https://github.com/ztalbot2000/homebridge-cmd4#installation
 [migrating-from-homebridge-cmdswitch2]:https://github.com/ztalbot2000/homebridge-cmd4#migrating-from-homebridge-cmdswitch2
