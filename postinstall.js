@@ -51,7 +51,8 @@ if (package.version.includes('1.3.0') ||
 
 if (package.version.includes('2.0.0') ||
     package.version.includes('2.1.0') ||
-    package.version.includes('2.1.2'))
+    package.version.includes('2.1.2') ||
+    package.version.includes('2.1.3'))
 {
   console.log("\n%sHomeBridge-Cmd4 Version 2.0 Notes:%s", KUND, KEND);
   console.log("   This version changes the philosophy of homebridge-Cmd4 from Accessories that have known characteristics as per the HAP Spec to assigning any characteristic to any Accessory.\n");

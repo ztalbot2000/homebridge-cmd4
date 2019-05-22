@@ -1337,6 +1337,7 @@ Cmd4Platform.prototype =
                   this.setupCharacteristicPolling(accessory);
                   break;
                case 'string':
+               case 'boolean':
                   this.log.debug("State polling for '%s'", accessory.name);
                   this.setupStatePollingPerAccessory(accessory);
                   break;
@@ -1450,7 +1451,7 @@ Cmd4Platform.prototype.characteristicPolling = function (accessory, accTypeEnumI
 Cmd4Platform.prototype.setupStatePollingPerAccessory = function (accessory)
 {
    // Make sure the defined characteristics will be polled
-   let pollingCharacteristicsArray = CMD4_DEVICE_TYPE_ENUM.properties[this.typeIndex].defaultPollingCharacteristics;
+   let pollingCharacteristicsArray = CMD4_DEVICE_TYPE_ENUM.properties[accessory.typeIndex].defaultPollingCharacteristics;
    
    for (let index = 0; index < pollingCharacteristicsArray.length; index++)
    {
