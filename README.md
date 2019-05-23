@@ -388,7 +388,7 @@ Todo
 ----
 * [ ] Referred devices, i.e. a smoke detectors battery is not yet linked.
 * [ ] Support for custom characteristics for an accessory.
-* [X] Support multi word device names.
+* [X] Support multi word device names. (Technically done, but scripting is hard for newbies).
 
 
 
@@ -404,19 +404,35 @@ Troubleshooting
  
 ### Step 3 Have a look at the State.js file, all the settable characteristics are very well documented there.<BR>
 <BR>
-### Step 4 You can also run:<BR>
+### Step 4 You can also run:
     SHELL> DEBUG=* homebridge -D $HOME/ <BR>
 
-### Step 5  Try executing the State.js script
+### Step 5 Try executing the State.js script
 <BR>
  &nbsp;&nbsp;&nbsp;SHELL> cd $HOME
  &nbsp;&nbsp;&nbsp;SHELL> node .homebridge/Cmd4Scripts/State.js Get My_Fan On
  <BR>
- This should output '0' or '1' or 'true' or 'false'
+ &nbsp;&nbsp;&nbsp;&nbsp;This should output '0' or '1' or 'true' or 'false'
  <BR>
  &nbsp;&nbsp;&nbsp;SHELL> node .homebridge/Cmd4Scripts/State.js Set My_Fan On false
  <BR>
  &nbsp;&nbsp;&nbsp;SHELL> node .homebridge/Cmd4Scripts/State.js Set My_Fan On true
+<BR>
+### Step 5 If you see the error message:
+<BR>
+```
+{ Error: Command failed: /homebridge/Server.sh Get 'Server' 'On'
+
+    at ChildProcess.exithandler (child_process.js:297:12)
+    at ChildProcess.emit (events.js:193:13)
+    at maybeClose (internal/child_process.js:1001:16)
+    at Process.ChildProcess._handle.onexit (internal/child_process.js:266:5)
+  killed: true,
+  code: null,
+  signal: 'SIGTERM',
+  cmd: "/homebridge/Server.sh Get 'Server' 'On'" }
+...
+The command may not exist, but also the timeout value in your config.json for that accessory may be too low.
 
 Troubleshooting your own scripts
 --------------------------------
@@ -449,7 +465,6 @@ Note 2. Don't forget to put the '' around the command to prevent globing as writ
 Note 3. If your state_cmd has a '$' in it. the CheckYourScript.sh will fail and so rightly would homebridge-cmd4<BR>
 &nbsp;&nbsp;&nbsp;SHELL> '.homebridge/Cmd4Scripts/CheckYourScript.sh' '$HOME/bin/YourScript.sh' 'Get' 'MyDevice' 'On' <BR>
 <BR>
-  
 
 Raspbian-Stretch
 ----------------
@@ -556,28 +571,8 @@ See [LICENSE](LICENSE)
 
 
 <!---
-Link References
+Link References (Not Local)
 -->
-
-
-
-[about-the-cmd4-plugin]:https://github.com/ztalbot2000/homebridge-cmd4#about-the-cmd4-plugin
-[how-the-cmd4-plugin-works]:https://github.com/ztalbot2000/homebridge-cmd4#how-the-cmd4-plugin-works
-[features]:https://github.com/ztalbot2000/homebridge-cmd4#features
-[screenshots]:https://github.com/ztalbot2000/homebridge-cmd4#screenshots
-[installation]:https://github.com/ztalbot2000/homebridge-cmd4#installation
-[migrating-from-homebridge-cmdswitch2]:https://github.com/ztalbot2000/homebridge-cmd4#migrating-from-homebridge-cmdswitch2
-[adding in fakegato-history]:https://github.com/ztalbot2000/homebridge-cmd4#adding-in-fakegato-history
-[developer]:https://github.com/ztalbot2000/homebridge-cmd4#developer
-[unit-testing]:https://github.com/ztalbot2000/homebridge-cmd4#unit-testing
-[todo]:https://github.com/ztalbot2000/homebridge-cmd4#todo
-[contributing]:https://github.com/ztalbot2000/homebridge-cmd4#contributing
-[inspiration-and-special-thanks]:https://github.com/ztalbot2000/homebridge-cmd4#inspiration-and-special-thanks
-[license]:https://github.com/ztalbot2000/homebridge-cmd4#license
-[faq-troubleshooting]:https://github.com/ztalbot2000/homebridge-cmd4#faq-troubleshooting
-[raspbian-stretch]:https://github.com/ztalbot2000/homebridge-cmd4#raspbian-stretch
-[rationale]:https://github.com/ztalbot2000/homebridge-cmd4#rationale
-[inspiration]:https://github.com/ztalbot2000/homebridge-cmd4#inspiration
 
 [homekit_screenshot]:https://github.com/ztalbot2000/homebridge-cmd4/raw/master/screenshots/Homekit_screenshot.png
 [eve_screenshot]:https://github.com/ztalbot2000/homebridge-cmd4/raw/master/screenshots/Eve_screenshot.png
