@@ -17,7 +17,7 @@
                 "type": "Switch",
                 "name": "PS_4",
                 "on": false,
-                "polling": [{"on": false, "interval": 540, "timeout":2000}
+                "polling": [{"on": false, "interval": 540, "timeout": 4000}
                            ],
                 "state_cmd": "bash .homebridge/Cmd4Scripts/PS4.sh"
              },
@@ -56,7 +56,7 @@
                  "lockTargetState": 0,
                  "polling": [{"lockCurrentState": "0",
                               "interval": 540,
-                              "timeout":2000
+                              "timeout": 4000
                              }],
                  "stateChangeResponseTime": 10,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -127,9 +127,9 @@
                  "heatingThresholdTemperature": 25.2,
                  "targetRelativeHumidity": 60.2,
                  "polling": [{"currentHeatingCoolingState": 0,
-                              "interval": 540,  "timeout": 2000},
+                              "interval": 540,  "timeout": 4000},
                              {"currentTemperature": 50.0,
-                              "interval": 60,   "timeout": 2000}
+                              "interval": 60,   "timeout": 4000}
                             ],
                  "stateChangeResponseTime": 10,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js",
@@ -202,8 +202,8 @@
                  "positionState": 0,
                  "holdPosition": 0,
                  "obstructionDetected": 0,
-                 "polling": [{"statusActive":   1, "interval": 80, "timeout":1000},
-                             {"statusFault" : 10, "interval": 50, "timeout":2000}
+                 "polling": [{"statusActive":   1, "interval": 80, "timeout": 4000},
+                             {"statusFault" :  10, "interval": 50, "timeout": 4000}
                             ],
                  "fakegato":{"eve":"door",
                             "status": "statusActive",
@@ -315,8 +315,8 @@
                  "statusFault": 0,
                  "statusTampered": 0,
                  "statusLowBattery": 0,
-                 "polling":[{"currentTemperature": 50, "interval": 50, "timeout":2000},
-                            {"currentRelativeHumidity": 30, "interval": 40, "timeout":2000}
+                 "polling":[{"currentTemperature": 50, "interval": 50, "timeout": 4000},
+                            {"currentRelativeHumidity": 30, "interval": 40, "timeout": 4000}
                            ],
                  "fakegato":{"eve":"room",
                              "temp": "currentTemperature",
@@ -458,8 +458,8 @@
                  "targetMediaState":       2,
                  "pictureMode" :           1,
                  "remoteKey":              8,
-                 "polling":[{"active": 1, "interval": 50, "timeout":3000},
-                            {"currentMediaState": 2, "interval": 540, "timeout":3000}
+                 "polling":[{"active": 1, "interval": 50, "timeout": 5000},
+                            {"currentMediaState": 2, "interval": 540, "timeout": 5000}
                            ],
                  "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -472,8 +472,8 @@
                  "volume":                 5,
                  "volumeControlType":      3,
                  "volumeSelector":         0,
-                 "polling":[{"active": 1, "interval": 50, "timeout":3000},
-                            {"volume": 5, "interval": 50, "timeout":3000}
+                 "polling":[{"active": 1, "interval": 50, "timeout": 5000},
+                            {"volume": 5, "interval": 50, "timeout": 5000}
                            ],
                  "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -498,8 +498,8 @@
                  "InUse" :                 1,
                  "remainingDuration":      60,
                  "statusFault":            0,
-                 "polling":[{"active": 1, "interval": 50, "timeout":3000},
-                            {"statusFault": 0, "interval": 300, "timeout":3000}
+                 "polling":[{"active": 1, "interval": 50, "timeout": 5000},
+                            {"statusFault": 0, "interval": 300, "timeout": 5000}
                            ],
                  "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -509,8 +509,8 @@
                  "name": "My_Faucet",
                  "active":                 1,
                  "statusFault":            0,
-                 "polling":[{"active": 1, "interval": 50, "timeout":3000},
-                            {"statusFault": 0, "interval": 300, "timeout":3000}
+                 "polling":[{"active": 1, "interval": 50, "timeout": 5000},
+                            {"statusFault": 0, "interval": 300, "timeout": 5000}
                            ],
                  "stateChangeResponseTime": 3,
                  "state_cmd": "node .homebridge/Cmd4Scripts/State.js"

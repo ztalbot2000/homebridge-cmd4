@@ -180,10 +180,10 @@ Migrating from Homebridge-cmdswitch2
              "on": false,
              "state_cmd": "bash .homebridge/Cmd4Scripts/PS4.sh"
              "polling": true,     <OR>
-             "polling": [{"on": false, "interval": 5, "timeout":2000}
+             "polling": [{"on": false, "interval": 5, "timeout": 4000}
                         ],
              "interval": 5,
-             "timeout": 2000,
+             "timeout": 4000,
           }
       ]
    }
@@ -337,9 +337,9 @@ The value "0" should be used for any characteristics value which is not possible
 For history to be collected you will have to enable polling and interval for the accesory, and according to the fakegato-hitory documents it should be less than 10 minutes (600 seconds). The new polling config section allows for each characteristic to be polled at their individual times.<BR>
 ```
 "polling": [{"currentHeatingCoolingState": 0,
-             "interval": 540,  "timeout": 2000},
+             "interval": 540,  "timeout": 4000},
             {"currentTemperature": 50.0,
-             "interval": 60,   "timeout": 2000}
+             "interval": 60,   "timeout": 4000}
            ],
 ```
 
@@ -431,7 +431,9 @@ Troubleshooting
   code: null,
   signal: 'SIGTERM',
   cmd: "/homebridge/Server.sh Get 'Server' 'On'" }
-...
+
+```
+
 The command may not exist, but also the timeout value in your config.json for that accessory may be too low.
 
 Troubleshooting your own scripts
