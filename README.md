@@ -12,8 +12,8 @@ Table of Contents
 * [**About the Cmd4 Plugin**](#about-the-cmd4-plugin)
 * [**How the Cmd4 Plugin Works**](#how-the-cmd4-plugin-works)
 * [**Features**](#features)
-* [**Whats new in 2.1**]
-* [**Whats new in 2.0**]
+* [**Whats new in 2.1**](#whats-new-in-21)
+* [**Whats new in 2.0**](#whats-new-in-20)
 * [**Screenshots**](#screenshots)
 * [**Installation**](#installation)
 * [**Migrating from Homebridge-cmdswitch2**](#migrating-from-homebridge-cmdswitch2)
@@ -24,7 +24,8 @@ Table of Contents
 * [**Contributing**](#contributing)
 * [**Inspiration and special thanks**](#inspiration-and-special-thanks)
 * [**License**](#license)
-* [**FAQ-Troubleshooting**](#faq-troubleshooting)
+* [**Troubleshooting**](#troubleshooting)
+* [**Troubleshooting your own scripts**](#troubleshooting-your-own-scripts)
 * [**Raspbian-Stretch**](#raspbian-stretch)
 * [**Rationale**](#rationale)
 
@@ -59,7 +60,7 @@ Cmd4 can be configured to respond to actual devices directly or by modofying the
 Look closely at State.js and config.min.json as in them they have most of all the characteristics defined.
 
 Whats new in 2.1
------------------
+----------------
 This minor release fixes duplicate service calls for initializing an AccessoryInformation device, Television & TelevisionSpeaker. <BR>
 Mostly importantly it wipes out 5600 duplicate lines of code when setting up the characteristic getter & setter methods to a common bound function. <BR>
 
@@ -87,7 +88,10 @@ Installation
   SHELL> mkdir $HOME/.homebridge<BR>
   SHELL> mkdir $HOME/.homebridge/Cmd4Scripts<BR>
   SHELL> cp /usr/lib/node_modules/homebridge-cmd4/Extras/Cmd4Scripts/State.js $HOME/.homebridge/Cmd4Scripts/<BR>
+  SHELL> cp /usr/lib/node_modules/homebridge-cmd4/Extras/Cmd4Scripts/CheckYourScript.sh $HOME/.homebridge/Cmd4Scripts/<BR>
   SHELL> chmod 700 .homebridge/Cmd4Scripts/State.js<BR>
+  SHELL> chmod 700 .homebridge/Cmd4Scripts/CheckYourScript.sh<BR>
+Note: CheckYourScript.sh is for your own script development testing<BR>
 
 
 ### Step 4 `Install/Update your config.json file.`
@@ -388,8 +392,8 @@ Todo
 
 
 
-FAQ-Troubleshooting
--------------------
+Troubleshooting
+---------------
 
 ### Step 1  Homebridge is expected to run from a users home directory. where it can find the .homebridge directory and indirectly the homebridge/Cmd4Scripts/State.js command file.
 
@@ -414,11 +418,37 @@ FAQ-Troubleshooting
  <BR>
  &nbsp;&nbsp;&nbsp;SHELL> node .homebridge/Cmd4Scripts/State.js Set My_Fan On true
 
-### Step 7  Testing your own scripts
+Troubleshooting your own scripts
+--------------------------------
+
   It is EXTREMELY important that you understand that scripts run by homebridge-Cmd4 or any background process do not interpret any environment settings you may have in your .profile or .bashrc.  This includes any variables that starts with a $ sign (including $HOME) or the tilda character.  It is wisest to test your scripts from a blank configuration and starting from your home directory.. <BR>
-i.e.<BR>
-&nbsp;&nbsp;&nbsp;SHELL> cd $HOME; bash --noprofile --norc
-&nbsp;&nbsp;&nbsp;SHELL> node .homebridge/Cmd4Scripts/State.js Get My_Fan On
+
+### Step 1  Change to your home directory.
+&nbsp;&nbsp;&nbsp;SHELL> cd <BR>
+
+### Step 2  Run a shell that does not read your profile to omit any special variables.
+&nbsp;&nbsp;&nbsp;SHELL> cd $HOME; bash --noprofile --norc <BR>
+
+### Step 3  Try the default State.js script
+&nbsp;&nbsp;&nbsp;SHELL> node .homebridge/Cmd4Scripts/State.js Get My_Fan On <BR>
+
+### Step 4  Try your state command 
+&nbsp;&nbsp;&nbsp;SHELL> .homebridge/Cmd4Scripts/PS4.sh Get My_Fan On <BR>
+
+### Step 5  Try the cmd4 CheckYourScript.sh
+&nbsp;&nbsp;&nbsp;SHELL> cd <BR>
+&nbsp;&nbsp;&nbsp;SHELL> bash --noprofile --norc <BR>
+&nbsp;&nbsp;&nbsp;SHELL> '.homebridge/Cmd4Scripts/CheckYourScript.sh' 'bin/MyExec' 'Get' 'MyDevice' 'On' <BR>
+or something else like <BR>
+&nbsp;&nbsp;&nbsp;SHELL> '.homebridge/Cmd4Scripts/CheckYourScript.sh' 'bash' 'bin/YourScript.sh' 'Get' 'MyDevice' 'On' <BR>
+or something else like <BR>
+&nbsp;&nbsp;&nbsp;SHELL> '.homebridge/Cmd4Scripts/CheckYourScript.sh' 'bin/YourScript.sh' 'Get' 'MyDevice' 'On' <BR>
+<BR>
+Note 1. The arguments to CheckYourScript.sh are exactly what your state_cmd has define plus the options passed to your script<BR>
+Note 2. Don't forget to put the '' around the command to prevent globing as written above. <BR>
+Note 3. If your state_cmd has a '$' in it. the CheckYourScript.sh will fail and so rightly would homebridge-cmd4<BR>
+&nbsp;&nbsp;&nbsp;SHELL> '.homebridge/Cmd4Scripts/CheckYourScript.sh' '$HOME/bin/YourScript.sh' 'Get' 'MyDevice' 'On' <BR>
+<BR>
   
 
 Raspbian-Stretch
@@ -551,6 +581,3 @@ Link References
 
 [homekit_screenshot]:https://github.com/ztalbot2000/homebridge-cmd4/raw/master/screenshots/Homekit_screenshot.png
 [eve_screenshot]:https://github.com/ztalbot2000/homebridge-cmd4/raw/master/screenshots/Eve_screenshot.png
-
-
-
