@@ -8,6 +8,7 @@
 * [**About the Cmd4 Plugin**](#about-the-cmd4-plugin)
 * [**How the Cmd4 Plugin Works**](#how-the-cmd4-plugin-works)
 * [**Features**](#features)
+* [**Whats new in 2.2**](#whats-new-in-22)
 * [**Whats new in 2.1**](#whats-new-in-21)
 * [**Whats new in 2.0**](#whats-new-in-20)
 * [**Screenshots**](#screenshots)
@@ -44,7 +45,17 @@
 
 &nbsp;&nbsp;&nbsp; Cmd4 can be configured to respond to actual devices directly or by modofying the script file it calls.
 
-&nbsp;&nbsp;&nbsp; Look closely at State.js and config.min.json as in them they have most of all the characteristics defined.
+&nbsp;&nbsp;&nbsp; Look closely at State.js and config.min.json as in them they have all the characteristics and any of their constant values defined. 
+
+&nbsp;&nbsp;&nbsp; Cmd4 supports linked accessories.  Multiple Input Sources for a TV is the example given.
+
+
+<BR><BR>
+## Whats new in 2.2
+&nbsp;&nbsp;&nbsp; This version adds in linked accessories. HDMI Input sources for a TV are now shown in HomeKit as an example.<BR>
+&nbsp;&nbsp;&nbsp; This release also defines constants for all thecharacteristics that has them.  Look at the config.min.json file for descriptions of the constants per characteristic.<BR>
+&nbsp;&nbsp;&nbsp; The number of test cases increases because of constants to 4500.  That equates to almost 61\% more coverage, and less possible errors.<BR>
+&nbsp;&nbsp;&nbsp; Finally this release adds in version checking so you are always up to date with the latest version of Homebridge-Cmd4.<BR>
 
 <BR><BR>
 ## Whats new in 2.1
@@ -349,6 +360,8 @@ The command may not exist, but also the timeout value in your config.json for th
 ### Step 3  Polling is supported
 &nbsp;&nbsp;&nbsp; Even if you do not use polling, care was taken that all Set Target states are immediately followed by a Get of the Current state. This is so that after closing a garage door for instance, Homekit gets updated that the door was closed.    
    
+### Step 3  Sending constants to your script.
+&nbsp;&nbsp;&nbsp; By placing in your config.json file the tag "outputConstants": true, instead of values, your script will receive constants instead of values (Where Applicable). Homebridge-Cmd4 will except constants or values as input.  See the config.min.json file for the defined constants.
     
 &nbsp;&nbsp;&nbsp; Your now ready to go and try Fans, Switches, Garage Doors, Locks, Sensors ....    
 
@@ -498,9 +511,10 @@ Note: There is one bug where the testcases do not run correctly every second att
 
 <BR><BR>
 ## Todo
-* [ ] Referred devices, i.e. a smoke detectors battery is not yet linked.
+* [X] Linked characteristics, i.e. a smoke detectors battery is not yet linked.
 * [ ] Support for custom characteristics for an accessory.
-* [X] Support multi word device names. (Technically done, but scripting is hard for newbies).    
+* [X] Support multi word device names. (Technically done, but scripting is hard for newbies).
+* [ ] Scripting language to avoid creating new Homebridge modules.
 
 <BR><BR>
 ## Contributing

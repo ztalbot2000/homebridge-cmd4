@@ -198,7 +198,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(123); else console.log(c);
+                if (c == "") console.log(1); else console.log(c);
 
                 // UUID: 000000E7-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.activeIdentifier
@@ -996,8 +996,6 @@ switch(io)
                 // Valid Values
                 // 0 - SHOWN
                 // 1 - HIDDEN
-                // 2 - STOP
-                // 3 - Reserved ????
 
                 break;
             }
@@ -1256,6 +1254,49 @@ switch(io)
                 // Found in HomeKitTypes.js
 
                 // Format: Bool
+
+                break;
+            }
+            case "Identifier":
+            {
+                c = readData(device, characteristic);
+
+                if (c == ""){
+                  // Each identifier needs a unique number
+                  // Match this with what is in the config.json
+                  switch(device)
+                  {  
+                     case "HDMI1":
+                          console.log(0);
+                          break;
+                     case "HDMI2":
+                          console.log(1);
+                          break;
+                     case "HDMI3":
+                          console.log(2);
+                          break;
+                     case "HDMI4":
+                          console.log(3);
+                          break;
+                     case "Netflix":
+                          console.log(4);
+                          break;
+                     default:
+                          console.log(0);
+                  }
+               } else {
+                  console.log(c);
+               }
+                
+                // UUID: 000000E6-0000-1000-8000-0026BB765291
+                // Type: public.hap.characteristic.identifier
+                // Permissions: Paired Read
+                // Found in HomeKitTypes-Television.js
+
+                // Format: uint32
+
+                // Min Value: 0
+                // Min Step: 1
 
                 break;
             }
@@ -3654,6 +3695,12 @@ switch(io)
                 break;
             }
             case "Identify":
+            {
+                writeData(device, characteristic, option);
+                
+                break;
+            }
+            case "Identifier":
             {
                 writeData(device, characteristic, option);
                 

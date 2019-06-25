@@ -108,7 +108,7 @@ describe('Testing CMD4_ACC_TYPE_ENUM[]', function ()
    }
 });
 
-var API = require('/usr/local/lib/node_modules/homebridge/lib/api').API;
+var API = require('../node_modules/homebridge/lib/api').API;
 var _api = new API(); // object we feed to Plugins
 
 describe('Testing homebridge API', function ()
@@ -166,68 +166,59 @@ describe('Testing index.js plugin initialized variables.', function ()
 // ******** TEST CMD4_DEVICE_TYPE_ENUM.properties *************
 describe('Testing CMD4_DEVICE_TYPE_ENUM.properties', function ()
 {
-   it('CMD4_DEVICE_TYPE_ENUM.properties should be an array', function (done)
+   it('CMD4_DEVICE_TYPE_ENUM.properties should be an array', function ()
    {
       assert.isObject(cmd4.CMD4_DEVICE_TYPE_ENUM.properties, "CMD4_DEVICE_TYPE_ENUM.properties is not an object");
-      done();
    });
 
    for (let index=0; index < cmd4.CMD4_DEVICE_TYPE_ENUM.EOL; index ++)
    {  
       it('CMD4_DEVICE_TYPE_ENUM.properties[' + index + '] should not be null ',
-          function (done)
+          function ()
       {      
           assert.isNotNull(cmd4.CMD4_DEVICE_TYPE_ENUM.properties[index], 'properties[' +  index + '] is null');
-          done();
       });
 
       it('CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].deviceName should not be null ',
-          function (done)
+          function ()
       {      
           assert.isNotNull(cmd4.CMD4_DEVICE_TYPE_ENUM.properties[index].deviceName, 'deviceName is null');
-          done();
       });
 
       it('CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].service should not be null ',
-          function (done)
+          function ()
       {      
           assert.isNotNull(cmd4.CMD4_DEVICE_TYPE_ENUM.properties[index].service, 'service is null');
-          done();
       });
 
       it('CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].devicesStateChangeDefaultTime should not be null ',
-          function (done)
+          function ()
       {      
           assert.isNotNull(cmd4.CMD4_DEVICE_TYPE_ENUM.properties[index].devicesStateChangeDefaultTime, 'devicesStateChangeDefaultTime is null');
-          done();
       });
 
       it('CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].requiredCharacteristics should be an array ',
-          function (done)
+          function ()
       {
           assert.isArray(cmd4.CMD4_DEVICE_TYPE_ENUM.properties[index].requiredCharacteristics, 'requiredCharacteristics is not an array');
-          done();
       });
 
       it('CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].defaultValues should be an array ',
-          function (done)
+          function ()
       {      
           assert.isArray(cmd4.CMD4_DEVICE_TYPE_ENUM.properties[index].defaultValues, 'defaultValues is not an array');
-          done();
       });
 
       it('length of CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].defaultValues should equal CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].requiredCharacteristics  ',
-          function (done)
+          function ()
       {      
           assert(cmd4.CMD4_DEVICE_TYPE_ENUM.properties[index].defaultValues.length ==  cmd4.CMD4_DEVICE_TYPE_ENUM.properties[index].requiredCharacteristics.length, 'Length is not the same');
-          done();
       });
 
       it('CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].defaultPollingCharacteristics should be an array ',
-          function (done)
+          function ()
       {
           assert.isArray(cmd4.CMD4_DEVICE_TYPE_ENUM.properties[index].defaultPollingCharacteristics, 'defaultPollingCharacteristics is not an array');
-          done();
       });
    }
 });
@@ -244,24 +235,21 @@ describe('Testing CMD4_DEVICE_TYPE_ENUM.properties[].requiredCharacteristics', f
          let characteristic = cmd4.CMD4_DEVICE_TYPE_ENUM.properties[index].requiredCharacteristics[rindex];
 
          it('CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].requiredCharacteristics[' + rindex + '] should be a number of  ',
-             function (done)
+             function ()
          {
              assert.isNumber(characteristic, 'characteristic must be a number matching CMD4_DEVICE_TYPE_ENUM');
-             done();
          });
 
          it('CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].requiredCharacteristics[' + rindex + '] < 0',
-             function (done)
+             function ()
          {
              assert.isAbove(characteristic, 0, 'characteristic is below zero');
-             done();
          });
 
          it('CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].requiredCharacteristics[' + rindex + '] > ' + rindex,
-             function (done)
+             function ()
          {
              assert.isBelow(characteristic, cmd4.CMD4_ACC_TYPE_ENUM.EOL, 'characteristic not in range');
-             done();
          });
       }
    }
@@ -279,24 +267,21 @@ describe('Testing CMD4_DEVICE_TYPE_ENUM.properties[].defaultPollingCharacteristi
          let characteristic = cmd4.CMD4_DEVICE_TYPE_ENUM.properties[index].defaultPollingCharacteristics[rindex];
 
          it('CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].defaultPollingCharacteristics[' + rindex + '] should be a number of  ',
-             function (done)
+             function ()
          {
              assert.isNumber(characteristic, 'characteristic must be a number matching CMD4_DEVICE_TYPE_ENUM');
-             done();
          });
 
          it('CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].defaultPollingCharacteristics[' + rindex + '] < 0',
-             function (done)
+             function ()
          {
              assert.isAbove(characteristic, 0, 'characteristic is below zero');
-             done();
          });
 
          it('CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].defaultPollingCharacteristics[' + rindex + '] > ' + cmd4.CMD4_ACC_TYPE_ENUM.EOL,
-             function (done)
+             function ()
          {
              assert.isBelow(characteristic, cmd4.CMD4_ACC_TYPE_ENUM.EOL, 'characteristic not in range');
-             done();
          });
 
          // Check that polled characteristic is in required characteristics
@@ -312,10 +297,9 @@ describe('Testing CMD4_DEVICE_TYPE_ENUM.properties[].defaultPollingCharacteristi
              }
          }
          it('CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].defaultPollingCharacteristics[' + rindex + '] is in requiredCharacteristics',
-             function (done)
+             function ()
          {      
              assert.isTrue(foundInRequiredCharacteristics, 'Polling characteristic is not in required Characteristics');   
-             done();
          });
       }
    }
@@ -332,25 +316,47 @@ describe('Testing CMD4_ACC_TYPE_ENUM.properties', function ()
    for (let index=0; index < cmd4.CMD4_ACC_TYPE_ENUM.EOL; index ++)
    {  
       it('CMD4_ACC_TYPE_ENUM.properties[' + index + '] should not be null ',
-          function (done)
+          function ()
       {      
              assert.isNotNull(cmd4.CMD4_ACC_TYPE_ENUM.properties[index], 'properties is null');
-             done();
       });
 
       it('CMD4_ACC_TYPE_ENUM.properties[' + index + '].name should not be null ',
-          function (done)
+          function ()
       {      
              assert.isNotNull(cmd4.CMD4_ACC_TYPE_ENUM.properties[index].name, 'name is null');
-             done();
       });
 
       it('CMD4_ACC_TYPE_ENUM.properties[' + index + '].characteristic should not be null ',
-          function (done)
+          function ()
       {      
           assert.isNotNull(cmd4.CMD4_ACC_TYPE_ENUM.properties[index].characteristic, 'characteristic is null');
-          done();
       });
+
+      it('CMD4_ACC_TYPE_ENUM.properties[' + index + '].values should not be null ',
+          function ()
+      {      
+          assert.isNotNull(cmd4.CMD4_ACC_TYPE_ENUM.properties[index].values, 'values is null');
+      });
+
+      let numberOfValues = Object.keys(cmd4.CMD4_ACC_TYPE_ENUM.properties[index].values).length;
+      if (numberOfValues > 0)
+      {
+         for (let key in cmd4.CMD4_ACC_TYPE_ENUM.properties[index].values)
+         {
+            it('CMD4_ACC_TYPE_ENUM.properties[' + index + '].values[' + key +'] should be a string ',
+            function ()
+            {
+              assert.isString(key, "Key:'" + key + "' is not a string");
+            });
+            it('CMD4_ACC_TYPE_ENUM.properties[' + index + '].values[' + key + '] should be a string ',
+            function ()
+            {
+               let value = cmd4.CMD4_ACC_TYPE_ENUM.properties[index].values[key];
+               assert.isNotNull(value, "Value:'" + value + "' is null");
+            });
+         }
+      }
    }
 });
 

@@ -3,7 +3,17 @@ const exec = require("child_process").exec;
 const moment = require('moment');
 const fs = require('fs');
 const commandExistsSync = require('command-exists').sync;
+const versionCheck = require('github-version-checker');
+const FgMagenta = "\x1b[35m"
+const FgBlack = "\x1b[30m"
 
+
+const versionCheckOptions = {
+  repo: 'homebridge-cmd4', 
+  owner: 'ztalbot2000', 
+  currentVersion: require('./package.json').version,
+  fetchTags: true 
+};
 
 const SLOW_STATE_CHANGE_RESPONSE_TIME   = 10000;  // 10 seconds
 const MEDIUM_STATE_CHANGE_RESPONSE_TIME = 3000;   // 3 seconds
@@ -87,6 +97,7 @@ var Accessory;
 var Service; 
 var Characteristic ;
 var UUIDGen;
+var foundAccessories = [];
 
 var CMD4_ACC_TYPE_ENUM =
 {
@@ -146,111 +157,112 @@ var CMD4_ACC_TYPE_ENUM =
    HoldPosition:                          53,
    Hue:                                   54,
    Identify:                              55,
-   ImageMirroring:                        56,
-   ImageRotation:                         57,
-   InputDeviceType:                       58,
-   InputSourceType:                       59,
-   InUse:                                 60,
-   IsConfigured:                          61,
-   LeakDetected:                          62,
-   LinkQuality:                           63,
-   LockControlPoint:                      64,
-   LockCurrentState:                      65,
-   LockLastKnownAction:                   66,
-   LockManagementAutoSecurityTimeout:     67,
-   LockPhysicalControls:                  68,
-   LockTargetState:                       69,
-   Logs:                                  70,
-   Manufacturer:                          71,
-   Model:                                 72,
-   MotionDetected:                        73,
-   Mute:                                  74,
-   Name:                                  75,
-   NightVision:                           76,
-   NitrogenDioxideDensity:                77,
-   ObstructionDetected:                   78,
-   OccupancyDetected:                     79,
-   On:                                    80,
-   OpticalZoom:                           81,
-   OutletInUse:                           82,
-   OzoneDensity:                          83,
-   PairSetup:                             84,
-   PairVerify:                            85,
-   PairingFeatures:                       86,
-   PairingPairings:                       87,
-   PictureMode:                           88,
-   PM10Density:                           89,
-   PM2_5Density:                          90,
-   PositionState:                         91,
-   PowerModeSelection:                    92,
-   ProgramMode:                           93,
-   ProgrammableSwitchEvent:               94,
-   ProgrammableSwitchOutputState:         95,
-   Reachable:                             96,
-   RelativeHumidityDehumidifierThreshold: 97,
-   RelativeHumidityHumidifierThreshold:   98,
-   RelayEnabled:                          99,
-   RelayState:                            100,
-   RelayControlPoint:                     101,
-   RemainingDuration:                     102,
-   RemoteKey:                             103,
-   ResetFilterIndication:                 104,
-   RotationDirection:                     105,
-   RotationSpeed:                         106,
-   Saturation:                            107,
-   SecuritySystemAlarmType:               108,
-   SecuritySystemCurrentState:            109,
-   SecuritySystemTargetState:             110,
-   SelectedRTPStreamConfiguration:        111,
-   SerialNumber:                          112,
-   ServiceLabelIndex:                     113,
-   ServiceLabelNamespace:                 114,
-   SetDuration:                           115,
-   SetupEndpoints:                        116,
-   SlatType:                              117,
-   SleepDiscoveryMode:                    118,
-   SmokeDetected:                         119,
-   StatusActive:                          120,
-   StatusFault:                           121,
-   StatusJammed:                          122,
-   StatusLowBattery:                      123,
-   StatusTampered:                        124,
-   StreamingStatus:                       125,
-   SulphurDioxideDensity:                 126,
-   SupportedAudioStreamConfiguration:     127,
-   SupportedRTPConfiguration:             128,
-   SupportedVideoStreamConfiguration:     129,
-   SwingMode:                             130,
-   TargetAirPurifierState:                131,
-   TargetAirQuality:                      132,
-   TargetDoorState:                       133,
-   TargetFanState:                        134,
-   TargetHeaterCoolerState:               135,
-   TargetHeatingCoolingState:             136,
-   TargetHorizontalTiltAngle:             137,
-   TargetHumidifierDehumidifierState:     138,
-   TargetMediaState:                      139,
-   TargetPosition:                        140,
-   TargetRelativeHumidity:                141,
-   TargetSlatState:                       142,
-   TargetTemperature:                     143,
-   TargetTiltAngle:                       144,
-   TargetVerticalTiltAngle:               145,
-   TargetVisibilityState:                 146,
-   TemperatureDisplayUnits:               147,
-   TimeUpdate:                            148,
-   TunneledAccessoryAdvertising:          149,
-   TunneledAccessoryConnected:            150,
-   TunneledAccessoryStateNumber:          151,
-   TunnelConnectionTimeout:               152,
-   ValveType:                             153,
-   Version:                               154,
-   VOCDensity:                            155,
-   Volume:                                156,
-   VolumeControlType:                     157,
-   VolumeSelector:                        158,
-   WaterLevel:                            159,
-   EOL:                                   160,
+   Identifier:                            56,
+   ImageMirroring:                        57,
+   ImageRotation:                         58,
+   InputDeviceType:                       59,
+   InputSourceType:                       60,
+   InUse:                                 61,
+   IsConfigured:                          62,
+   LeakDetected:                          63,
+   LinkQuality:                           64,
+   LockControlPoint:                      65,
+   LockCurrentState:                      66,
+   LockLastKnownAction:                   67,
+   LockManagementAutoSecurityTimeout:     68,
+   LockPhysicalControls:                  69,
+   LockTargetState:                       70,
+   Logs:                                  71,
+   Manufacturer:                          72,
+   Model:                                 73,
+   MotionDetected:                        74,
+   Mute:                                  75,
+   Name:                                  76,
+   NightVision:                           77,
+   NitrogenDioxideDensity:                78,
+   ObstructionDetected:                   79,
+   OccupancyDetected:                     80,
+   On:                                    81,
+   OpticalZoom:                           82,
+   OutletInUse:                           83,
+   OzoneDensity:                          84,
+   PairSetup:                             85,
+   PairVerify:                            86,
+   PairingFeatures:                       87,
+   PairingPairings:                       88,
+   PictureMode:                           89,
+   PM10Density:                           90,
+   PM2_5Density:                          91,
+   PositionState:                         92,
+   PowerModeSelection:                    93,
+   ProgramMode:                           94,
+   ProgrammableSwitchEvent:               95,
+   ProgrammableSwitchOutputState:         96,
+   Reachable:                             97,
+   RelativeHumidityDehumidifierThreshold: 98,
+   RelativeHumidityHumidifierThreshold:   99,
+   RelayEnabled:                          100,
+   RelayState:                            101,
+   RelayControlPoint:                     102,
+   RemainingDuration:                     103,
+   RemoteKey:                             104,
+   ResetFilterIndication:                 105,
+   RotationDirection:                     106,
+   RotationSpeed:                         107,
+   Saturation:                            108,
+   SecuritySystemAlarmType:               109,
+   SecuritySystemCurrentState:            110,
+   SecuritySystemTargetState:             111,
+   SelectedRTPStreamConfiguration:        112,
+   SerialNumber:                          113,
+   ServiceLabelIndex:                     114,
+   ServiceLabelNamespace:                 115,
+   SetDuration:                           116,
+   SetupEndpoints:                        117,
+   SlatType:                              118,
+   SleepDiscoveryMode:                    119,
+   SmokeDetected:                         120,
+   StatusActive:                          121,
+   StatusFault:                           122,
+   StatusJammed:                          123,
+   StatusLowBattery:                      124,
+   StatusTampered:                        125,
+   StreamingStatus:                       126,
+   SulphurDioxideDensity:                 127,
+   SupportedAudioStreamConfiguration:     128,
+   SupportedRTPConfiguration:             129,
+   SupportedVideoStreamConfiguration:     130,
+   SwingMode:                             131,
+   TargetAirPurifierState:                132,
+   TargetAirQuality:                      133,
+   TargetDoorState:                       134,
+   TargetFanState:                        135,
+   TargetHeaterCoolerState:               136,
+   TargetHeatingCoolingState:             137,
+   TargetHorizontalTiltAngle:             138,
+   TargetHumidifierDehumidifierState:     139,
+   TargetMediaState:                      140,
+   TargetPosition:                        141,
+   TargetRelativeHumidity:                142,
+   TargetSlatState:                       143,
+   TargetTemperature:                     144,
+   TargetTiltAngle:                       145,
+   TargetVerticalTiltAngle:               146,
+   TargetVisibilityState:                 147,
+   TemperatureDisplayUnits:               148,
+   TimeUpdate:                            149,
+   TunneledAccessoryAdvertising:          150,
+   TunneledAccessoryConnected:            151,
+   TunneledAccessoryStateNumber:          152,
+   TunnelConnectionTimeout:               153,
+   ValveType:                             154,
+   Version:                               155,
+   VOCDensity:                            156,
+   Volume:                                157,
+   VolumeControlType:                     158,
+   VolumeSelector:                        159,
+   WaterLevel:                            160,
+   EOL:                                   161,
    properties: {}
 };
 
@@ -278,6 +290,984 @@ module.exports =
 
    FakeGatoHistoryService = require('fakegato-history')(homebridge);
 
+   
+   // Fill in the properties of all possible characteristics
+   CMD4_ACC_TYPE_ENUM.properties =
+   {
+      0:   { name: "AccessoryFlags", 
+             characteristic: Characteristic.AccessoryFlags,
+             values: {} 
+           },
+      1:   { name: "Active",
+             characteristic:Characteristic.Active,
+             values: {"INACTIVE": Characteristic.Active.INACTIVE,
+                      "ACTIVE": Characteristic.Active.ACTIVE
+                     } 
+           },
+      2:   { name: "ActiveIdentifier",
+             characteristic: Characteristic.ActiveIdentifier,
+             values: {} 
+           },
+      3:   { name: "AccessoryIdentifier",
+             characteristic: Characteristic.AccessoryIdentifier,
+             values: {} 
+           },
+      4:   { name: "AdministratorOnlyAccess",
+             characteristic: Characteristic.AdministratorOnlyAccess,
+             values: {"FALSE": false,
+                      "TRUE":   true
+                     } 
+           },
+      5:   { name: "AirParticulateDensity",
+             characteristic: Characteristic.AirParticulateDensity,
+             values: {} 
+           },
+      6:   { name: "AirParticulateSize",
+             characteristic: Characteristic.AirParticulateSize,
+             values: {"_2_5_M": Characteristic.AirParticulateSize._2_5_M,
+                      "_10_M":  Characteristic.AirParticulateSize._10_M
+                     } 
+           },
+      7:   { name: "AirQuality",
+             characteristic: Characteristic.AirQuality,
+             values: {"UNKNOWN":   Characteristic.AirQuality.UNKNOWN,
+                      "EXCELLENT": Characteristic.AirQuality.EXCELLENT,
+                      "GOOD":      Characteristic.AirQuality.GOOD,
+                      "FAIR":      Characteristic.AirQuality.FAIR,
+                      "INFERIOR":  Characteristic.AirQuality.INFERIOR,
+                      "POOR":      Characteristic.AirQuality.POOR
+                     } 
+           },
+      8:   { name: "AudioFeedback",
+             characteristic: Characteristic.AudioFeedback,
+             values: {"FALSE": false,
+                      "TRUE":  true
+                     } 
+           },
+      9:   { name: "BatteryLevel",
+             characteristic: Characteristic.BatteryLevel,
+             values: {} 
+           },
+      10:  { name: "Brightness",
+             characteristic: Characteristic.Brightness,
+             values: {} 
+           },
+      11:  { name: "CarbonDioxideDetected",
+             characteristic: Characteristic.CarbonDioxideDetected,
+             values: {"CO2_LEVELS_NORMAL":
+                      Characteristic.CarbonDioxideDetected.CO2_LEVELS_NORMAL,
+                      "CO2_LEVELS_ABNORMAL":
+                      Characteristic.CarbonDioxideDetected.CO2_LEVELS_ABNORMAL
+                     } 
+           },
+      12:  { name: "CarbonDioxideLevel",
+             characteristic: Characteristic.CarbonDioxideLevel,
+             values: {} 
+           },
+      13:  { name: "CarbonDioxidePeakLevel",
+             characteristic: Characteristic.CarbonDioxidePeakLevel,
+             values: {} 
+           },
+      14:  { name: "CarbonMonoxideDetected",
+             characteristic: Characteristic.CarbonMonoxideDetected,
+             values: {"CO_LEVELS_NORMAL":
+                      Characteristic.CarbonMonoxideDetected.CO_LEVELS_NORMAL,
+                      "CO_LEVELS_ABNORMAL":
+                      Characteristic.CarbonMonoxideDetected.CO_LEVELS_ABNORMAL
+                     } 
+           },
+      15:  { name: "CarbonMonoxideLevel",
+             characteristic: Characteristic.CarbonMonoxideLevel,
+             values: {} 
+           },
+      16:  { name: "CarbonMonoxidePeakLevel",
+             characteristic: Characteristic.CarbonMonoxidePeakLevel,
+             values: {} 
+           },
+      17:  { name: "Category",
+             characteristic: Characteristic.Category,
+             values: {} 
+           },
+      18:  { name: "ChargingState",
+             characteristic: Characteristic.ChargingState,
+             values: {"NOT_CHARGING": 
+                      Characteristic.ChargingState.NOT_CHARGING,
+                      "CHARGING": 
+                      Characteristic.ChargingState.CHARGING,
+                      "NOT_CHARGEABLE":
+                      Characteristic.ChargingState.NOT_CHARGEABLE
+                     } 
+           },
+      19:  { name: "ClosedCaptions",
+             characteristic: Characteristic.ClosedCaptions,
+             values: {"DISABLED": Characteristic.ClosedCaptions.DISABLED,
+                      "ENABLED":  Characteristic.ClosedCaptions.ENABLED
+                     } 
+           },
+      20:  { name: "ColorTemperature",
+             characteristic: Characteristic.ColorTemperature,
+             values: {} 
+           },
+      21:  { name: "ConfiguredName",
+             characteristic: Characteristic.ConfiguredName,
+             values: {} 
+           },
+      22:  { name: "ConfigureBridgedAccessoryStatus",
+             characteristic: Characteristic.ConfigureBridgedAccessoryStatus,
+             values: {} 
+           },
+      23:  { name: "ConfigureBridgedAccessory",
+             characteristic: Characteristic.ConfigureBridgedAccessory,
+             values: {} 
+           },
+      24:  { name: "ContactSensorState",
+             characteristic: Characteristic.ContactSensorState,
+             values: {"CONTACT_DETECTED":
+                      Characteristic.ContactSensorState.CONTACT_DETECTED,
+                      "CONTACT_NOT_DETECTED":
+                      Characteristic.ContactSensorState.CONTACT_NOT_DETECTED
+                     } 
+           },
+      25:  { name: "CoolingThresholdTemperature",
+             characteristic: Characteristic.CoolingThresholdTemperature ,
+             values: {} 
+           },
+      26:  { name: "CurrentAirPurifierState",
+             characteristic: Characteristic.CurrentAirPurifierState,
+             values: 
+                {"INACTIVE": 
+                     Characteristic.CurrentAirPurifierState.INACTIVE,
+                 "IDLE":     
+                     Characteristic.CurrentAirPurifierState.IDLE,
+                 "PURIFYING_AIR":
+                     Characteristic.CurrentAirPurifierState.PURIFYING_AIR
+                } 
+           },
+      27:  { name: "CurrentAmbientLightLevel",
+             characteristic: Characteristic.CurrentAmbientLightLevel,
+             values: {} 
+           },
+      28:  { name: "CurrentDoorState",
+             characteristic: Characteristic.CurrentDoorState ,
+             values: {"OPEN":    Characteristic.CurrentDoorState.OPEN,
+                      "CLOSED":  Characteristic.CurrentDoorState.CLOSED,
+                      "OPENING": Characteristic.CurrentDoorState.OPENING,
+                      "CLOSING": Characteristic.CurrentDoorState.CLOSING,
+                      "STOPPED": Characteristic.CurrentDoorState.STOPPED
+                     } 
+           },
+      29:  { name: "CurrentFanState",
+             characteristic: Characteristic.CurrentFanState ,
+             values: {"INACTIVE":    Characteristic.CurrentFanState.INACTIVE,
+                      "IDLE":        Characteristic.CurrentFanState.IDLE,
+                      "BLOWING_AIR": Characteristic.CurrentFanState.BLOWING_AIR
+                     } 
+           },
+      30:  { name: "CurrentHeaterCoolerState",
+             characteristic: Characteristic.CurrentHeaterCoolerState ,
+             values: 
+                {"INACTIVE": Characteristic.CurrentHeaterCoolerState.INACTIVE,
+                 "IDLE":     Characteristic.CurrentHeaterCoolerState.IDLE,
+                 "HEATING":  Characteristic.CurrentHeaterCoolerState.HEATING,
+                 "COOLING":  Characteristic.CurrentHeaterCoolerState.COOLING
+                } 
+           },
+      31:  { name: "CurrentHeatingCoolingState",
+             characteristic: Characteristic.CurrentHeatingCoolingState,
+             values: 
+                {"OFF":  Characteristic.CurrentHeatingCoolingState.OFF,
+                 "HEAT": Characteristic.CurrentHeatingCoolingState.HEAT,
+                 "COOL": Characteristic.CurrentHeatingCoolingState.COOL
+                } 
+           },
+      32:  { name: "CurrentHorizontalTiltAngle",
+             characteristic: Characteristic.CurrentHorizontalTiltAngle ,
+             values: {} 
+           },
+      33:  { name: "CurrentHumidifierDehumidifierState",
+             characteristic: Characteristic.CurrentHumidifierDehumidifierState,
+             values: 
+             {"INACTIVE":
+                 Characteristic.CurrentHumidifierDehumidifierState.INACTIVE,
+              "IDLE":
+                 Characteristic.CurrentHumidifierDehumidifierState.IDLE,                
+              "HUMIDIFYING":
+                 Characteristic.CurrentHumidifierDehumidifierState.HUMIDIFYING,
+              "DEHUMIDIFYING":
+                 Characteristic.CurrentHumidifierDehumidifierState.DEHUMIDIFYING
+             } 
+           },
+      34:  { name: "CurrentMediaState",
+             characteristic: Characteristic.CurrentMediaState,
+             values: {} 
+           },
+      35:  { name: "CurrentPosition",
+             characteristic: Characteristic.CurrentPosition,
+             values: {} 
+           },
+      36:  { name: "CurrentRelativeHumidity",
+             characteristic: Characteristic.CurrentRelativeHumidity,
+             values: {} 
+           },
+      37:  { name: "CurrentSlatState",
+             characteristic: Characteristic.CurrentSlatState,
+             values: {"FIXED":    Characteristic.CurrentSlatState.FIXED,
+                      "JAMMED":   Characteristic.CurrentSlatState.JAMMED,
+                      "SWINGING": Characteristic.CurrentSlatState.SWINGING
+                     } 
+           },
+      38:  { name: "CurrentTemperature",
+             characteristic: Characteristic.CurrentTemperature,
+             values: {} 
+           },
+      39:  { name: "CurrentTiltAngle",
+             characteristic: Characteristic.CurrentTiltAngle,
+             values: {} 
+           },
+      40:  { name: "CurrentTime",
+             characteristic: Characteristic.CurrentTime,
+             values: {} 
+           },
+      41:  { name: "CurrentVerticalTiltAngle",
+             characteristic: Characteristic.CurrentVerticalTiltAngle,
+             values: {} 
+           },
+      42:  { name: "CurrentVisibilityState",   
+             characteristic: Characteristic.CurrentVisibilityState,
+             values: {"SHOWN": Characteristic.CurrentVisibilityState.SHOWN,
+                      "HIDDEN": Characteristic.CurrentVisibilityState.HIDDEN
+                     } 
+           },
+      43:  { name: "DayoftheWeek",
+             characteristic: Characteristic.DayoftheWeek,
+             values: {} 
+           },
+      44:  { name: "DigitalZoom",
+             characteristic: Characteristic.DigitalZoom,
+             values: {} 
+           },
+      45:  { name: "DiscoverBridgedAccessories",
+             characteristic: Characteristic.DiscoverBridgedAccessories,
+             values: {"START_DISCOVERY": Characteristic.DiscoverBridgedAccessories.START_DISCOVERY,
+                      "STOP_DISCOVERY":  Characteristic.DiscoverBridgedAccessories.STOP_DISCOVERY 
+                     } 
+           },
+      46:  { name: "DiscoveredBridgedAccessories",
+             characteristic: Characteristic.DiscoveredBridgedAccessories,
+             values: {} 
+           },
+      47:  { name: "DisplayOrder",
+             characteristic: Characteristic.DisplayOrder,
+             values: {} 
+           },
+      48:  { name: "FilterChangeIndication",
+             characteristic: Characteristic.FilterChangeIndication,
+             values:
+                {"FILTER_OK": 
+                   Characteristic.FilterChangeIndication.FILTER_OK,
+                 "CHANGE_FILTER":
+                   Characteristic.FilterChangeIndication.CHANGE_FILTER
+                } 
+           },
+      49:  { name: "FilterLifeLevel",
+             characteristic: Characteristic.FilterLifeLevel ,
+             values: {} 
+           },
+      50:  { name: "FirmwareRevision",
+             characteristic: Characteristic.FirmwareRevision ,
+             values: {} 
+           },
+      51:  { name: "HardwareRevision",
+             characteristic: Characteristic.HardwareRevision,
+             values: {} 
+           },
+      52:  { name: "HeatingThresholdTemperature",
+             characteristic: Characteristic.HeatingThresholdTemperature,
+             values: {} 
+           },
+      53:  { name: "HoldPosition",
+             characteristic: Characteristic.HoldPosition ,
+             values: {"FALSE": false,
+                      "TRUE":  true
+                     } 
+           },
+      54:  { name: "Hue",
+             characteristic: Characteristic.Hue,
+             values: {} 
+           },
+      55:  { name: "Identify",
+             characteristic: Characteristic.Identify,
+             values: {"FALSE": false,
+                      "TRUE":  true
+                     } 
+           },
+      56:  { name: "Identifier",
+             characteristic: Characteristic.Identifier,
+             values: {} 
+           },
+      57:  { name: "ImageMirroring",
+             characteristic: Characteristic.ImageMirroring,
+             values: {"FALSE": false,
+                      "TRUE":  true
+                     } 
+           },
+      58:  { name: "ImageRotation",
+             characteristic: Characteristic.ImageRotation,
+             values: {} 
+           },
+      59:  { name: "InputDeviceType",
+             characteristic: Characteristic.InputDeviceType,
+             values: 
+                {"OTHER": 
+                    Characteristic.InputDeviceType.OTHER,
+                 "TV": 
+                    Characteristic.InputDeviceType.TV,
+                 "RECORDING": 
+                    Characteristic.InputDeviceType.RECORDING,
+                 "TUNER": 
+                    Characteristic.InputDeviceType.TUNER,
+                 "PLAYBACK":
+                    Characteristic.InputDeviceType.PLAYBACK,
+                 "AUDIO_SYSTEM":
+                    Characteristic.InputDeviceType.AUDIO_SYSTEM
+                 } 
+           },
+      60:  { name: "InputSourceType",
+             characteristic: Characteristic.InputSourceType,
+             values: {"OTHER": 
+                        Characteristic.InputSourceType.OTHER,
+                      "HOME_SCREEN": 
+                        Characteristic.InputSourceType.HOME_SCREEN,
+                      "TUNER": 
+                        Characteristic.InputSourceType.TUNER,
+                      "HDMI": 
+                        Characteristic.InputSourceType.HDMI,
+                      "COMPOSITE_VIDEO":
+                        Characteristic.InputSourceType.COMPOSITE_VIDEO,
+                      "S_VIDEO": 
+                        Characteristic.InputSourceType.S_VIDEO,
+                      "COMPONENT_VIDEO":
+                        Characteristic.InputSourceType.COMPONENT_VIDEO,
+                      "DVI": 
+                        Characteristic.InputSourceType.DVI,
+                      "AIRPLAY":
+                        Characteristic.InputSourceType.AIRPLAY,
+                      "USB": 
+                        Characteristic.InputSourceType.USB,
+                      "APPLICATION": 
+                        Characteristic.InputSourceType.APPLICATION
+                     } 
+           },
+      61:  { name: "InUse",
+             characteristic: Characteristic.InUse,
+             values: {"NOT_IN_USE": Characteristic.InUse.NOT_IN_USE,
+                      "IN_USE":     Characteristic.InUse.IN_USE
+                     } 
+           },
+      62:  { name: "IsConfigured",
+             characteristic: Characteristic.IsConfigured,
+             values: 
+                {"NOT_CONFIGURED": Characteristic.IsConfigured.NOT_CONFIGURED,
+                 "CONFIGURED":     Characteristic.IsConfigured.CONFIGURED
+                 } 
+           },
+      63:  { name: "LeakDetected",
+             characteristic: Characteristic.LeakDetected,
+             values: 
+                {"LEAK_NOT_DETECTED":
+                    Characteristic.LeakDetected.LEAK_NOT_DETECTED,
+                 "LEAK_DETECTED":
+                    Characteristic.LeakDetected.LEAK_DETECTED
+                } 
+           },
+      64:  { name: "LinkQuality",
+             characteristic: Characteristic.LinkQuality,
+             values: {} 
+           },
+      65:  { name: "LockControlPoint",
+             characteristic: Characteristic.LockControlPoint,
+             values: {} 
+           },
+      66:  { name: "LockCurrentState",
+             characteristic: Characteristic.LockCurrentState,
+             values: {"UNSECURED": Characteristic.LockCurrentState.UNSECURED,
+                      "SECURED":   Characteristic.LockCurrentState.SECURED,
+                      "JAMMED":    Characteristic.LockCurrentState.JAMMED,
+                      "UNKNOWN":   Characteristic.LockCurrentState.UNKNOWN
+                     } 
+           },
+      67:  { name: "LockLastKnownAction",
+             characteristic: Characteristic.LockLastKnownAction,
+             values:
+             {"SECURED_PHYSICALLY_INTERIOR":
+                 Characteristic.LockLastKnownAction.SECURED_PHYSICALLY_INTERIOR,
+              "UNSECURED_PHYSICALLY_INTERIOR":
+                 Characteristic.LockLastKnownAction.UNSECURED_PHYSICALLY_INTERIOR,
+              "SECURED_PHYSICALLY_EXTERIOR":
+                 Characteristic.LockLastKnownAction.SECURED_PHYSICALLY_EXTERIOR,
+              "UNSECURED_PHYSICALLY_EXTERIOR":
+                 Characteristic.LockLastKnownAction.UNSECURED_PHYSICALLY_EXTERIOR,
+              "SECURED_BY_KEYPAD":
+                 Characteristic.LockLastKnownAction.SECURED_BY_KEYPAD,
+              "UNSECURED_BY_KEYPAD":
+                 Characteristic.LockLastKnownAction.UNSECURED_BY_KEYPAD,
+              "SECURED_REMOTELY":
+                 Characteristic.LockLastKnownAction.SECURED_REMOTELY,
+              "UNSECURED_REMOTELY":
+                 Characteristic.LockLastKnownAction.UNSECURED_REMOTELY,
+              "SECURED_BY_AUTO_SECURE_TIMEOUT":
+                 Characteristic.LockLastKnownAction.SECURED_BY_AUTO_SECURE_TIMEOUT
+             } 
+           },
+      68:  { name: "LockManagementAutoSecurityTimeout",
+             characteristic: Characteristic.LockManagementAutoSecurityTimeout,
+             values: {} 
+           },
+      69:  { name: "LockPhysicalControls",
+             characteristic: Characteristic.LockPhysicalControls,
+             values: 
+                {"CONTROL_LOCK_DISABLED":
+                    Characteristic.LockPhysicalControls.CONTROL_LOCK_DISABLED,
+                 "CONTROL_LOCK_ENABLED":
+                    Characteristic.LockPhysicalControls.CONTROL_LOCK_ENABLED
+                 } 
+           },
+      70:  { name: "LockTargetState",
+             characteristic: Characteristic.LockTargetState,
+             values: {"UNSECURED": Characteristic.LockTargetState.UNSECURED,
+                      "SECURED": Characteristic.LockTargetState.SECURED
+                     } 
+           },
+      71:  { name: "Logs",
+             characteristic: Characteristic.Logs,
+             values: {} 
+           },
+      72:  { name: "Manufacturer",
+             characteristic: Characteristic.Manufacturer,
+             values: {} 
+           },
+      73:  { name: "Model",
+             characteristic: Characteristic.Model,
+             values: {} 
+           },
+      74:  { name: "MotionDetected",
+             characteristic: Characteristic.MotionDetected,
+             values: {"FALSE": false,
+                      "TRUE":  true
+                     } 
+           },
+      75:  { name: "Mute",
+             characteristic: Characteristic.Mute,
+             values: {"FALSE": false,
+                      "TRUE":  true
+                     } 
+           },
+      76:  { name: "Name",
+             characteristic: Characteristic.Name,
+             values: {} 
+           },
+      77:  { name: "NightVision",
+             characteristic: Characteristic.NightVision ,
+             values: {"FALSE": false,
+                      "TRUE":  true
+                     } 
+           },
+      78:  { name: "NitrogenDioxideDensity",
+             characteristic: Characteristic.NitrogenDioxideDensity ,
+             values: {} 
+           },
+      79:  { name: "ObstructionDetected",
+             characteristic: Characteristic.ObstructionDetected,
+             values: {"FALSE": false,
+                      "TRUE":  true
+                     } 
+           },
+      80:  { name: "OccupancyDetected",
+             characteristic: Characteristic.OccupancyDetected,
+             values: 
+                {"OCCUPANCY_NOT_DETECTED":
+                    Characteristic.OccupancyDetected.OCCUPANCY_NOT_DETECTED,
+                 "OCCUPANCY_DETECTED":
+                     Characteristic.OccupancyDetected.OCCUPANCY_DETECTED
+                } 
+           },
+      81:  { name: "On",
+             characteristic: Characteristic.On,
+             values: {"FALSE": false,
+                      "TRUE":  true
+                     } 
+           },
+      82:  { name: "OpticalZoom",
+             characteristic: Characteristic.OpticalZoom,
+             values: {} 
+           },
+      83:  { name: "OutletInUse",
+             characteristic: Characteristic.OutletInUse,
+             values: {"FALSE": false,
+                      "TRUE":  true
+                     } 
+           },
+      84:  { name: "OzoneDensity",
+             characteristic: Characteristic.OzoneDensity,
+             values: {} 
+           },
+      85:  { name: "PairSetup",
+             characteristic: Characteristic.PairSetup,
+             values: {} 
+           },
+      86:  { name: "PairVerify",
+             characteristic: Characteristic.PairVerify,
+             values: {} 
+           },
+      87:  { name: "PairingFeatures",
+             characteristic: Characteristic.PairingFeatures,
+             values: {} 
+           },
+      88:  { name: "PairingPairings",
+             characteristic: Characteristic.PairingPairings,
+             values: {} 
+           },
+      89:  { name: "PictureMode",
+             characteristic: Characteristic.PictureMode,
+             values: 
+                {"OTHER":           Characteristic.PictureMode.OTHER,
+                 "STANDARD":        Characteristic.PictureMode.STANDARD,
+                 "CALIBRATED":      Characteristic.PictureMode.CALIBRATED,
+                 "CALIBRATED_DARK": Characteristic.PictureMode.CALIBRATED_DARK,
+                 "VIVID":           Characteristic.PictureMode.VIVID,
+                 "GAME":            Characteristic.PictureMode.GAME,
+                 "COMPUTER":        Characteristic.PictureMode.COMPUTER,
+                 "CUSTOM":          Characteristic.PictureMode.CUSTOM
+                } 
+           },
+      90:  { name: "PM10Density",
+             characteristic: Characteristic.PM10Density,
+             values: {} 
+           },
+      91:  { name: "PM2_5Density",
+             characteristic: Characteristic.PM2_5Density,
+             values: {} 
+           },
+      92:  { name: "PositionState",
+             characteristic: Characteristic.PositionState,
+             values: {"DECREASING": Characteristic.PositionState.DECREASING,
+                      "INCREASING": Characteristic.PositionState.INCREASING,
+                      "STOPPED":    Characteristic.PositionState.STOPPED
+                     } 
+           },
+      93:  { name: "PowerModeSelection",
+             characteristic: Characteristic.PowerModeSelection ,
+             values: {"SHOW": Characteristic.PowerModeSelection.SHOW,
+                      "HIDE": Characteristic.PowerModeSelection.HIDE
+                     } 
+           },
+      94:  { name: "ProgramMode",
+             characteristic: Characteristic.ProgramMode,
+             values:
+                {"NO_PROGRAM_SCHEDULED":
+                   Characteristic.ProgramMode.NO_PROGRAM_SCHEDULED,
+                 "PROGRAM_SCHEDULED":
+                    Characteristic.ProgramMode.PROGRAM_SCHEDULED,
+                 "PROGRAM_SCHEDULED_MANUAL_MODE_":
+                     Characteristic.ProgramMode.PROGRAM_SCHEDULED_MANUAL_MODE_
+                } 
+           },
+      95:  { name: "ProgrammableSwitchEvent",
+             characteristic: Characteristic.ProgrammableSwitchEvent,
+             values: {"SINGLE_PRESS": Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS,
+                      "DOUBLE_PRESS": Characteristic.ProgrammableSwitchEvent.DOUBLE_PRESS,
+                      "LONG_PRESS":   Characteristic.ProgrammableSwitchEvent.LONG_PRESS
+                     } 
+           },
+      96:  { name: "ProgrammableSwitchOutputState",
+             characteristic: Characteristic.ProgrammableSwitchOutputState,
+             values: {} 
+           },
+           
+           
+      97:  { name: "Reachable",
+             characteristic: Characteristic.Reachable,
+             values: {"FALSE": false,
+                      "TRUE":  true
+                     } 
+                  },
+      98:  { name: "RelativeHumidityDehumidifierThreshold",
+             characteristic: Characteristic.RelativeHumidityDehumidifierThreshold,
+             values: {} 
+           },
+      99:  { name: "RelativeHumidityHumidifierThreshold",
+             characteristic: Characteristic.RelativeHumidityHumidifierThreshold,
+             values: {} 
+           },
+      100: { name: "RelayEnabled",
+             characteristic: Characteristic.RelayEnabled,
+             values: {"FALSE": false,
+                      "TRUE":  true
+                     } 
+           },
+      101: { name: "RelayState",
+             characteristic: Characteristic.RelayState,
+             values: {} 
+           },
+      102: { name: "RelayControlPoint",
+             characteristic: Characteristic.RelayControlPoint,
+             values: {} 
+           },
+      103: { name: "RemainingDuration",
+             characteristic: Characteristic.RemainingDuration,
+             values: {} 
+           },
+      104: { name: "RemoteKey",
+             characteristic: Characteristic.RemoteKey,
+             values: 
+                {"REWIND":         Characteristic.RemoteKey.REWIND,
+                 "FAST_FORWARD":   Characteristic.RemoteKey.FAST_FORWARD,
+                 "NEXT_TRACK":     Characteristic.RemoteKey.NEXT_TRACK,
+                 "PREVIOUS_TRACK": Characteristic.RemoteKey.PREVIOUS_TRACK,
+                 "ARROW_UP":       Characteristic.RemoteKey.ARROW_UP,
+                 "ARROW_DOWN":     Characteristic.RemoteKey.ARROW_DOWN,
+                 "ARROW_LEFT":     Characteristic.RemoteKey.ARROW_LEFT,
+                 "ARROW_RIGHT":    Characteristic.RemoteKey.ARROW_RIGHT,
+                 "SELECT":         Characteristic.RemoteKey.SELECT,
+                 "BACK":           Characteristic.RemoteKey.BACK,
+                 "EXIT":           Characteristic.RemoteKey.EXIT,
+                 "PLAY_PAUSE":     Characteristic.RemoteKey.PLAY_PAUSE,
+                 "INFORMATION":    Characteristic.RemoteKey.INFORMATION
+                } 
+           },
+      105: { name: "ResetFilterIndication",
+             characteristic: Characteristic.ResetFilterIndication,
+             values: {} 
+           },
+      106: { name: "RotationDirection",
+             characteristic: Characteristic.RotationDirection,
+             values: 
+                {"CLOCKWISE": 
+                   Characteristic.RotationDirection.CLOCKWISE,
+                 "COUNTER_CLOCKWISE":
+                   Characteristic.RotationDirection.COUNTER_CLOCKWISE
+                } 
+           },
+      107: { name: "RotationSpeed",
+             characteristic: Characteristic.RotationSpeed,
+             values: {} 
+           },
+      108: { name: "Saturation",
+             characteristic: Characteristic.Saturation,
+             values: {} 
+           },
+      109: { name: "SecuritySystemAlarmType",
+             characteristic: Characteristic.SecuritySystemAlarmType,
+             values: {} 
+           },
+      110: { name: "SecuritySystemCurrentState",
+             characteristic: Characteristic.SecuritySystemCurrentState,
+             values:
+                {"STAY_ARM": 
+                   Characteristic.SecuritySystemCurrentState.STAY_ARM,
+                 "AWAY_ARM": 
+                    Characteristic.SecuritySystemCurrentState.AWAY_ARM,
+                 "NIGHT_ARM":
+                    Characteristic.SecuritySystemCurrentState.NIGHT_ARM,
+                 "DISARMED": 
+                    Characteristic.SecuritySystemCurrentState.DISARMED,
+                 "ALARM_TRIGGERED":
+                    Characteristic.SecuritySystemCurrentState.ALARM_TRIGGERED
+                } 
+           },
+      111: { name: "SecuritySystemTargetState",
+             characteristic: Characteristic.SecuritySystemTargetState,
+             values: 
+                {"STAY_ARM": 
+                    Characteristic.SecuritySystemTargetState.STAY_ARM,
+                 "AWAY_ARM": 
+                    Characteristic.SecuritySystemTargetState.AWAY_ARM,
+                 "NIGHT_ARM":
+                    Characteristic.SecuritySystemTargetState.NIGHT_ARM,
+                 "DISARM": 
+                    Characteristic.SecuritySystemTargetState.DISARM
+                } 
+           },
+      112: { name: "SelectedRTPStreamConfiguration",
+             characteristic: Characteristic.SelectedRTPStreamConfiguration ,
+             values: {} 
+           },
+      113: { name: "SerialNumber",
+             characteristic: Characteristic.SerialNumber,
+             values: {} 
+           },
+      114: { name: "ServiceLabelIndex",
+             characteristic: Characteristic.ServiceLabelIndex,
+             values: {} 
+           },
+      115: { name: "ServiceLabelNamespace",
+             characteristic: Characteristic.ServiceLabelNamespace,
+             values: 
+                {"DOTS": 
+                   Characteristic.ServiceLabelNamespace.DOTS,
+                 "ARABIC_NUMERALS":
+                   Characteristic.ServiceLabelNamespace.ARABIC_NUMERALS
+                } 
+           },
+      116: { name: "SetDuration",
+             characteristic: Characteristic.SetDuration,
+             values: {} 
+           },
+      117: { name: "SetupEndpoints",
+             characteristic: Characteristic.SetupEndpoints,
+             values: {} 
+           },
+      118: { name: "SlatType",
+             characteristic: Characteristic.SlatType,
+             values: {"HORIZONTAL": Characteristic.SlatType.HORIZONTAL,
+                      "VERTICAL":   Characteristic.SlatType.VERTICAL
+                     } 
+           },
+      119: { name: "SleepDiscoveryMode",
+             characteristic: Characteristic.SleepDiscoveryMode,
+             values: {"NOT_DISCOVERABLE":    Characteristic.SleepDiscoveryMode.NOT_DISCOVERABLE ,
+                      "ALWAYS_DISCOVERABLE": Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE
+                     } 
+           },
+      120: { name: "SmokeDetected",
+             characteristic: Characteristic.SmokeDetected,
+             values: {"SMOKE_NOT_DETECTED": Characteristic.SmokeDetected.SMOKE_NOT_DETECTED,
+                      "SMOKE_DETECTED":     Characteristic.SmokeDetected.SMOKE_DETECTED
+                     } 
+           },
+      121: { name: "StatusActive",
+             characteristic: Characteristic.StatusActive,
+             values: 
+                {"FALSE": false,
+                  "TRUE":  true
+                } 
+           },
+      122: { name: "StatusFault",
+             characteristic: Characteristic.StatusFault,
+             values: {"NO_FAULT":      Characteristic.StatusFault.NO_FAULT,
+                      "GENERAL_FAULT": Characteristic.StatusFault.GENERAL_FAULT
+                     } 
+           },
+      123: { name: "StatusJammed",
+             characteristic: Characteristic.StatusJammed,
+             values: {"NOT_JAMMED": Characteristic.StatusJammed.NOT_JAMMED,
+                      "JAMMED":     Characteristic.StatusJammed.JAMMED
+                     } 
+           },
+      124: { name: "StatusLowBattery",
+             characteristic: Characteristic.StatusLowBattery,
+             values: 
+                {"BATTERY_LEVEL_NORMAL":
+                   Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL,
+                 "BATTERY_LEVEL_LOW":
+                   Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW
+                } 
+           },
+      125: { name: "StatusTampered",
+             characteristic: Characteristic.StatusTampered,
+             values: 
+                {"NOT_TAMPERED": Characteristic.StatusTampered.NOT_TAMPERED,
+                 "TAMPERED":     Characteristic.StatusTampered.TAMPERED
+                } 
+           },
+      126: { name: "StreamingStatus",
+             characteristic: Characteristic.StreamingStatus,
+             values: {} 
+           },
+      127: { name: "SulphurDioxideDensity",
+             characteristic: Characteristic.SulphurDioxideDensity,
+             values: {} 
+           },
+      128: { name: "SupportedAudioStreamConfiguration",
+             characteristic: Characteristic.SupportedAudioStreamConfiguration,
+             values: {} 
+           },
+      129: { name: "SupportedRTPConfiguration",
+             characteristic: Characteristic.SupportedRTPConfiguration,
+             values: {} 
+           },
+      130: { name: "SupportedVideoStreamConfiguration",
+             characteristic: Characteristic.SupportedVideoStreamConfiguration,
+             values: {} 
+           },
+      131: { name: "SwingMode",
+             characteristic: Characteristic.SwingMode,
+             values: {"SWING_DISABLED": Characteristic.SwingMode.SWING_DISABLED,
+                      "SWING_ENABLED": Characteristic.SwingMode.SWING_ENABLED
+                     } 
+           },
+      132: { name: "TargetAirPurifierState",
+             characteristic: Characteristic.TargetAirPurifierState ,
+             values: {"MANUAL": Characteristic.TargetAirPurifierState.MANUAL,
+                      "AUTO":   Characteristic.TargetAirPurifierState.AUTO
+                     } 
+           },
+      133: { name: "TargetAirQuality",
+             characteristic: Characteristic.TargetAirQuality,
+             values: {"EXCELLENT": Characteristic.TargetAirQuality.EXCELLENT,
+                      "GOOD":      Characteristic.TargetAirQuality.GOOD,
+                      "FAIR":      Characteristic.TargetAirQuality.FAIR
+                     } 
+           },
+      134: { name: "TargetDoorState",
+             characteristic: Characteristic.TargetDoorState,
+             values: {"OPEN":   Characteristic.TargetDoorState.OPEN,
+                      "CLOSED": Characteristic.TargetDoorState.CLOSED
+                     } 
+           },
+      135: { name: "TargetFanState",
+             characteristic: Characteristic.TargetFanState,
+             values: {"MANUAL": Characteristic.TargetFanState.MANUAL,
+                      "AUTO": Characteristic.TargetFanState.AUTO
+                     } 
+           },
+      136: { name: "TargetHeaterCoolerState",
+             characteristic: Characteristic.TargetHeaterCoolerState,
+             values: {"AUTO": Characteristic.TargetHeaterCoolerState.AUTO,
+                      "HEAT": Characteristic.TargetHeaterCoolerState.HEAT,
+                      "COOL": Characteristic.TargetHeaterCoolerState.COOL
+                     } 
+           },
+      137: { name: "TargetHeatingCoolingState",
+             characteristic: Characteristic.TargetHeatingCoolingState,
+             values: {"OFF": Characteristic.TargetHeatingCoolingState.OFF,
+                      "HEAT": Characteristic.TargetHeatingCoolingState.HEAT,
+                      "COOL": Characteristic.TargetHeatingCoolingState.COOL,
+                      "AUTO": Characteristic.TargetHeatingCoolingState.AUTO
+                     } 
+           },
+      138: { name: "TargetHorizontalTiltAngle",
+             characteristic: Characteristic.TargetHorizontalTiltAngle,
+             values: {} 
+           },
+      139: { name: "TargetHumidifierDehumidifierState",
+             characteristic: Characteristic.TargetHumidifierDehumidifierState,
+             values: 
+               {"HUMIDIFIER_OR_DEHUMIDIFIER":
+                  Characteristic.TargetHumidifierDehumidifierState.HUMIDIFIER_OR_DEHUMIDIFIER,               
+                "HUMIDIFIER": 
+                  Characteristic.TargetHumidifierDehumidifierState.HUMIDIFIER,
+                "DEHUMIDIFIER":
+                  Characteristic.TargetHumidifierDehumidifierState.DEHUMIDIFIER
+               } 
+           },
+      140: { name: "TargetMediaState",
+             characteristic: Characteristic.TargetMediaState,
+             values: {"PLAY": Characteristic.TargetMediaState.PLAY,
+                      "PAUSE": Characteristic.TargetMediaState.PAUSE,
+                      "STOP": Characteristic.TargetMediaState.STOP
+                     } 
+           },
+      141: { name: "TargetPosition",
+             characteristic: Characteristic.TargetPosition,
+             values: {} 
+           },
+      142: { name: "TargetRelativeHumidity",
+             characteristic: Characteristic.TargetRelativeHumidity,
+             values: {} 
+           },
+      143: { name: "TargetSlatState",
+             characteristic: Characteristic.TargetSlatState,
+             values: {"MANUAL": Characteristic.TargetSlatState.MANUAL,
+                      "AUTO": Characteristic.TargetSlatState.AUTO
+                     } 
+           },
+      144: { name: "TargetTemperature",
+             characteristic: Characteristic.TargetTemperature,
+             values: {} 
+           },
+      145: { name: "TargetTiltAngle",
+             characteristic: Characteristic.TargetTiltAngle,
+             values: {} 
+           },
+      146: { name: "TargetVerticalTiltAngle",
+             characteristic: Characteristic.TargetVerticalTiltAngle ,
+             values: {} 
+           },
+      147: { name: "TargetVisibilityState",
+             characteristic: Characteristic.TargetVisibilityState,
+             values: {"SHOWN": Characteristic.TargetVisibilityState.SHOWN,
+                      "HIDDEN": Characteristic.TargetVisibilityState.HIDDEN
+                     } 
+           },
+      148: { name: "TemperatureDisplayUnits",
+             characteristic: Characteristic.TemperatureDisplayUnits,
+             values: 
+                {"CELSIUS":    Characteristic.TemperatureDisplayUnits.CELSIUS,
+                 "FAHRENHEIT": Characteristic.TemperatureDisplayUnits.FAHRENHEIT
+                 } 
+           },
+      149: { name: "TimeUpdate",
+             characteristic: Characteristic.TimeUpdate,
+             values: {"FALSE": false,
+                      "TRUE":  true
+                     } 
+           },
+      150: { name: "TunneledAccessoryAdvertising",
+             characteristic: Characteristic.TunneledAccessoryAdvertising,
+             values: {"FALSE": false,
+                      "TRUE":  true
+                     } 
+           },
+      151: { name: "TunneledAccessoryConnected",
+             characteristic: Characteristic.TunneledAccessoryConnected,
+             values: {"FALSE": false,
+                      "TRUE":  true
+                     } 
+           },
+      152: { name: "TunneledAccessoryStateNumber",
+             characteristic: Characteristic.TunneledAccessoryStateNumber,
+             values: {} 
+           },
+      153: { name: "TunnelConnectionTimeout",
+             characteristic: Characteristic.TunnelConnectionTimeout,
+             values: {} 
+           },
+      154: { name: "ValveType",
+             characteristic: Characteristic.ValveType ,
+             values: {"GENERIC_VALVE": Characteristic.ValveType.GENERIC_VALVE,
+                      "IRRIGATION":    Characteristic.ValveType.IRRIGATION,
+                      "SHOWER_HEAD":   Characteristic.ValveType.SHOWER_HEAD,
+                      "WATER_FAUCET":  Characteristic.ValveType.WATER_FAUCET
+                     } 
+           },
+      155: { name: "Version",
+             characteristic: Characteristic.Version,
+             values: {} 
+           },
+      156: { name: "VOCDensity",
+             characteristic: Characteristic.VOCDensity,
+             values: {} 
+           },
+      157: { name: "Volume",
+             characteristic: Characteristic.Volume,
+             values: {} 
+           },
+      158: { name: "VolumeControlType",
+             characteristic: Characteristic.VolumeControlType,
+             values: 
+                {"NONE": 
+                    Characteristic.VolumeControlType.NONE,
+                 "RELATIVE": 
+                    Characteristic.VolumeControlType.RELATIVE,
+                 "RELATIVE_WITH_CURRENT":
+                    Characteristic.VolumeControlType.RELATIVE_WITH_CURRENT,
+                 "ABSOLUTE":
+                    Characteristic.VolumeControlType.ABSOLUTE
+                 } 
+           },
+      159: { name: "VolumeSelector",
+              characteristic: Characteristic.VolumeSelector,
+             values: {"INCREMENT": Characteristic.VolumeSelector.INCREMENT,
+                      "DECREMENT": Characteristic.VolumeSelector.DECREMENT
+                     } 
+           },
+      160: { name: "WaterLevel",
+             characteristic: Characteristic.WaterLevel,
+             values: {} 
+           }
+   };
+   
    // Fill in the properties of each device (Must be done at runtime)
    CMD4_DEVICE_TYPE_ENUM.properties =
    {
@@ -293,12 +1283,12 @@ module.exports =
                  CMD4_ACC_TYPE_ENUM.FirmwareRevision
                 ],
             defaultValues:
-               [ 0,           // Format: Bool
-                 'Cmd4',      // Format: string
-                 0,           // Format: string
+               [ true,                       // Format: Bool
+                 'Cmd4',                     // Format: string
+                 'Model',                    // Format: string
                  'My_AccessoryInformation',  // Format: string
-                 'ABC001',    // Format: string
-                 '100.1.1'    // Format: string
+                 'ABC001',                   // Format: string
+                 '100.1.1'                   // Format: string
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.Identify
@@ -312,9 +1302,9 @@ module.exports =
                  CMD4_ACC_TYPE_ENUM.CurrentAirPurifierState,
                  CMD4_ACC_TYPE_ENUM.TargetAirPurifierState],
             defaultValues:
-               [ 1,    // Active
-                 2,    // Purifying Air
-                 1.    // Active
+               [ Characteristic.Active.ACTIVE,
+                 Characteristic.CurrentAirPurifierState.PURIFYING_AIR,
+                 Characteristic.TargetAirPurifierState.AUTO
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.Active
@@ -327,8 +1317,8 @@ module.exports =
                [ CMD4_ACC_TYPE_ENUM.StatusActive,    // Added anyway
                  CMD4_ACC_TYPE_ENUM.AirQuality],
             defaultValues:
-               [ 0,   // false
-                 1.   // Good
+               [ true,                               // Format: Bool
+                 Characteristic.AirQuality.GOOD
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.StatusActive,
@@ -344,8 +1334,8 @@ module.exports =
                  CMD4_ACC_TYPE_ENUM.StatusLowBattery],
             defaultValues:
                [ 50,  // Range 0-100
-                 0,   // Not Charging
-                 0.   // Battery Level is normal
+                 Characteristic.ChargingState.NOT_CHARGING,
+                 Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.StatusLowBattery
@@ -357,7 +1347,7 @@ module.exports =
             requiredCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.ConfigureBridgedAccessoryStatus],
             defaultValues:
-               [ 0   // format TLV8
+               [ 0   // Format: TLV8
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.ConfigureBridgedAccessoryStatus
@@ -369,7 +1359,7 @@ module.exports =
             requiredCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.Reachable],
             defaultValues:
-               [ 0   // format Bool
+               [ true   // Format: Bool
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.Reachable
@@ -381,7 +1371,7 @@ module.exports =
             requiredCharacteristics:
                [CMD4_ACC_TYPE_ENUM.On],
             defaultValues:
-               [ 1   // format Bool
+               [ true   // Format: Bool
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.On
@@ -399,13 +1389,13 @@ module.exports =
                  CMD4_ACC_TYPE_ENUM.SetupEndpoints,
                  CMD4_ACC_TYPE_ENUM.StatusActive],  // Added as all are TLV8
             defaultValues:
-               [ 0,   // format TLV8
-                 0,   // format TLV8
-                 0,   // format TLV8
-                 0,   // format TLV8
-                 0,   // format TLV8
-                 0,   // format TLV8
-                 0    // format Bool - false
+               [ 0,     // Format TLV8
+                 0,     // Format TLV8
+                 0,     // Format TLV8
+                 0,     // Format TLV8
+                 0,     // Format TLV8
+                 0,     // Format TLV8
+                 false  // Format: Bool
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.StatusActive
@@ -418,8 +1408,8 @@ module.exports =
                [ CMD4_ACC_TYPE_ENUM.StatusActive,   // Added anyway
                  CMD4_ACC_TYPE_ENUM.CarbonDioxideDetected],
             defaultValues:
-               [ 0,   // format Bool - false
-                 0    // 0 - Normal, 1 - Abnormal
+               [ false,   // Format: Bool
+                 Characteristic.CarbonDioxideDetected.CO2_LEVELS_NORMAL
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.StatusActive,
@@ -433,8 +1423,8 @@ module.exports =
                [ CMD4_ACC_TYPE_ENUM.StatusActive,    // Added anyway
                  CMD4_ACC_TYPE_ENUM.CarbonMonoxideDetected],
             defaultValues:
-               [ 0,   // format Bool - false
-                 0    // 0 - Normal, 1 - Abnormal
+               [ false,   // Format: Bool
+                 Characteristic.CarbonMonoxideDetected.CO_LEVELS_NORMAL
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.StatusActive,
@@ -448,8 +1438,8 @@ module.exports =
                [ CMD4_ACC_TYPE_ENUM.StatusActive,     // Added anyway
                  CMD4_ACC_TYPE_ENUM.ContactSensorState],
             defaultValues:
-               [ 0,   // format Bool - false
-                 0    // 0 - Contact Detected, 1 - Contact Not Detected
+               [ false,   // Format: Bool
+                 Characteristic.ContactSensorState.CONTACT_NOT_DETECTED
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.StatusActive,
@@ -464,9 +1454,9 @@ module.exports =
                  CMD4_ACC_TYPE_ENUM.PositionState,
                  CMD4_ACC_TYPE_ENUM.TargetPosition],
             defaultValues:
-               [ 0,   // Range 0 - 100
-                 2,   // 0 - Decreasing, 1 - Increasing, 2 - Stopped
-                 0,   // Range 0 - 100
+               [ 0,                                    // Range 0 - 100
+                 Characteristic.PositionState.STOPPED,
+                 0                                     // Range 0 - 100
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.CurrentPosition
@@ -478,7 +1468,7 @@ module.exports =
             requiredCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent],
             defaultValues:
-               [ 0   // 0 - Single Press, 1 - Double Press, 2 - Long Press 
+               [ Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent
@@ -490,7 +1480,7 @@ module.exports =
             requiredCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.On],
             defaultValues:
-               [ 0    // Format Bool
+               [ false   // Format: Bool
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.On
@@ -502,7 +1492,7 @@ module.exports =
             requiredCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.On],
             defaultValues:
-               [ 0    // Format Bool
+               [ false   // Format: Bool
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.On
@@ -513,7 +1503,7 @@ module.exports =
             requiredCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.Active],
             defaultValues:
-               [ 1   // 0 - Inactive, 1 - Active 
+               [ Characteristic.Active.ACTIVE
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.Active
@@ -525,7 +1515,7 @@ module.exports =
             requiredCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.Active],
             defaultValues:
-               [ 1   // 0 - Inactive, 1 - Active 
+               [ Characteristic.Active.ACTIVE
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.Active
@@ -537,7 +1527,7 @@ module.exports =
             requiredCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.FilterChangeIndication],
             defaultValues:
-               [ 0   // 0 - No change needed, 1 - Change needed
+               [ Characteristic.FilterChangeIndication.FILTER_OK
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.FilterChangeIndication
@@ -551,9 +1541,9 @@ module.exports =
                  CMD4_ACC_TYPE_ENUM.TargetDoorState,
                  CMD4_ACC_TYPE_ENUM.ObstructionDetected],
             defaultValues:
-               [ 0,   // 0 - Open, 1 - Closed, 2 - Openning ...
-                 0,   // 0 - Open, 1 - Closed
-                 1    // format bool, 0 - false, 1 - true
+               [ Characteristic.CurrentDoorState.OPEN,
+                 Characteristic.TargetDoorState.OPEN,
+                 true                                   // Format: Bool
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.CurrentDoorState
@@ -568,9 +1558,9 @@ module.exports =
                  CMD4_ACC_TYPE_ENUM.TargetHeaterCoolerState,
                  CMD4_ACC_TYPE_ENUM.CurrentTemperature],
             defaultValues:
-               [ 1,   // 0 - Inactive, 1 - Active 
-                 0,   // 0 - Inactive, 1 - Idle, 2 - Heating, 3 - Cooling
-                 1,   // 0 - Auto, 1 - Heat, 2 - Cool
+               [ Characteristic.Active.ACTIVE, 
+                 Characteristic.CurrentHeaterCoolerState.INACTIVE,
+                 Characteristic.TargetHeaterCoolerState.HEAT,
                  50.0 // format float, Range 0 - 100, step 0.1 (Celcius)
                ],
             defaultPollingCharacteristics:
@@ -587,9 +1577,9 @@ module.exports =
                  CMD4_ACC_TYPE_ENUM.Active],
             defaultValues:
                [ 60.2,   // format float, Range 0 - 100, step 1
-                 1,      // 0 - Inactive, 1 - Idle, 2 - Humidifying, 3 - Dehumid
-                 1,      // 0 Hum or DeHum, 1 - Hum, 2 - DeHum
-                 1       // 0 - Inactive, 1 - Active 
+                 Characteristic.CurrentHumidifierDehumidifierState.IDLE,
+                 Characteristic.TargetHumidifierDehumidifierState.DEHUMIDIFIER,
+                 Characteristic.Active.ACTIVE
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.Active
@@ -602,8 +1592,8 @@ module.exports =
                [ CMD4_ACC_TYPE_ENUM.StatusActive,   // Added anyway
                  CMD4_ACC_TYPE_ENUM.CurrentRelativeHumidity],
             defaultValues:
-               [ 0,   // format Bool - false
-                 60.2 // format float, Range 1-100
+               [ false,   // Format: Bool
+                 60.2     // Format: float, Range 1-100
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.StatusActive,
@@ -620,9 +1610,9 @@ module.exports =
                 CMD4_ACC_TYPE_ENUM.CurrentVisibilityState],
             defaultValues:
                [ "My_TV", // Format String
-                 1,       // HOME_SCREEN
-                 1,       // 0 - Not Configured, 1 - Configured
-                 0        // 0 - Shown, 1 - Hidden, 2 - Stop, 3 - Rsvd
+                 Characteristic.InputSourceType.HOME_SCREEN,
+                 Characteristic.IsConfigured.CONFIGURED,
+                 Characteristic.CurrentVisibilityState.SHOWN
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.CurrentVisibilityState
@@ -636,9 +1626,9 @@ module.exports =
                  CMD4_ACC_TYPE_ENUM.ProgramMode,
                  CMD4_ACC_TYPE_ENUM.InUse],
             defaultValues:
-               [ 1,  // 0 - Inactive, 1 - Active 
-                 0,  // 0 - None Scheduled, 1 - Scheduled, 2 - Manual Schedule
-                 1   // 0 - Not in use, 1 - In Use
+               [ Characteristic.Active.ACTIVE, 
+                 Characteristic.ProgramMode.NO_PROGRAM_SCHEDULED,
+                 Characteristic.InUse.IN_USE
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.Active
@@ -651,8 +1641,8 @@ module.exports =
                [ CMD4_ACC_TYPE_ENUM.StatusActive,  // Added Anyway
                  CMD4_ACC_TYPE_ENUM.LeakDetected],
             defaultValues:
-               [ 0,   // format Bool - false
-                 0    // 0 - Leak not detected, 1 - Leak Detected
+               [ false,   // Format: Bool
+                 Characteristic.LeakDetected.LEAK_NOT_DETECTED
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.StatusActive,
@@ -666,8 +1656,8 @@ module.exports =
                [ CMD4_ACC_TYPE_ENUM.StatusActive,  // Added anyway
                  CMD4_ACC_TYPE_ENUM.CurrentAmbientLightLevel],
             defaultValues:
-               [ 0,   // format Bool - false
-                 1    // float, Range 0.0001 - 100000 (lux)
+               [ false,   // Format: Bool
+                 1        // float, Range 0.0001 - 100000 (lux)
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.StatusActive,
@@ -680,7 +1670,7 @@ module.exports =
             requiredCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.On],
             defaultValues:
-               [ 0   // Format bool, 0 - false, 1 - true
+               [ false,   // Format: Bool
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.On
@@ -694,9 +1684,9 @@ module.exports =
                  CMD4_ACC_TYPE_ENUM.LockControlPoint,
                  CMD4_ACC_TYPE_ENUM.Version],
             defaultValues:
-               [ 0,   // 0 - Open, 1 - Closed, 2 - Openning ...
-                 0,    // format TLV8
-                 0     // format string   
+               [ Characteristic.CurrentDoorState.OPEN,
+                 0,       // format: TLV8
+                 '0'      // Format: string  
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.CurrentDoorState
@@ -709,8 +1699,8 @@ module.exports =
                [ CMD4_ACC_TYPE_ENUM.LockCurrentState,
                  CMD4_ACC_TYPE_ENUM.LockTargetState],
             defaultValues:
-               [ 0,   // 0 - Unsecured, 1 - Secured, 2 - Jammed ...
-                 0    // 0 - Unsecure,  1 - Secure
+               [ Characteristic.LockCurrentState.UNSECURED,
+                 Characteristic.LockTargetState.UNSECURED
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.LockCurrentState
@@ -722,7 +1712,7 @@ module.exports =
             requiredCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.Mute],
             defaultValues:
-               [ 0   // Format bool, 0 - Mute is off, 1 - Mute is on
+               [ false,   // Format: Bool,  0 - Mute is off, 1 - Mute is on
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.Mute
@@ -735,8 +1725,8 @@ module.exports =
                [ CMD4_ACC_TYPE_ENUM.StatusActive,   // Added anyway
                  CMD4_ACC_TYPE_ENUM.MotionDetected],
             defaultValues:
-               [ 0,   // format Bool, 0 - false
-                 0    // format Bool, 0 - false
+               [ false,   // Format: Bool
+                 false    // Format: Bool
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.StatusActive,
@@ -750,8 +1740,8 @@ module.exports =
                [ CMD4_ACC_TYPE_ENUM.StatusActive,  // Added anyway
                  CMD4_ACC_TYPE_ENUM.OccupancyDetected],
             defaultValues:
-               [ 0,   // format Bool, 0 - false
-                 0    // format Bool, 0 - false
+               [ false,   // Format: Bool
+                 Characteristic.OccupancyDetected.OCCUPANCY_NOT_DETECTED
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.StatusActive,
@@ -765,8 +1755,8 @@ module.exports =
                [ CMD4_ACC_TYPE_ENUM.On,
                  CMD4_ACC_TYPE_ENUM.OutletInUse],
             defaultValues:
-               [ 0,  // format Bool, 0 - false
-                 0   // format Bool, 0 - false
+               [ false,   // Format: Bool
+                 false    // Format: Bool
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.On
@@ -801,12 +1791,18 @@ module.exports =
             devicesStateChangeDefaultTime:MEDIUM_STATE_CHANGE_RESPONSE_TIME,
             requiredCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.RelayEnabled,
-                 CMD4_ACC_TYPE_ENUM.RelayState,
-                 CMD4_ACC_TYPE_ENUM.RelayControlPoint],
+                 CMD4_ACC_TYPE_ENUM.RelayState
+                 
+                 // This is a required Characteristic, 
+                 // but made optional, otherwise you cannot connect
+                 // to Homebridge with HomeKit or Eve. they return
+                 // cannot connect to accessory. 
+                 // CMD4_ACC_TYPE_ENUM.RelayControlPoint
+               ],
             defaultValues:
-               [ 1,   // Format bool, 0 - false
-                 1,   // Format uint8, Values ???
-                 0    // TLV8
+               [ true,   // Format: Bool
+                 1       // Format uint8, Values ???
+                 //0     // Format: TLV8
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.RelayEnabled,
@@ -820,8 +1816,8 @@ module.exports =
                [ CMD4_ACC_TYPE_ENUM.SecuritySystemCurrentState,
                  CMD4_ACC_TYPE_ENUM.SecuritySystemTargetState],
             defaultValues:
-               [ 3,   // 0 - Stay Arm, 1 - Away, 2 - Night Arm, 3 - Disarm ...
-                 0    // 0 - Stay Arm, 1 = Away, 2 - Night
+               [ Characteristic.SecuritySystemCurrentState.DISARMED,
+                 Characteristic.SecuritySystemTargetState.DISARM
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.SecuritySystemCurrentState
@@ -832,7 +1828,7 @@ module.exports =
             requiredCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.ServiceLabelNamespace],
             defaultValues:
-               [ 0    // 0 - Dots, 1.- Arabic, 2+ - Rsvd
+               [ Characteristic.ServiceLabelNamespace.DOTS
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.ServiceLabelNamespace
@@ -845,8 +1841,8 @@ module.exports =
                [ CMD4_ACC_TYPE_ENUM.SlatType,
                  CMD4_ACC_TYPE_ENUM.CurrentSlatState],
             defaultValues:
-               [ 0,   // 0 - Horizontal, 1 - Vertical
-                 0    // 0 - Fixed, 1 - Jammed, 2 - Swinging
+               [ Characteristic.SlatType.HORIZONTAL,
+                 Characteristic.CurrentSlatState.FIXED
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.CurrentSlatState
@@ -859,8 +1855,8 @@ module.exports =
                [ CMD4_ACC_TYPE_ENUM.StatusActive,   // Added anyway
                  CMD4_ACC_TYPE_ENUM.SmokeDetected],
             defaultValues:
-               [ 0,   // format Bool, 0 - false
-                 0    // format Bool, 0 - false
+               [ false,   // Format: Bool
+                 Characteristic.SmokeDetected.SMOKE_NOT_DETECTED
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.StatusActive,
@@ -873,7 +1869,7 @@ module.exports =
             requiredCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.Mute],
             defaultValues:
-               [ 0   // Format bool, 0 - Mute is off, 1 - Mute is on
+               [ false    // Format: Bool, 0 - Mute is off, 1 - Mute is on
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.Mute
@@ -886,7 +1882,7 @@ module.exports =
                [ CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent,
                  CMD4_ACC_TYPE_ENUM.ProgrammableSwitchOutputState],
             defaultValues:
-               [ 0,   // 0 - Single Press, 1 - Double Press, 2 - Long Press
+               [ Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS,
                  0    // Min 0, Max 1
                ],
             defaultPollingCharacteristics:
@@ -899,7 +1895,7 @@ module.exports =
             requiredCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent],
             defaultValues:
-               [ 0   // 0 - Single Press, 1 - Double Press, 2 - Long Press
+               [ Characteristic.ProgrammableSwitchEvent.SINGLE_PRESS
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.ProgrammableSwitchEvent
@@ -911,7 +1907,7 @@ module.exports =
             requiredCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.On],
             defaultValues:
-               [ 0   // Format bool, 0 - false, 1 - true
+               [ false    // Format: Bool
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.On
@@ -926,10 +1922,10 @@ module.exports =
                  CMD4_ACC_TYPE_ENUM.ConfiguredName,
                  CMD4_ACC_TYPE_ENUM.SleepDiscoveryMode],
             defaultValues:
-               [ 1,         // 0 - Inactive, 1 - Active 
+               [ Characteristic.Active.ACTIVE,
                  123,       // Format uint32
                  'My_Tv',   // Format string
-                 1          // 0 - Not Discoverable, 1 - Discoverable
+                 Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.Active
@@ -945,10 +1941,10 @@ module.exports =
                  CMD4_ACC_TYPE_ENUM.VolumeSelector,
                  CMD4_ACC_TYPE_ENUM.Name],
             defaultValues:
-               [ 1,  // 0 - Inactive, 1 - Active 
-                 0,  // Min 0, Max 100, step 1
-                 0,  // 0 - None, 1 - Relative, 2 - RelativeCurrent 3 - Absolute
-                 1,  // 0 - Decrement, 1 - Increment
+               [ Characteristic.Active.ACTIVE,
+                 0,           // Min 0, Max 100, step 1
+                 Characteristic.VolumeControlType.NONE,
+                 Characteristic.VolumeSelector.DECREMENT,  
                  'My_Speaker' // Format string
                ],
             defaultPollingCharacteristics:
@@ -962,8 +1958,8 @@ module.exports =
                [ CMD4_ACC_TYPE_ENUM.StatusActive,   // Added anyway
                  CMD4_ACC_TYPE_ENUM.CurrentTemperature],
             defaultValues:
-               [ 0,    // format Bool, 0 - false
-                 50.0  // format float, 0 - 100, by 0.1
+               [ false,   // Format: Bool
+                 50.0     // format float, 0 - 100, by 0.1
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.StatusActive,
@@ -980,11 +1976,11 @@ module.exports =
                  CMD4_ACC_TYPE_ENUM.TargetTemperature,
                  CMD4_ACC_TYPE_ENUM.TemperatureDisplayUnits],
             defaultValues:
-               [ 0,    // 0 - Off, 1 - Heat, 2 - Cool
-                 0,    // 0 - Off, 1 - Heat, 2 - Cool
+               [ Characteristic.CurrentHeatingCoolingState.OFF,
+                 Characteristic.TargetHeatingCoolingState.OFF,
                  50.0, // format float, Range 0 - 100, step 0.1 (Celcius
                  50.0, // format float, Range 0 - 100, step 0.1 (Celcius
-                 0     // 0 - Celcius, 1 - Fehrenheit
+                 Characteristic.TemperatureDisplayUnits.CELSIUS
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.CurrentTemperature
@@ -1000,7 +1996,7 @@ module.exports =
             defaultValues:
                [ '11:15',   // Format string
                  1,         // Range 1 - 7
-                 0          // Format bool
+                 false      // Format: Bool
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.CurrentTime
@@ -1017,11 +2013,11 @@ module.exports =
                  CMD4_ACC_TYPE_ENUM.TunneledAccessoryAdvertising,
                  CMD4_ACC_TYPE_ENUM.TunnelConnectionTimeout],
             defaultValues:
-               [ 'My_TunnelB', // Format string
+               [ 'My_TunnelB',  // Format string
                  'TLB',         // Format string
                  0.0,           // Format float
-                 0,             // Format bool, 0 - false
-                 0,             // Format bool, 0 - false
+                 false,         // Format: Bool
+                 false,         // Format: Bool
                  5000           // Format uint32
                ],
             defaultPollingCharacteristics:
@@ -1036,9 +2032,9 @@ module.exports =
                  CMD4_ACC_TYPE_ENUM.InUse,
                  CMD4_ACC_TYPE_ENUM.ValveType],
             defaultValues:
-               [ 1,  // 0 - Inactive, 1 - Active 
-                 1,  // 0 - Not in use, 1 - In use
-                 0   // 0 - Generic, 1 - Irrigation, 2 - Shower, 3 - Faucet
+               [ Characteristic.Active.ACTIVE,
+                 Characteristic.InUse.IN_USE,
+                 Characteristic.ValveType.GENERIC_VALVE
                ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.Active
@@ -1053,7 +2049,7 @@ module.exports =
                  CMD4_ACC_TYPE_ENUM.TargetPosition],
             defaultValues:
                [ 0,   // Range 0 - 100
-                 2,   // 0 - Decreasing, 1 - Increasing, 2 - Stopped
+                 Characteristic.PositionState.STOPPED,
                  0,   // Range 0 - 100
                ],
             defaultPollingCharacteristics:
@@ -1069,178 +2065,13 @@ module.exports =
                  CMD4_ACC_TYPE_ENUM.TargetPosition],
             defaultValues:
                [ 0,   // Range 0 - 100
-                 2,   // 0 - Decreasing, 1 - Increasing, 2 - Stopped
+                 Characteristic.PositionState.STOPPED,
                  0,   // Range 0 - 100
                 ],
             defaultPollingCharacteristics:
                [ CMD4_ACC_TYPE_ENUM.CurrentPosition
                ]
           }
-   };
-
-   // Fill in the properties of all possible characteristics
-   CMD4_ACC_TYPE_ENUM.properties =
-   {
-      0:   { name: "AccessoryFlags", characteristic: Characteristic.AccessoryFlags},
-      1:   { name: "Active", characteristic: Characteristic.Active },
-      2:   { name: "ActiveIdentifier", characteristic: Characteristic.ActiveIdentifier },
-      3:   { name: "AccessoryIdentifier", characteristic: Characteristic.AccessoryIdentifier },
-      4:   { name: "AdministratorOnlyAccess", characteristic: Characteristic.AdministratorOnlyAccess },
-      5:   { name: "AirParticulateDensity", characteristic: Characteristic.AirParticulateDensity },
-      6:   { name: "AirParticulateSize", characteristic: Characteristic.AirParticulateSize },
-      7:   { name: "AirQuality", characteristic: Characteristic.AirQuality },
-      8:   { name: "AudioFeedback", characteristic: Characteristic.AudioFeedback },
-      9:   { name: "BatteryLevel", characteristic: Characteristic.BatteryLevel },
-      10:  { name: "Brightness", characteristic: Characteristic.Brightness },
-      11:  { name: "CarbonDioxideDetected", characteristic: Characteristic.CarbonDioxideDetected },
-      12:  { name: "CarbonDioxideLevel", characteristic: Characteristic.CarbonDioxideLevel },
-      13:  { name: "CarbonDioxidePeakLevel", characteristic: Characteristic.CarbonDioxidePeakLevel },
-      14:  { name: "CarbonMonoxideDetected", characteristic: Characteristic.CarbonMonoxideDetected },
-      15:  { name: "CarbonMonoxideLevel", characteristic: Characteristic.CarbonMonoxideLevel },
-      16:  { name: "CarbonMonoxidePeakLevel", characteristic: Characteristic.CarbonMonoxidePeakLevel },
-      17:  { name: "Category", characteristic: Characteristic.Category },
-      18:  { name: "ChargingState", characteristic: Characteristic.ChargingState },
-      19:  { name: "ClosedCaptions", characteristic: Characteristic.ClosedCaptions },
-      20:  { name: "ColorTemperature", characteristic: Characteristic.ColorTemperature},
-      21:  { name: "ConfiguredName", characteristic: Characteristic.ConfiguredName },
-      22:  { name: "ConfigureBridgedAccessoryStatus", characteristic: Characteristic.ConfigureBridgedAccessoryStatus },
-      23:  { name: "ConfigureBridgedAccessory", characteristic: Characteristic.ConfigureBridgedAccessory },
-      24:  { name: "ContactSensorState", characteristic: Characteristic.ContactSensorState },
-      25:  { name: "CoolingThresholdTemperature", characteristic: Characteristic.CoolingThresholdTemperature },
-      26:  { name: "CurrentAirPurifierState", characteristic: Characteristic.CurrentAirPurifierState },
-      27:  { name: "CurrentAmbientLightLevel", characteristic: Characteristic.CurrentAmbientLightLevel },
-      28:  { name: "CurrentDoorState", characteristic: Characteristic.CurrentDoorState },
-      29:  { name: "CurrentFanState", characteristic: Characteristic.CurrentFanState },
-      30:  { name: "CurrentHeaterCoolerState", characteristic: Characteristic.CurrentHeaterCoolerState },
-      31:  { name: "CurrentHeatingCoolingState", characteristic: Characteristic.CurrentHeatingCoolingState },
-      32:  { name: "CurrentHorizontalTiltAngle", characteristic: Characteristic.CurrentHorizontalTiltAngle },
-      33:  { name: "CurrentHumidifierDehumidifierState", characteristic: Characteristic.CurrentHumidifierDehumidifierState },
-      34:  { name: "CurrentMediaState", characteristic: Characteristic.CurrentMediaState },
-      35:  { name: "CurrentPosition", characteristic: Characteristic.CurrentPosition },
-      36:  { name: "CurrentRelativeHumidity", characteristic: Characteristic.CurrentRelativeHumidity },
-      37:  { name: "CurrentSlatState", characteristic: Characteristic.CurrentSlatState },
-      38:  { name: "CurrentTemperature", characteristic: Characteristic.CurrentTemperature },
-      39:  { name: "CurrentTiltAngle", characteristic: Characteristic.CurrentTiltAngle },
-      40:  { name: "CurrentTime", characteristic: Characteristic.CurrentTime },
-      41:  { name: "CurrentVerticalTiltAngle", characteristic: Characteristic.CurrentVerticalTiltAngle },
-      42:  { name: "CurrentVisibilityState", characteristic: Characteristic.CurrentVisibilityState },
-      43:  { name: "DayoftheWeek", characteristic: Characteristic.DayoftheWeek },
-      44:  { name: "DigitalZoom", characteristic: Characteristic.DigitalZoom },
-      45:  { name: "DiscoverBridgedAccessories", characteristic: Characteristic.DiscoverBridgedAccessories },
-      46:  { name: "DiscoveredBridgedAccessories", characteristic: Characteristic.DiscoveredBridgedAccessories },
-      47:  { name: "DisplayOrder", characteristic: Characteristic.DisplayOrder },
-      48:  { name: "FilterChangeIndication", characteristic: Characteristic.FilterChangeIndication },
-      49:  { name: "FilterLifeLevel", characteristic: Characteristic.FilterLifeLevel },
-      50:  { name: "FirmwareRevision", characteristic: Characteristic.FirmwareRevision },
-      51:  { name: "HardwareRevision", characteristic: Characteristic.HardwareRevision },
-      52:  { name: "HeatingThresholdTemperature", characteristic: Characteristic.HeatingThresholdTemperature },
-      53:  { name: "HoldPosition", characteristic: Characteristic.HoldPosition },
-      54:  { name: "Hue", characteristic: Characteristic.Hue},
-      55:  { name: "Identify", characteristic: Characteristic.Identify },
-      56:  { name: "ImageMirroring", characteristic: Characteristic.ImageMirroring },
-      57:  { name: "ImageRotation", characteristic: Characteristic.ImageRotation },
-      58:  { name: "InputDeviceType", characteristic: Characteristic.InputDeviceType },
-      59:  { name: "InputSourceType", characteristic: Characteristic.InputSourceType },
-      60:  { name: "InUse", characteristic: Characteristic.InUse },
-      61:  { name: "IsConfigured", characteristic: Characteristic.IsConfigured },
-      62:  { name: "LeakDetected", characteristic: Characteristic.LeakDetected },
-      63:  { name: "LinkQuality", characteristic: Characteristic.LinkQuality },
-      64:  { name: "LockControlPoint", characteristic: Characteristic.LockControlPoint },
-      65:  { name: "LockCurrentState", characteristic: Characteristic.LockCurrentState },
-      66:  { name: "LockLastKnownAction", characteristic: Characteristic.LockLastKnownAction },
-      67:  { name: "LockManagementAutoSecurityTimeout", characteristic: Characteristic.LockManagementAutoSecurityTimeout },
-      68:  { name: "LockPhysicalControls", characteristic: Characteristic.LockPhysicalControls },
-      69:  { name: "LockTargetState", characteristic: Characteristic.LockTargetState },
-      70:  { name: "Logs", characteristic: Characteristic.Logs },
-      71:  { name: "Manufacturer", characteristic: Characteristic.Manufacturer },
-      72:  { name: "Model", characteristic: Characteristic.Model },
-      73:  { name: "MotionDetected", characteristic: Characteristic.MotionDetected },
-      74:  { name: "Mute", characteristic: Characteristic.Mute },
-      75:  { name: "Name", characteristic: Characteristic.Name },
-      76:  { name: "NightVision", characteristic: Characteristic.NightVision },
-      77:  { name: "NitrogenDioxideDensity", characteristic: Characteristic.NitrogenDioxideDensity },
-      78:  { name: "ObstructionDetected", characteristic: Characteristic.ObstructionDetected },
-      79:  { name: "OccupancyDetected", characteristic: Characteristic.OccupancyDetected },
-      80:  { name: "On", characteristic: Characteristic.On},
-      81:  { name: "OpticalZoom", characteristic: Characteristic.OpticalZoom },
-      82:  { name: "OutletInUse", characteristic: Characteristic.OutletInUse },
-      83:  { name: "OzoneDensity", characteristic: Characteristic.OzoneDensity },
-      84:  { name: "PairSetup", characteristic: Characteristic.PairSetup },
-      85:  { name: "PairVerify", characteristic: Characteristic.PairVerify },
-      86:  { name: "PairingFeatures", characteristic: Characteristic.PairingFeatures },
-      87:  { name: "PairingPairings", characteristic: Characteristic.PairingPairings },
-      88:  { name: "PictureMode", characteristic: Characteristic.PictureMode },
-      89:  { name: "PM10Density", characteristic: Characteristic.PM10Density },
-      90:  { name: "PM2_5Density", characteristic: Characteristic.PM2_5Density },
-      91:  { name: "PositionState", characteristic: Characteristic.PositionState },
-      92:  { name: "PowerModeSelection", characteristic: Characteristic.PowerModeSelection },
-      93:  { name: "ProgramMode", characteristic: Characteristic.ProgramMode },
-      94:  { name: "ProgrammableSwitchOutputState", characteristic: Characteristic.ProgrammableSwitchOutputState },
-      95:  { name: "Reachable", characteristic: Characteristic.Reachable },
-      96:  { name: "ProgrammableSwitchEvent", characteristic: Characteristic.ProgrammableSwitchEvent },
-      97:  { name: "RelativeHumidityDehumidifierThreshold", characteristic: Characteristic.RelativeHumidityDehumidifierThreshold },
-      98:  { name: "RelativeHumidityHumidifierThreshold", characteristic: Characteristic.RelativeHumidityHumidifierThreshold },
-      99:  { name: "RelayEnabled", characteristic: Characteristic.RelayEnabled },
-      100: { name: "RelayState", characteristic: Characteristic.RelayState },
-      101: { name: "RelayControlPoint", characteristic: Characteristic.RelayControlPoint },
-      102: { name: "RemainingDuration", characteristic: Characteristic.RemainingDuration },
-      103: { name: "RemoteKey", characteristic: Characteristic.RemoteKey },
-      104: { name: "ResetFilterIndication", characteristic: Characteristic.ResetFilterIndication },
-      105: { name: "RotationDirection", characteristic: Characteristic.RotationDirection },
-      106: { name: "RotationSpeed", characteristic: Characteristic.RotationSpeed },
-      107: { name: "Saturation", characteristic: Characteristic.Saturation},
-      108: { name: "SecuritySystemAlarmType", characteristic: Characteristic.SecuritySystemAlarmType },
-      109: { name: "SecuritySystemCurrentState", characteristic: Characteristic.SecuritySystemCurrentState },
-      110: { name: "SecuritySystemTargetState", characteristic: Characteristic.SecuritySystemTargetState },
-      111: { name: "SelectedRTPStreamConfiguration", characteristic: Characteristic.SelectedRTPStreamConfiguration },
-      112: { name: "SerialNumber", characteristic: Characteristic.SerialNumber },
-      113: { name: "ServiceLabelIndex", characteristic: Characteristic.ServiceLabelIndex },
-      114: { name: "ServiceLabelNamespace", characteristic: Characteristic.ServiceLabelNamespace },
-      115: { name: "SetDuration", characteristic: Characteristic.SetDuration },
-      116: { name: "SetupEndpoints", characteristic: Characteristic.SetupEndpoints },
-      117: { name: "SlatType", characteristic: Characteristic.SlatType },
-      118: { name: "SleepDiscoveryMode", characteristic: Characteristic.SleepDiscoveryMode },
-      119: { name: "SmokeDetected", characteristic: Characteristic.SmokeDetected },
-      120: { name: "StatusActive", characteristic: Characteristic.StatusActive },
-      121: { name: "StatusFault", characteristic: Characteristic.StatusFault },
-      122: { name: "StatusJammed", characteristic: Characteristic.StatusJammed },
-      123: { name: "StatusLowBattery", characteristic: Characteristic.StatusLowBattery },
-      124: { name: "StatusTampered", characteristic: Characteristic.StatusTampered },
-      125: { name: "StreamingStatus", characteristic: Characteristic.StreamingStatus },
-      126: { name: "SulphurDioxideDensity", characteristic: Characteristic.SulphurDioxideDensity },
-      127: { name: "SupportedAudioStreamConfiguration", characteristic: Characteristic.SupportedAudioStreamConfiguration },
-      128: { name: "SupportedRTPConfiguration", characteristic: Characteristic.SupportedRTPConfiguration },
-      129: { name: "SupportedVideoStreamConfiguration", characteristic: Characteristic.SupportedVideoStreamConfiguration },
-      130: { name: "SwingMode", characteristic: Characteristic.SwingMode },
-      131: { name: "TargetAirPurifierState", characteristic: Characteristic.TargetAirPurifierState },
-      132: { name: "TargetAirQuality", characteristic: Characteristic.TargetAirQuality },
-      133: { name: "TargetDoorState", characteristic: Characteristic.TargetDoorState },
-      134: { name: "TargetFanState", characteristic: Characteristic.TargetFanState },
-      135: { name: "TargetHeaterCoolerState", characteristic: Characteristic.TargetHeaterCoolerState },
-      136: { name: "TargetHeatingCoolingState", characteristic: Characteristic.TargetHeatingCoolingState },
-      137: { name: "TargetHorizontalTiltAngle", characteristic: Characteristic.TargetHorizontalTiltAngle },
-      138: { name: "TargetHumidifierDehumidifierState", characteristic: Characteristic.TargetHumidifierDehumidifierState },
-      139: { name: "TargetMediaState", characteristic: Characteristic.TargetMediaState },
-      140: { name: "TargetPosition", characteristic: Characteristic.TargetPosition },
-      141: { name: "TargetRelativeHumidity", characteristic: Characteristic.TargetRelativeHumidity },
-      142: { name: "TargetSlatState", characteristic: Characteristic.TargetSlatState },
-      143: { name: "TargetTemperature", characteristic: Characteristic.TargetTemperature },
-      144: { name: "TargetTiltAngle", characteristic: Characteristic.TargetTiltAngle },
-      145: { name: "TargetVerticalTiltAngle", characteristic: Characteristic.TargetVerticalTiltAngle },
-      146: { name: "TargetVisibilityState", characteristic: Characteristic.TargetVisibilityState },
-      147: { name: "TemperatureDisplayUnits", characteristic: Characteristic.TemperatureDisplayUnits },
-      148: { name: "TimeUpdate", characteristic: Characteristic.TimeUpdate },
-      149: { name: "TunneledAccessoryAdvertising", characteristic: Characteristic.TunneledAccessoryAdvertising },
-      150: { name: "TunneledAccessoryConnected", characteristic: Characteristic.TunneledAccessoryConnected },
-      151: { name: "TunneledAccessoryStateNumber", characteristic: Characteristic.TunneledAccessoryStateNumber },
-      152: { name: "TunnelConnectionTimeout", characteristic: Characteristic.TunnelConnectionTimeout },
-      153: { name: "ValveType", characteristic: Characteristic.ValveType },
-      154: { name: "Version", characteristic: Characteristic.Version },
-      155: { name: "VOCDensity", characteristic: Characteristic.VOCDensity },
-      156: { name: "Volume", characteristic: Characteristic.Volume },
-      157: { name: "VolumeControlType", characteristic: Characteristic.VolumeControlType },
-      158: { name: "VolumeSelector", characteristic: Characteristic.VolumeSelector },
-      159: { name: "WaterLevel", characteristic: Characteristic.WaterLevel }
    };
    
    // This is not required by homebridge and does not affect it.  I use it for
@@ -1265,9 +2096,10 @@ module.exports =
 function Cmd4Platform(log, config, api) {
    this.log = log;
    this.config = config || {'platform': 'cmd4'};
+  
+   setTimeout(checkForUpdates, 1800);
 
    this.reachable = true;
-   this.foundAccessories = [];
 
    // Instead of polling per accessory, allow the config file to be polled per characteristic.
    this.listOfPollingCharacteristics = {};
@@ -1289,27 +2121,22 @@ function Cmd4Platform(log, config, api) {
       {
          this.storage = config.storage;
       } else {
-         this.log("WARNING: Cmd4: Unknown platform.config.storage '%s'. Expected 'fs' or 'googleDrive' ", config.storage);
+         this.log("WARNING: Cmd4: Unknown platform.config.storage:%s. Expected 'fs' or 'googleDrive' ", config.storage);
       }
    }
 
    // Define platform config storagePath for fakegato-history
-   if ( config.storagePath != undefined )
-   {
-      this.storagePath = config.storagePath;
-   }
+   this.storagePath = config.storagePath;
 
    // Define platform config folder for fakegato-history
-   if ( config.folder != undefined )
-   {
-      this.folder = config.folder;
-   }
+   this.folder = config.folder;
 
    // Define platform config keyPath for fakegato-history
-   if ( config.keyPath != undefined )
-   {
-      this.keyPath = config.keyPath;
-   }
+   this.keyPath = config.keyPath;
+   
+   // If outputConstants is defined it is set to true/false, otherwise false.
+   this.outputConstants = config.outputConstants === true;
+   
 }
 
 Cmd4Platform.prototype =
@@ -1323,32 +2150,35 @@ Cmd4Platform.prototype =
       {
          // This will create an accessory based on the Cmd4Accessory
          // definition bellow. This is not obvious for a newbie.
-         this.log("Processing accessory " + this.config.accessories[i].name);
-         let accessory = new Cmd4Accessory( that.log, that.config, this.config.accessories[i] );
-
-         this.foundAccessories.push( accessory );
+         this.log(FgMagenta + "Processing accessory: " + FgBlack + this.config.accessories[i].name );
+         let accessory = new Cmd4Accessory( that.log, that.config, this.config.accessories[i], null );
+         foundAccessories.push( accessory );
+      }
+      for( let i=0; i < foundAccessories.length; i++ )
+      {
+         let accessory = foundAccessories[i];
   
          if ( accessory.polling && accessory.state_cmd)
          {  
             switch (typeof accessory.polling)
             {
                case 'object':
-                  this.log.debug("Characteristic polling for '%s'", accessory.name);
+                  this.log.debug("Characteristic polling for:%s", accessory.name);
                   this.setupCharacteristicPolling(accessory);
                   break;
                case 'string':
                case 'boolean':
-                  this.log.debug("State polling for '%s'", accessory.name);
+                  this.log.debug("State polling for:%s", accessory.name);
                   this.setupStatePollingPerAccessory(accessory);
                   break;
                default:
-                  this.log("CMD4 Error: Something wrong with value of polling '%s'", accessory.polling);
+                  this.log("CMD4 Error: Something wrong with value of polling:%s", accessory.polling);
                   this.log("            Check your config.json for errors.");
                   process.exit(1);
              }
           }
       }
-      callback(this.foundAccessories);
+      callback(foundAccessories);
    }
 }
 
@@ -1356,13 +2186,13 @@ Cmd4Platform.prototype.characteristicPolling = function (accessory, accTypeEnumI
 {
    let self = accessory;
 
-   self.log.debug("Doing Poll of index:%s characteristic:%s for '%s' timeout=%s interval=%s", accTypeEnumIndex,
+   self.log.debug("Doing Poll of index:%s characteristic:%s for:%s timeout=%s interval=%s", accTypeEnumIndex,
           CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].name, self.name, timeout, interval);
 
    // Make sure that the characteristic exists
    if ( accTypeEnumIndex < 0 )
    {
-      self.log("CMD4 WARNING: No such polling accTypeEnumIndex '%d' for '%s'",
+      self.log("CMD4 WARNING: No such polling accTypeEnumIndex '%d' for:%s",
          accTypeEnumIndex, self.name);
       return;
    }
@@ -1388,7 +2218,7 @@ Cmd4Platform.prototype.characteristicPolling = function (accessory, accTypeEnumI
 {
    let self = accessory;
 
-   self.log.debug("Setting up '%s' polling characteristics of accessory '%s'",
+   self.log.debug("Setting up:%s polling characteristics of accessory:%s",
       self.polling.length, self.name);
 
    for ( let jsonIndex = 0;
@@ -1418,7 +2248,7 @@ Cmd4Platform.prototype.characteristicPolling = function (accessory, accTypeEnumI
                timeout = parseInt(value, 10);
                if ( timeout < 500 )
                {
-                   this.log.warn("Timeout for '%s' is in milliseconds. A value of '%d' seems pretty low.",
+                   this.log.warn("Timeout for:%s is in milliseconds. A value of '%d' seems pretty low.",
                           this.config.name, timeout);
                }
                break;
@@ -1430,14 +2260,14 @@ Cmd4Platform.prototype.characteristicPolling = function (accessory, accTypeEnumI
                ucKeyIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.name === ucKey);
                if ( ucKeyIndex < 0 )
                {
-                  self.log("CMD4 WARNING: No such polling characteristic '%s' for '%'",
+                  self.log("CMD4 WARNING: No such polling characteristic:%s for:%s",
                        key, self.name);
                    continue;
                }
           }
       }
 
-      self.log.debug("Setting up '%s' for polling of '%s' timeout=%s interval=%s", self.name, CMD4_ACC_TYPE_ENUM.properties[ucKeyIndex].name, timeout, interval);
+      self.log.debug("Setting up accessory:%s for polling of:%s timeout:%s interval:%s", self.name, CMD4_ACC_TYPE_ENUM.properties[ucKeyIndex].name, timeout, interval);
 
       this.listOfPollingCharacteristics[ accessory.name + ucKeyIndex ] =
          setTimeout(this.characteristicPolling.bind(this, accessory, ucKeyIndex, timeout, interval), interval);
@@ -1462,197 +2292,101 @@ Cmd4Platform.prototype.setupStatePollingPerAccessory = function (accessory)
    }
 }
 
-function Cmd4Accessory(log, platformConfig, accessoryConfig, status ) 
+// Accessory definitions - THE GOOD STUFF STARTs HERE
+// The parent could be the platform or the parent accessory, either
+// way stuff gets passed down.
+function Cmd4Accessory(log, parentConfig, accessoryConfig, parent ) 
 {
-   this.config = accessoryConfig;
    this.log = log;
+   this.parentConfig = parentConfig;
+   this.config = accessoryConfig;
+   
+   // If a parent is defined, then use it, otherwise
+   // I am the parent.
+   if (parent) 
+   { 
+      this.parent = parent 
+   } else
+   {
+      // I am the parent of all children if there is none.
+      this.log.debug("Creating array to hold child Accessories for %s", accessoryConfig.name);
+      this.childFoundAccessories = [];
+      this.log.debug("Creating array to hold services for %s", accessoryConfig.name);
+      this.services = [];
+      this.parent = this;
+   }
+      
+   this.listOfVariables = {};
+   this.listOfConstants = {};
+   
+   // Bring the platform config variables forward the accessory first
+   // If they do not exist, they would still be undefined.
+   this.stateChangeResponseTime = parentConfig.stateChangeResponseTime;   
+   this.interval = parentConfig.interval;   
+   this.timeout = parentConfig.timeout;
+   this.state_cmd = parentConfig.state_cmd;
 
    // Instead of local variables for every characteristic, create an array to
    // hold values for  all characteristics based on the size of all possible characteristics.
    this.storedValuesPerCharacteristic = new Array(CMD4_ACC_TYPE_ENUM.EOL).fill(null);
     
     
-   // If polling is defined it is set to true, otherwise false.
+   // If polling is defined it is set to true/false, otherwise false.
    this.polling = this.config.polling === true;
 
-   for (let key in this.config)
+   // We need to do this before parseConfig as it is re-interant
+   this.type = this.config.type;
+   this.name = this.config.name;
+   this.ucType = ucFirst(this.config.type);
+   this.deviceName = this.config.name
+   this.typeIndex = CMD4_DEVICE_TYPE_ENUM.properties.indexOfEnum(i => i.deviceName === this.ucType);
+   if (this.typeIndex < 0)
    {
-      let value = this.config[key];
-
-      // I made the stupid mistake of not havin all characteristics in the config.json
-      // file not upper case to match that in State.js. So instead of having everyone
-      // fix the their scripts, fix it here.
-      let ucKey = ucFirst(key);
-
-      switch (ucKey)
-      {
-         case 'Type':
-            this.type = value;
-            this.ucType = ucFirst(value);
-            this.typeIndex = CMD4_DEVICE_TYPE_ENUM.properties.indexOfEnum(i => i.deviceName === this.ucType);
-            if (this.typeIndex < 0)
-            {
-               this.log ("CMD4 Error: Unknown device type '%s' for %s", this.type, this.name);
-               process.exit(1);
-            }
-            break;
-         case 'Name':
-            this.name = value;
-            this.UUID = UUIDGen.generate(this.name);
-            this.displayName = this.name;  //fakegato-history uses displayName
-            break;
-         case 'Model':
-            this.model = value;
-            this.log.debug("Setting model to '%s'", value);
-            break;
-         case 'Timeout':
-            // Timers are in milliseconds. A low value can result in failure to get/set values
-            this.timeout = parseInt(value, 10);
-            if (this.timeout < 500)
-            {
-               this.log.warn("Timeout for '%s' is in milliseconds. A value of '%d' seems pretty low.",
-                  this.config.name, this.timeout);
-            }
-            break;
-         case 'Polling':
-            this.polling = value;
-            break;
-         case 'Interval':
-            // Intervals are in seconds
-            this.interval = parseInt(value, 10) * 1000;
-            break;
-         case 'StateChangeResponseTime':
-            // respnse time is in seconds
-            this.stateChangeResponseTime = value * 1000;
-            break;
-         case 'State_cmd':
-         {
-            // What this plugin is all about
-            this.state_cmd = value;
-            
-            // Solve some issues people have encounterred who
-            // have had problems with shell completion which is
-            // only available from shell expansion.
-            
-            
-            // Split the state_cmd into words.
-            let cmdArray = this.state_cmd.match(/\S+/gi);
-            
-            // Assume no words
-            let arrayLength = 0;
-            
-            // Get the number of words
-            if (cmdArray )
-               arrayLength = cmdArray.length;
-               
-            // Check that the state_cmd is valid.
-            // The first word must be in the persons path
-            // The second word, if it exists must be a file
-            // and have the correct path.
-            switch (arrayLength)
-            { 
-                case 0:
-                    this.log.error("No state_cmd given");
-                    process.exit(1);
-                    break;
-                default:
-                {           
-                   let checkFile = cmdArray[arrayLength -1]; 
-            
-                   try {
-                      fs.accessSync(checkFile, fs.F_OK);
-                      // File exists - OK
-                      
-                   } catch (e) {         
-                          // It isn't accessible
-                          this.log.warn("The file %s does not exist, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell.", checkFile);                   
-                    }
-                    
-                    // Purposely fall through to check the command as well  
-                }
-                case 1:
-                {
-                   let checkCmd = cmdArray[0]; 
-                                    
-                   // if the lone command is a path to a command
-                   // Then check if it exists, oTherwise check if it is
-                   // in Their path.
-                   if ( checkCmd.charAt( 0 ) == '/' )
-                   {
-                      try {
-                         fs.accessSync(checkCmd, fs.F_OK);
-                         // File exists - OK
-                      } catch (e) {                           
-                         this.log.warn("The command %s does not exist, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell.", checkCmd); 
-                      }                     
-                   } else
-                   {
-                      if ( ! commandExistsSync( checkCmd ) )
-                         this.log.warn("The command %s does not exist, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell.", checkCmd);
-                   }
-                   break;
-                }
-             }           
-               
-            break;
-         }
-         case 'Storage':
-         case 'StoragePath':
-         case 'Folder':
-         case 'KeyPath':
-            this.log("Definitions of fakegato has changed to be more specific per characteristic");
-            this.log("and in line with fakegato.")
-            this.log("Please see the README.md for further details.");
-            this.log("Sorry for the inconvenience");
-            break;
-         case 'Fakegato':
-            this.fakegatoConfig = value;
-            break;
-         default:
-         {
-            let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.name === ucKey);
-            
-            if (accTypeEnumIndex < 0 )
-            {
-              this.log("OOPS: '%s' not found. There something wrong with your config.json file?", key);
-              if (ucKey == "AdministorOnlyAccess") 
-              {
-                 this.log("administorOnlyAccess was incorrectly named");
-                 this.log("It is corrected in the new config.json file as administratorOnlyAccess");
-                 this.log("Please make the approperiate changes or use the new config.json file");
-                 this.log("provided.");
-              }
-              if (ucKey == "TargettRelativeHumidity") 
-              {
-                 this.log("targettRelativeHumidity was incorrectly named");
-                 this.log("It is corrected in the new config.json file as targetRelativeHumidity");
-                 this.log("Please make the approperiate changes or use the new config.json file");
-                 this.log("provided.");
-              }
-              if (ucKey == "CurrentSlatType") 
-              {
-                 this.log("currentSlatType was incorrectly named");
-                 this.log("It is corrected in the new config.json file as currentSlatState");
-                 this.log("Please make the approperiate changes or use the new config.json file");
-                 this.log("provided.");
-              }
-              process.exit(1);
-            } else {
-               this.setStoredValueForIndex(accTypeEnumIndex, value);
-            }
-         }
-      }
+      this.log ("CMD4 Error: Unknown device type:%s for %s", this.type, this.name);
+      process.exit(1);
    }
 
-   // The information service
-   // For multiple accessories of the same type, it is important that the accessory
-   // has a unique serial number, so append the config.name.
-   this.informationService = new Service.AccessoryInformation();
-   this.informationService
-       .setCharacteristic(Characteristic.Manufacturer, "Cmd4")
-       .setCharacteristic(Characteristic.Model, this.config.model )
-       .setCharacteristic(Characteristic.SerialNumber, "Cmd4 " + this.config.type + this.config.name);
+   // Make sure the default characteristics will be included
+   // This also defines what service will be created.
+   let properties = CMD4_DEVICE_TYPE_ENUM.properties[this.typeIndex]; 
 
+   // We need to set up the service for linked services (If any)
+   this.service = new properties.service(this.name, this.name);
+   
+   // Linked services (Ones with parents, do not have information services)
+   // If a parent is defined, then I must be a linked accessory and linked
+   // accessories no not have information services.
+   // Also let the parent add this accessories service to their list.
+   if (! parent)
+   {
+      this.log.debug("Creating information and service for this parent");
+      // The information service
+      // For multiple accessories of the same type, it is important that the accessory
+      // has a unique serial number, so append the config.name.
+      this.informationService = new Service.AccessoryInformation();
+      
+      this.services.push(this.informationService);
+      this.services.push(this.service);
+   }
+
+   this.parseConfig ( this.config );
+   
+   // parseConfig may/mayNotHave set Manufacturer, Model & SerialNumber
+   if (this.informationService)
+   {
+      if ( ! this.manufacturer )
+         this.informationService
+            .setCharacteristic(Characteristic.Manufacturer, "Cmd4");
+            
+      if ( ! this.model )
+         this.informationService
+            .setCharacteristic(Characteristic.Model, "Cmd4Model");
+         
+      if ( ! this.serialNumber )
+         this.informationService
+            .setCharacteristic(Characteristic.SerialNumber,  "Cmd4 " + this.config.type)
+   }
+   
    // Explanation:
    // If you are wondering why this is done this way as compared to
    // other plugins that do the switch and a bind in their getServices
@@ -1672,22 +2406,22 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status )
    //        in Homebridge :-)    If you find it useful, send
    //        me a like ;-)
 
-   // Make sure the default characteristics will be included
-   let properties = CMD4_DEVICE_TYPE_ENUM.properties[this.typeIndex];   
+   // The linked service needs to know about this one.
    let numberOfRequiredCharacteristics = properties.requiredCharacteristics.length;
    
    for (let index = 0; index < numberOfRequiredCharacteristics; index ++)
    {
+      this.log.debug("Checking index:%d for:", index, this.name);
       let value = properties.defaultValues[index];
       let req = properties.requiredCharacteristics[index];
       
-      if ( ! this.getStoredValueForIndex( req ))
+      if ( this.getStoredValueForIndex( req ) == undefined )
       {
-         this.log("Adding default characteristic %s for %s", CMD4_ACC_TYPE_ENUM.properties[req].name, this.name);
+         this.log.warn("Adding default characteristic %s for %s", CMD4_ACC_TYPE_ENUM.properties[req].name, this.name);
+         this.log.warn("Not defining a default characteristic can be problematic");
          this.setStoredValueForIndex(req, value);
       }
    }
-   this.service = new properties.service(this.name, this.name);
 
    // The default respnse time is in seconds
    if ( ! this.stateChangeResponseTime )
@@ -1700,7 +2434,7 @@ function Cmd4Accessory(log, platformConfig, accessoryConfig, status )
    // based on the config.json file and not just those characterisitics
    // an accessory actually has.
    this.setupAllServices(this.service);
-
+   
    // Setup the fakegato service if defined in the config.json file
    this.setupAccessoryFakeGatoService(this.fakegatoConfig);
 }
@@ -1714,20 +2448,20 @@ Cmd4Accessory.prototype = {
 
    getServices: function ()
    {
-      // For the accessory, only acknowledge available services
-      if (this.loggingService)
-      {
-         return [this.informationService, this.service, this.loggingService];
-      }
-
-      return [this.informationService, this.service];
+      //if (this.services) 
+      //{
+      //   console.log("Returning:%s number of services for:%s", this.services.length, this.name);
+      //} else {
+      //   console.log("Returning this.services:%s fo:%s", this.services, this.name);
+      //}
+      return this.services;
    },
 
    setStoredValueForIndex:function (accTypeEnumIndex, value)
    {
       if (accTypeEnumIndex < 0 || accTypeEnumIndex > CMD4_ACC_TYPE_ENUM.EOL )
       {
-         this.log ("CMD4 Warning: setStoredValue - Characteristic '%s' for '%s' not known", accTypeEnumIndex, this.name);
+         this.log ("CMD4 Warning: setStoredValue - Characteristic:%s for:%s not known", accTypeEnumIndex, this.name);
          this.log ("Check your json.config file for this error");
          process.exit(1);
       }
@@ -1738,7 +2472,7 @@ Cmd4Accessory.prototype = {
    {
       if (accTypeEnumIndex < 0 || accTypeEnumIndex > CMD4_ACC_TYPE_ENUM.EOL)
       {
-         this.log ("CMD4 Warning: getStoredValue - Characteristic '%s' for '%s' not known", accTypeEnumIndex, this.name);
+         this.log ("CMD4 Warning: getStoredValue - Characteristic:%s for:%s not known", accTypeEnumIndex, this.name);
          this.log ("Check your json.config file for this error");
          process.exit(1);
       }
@@ -1786,7 +2520,7 @@ Cmd4Accessory.prototype = {
                   this.timeout = parseInt(value, 10);
                   if (this.timeout < 500)
                   {
-                     this.log.warn("Timeout for '%s' is in milliseconds. A value of '%d' seems pretty low.",
+                     this.log.warn("Timeout for:%s is in milliseconds. A value of '%d' seems pretty low.",
                         this.config.name, this.timeout);
                   }
                   break;
@@ -1800,13 +2534,13 @@ Cmd4Accessory.prototype = {
                   
                   if (accTypeEnumIndex < 0 )
                   {
-                    this.log("OOPS: '%s' not found. There something wrong with your config.json file?", key);
+                    this.log("OOPS::%s not found. There something wrong with your config.json file?", key);
                     process.exit(1);
                   } else {
                      if ( this.getStoredValueForIndex(accTypeEnumIndex) == undefined )
                      {
-                        this.log.warn("Polling for '%s' requested, but characteristic ", key);
-                        this.log.warn("is not in your config.json file for '%s'", this.name);
+                        this.log.warn("Polling for:%s requested, but characteristic ", key);
+                        this.log.warn("is not in your config.json file for:%s", this.name);
                      }
 
                      this.setStoredValueForIndex(accTypeEnumIndex, value);
@@ -1847,13 +2581,22 @@ Cmd4Accessory.prototype = {
    // ***********************************************
    setValue:function (five, context, accTypeEnumIndex, value , callback )
    {      
-      let self = context;    
+      let self = context;   
       
       let characteristicString = CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].name;
       let characteristic = CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].characteristic;      
 
-      let cmd = self.state_cmd + " Set '" + self.name + "' '" + characteristicString  + "' '" + value  + "'";
-      self.log.debug("setValue %s function for: %s cmd: %s", characteristicString, self.name, cmd);
+      let cmd;
+      
+      
+      if (self.outputConstants == true)
+      {
+         let constant = self.transposeValueToConstantForCharacteristic(accTypeEnumIndex, value);
+          cmd = self.state_cmd + " Set '" + self.name + "' '" + characteristicString  + "' '" + constant  + "'";
+      } else {
+         cmd = self.state_cmd + " Set '" + self.name + "' '" + characteristicString  + "' '" + value  + "'";
+      }
+      self.log.debug("setValue %s function for:%s cmd:%s", characteristicString, self.name, cmd);
 
       
       // Execute command to Set a characteristic value for an accessory
@@ -2077,7 +2820,7 @@ Cmd4Accessory.prototype = {
                {
                   // I have seen this once where Homebridge dies, possibly after
                   // trying to delete the bridge.
-                  self.log.warn("Characteristic is null for name:%s type: %s.",
+                  self.log.warn("Characteristic is null for name:%s type:%s",
                           self.name, self.config.type);
                } else if (self.service.getCharacteristic(characteristic) == undefined)
                {
@@ -2127,13 +2870,13 @@ Cmd4Accessory.prototype = {
       let cmd = this.state_cmd + " Get '" + this.name + "' '" + characteristicString  + "'";
 
 
-      self.log.debug("getValue accTypeEnumIndex:(%s)-'%s' function for: %s cmd: %s", accTypeEnumIndex, characteristicString, self.name, cmd);
+      self.log.debug("getValue accTypeEnumIndex:(%s)-'%s' function for:%s cmd:%s", accTypeEnumIndex, characteristicString, self.name, cmd);
 
       // Execute command to Get a characteristics value for an accessory
       let child = exec(cmd, {timeout:self.timeout}, function (error, stdout, stderr)
       {
          if (error) {
-            self.log("getGeneric %s function for: %s cmd: %s failed.", characteristicString, self.name, cmd);
+            self.log("getGeneric %s function for:%s cmd:%s failed.", characteristicString, self.name, cmd);
             self.log(error);
             self.log(stdout);
             self.log(stderr);
@@ -2151,15 +2894,20 @@ Cmd4Accessory.prototype = {
                callback( -1, 0 );
             } else if (words.length <= 0)
             {
-               self.log("getValue %s function for: %s returned no value", characteristicString, self.name);
+               self.log("getValue %s function for:%s returned no value", characteristicString, self.name);
+               
                callback( -1, 0 );
             } else {
                if (words.length >=2)
                {
-                  self.log.warn("Warning, Retrieving %s, expected only one word value for: %s, using first of: '%s'", characteristicString,self.name, stdout);
+                  self.log.warn("Warning, Retrieving %s, expected only one word value for:%s, using first of:%s", characteristicString,self.name, stdout);
                }
          
-               self.log.debug("getValue %s function for: %s returned: '%s'", characteristicString, self.name, words[0]);
+               self.log.debug("getValue %s function for:%s returned:%s", characteristicString, self.name, words[0]);
+               
+               
+               // Even if outputConsts is not set, just in case, transpose it anyway.
+               words[0] = self.transposeConstantToValueForCharacteristic(accTypeEnumIndex, words[0])        
          
 
                let value = '';
@@ -2178,27 +2926,33 @@ Cmd4Accessory.prototype = {
                   // HomeKit and HomeBridge seems okay with this.
                   // Eve sees the decimal numbers.
                   value =  parseFloat(words[0], 10);
-                  // self.log( "getValue Retrieved %s %s for: %s. translated to %f", characteristicString, words[0], self.name, value);
            
                   // Store history using fakegato if set up
                   self.updateAccessoryAttribute(accTypeEnumIndex, value);
 
                   callback(null,value);
+               } else if ( typeof words[0] == "boolean")
+               {
+                  // Store history using fakegato if set up
+                  self.updateAccessoryAttribute(accTypeEnumIndex, words[0]);                 
+              
+                  callback(null,words[0]);
                } else {
                   let lowerCaseWord = words[0].toLowerCase();
 
+                  // Fix strings of true or on
                   if (lowerCaseWord  == "true" || lowerCaseWord == "on")
                   {
-                     // self.log( "getValue Retrieved %s %s for: %s. translated to 1", characteristicString, words[0], self.name);
                      value = 1;
               
                      // Store history using fakegato if set up
                      self.updateAccessoryAttribute(accTypeEnumIndex, value);
               
                      callback(null,value);
+                     
+                  // Fix strings of false or off
                   } else if (lowerCaseWord == "false" || lowerCaseWord == "off")
                   {
-                     // self.log( "getValue Retrieved %s %s for: %s. translated to 0", characteristicString, words[0], self.name);
                      value = 0;
               
                      // Store history using fakegato if set up
@@ -2206,14 +2960,13 @@ Cmd4Accessory.prototype = {
               
                      callback(null,value);
                   } else {
-                     // self.log( "getValue Retrieved %s %s for: %s.", characteristicString, words[0], self.name);
                      value = words[0];
               
                      // Store history using fakegato if set up
                      self.updateAccessoryAttribute(accTypeEnumIndex, value);
               
                      callback(null,value);
-                  }
+                  }                                 
                }
             }
          }
@@ -2234,75 +2987,98 @@ Cmd4Accessory.prototype = {
     // ***********************************************
     setupAllServices: function (service)
     {
-        this.log.debug("Setting up services");
+       this.log.debug("Setting up services");
  
-        let perms = '';
-        let len = this.storedValuesPerCharacteristic.length;
+       let perms = '';
+       let len = this.storedValuesPerCharacteristic.length;
 
-        for (let accTypeEnumIndex = 0;
-               accTypeEnumIndex < len; 
-               accTypeEnumIndex++ )
-        {
-            if ( this.storedValuesPerCharacteristic[accTypeEnumIndex] != undefined)
-            {
-               this.log.debug("Found characteristic '%s' for '%s'", 
-                  CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].name, this.name);             
+       // Check every possible characteristic
+       for (let accTypeEnumIndex = 0;
+            accTypeEnumIndex < len; 
+            accTypeEnumIndex++ )
+       {
+          
+          // If there is a stored value for this characteristic (defined by the config file )
+          // Then we need to add the characteristic too
+          if ( this.storedValuesPerCharacteristic[accTypeEnumIndex] != undefined)
+          {
+             this.log.debug("Found characteristic:%s value:%s for:%s", 
+                  CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].name,
+                  this.getStoredValueForIndex(accTypeEnumIndex),
+                  this.name); 
+      
+             // Get the permissions of characteristic (Read/Write ...)
+             perms = service.getCharacteristic(
+                CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex]
+                .characteristic).props.perms;            
                
-               if ( ! service.testCharacteristic(
-                    CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].characteristic))
-               {
+             // Find out if the characteristic is Optional and needs to be added
+             if ( ! service.testCharacteristic(
+                  CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].characteristic))
+             {                
+                // We need to check if the characteristic is write only
+                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
+                {
+                   // Since the characteristic is writeable, then add it.
+                   this.log.debug("Adding optional characteristic:%s for:%s", CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].name, this.name);
                    service.addCharacteristic(
                       CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].
-                      characteristic );
-               }
-                
-               perms = service.getCharacteristic(
-                  CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex]
-                  .characteristic).props.perms;
-
-               if ( service.getCharacteristic(
-                      CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex]
-                      .characteristic).listeners('get').length == 0 )
-               {
-                   // Add Read services for characterisitcs, if possible
-                   if (perms.indexOf(Characteristic.Perms.READ) != -1)
-                   {
-                       service.getCharacteristic(
-                         CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex]
-                         .characteristic)
-                            .on('get', this.getValue.bind(this, accTypeEnumIndex));
-                   }
-               }
-     
-               if ( service.getCharacteristic(
+                         characteristic );
+                }
+             }
+             
+             // Read and or write, we need to set the value once.
+             // If the characteristic was optional and read only, this will add
+             // it with the correct value.  You cannot add and set a read characteristic.
+             service.setCharacteristic(
+                CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].characteristic,
+                      this.getStoredValueForIndex(accTypeEnumIndex) );
+                 
+             
+             // Add getValue funtion to service
+             if ( service.getCharacteristic(
                     CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex]
-                    .characteristic).listeners('set').length == 0 )
-               {
-                   // Add Write services for characterisitcs, if possible
-                   if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
-                   {
-                      
-                      // GetService has parameters:
-                      // five, context, accTypeEnumIndex, value , callback
-                      // Why this works, beats me.
-                      // five ends up equal to '2';                        
-                      let boundSetValue = this.setValue.bind(1, 2, this, accTypeEnumIndex);
+                    .characteristic).listeners('get').length == 0 )
+             {
+                // Add Read services for characterisitcs, if possible
+                if (perms.indexOf(Characteristic.Perms.READ) != -1)
+                {
+                   service.getCharacteristic(
+                      CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex]
+                      .characteristic)
+                         .on('get', this.getValue.bind(this, accTypeEnumIndex));
+                }
+             }
+             
+             // Add setValue function to service
+             if ( service.getCharacteristic(
+                  CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex]
+                  .characteristic).listeners('set').length == 0 )
+             {
+                // Add Write services for characterisitcs, if possible
+                if (perms.indexOf(Characteristic.Perms.WRITE) != -1)
+                {                  
+                   // GetService has parameters:
+                   // five, context, accTypeEnumIndex, value , callback
+                   // Why this works, beats me.
+                   // five ends up equal to '2';                        
+                   let boundSetValue = this.setValue.bind(1, 2, this, accTypeEnumIndex);
                         
-                      service.getCharacteristic(
-                         CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex]     
-                         .characteristic).on('set', (value,callback) => {
-                           boundSetValue(value, callback);
-                      });   
-                   }
-               }
-            }
-        }
+                   service.getCharacteristic(
+                      CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex]     
+                      .characteristic).on('set', (value,callback) => {
+                          boundSetValue(value, callback);
+                   });   
+                }
+             }
+          }
+       }
    },
    updateAccessoryAttribute: function (accTypeEnumIndex, value)
    {
       if (accTypeEnumIndex < 0 || accTypeEnumIndex > CMD4_ACC_TYPE_ENUM.EOL )
       {
-         this.log ("Internal error.: updateAccessoryAttribute - accTypeEnumIndex '%s' for '%s' not known", accTypeEnumIndex, this.name);
+         this.log ("Internal error.: updateAccessoryAttribute - accTypeEnumIndex:%s for:%s not known", accTypeEnumIndex, this.name);
          return;
       }
 
@@ -2327,7 +3103,7 @@ Cmd4Accessory.prototype = {
                firstParmValue = (this.testStoredValueForIndex(firstParmIndex) < 0) ?
                       firstParmValue : this.getStoredValueForIndex(firstParmIndex);
 
-               this.log.debug("Logging power '%s'", firstParmValue);
+               this.log.debug("Logging power:%s", firstParmValue);
                // Eve Energy (Outlet service)
                this.loggingService.addEntry({time: moment().unix(),
                   power: firstParmValue});
@@ -2355,7 +3131,7 @@ Cmd4Accessory.prototype = {
                   thirdParmValue : this.getStoredValueForIndex(thirdParmIndex);
          
 
-               this.log.debug("Logging temp '%s' humidity '%s' ppm '%s'", firstParmValue, secondParmValue, thirdParmValue);
+               this.log.debug("Logging temp:%s humidity:%s ppm:%s", firstParmValue, secondParmValue, thirdParmValue);
                // Eve Room (TempSensor, HumiditySensor and AirQuality Services)
                this.loggingService.addEntry({time: moment().unix(),
                   temp:firstParmValue,
@@ -2383,7 +3159,7 @@ Cmd4Accessory.prototype = {
                thirdParmValue = (this.testStoredValueForIndex(thirdParmIndex) < 0) ?
                   thirdParmValue : this.getStoredValueForIndex(thirdParmIndex);
          
-               this.log.debug("Logging temp '%s' pressure '%s' humidity '%s'", firstParmValue, secondParmValue, thirdParmValue);
+               this.log.debug("Logging temp:%s pressure:%s humidity:%s", firstParmValue, secondParmValue, thirdParmValue);
 
                // Eve Weather (TempSensor Service)
                this.loggingService.addEntry({time: moment().unix(),
@@ -2402,7 +3178,7 @@ Cmd4Accessory.prototype = {
                firstParmValue = (this.testStoredValueForIndex(firstParmIndex) < 0) ?
                       firstParmValue : this.getStoredValueForIndex(firstParmIndex);
 
-               this.log.debug("Logging status '%s'", firstParmValue);
+               this.log.debug("Logging status:%s", firstParmValue);
                       
                this.loggingService.addEntry({time: moment().unix(),
                   status: firstParmValue});
@@ -2419,7 +3195,7 @@ Cmd4Accessory.prototype = {
                firstParmValue = (this.testStoredValueForIndex(firstParmIndex) < 0) ?
                       firstParmValue : this.getStoredValueForIndex(firstParmIndex);
 
-               this.log.debug("Logging status '%s'", firstParmValue);
+               this.log.debug("Logging status:%s", firstParmValue);
                       
                this.loggingService.addEntry({time: moment().unix(),
                   status: firstParmValue});
@@ -2446,7 +3222,7 @@ Cmd4Accessory.prototype = {
                thirdParmValue = (this.testStoredValueForIndex(thirdParmIndex) < 0) ?
                   thirdParmValue : this.getStoredValueForIndex(thirdParmIndex);
          
-               this.log.debug("Logging currentTemp '%s' setTemp '%s' valvePosition '%s'", firstParmValue, secondParmValue, thirdParmValue);
+               this.log.debug("Logging currentTemp:%s setTemp:%s valvePosition:%s", firstParmValue, secondParmValue, thirdParmValue);
                
                // Eve Thermo (Thermostat service)
                this.loggingService.addEntry({time: moment().unix(),
@@ -2470,7 +3246,7 @@ Cmd4Accessory.prototype = {
                secondParmValue = (this.testStoredValueForIndex(secondParmIndex) < 0) ?
                   secondParmValue : this.getStoredValueForIndex(secondParmIndex);
                   
-               this.log.debug("Logging status '%s' waterAmount '%s'", firstParmValue, secondParmValue);
+               this.log.debug("Logging status:%s waterAmount:%s", firstParmValue, secondParmValue);
                
                // Eve Aqua (Valve service set to Irrigation Type)
                this.LoggingService.addEntry({ time: moment().unix(),
@@ -2506,7 +3282,7 @@ Cmd4Accessory.prototype = {
                     case FAKEGATO_TYPE_AQUA:
                        break;
                     default:
-                       this.log("Invalid fakegato eve type '%s'", value);
+                       this.log("Invalid fakegato eve type:%s", value);
                        this.log("It must be one of (%s, %s, %s, %s, %s, %s, %s)",
                           FAKEGATO_TYPE_ENERGY,
                           FAKEGATO_TYPE_ROOM,
@@ -2548,11 +3324,11 @@ Cmd4Accessory.prototype = {
                  // make sure that the characteristic to log to fakegato is valid
                  // and if it is not 0 for not used.
                  if (this.testStoredValueForIndex(accTypeEnumIndex) < 0 && ucValue != '0')
-                    this.log.warn("Not a valid characteristic '%s' for fakegato to log of '%s'", value, key);
+                    this.log.warn("Not a valid characteristic:%s for fakegato to log of:%s", value, key);
                  break;
               }
               default:
-                 this.log("Invalid fakegato key '%s' in json.config for %s ", key, this.name);
+                 this.log("Invalid fakegato key:%s in json.config for:%s", key, this.name);
           }
       }
 
@@ -2568,6 +3344,7 @@ Cmd4Accessory.prototype = {
                { storage: 'fs',
                   path: this.storagePath }
             );
+            this.services.push(this.loggingService);
   
          } else if (this.storage == 'googleDrive')
          {
@@ -2579,9 +3356,10 @@ Cmd4Accessory.prototype = {
                  folder: this.folder,
                  keyPath: this.keyPath }
             );
+            this.services.push(this.loggingService);
          } else
          {
-            this.log("WARNING: Cmd4 Unknown accessory config.storage '%s'. Expected 'fs' or 'googlrDrive for '%s' ", this.storage, this.name);
+            this.log("WARNING: Cmd4 Unknown accessory config.storage:%s Expected:fs or googlrDrive for:%s", this.storage, this.name);
          }
       }
 
@@ -2590,10 +3368,488 @@ Cmd4Accessory.prototype = {
          if (this.polling == undefined ||
              this.polling == false)
          {
-            this.log.warn("config.storage='%s' for '%s' set but polling is not enabled.",
+            this.log.warn("config.storage:%s for:%s set but polling is not enabled.",
               this.storage, this.name);
             this.log.warn("      History will not be updated continiously.");
         
+         }
+      }
+   },
+   validateStateCmd: function ( state_cmd )
+   {
+      // Split the state_cmd into words.
+      let cmdArray = state_cmd.match(/\S+/gi);
+            
+      // Assume no words
+      let arrayLength = 0;
+            
+      // Get the number of words
+      if (cmdArray )
+         arrayLength = cmdArray.length;
+               
+      // Check that the state_cmd is valid.
+      // The first word must be in the persons path
+      // The second word, if it exists must be a file
+      // and have the correct path.
+      switch (arrayLength)
+      { 
+         case 0:
+            this.log.error("No state_cmd given");
+            return false;
+         default:
+         {           
+            let checkFile = cmdArray[arrayLength -1]; 
+      
+            try {
+               fs.accessSync(checkFile, fs.F_OK);
+               // File exists - OK
+                
+            } catch (e) {         
+               // It isn't accessible
+               this.log.warn("The file %s does not exist, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell.", checkFile);                   
+            }                         
+         }
+         // Purposely fall through to check the command as well 
+         case 1:
+         {
+            let checkCmd = cmdArray[0]; 
+                              
+            // if the lone command is a path to a command
+            // Then check if it exists, oTherwise check if it is
+            // in Their path.
+            if ( checkCmd.charAt( 0 ) == '/' )
+            {
+               try {
+                  fs.accessSync(checkCmd, fs.F_OK);
+                  // File exists - OK
+               } catch (e) {                           
+                  this.log.warn("The command %s does not exist, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell.", checkCmd); 
+               }                     
+            } else
+            {
+               if ( ! commandExistsSync( checkCmd ) )
+                  this.log.warn("The command %s does not exist, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell.", checkCmd);
+            }
+            break;
+         }
+      }           
+      return true;
+   },
+   parseKeyForCharacteristics: function ( key, value )
+   {
+      // fix the their scripts, fix it here.
+      let ucKey = ucFirst(key);
+
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.name === ucKey);
+      
+      if (accTypeEnumIndex < 0 )
+      {
+         this.log("OOPS:%s not found. There something wrong with your config.json file?", key);
+         if (ucKey == "AdministorOnlyAccess") 
+         {
+            this.log("administorOnlyAccess was incorrectly named");
+            this.log("It is corrected in the new config.json file as administratorOnlyAccess");
+            this.log("Please make the approperiate changes or use the new config.json file");
+            this.log("provided.");
+         }
+         if (ucKey == "TargettRelativeHumidity") 
+         {
+            this.log("targettRelativeHumidity was incorrectly named");
+            this.log("It is corrected in the new config.json file as targetRelativeHumidity");
+            this.log("Please make the approperiate changes or use the new config.json file");
+            this.log("provided.");
+         }
+         if (ucKey == "CurrentSlatType") 
+         {
+            this.log("currentSlatType was incorrectly named");
+            this.log("It is corrected in the new config.json file as currentSlatState");
+            this.log("Please make the approperiate changes or use the new config.json file");
+            this.log("provided.");
+         }
+         process.exit(1);
+      }
+         
+      //this.log.debug("**** Size is %s for %s", Object.keys(CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].values).length, accTypeEnumIndex);
+         
+      if (Object.keys(CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].values).length > 0)
+      {
+                  
+         // Even if outputConsts is not set, just in case, transpose it anyway.
+         let newValue = this.transposeConstantToValueForCharacteristic(accTypeEnumIndex, value) ;
+
+         if (value != newValue) 
+         {
+            //this.log.debug("**** Translated %s to %s", value, newValue);               
+            value = newValue;
+         }  
+      }     
+         
+      this.setStoredValueForIndex(accTypeEnumIndex, value);
+   },
+   processRequires: function( requires )
+   {
+      if ( Array.isArray ( requires ) )
+      {  
+         for (let i = 0; i < requires.length; i++)
+         {
+            this.processRequires(requires[i]);
+         }
+         return;
+      } 
+      if ( isJSON( requires ) )
+      { 
+          // I assume only 1, but you know about assuming ...
+         for (let key in requires)
+         {
+            let required = requires[ key ] ;
+            
+            if ( typeof required != 'string'  )
+            {
+               this.log.error("Requires definition must be a string", required);
+               process.exit(-1);
+            }
+                        
+            this.log.debug("Requiring %s", required);
+ 
+            require(required);
+        }           
+        return;
+     } 
+     this.log.error("Requires must be an array of/or list of key/value pairs:%s",
+               requires);
+      process.exit(-1); 
+   },
+   processConstants: function( constant )
+   {
+      if ( Array.isArray ( constant ) )
+      {  
+         for (let i = 0; i < constant.length; i++)
+         {
+            this.processConstants(constant[i]);
+         }
+         return;
+      } 
+      if ( isJSON( constant ) )
+      {  
+         // I assume only 1, but you know about assuming ...
+         for (let key in constant)
+         {
+            let keyToAdd = key ;
+            let valueToAdd = constant[ key ] ;
+            if ( ! keyToAdd.startsWith( '${' ) )
+            {
+               this.log.error("Constant definition for:%s must start with '${' for clarity.", keyToAdd);
+               process.exit(-1);
+            }
+            if ( ! keyToAdd.endsWith( '}' ) )
+            {
+               this.log.error("Constant definition for:%s must end with '}' for clarity.", keyToAdd);
+               process.exit(-1);
+            }
+            // remove any leading and trailing single quotes
+            // so that using it for replacement will be easier.
+            valueToAdd.replace(/^'/, "")
+            valueToAdd.replace(/'$/, "")
+            
+            this.listOfConstants[ keyToAdd ] = valueToAdd;
+        }           
+        return;
+     } 
+     
+     this.log.error("Constants must be an array of/or list of key/value pairs:%s",
+               constant);
+     process.exit(-1);
+
+   },
+   processVariables: function( variable )
+   {      
+      if ( Array.isArray ( variable ) )
+      {  
+         for (let i = 0; i < variable.length; i++)
+         {
+            this.processConstants(variable[i]);
+         }
+         return;
+      } 
+      if ( isJSON ( variable ) )
+      {
+         // I assume only 1, but you know about assuming ...
+         for (let key in variable)
+         {
+            let keyToAdd = key ;
+            let valueToAdd = variable[ key ] ;
+            if ( ! keyToAdd.startsWith( '${' ) )
+            {
+               this.log.error("Variable definition for:%s must start with '${' for clarity.", keyToAdd);
+               process.exit(-1);
+            }
+            if ( ! keyToAdd.endsWith( '}' ) )
+            {
+               this.log.error("Variable definition for:%s must end with '}' for clarity.", keyToAdd);
+               process.exit(-1);
+            }
+            // remove any leading and trailing single quotes
+            // so that using it for replacement will be easier.
+            valueToAdd.replace(/^'/, "")
+            valueToAdd.replace(/'$/, "")
+
+            // The resultant variable may have constants to be replaced.
+            let value = this.replaceConstantsInString(valueToAdd);
+            
+            this.listOfVariables[ keyToAdd ] = value;
+         }           
+         return;
+      } 
+      
+      this.log.error("Variables must be an array of/or list of key/value pairs:%s",
+               variable);
+      process.exit(-1);
+      
+   },
+   /**
+    * @param config       - The accessories config information
+    * @param parentConfig - the accessories parent Config
+    *                       for state_cmd ..., if not defined.
+    */
+   processLinkedTypesConfig: function( config, parentConfig)
+   {
+      if ( Array.isArray ( config ) )
+      {
+         for (let i = 0; i < config.length; i++)
+            this.processLinkedTypesConfig(config[i], parentConfig);
+            
+         return;
+      } 
+      if ( isJSON ( config ) )
+      {
+         this.log("Processing Linked accessory %s of %s", config.name, this.name);
+        
+         let accessory = new Cmd4Accessory( this.log, parentConfig, config, this );
+         // This.parent is probable me, but what happens to linked-linked accessories ???
+         this.parent.childFoundAccessories.push( accessory ); 
+         
+         
+         this.log.debug("Pushing service for accessory:%s to:%s", accessory.name, this.name);
+         this.parent.services.push(accessory.service);
+         
+
+         this.log.debug("Adding Linked service of %s to %s", accessory.name, this.name);
+         this.parent.service.addLinkedService(accessory.service);
+         
+         return;
+      } 
+     
+      this.log.error("linkedTypes must be an array of json objects:%s", config);
+      process.exit(-1);
+   },
+   processURL: function( url )
+   {
+      if ( typeof url != 'string')
+      {
+         this.log.error("url must be a string:%s", url);
+         process.exit(-1);
+      }
+
+      if ( this.url !== undefined ) 
+      {
+         this.log.error("url is already defined as:%s for %s",
+             this.url, url);
+         process.exit(-1);
+      }
+      this.url = this.replaceConstantsInString(url);
+   },
+   replaceConstantsInString: function( orig )
+   {
+      let finalAns = orig;
+
+      for (let key in this.listOfConstants)
+      {
+          let replacementConstant = this.listOfConstants[key];
+          finalAns = finalAns.replace(key, replacementConstant);
+      }
+      return finalAns;
+   },
+   // Used during getValue and parsing config.json
+   transposeConstantToValueForCharacteristic( accTypeEnumIndex, constantString )
+   {  
+      if (Object.keys(CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].values).length < 0)
+      {  
+         //this.log.debug("No constants to transpose for:%s", constantString);
+         return;
+      }  
+      
+      if (CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].values.hasOwnProperty(constantString) )
+      {         
+         let value = CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].values[constantString];
+         
+         // When we translate constants to Characteristic.<type>.values and value is a true/false
+         // result, than parsing words[0].lowercase fails.
+         // - I fixed that instead ...
+         //value = String(value);
+         
+         this.log.debug("Found value:%s for:%s", value, constantString);
+         
+            
+         return value;
+      }
+      //this.log.debug("No value found for constant:%s", constantString);
+      return constantString;
+   },
+   // Used during setValue
+   transposeValueToConstantForCharacteristic( accTypeEnumIndex, valueString )
+   {  
+      //this.log("check index:%s", accTypeEnumIndex);
+      if (Object.keys(CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].values).length < 0)
+      {  
+         //this.log("No constants to transpose for:%s", valueString);
+         return;
+      }
+   
+      let constant = extractKeyValue(CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].values, valueString);
+   
+      if (constant == undefined)
+      {
+         //this.log.debug("No constant found for value:%s", valueString);
+         return valueString;
+      }
+      return constant;
+   },
+   parseConfig: function( config )
+   {
+      for (let key in config)
+      {
+         let value = config[key];
+
+         // I made the stupid mistake of not having all characteristics in the config.json
+         // file not upper case to match that in State.js. So instead of having everyone
+         // fix their scripts, fix it here.
+         let ucKey = ucFirst(key);
+
+         switch (ucKey)
+         {
+            case 'Type':
+               this.type = value;
+               this.ucType = ucFirst(value);
+               this.typeIndex = CMD4_DEVICE_TYPE_ENUM.properties.indexOfEnum(i => i.deviceName === this.ucType);
+               if (this.typeIndex < 0)
+               {
+                  this.log ("CMD4 Error: Unknown device type:%s for %s", this.type, this.name);
+                  process.exit(1);
+               }
+               break;
+            case 'Name':
+               this.name = value;
+               this.UUID = UUIDGen.generate(this.name);
+               this.displayName = this.name;  //fakegato-history uses displayName
+               
+               // Name is also a characteristic, which must be added.
+               this.parseKeyForCharacteristics( key, value );
+               
+               break;
+            case 'Model':
+               this.model = value;
+               this.log.debug("Setting model to:%s", value);
+               
+               if ( this.informationService )
+                  this.informationService
+                    .setCharacteristic(Characteristic.Model, value );
+               
+               break;
+            case 'Manufacturer':
+               this.manufacturer = value;
+               
+               if ( this.informationService )
+                  this.informationService
+                    .setCharacteristic(Characteristic.Manufacturer, value );
+               
+               break;
+            case 'SerialNumber':
+               this.serialNumber = value;
+               
+               if ( this.informationService )
+                  this.informationService
+                    .setCharacteristic(Characteristic.SerialNumber, value );
+               
+               break;
+            case 'OutputConstants':
+               // Define if we should ouput constant strings
+               // instead of values
+               if ( config.outputConstants === true ) 
+
+                  this.outputConstants = value;
+                else
+                  this.outputConstants = false;
+                  
+               break;
+            case 'Timeout':
+               // Timers are in milliseconds. A low value can result in failure to get/set values
+               this.timeout = parseInt(value, 10);
+               if (this.timeout < 500)
+               {
+                  this.log.warn("Timeout for:%s is in milliseconds. A value of '%d' seems pretty low.",
+                     config.name, this.timeout);
+               }
+               break;
+            case 'Polling':
+               // Do not parse it yet as characteristics must be set first.
+               this.polling = value;
+               break;
+            case 'Interval':
+               // Intervals are in seconds
+               this.interval = parseInt(value, 10) * 1000;
+               break;
+            case 'StateChangeResponseTime':
+               // respnse time is in seconds
+               this.stateChangeResponseTime = value * 1000;
+               break;
+            case 'State_cmd':
+            {
+               // Solve some issues people have encounterred who
+               // have had problems with shell completion which is
+               // only available from shell expansion.
+   
+               if (! this.validateStateCmd( value ) )
+                  process.exit(-1);
+   
+               // What this plugin is all about
+               this.state_cmd = value;
+                  
+               break;
+            }
+            case 'Storage':
+            case 'StoragePath':
+            case 'Folder':
+            case 'KeyPath':
+               this.log("Definitions of fakegato has changed to be more specific per characteristic");
+               this.log("and in line with fakegato.")
+               this.log("Please see the README.md for further details.");
+               this.log("Sorry for the inconvenience");
+               break;
+            case 'Fakegato':
+               // Do not parse it yet as characteristics must be set first.
+               this.fakegatoConfig = value;
+               break;
+            case 'Requires':
+               this.processRequires( value );
+               break;
+            case 'Constants':
+               this.processConstants( value );
+               break;
+            case 'Variables':
+               this.processVariables( value );
+               break;
+            case 'LinkedTypes':
+               //this.log.debug("Before processLinked this.services.size=%d", this.services.length);
+               this.processLinkedTypesConfig( value, config );
+               break;
+            case 'Url':
+               this.processURL( value );
+               break;
+            default:
+            {
+               this.parseKeyForCharacteristics( key, value );
+            }
+
          }
       }
    }
@@ -2620,17 +3876,78 @@ Object.defineProperty(Object.prototype, "indexOfEnum", {
     }
 });
 
+/**
+ * @param string
+ * @returns string with first character in upper case.
+ */
 function ucFirst( string )
 {
-   if ( string )
-      return string.charAt(0).toUpperCase() + string.slice( 1 );
-   else {
-      console.log( "Asked to upper  case first character of NULL String" );
-      return "undefined";
+   switch( typeof string )
+   {
+      case undefined:
+   
+         console.log( "Asked to upper case first character of NULL String" );
+         return "undefined";
+   
+      case 'boolean':
+      case 'number':
+         return string;
+      case 'string':
+         return string.charAt(0).toUpperCase() + string.slice( 1 );
+      default:
+         console.log( "Asked to upper case first character of non String(%s):%s", typeof string, string );
+         return string;
    }
 }
 
+/**
+ * @param variable
+ * @returns boolean
+ */
 function isNumeric( num ){
    num = "" + num; // coerce num to be a string
    return !isNaN(num) && !isNaN(parseFloat(num));
+}
+/**
+ * @param Object
+ * @returns boolean
+ */
+function isJSON(m) 
+{
+
+   if (m.constructor === Array) {
+      console.log("It is an array");
+      return false;
+   }
+
+   if (typeof m == 'object') {
+      try{ m = JSON.stringify(m); }
+      catch(err) { return false; } }
+
+   if (typeof m == 'string') {
+      try{ m = JSON.parse(m); }
+      catch (err) { return false; } }
+
+   if (typeof m != 'object') { return false; }
+   return true;
+
+}
+
+function extractKeyValue(obj, value) {
+    return Object.keys(obj)[Object.values(obj).indexOf(value)];
+}
+
+const checkForUpdates = () => {
+   versionCheck(versionCheckOptions, function (error, update) 
+   {
+      if (error) {
+         console.error(error);
+         process.exit(-1);
+      }
+      
+      if (update) 
+      { 
+         console.log(`\x1b[32m[UPDATE AVAILABLE] \x1b[0mVersion ${update.tag_name} of homebridge-cmd4 is available. Any release notes can be found here: \x1b[4mhttps://github.com/ztalbot2000/homebridge-cmd4/README.md\x1b[0m`);
+      }
+   });
 }

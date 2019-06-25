@@ -79,3 +79,15 @@ if (package.version.includes('2.0.0') ||
   console.log("   John Talbot");
   console.log("\nP.S. If you really enjoy homebridge-cmd4, please star it on GitHub\n");
 }
+
+if (package.version.includes('2.2.0'))
+{
+  console.log("\n%sHomeBridge-Cmd4 Version 2.2.0 Notes:%s", KUND, KEND);
+  console.log("   This version adds in linked accessories. HDMI Input sources for a TV are now shown in HomeKit as an example.\n");
+  console.log("   This version also allows the config.json file to be populated with constants (Where applicable). See the README.md file for more information.\n");
+  console.log("   With constants, the number of testcases has risen to 4150. That equates to almost 61\% more coverage, And less errors.\n");
+  console.log("   Finally this release adds in version checking so you are always up to date with the latest version of Homebridge-Cmd4.\n");
+  console.log("\n\nEnjoy");
+  console.log("   John Talbot");
+  console.log("\nP.S. If you really enjoy homebridge-cmd4, please star it on GitHub\n");
+}

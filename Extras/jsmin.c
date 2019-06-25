@@ -39,6 +39,8 @@ SOFTWARE.
 
 int   theCurrentChar;
 int   theNextChar;
+int   insideSingleQuote = 0;
+int   insideDoubleQuote = 0;
 
 unsigned long lineCounter =1;
 
@@ -115,14 +117,97 @@ jsmin()
 
     while (theCurrentChar != EOF)
     {
-// fprintf(stdout,"processing '%c\n",theCurrentChar);
+
+       if (theCurrentChar == '\'') 
+       {
+          insideSingleQuote = 1;
+
+          outputChar(theCurrentChar);
+
+          theCurrentChar = getCharFromStdin();
+
+          // Continue until out of single quotes
+          // or forced out of single quotes by a newline
+          while (insideSingleQuote == 1 &&
+                 theCurrentChar !=EOF)
+          {
+             theNextChar = getCharFromStdin();
+
+             // Skip passed escaped single quotes
+             if (theCurrentChar == '\\' && theNextChar == '\'' )
+             {
+                outputChar(theCurrentChar);
+                theCurrentChar = theNextChar;
+                continue;
+             }
+
+             // Found end of single quotes
+             if (theCurrentChar == '\'')
+             {
+                insideSingleQuote = 0;
+             }
+
+             // Newline and inside single quotes breaks
+             // out automatically
+             if (theCurrentChar == '\n')
+             {
+                insideSingleQuote = 0;
+             }
+
+             outputChar(theCurrentChar);
+             theCurrentChar = theNextChar;
+          }
+       }
+
+       if (theCurrentChar == '\"') 
+       {
+          insideDoubleQuote = 1;
+
+          outputChar(theCurrentChar);
+
+          theCurrentChar = getCharFromStdin();
+
+          // Continue until out of single quotes
+          // or forced out of single quotes by a newline
+          while (insideDoubleQuote == 1 &&
+                 theCurrentChar !=EOF)
+          {
+             theNextChar = getCharFromStdin();
+
+             // Skip passed escaped double quotes
+             if (theCurrentChar == '\\' && theNextChar == '\"' )
+             {
+                outputChar(theCurrentChar);
+                theCurrentChar = theNextChar;
+                continue;
+             }
+
+             // Found end of double quotes
+             if (theCurrentChar == '\"')
+             {
+                insideDoubleQuote = 0;
+             }
+
+             // Newline and inside double quotes breaks
+             // out automatically
+             if (theCurrentChar == '\n')
+             {
+                insideDoubleQuote = 0;
+             }
+
+             outputChar(theCurrentChar);
+             theCurrentChar = theNextChar;
+          }
+       }
+
+
        // Look for the start of a 'C' or 'C++' style comment.
-       if (theCurrentChar == '/')
+       if (theCurrentChar == '/' )
        {
           theNextChar = getCharFromStdin();
 
           // Found a 'C++' style comment.
-          if (theNextChar == '/')
+          if (theNextChar == '/' )
           {
              // Continue until \n
              while (theCurrentChar != '\n' )
