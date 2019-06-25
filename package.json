@@ -20,7 +20,7 @@
     "/"
   ],
   "_resolved": "https://registry.npmjs.org/homebridge-cmd4/-/homebridge-cmd4-2.2.0.tgz",
-  "_shasum": "4f49b51f702.1.3df314cf88ea9022.1.3ec3025e7",
+  "_shasum": "8329f6094809108460224f10a094f94da979d32e",
   "_spec": "homebridge-cmd4@2.2.0",
   "_where": "/private/var/root",
   "author": {
@@ -31,8 +31,6 @@
     "email": "info@BeNiceGames.com"
   },
   "dependencies": {
-    "babel-polyfill": "^6.26.0",
-    "chai-as-promised": "^7.1.1",
     "command-exists": ">=1.2.8",
     "fakegato-history": ">=0.5.3",
     "homebridge": ">=0.4.0",
