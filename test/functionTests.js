@@ -29,27 +29,27 @@ describe('Initializing our plugin module', function ()
 var API = require('../node_modules/homebridge/lib/api').API;
 var _api = new API(); // object we feed to Plugins
 
-//console.log("Initializing our plugin module");
 var cmd4 = pluginModule.default(_api);
+let CMD4_ACC_TYPE_ENUM = cmd4.CMD4_ACC_TYPE_ENUM;
 
 // ******** TEST CMD4_ACC_TYPE_ENUM.properties *************
 describe('Testing transposeValueToConstantForCharacteristic', function ()
 {
-   for (let index=0; index < cmd4.CMD4_ACC_TYPE_ENUM.EOL; index ++)
+   for (let index=0; index < CMD4_ACC_TYPE_ENUM.EOL; index ++)
    {  
-      if (Array.isArray(cmd4.CMD4_ACC_TYPE_ENUM.properties[index].values))
+      if (Array.isArray(CMD4_ACC_TYPE_ENUM.properties[index].validValues))
       {
          let numberOfValues =
-            cmd4.CMD4_ACC_TYPE_ENUM.properties[index].values.length;
+            CMD4_ACC_TYPE_ENUM.properties[index].values.length;
          for (let vindex=0; vindex < numberOfValues; vindex ++)
          {
             testTransposeValueTo(index,
-               cmd4.CMD4_ACC_TYPE_ENUM.properties[index].values[vindex], true);
+               CMD4_ACC_TYPE_ENUM.properties[index].validValues[vindex], true);
          }
       } else {
    
          testTransposeValueTo(index,
-               cmd4.CMD4_ACC_TYPE_ENUM.properties[index].values, true);
+               CMD4_ACC_TYPE_ENUM.properties[index].validValues, true);
       }
    }
 
@@ -58,21 +58,21 @@ describe('Testing transposeValueToConstantForCharacteristic', function ()
 });
 describe('Testing transposeConstantToValueForCharacteristic', function ()
 {
-   for (let index=0; index < cmd4.CMD4_ACC_TYPE_ENUM.EOL; index ++)
+   for (let index=0; index < CMD4_ACC_TYPE_ENUM.EOL; index ++)
    {
-      if (Array.isArray(cmd4.CMD4_ACC_TYPE_ENUM.properties[index].values))
+      if (Array.isArray(CMD4_ACC_TYPE_ENUM.properties[index].validValues))
       {
          let numberOfValues =
-            cmd4.CMD4_ACC_TYPE_ENUM.properties[index].values.length;
+            CMD4_ACC_TYPE_ENUM.properties[index].validValues.length;
          for (let vindex=0; vindex < numberOfValues; vindex ++)
          {
             testTransposeConstantTo(index,
-               cmd4.CMD4_ACC_TYPE_ENUM.properties[index].values[vindex], true);
+               CMD4_ACC_TYPE_ENUM.properties[index].validValues[vindex], true);
          }
       } else {
 
          testTransposeConstantTo(index,
-               cmd4.CMD4_ACC_TYPE_ENUM.properties[index].values, true);
+               CMD4_ACC_TYPE_ENUM.properties[index].validValues, true);
       }
    }
 
@@ -103,13 +103,14 @@ function testTransposeConstantTo(accTypeEnumIndex, obj, shouldPass )
       it('transposeConstantToValueForCharacteristic should return expected value', function ()
       {
          if (shouldPass)
-            assert.equal(valueThatShouldBeReturned, value, "transposeConstantTo from " + key + " returned " + value + " instead of " + valueThatShouldBeReturned + " for " + cmd4.CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].name);
+            assert.equal(valueThatShouldBeReturned, value, "transposeConstantTo from " + key + " returned " + value + " instead of " + valueThatShouldBeReturned + " for " + CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].type);
          else
-            assert.notEqual(valueThatShouldBeReturned, value, "transposeConstantTo from " + key + " returned " + value + " instead of " + valueThatShouldBeReturned + " for " + cmd4.CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].name);
+            assert.notEqual(valueThatShouldBeReturned, value, "transposeConstantTo from " + key + " returned " + value + " instead of " + valueThatShouldBeReturned + " for " + CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].type);
       });
        
    }
-};
+}
+
 function testTransposeValueTo(accTypeEnumIndex, obj, shouldPass )
 {
    let numberOfKeyValuePairs = Object.keys(obj);
@@ -129,9 +130,9 @@ function testTransposeValueTo(accTypeEnumIndex, obj, shouldPass )
       it('transposeValueToConstantForCharacteristic should return expected constant', function ()
       {
          if (shouldPass)
-            assert.equal(key, constant, "transposeValueTo from " + constantToBeChecked + " returned " + constant + " instead of " + key + " for " + cmd4.CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].name);
+            assert.equal(key, constant, "transposeValueTo from " + constantToBeChecked + " returned " + constant + " instead of " + key + " for " + CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].type);
          else
-            assert.notEqual(key, constant, "transposeValueTo from " + constantToBeChecked + " returned " + constant + " instead of " + key + " for " + cmd4.CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].name);
+            assert.notEqual(key, constant, "transposeValueTo from " + constantToBeChecked + " returned " + constant + " instead of " + key + " for " + CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].type);
       });
           
    }
@@ -140,15 +141,15 @@ function testTransposeValueTo(accTypeEnumIndex, obj, shouldPass )
 // Copied functions to test below here
 function transposeConstantToValueForCharacteristic( accTypeEnumIndex, constantString )
 {
-   if (cmd4.CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].values.length < 0)
+   if (CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].validValues.length < 0)
    {
       //console.log("No constants to transpose for '%s'", constantString);
       return;
    }
       
-   if ( cmd4.CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].values.hasOwnProperty( constantString ) )
+   if ( CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].validValues.hasOwnProperty( constantString ) )
    {         
-      let value = cmd4.CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].values[constantString];
+      let value = CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].validValues[constantString];
       //console.log("Found value '%s' for '%s'", value, constantString);
       return value;
    }
@@ -159,13 +160,13 @@ function transposeConstantToValueForCharacteristic( accTypeEnumIndex, constantSt
 function transposeValueToConstantForCharacteristic( accTypeEnumIndex, valueString)
 {
    //console.log("check index '%s'", accTypeEnumIndex);
-   if (cmd4.CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].values.length < 0)
+   if (CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].validValues.length < 0)
    {
       //console.log("No constants to transpose for '%s'", valueString);
       return;
    }
 
-   let constant = extractKeyValue(cmd4.CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].values, valueString);
+   let constant = extractKeyValue(CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].validValues, valueString);
    
    if (constant == undefined)
    {

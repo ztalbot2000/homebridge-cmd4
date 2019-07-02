@@ -19,8 +19,14 @@ var _api = new API(); // object we feed to Plugins
 // This would be the uninitialized value
 var pluginModule = require('../index');
 
-console.log("Initializing our plugin module");
+describe('Initializing our plugin module', function ()
+{});
+
 var cmd4 = pluginModule.default(_api);
+
+let CMD4_ACC_TYPE_ENUM = cmd4.CMD4_ACC_TYPE_ENUM;
+let CMD4_DEVICE_TYPE_ENUM = cmd4.CMD4_DEVICE_TYPE_ENUM;
+
 
 describe('Testing our config.json)', () =>
 {
@@ -33,10 +39,10 @@ describe('Testing our config.json)', () =>
 
 describe('Testing CMD4_DEVICE_TYPE_ENUM devices all defined', function ()
 {
-   for (let index=0; index < cmd4.CMD4_DEVICE_TYPE_ENUM.EOL; index ++)
+   for (let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++)
    //for (let index=0; index < 2; index ++)
    {
-      let deviceToFind = cmd4.CMD4_DEVICE_TYPE_ENUM.properties[index].deviceName;
+      let deviceToFind = CMD4_DEVICE_TYPE_ENUM.properties[index].deviceName;
 
       // Skip those we do not care about
       if (deviceToFind == 'AccessoryInformation'         ||
@@ -72,10 +78,10 @@ describe('Testing CMD4_DEVICE_TYPE_ENUM devices all defined', function ()
 
 describe('Testing CMD4_DEVICE_TYPE_ENUM devices all defined', function ()
 {
-   for (let index=0; index < cmd4.CMD4_DEVICE_TYPE_ENUM.EOL; index ++)
+   for (let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++)
    //for (let index=0; index < 2; index ++)
    {
-      let deviceToFind = cmd4.CMD4_DEVICE_TYPE_ENUM.properties[index].deviceName;
+      let deviceToFind = CMD4_DEVICE_TYPE_ENUM.properties[index].deviceName;
 
       // Skip those we do not care about
       if (deviceToFind == 'AccessoryInformation'         ||
@@ -111,7 +117,7 @@ describe('Testing CMD4_DEVICE_TYPE_ENUM devices all defined', function ()
 
 function testAccessoryConfig ( accessoryConfig )
 {
-   describe('Testing Device Name:' + accessoryConfig.name, () =>
+   describe('Testing Device Name:' + accessoryConfig.displayName, () =>
    {
       for (let key in accessoryConfig)
       {
@@ -125,20 +131,36 @@ function testAccessoryConfig ( accessoryConfig )
                testType ( value );
 
                break;
+            case 'DisplayName':
+               testName( value );
+               
+               break;
+            case 'UUID':
+               testName( value );
+               
+               break;
             case 'Name':
                testName( value );
 
                break;
-            case "Timeout":
-               testTimeout( value );
-
+            case 'Model':
+               testName( value );
+               
                break;
-            case "Model":
-               testModel ( value );
-
+            case 'Manufacturer':
+               testName( value );
+               
+               break;
+            case 'SerialNumber':
+               testName( value );
+               
                break;
             case 'OutputConstants':
                break;
+            case "Timeout":
+               testTimeout( value );
+
+               break;               
             case "Polling":
                testPollingConfig( value );
               
@@ -180,7 +202,16 @@ function testAccessoryConfig ( accessoryConfig )
               testCharacteristic( ucKey, value);
            }
         }
+        
       }
+      
+      // Test that we define displayName
+      it('Testing for a displayName',
+         function ()
+      {
+         assert.isNotNull(accessoryConfig.displayName , 'displayName cannot be undefined');
+      });
+
    });
 }
 function testConstantKey( key )
@@ -207,7 +238,9 @@ function processConstantsConfig( config )
    }
    if ( isJSON( config ) )
    {
-      console.log ("****** test JSSON Config");
+      describe('test JSON Config', function ()
+      {});
+      
       // I assume only 1, but you know about assuming ...
       for (let key in config)
       {
@@ -286,7 +319,10 @@ function processLinkedTypesConfig( config )
    } 
    if ( isJSON ( config ) )
    {
-      console.log("Processing Linked accessory %s", config.name);
+      describe('Processing Linked accessory:'+ config.displayName, 
+      function ()
+      {});
+
       testAccessoryConfig(config);
       return;
    } 
@@ -298,7 +334,7 @@ function processLinkedTypesConfig( config )
 }
 function testType( type )
 {
-   let ucKeyIndex = cmd4.CMD4_DEVICE_TYPE_ENUM.properties.indexOfEnum(i => i.deviceName === type);
+   let ucKeyIndex = CMD4_DEVICE_TYPE_ENUM.properties.indexOfEnum(i => i.deviceName === type);
    it('Device Type:' + type + ' should be valid', function ()
    {
       assert.isAbove(ucKeyIndex, 0, 'Invalid device type:' + type);
@@ -350,18 +386,31 @@ function testCharacteristic ( characteristic, value)
 {
    describe('Testing characteristic:' + characteristic, () =>
    {
-      let characteristicIndex = cmd4.CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.name === characteristic);
+      let characteristicIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.type === characteristic);
+
       it('Characteristic ' + characteristic + ' should be valid', function ()
       {
          assert.isAbove(characteristicIndex, 0, 'Invalid characteristic:' + characteristic);
       });
 
+      // Check if properties is not null
+      it('Characteristic ' + characteristic + ' properties should be valid', function ()
+      {
+         assert.isNotNull(CMD4_ACC_TYPE_ENUM.properties, 'properties is null:' + characteristic);
+      });
+      
+      // Check if properties[charisticIndex] is not null
+      it('Characteristic ' + characteristic + ' properties[' + characteristicIndex + '] should be valid', function ()
+      {
+         assert.isNotNull(CMD4_ACC_TYPE_ENUM.properties[characteristicIndex], 'properties is null:' + characteristic);
+      });
+
       // Check if the characteristic has constant values to test 
-      if (Object.keys(cmd4.CMD4_ACC_TYPE_ENUM.properties[characteristicIndex].values).length > 0)
+      if (Object.keys(CMD4_ACC_TYPE_ENUM.properties[characteristicIndex].validValues).length > 0)
       {
          it("Value '" + value + "' should be valid characteristic value", function ()
          {
-            assert.property(cmd4.CMD4_ACC_TYPE_ENUM.properties[characteristicIndex].values, value, "Could not find '" + value + "' for characteristic: " + characteristic );
+            assert.property(CMD4_ACC_TYPE_ENUM.properties[characteristicIndex].validValues, value, "Could not find '" + value + "' for characteristic: " + characteristic );
          });
       }  
    });
@@ -450,12 +499,12 @@ function testFakegatoConfig(fakegatoConfig)
                case 'StoragePath':
                case 'Polling':
                {
-                  console.log("Found ucKey '%s'", ucFakegatoKey);
+                  // console.log("Found ucKey '%s'", ucFakegatoKey);
                   break;
                }
                default:
                {
-                  console.log("Found default ucKey '%s'", ucFakegatoKey);
+                  //console.log("Found default ucKey '%s'", ucFakegatoKey);
                }
             }
          }
@@ -476,11 +525,21 @@ function testFakegatoConfig(fakegatoConfig)
  */
 function ucFirst( string )
 {
-   if ( string )
-      return string.charAt(0).toUpperCase() + string.slice( 1 );
-   else {
-      console.log( "Asked to upper  case first character of NULL String" );
-      return "undefined";
+   switch( typeof string )
+   {
+      case undefined:
+ 
+         console.log( "Asked to upper case first character of NULL String" );
+         return "undefined";
+ 
+      case 'boolean':
+      case 'number':
+         return string;
+      case 'string':
+         return string.charAt(0).toUpperCase() + string.slice( 1 );
+      default:
+         console.log( "Asked to upper case first character of non String(%s):%s", typeof string, string );
+         return string;
    }
 }
 /**
@@ -490,7 +549,7 @@ function ucFirst( string )
 function isJSON (m)
 {
    if (m.constructor === Array) {
-      console.log("It is an array");
+      //console.log("It is an array");
       return false;
    }
 

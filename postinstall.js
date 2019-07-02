@@ -82,6 +82,7 @@ if (package.version.includes('2.0.0') ||
 
 if (package.version.includes('2.2.0'))
 {
+
   console.log("\n%sHomeBridge-Cmd4 Version 2.2.0 Notes:%s", KUND, KEND);
   console.log("   This version adds in linked accessories. HDMI Input sources for a TV are now shown in HomeKit as an example.\n");
   console.log("   This version also allows the config.json file to be populated with constants (Where applicable). See the README.md file for more information.\n");
@@ -90,4 +91,18 @@ if (package.version.includes('2.2.0'))
   console.log("\n\nEnjoy");
   console.log("   John Talbot");
   console.log("\nP.S. If you really enjoy homebridge-cmd4, please star it on GitHub\n");
+}
+
+if (package.version.includes('2.2.1'))
+{
+  console.log("\n%sHomeBridge-Cmd4 Version 2.2.1 Notes:%s", KUND, KEND);
+  console.log(" -  This minor version differentiates the optional characteristic 'Name' from displayName");
+  console.log("    displayName is used when creating the service.  It is essentially the same thing, but this follows the spec exactly.  You do not need to change your config.json file if you do not want too.");
+  console.log(" -  Internally all properties of all characteristics are defined.");
+  console.log("    Homebridge does not allow you to getCharacteristic information easily.  This allows Cmd4 to stop you from using characteristics with a format of TLV8 that causes HomeBridge to fail to start.  This is why the new option:'allowTLV8' was created and set to false by default. Again just ignore it."); 
+  console.log(" -  With all the properties defined, Test cases increases to 7644.");
+  console.log("\nAs always, check the config.min.json file for descriptive config.json parameters and remember to star HomeBridge-Cmd4 if you enjoy using it.");
+  console.log("\n\nEnjoy");
+  console.log("   John Talbot");
+  
 }

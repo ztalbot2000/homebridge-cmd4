@@ -1,3 +1,9 @@
 .eslintrc.json
 .gitignore
 jsmin
+test
+test/all.js
+test/configTest.js
+test/functionTests.js
+test/testGetSetAllValues.js
+test/testPS4.js

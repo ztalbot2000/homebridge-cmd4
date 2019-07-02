@@ -8,6 +8,7 @@
 * [**About the Cmd4 Plugin**](#about-the-cmd4-plugin)
 * [**How the Cmd4 Plugin Works**](#how-the-cmd4-plugin-works)
 * [**Features**](#features)
+* [**Whats new in 2.2.1**](#whats-new-in-221)
 * [**Whats new in 2.2**](#whats-new-in-22)
 * [**Whats new in 2.1**](#whats-new-in-21)
 * [**Whats new in 2.0**](#whats-new-in-20)
@@ -49,6 +50,14 @@
 
 &nbsp;&nbsp;&nbsp; Cmd4 supports linked accessories.  Multiple Input Sources for a TV is the example given.
 
+
+<BR><BR>
+## Whats new in 2.2.1
+&nbsp;&nbsp;&nbsp; This minor version differentiates the optional characteristic 'Name' from displayName.
+    displayName is used when creating the service.  It is essentially the same thing, but this follows the spec exactly.  You do not need to change your config.json file if you do not want too.<BR>
+&nbsp;&nbsp;&nbsp; Internally all properties of all characteristics are defined.<BR>
+&nbsp;&nbsp;&nbsp; Homebridge does not allow you to getCharacteristic information easily.  This allows Cmd4 to stop you from using characteristics with a format of TLV8 that causes HomeBridge to fail to start.  This is why the new option:'allowTLV8' was created and set to false by default. Again just ignore it.<BR>
+&nbsp;&nbsp;&nbsp; With all the properties defined, Test cases increases to 7644.
 
 <BR><BR>
 ## Whats new in 2.2
