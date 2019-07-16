@@ -93,8 +93,11 @@ if (package.version.includes('2.2.0'))
   console.log("\nP.S. If you really enjoy homebridge-cmd4, please star it on GitHub\n");
 }
 
-if (package.version.includes('2.2.1'))
+if (package.version.includes('2.2.1') ||
+    package.version.includes('2.2.2'))
 {
+  console.log("\n%sHomeBridge-Cmd4 Version 2.2.2 Notes:%s", KUND, KEND);
+  console.log(" -  This minor version adds an eror message when accidentally defining multiple characteristics for characteristic polling.\n");
   console.log("\n%sHomeBridge-Cmd4 Version 2.2.1 Notes:%s", KUND, KEND);
   console.log(" -  This minor version differentiates the optional characteristic 'Name' from displayName");
   console.log("    displayName is used when creating the service.  It is essentially the same thing, but this follows the spec exactly.  You do not need to change your config.json file if you do not want too.");

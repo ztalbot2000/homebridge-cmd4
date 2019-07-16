@@ -8,6 +8,7 @@
 * [**About the Cmd4 Plugin**](#about-the-cmd4-plugin)
 * [**How the Cmd4 Plugin Works**](#how-the-cmd4-plugin-works)
 * [**Features**](#features)
+* [**Whats new in 2.2.1**](#whats-new-in-222)
 * [**Whats new in 2.2.1**](#whats-new-in-221)
 * [**Whats new in 2.2**](#whats-new-in-22)
 * [**Whats new in 2.1**](#whats-new-in-21)
@@ -50,6 +51,10 @@
 
 &nbsp;&nbsp;&nbsp; Cmd4 supports linked accessories.  Multiple Input Sources for a TV is the example given.
 
+
+<BR><BR>
+## Whats new in 2.2.2
+&nbsp;&nbsp;&nbsp; This minor version adds an error message when accidentally defining multiple characteristics for characteristic polling.
 
 <BR><BR>
 ## Whats new in 2.2.1

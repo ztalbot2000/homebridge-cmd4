@@ -3652,6 +3652,13 @@ Cmd4Platform.prototype.characteristicPolling = function (accessory, accTypeEnumI
                interval = parseInt(value, 10) * 1000;
                break;
             default:
+               // The key must be a characteristic property
+               // but first check if one has already been defined as we can only handle one at a time.
+               if ( ucKeyIndex != -1 )
+               {
+                  this.log.error("For charateristic polling, you can only define one characteristic per array item.  Error: Cannot add '%s' as '%s' is already defined for %s.", ucKey, CMD4_ACC_TYPE_ENUM.properties[ucKeyIndex].type, self.displayName);
+                  process.exit(-1);
+               } 
                ucKeyIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.type === ucKey);
                if ( ucKeyIndex < 0 )
                {
