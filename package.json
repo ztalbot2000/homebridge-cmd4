@@ -1,6 +1,6 @@
 {
   "_from": "homebridge-cmd4@2.2.2",
-  "_id": "homebridge-cmd4@2.2.3",
+  "_id": "homebridge-cmd4@2.2.4",
   "_inBundle": false,
   "_integrity": "sha512-Q39XXNNaxpBENc4AXvqoWoW+5OVZE24OLYLm+4RqCxJmyQDAGLNsokL+dh2JU++YaZRdycASfnG/8sylpocGAg==",
   "_location": "/homebridge-cmd4",
@@ -8,20 +8,20 @@
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "homebridge-cmd4@2.2.3",
+    "raw": "homebridge-cmd4@2.2.4",
     "name": "homebridge-cmd4",
     "escapedName": "homebridge-cmd4",
-    "rawSpec": "2.2.3",
+    "rawSpec": "2.2.4",
     "saveSpec": null,
-    "fetchSpec": "2.2.3"
+    "fetchSpec": "2.2.4"
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/homebridge-cmd4/-/homebridge-cmd4-2.2.3.tgz",
+  "_resolved": "https://registry.npmjs.org/homebridge-cmd4/-/homebridge-cmd4-2.2.4.tgz",
   "_shasum": "8329f6094809108460224f10a094f94da979d32e",
-  "_spec": "homebridge-cmd4@2.2.3",
+  "_spec": "homebridge-cmd4@2.2.4",
   "_where": "/private/var/root",
   "author": {
     "name": "John Talbot"
@@ -85,5 +85,5 @@
     "test": "node_modules/.bin/mocha",
     "postinstall": "node postinstall.js"
   },
-  "version": "2.2.3"
+  "version": "2.2.4"
 }
