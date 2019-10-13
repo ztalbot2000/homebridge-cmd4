@@ -3,17 +3,9 @@ const exec = require("child_process").exec;
 const moment = require('moment');
 const fs = require('fs');
 const commandExistsSync = require('command-exists').sync;
-const versionCheck = require('github-version-checker');
 const FgMagenta = "\x1b[35m"
 const FgBlack = "\x1b[30m"
 
-
-const versionCheckOptions = {
-  repo: 'homebridge-cmd4',
-  owner: 'ztalbot2000',
-  currentVersion: require('./package.json').version,
-  fetchTags: true
-};
 
 const SLOW_STATE_CHANGE_RESPONSE_TIME   = 10000;  // 10 seconds
 const MEDIUM_STATE_CHANGE_RESPONSE_TIME = 3000;   // 3 seconds
@@ -5431,17 +5423,18 @@ function extractKeyValue(obj, value) {
     return Object.keys(obj)[Object.validValues(obj).indexOf(value)];
 }
 
-const checkForUpdates = () => {
-   versionCheck(versionCheckOptions, function (error, update)
-   {
-      if (error) {
-         console.error(error);
-         process.exit(-1);
-      }
-    
-      if (update)
+function checkForUpdates()  {
+   const latestVersion = require("latest-version");
+
+   const myPkg = require('./package.json');
+
+   (async() => {
+      let lv = await latestVersion(myPkg.name);
+
+      if (lv != myPkg.version)
       {
-         console.log(`\x1b[32m[UPDATE AVAILABLE] \x1b[0mVersion ${update.tag_name} of homebridge-cmd4 is available. Any release notes can be found here: \x1b[4mhttps://github.com/ztalbot2000/homebridge-cmd4/README.md\x1b[0m`);
+            console.log(`\x1b[32m[UPDATE AVAILABLE] \x1b[0mVersion ${lv} of ${myPkg.name} is available. Any release notes can be found here: \x1b[4m${myPkg.homepage}\x1b[0m`);
       }
-   });
+   })();
 }
+

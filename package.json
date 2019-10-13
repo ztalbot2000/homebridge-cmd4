@@ -1,6 +1,6 @@
 {
-  "_from": "homebridge-cmd4@2.2.2",
-  "_id": "homebridge-cmd4@2.2.4",
+  "_from": "homebridge-cmd4@2.2.4",
+  "_id": "homebridge-cmd4@2.2.5",
   "_inBundle": false,
   "_integrity": "sha512-Q39XXNNaxpBENc4AXvqoWoW+5OVZE24OLYLm+4RqCxJmyQDAGLNsokL+dh2JU++YaZRdycASfnG/8sylpocGAg==",
   "_location": "/homebridge-cmd4",
@@ -8,20 +8,20 @@
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "homebridge-cmd4@2.2.4",
+    "raw": "homebridge-cmd4@2.2.5",
     "name": "homebridge-cmd4",
     "escapedName": "homebridge-cmd4",
-    "rawSpec": "2.2.4",
+    "rawSpec": "2.2.5",
     "saveSpec": null,
-    "fetchSpec": "2.2.4"
+    "fetchSpec": "2.2.5"
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/homebridge-cmd4/-/homebridge-cmd4-2.2.4.tgz",
+  "_resolved": "https://registry.npmjs.org/homebridge-cmd4/-/homebridge-cmd4-2.2.5.tgz",
   "_shasum": "8329f6094809108460224f10a094f94da979d32e",
-  "_spec": "homebridge-cmd4@2.2.4",
+  "_spec": "homebridge-cmd4@2.2.5",
   "_where": "/private/var/root",
   "author": {
     "name": "John Talbot"
@@ -33,10 +33,11 @@
   "dependencies": {
     "command-exists": ">=1.2.8",
     "fakegato-history": ">=0.5.3",
+    "github-version-checker": ">=2.1.2",
     "homebridge": ">=0.4.0",
+    "latest-version": "^5.1.0",
     "moment": "*",
-    "system-sleep": "^1.3.6",
-    "github-version-checker": ">=2.1.2"
+    "system-sleep": "^1.3.6"
   },
   "deprecated": false,
   "description": "Exec Plugin for Homebridge supporting all accessorys and characteristics",
@@ -85,5 +86,5 @@
     "test": "node_modules/.bin/mocha",
     "postinstall": "node postinstall.js"
   },
-  "version": "2.2.4"
+  "version": "2.2.5"
 }
