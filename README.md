@@ -8,6 +8,7 @@
 * [**About the Cmd4 Plugin**](#about-the-cmd4-plugin)
 * [**How the Cmd4 Plugin Works**](#how-the-cmd4-plugin-works)
 * [**Features**](#features)
+* [**Whats new in 2.3.0**](#whats-new-in-23)
 * [**Whats new in 2.2.5**](#whats-new-in-225)
 * [**Whats new in 2.2.2**](#whats-new-in-222)
 * [**Whats new in 2.2.1**](#whats-new-in-221)
@@ -52,6 +53,16 @@
 
 &nbsp;&nbsp;&nbsp; Cmd4 supports linked accessories.  Multiple Input Sources for a TV is the example given.
 
+
+<BR><BR>
+## Whats new in 2.3.0
+&nbsp;&nbsp;&nbsp; Added state_cmd_prefix and state_cmd_suffix to possible state_cmd options.  This does what they intend to where:<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<I><B>state_cmd_prefix</B></I> - adds a string before the state_cmd. i.e. state_cmd_prefix=sudo would create the Set command to be:<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sudo node .homebridge/Cmd4Scripts/State.js 'My_Fan' '1'<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<I><B>state_cmd_suffix</B></I> - adds a string after the state_cmd. i.e. state_cmd_suffix="00:16:AA:BB:1F:2D" would create the Set command to be:<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;node .homebridge/Cmd4Scripts/State.js Set 'My_Fan' '1' 00:16:AA:BB:1F:2D<BR>
+&nbsp;&nbsp;&nbsp; Combining the two i.e. state_cmd_prefix=sudo state_cmd_suffix="00:16:AA:BB:1F:2D" would create the Get command to be:<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sudo node .homebridge/Cmd4Scripts/State.js Get 'My_Fan' 00:16:AA:BB:1F:2D<BR>
 
 <BR><BR>
 ## Whats new in 2.2.5

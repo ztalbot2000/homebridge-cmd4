@@ -3725,6 +3725,8 @@ function Cmd4Accessory(log, parentConfig, accessoryConfig, parent )
    this.interval = parentConfig.interval; 
    this.timeout = parentConfig.timeout;
    this.state_cmd = parentConfig.state_cmd;
+   this.state_cmd_prefix = parentConfig.state_cmd_prefix;
+   this.state_cmd_suffix = parentConfig.state_cmd_prefix;
  
    // TKV8 causes a lot of issues if defined and trying to parse.
    // Omit them by default.
@@ -4005,9 +4007,9 @@ Cmd4Accessory.prototype = {
       if (self.outputConstants == true)
       {
          let constant = self.transposeValueToConstantForCharacteristic(accTypeEnumIndex, value);
-          cmd = self.state_cmd + " Set '" + self.displayName + "' '" + characteristicString  + "' '" + constant  + "'";
+          cmd = self.state_cmd_prefix + self.state_cmd + " Set '" + self.displayName + "' '" + characteristicString  + "' '" + constant  + "'" + self.state_cmd_suffix;
       } else {
-         cmd = self.state_cmd + " Set '" + self.displayName + "' '" + characteristicString  + "' '" + value  + "'";
+         cmd = self.state_cmd_prefix + self.state_cmd + " Set '" + self.displayName + "' '" + characteristicString  + "' '" + value  + "'" + self.state_cmd_suffix;
       }
       self.log.debug("setValue %s function for:%s cmd:%s", characteristicString, self.displayName, cmd);
 
@@ -4280,7 +4282,7 @@ Cmd4Accessory.prototype = {
 
       let characteristicString = CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].type;
 
-      let cmd = this.state_cmd + " Get '" + this.displayName + "' '" + characteristicString  + "'";
+      let cmd = this.state_cmd_prefix + this.state_cmd + " Get '" + this.displayName + "' '" + characteristicString  + "'" + this.state_cmd_suffix;
 
 
       self.log.debug("getValue accTypeEnumIndex:(%s)-'%s' function for:%s cmd:%s", accTypeEnumIndex, characteristicString, self.displayName, cmd);
@@ -5245,6 +5247,17 @@ Cmd4Accessory.prototype = {
                this.stateChangeResponseTime = value * 1000;
              
                break;
+            case 'State_cmd_prefix':
+               // Not 100% sure why this would be needed, but
+               // added anyway since we have a suffix
+               this.state_cmd_prefix = value;
+
+               break;
+            case 'State_cmd_suffix':
+               // This gets added after any Get/Set <value>
+               this.state_cmd_suffix = value;
+
+               break;
             case 'State_cmd':
             {
                // Solve some issues people have encounterred who
@@ -5298,6 +5311,7 @@ Cmd4Accessory.prototype = {
                break;
             case 'AllowTLV8':
                this.allowTLV8 = true;
+               break;
             default:
             {
                this.parseKeyForCharacteristics( key, value );
@@ -5325,6 +5339,18 @@ Cmd4Accessory.prototype = {
       // So create the Service nowS
       if (! this.name )
          this.name = this.displayName;   
+
+      // Handle seperation of strings of state_cmd for a prefix
+      if ( this.state_cmd_prefix )
+         this.state_cmd_prefix = this.state_cmd_prefix + " ";
+      else
+         this.state_cmd_prefix = "";
+
+      // Handle seperation of strings of state_cmd for a suffix
+      if ( this.state_cmd_suffix )
+         this.state_cmd_suffix = " " + this.state_cmd_suffix;
+      else
+         this.state_cmd_suffix = "";
    }
 }
 

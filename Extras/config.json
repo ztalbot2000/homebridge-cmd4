@@ -22,7 +22,9 @@
                 "polling": [
                    {"on":                    "FALSE", "interval": 540, "timeout": 4000}
                 ],
-                "state_cmd": "bash .homebridge/Cmd4Scripts/PS4.sh"
+                "state_cmd_prefix": "bash",
+                "state_cmd": ".homebridge/Cmd4Scripts/PS4.sh",
+                "state_cmd_suffix": "Something After Everything else"
              },
              {
                 "type": "Fanv1",
@@ -76,7 +78,8 @@
                     {"lockCurrentState":     "UNSECURED", "interval": 540, "timeout": 4000}
                  ],
                  "stateChangeResponseTime":   10,
-                 "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+                 "state_cmd_prefix": "node",
+                 "state_cmd": ".homebridge/Cmd4Scripts/State.js"
               },
               {
                  "type": "Lightbulb",
