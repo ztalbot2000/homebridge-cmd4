@@ -41,6 +41,7 @@ int   theCurrentChar;
 int   theNextChar;
 int   insideSingleQuote = 0;
 int   insideDoubleQuote = 0;
+unsigned long theCharacterPositionInLine = 0;
 
 unsigned long lineCounter =1;
 
@@ -48,10 +49,16 @@ unsigned long lineCounter =1;
 int getCharFromStdin()
 {
     int c = getc(stdin);
-    
-    if (c == '\r') c = '\n';
 
-    if (c == '\n') lineCounter ++;
+    if (c == '\r') 
+       c = '\n';
+
+    if (c == '\n') {
+       lineCounter ++;
+       theCharacterPositionInLine = 0;
+    } else {
+       theCharacterPositionInLine ++;
+    }
     return c;
 }
 
@@ -159,7 +166,7 @@ jsmin()
           }
        }
 
-       if (theCurrentChar == '\"') 
+       if (theCurrentChar == '\"')
        {
           insideDoubleQuote = 1;
 
@@ -178,8 +185,9 @@ jsmin()
              if (theCurrentChar == '\\' && theNextChar == '\"' )
              {
                 outputChar(theCurrentChar);
-                theCurrentChar = theNextChar;
-                continue;
+                outputChar(theNextChar);
+                theCurrentChar = getCharFromStdin();
+                theNextChar = getCharFromStdin();
              }
 
              // Found end of double quotes
