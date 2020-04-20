@@ -116,7 +116,7 @@ There are 160 possible characteristics, 60 more than the previous version.  Also
 
 
 ### Step 2  Install Cmd4 Plugin
-&nbsp;&nbsp;&nbsp; *SHELL*> `sudo npm install -g --unsafe-perm homebridge-cmd`
+&nbsp;&nbsp;&nbsp; *SHELL*> `sudo npm install -g --unsafe-perm homebridge-cmd4`
 
 
 ### Step 3  Install State.js
