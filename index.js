@@ -310,7 +310,7 @@ module.exports =
                          Characteristic.Perms.NOTIFY
                         ]
                 },
-             validValues:
+             validValues:   // Checked 04/24/2020
                 {"INACTIVE": Characteristic.Active.INACTIVE,
                  "ACTIVE":   Characteristic.Active.ACTIVE
                 }
@@ -367,7 +367,7 @@ module.exports =
                              Characteristic.Perms.NOTIFY
                             ]
                     },
-             validValues:
+             validValues:   // Checked 04/24/2020
                 {"_2_5_M": Characteristic.AirParticulateSize._2_5_M,
                  "_10_M":  Characteristic.AirParticulateSize._10_M
                 }
@@ -381,7 +381,7 @@ module.exports =
                              Characteristic.Perms.NOTIFY
                             ]
                     },
-             validValues:
+             validValues:   // Checked 04/24/2020
                 {"UNKNOWN":   Characteristic.AirQuality.UNKNOWN,
                  "EXCELLENT": Characteristic.AirQuality.EXCELLENT,
                            "GOOD":      Characteristic.AirQuality.GOOD,
@@ -527,7 +527,7 @@ module.exports =
                              Characteristic.Perms.NOTIFY
                             ]
                     },
-             validValues:
+         validValues:   // Checked 04/24/2020. Note: HomeKit Spec has inProgress, Not CHARGING
                 {"NOT_CHARGING": Characteristic.ChargingState.NOT_CHARGING,
                  "CHARGING": Characteristic.ChargingState.CHARGING,
                  "NOT_CHARGEABLE":Characteristic.ChargingState.NOT_CHARGEABLE
@@ -625,7 +625,7 @@ module.exports =
                              Characteristic.Perms.NOTIFY
                             ]
                     },
-             validValues:
+             validValues:   // Checked 04/24/2020
                 {"INACTIVE": Characteristic.CurrentAirPurifierState.INACTIVE,
                  "IDLE": Characteristic.CurrentAirPurifierState.IDLE,
                  "PURIFYING_AIR":Characteristic.CurrentAirPurifierState.PURIFYING_AIR
@@ -684,7 +684,7 @@ module.exports =
                              Characteristic.Perms.NOTIFY
                             ]
                     },
-             validValues:
+             validValues:   // Checked 04/24/2020
                 {"INACTIVE": Characteristic.CurrentHeaterCoolerState.INACTIVE,
                  "IDLE":     Characteristic.CurrentHeaterCoolerState.IDLE,
                  "HEATING":  Characteristic.CurrentHeaterCoolerState.HEATING,
@@ -694,16 +694,17 @@ module.exports =
       31:  { type: "CurrentHeatingCoolingState",
              characteristic: Characteristic.CurrentHeatingCoolingState,
              props: {format: Characteristic.Formats.UINT8,
-                     maxValue: 2,
+                     maxValue: 3,
                      minValue: 0,
                      perms: [Characteristic.Perms.READ,
                              Characteristic.Perms.NOTIFY
                             ]
                     },
-             validValues:
+             validValues:   // Checked 04/24/2020
                 {"OFF":  Characteristic.CurrentHeatingCoolingState.OFF,
                  "HEAT": Characteristic.CurrentHeatingCoolingState.HEAT,
-                 "COOL": Characteristic.CurrentHeatingCoolingState.COOL
+                 "COOL": Characteristic.CurrentHeatingCoolingState.COOL,
+                 "AUTO": Characteristic.CurrentHeatingCoolingState.AUTO
                 }
            },
       32:  { type: "CurrentHorizontalTiltAngle",
@@ -738,17 +739,19 @@ module.exports =
       34:  { type: "CurrentMediaState",   // HomKitTypes-Television.js
              characteristic: Characteristic.CurrentMediaState,
              props: {format: Characteristic.Formats.UINT8,
-                     maxValue: 3,
+                     maxValue: 5,
                      minValue: 0,
                      perms: [Characteristic.Perms.READ,
                              Characteristic.Perms.NOTIFY
                             ]
                     },
              // HomeKit forgets to define these
-             validValues: {"PLAY":     Characteristic.TargetMediaState.PLAY,
-                           "PAUSE":    Characteristic.TargetMediaState.PAUSE,
-                           "STOP":     Characteristic.TargetMediaState.STOP,
-                           "UNKNOWN3": 3}
+             validValues: {"PLAY":        Characteristic.CurrentMediaState.PLAY,
+                           "PAUSE":       Characteristic.CurrentMediaState.PAUSE,
+                           "STOP":        Characteristic.CurrentMediaState.STOP,
+                           "UNKNOWN3":    3,
+                           "LOADING":     Characteristic.CurrentMediaState.LOADING,
+                           "INTERRUPTED": Characteristic.CurrentMediaState.INTERRUPTED}
            },
       35:  { type: "CurrentPosition",
              characteristic: Characteristic.CurrentPosition,
@@ -785,7 +788,7 @@ module.exports =
                              Characteristic.Perms.NOTIFY
                             ]
                     },
-             validValues:
+             validValues:   // Checked 04/24/2020  Note HomeKit Spec has "Stationary" not "Jammed"
                 {"FIXED":    Characteristic.CurrentSlatState.FIXED,
                  "JAMMED":   Characteristic.CurrentSlatState.JAMMED,
                  "SWINGING": Characteristic.CurrentSlatState.SWINGING
@@ -915,7 +918,7 @@ module.exports =
                              Characteristic.Perms.NOTIFY
                             ]
                     },
-             validValues:
+             validValues:   // Checked 04/24/2020.  HomeKit Spec has these as "notNeeded" and "needed"
                 {"FILTER_OK": Characteristic.FilterChangeIndication.FILTER_OK,
                  "CHANGE_FILTER":Characteristic.FilterChangeIndication.CHANGE_FILTER
                 }
@@ -1099,7 +1102,7 @@ module.exports =
                              Characteristic.Perms.NOTIFY
                             ]
                     },
-             validValues:
+             validValues:   // Checked 04/24/2020
                 {"NOT_CONFIGURED": Characteristic.IsConfigured.NOT_CONFIGURED,
                  "CONFIGURED":     Characteristic.IsConfigured.CONFIGURED
                  }
@@ -1288,7 +1291,8 @@ module.exports =
              props: {format: Characteristic.Formats.BOOL,
                      perms: [Characteristic.Perms.READ,
                              Characteristic.Perms.WRITE,
-                             Characteristic.Perms.NOTIFY
+                             Characteristic.Perms.NOTIFY,
+                             Characteristic.Perms.TIMED_WRITE
                             ]
                     },
              validValues:
@@ -1420,7 +1424,7 @@ module.exports =
            },
       89:  { type: "PictureMode",   // HomeKitTypes-Television.js
              characteristic: Characteristic.PictureMode,
-             props: {format: Characteristic.Formats.UINT16,
+             props: {format: Characteristic.Formats.UINT8,
                      maxValue: 13,
                      minValue: 0,
                      perms: [Characteristic.Perms.READ,
@@ -2006,7 +2010,7 @@ module.exports =
                              Characteristic.Perms.NOTIFY
                             ]
                     },
-             validValues:
+             validValues:   // Checked 04/24/2020
                 {"MANUAL": Characteristic.TargetAirPurifierState.MANUAL,
                  "AUTO":   Characteristic.TargetAirPurifierState.AUTO
                 }

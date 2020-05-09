@@ -26,8 +26,8 @@ describe('Testing load of index.js', function ()
 describe('Initializing our plugin module', function ()
 {});
 
-var API = require('../node_modules/homebridge/lib/api').API;
-var _api = new API(); // object we feed to Plugins
+var HomebridgeAPI = require('../node_modules/homebridge/lib/api').HomebridgeAPI;
+var _api = new HomebridgeAPI(); // object we feed to Plugins
 
 var cmd4 = pluginModule.default(_api);
 let CMD4_ACC_TYPE_ENUM = cmd4.CMD4_ACC_TYPE_ENUM;

@@ -6,15 +6,19 @@ const cmd4Config = require('../Extras/config.json');
 
 
 describe('Testing our config.json)', () =>
-{  
+{
    it('cmdConfig should be a JSON object', function ()
-   {  
+   {
       assert.isObject(cmd4Config, "cmd4Config is not an object");
    });
-   
+
 })
-var API = require('../node_modules/homebridge/lib/api').API;
-var _api = new API(); // object we feed to Plugins
+//var API = require('../node_modules/homebridge/lib/api').API;
+//var _api = new API(); // object we feed to Plugins
+var HomebridgeAPI = require('../node_modules/homebridge/lib/api').HomebridgeAPI;
+var _api = new HomebridgeAPI(); // object we feed to Plugins
+
+
 
 // This would be the uninitialized value
 var pluginModule = require('../index');
@@ -56,7 +60,7 @@ describe('Testing CMD4_DEVICE_TYPE_ENUM devices all defined', function ()
          continue;
 
       let deviceFound = '';
-      
+
       it('CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].deviceName (' + deviceToFind + ') should be defined in config.json',
       function ()
       {
@@ -95,7 +99,7 @@ describe('Testing CMD4_DEVICE_TYPE_ENUM devices all defined', function ()
          continue;
 
       let deviceFound = '';
-      
+
       it('CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].deviceName (' + deviceToFind + ') should be defined in config.json',
       function ()
       {
@@ -133,11 +137,11 @@ function testAccessoryConfig ( accessoryConfig )
                break;
             case 'DisplayName':
                testName( value );
-               
+
                break;
             case 'UUID':
                testName( value );
-               
+
                break;
             case 'Name':
                testName( value );
@@ -145,25 +149,25 @@ function testAccessoryConfig ( accessoryConfig )
                break;
             case 'Model':
                testName( value );
-               
+
                break;
             case 'Manufacturer':
                testName( value );
-               
+
                break;
             case 'SerialNumber':
                testName( value );
-               
+
                break;
             case 'OutputConstants':
                break;
             case "Timeout":
                testTimeout( value );
 
-               break;               
+               break;
             case "Polling":
                testPollingConfig( value );
-              
+
                break;
             case "Interval":
               testInterval( value );
@@ -173,9 +177,15 @@ function testAccessoryConfig ( accessoryConfig )
               testStateChangeResponseTime( value );
 
               break;
+           case "State_cmd_prefix":
+              testStateCmd( value );
+
+              break;
            case "State_cmd":
               testStateCmd( value );
 
+              break;
+           case "State_cmd_suffix":
               break;
            case 'Fakegato':
               testFakegatoConfig( value );
@@ -185,7 +195,7 @@ function testAccessoryConfig ( accessoryConfig )
                break;
            case 'Constants':
               processConstantsConfig( value );
-              
+
               break;
            case 'Variables':
               processVariablesConfig( value );
@@ -202,9 +212,9 @@ function testAccessoryConfig ( accessoryConfig )
               testCharacteristic( ucKey, value);
            }
         }
-        
+
       }
-      
+
       // Test that we define displayName
       it('Testing for a displayName',
          function ()
@@ -217,11 +227,11 @@ function testAccessoryConfig ( accessoryConfig )
 function testConstantKey( key )
 {
    it('Constant key:' + key + ' must start with \'${\'', function ()
-   {  
+   {
       assert.isTrue(key!=null && key.startsWith( '${' ), "Constant:'" + key + "' does not start with '${'");
    });
    it('Constant key:' + key + ' should end with \'}\'', function ()
-   {  
+   {
       assert.isTrue(key!=null && key.endsWith( '}' ), "Constant:'" + key + "' does not end with '}'");
    });
 }
@@ -240,7 +250,7 @@ function processConstantsConfig( config )
    {
       describe('test JSON Config', function ()
       {});
-      
+
       // I assume only 1, but you know about assuming ...
       for (let key in config)
       {
@@ -248,7 +258,7 @@ function processConstantsConfig( config )
          let valueToAdd = config[ key ] ;
 
          testConstantKey( key );
-      
+
          // remove any leading and trailing single quotes
          // so that using it for replacement will be easier.
          //valueToAdd.replace(/^'/, "")
@@ -258,18 +268,18 @@ function processConstantsConfig( config )
       return;
    }
    it('Constant Config must be valid', function ()
-   { 
-      assert.isTrue( isJSON( config ), "Constants:'" + config + "'  must be an array of/or list of key/value pairs" ); 
+   {
+      assert.isTrue( isJSON( config ), "Constants:'" + config + "'  must be an array of/or list of key/value pairs" );
    });
 }
 function testVariableKey( key )
 {
    it('Variable key:' + key + ' must start with \'${\'', function ()
-   {  
+   {
       assert.isTrue(key!=null && key.startsWith( '${' ), "Variable:'" + key + "' does not start with '${'");
    });
    it('Variable key:' + key + ' should end with \'}\'', function ()
-   {  
+   {
       assert.isTrue(key!=null && key.endsWith( '}' ), "Variable '" + key + "' does not end with '}'");
    });
 }
@@ -291,7 +301,7 @@ function processVariablesConfig( config )
          let valueToAdd = config[ key ] ;
 
          testVariableKey( key );
-      
+
          // remove any leading and trailing single quotes
          // so that using it for replacement will be easier.
          valueToAdd.replace(/^'/, "")
@@ -301,10 +311,10 @@ function processVariablesConfig( config )
 
          return;
       }
-   } 
+   }
    it('Variable Config must be valid', function ()
-   { 
-      assert.isTrue( isJSON( config ), "Variable:'" + config + "'  must be an array of/or list of key/value pairs" ); 
+   {
+      assert.isTrue( isJSON( config ), "Variable:'" + config + "'  must be an array of/or list of key/value pairs" );
    });
 }
 function processLinkedTypesConfig( config )
@@ -316,20 +326,20 @@ function processLinkedTypesConfig( config )
          processLinkedTypesConfig(config[i]);
       }
       return;
-   } 
+   }
    if ( isJSON ( config ) )
    {
-      describe('Processing Linked accessory:'+ config.displayName, 
+      describe('Processing Linked accessory:'+ config.displayName,
       function ()
       {});
 
       testAccessoryConfig(config);
       return;
-   } 
+   }
 
    it('Variable Config must be valid', function ()
-   { 
-      assert.isTrue( isJSON( config ), "LinkedTypes:'" + config + "'  must be an array of/or list of key/value pairs" ); 
+   {
+      assert.isTrue( isJSON( config ), "LinkedTypes:'" + config + "'  must be an array of/or list of key/value pairs" );
    });
 }
 function testType( type )
@@ -398,21 +408,21 @@ function testCharacteristic ( characteristic, value)
       {
          assert.isNotNull(CMD4_ACC_TYPE_ENUM.properties, 'properties is null:' + characteristic);
       });
-      
+
       // Check if properties[charisticIndex] is not null
       it('Characteristic ' + characteristic + ' properties[' + characteristicIndex + '] should be valid', function ()
       {
          assert.isNotNull(CMD4_ACC_TYPE_ENUM.properties[characteristicIndex], 'properties is null:' + characteristic);
       });
 
-      // Check if the characteristic has constant values to test 
+      // Check if the characteristic has constant values to test
       if (Object.keys(CMD4_ACC_TYPE_ENUM.properties[characteristicIndex].validValues).length > 0)
       {
          it("Value '" + value + "' should be valid characteristic value", function ()
          {
             assert.property(CMD4_ACC_TYPE_ENUM.properties[characteristicIndex].validValues, value, "Could not find '" + value + "' for characteristic: " + characteristic );
          });
-      }  
+      }
    });
 }
 function testPollingConfig( pollingConfig )
@@ -420,7 +430,7 @@ function testPollingConfig( pollingConfig )
    switch (typeof pollingConfig )
    {
       case 'object':
-                  {
+      {
          it('Device polling:' + pollingConfig + ' should be an array', function ()
          {
             assert.isArray(pollingConfig, 'Invalid polling:' + pollingConfig);
@@ -438,7 +448,7 @@ function testPollingConfig( pollingConfig )
                   {
                      case 'Timeout':
                      {
-                        testTimeout ( pollingConfig[cindex].timeout ); 
+                        testTimeout ( pollingConfig[cindex].timeout );
                         break;
                      }
                      case 'Interval':
@@ -528,10 +538,10 @@ function ucFirst( string )
    switch( typeof string )
    {
       case undefined:
- 
+
          console.log( "Asked to upper case first character of NULL String" );
          return "undefined";
- 
+
       case 'boolean':
       case 'number':
          return string;

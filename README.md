@@ -8,6 +8,7 @@
 * [**About the Cmd4 Plugin**](#about-the-cmd4-plugin)
 * [**How the Cmd4 Plugin Works**](#how-the-cmd4-plugin-works)
 * [**Features**](#features)
+* [**Whats new in 2.3.1**](#whats-new-in-231)
 * [**Whats new in 2.3.0**](#whats-new-in-23)
 * [**Whats new in 2.2.5**](#whats-new-in-225)
 * [**Whats new in 2.2.2**](#whats-new-in-222)
@@ -53,6 +54,13 @@
 
 &nbsp;&nbsp;&nbsp; Cmd4 supports linked accessories.  Multiple Input Sources for a TV is the example given.
 
+
+<BR><BR>
+## Whats new in 2.3.1
+&nbsp;&nbsp;&nbsp; Updates for Homebridge 1.0.4.<BR>
+&nbsp;&nbsp;&nbsp; Added 'AUTO' as current heating state matching Apples Development documentation.<BR>
+&nbsp;&nbsp;&nbsp; Increased default timeout to 8 seconds as HomeBridge 1.04 seems slower.<BR>
+&nbsp;&nbsp;&nbsp; Pull in README update noted by Daniel.<BR>
 
 <BR><BR>
 ## Whats new in 2.3.0
