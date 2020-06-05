@@ -48,7 +48,7 @@
 
 &nbsp;&nbsp;&nbsp; Cmd4 also supports polling, though care was taken to make sure accessories get updated after an adjustable response time so that accessories like a garage door is updated in HomeKit after it was closed or openned.
 
-&nbsp;&nbsp;&nbsp; Cmd4 can be configured to respond to actual devices directly or by modofying the script file it calls.
+&nbsp;&nbsp;&nbsp; Cmd4 can be configured to respond to actual devices directly or by modifying the script file it calls.
 
 &nbsp;&nbsp;&nbsp; Look closely at State.js and config.min.json as in them they have all the characteristics and any of their constant values defined. 
 
