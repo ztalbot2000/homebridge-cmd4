@@ -441,6 +441,34 @@
                "statusFault":              "NO_FAULT",
                "statusTampered":           "NOT_TAMPERED",
                "statusLowBattery":         "BATTERY_LEVEL_NORMAL",
+               "name":                     "My_TemperatureSensor",
+               "Manufacturer":             "Somebody",
+               "Model":                    "Anything",
+               "SerialNumber":             "12345",
+               "polling":
+               [
+                  {"currentTemperature":       50, "interval": 50, "timeout": 8000},
+                  {"currentRelativeHumidity":  30, "interval": 40, "timeout": 8000}
+               ],
+               "fakegato": {"eve":         "room",
+                            "temp":        "currentTemperature",
+                            "humidity":    "currentRelativeHumidity",
+                            "storage":     "fs",
+                            "storagePath": ".homebridge/FakegatoStorage",
+                            "folder":      "folderName",
+                            "keyPath":     "/place/to/store/my/keys/"
+                           },
+               "stateChangeResponseTime":   3,
+               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+            },
+            {
+               "type": "Window",
+               "displayName": "My_Window",
+               "currentPosition":           0,
+               "targetPosition":            0,
+               "positionState":            "STOPPED",
+               "holdPosition":             "FALSE",
+               "obstructionDetected":      "FALSE",
                "name":                     "My_Window",
                "Manufacturer":             "Somebody",
                "Model":                    "Anything",
