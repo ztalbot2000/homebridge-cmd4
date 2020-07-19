@@ -1354,7 +1354,7 @@ switch(io)
                 // Format: uint8
 
                 // Minimum Value: 0
-                // Maximum Value: 5
+                // Maximum Value: 6
 
                 // Valid Values
                 // 0 - OTHER 
@@ -1363,6 +1363,7 @@ switch(io)
                 // 3 - TUNER
                 // 4 - PLAYBACK
                 // 5 - AUDIO_SYSTEM
+                // 6 - UNKNOWN_6 (Added in IOS 14)
 
                 break;
             }

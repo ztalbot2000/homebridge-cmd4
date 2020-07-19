@@ -1040,7 +1040,7 @@ module.exports =
       59:  { type: "InputDeviceType",   // HomeKitTypes-Television.js
              characteristic: Characteristic.InputDeviceType,
              props: {format: Characteristic.Formats.UINT8,
-                     maxValue: 5,
+                     maxValue: 6,
                      minValue: 0,
                      perms: [Characteristic.Perms.READ,
                              Characteristic.Perms.NOTIFY
@@ -1052,7 +1052,8 @@ module.exports =
                  "RECORDING":   Characteristic.InputDeviceType.RECORDING,
                  "TUNER":       Characteristic.InputDeviceType.TUNER,
                  "PLAYBACK":    Characteristic.InputDeviceType.PLAYBACK,
-                 "AUDIO_SYSTEM":Characteristic.InputDeviceType.AUDIO_SYSTEM
+                 "AUDIO_SYSTEM":Characteristic.InputDeviceType.AUDIO_SYSTEM,
+                 "UNKNOWN_6":   Characteristic.InputDeviceType.UNKNOWN_6
                 }
            },
       60:  { type: "InputSourceType",   // HomeKitTypes-Television.js
