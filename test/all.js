@@ -276,19 +276,22 @@ function ()
 {
 
 
-   let serviceName = 'Service123';
-   let service = new Service(serviceName, UUIDGen.generate(serviceName), serviceName);
-
-   it('Creating service to test Characteristic',
-   function ()
-   {
-      assert.isNotNull(service, 'Service is null');
-   });
-
    for (let accTypeEnumIndex=0; accTypeEnumIndex < CMD4_ACC_TYPE_ENUM.EOL; accTypeEnumIndex ++)
    {
        if (accTypeEnumIndex == CMD4_ACC_TYPE_ENUM.Name)
           continue;
+
+       // Characteristics dont seem to get removed and homebridge put a limit
+       // of 100 Characteristics per service, so just create a new service
+       // per characteristic.  This is unit testing anyway, so not an issue.
+       let serviceName = 'Service' + accTypeEnumIndex;
+       let service = new Service(serviceName, UUIDGen.generate(serviceName), serviceName);
+
+       it('Creating service to test Characteristic',
+       function ()
+       {
+          assert.isNotNull(service, 'Service is null at accTypeEnumIndex: ' + accTypeEnumIndex);
+       });
 
        // Get the properties for this characteristic type
        let accProperties = CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex];
@@ -310,6 +313,7 @@ function ()
           service.addCharacteristic(characteristic);
 
           let props = service.getCharacteristic(characteristic).props;
+          service.removeCharacteristic(characteristic);
 
           it('props for HomeBridge Characteristic:' + accProperties.type,
           function ()
@@ -450,6 +454,7 @@ function ()
        });
     }
 });
+return;
 
 // ** TEST CMD4_DEVICE_TYPE_ENUM.properties[].defaultPollingCharacteristic  **
 describe('Testing CMD4_DEVICE_TYPE_ENUM.properties[].defaultPollingCharacteristics', function ()
