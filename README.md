@@ -8,6 +8,7 @@
 * [**About the Cmd4 Plugin**](#about-the-cmd4-plugin)
 * [**How the Cmd4 Plugin Works**](#how-the-cmd4-plugin-works)
 * [**Features**](#features)
+* [**Whats new in 2.3.2**](#whats-new-in-232)
 * [**Whats new in 2.3.1**](#whats-new-in-231)
 * [**Whats new in 2.3.0**](#whats-new-in-23)
 * [**Whats new in 2.2.5**](#whats-new-in-225)
@@ -54,6 +55,10 @@
 
 &nbsp;&nbsp;&nbsp; Cmd4 supports linked accessories.  Multiple Input Sources for a TV is the example given.
 
+
+<BR><BR>
+## Whats new in 2.3.2
+&nbsp;&nbsp;&nbsp; Minor changes for spelling and package updates. Nothing to see here. These are not the changes you are looking for.<BR>
 
 <BR><BR>
 ## Whats new in 2.3.1
