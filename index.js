@@ -4848,7 +4848,7 @@ Cmd4Accessory.prototype = {
               
             } catch (e) {       
                // It isn't accessible
-               this.log.warn("The file %s does not exist, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell.", checkFile);                 
+               this.log.warn("The script %s does not exist, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell.", checkFile);                 
             }                       
          }
          // Purposely fall through to check the command as well
@@ -4859,18 +4859,22 @@ Cmd4Accessory.prototype = {
             // if the lone command is a path to a command
             // Then check if it exists, oTherwise check if it is
             // in Their path.
-            if ( checkCmd.charAt( 0 ) == '/' )
+            if ( checkCmd.charAt( 0 ) == '/' || (
+                  checkCmd.length > 1 &&
+                  checkCmd.charAt( 0 ) == '.' &&
+                  checkCmd.charAt( 1 ) == '/' )
+               )
             {
                try {
                   fs.accessSync(checkCmd, fs.F_OK);
                   // File exists - OK
                } catch (e) {                         
-                  this.log.warn("The command %s does not exist, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell.", checkCmd);
+                  this.log.warn("The file %s does not exist, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell.", checkCmd);
                }                   
             } else
             {
                if ( ! commandExistsSync( checkCmd ) )
-                  this.log.warn("The command %s does not exist, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell.", checkCmd);
+                  this.log.warn("The command %s does not exist or is not in your path, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell.", checkCmd);
             }
             break;
          }
