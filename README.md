@@ -133,12 +133,17 @@ There are 160 possible characteristics, 60 more than the previous version.  Also
 
 
 ### Step 3  Install State.js
-&nbsp;&nbsp;&nbsp; *SHELL*> `mkdir $HOME/.homebridge`
-&nbsp;&nbsp;&nbsp; *SHELL*> `mkdir $HOME/.homebridge/Cmd4Scripts`
-&nbsp;&nbsp;&nbsp; *SHELL*> `cp /usr/lib/node_modules/homebridge-cmd4/Extras/Cmd4Scripts/State.js $HOME/.homebridge/Cmd4Scripts/`
-&nbsp;&nbsp;&nbsp; *SHELL*> `cp /usr/lib/node_modules/homebridge-cmd4/Extras/Cmd4Scripts/CheckYourScript.sh $HOME/.homebridge/Cmd4Scripts/`
-&nbsp;&nbsp;&nbsp; *SHELL*> `chmod 700 .homebridge/Cmd4Scripts/State.js`
-&nbsp;&nbsp;&nbsp; *SHELL*> `chmod 700 .homebridge/Cmd4Scripts/CheckYourScript.sh`
+&nbsp;&nbsp;&nbsp; *SHELL*> 
+```sh
+mkdir $HOME/.homebridge;
+mkdir $HOME/.homebridge/Cmd4Scripts;
+cp /usr/lib/node_modules/homebridge-cmd4/Extras/Cmd4Scripts/State.js $HOME/.homebridge/Cmd4Scripts/;
+cp /usr/lib/node_modules/homebridge-cmd4/Extras/Cmd4Scripts/CheckYourScript.sh $HOME/.homebridge/Cmd4Scripts/;
+cp /usr/lib/node_modules/homebridge-cmd4/Extras/Cmd4Scripts/PS4.sh $HOME/.homebridge/Cmd4Scripts/;
+chmod 700 .homebridge/Cmd4Scripts/State.js;
+chmod 700 .homebridge/Cmd4Scripts/CheckYourScript.sh;
+chmod 700 .homebridge/Cmd4Scripts/PS4.sh;
+```
 
 Note: CheckYourScript.sh is for your own script development testing
 
@@ -147,7 +152,7 @@ Note: CheckYourScript.sh is for your own script development testing
 ### Step 4  Install/Update your config.json file
 &nbsp;&nbsp;&nbsp; Use the provided config.json file or add it to your own.
 
-&nbsp;&nbsp;&nbsp; There is a fully populated copy of both the config.min.json and the config.json in the Extras folder that comes with the homebridge-cmd4 plugin. You can use it, or copy from it, as it is a lot of typing.
+&nbsp;&nbsp;&nbsp; There is a fully populated copy of both the config.min.json and the `config.json` in the Extras folder that comes with the homebridge-cmd4 plugin. You can use it, or copy from it, as it is a lot of typing.
 
 
 &nbsp;&nbsp;&nbsp; *SHELL*> `cp /usr/lib/node_modules/homebridge-cmd4/Extras/config.json $HOME/.homebridge/`
@@ -155,8 +160,10 @@ Note: CheckYourScript.sh is for your own script development testing
 
 
 ### Step 5  Install/Restart homebridge
-&nbsp;&nbsp;&nbsp; Start/Restart Homebridge as you normally would.
-&nbsp;&nbsp;&nbsp; *SHELL*> `homebridge`
+&nbsp;&nbsp;&nbsp; Start/Restart Homebridge as you normally would. It is important that you run it from `$HOME`.
+
+
+&nbsp;&nbsp;&nbsp; *SHELL*> `cd  ~; homebridge;`
  
 ### Step 6  Try Homekit
 &nbsp;&nbsp;&nbsp; If you are not already familiar with Homekit, you may wish to look at the documentation for Homebridge and how to configure it with Homekit. The gist of it is that you enter the manual code defined in the config.json file. I chose 5555555 for simplicity.
@@ -347,7 +354,7 @@ The second is the exit status of the script, which happens to be almost the same
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; will output "1" and have an exit status of 0 if the device is Off
 
 &nbsp;&nbsp;&nbsp; For On, the commands seem quite redundant, but On is a characteristic. Consider the following for a light where the characteristic is Brightness
-&nbsp;&nbsp;&nbsp; *SHELL*> `node ./homebridge/Cmd4Scripts/State.js Set My_Dimmable_Light Brightness 40`
+&nbsp;&nbsp;&nbsp; *SHELL*> `node .homebridge/Cmd4Scripts/State.js Set My_Dimmable_Light Brightness 40`
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This makes more sense.
 
