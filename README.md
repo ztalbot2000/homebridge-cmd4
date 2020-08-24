@@ -8,7 +8,7 @@
 * [**About the Cmd4 Plugin**](#about-the-cmd4-plugin)
 * [**How the Cmd4 Plugin Works**](#how-the-cmd4-plugin-works)
 * [**Features**](#features)
-* [**ChangeLog**](https://github.com/ztalbot2000/homebridge-cmd4/ChangeLog.md)
+* [**ChangeLog**](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/ChangeLog.md)
 * [**Screenshots**](#screenshots)
 * [**Installation**](#installation)
 * [**Migrating from Homebridge-cmdswitch2**](#migrating-from-homebridge-cmdswitch2)
@@ -136,14 +136,14 @@ As a plugin, Homebridge-cmd4 easily coexists with Homebridge-cmdswitch2 or any o
 ```
 
 ### Step 2  homebridge-cmd4 config.json
-&nbsp;&nbsp;&nbsp; Homebridge-cmd4 only uses one command string as there are many options beyond on/off. This command string is:    
+&nbsp;&nbsp;&nbsp; Homebridge-cmd4 only uses one command string as there are many options beyond on/off. This command string is:
    **`"state_cmd": "< path to some executable or script >"`**
 
-&nbsp;&nbsp;&nbsp; In this example, we will use:    
-   **`"state_cmd": "bash .homebridge/Cmd4Scripts/PS4.sh"`**    
+&nbsp;&nbsp;&nbsp; In this example, we will use:
+   **`"state_cmd": "bash .homebridge/Cmd4Scripts/PS4.sh"`**
 
    Note: for the device name, DO NOT USE SPACES as this
-         will cause problems parsing the command line.    
+         will cause problems parsing the command line.
 
 &nbsp;&nbsp;&nbsp; The config.json file for homebridge-cmd4 now looks like:
 
@@ -173,13 +173,13 @@ As a plugin, Homebridge-cmd4 easily coexists with Homebridge-cmdswitch2 or any o
 
 ### Step 3  Contents of PS4.sh
 &nbsp;&nbsp;&nbsp; An equivalent script can be found at:
-* [**PS4.sh**](https://github.com/ztalbot2000/homebridge-cmd4/Extras/CmdScripts/Examples/PS4.sh)
+* [**PS4.sh**](https://github.com/ztalbot2000/homebridge-cmd4/raw/master/Extras/Cmd4Scripts/Examples/PS4.sh)
 
 <BR><BR>
 ## Other Example Shell Scriots
-* [**basic_ping.sh**](https://github.com/ztalbot2000/homebridge-cmd4/Extras/CmdScripts/Examples/basic_ping.sh)
-* [**advanced_ping.sh**](https://github.com/ztalbot2000/homebridge-cmd4/Extras/CmdScripts/Examples/advanced_ping.sh)
-* [**wakeonlan.sh**](https://github.com/ztalbot2000/homebridge-cmd4/Extras/CmdScripts/Examples/wakeonlan.sh)
+* [**basic_ping.sh**](https://github.com/ztalbot2000/homebridge-cmd4/raw/master/Extras/Cmd4Scripts/Examples/basic_ping.sh)
+* [**advanced_ping.sh**](https://github.com/ztalbot2000/homebridge-cmd4/raw/master/Extras/Cmd4Scripts/Examples/advanced_ping.sh)
+* [**wakeonlan.sh**](https://github.com/ztalbot2000/homebridge-cmd4/raw/master/Extras/Cmd4Scripts/Examples/wakeonlan.sh)
 
 <BR><BR>
 ## Troubleshooting
@@ -221,19 +221,19 @@ The command may not exist, but also the timeout value in your config.json for th
 <BR><BR>
 ## Developer Notes
 ### Step 1  The provided jsmin differs from others
-&nbsp;&nbsp;&nbsp; The resulting file is still readable. Only C and C++ comments are removed. The included config.json is created via:
-&nbsp;&nbsp;&nbsp; *SHELL*> `gcc jsmin.c -o jsmin`
+&nbsp;&nbsp;&nbsp; The resulting file is still readable. Only C and C++ comments are removed. The included config.json is created via:<BR>
+&nbsp;&nbsp;&nbsp; *SHELL*> `gcc jsmin.c -o jsmin`<BR>
 &nbsp;&nbsp;&nbsp; *SHELL*> `jsmin < config.min.json > config.json`
  
 ### Step 2  The parameters to the state_cmd
-&nbsp;&nbsp;&nbsp;  These are defined as:
-&nbsp;&nbsp;&nbsp; Get < Accessory Name > < Characteristic >
+&nbsp;&nbsp;&nbsp;  These are defined as:<BR>
+&nbsp;&nbsp;&nbsp; Get < Accessory Name > < Characteristic ><BR>
 &nbsp;&nbsp;&nbsp; Set < Accessory Name > < Characteristic > < Value >
  
 ### Step 3  Polling is supported
 &nbsp;&nbsp;&nbsp; Even if you do not use polling, care was taken that all Set Target states are immediately followed by a Get of the Current state. This is so that after closing a garage door for instance, Homekit gets updated that the door was closed.
  
-### Step 3  Sending constants to your script.
+### Step 4  Sending constants to your script.
 &nbsp;&nbsp;&nbsp; By placing in your config.json file the tag "outputConstants": true, instead of values, your script will receive constants instead of values (Where Applicable). Homebridge-Cmd4 will except constants or values as input.  See the config.min.json file for the defined constants.
  
 ***Important***
@@ -262,20 +262,20 @@ Thanks Florian for pointing out the original documented bash script was incorrec
 &nbsp;&nbsp;&nbsp; *SHELL*> `.homebridge/Cmd4Scripts/PS4.sh Get My_Fan On`
 
 ### Step 5  Try the cmd4 CheckYourScript.sh
-&nbsp;&nbsp;&nbsp; *SHELL*> `cd`
-&nbsp;&nbsp;&nbsp; *SHELL*> `bash --noprofile --norc`
-&nbsp;&nbsp;&nbsp; *SHELL*> `'.homebridge/Cmd4Scripts/CheckYourScript.sh' 'bin/MyExec' 'Get' 'MyDevice' 'On'`
+&nbsp;&nbsp;&nbsp; *SHELL*> `cd`<BR>
+&nbsp;&nbsp;&nbsp; *SHELL*> `bash --noprofile --norc`<BR>
+&nbsp;&nbsp;&nbsp; *SHELL*> `'.homebridge/Cmd4Scripts/CheckYourScript.sh' 'bin/MyExec' 'Get' 'MyDevice' 'On'`<BR>
+<BR>
+&nbsp;&nbsp;&nbsp; or something else like<BR>
+&nbsp;&nbsp;&nbsp; *SHELL*> `'.homebridge/Cmd4Scripts/CheckYourScript.sh' 'bash' 'bin/YourScript.sh' 'Get' 'MyDevice' 'On'`<BR>
+<BR>
+&nbsp;&nbsp;&nbsp; or something else like<BR>
+&nbsp;&nbsp;&nbsp; *SHELL*> `'.homebridge/Cmd4Scripts/CheckYourScript.sh' 'bin/YourScript.sh' 'Get' 'MyDevice' 'On'`<BR>
+<BR>
 
-&nbsp;&nbsp;&nbsp; or something else like
-&nbsp;&nbsp;&nbsp; *SHELL*> `'.homebridge/Cmd4Scripts/CheckYourScript.sh' 'bash' 'bin/YourScript.sh' 'Get' 'MyDevice' 'On'`
-
-&nbsp;&nbsp;&nbsp; or something else like
-&nbsp;&nbsp;&nbsp; *SHELL*> `'.homebridge/Cmd4Scripts/CheckYourScript.sh' 'bin/YourScript.sh' 'Get' 'MyDevice' 'On'`
-
-
-*Note 1.* The arguments to CheckYourScript.sh are exactly what your state_cmd has define plus the options passed to your script
-*Note 2.* Don't forget to put the '' around the command to prevent globing as written above.
-*Note 3.* If your state_cmd has a '$' in it. the CheckYourScript.sh will fail and so rightly would homebridge-cmd4
+*Note 1.* The arguments to CheckYourScript.sh are exactly what your state_cmd has define plus the options passed to your script<BR>
+*Note 2.* Don't forget to put the '' around the command to prevent globing as written above.<BR>
+*Note 3.* If your state_cmd has a '$' in it. the CheckYourScript.sh will fail and so rightly would homebridge-cmd4<BR>
 &nbsp;&nbsp;&nbsp; *SHELL*> `'.homebridge/Cmd4Scripts/CheckYourScript.sh' '$HOME/bin/YourScript.sh' 'Get' 'MyDevice' 'On'`
 
 <BR><BR>
@@ -316,7 +316,6 @@ The value "0" should be used for any characteristics value which is not possible
              "interval": 60,   "timeout": 4000}
            ],
 ```
-
 <BR><BR>
 ## Raspbian-Stretch
 &nbsp;&nbsp;&nbsp; Please consult the Raspbian documentation first. Here are my notes though:
@@ -356,11 +355,11 @@ deb-src https://deb.nodesource.com/node_9.x stretch main
 &nbsp;&nbsp;&nbsp; *SHELL*>  `sudo apt-get install nodejs`
 
 ### Step 8  Check versions of node and npm
-&nbsp;&nbsp;&nbsp; *SHELL*> `node -v`   (Should return >=v9.11.2
-&nbsp;&nbsp;&nbsp; *SHELL*> `npm -v`    (Should return >=5.6.0
+&nbsp;&nbsp;&nbsp; *SHELL*> `node -v`   (Should return >=v9.11.2<BR>
+&nbsp;&nbsp;&nbsp; *SHELL*> `npm -v`    (Should return >=5.6.0<BR>
 
 ### Step 9  Install homebridge
-&nbsp;&nbsp;&nbsp; *SHELL*> `sudo npm install -g --unsafe-perm homebridge`
+&nbsp;&nbsp;&nbsp; *SHELL*> `sudo npm install -g --unsafe-perm homebridge`<BR>
 &nbsp;&nbsp;&nbsp; *SHELL*> `sudo npm install -g --unsafe-perm homebridge-cmd4`
 <BR><BR>
 ## Unit Testing
@@ -369,7 +368,7 @@ deb-src https://deb.nodesource.com/node_9.x stretch main
 &nbsp;&nbsp;&nbsp; Unit testing is only possible in a development environment and can be achieved in the following manner.
 
 ### Step 1  Install homebridge-cmd4 in a local environment
-&nbsp;&nbsp;&nbsp; This is done separate from the global environment and does not impact the global environment.
+&nbsp;&nbsp;&nbsp; This is done separate from the global environment and does not impact the global environment.<BR><BR>
 &nbsp;&nbsp;&nbsp; *SHELL*> `npm install homebridge-cmd4`
 
 ### Step 2  Change to the homebridge-cmd4 directory
@@ -385,7 +384,7 @@ Note: There is one bug where the testcases do not run correctly every second att
 
 <BR><BR>
 ## Rationale
-&nbsp;&nbsp;&nbsp; After playing with homebridge-cmd and then homebridge-cmdswitch2, I really wanted to control as much as I could.  I did not have all the devices, but I did have a light and a Sony Android TV.  I wanted to control these and see what else I could do.
+&nbsp;&nbsp;&nbsp; After playing with homebridge-cmd and then homebridge-cmdswitch2, I really wanted to control as much as I could.  I did not have all the devices, but I did have a light and a Sony Android TV.  I wanted to control these and see what else I could do.<BR>
 &nbsp;&nbsp;&nbsp; If you were wondering what happened to version 3, well I learned a lot, hence the working cmd4.
 
 <BR><BR>
