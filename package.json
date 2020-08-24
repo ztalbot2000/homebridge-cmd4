@@ -77,7 +77,7 @@
   "name": "homebridge-cmd4",
   "repository": {
     "type": "git",
-    "url": "git://github.com/ztalbot2000/homebridge-cmd4.git"
+    "url": "git://github.com/ztalbot2000/homebridgeCmd4.git"
   },
   "scripts": {
     "debug": "DEBUG=* homebridge --debug --plugin-path .",
