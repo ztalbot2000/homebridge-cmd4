@@ -2,6 +2,7 @@
 
 <BR><BR>
 ## ChangeLog
+* [**Whats new in 2.4.0**](#whats-new-in-240)
 * [**Whats new in 2.3.2**](#whats-new-in-232)
 * [**Whats new in 2.3.1**](#whats-new-in-231)
 * [**Whats new in 2.3.0**](#whats-new-in-23)
@@ -11,6 +12,13 @@
 * [**Whats new in 2.2**](#whats-new-in-22)
 * [**Whats new in 2.1**](#whats-new-in-21)
 * [**Whats new in 2.0**](#whats-new-in-20)
+
+<BR><BR>
+## Whats new in 2.4.0
+&nbsp;&nbsp;&nbsp; While a bump to the minor release, the changes are development only and also for any spelling errors.<BR>
+&nbsp;&nbsp;&nbsp; The plugin was split into its respective program/lib/utility/ChangeLog modules. <BR>
+&nbsp;&nbsp;&nbsp; Splitting the plugin allowed for better Unit testing.<BR>
+&nbsp;&nbsp;&nbsp; What is new are some examples of scripts for ping and wake on lan and can be found in the Extras/CMD4Scripts/Examples sub-directory.<BR>
 
 <BR><BR>
 ## Whats new in 2.3.2

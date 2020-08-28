@@ -1,9 +1,8 @@
 .eslintrc.json
 .gitignore
+.DS_Store
+*.swp
 jsmin
+screenshots
 test
-test/all.js
-test/configTest.js
-test/functionTests.js
-test/testGetSetAllValues.js
-test/testPS4.js
+node_modules
