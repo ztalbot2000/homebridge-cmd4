@@ -167,7 +167,7 @@ Cmd4Platform.prototype =
       this.log("Fetching config.json devices.");
       for( let i=0; i<this.config.accessories.length; i++ )
       {
-         // Since we do not know the accwssories name yet
+         // Since we do not know the accessories name yet
          this.log(FgMagenta + "Processing accessory: " + FgBlack + getAccessoryName(this.config.accessories[i]) );
 
          // This will create an accessory based on the Cmd4Accessory
@@ -457,7 +457,7 @@ function Cmd4Accessory(log, parentConfig, accessoryConfig, parent )
          continue;
       }
 
-      // if it is required, add not stored, add it
+      // if it is required and not stored, add it
       if (requiredIndex != -1 && this.getStoredValueForIndex(accTypeEnumIndex) == null)
       {
          this.log.warn("**** Adding required characteristic %s for %s", CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].type, this.displayName);
@@ -465,7 +465,14 @@ function Cmd4Accessory(log, parentConfig, accessoryConfig, parent )
 
          // Get the default value to store
          let defaultValue = properties.requiredCharacteristics[requiredIndex].defaultValue;
-          this.log.debug("*****Adding default value %s for %s", defaultValue, this.displayName )
+
+         // If ConfiguredName was not defined, then use the Accessories Name
+         if ( accTypeEnumIndex == CMD4_ACC_TYPE_ENUM.ConfiguredName )
+         {
+            defaultValue = getAccessoryName( this.config );
+         }
+
+         this.log.debug("*****Adding default value %s for %s", defaultValue, this.displayName )
 
          this.setStoredValueForIndex(accTypeEnumIndex, defaultValue);
       }
