@@ -465,7 +465,7 @@ function Cmd4Accessory(log, parentConfig, accessoryConfig, parent )
 
          // Get the default value to store
          let defaultValue = properties.requiredCharacteristics[requiredIndex].defaultValue;
-          this.log.debug("*****Adding default value %s for %s", defaultValue, )
+          this.log.debug("*****Adding default value %s for %s", defaultValue, this.displayName )
 
          this.setStoredValueForIndex(accTypeEnumIndex, defaultValue);
       }
