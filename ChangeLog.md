@@ -2,6 +2,7 @@
 
 <BR><BR>
 ## ChangeLog
+* [**Whats new in 2.4.1**](#whats-new-in-241)
 * [**Whats new in 2.4.0**](#whats-new-in-240)
 * [**Whats new in 2.3.2**](#whats-new-in-232)
 * [**Whats new in 2.3.1**](#whats-new-in-231)
@@ -12,6 +13,13 @@
 * [**Whats new in 2.2**](#whats-new-in-22)
 * [**Whats new in 2.1**](#whats-new-in-21)
 * [**Whats new in 2.0**](#whats-new-in-20)
+
+<BR><BR>
+## Whats new in 2.4.1
+&nbsp;&nbsp;&nbsp; Add check for duplicate UUID's that may be created and homebridge now complains about.<BR>
+&nbsp;&nbsp;&nbsp; Fix issue were configuredName was not provided in users config.json. <BR>
+&nbsp;&nbsp;&nbsp; Add an example of a DoorLock.sh with on a PI and using a GPIO to control it.<BR>
+&nbsp;&nbsp;&nbsp; Add a tool to me debug users config.json files.<BR>
 
 <BR><BR>
 ## Whats new in 2.4.0

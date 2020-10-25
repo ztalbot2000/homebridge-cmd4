@@ -18,8 +18,9 @@ var { transposeConstantToValidValue,
 
 let isJSON = require('./utils/isJSON');
 
+const FgBlack   = "\x1b[30m"
+const FgRed     = "\x1b[31m"
 const FgMagenta = "\x1b[35m"
-const FgBlack = "\x1b[30m"
 
 
 const SLOW_STATE_CHANGE_RESPONSE_TIME   = 10000;  // 10 seconds
@@ -55,10 +56,6 @@ var DEVICE_DATA = require('./lib/CMD4_DEVICE_TYPE_ENUM');
 var CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.CMD4_DEVICE_TYPE_ENUM;
 
 var foundAccessories = [];
-//console.log("CMD4_ACC_TYPE_ENUM");
-//console.log(CMD4_ACC_TYPE_ENUM);
-//console.log(CMD4_DEVICE_TYPE_ENUM);
-
 
 module.exports =
 {
@@ -123,13 +120,6 @@ function Cmd4Platform(log, config, api)
    // Instead of polling per accessory, allow the config file to be polled per characteristic.
    this.listOfPollingCharacteristics = {};
 
-
-   //this.storage     = undefined;               // Default - disabled
-   //this.storagePath = undefined;               // Default path for storage of 'fs'
-
-   //this.folder.     = undefined;               // Default for storage of 'GoogleDrive'
-   //this.keypath     = undefined;               // Default for storage of 'GoogleDrive'
-
    // Define platform config for fakegato-history
    if ( config.storage != undefined )
    {
@@ -173,8 +163,35 @@ Cmd4Platform.prototype =
          // This will create an accessory based on the Cmd4Accessory
          // definition bellow. This is not obvious for a newbie.
          let accessory = new Cmd4Accessory( that.log, that.config, this.config.accessories[i], null );
+
+         // check for UUID+subtype conflict
+         this.log("Checking for Duplicate UUID");
+         for( let i=0; i < foundAccessories.length; i++ )
+         {
+            let existingAccessory = foundAccessories[i];
+
+            if ( accessory.uuid == existingAccessory.uuid )
+            {
+               // This is the same check as what is in 
+               // hap-nodejs/dist/lib/Accessory.js
+               if (accessory.service.subtype == existingAccessory.service.subtype )
+               {
+                  this.log(FgRed + "Error: Cannot add a bridged Accessory with the same UUID as another bridged Accessory: " + getAccessoryName( existingAccessory ) );
+                  if ( accessory.name == existingAccessory.name )
+                     this.log(FgRed + "Duplicate accessory names can cause this issue.");
+
+                  this.log(FgRed + "It is wiser to define the second accessory in a different bridge.");
+
+                  process.exit(1);
+               }
+            }
+         }
+
+
          foundAccessories.push( accessory );
       }
+
+      // Set up polling of each accessory.
       for( let i=0; i < foundAccessories.length; i++ )
       {
          let accessory = foundAccessories[i];
@@ -193,8 +210,8 @@ Cmd4Platform.prototype =
                   this.setupStatePollingPerAccessory(accessory);
                   break;
                default:
-                  this.log("CMD4 Error: Something wrong with value of polling:%s", accessory.polling);
-                  this.log("            Check your config.json for errors.");
+                  this.log( FgRed + "CMD4 Error: Something wrong with value of polling:%s", accessory.polling);
+                  this.log( FgRed + "            Check your config.json for errors.");
                   process.exit(1);
              }
           }
@@ -233,9 +250,9 @@ Cmd4Platform.prototype.characteristicPolling = function (accessory, accTypeEnumI
        setTimeout(this.characteristicPolling.bind(
           this, accessory, accTypeEnumIndex, timeout, interval), interval);
 
- }
+}
 
- Cmd4Platform.prototype.setupCharacteristicPolling = function (accessory)
+Cmd4Platform.prototype.setupCharacteristicPolling = function (accessory)
 {
    let self = accessory;
 
@@ -282,7 +299,7 @@ Cmd4Platform.prototype.characteristicPolling = function (accessory, accTypeEnumI
                // but first check if one has already been defined as we can only handle one at a time.
                if ( ucKeyIndex != -1 )
                {
-                  this.log.error("For charateristic polling, you can only define one characteristic per array item.  Error: Cannot add '%s' as '%s' is already defined for %s.", ucKey, CMD4_ACC_TYPE_ENUM.properties[ucKeyIndex].type, self.displayName);
+                  this.log( FgRed + "For charateristic polling, you can only define one characteristic per array item.  Error: Cannot add '%s' as '%s' is already defined for %s.", ucKey, CMD4_ACC_TYPE_ENUM.properties[ucKeyIndex].type, self.displayName);
                   process.exit(-1);
                }
                ucKeyIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.type === ucKey);
@@ -659,7 +676,7 @@ Cmd4Accessory.prototype = {
       exec(cmd, {timeout: self.timeout}, function (error, stdout, stderr)
       {
          if (error) {
-            self.log("setGeneric %s function failed for %s Error:%s", characteristicString, self.displayName, error.message);
+            self.log( FgRed + "setGeneric %s function failed for %s Error:%s", characteristicString, self.displayName, error.message);
             self.log(stdout);
             self.log(stderr);
             callback(error);
@@ -1766,7 +1783,7 @@ Cmd4Accessory.prototype = {
                this.typeIndex = CMD4_DEVICE_TYPE_ENUM.properties.indexOfEnum(i => i.deviceName === this.ucType);
                if (this.typeIndex < 0)
                {
-                  this.log ("CMD4 Error: Unknown device type:%s for %s", this.type, this.displayName);
+                  this.log ( FgRed + "CMD4 Error: Unknown device type:%s for %s", this.type, this.displayName);
                   process.exit(1);
                }
 
