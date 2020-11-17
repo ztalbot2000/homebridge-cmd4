@@ -18,9 +18,15 @@ var { transposeConstantToValidValue,
 
 let isJSON = require('./utils/isJSON');
 
+const FgRm      = "\x1b[m"
 const FgBlack   = "\x1b[30m"
 const FgRed     = "\x1b[31m"
+const FgGreen   = "\x1b[32m"
+const FgYellow  = "\x1b[33m"
+const FgBlue    = "\x1b[34m"
 const FgMagenta = "\x1b[35m"
+const FgCyan    = "\x1b[36m"
+const FgWhite   = "\x1b[37m"
 
 
 const SLOW_STATE_CHANGE_RESPONSE_TIME   = 10000;  // 10 seconds
@@ -166,11 +172,12 @@ Cmd4Platform.prototype =
 
          // check for UUID+subtype conflict
          this.log("Checking for Duplicate UUID");
+         this.log("Checking accessory.UUID: " + accessory.UUID);
          for( let i=0; i < foundAccessories.length; i++ )
          {
             let existingAccessory = foundAccessories[i];
 
-            if ( accessory.uuid == existingAccessory.uuid )
+            if ( accessory.UUID == existingAccessory.UUID )
             {
                // This is the same check as what is in 
                // hap-nodejs/dist/lib/Accessory.js
@@ -186,6 +193,7 @@ Cmd4Platform.prototype =
                }
             }
          }
+         this.log( "No Duplicate UUID's for this Accessory - " + FgGreen + "OK" + FgRm + ". Using: " + accessory.UUID );
 
 
          foundAccessories.push( accessory );
@@ -623,7 +631,7 @@ Cmd4Accessory.prototype = {
          }
       }
 
-      this.log.debug("Checking complete.");
+      this.log.debug("Checking for polling of unset characteristics complete. - " + FgGreen + "OK" + FgRm + ".");
    },
    // ***********************************************
    //
