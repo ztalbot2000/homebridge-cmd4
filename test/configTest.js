@@ -49,14 +49,23 @@ describe( "Testing CMD4_DEVICE_TYPE_ENUM devices all defined", ( ) =>
       let deviceToFind = CMD4_DEVICE_TYPE_ENUM.properties[ index ].deviceName;
 
       // Skip those we do not care about
-      if ( deviceToFind == "AccessoryInformation"         ||
-           deviceToFind == "BridgeConfiguration"          ||
-           deviceToFind == "BridgingState"                ||
-           deviceToFind == "CameraControl"                ||
-           deviceToFind == "CameraRTPStreamManagement"    ||
-           deviceToFind == "Pairing"                      ||
-           deviceToFind == "ProtocolInformation"          ||
-           deviceToFind == "TunneledBTLEAccessoryService" )
+      if ( deviceToFind == "AccessoryInformation"                         ||
+           deviceToFind == "AccessoryRuntimeInformation"                  ||
+           deviceToFind == "BridgeConfiguration"                          ||
+           deviceToFind == "BridgingState"                                ||
+           deviceToFind == "CameraControl"                                ||
+           deviceToFind == "CamaeraEventRecordingManagement"              ||
+           deviceToFind == "CameraRTPStreamManagement"                    ||
+           deviceToFind == "Diagnostic"                                   ||
+           deviceToFind == "Pairing"                                      ||
+           deviceToFind == "PowerManagement"                              ||
+           deviceToFind == "ProtocolInformation"                          ||
+           deviceToFind == "Siri"                                         ||
+           deviceToFind == "TargetControl"                                ||
+           deviceToFind == "TargetControlManagement"                      ||
+           deviceToFind == "TransferTransportManagement"                  ||
+           deviceToFind == "TunneledBTLEAccessoryService"
+         )
          continue;
 
       let deviceFound = "";
@@ -87,14 +96,23 @@ describe( "Testing CMD4_DEVICE_TYPE_ENUM devices all defined", ( ) =>
       let deviceToFind = CMD4_DEVICE_TYPE_ENUM.properties[index].deviceName;
 
       // Skip those we do not care about
-      if ( deviceToFind == "AccessoryInformation"         ||
-           deviceToFind == "BridgeConfiguration"          ||
-           deviceToFind == "BridgingState"                ||
-           deviceToFind == "CameraControl"                ||
-           deviceToFind == "CameraRTPStreamManagement"    ||
-           deviceToFind == "Pairing"                      ||
-           deviceToFind == "ProtocolInformation"          ||
-           deviceToFind == "TunneledBTLEAccessoryService" )
+      if ( deviceToFind == "AccessoryInformation"                         ||
+           deviceToFind == "AccessoryRuntimeInformation"                  ||
+           deviceToFind == "BridgeConfiguration"                          ||
+           deviceToFind == "BridgingState"                                ||
+           deviceToFind == "CameraControl"                                ||
+           deviceToFind == "CamaeraEventRecordingManagement"              ||
+           deviceToFind == "CameraRTPStreamManagement"                    ||
+           deviceToFind == "Diagnostic"                                   ||
+           deviceToFind == "Pairing"                                      ||
+           deviceToFind == "PowerManagement"                              ||
+           deviceToFind == "ProtocolInformation"                          ||
+           deviceToFind == "Siri"                                         ||
+           deviceToFind == "TargetControl"                                ||
+           deviceToFind == "TargetControlManagement"                      ||
+           deviceToFind == "TransferTransportManagement"                  ||
+           deviceToFind == "TunneledBTLEAccessoryService"
+         )
          continue;
 
       let deviceFound = "";
@@ -343,7 +361,7 @@ function testType( type )
    let ucKeyIndex = CMD4_DEVICE_TYPE_ENUM.properties.indexOfEnum( i => i.deviceName === type);
    it( "Device Type:" + type + " should be valid", ( ) =>
    {
-      assert.isAbove( ucKeyIndex, 0, "Invalid device type:" + type );
+      assert.isAbove( ucKeyIndex, -1, "Invalid device type:" + type );
    });
 }
 function testName( name )
@@ -396,7 +414,7 @@ function testCharacteristic ( characteristic, value )
 
       it( "Characteristic " + characteristic + " should be valid", ( ) =>
       {
-         assert.isAbove( characteristicIndex, 0, "Invalid characteristic:" + characteristic );
+         assert.isAbove( characteristicIndex, -1, "Invalid characteristic:" + characteristic );
       });
 
       // Check if properties is not null

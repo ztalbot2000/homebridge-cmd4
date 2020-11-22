@@ -85,7 +85,7 @@
     "debug": "DEBUG=* homebridge --debug --plugin-path .",
     "postversion": "git push && git push --tags",
     "pretest": "printf ' test is only done in a development environment\n';sleep 2 ",
-    "test": "node_modules/.bin/mocha ",
+    "test": "node_modules/.bin/mocha --file test/mocha-setup ",
     "postinstall": "node postinstall.js"
   },
   "version": "2.4.1"

@@ -9,27 +9,25 @@ const cmd4StateDir = os.homedir( ) + "/.homebridge/Cmd4Scripts/Cmd4States/"
 
 var glob = require( "glob" );
 
-const DEVICE_EOL = 50;
 
-describe( "Cleaning up any old Cmd4States/Status_Device_* files ...", ( ) =>
+describe( 'Cleaning up any old Cmd4States/Status_Device_* files ...', ( ) =>
 {
-   glob( cmd4StateDir + "Status_Device_*", null,
-   function( er, files )
+   glob( cmd4StateDir + "Status_Device_*", null, function ( er, files )
    {
       for ( var file of files )
       {
-         fs.unlink( file, function( err,results )
+         fs.unlink( file, function( err, result )
          {
-            it( "file: " + file + " should be removed", ( ) =>
+            it('file:' + file +' should be removed', function ( done )
             {
-               console.log( "File Doesnt exists" );
-               assert.isFalse( err, "file not removed" );
+               if ( err && err.code != 'ENOENT' )
+                  assert.isNull( err, 'file not removed err: ' + err + " result: " + result );
+               done( );
             });
          });
       }
    })
 });
-
 
 // ***************** TEST LOADING **********************
 
@@ -58,9 +56,9 @@ describe( "Testing CMD4_DEVICE_TYPE_ENUM EOL", ( ) =>
       assert.isNotNull( pluginModule.CMD4_DEVICE_TYPE_ENUM.EOL, "EOL is null" );
    });
 
-   it( "CMD4_DEVICE_TYPE_ENUM.EOL >= " + DEVICE_EOL, ( ) =>
+   it( "CMD4_DEVICE_TYPE_ENUM.EOL = " + DEVICE_EOL, ( ) =>
    {
-      assert.isAtLeast( pluginModule.CMD4_DEVICE_TYPE_ENUM.EOL, DEVICE_EOL );
+      assert.equal( pluginModule.CMD4_DEVICE_TYPE_ENUM.EOL, DEVICE_EOL );
    });
 });
 

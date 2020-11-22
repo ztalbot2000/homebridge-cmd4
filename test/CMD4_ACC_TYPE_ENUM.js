@@ -4,7 +4,6 @@ const assert = require( "chai" ).assert;
 
 var ACC_DATA = require( "../lib/CMD4_ACC_TYPE_ENUM.js" );
 var CMD4_ACC_TYPE_ENUM = ACC_DATA.CMD4_ACC_TYPE_ENUM;
-var EOL = 150;
 
 describe( "Testing require of CMD4_ACC_TYPE_ENUM.js", ( ) =>
 {
@@ -26,9 +25,9 @@ describe( "Testing require of CMD4_ACC_TYPE_ENUM.js", ( ) =>
          assert.isNotNull( CMD4_ACC_TYPE_ENUM.EOL, "EOL is null" );
       });
 
-      it( "CMD4_ACC_TYPE_ENUM.EOL >= " + EOL, ( ) =>
+      it( "CMD4_ACC_TYPE_ENUM.EOL = " + ACC_EOL, ( ) =>
       {
-         assert.isAtLeast( CMD4_ACC_TYPE_ENUM.EOL, EOL, "CMD4_ACC_TYPE_ENUM.EOL FOUND: " + CMD4_ACC_TYPE_ENUM.EOL );
+         assert.equal( CMD4_ACC_TYPE_ENUM.EOL, ACC_EOL, "CMD4_ACC_TYPE_ENUM.EOL FOUND: " + CMD4_ACC_TYPE_ENUM.EOL );
       });
 
       it( "CMD4_ACC_TYPE_ENUM[ 0-" + CMD4_ACC_TYPE_ENUM.EOL + " ] should equal value at index", ( ) =>

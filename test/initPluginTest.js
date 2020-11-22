@@ -19,9 +19,6 @@ var UUIDGen = cmd4.UUIDGen;
 var CMD4_ACC_TYPE_ENUM = cmd4.CMD4_ACC_TYPE_ENUM;
 var CMD4_DEVICE_TYPE_ENUM = cmd4.CMD4_DEVICE_TYPE_ENUM;
 
-const DEVICE_EOL = 50;
-const ACC_EOL = 150;
-
 function getKeyByValue(object, value ) {
   return Object.keys(object ).find(key => object[key] === value );
 }
@@ -316,15 +313,30 @@ describe('Testing CMD4_ACC_TYPE_ENUM.properties[].props', ( ) =>
              // so TRUE/FALSE can be a constant.
              if (format != Characteristic.Formats.BOOL )
              {
-                // Test if our validValues is empty
-                it('Our CMD4_ACC_TYPE_ENUM.properties[' + accTypeEnumIndex + '].validValues.length should be 0', ( ) =>
+                // Hap has values defined, but not in valid values. We added them in ours
+                if ( accTypeEnumIndex != CMD4_ACC_TYPE_ENUM.CameraOperatingModeIndicator &&
+                     accTypeEnumIndex != CMD4_ACC_TYPE_ENUM.ThirdPartyCameraActive &&
+                     accTypeEnumIndex != CMD4_ACC_TYPE_ENUM.RecordingAudioActive &&
+                     accTypeEnumIndex != CMD4_ACC_TYPE_ENUM.PeriodicSnapshotsActive &&
+                     accTypeEnumIndex != CMD4_ACC_TYPE_ENUM.HomeKitCameraActive &&
+                     accTypeEnumIndex != CMD4_ACC_TYPE_ENUM.EventSnapshotsActive )
                 {
-                   assert.equal(Object.keys(accProperties.validValues ).length, 0, 'validValuesh for: ' + accTypeEnumIndex + ' is not empty' );
-                });
+                   // Test if our validValues is empty
+                   it('Our CMD4_ACC_TYPE_ENUM.properties[' + accTypeEnumIndex + '].validValues.length should be 0', ( ) =>
+                   {
+                      assert.equal(Object.keys(accProperties.validValues ).length, 0, 'validValuesh for: ' + accTypeEnumIndex + ' is not empty' );
+                   });
+                } else {
+                   // console.log("Homebridge is wrong, skipping" );
+                }
              }
           } else
           {
-             if ( accTypeEnumIndex != CMD4_ACC_TYPE_ENUM.CurrentHeatingCoolingState )
+             // For InputDeviceType, we define the UNKNOWN_6 they do not. its okay
+             // For ManagedNetworkEnable, we define the UNKNOWN they do not. its okay
+             if ( accTypeEnumIndex != CMD4_ACC_TYPE_ENUM.CurrentHeatingCoolingState &&
+                  accTypeEnumIndex != CMD4_ACC_TYPE_ENUM.InputDeviceType &&
+                  accTypeEnumIndex != CMD4_ACC_TYPE_ENUM.ManagedNetworkEnable )
              {
                 // Test if same number of validValues
                 it('CMD4_ACC_TYPE_ENUM.properties[' + accTypeEnumIndex + '].perms.length should be the same', ( ) =>
@@ -353,7 +365,7 @@ describe('Testing CMD4_ACC_TYPE_ENUM.properties[].props', ( ) =>
        });
     }
 });
-return;
+
 
 // ** TEST CMD4_DEVICE_TYPE_ENUM.properties[].defaultPollingCharacteristic  **
 describe('Testing CMD4_DEVICE_TYPE_ENUM.properties[].defaultPollingCharacteristics', ( ) =>

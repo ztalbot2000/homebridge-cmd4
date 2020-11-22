@@ -898,7 +898,63 @@
                "SerialNumber":             "12345",
                "stateChangeResponseTime":   3,
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
-             }
+            },
+            {
+               "type": "AccessControl",
+               "displayName": "My_AccessControl",
+               "AccessControlLevel":                      0,
+               "stateChangeResponseTime":   3,
+               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+            },
+            {
+               "type": "CameraOperatingMode",
+               "displayName": "My_CameraOperatingMode",
+               "eventSnapshotsActive":                   "DISABLE",
+               "homeKitCameraActive":                    "OFF",
+               "manuallyDisabled":                       "DISABLED",
+               "nightVision":                            "FALSE",
+               "thirdPartyCameraActive":                 "OFF",
+               "periodicSnapshotsActive":                "DISABLE",
+               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+            },
+            {
+               "type": "SmartSpeaker",
+               "displayName": "My_SmartSpeaker",
+               "currentMediaState":        "STOP",
+               "targetMediaState":         "STOP",
+               "name":                                       "My_SmartSpeaker",
+               "configuredName":                             "My_SmartSpeaker",
+               "volume":                                     5,
+               "mute":                                       "FALSE",
+               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+            },
+            {
+               "type": "TargetControl",
+               "displayName": "My_TargetControl",
+               "ActiveIdentifier":                           1183,
+               "Active":                                     "ACTIVE",
+               "ButtonEvent":                                0,
+               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+            },
+            {
+               "type": "WiFiRouter",
+               "displayName": "My_WiFiRouter",
+               "managedNetworkEnable":                       "DISABLED",
+               "NetworkAccessViolationControl":              0,
+               "NetworkClientProfileControl":                0,
+               "NetworkClientStatusControl":                 0,
+               "RouterStatus":                               "READY",
+               "SupportedRouterConfiguration":               0,
+               "WANConfigurationList":                       0,
+               "WANStatusList":                              0,
+               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+            },
+            {
+               "type": "WiFiSatellite",
+               "displayName": "My_WiFiSatellite",
+               "WiFiSatelliteStatus":                        "NOT_CONNECTED",
+               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+            }
           ]
        }
    ]

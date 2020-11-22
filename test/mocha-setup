@@ -1,0 +1,7 @@
+/* setup-cmd4 */
+/* These instructions taken from: https://airbnb.io/enzyme/docs/guides/jsdom.html */
+
+const fs = require('fs')
+
+global.ACC_EOL = 222;
+global.DEVICE_EOL = 66;

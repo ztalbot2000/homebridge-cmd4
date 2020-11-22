@@ -103,13 +103,13 @@ module.exports =
              foundAccessories};
      },
      // These would be the uninitialized values, used for unit testing
-     CMD4_ACC_TYPE_ENUM: CMD4_ACC_TYPE_ENUM,        // properties would be {} empty.
-     CMD4_DEVICE_TYPE_ENUM: CMD4_DEVICE_TYPE_ENUM,  // properties would be {} empty.
-     Accessory: Accessory,                          // Would be undefined
-     Service: Service,                              // Would be undefined
-     Characteristic: Characteristic,                // Would be undefined
-     UUIDGen: UUIDGen,                              // Would be undefined
-     FoundAccessories:foundAccessories              // Would be {}  empty
+     CMD4_ACC_TYPE_ENUM: CMD4_ACC_TYPE_ENUM,                          // properties would be {} empty.
+     CMD4_DEVICE_TYPE_ENUM: CMD4_DEVICE_TYPE_ENUM,                    // properties would be {} empty.
+     Accessory: Accessory,                                            // Would be undefined
+     Service: Service,                                                // Would be undefined
+     Characteristic: Characteristic,                                  // Would be undefined
+     UUIDGen: UUIDGen,                                                // Would be undefined
+     FoundAccessories:foundAccessories                                // Would be {}  empty
 }
 
 

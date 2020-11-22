@@ -11,10 +11,6 @@ var { transposeConstantToValidValue,
       transposeValueToValidConstant,
       extractKeyValue } = require( "../utils/transposeCMD4Props" );
 
-const DEVICE_EOL = 50;
-const ACC_EOL = 150;
-
-
 
 // ***************** TEST Plugin Initialized Variables ***************
 
@@ -44,17 +40,17 @@ describe( "Testing load of index.js", ( ) =>
 // ******** QUICK TEST CMD4_ACC_TYPE_ENUM.properties *************
 describe( "Quick Test load of CMD4_ACC_TYPE_ENUM", ( ) =>
 {
-   it( "CMD4_ACC_TYPE_ENUM.EOL >" + ACC_EOL, ( ) =>
+   it( "CMD4_ACC_TYPE_ENUM.EOL =" + ACC_EOL, ( ) =>
    {
-     expect( CMD4_ACC_TYPE_ENUM.EOL ).to.be.least( ACC_EOL );
+     expect( CMD4_ACC_TYPE_ENUM.EOL ).to.equal( ACC_EOL );
    });
 });
 // ******** QUICK TEST CMD4_DEVICE_TYPE_ENUM.properties *************
 describe( "Quick Test load of CMD4_DEVICE_TYPE_ENUM", ( ) =>
 {
-   it( "CMD4_DEVICE_TYPE_ENUM.EOL >" + DEVICE_EOL, ( ) =>
+   it( "CMD4_DEVICE_TYPE_ENUM.EOL =" + DEVICE_EOL, ( ) =>
   {
-     expect( CMD4_DEVICE_TYPE_ENUM.EOL ).to.be.least( DEVICE_EOL );
+     expect( CMD4_DEVICE_TYPE_ENUM.EOL ).to.equal( DEVICE_EOL );
   });
 });
 

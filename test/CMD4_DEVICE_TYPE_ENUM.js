@@ -4,7 +4,6 @@ const assert = require( "chai" ).assert;
 
 var DEVICE_DATA = require( "../lib/CMD4_DEVICE_TYPE_ENUM.js" );
 var CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.CMD4_DEVICE_TYPE_ENUM;
-var EOL = 50;
 
 describe( "Testing require of CMD4_DEVICE_TYPE_ENUM.js", ( ) =>
 {
@@ -26,9 +25,9 @@ describe( "Testing require of CMD4_DEVICE_TYPE_ENUM.js", ( ) =>
          assert.isNotNull( CMD4_DEVICE_TYPE_ENUM.EOL, "EOL is null" );
       });
 
-      it( "CMD4_DEVICE_TYPE_ENUM.EOL >= " + EOL, ( ) =>
+      it( "CMD4_DEVICE_TYPE_ENUM.EOL = " + DEVICE_EOL, ( ) =>
       {
-         assert.isAtLeast( CMD4_DEVICE_TYPE_ENUM.EOL, EOL, "CMD4_DEVICE_TYPE_ENUM.EOL FOUND: " + CMD4_DEVICE_TYPE_ENUM.EOL );
+         assert.equal( CMD4_DEVICE_TYPE_ENUM.EOL, DEVICE_EOL, "CMD4_DEVICE_TYPE_ENUM.EOL FOUND: " + CMD4_DEVICE_TYPE_ENUM.EOL );
       });
 
       it( "CMD4_DEVICE_TYPE_ENUM[ 0-" + CMD4_DEVICE_TYPE_ENUM.EOL + " ] should equal value at index", ( ) =>

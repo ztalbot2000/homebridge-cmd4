@@ -1,31 +1,36 @@
 'use strict';
 
-var fs = require('fs');
+var fs = require( 'fs' );
 
-var assert = require('chai').assert;
+var assert = require( 'chai' ).assert;
 
-const os = require('os');
-const cmd4StateDir = os.homedir() + '/.homebridge/Cmd4Scripts/Cmd4States/'
+const os = require( 'os' );
+const cmd4StateDir = os.homedir( ) + '/.homebridge/Cmd4Scripts/Cmd4States/'
 
-var glob = require('glob')
+var glob = require( 'glob' )
 
-describe('Cleaning up any old Cmd4States/Status_Device_* files ...', ( ) =>
+/* Why
+describe( 'Cleaning up any old Cmd4States/Status_Device_* files ...', ( ) =>
 {
-   glob(cmd4StateDir + "Status_Device_*", null, function (er, files)
+   glob( cmd4StateDir + "Status_Device_*", null, function ( er, files )
    {
-      for (var file of files)
+      for ( var file of files )
       {
-         fs.unlink(file,function(err,results){
-            it('file:' + file +' should be removed', function (done)
+         fs.unlink( file, function( err, result )
+         {
+            it('file:' + file +' should be removed', function ( done )
             {
-               console.log('File Doesnt exists');
-               assert.isFalse(err, 'file not removed');
+               assert.isNull( err, 'file not removed err: ' + err + " result: " + result );
                done( );
             });
          });
       }
    })
 });
+
+
+
+*/
 
 
 // ***************** TEST LOADING **********************
@@ -55,9 +60,9 @@ describe('Testing CMD4_DEVICE_TYPE_ENUM EOL', ( ) =>
       assert.isNotNull(pluginModule.CMD4_DEVICE_TYPE_ENUM.EOL, 'EOL is null');
    });
 
-   it('CMD4_DEVICE_TYPE_ENUM.EOL >= 50', ( ) =>
+   it('CMD4_DEVICE_TYPE_ENUM.EOL = ' + DEVICE_EOL, ( ) =>
    {
-      assert.isAtLeast(pluginModule.CMD4_DEVICE_TYPE_ENUM.EOL, 50);
+      assert.equal(pluginModule.CMD4_DEVICE_TYPE_ENUM.EOL, DEVICE_EOL);
    });
 });
 
@@ -79,7 +84,7 @@ describe('Testing homebridge API', ( ) =>
 
 
 
-// ***************** TEST State.js **********************
+// ***************** TEST PS4.js **********************
 const child_process = require('child_process');
 
 // *** TEST PS4.sh Set *******
