@@ -1,7 +1,5 @@
 'use strict';
 
-const assert = require( "chai" ).assert;
-
 var getAccessoryName = require( "../utils/getAccessoryName.js" );
 
 describe( "Testing getAccessoryName.js", ( ) =>

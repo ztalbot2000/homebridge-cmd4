@@ -1,7 +1,5 @@
 'use strict';
 
-const assert = require( "chai" ).assert;
-
 const cmd4Config = require( "../Extras/config.json" );
 
 

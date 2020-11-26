@@ -5,6 +5,8 @@ const fs = require('fs');
 const commandExistsSync = require('command-exists').sync;
 
 let getAccessoryName = require('./utils/getAccessoryName');
+let isValidHomebridgeCategory = require('./utils/isValidHomebridgeCategory');
+
 
 
 
@@ -51,6 +53,7 @@ var FakeGatoHistoryService;
 var Accessory;
 var Service;
 var Characteristic;
+var Categories;
 var UUIDGen;
 
 var ACC_DATA = require('./lib/CMD4_ACC_TYPE_ENUM');
@@ -73,12 +76,13 @@ module.exports =
 
      Service = homebridge.hap.Service;
      Characteristic = homebridge.hap.Characteristic;
+     Categories = homebridge.hap.Categories;
 
      UUIDGen = homebridge.hap.uuid;
 
      CMD4_ACC_TYPE_ENUM = ACC_DATA.init(Characteristic);
 
-     CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init(CMD4_ACC_TYPE_ENUM, Service, Characteristic);
+     CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init(CMD4_ACC_TYPE_ENUM, Service, Characteristic, Categories);
 
      foundAccessories = [];
 
@@ -1811,6 +1815,19 @@ Cmd4Accessory.prototype = {
 
                // Name is also a characteristic, which must be added.
                this.parseKeyForCharacteristics( key, value );
+
+               break;
+            case "Category":
+
+               // For those who define there own Category
+
+               if ( ! isValidHomebridgeCategory( Categories, value ) )
+               {
+                  this.log(FgRed + "Error: Category specified: " + value + " is not a valid homebridge category." + FgRm);;
+                  process.exit( -1 );
+               }
+
+               this.category = value;
 
                break;
             case 'Model':

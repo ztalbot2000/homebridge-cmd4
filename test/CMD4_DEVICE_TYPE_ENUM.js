@@ -1,10 +1,5 @@
 'use strict';
 
-const assert = require( "chai" ).assert;
-
-var DEVICE_DATA = require( "../lib/CMD4_DEVICE_TYPE_ENUM.js" );
-var CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.CMD4_DEVICE_TYPE_ENUM;
-
 describe( "Testing require of CMD4_DEVICE_TYPE_ENUM.js", ( ) =>
 {
    it( "CMD4_DEVICE_TYPE_ENUM should be defined ( required correctly)", ( ) =>

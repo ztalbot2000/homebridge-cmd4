@@ -1,10 +1,5 @@
 'use strict';
 
-const assert = require( "chai" ).assert;
-
-var ACC_DATA = require( "../lib/CMD4_ACC_TYPE_ENUM.js" );
-var CMD4_ACC_TYPE_ENUM = ACC_DATA.CMD4_ACC_TYPE_ENUM;
-
 describe( "Testing require of CMD4_ACC_TYPE_ENUM.js", ( ) =>
 {
    it( "CMD4_ACC_TYPE_ENUM should be defined ( required correctly )", ( ) =>

@@ -1,9 +1,5 @@
 'use strict';
 
-const assert = require( "chai" ).assert;
-
-
-
 var isNumeric = require( "../utils/isNumeric.js" );
 
 describe( "Testing isNumeric", ( ) =>

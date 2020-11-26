@@ -1,7 +1,16 @@
-/* setup-cmd4 */
-/* These instructions taken from: https://airbnb.io/enzyme/docs/guides/jsdom.html */
+// These instructions taken from: https://airbnb.io/enzyme/docs/guides/jsdom.html
 
-const fs = require('fs')
+global.fs = require('fs')
+global.assert = require( "chai" ).assert;
+global.expect = require( "chai" ).expect;
 
 global.ACC_EOL = 222;
 global.DEVICE_EOL = 66;
+
+// These would be the uninitialized values, used for unit testing
+global.ACC_DATA = require('../lib/CMD4_ACC_TYPE_ENUM');
+global.CMD4_ACC_TYPE_ENUM = ACC_DATA.CMD4_ACC_TYPE_ENUM;
+
+global.DEVICE_DATA = require('../lib/CMD4_DEVICE_TYPE_ENUM');
+global.CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.CMD4_DEVICE_TYPE_ENUM;
+

@@ -1,6 +1,5 @@
 "use strict";
 
-var expect = require( "chai" ).expect;
 // ***************** TEST LOADING **********************
 
 

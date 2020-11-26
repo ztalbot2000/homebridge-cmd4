@@ -1,10 +1,6 @@
 "use strict";
 
 
-var expect = require( "chai" ).expect;
-var assert = require( "chai" ).assert;
-
-
 // ***************** TEST LOADING **********************
 
 
@@ -14,10 +10,9 @@ var pluginModule = require( "../index" );
 var cmd4 = pluginModule.default(_api);
 var Accessory = cmd4.Accessory;
 var Characteristic = cmd4.Characteristic;
+var Categories = cmd4.Categories;
 var Service = cmd4.Service;
 var UUIDGen = cmd4.UUIDGen;
-var CMD4_ACC_TYPE_ENUM = cmd4.CMD4_ACC_TYPE_ENUM;
-var CMD4_DEVICE_TYPE_ENUM = cmd4.CMD4_DEVICE_TYPE_ENUM;
 
 function getKeyByValue(object, value ) {
   return Object.keys(object ).find(key => object[key] === value );
@@ -191,6 +186,11 @@ describe('Testing CMD4_ACC_TYPE_ENUM.properties[].props', ( ) =>
        if (accTypeEnumIndex == CMD4_ACC_TYPE_ENUM.Name )
           continue;
 
+       // Get the properties for this characteristic type
+       let accProperties = CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex];
+
+      console.log(" Test #" + accTypeEnumIndex + " type: " + accProperties.type );
+
        // Characteristics dont seem to get removed and homebridge put a limit
        // of 100 Characteristics per service, so just create a new service
        // per characteristic.  This is unit testing anyway, so not an issue.
@@ -201,9 +201,6 @@ describe('Testing CMD4_ACC_TYPE_ENUM.properties[].props', ( ) =>
        {
           assert.isNotNull(service, 'Service is null at accTypeEnumIndex: ' + accTypeEnumIndex );
        });
-
-       // Get the properties for this characteristic type
-       let accProperties = CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex];
 
        describe('Testing CMD4_ACC_TYPE_ENUM.properties[' + accTypeEnumIndex + ']:' + accProperties.type, ( ) =>
        {
@@ -403,6 +400,7 @@ describe('Testing CMD4_DEVICE_TYPE_ENUM.properties[].defaultPollingCharacteristi
       });
    }
 });
+
 
 // ******** TEST CMD4_ACC_TYPE_ENUM.properties *************
 describe('Testing CMD4_ACC_TYPE_ENUM.properties', ( ) =>

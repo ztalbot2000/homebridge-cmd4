@@ -1,9 +1,5 @@
 'use strict';
 
-const assert = require( "chai" ).assert;
-
-
-
 var isJSON = require( "../utils/isJSON.js" );
 
 describe( "Testing isJSON", ( ) =>

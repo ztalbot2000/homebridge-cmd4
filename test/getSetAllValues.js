@@ -1,9 +1,5 @@
 'use strict';
 
-var fs = require( "fs" );
-
-var assert = require( "chai" ).assert;
-
 const os = require( "os" );
 const cmd4StateDir = os.homedir( ) + "/.homebridge/Cmd4Scripts/Cmd4States/"
 

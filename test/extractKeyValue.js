@@ -1,7 +1,5 @@
 'use strict';
 
-const assert = require( "chai" ).assert;
-
 var CMD4_ACC_TYPE_ENUM = {
    AccessoryFlags:                        0,
    properties: {}

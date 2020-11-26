@@ -1,7 +1,5 @@
 'use strict';
 
-var expect = require( "chai" ).expect;
-
 // ***************** TEST LOADING **********************
 
 // This would be the plugin un-initialized
@@ -45,6 +43,7 @@ describe( "Quick Test load of CMD4_ACC_TYPE_ENUM", ( ) =>
      expect( CMD4_ACC_TYPE_ENUM.EOL ).to.equal( ACC_EOL );
    });
 });
+
 // ******** QUICK TEST CMD4_DEVICE_TYPE_ENUM.properties *************
 describe( "Quick Test load of CMD4_DEVICE_TYPE_ENUM", ( ) =>
 {
