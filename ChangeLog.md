@@ -2,6 +2,7 @@
 
 <BR><BR>
 ## ChangeLog
+* [**Whats new in 2.4.2**](#whats-new-in-242)
 * [**Whats new in 2.4.1**](#whats-new-in-241)
 * [**Whats new in 2.4.0**](#whats-new-in-240)
 * [**Whats new in 2.3.2**](#whats-new-in-232)
@@ -13,6 +14,11 @@
 * [**Whats new in 2.2**](#whats-new-in-22)
 * [**Whats new in 2.1**](#whats-new-in-21)
 * [**Whats new in 2.0**](#whats-new-in-20)
+
+<BR><BR>
+## Whats new in 2.4.2
+&nbsp;&nbsp;&nbsp; Bug fix for negative temperature values
+&nbsp;&nbsp;&nbsp; Add in ability to change properties like minValue. Effect is none as not used, except for further testing.<BR>
 
 <BR><BR>
 ## Whats new in 2.4.1
