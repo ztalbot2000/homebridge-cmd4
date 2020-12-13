@@ -183,7 +183,7 @@ Cmd4Platform.prototype =
 
             if ( accessory.UUID == existingAccessory.UUID )
             {
-               // This is the same check as what is in 
+               // This is the same check as what is in
                // hap-nodejs/dist/lib/Accessory.js
                if (accessory.service.subtype == existingAccessory.service.subtype )
                {
@@ -566,7 +566,7 @@ Cmd4Accessory.prototype = {
    testStoredValueForIndex:function (accTypeEnumIndex)
    {
       if (accTypeEnumIndex < 0 || accTypeEnumIndex > CMD4_ACC_TYPE_ENUM.EOL)
-         return -1;
+         return undefined;
 
       return this.storedValuesPerCharacteristic[accTypeEnumIndex];
    },
@@ -1134,6 +1134,21 @@ Cmd4Accessory.prototype = {
                 }
              }
 
+             let props = this.configHasCharacteristicProps( accTypeEnumIndex );
+             if ( props )
+             {
+                this.log.debug("Overriding characteristic %s props for: %s ", CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].type, this.displayName);
+                service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].
+                         characteristic )
+                .setProps(
+                {
+                   // minValue: 18,
+                   // maxValue: 30,
+                   // minStep: 1
+                   props
+                });
+             }
+
              // Read and or write, we need to set the value once.
              // If the characteristic was optional and read only, this will add
              // it with the correct value.  You cannot add and set a read characteristic.
@@ -1207,7 +1222,7 @@ Cmd4Accessory.prototype = {
 
                firstParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.type === ucFirstParm);
 
-               firstParmValue = (this.testStoredValueForIndex(firstParmIndex) < 0) ?
+               firstParmValue = (this.testStoredValueForIndex(firstParmIndex) == undefined ) ?
                       firstParmValue : this.getStoredValueForIndex(firstParmIndex);
 
                this.log.debug("Logging power:%s", firstParmValue);
@@ -1230,11 +1245,11 @@ Cmd4Accessory.prototype = {
                thirdParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.type === ucThirdParm);
 
 
-               firstParmValue = (this.testStoredValueForIndex(firstParmIndex) < 0) ?
+               firstParmValue = (this.testStoredValueForIndex(firstParmIndex) == undefined ) ?
                   firstParmValue : this.getStoredValueForIndex(firstParmIndex);
-               secondParmValue = (this.testStoredValueForIndex(secondParmIndex) < 0) ?
+               secondParmValue = (this.testStoredValueForIndex(secondParmIndex) == undefined ) ?
                   secondParmValue : this.getStoredValueForIndex(secondParmIndex);
-               thirdParmValue = (this.testStoredValueForIndex(thirdParmIndex) < 0) ?
+               thirdParmValue = (this.testStoredValueForIndex(thirdParmIndex) == undefined ) ?
                   thirdParmValue : this.getStoredValueForIndex(thirdParmIndex);
 
 
@@ -1259,11 +1274,11 @@ Cmd4Accessory.prototype = {
                secondParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.type === ucSecondParm);
                thirdParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.type === ucThirdParm);
 
-               firstParmValue = (this.testStoredValueForIndex(firstParmIndex) < 0) ?
+               firstParmValue = (this.testStoredValueForIndex(firstParmIndex) == undefined ) ?
                   firstParmValue : this.getStoredValueForIndex(firstParmIndex);
-               secondParmValue = (this.testStoredValueForIndex(secondParmIndex) < 0) ?
+               secondParmValue = (this.testStoredValueForIndex(secondParmIndex) == undefined ) ?
                   secondParmValue : this.getStoredValueForIndex(secondParmIndex);
-               thirdParmValue = (this.testStoredValueForIndex(thirdParmIndex) < 0) ?
+               thirdParmValue = (this.testStoredValueForIndex(thirdParmIndex) == undefined ) ?
                   thirdParmValue : this.getStoredValueForIndex(thirdParmIndex);
 
                this.log.debug("Logging temp:%s pressure:%s humidity:%s", firstParmValue, secondParmValue, thirdParmValue);
@@ -1282,7 +1297,7 @@ Cmd4Accessory.prototype = {
 
                firstParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.type === ucFirstParm);
 
-               firstParmValue = (this.testStoredValueForIndex(firstParmIndex) < 0) ?
+               firstParmValue = (this.testStoredValueForIndex(firstParmIndex) == undefined ) ?
                       firstParmValue : this.getStoredValueForIndex(firstParmIndex);
 
                this.log.debug("Logging status:%s", firstParmValue);
@@ -1299,7 +1314,7 @@ Cmd4Accessory.prototype = {
 
                firstParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.type === ucFirstParm);
 
-               firstParmValue = (this.testStoredValueForIndex(firstParmIndex) < 0) ?
+               firstParmValue = (this.testStoredValueForIndex(firstParmIndex) == undefined ) ?
                       firstParmValue : this.getStoredValueForIndex(firstParmIndex);
 
                this.log.debug("Logging status:%s", firstParmValue);
@@ -1322,11 +1337,11 @@ Cmd4Accessory.prototype = {
                thirdParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.type === ucThirdParm);
 
 
-               firstParmValue = (this.testStoredValueForIndex(firstParmIndex) < 0) ?
+               firstParmValue = (this.testStoredValueForIndex(firstParmIndex) == undefined ) ?
                   firstParmValue : this.getStoredValueForIndex(firstParmIndex);
-               secondParmValue = (this.testStoredValueForIndex(secondParmIndex) < 0) ?
+               secondParmValue = (this.testStoredValueForIndex(secondParmIndex) == undefined ) ?
                   secondParmValue : this.getStoredValueForIndex(secondParmIndex);
-               thirdParmValue = (this.testStoredValueForIndex(thirdParmIndex) < 0) ?
+               thirdParmValue = (this.testStoredValueForIndex(thirdParmIndex) == undefined ) ?
                   thirdParmValue : this.getStoredValueForIndex(thirdParmIndex);
 
                this.log.debug("Logging currentTemp:%s setTemp:%s valvePosition:%s", firstParmValue, secondParmValue, thirdParmValue);
@@ -1348,9 +1363,9 @@ Cmd4Accessory.prototype = {
                firstParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.type === ucFirstParm);
                secondParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum(i => i.type === ucSecondParm);
 
-               firstParmValue = (this.testStoredValueForIndex(firstParmIndex) < 0) ?
+               firstParmValue = (this.testStoredValueForIndex(firstParmIndex) == undefined ) ?
                   firstParmValue : this.getStoredValueForIndex(firstParmIndex);
-               secondParmValue = (this.testStoredValueForIndex(secondParmIndex) < 0) ?
+               secondParmValue = (this.testStoredValueForIndex(secondParmIndex) == undefined ) ?
                   secondParmValue : this.getStoredValueForIndex(secondParmIndex);
 
                this.log.debug("Logging status:%s waterAmount:%s", firstParmValue, secondParmValue);
@@ -1363,6 +1378,53 @@ Cmd4Accessory.prototype = {
             }
          }
       }
+   },
+
+   // Check props to see if any characteristic properties
+   // are to be changed.  For example, currentTemperature
+   // minValue to be below zero.
+   configHasCharacteristicProps( accTypeEnumIndex )
+   {
+      if ( this.props == undefined )
+         return undefined;
+
+      if ( ! isJSON( this.props ) )
+         return undefined;
+
+      let characteristicProps = CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].props;
+      let type = CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].type;
+      let ucType = ucFirst(type);
+
+      let definitions;
+
+      if ( this.props[ type ] )
+         definitions = this.props[ type ];
+
+      if ( this.props[ ucType ] )
+         definitions = this.props[ ucType ];
+
+      if ( ! definitions )
+      {
+         return undefined;
+      }
+
+      let rc = definitions;
+      for ( let key in definitions )
+      {
+         if ( characteristicProps[ key ] == undefined )
+         {
+            this.log.error(FgRed + "Error" + FgRm + ": props for key: '%s' not in definition of %s", key, type );
+            process.exit(-1);
+
+         }
+         if ( typeof characteristicProps[ key ] !=  typeof definitions[ key ] )
+         {
+            this.log.error(FgRed + "Error" + FgRm + ": props for key: %s type %s not equal to definition of %s", key, typeof definitions[key], typeof characteristicProps[key] );
+            process.exit(-1);
+         }
+      }
+
+      return definitions;
    },
 
    setupAccessoryFakeGatoService: function ( fakegatoConfig )
@@ -1430,7 +1492,7 @@ Cmd4Accessory.prototype = {
 
                  // make sure that the characteristic to log to fakegato is valid
                  // and if it is not 0 for not used.
-                 if (this.testStoredValueForIndex(accTypeEnumIndex) < 0 && ucValue != '0')
+                 if (this.testStoredValueForIndex(accTypeEnumIndex) == undefined && ucValue != '0')
                     this.log.warn("Not a valid characteristic:%s for fakegato to log of:%s", value, key);
                  break;
               }
@@ -1808,6 +1870,11 @@ Cmd4Accessory.prototype = {
             case "UUID":
                // For those who define there own UUID
                this.UUID = value;
+
+               break;
+            case "Props":
+               // Allow characteristic property changes.
+               this.props = value;
 
                break;
             case 'Name':
