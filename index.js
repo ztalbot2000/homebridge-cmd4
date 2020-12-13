@@ -965,7 +965,10 @@ class Cmd4Accessory
             self.log( stderr );
             callback( error, 0 );
          } else {
-            let words = stdout.match(/\S+/gi);
+            //let words = stdout.match(/\S+/gi);
+            // Handle quotes words. Removes quotes
+            // Does not handle escaped quotes.
+            let words = stdout.match(/(\w|\s)*\w(?=")|\w+/g);
 
             // I'd rather trap here
             if ( words == undefined )

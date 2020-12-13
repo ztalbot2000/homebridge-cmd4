@@ -726,7 +726,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log("My_Tv"); else console.log(c);
+                if (c == "") console.log( "\"%s\"", device ); else console.log("\"%s\"", c);
 
                 // UUID: 000000E3-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.configuredName
@@ -2050,7 +2050,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if (c == "") console.log( "\"%s\"", device ); else console.log("\"%s\"", c);
 
                 // UUID: 00000023-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.name
