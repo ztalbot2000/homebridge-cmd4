@@ -1,5 +1,16 @@
 'use strict';
 
+// Description:
+//    Routines to convert Cmd4 values to constants and back.
+//
+// @param CMD4_ENUM_properties_obj - Just that
+// @param accTypeEnumIndex - The Accessory Type Enumerated index.
+// @param constantString - The string to change into a HAP value.
+// @param constantValue - The value to change into a HAP String.
+//
+// @returns Value of transposition or nothing.
+//
+
 
 var extractKeyValue = function ( obj, value )
 {

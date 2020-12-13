@@ -1,6 +1,6 @@
 {
-  "_from": "homebridge-cmd4@2.4.1",
-  "_id": "homebridge-cmd4@2.4.2",
+  "_from": "homebridge-cmd4@2.4.2",
+  "_id": "homebridge-cmd4@2.5.0",
   "_inBundle": false,
   "_integrity": "sha512-Q39XXNNaxpBENc4AXvqoWoW+5OVZE24OLYLm+4RqCxJmyQDAGLNsokL+dh2JU++YaZRdycASfnG/8sylpocGAg==",
   "_location": "/homebridge-cmd4",
@@ -8,20 +8,20 @@
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "homebridge-cmd4@2.4.2",
+    "raw": "homebridge-cmd4@2.5.0",
     "name": "homebridge-cmd4",
     "escapedName": "homebridge-cmd4",
-    "rawSpec": "2.4.2",
+    "rawSpec": "2.5.0",
     "saveSpec": null,
-    "fetchSpec": "2.4.2"
+    "fetchSpec": "2.5.0"
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/homebridge-cmd4/-/homebridge-cmd4-2.4.2.tgz",
+  "_resolved": "https://registry.npmjs.org/homebridge-cmd4/-/homebridge-cmd4-2.5.0.tgz",
   "_shasum": "8329f6094809108460224f10a094f94da979d32e",
-  "_spec": "homebridge-cmd4@2.4.2",
+  "_spec": "homebridge-cmd4@2.5.0",
   "_where": "/private/var/root",
   "author": {
     "name": "John Talbot"
@@ -57,6 +57,7 @@
     "node": ">=4.4.0"
   },
   "homepage": "https://github.com/ztalbot2000/homebridge-cmd4#readme",
+  "changelog": "https://github.com/ztalbot2000/homebridge-cmd4#changelog",
   "keywords": [
     "homebridge-plugin",
     "homebridge",
@@ -88,5 +89,5 @@
     "test": "node_modules/.bin/mocha --file test/mocha-setup ",
     "postinstall": "node postinstall.js"
   },
-  "version": "2.4.2"
+  "version": "2.5.0"
 }

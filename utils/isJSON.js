@@ -1,13 +1,13 @@
 'use strict';
 
-/**
- * @param Object
- *    Check for a true JSON object, not an array, but {}
- * @returns boolean
- */
-function isJSON(m)
-{
+// Description:
+//    Determine if parameter is a true JSON object, not an array, but {}
+//
+// @param m - JSON Object to check.
+// @returns: boolean
 
+function isJSON( m )
+{
    if ( ! m )
    {
       console.warn( "No parameter passed to isJSON" );
@@ -16,29 +16,29 @@ function isJSON(m)
 
    if ( ! m.constructor )
    {
-      //console.warn( "No constructor to isJSON for parameter:" + m );
+      //console.warn( "No constructor to isJSON for parameter: %s", m );
       return false;
    }
 
-   if (m.constructor === Array)
+   if ( m.constructor === Array )
    {
-      //console.warn("It is an array");
+      //console.warn( "It is an array" );
       return false;
    }
 
-   if (typeof m == 'object')
+   if ( typeof m == "object" )
    {
-      try{ m = JSON.stringify(m); }
-      catch(err) { return false; } }
+      try{ m = JSON.stringify( m ); }
+      catch( err ) { return false; } }
 
-   if (typeof m == 'string')
+   if ( typeof m == "string")
    {
-      try{ m = JSON.parse(m); }
-      catch (err) { return false; } }
+      try{ m = JSON.parse( m ); }
+      catch ( err ) { return false; } }
 
-   if (typeof m != 'object') { return false; }
+   if ( typeof m != "object") { return false; }
+
    return true;
-
 }
 
 

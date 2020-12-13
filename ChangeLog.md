@@ -2,6 +2,7 @@
 
 <BR><BR>
 ## ChangeLog
+* [**Whats new in 2.5**](#whats-new-in-25)
 * [**Whats new in 2.4.2**](#whats-new-in-242)
 * [**Whats new in 2.4.1**](#whats-new-in-241)
 * [**Whats new in 2.4.0**](#whats-new-in-240)
@@ -15,6 +16,9 @@
 * [**Whats new in 2.1**](#whats-new-in-21)
 * [**Whats new in 2.0**](#whats-new-in-20)
 
+<BR><BR>
+## Whats new in 2.5.0
+&nbsp;&nbsp;&nbsp; Big Changes to support IOS 14.re values
 <BR><BR>
 ## Whats new in 2.4.2
 &nbsp;&nbsp;&nbsp; Bug fix for negative temperature values

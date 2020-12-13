@@ -8,11 +8,6 @@ var HomebridgeAPI = require( "../node_modules/homebridge/lib/api" ).HomebridgeAP
 var _api = new HomebridgeAPI(); // object we feed to Plugins
 var pluginModule = require( "../index" );
 var cmd4 = pluginModule.default(_api);
-var Accessory = cmd4.Accessory;
-var Characteristic = cmd4.Characteristic;
-var Categories = cmd4.Categories;
-var Service = cmd4.Service;
-var UUIDGen = cmd4.UUIDGen;
 
 function getKeyByValue(object, value ) {
   return Object.keys(object ).find(key => object[key] === value );
@@ -55,6 +50,14 @@ describe('Testing homebridge API', ( ) =>
    });
 });
 
+describe('Testing homebridge Categories', ( ) =>
+{
+   it('Categories should not be null', ( ) =>
+   {
+      assert.isNotNull(_api.hap.Categories, 'Categories is null' );
+   });
+});
+
 // ***************** TEST Plugin Initialized Variables ***************
 
 
@@ -62,15 +65,15 @@ describe('Testing index.js plugin initialized variables.', ( ) =>
 {
    it('Plugin Characteristic should be a function', ( ) =>
    {
-      assert.isFunction(Characteristic, "Characteristic is not an function" );
+      assert.isFunction(_api.hap.Characteristic, "Characteristic is not an function" );
    });
    it('Plugin Accessory should be a function', ( ) =>
    {
-      assert.isFunction(Accessory, "Accessory is not an function" );
+      assert.isFunction(_api.hap.Accessory, "Accessory is not an function" );
    });
    it('Plugin Service should be a function', ( ) =>
    {
-      assert.isFunction(Service, "Service is not an function" );
+      assert.isFunction(_api.hap.Service, "_api.hap.Service is not an function" );
    });
    it('Plugin CMD4_DEVICE_TYPE_ENUM should be a object', ( ) =>
    {
@@ -87,6 +90,44 @@ describe('Testing index.js plugin initialized variables.', ( ) =>
    });
 
 });
+
+// *** TEST CMD4_DEVICE_TYPE_ENUM.properties[].defaultCategory *******
+
+describe('Testing CMD4_DEVICE_TYPE_ENUM.properties[].defaultCategory', ( ) =>
+{
+   for (let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++ )
+   {
+      describe('Testing CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].defaultCategory ', ( ) =>
+      {
+
+         // Make sure our defaultCategory is defined
+         let defaultCategory = CMD4_DEVICE_TYPE_ENUM.properties[ index ].defaultCategory;
+         assert.isNumber(defaultCategory, "CMD4_DEVICE_TYPE_ENUM.properties[" + index + "].defaultCategory is not a number. category:" + defaultCategory );
+         let result = _api.hap.Categories[ defaultCategory ];
+
+         // Make sure that the default category we defined is valid.
+         assert.isString(result, "CMD4_DEVICE_TYPE_ENUM.properties[" + index + "].defaultCategory is not a string. result:" + result );
+
+      });
+   }
+});
+
+
+
+// *** TEST CMD4_DEVICE_TYPE_ENUM.properties[].publishExternally *******
+describe('Testing CMD4_DEVICE_TYPE_ENUM.properties[].publishExternally', ( ) =>
+{
+   for (let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++ )
+   {
+      describe('Testing CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].publishExternally ', ( ) =>
+      {
+
+         assert.isBoolean(CMD4_DEVICE_TYPE_ENUM.properties[ index ].publishExternally, "CMD4_ACC_TYPE_ENUM.properties[" + index + "].publishExternally is not a true|false" );
+
+      });
+   }
+});
+
 
 // ******** TEST CMD4_DEVICE_TYPE_ENUM.properties *************
 describe('Testing CMD4_DEVICE_TYPE_ENUM.properties', ( ) =>
@@ -111,6 +152,16 @@ describe('Testing CMD4_DEVICE_TYPE_ENUM.properties', ( ) =>
       it('CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].service should not be null ', ( ) =>
       {
           assert.isNotNull(CMD4_DEVICE_TYPE_ENUM.properties[index].service, 'service is null at index:' + index );
+      });
+
+      it('CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].defaultCategory should not be null ', ( ) =>
+      {
+          assert.isNotNull(CMD4_DEVICE_TYPE_ENUM.properties[index].defaultCategory, 'defaultCategory is null at index:' + index );
+      });
+
+      it('CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].publishExternally should not be null ', ( ) =>
+      {
+          assert.isNotNull(CMD4_DEVICE_TYPE_ENUM.properties[index].publishExternally, 'publishExternally is null at index:' + index );
       });
 
       it('CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].devicesStateChangeDefaultTime should not be null ', ( ) =>
@@ -158,7 +209,8 @@ describe('Testing CMD4_DEVICE_TYPE_ENUM.properties[].requiredCharacteristics', (
       });
    }
 });
-// *** TEST CMD4_DEVICE_TYPE_ENUM.properties[].optonalCharacteristics *******
+
+// *** TEST CMD4_DEVICE_TYPE_ENUM.properties[].optionalCharacteristics *******
 describe('Testing CMD4_DEVICE_TYPE_ENUM.properties[].optionalCharacteristics', ( ) =>
 {
    for (let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++ )
@@ -189,13 +241,13 @@ describe('Testing CMD4_ACC_TYPE_ENUM.properties[].props', ( ) =>
        // Get the properties for this characteristic type
        let accProperties = CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex];
 
-      console.log(" Test #" + accTypeEnumIndex + " type: " + accProperties.type );
+      //console.log(" Test #" + accTypeEnumIndex + " type: " + accProperties.type );
 
        // Characteristics dont seem to get removed and homebridge put a limit
        // of 100 Characteristics per service, so just create a new service
        // per characteristic.  This is unit testing anyway, so not an issue.
        let serviceName = 'Service' + accTypeEnumIndex;
-       let service = new Service(serviceName, UUIDGen.generate(serviceName ), serviceName );
+       let service = new _api.hap.Service(serviceName, _api.hap.uuid.generate(serviceName ), serviceName );
 
        it('Creating service to test Characteristic', ( ) =>
        {
@@ -205,14 +257,25 @@ describe('Testing CMD4_ACC_TYPE_ENUM.properties[].props', ( ) =>
        describe('Testing CMD4_ACC_TYPE_ENUM.properties[' + accTypeEnumIndex + ']:' + accProperties.type, ( ) =>
        {
           var characteristic = CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].characteristic;
+          var verifyCharacteristic = CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].verifyCharacteristic;
 
           it('CMD4_ACC_TYPE_ENUM.properties[' + accTypeEnumIndex + '].characteristic', ( ) =>
           {
              assert.isNotNull(characteristic, 'characteristic is null' );
           });
 
+          it('CMD4_ACC_TYPE_ENUM.properties[' + accTypeEnumIndex + '].characteristic', ( ) =>
+          {
+             assert.isDefined(characteristic, 'characteristic is not defined' );
+          });
+
+          it('CMD4_ACC_TYPE_ENUM.properties[' + accTypeEnumIndex + '].verifyCharacteristic', ( ) =>
+          {
+             assert.isDefined(verifyCharacteristic, 'verifyCharacteristic is not defined' );
+          });
+
           let charName = 'CharName' + accTypeEnumIndex;
-          characteristic.UUID = UUIDGen.generate(charName );
+          characteristic.UUID = _api.hap.uuid.generate(charName );
 
           service.addCharacteristic(characteristic );
 
@@ -308,7 +371,7 @@ describe('Testing CMD4_ACC_TYPE_ENUM.properties[].props', ( ) =>
           {
              // We defined what valid values are for BOOL
              // so TRUE/FALSE can be a constant.
-             if (format != Characteristic.Formats.BOOL )
+             if (format != _api.hap.Characteristic.Formats.BOOL )
              {
                 // Hap has values defined, but not in valid values. We added them in ours
                 if ( accTypeEnumIndex != CMD4_ACC_TYPE_ENUM.CameraOperatingModeIndicator &&
