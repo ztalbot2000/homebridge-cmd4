@@ -6,8 +6,6 @@ const commandExistsSync = require( "command-exists" ).sync;
 
 const { getAccessoryName, getAccessoryDisplayName } = require( "./utils/getAccessoryNameFunctions" );
 let getAccessoryUUID = require( "./utils/getAccessoryUUID" );
-let isValidHomebridgeCategory = require( "./utils/isValidHomebridgeCategory" );
-
 
 let isNumeric = require( "./utils/isNumeric" );
 let ucFirst = require( "./utils/ucFirst" );
@@ -151,6 +149,15 @@ class Cmd4Platform
             this.processPlatformAccessoriesConfig( api, {name: "Platform"}, this.config.platformAccessories );
          } else {
             this.log( FgMag + "Processing Platform Accessories. " + FgRm + "None found - " + FgGrn + "OK" + FgRm );
+         }
+
+         // Configure Accessories in the config.json file
+         if ( this.config.accessories )
+         {
+            this.log( FgMag + "Processing Standalone Accessories." + FgRm );
+            this.processAccessoriesConfig( api, {name: "Standalone"}, this.config.accessories );
+         } else {
+            this.log( FgMag + "Processing Standalone Accessories. " + FgRm + "None found - " + FgGrn + "OK" + FgRm );
          }
 
          // Hmmm should be done afterwards or after each Cmd4Accessory ...
@@ -623,10 +630,6 @@ class Cmd4Accessory
 
       // Get the properties for this accessories device type
       let properties = CMD4_DEVICE_TYPE_ENUM.properties[ this.typeIndex ];
-
-      // Set up the category for this device type, if not already defined.
-      if ( ! this.category )
-         this.category = properties.defaultCategory;
 
       // Check if required characteristics should be added, or TLV8 removed.
       for ( let accTypeEnumIndex = 0 ; accTypeEnumIndex < CMD4_ACC_TYPE_ENUM.EOL; accTypeEnumIndex++ )
@@ -1872,13 +1875,13 @@ class Cmd4Accessory
                break;
            case "Category":
                // For those who define there own Category
-               if ( ! isValidHomebridgeCategory( API.hap.Categories, value ) )
-               {
-                  this.log.error( FgRed + "Error" + FgRm + ": Category specified: '%s' is not a valid homebridge category.", value );;
-                  process.exit( -1 );
-               }
+               this.category = API.hap.Categories[ value ];
 
-               this.category = value;
+               if ( ! this.category )
+               {
+                  this.log.error( FgRed + "Error" + FgRm + ": Category specified: '%s' is not a valid homebridge category.", value );
+                  process.exit( 666 );
+               }
 
                break;
             case "PublishExternally":
