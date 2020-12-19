@@ -18,19 +18,11 @@ var { transposeConstantToValidValue,
 
 let isJSON = require( "./utils/isJSON" );
 
-const PLUGIN_NAME = "homebridge-cmd4";
+const PLUGIN_NAME   = "homebridge-cmd4";
 const PLATFORM_NAME = "Cmd4";
 
 // Pretty Colors
-const FgRm  = "\x1b[m"
-const FgBlk = "\x1b[30m"
-const FgRed = "\x1b[31m"
-const FgGrn = "\x1b[32m"
-const FgYlw = "\x1b[33m"
-const FgBlu = "\x1b[34m"
-const FgMag = "\x1b[35m"
-const FgCyn = "\x1b[36m"
-const FgWht = "\x1b[37m"
+var Fg = require("./utils/colors");
 
 
 const SLOW_STATE_CHANGE_RESPONSE_TIME   = 10000;  // 10 seconds
@@ -59,7 +51,15 @@ var DEVICE_DATA = require( "./lib/CMD4_DEVICE_TYPE_ENUM" );
 // This would be the uninitialized value ( No Characteristics )
 var CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.CMD4_DEVICE_TYPE_ENUM;
 
+// Triggers which Array CMD4Accessory will be placed
+// Either cmd4Accessories or cmd4StandaloneAccessories
+const STANDALONE = "Standalone";
+const PLATFORM   = "Platform";
+const COLLECTION = "Collection";
+
+
 let cmd4Accessories = [ ];
+let cmd4StandaloneAccessories = [ ];
 let cmd4Platforms  = [ ];
 
 // Did not change to Class because export of class
@@ -73,6 +73,7 @@ module.exports =
       CMD4_ACC_TYPE_ENUM = ACC_DATA.init( api.hap.Characteristic );
       CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, api.hap.Service, api.hap.Characteristic, api.hap.Categories );
 
+      api.registerAccessory( PLATFORM_NAME, Cmd4Accessory );
       api.registerPlatform( PLATFORM_NAME, Cmd4Platform );
 
       FakeGatoHistoryService = require( "fakegato-history" )( api );
@@ -99,22 +100,23 @@ class Cmd4Platform
       this.log = log;
       this.config = config || {"platform": "cmd4"};
       this.api = api;
+      this.cmd4Accessories = [];
 
+      this.log( Fg.Blu + "Class Cmd4Platform" );
+
+      this.services = [];
 
       setTimeout( checkForUpdates, 1800 );
 
       this.reachable = true;
 
-      // Instead of polling per accessory, allow the config file to be polled per characteristic.
-      this.listOfPollingCharacteristics = { };
-
       // Define platform config for fakegato-history
       if ( this.config.storage != undefined )
       {
-         if ( this.asterConfig.storage == "fs" || this.asterConfig.storage == "googleDrive" )
+         if ( this.config.storage == "fs" || this.config.storage == "googleDrive" )
             this.storage = this.config.storage;
          else
-            this.log( FgYlw + "WARNING" + FgRm + ": Cmd4: Unknown platform.config.storage:%s. Expected 'fs' or 'googleDrive' ", this.config.storage );
+            this.log( Fg.Ylw + "WARNING" + Fg.Rm + ": Cmd4: Unknown platform.config.storage:%s. Expected 'fs' or 'googleDrive' ", this.config.storage );
       }
 
       // Define platform config storagePath for fakegato-history
@@ -129,40 +131,35 @@ class Cmd4Platform
       // If outputConstants is defined it is set to true/false, otherwise false.
       this.outputConstants = this.config.outputConstants === true;
 
+      // didFinishLaunching is only called after the registerPlatform completes
       api.on( "didFinishLaunching", ( ) =>
       {
-         this.log.debug( "didFinishLaunching" );
+         this.log.debug( "Cmd4Platform  didFinishLaunching" );
 
-         // Configure Accessories in the config.json file
          if ( this.config.accessories )
          {
-            this.log( FgMag + "Processing Standalone Accessories." + FgRm );
-            this.processAccessoriesConfig( api, {name: "Standalone"}, this.config.accessories );
-         } else {
-            this.log( FgMag + "Processing Standalone Accessories. " + FgRm + "None found - " + FgGrn + "OK" + FgRm );
+            this.log( Fg.Mag + "Processing Platform Accessories." + Fg.Rm );
+            this.processPlatformAccessoriesConfig( this.config.accessories, api );
+            //this.processPlatformAccessoriesConfig( this.config.accessories,
+            //                                       api,
+            //                                       { CMD4: PLATFORM,
+            //                                         COLLECTION: cmd4Accessories,
+            //                                         LEVEL: 0
+            //                                       }
+            //                                     );
          }
 
-         // Configure Platform Accessories in the config.json file
-         if ( this.config.platformAccessories )
-         {
-            this.log( FgMag + "Processing Platform Accessories." + FgRm );
-            this.processPlatformAccessoriesConfig( api, {name: "Platform"}, this.config.platformAccessories );
-         } else {
-            this.log( FgMag + "Processing Platform Accessories. " + FgRm + "None found - " + FgGrn + "OK" + FgRm );
-         }
-
-         // Configure Accessories in the config.json file
-         if ( this.config.accessories )
-         {
-            this.log( FgMag + "Processing Standalone Accessories." + FgRm );
-            this.processAccessoriesConfig( api, {name: "Standalone"}, this.config.accessories );
-         } else {
-            this.log( FgMag + "Processing Standalone Accessories. " + FgRm + "None found - " + FgGrn + "OK" + FgRm );
-         }
-
-         // Hmmm should be done afterwards or after each Cmd4Accessory ...
-         this.setupPolling();
       });
+   }
+   getServices( )
+   {
+      if ( this.services )
+      {
+         this.log( Fg.Red + "ZZZZ PLATFORM SERVICES Returning:%s number of services for:%s" + Fg.Rm, this.services.length, this.displayName );
+      } else {
+         this.log( Fg.Red + "ZZZZ PLATFORM SERVICES Returning this.services:%s for:%s" + Fg.Rm, this.services, this.displayName );
+      }
+      return this.services;
    }
 
    // As Per HomeBridge:
@@ -177,56 +174,44 @@ class Cmd4Platform
       API.unregisterPlatformAccessories(  PLUGIN_NAME, PLATFORM_NAME, [ platformAccessory ] );
    }
 
-   // These would be the config of standalone accessories
-   processAccessoriesConfig( api, parentInfo, accessoriesConfig )
-   {
-      if ( ! accessoriesConfig )
-         return;
-
-      // Each array element is handled individually.
-      if ( Array.isArray ( accessoriesConfig ) )
-      {
-         accessoriesConfig.forEach( ( accessoryConfig ) => {
-            this.processAccessoriesConfig( api, parentInfo, accessoryConfig )
-         });
-         return;
-      }
-
-      this.log( "Fetching config.json accessories." );
-
-      // We are a single accessory Config past here.
-      let config = accessoriesConfig;
-
-      // This will create an accessory based on the Cmd4Accessory
-      // definition below. This is not obvious for a newbie.
-      let that = this;
-      let accessory = new Cmd4Accessory( that.log, parentInfo, config );
-      cmd4Accessories.push( accessory );
-
-      // Create all the services for the accessory, including fakegato and polling
-      this.createServicesForThisAccessoryAndItsChildren( accessories, undefined )
-
-   } // processAccessoriesConfig( api, parentInfo, accessoriesConfig )
-
    // These would be platform accessories with/without linked accessories
-   processPlatformAccessoriesConfig( api, parentInfo, platformAccessoriesConfig )
+   // parentInfo is: { CMD4: PLATFORM }
+   //processPlatformAccessoriesConfig( platformAccessoriesConfig, api, parentInfo )
+   processPlatformAccessoriesConfig( platformAccessoriesConfig, api )
    {
       if ( ! platformAccessoriesConfig )
          return;
 
       let platform;
 
-      this.log( "Fetching config.json Platform accessories." );
+      // Pass along the trigger to which collection array these accessories will be placed.
+      //this.CMD4 = ( parentInfo && parentInfo.CMD4 ) ? parentInfo.CMD4 : PLATFORM;
+      this.CMD4 = PLATFORM;
+      // this.LEVEL = ( parentInfo && parentInfo.LEVEL !== undefined) ? parentInfo.LEVEL + 1 : 0;
+      this.LEVEL = 0;
+      //this.COLLECTION = ( parentInfo && parentInfo.COLLECTION ) ? parentInfo.COLLECTION : [];
+      this.COLLECTION = this.cmd4Accessories;
+
+      this.log("Cmd4Platform LEVEL %s", this.LEVEL );
+      this.log.debug( "Fetching config.json Platform accessories." );
       for ( let index = 0; index < platformAccessoriesConfig.length; index++ )
       {
          let config = platformAccessoriesConfig[ index ];
 
          let that = this;
-         let accessory = new Cmd4Accessory( that.log, parentInfo, config );
-         cmd4Accessories.push( accessory );
-         this.log( FgMag + "Created ( Platform ) accessory: " + FgRm + accessory.displayName );
+         let accessory = new Cmd4Accessory( that.log, config, this.api, this );
+         //let accessory = new Cmd4Accessory( that.log, config, this.api, { CMD4: PLATFORM,
+         //                                                                 COLLECTION: cmd4Accessories,
+         //                                                                 LEVEL: 0
+         //                                                             } );
 
-         this.log( FgMag + "Configuring platformAccessory: " + FgRm + config.displayName );
+         // Put the accessory into its correct collection array.
+         //parentInfo.COLLECTION.push( accessory );
+         this.cmd4Accessories.push( accessory );
+
+         this.log.debug( Fg.Mag + "Created ( Platform ) accessory: " + Fg.Rm + accessory.displayName );
+
+         this.log( Fg.Mag + "Configuring platformAccessory: " + Fg.Rm + config.displayName );
 
          // Get the properties for this accessories device type
          let devProperties = CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ];
@@ -237,12 +222,12 @@ class Cmd4Platform
          // Step 1) this.tvAccessory = new api.platformAccessory( tvName, uuid );
          if ( accessory.category == undefined )
          {
-            this.log( FgYlw + "CMD4 Warning" + FgRm + " It is highly suggested that you set the category for the platform accessory: %s to %s", accessory.displayName, category );
+            this.log( Fg.Ylw + "CMD4 Warning" + Fg.Rm + " It is highly suggested that you set the category for the platform accessory: %s to %s", accessory.displayName, category );
 
-            this.log.debug("Step 1. platformAccesory = new platformAccessory(%s, uuid)",  config.displayName  );
+            this.log.debug("Step 1. platformAccessory = new platformAccessory(%s, uuid)",  config.displayName  );
             platform = new api.platformAccessory( accessory.displayName, accessory.UUID );
          } else {
-            this.log.debug("Step 1. platformAccesory = new platformAccessory(%s, uuid, %s)",  accessory.displayName, accessory.category  );
+            this.log.debug("Step 1. platformAccessory = new platformAccessory(%s, uuid, %s)",  accessory.displayName, accessory.category  );
             platform = new api.platformAccessory( accessory.displayName, accessory.UUID, accessory.category );
             platform.category = accessory.category;
          }
@@ -265,10 +250,12 @@ class Cmd4Platform
 
 
          // Create all the services for the accessory, including fakegato and polling
-         this.createServicesForThisAccessoryAndItsChildren( undefined, accessory )
+         this.createServicesForPlatformAccessoryAndItsChildren( accessory )
+
 
          // Children ???
          accessory.services.push( accessory.service );
+         this.log( Fg.Red + "ZZZZ %s.services.length:%s" + Fg.Rm, accessory.displayname, accessory.services.length);
 
          // Step 6) this.api.publishExternalAccessories( PLUGIN_NAME, [ this.tvAccessory ] );
          if ( accessory.publishExternally )
@@ -284,338 +271,224 @@ class Cmd4Platform
 
             api.registerPlatformAccessories( PLUGIN_NAME, PLATFORM_NAME, [ platform ] );
          }
+
+         accessory.log.debug( "Creating polling for Platform accessory %s", accessory.displayName );
+         accessory.setupPollingOfAccessoryAndItsChildren( accessory );
       }
    }
 
-   createServicesForThisAccessoryAndItsChildren( accessories, cmd4PlatformAccessory )
+   createServicesForPlatformAccessoryAndItsChildren( cmd4PlatformAccessory )
    {
-      if ( cmd4PlatformAccessory )
+      this.log( Fg.Red + " createServicesForPlatformAccessoryAndItsChildren, cmd4PlatformAccessory ");
+      //
+      // Platform Accessory
+      //
+      // The cmd4PlatformAccessory has it's service created already
+
+      // Create the service for all the accessories. i.e. Speaker Service
+      // Step 3)
+      //    const speakerService = this.tvAccessory.addService(this.Service.TelevisionSpeaker);
+      cmd4PlatformAccessory.accessories && cmd4PlatformAccessory.accessories.forEach( ( accessory ) =>
       {
-         //
-         // Platform Accessory
-         //
-         // The cmd4PlatformAccessory has it's service created already
+         // Get the properties for this accessory's device type
+         let properties = CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ];
 
-         // Create the service for all the accessories. i.e. Speaker Service
-         // Step 3)
-         //    const speakerService = this.tvAccessory.addService(this.Service.TelevisionSpeaker);
-         cmd4PlatformAccessory.accessories.forEach( ( accessory ) =>
-         {
+         this.log.debug("Platform Step 3. %s.service = PlatformAccessory:%s.addService( Service:%s);",
+                  accessory.displayName, cmd4PlatformAccessory.displayName,
+                  properties.deviceName );
+         accessory.service = cmd4PlatformAccessory.platform.addService( properties.service );
 
-            // Get the properties for this accessory's device type
-            let properties = CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ];
+         accessory.setupAllCharacteristicsForThisServices( accessory.service );
 
-            this.log.debug("Platform Step 3. %s.service = PlatformAccessory:%s.addService( Service:%s);",
-                     accessory.displayName, cmd4PlatformAccessory.displayName,
-                     properties.deviceName );
-            accessory.service = cmd4PlatformAccessory.platform.addService( properties.service );
+          // Setup the fakegato service if defined in the config.json file
+         accessory.setupAccessoryFakeGatoService( accessory.fakegatoConfig );
 
-            accessory.setupAllCharacteristicsForThisServices( accessory.service );
+      });
 
-             // Setup the fakegato service if defined in the config.json file
-            accessory.setupAccessoryFakeGatoService( accessory.fakegatoConfig );
-
-         });
-
-         // Create the service for all the linked accessories. i.e. HDMI Service
-         cmd4PlatformAccessory.linkedAccessories.forEach( ( linkedAccessory ) =>
-         {
-            // Get the properties for this linked Accessory device type
-            let properties = CMD4_DEVICE_TYPE_ENUM.properties[ linkedAccessory.typeIndex ];
-
-            // Child accessories can have linked accessories. i.e. HDMI accessory
-            // Step 4)
-            //    const hdmi1InputService = this.tvAccessory.addService(this.Service.InputSource, 'hdmi1', 'HDMI 1');
-            this.log.debug( "Platform Step 4. %s.service = %s.addService:(%s.service, %s, %s);", linkedAccessory.displayName, cmd4PlatformAccessory.displayName, properties.deviceName, linkedAccessory.displayName, linkedAccessory.name );
-            // createServicesForThisAccessoryAndItsChildren
-            linkedAccessory.service = cmd4PlatformAccessory.platform.addService( properties.service, linkedAccessory.displayName, linkedAccessory.name );
-            linkedAccessory.setupAllCharacteristicsForThisServices( linkedAccessory.service );
-
-            this.log.debug( "Platform Step 5. %s.service.addLinkedService( %s.service );", cmd4PlatformAccessory.displayName, linkedAccessory.displayName );
-            cmd4PlatformAccessory.service.addLinkedService( linkedAccessory.service );
-
-             // Setup the fakegato service if defined in the config.json file
-            linkedAccessory.setupAccessoryFakeGatoService( linkedAccessory.fakegatoConfig );
-
-         });
-
-
-         // Setup all the characteristics for the platform accessory itself
-         cmd4PlatformAccessory.setupAllCharacteristicsForThisServices( cmd4PlatformAccessory.service );
-
-         // Setup the fakegato service for the platform accessory istelf.
-         cmd4PlatformAccessory.setupAccessoryFakeGatoService( cmd4PlatformAccessory.fakegatoConfig );
-
-      } else
+      // Create the service for all the linked accessories. i.e. HDMI Service
+      cmd4PlatformAccessory.linkedAccessories.forEach( ( linkedAccessory ) =>
       {
-         //
-         // Standalone Accessory
-         //
-         accessories.forEach( ( accessory ) =>
-         {
-            // Create the accessory's service
-            accessory.service = new properties.service( accessory.displayName, accessory.name )
+         // Get the properties for this linked Accessory device type
+         let properties = CMD4_DEVICE_TYPE_ENUM.properties[ linkedAccessory.typeIndex ];
 
-            // Create accessory's Information Service
-            this.log.debug( "Creating information service for standalone accessory:%s", accessory.displayName );
-            accessory.informationService = new API.hap.Service.AccessoryInformation( );
+         // Child accessories can have linked accessories. i.e. HDMI accessory
+         // Step 4)
+         //    const hdmi1InputService = this.tvAccessory.addService(this.Service.InputSource, 'hdmi1', 'HDMI 1');
+         this.log.debug( "Platform Step 4. %s.service = %s.addService:(%s.service, %s, %s);", linkedAccessory.displayName, cmd4PlatformAccessory.displayName, properties.deviceName, linkedAccessory.displayName, linkedAccessory.name );
+         linkedAccessory.service = cmd4PlatformAccessory.platform.addService( properties.service, linkedAccessory.displayName, linkedAccessory.name );
+         linkedAccessory.addAllServiceCharacteristicsForAccessory( linkedAccessory );
 
-            if ( accessory.model )
-               accessory.informationService
-                    .setCharacteristic( API.hap.Characteristic.Model, accessory.model );
+         this.log.debug( "Platform Step 5. %s.service.addLinkedService( %s.service );", cmd4PlatformAccessory.displayName, linkedAccessory.displayName );
+         cmd4PlatformAccessory.service.addLinkedService( linkedAccessory.service );
 
-            if ( accessory.manufacturer )
-               accessory.informationService
-                    .setCharacteristic( API.hap.Characteristic.Manufacturer, accessory.manufacturer );
+          // Setup the fakegato service if defined in the config.json file
+         linkedAccessory.setupAccessoryFakeGatoService( linkedAccessory.fakegatoConfig );
 
-            if ( accessory.serialNumber )
-               accessory.informationService
-                    .setCharacteristic( API.hap.Characteristic.SerialNumber, accessory.serialNumber );
+      });
 
 
-            // Create the Standalone accessory's services for all its linked children
-            accessory.linkedAccessories.forEach( ( linkedAccessory ) =>
-            {
-               // Standalone
-               linkedAccessory.service = new properties.service( linedAccessory.displayName, linedAccessory.name )
+      // Setup all the characteristics for the platform accessory itself
+      cmd4PlatformAccessory.addAllServiceCharacteristicsForAccessory( cmd4PlatformAccessory );
 
-               // Create Information Service
-               this.log.debug( "Creating information service for linkedAccessory:%s", linkedAccessory.displayName );
-               linkedAccessory.informationService = new API.hap.Service.AccessoryInformation( );
+      // Setup the fakegato service for the platform accessory istelf.
+      cmd4PlatformAccessory.setupAccessoryFakeGatoService( cmd4PlatformAccessory.fakegatoConfig );
 
-               if ( linkedAccesory.model )
-                  linkedAccesory.informationService
-                       .setCharacteristic( API.hap.Characteristic.Model, linkedAccesory.model );
+   } // createServicesForPlatformAccessoryAndItsChildren( cmd4PlatformAccessory )
 
-               if ( linkedAccesory.manufacturer )
-                  linkedAccesory.informationService
-                       .setCharacteristic( API.hap.Characteristic.Manufacturer, linkedAccesory.manufacturer );
 
-               if ( linkedAccesory.serialNumber )
-                  linkedAccesory.informationService
-                       .setCharacteristic( API.hap.Characteristic.SerialNumber, linkedAccesory.serialNumber );
-
-               this.log.debug( "Standalone Step 5. %s.service.addLinkedService( %s.service );", accessory.displayName, linkedAccessory.displayName );
-               // Standalone Step 5)
-               // A const hdmi1InputService = this.tvAccessory.addService(this.Service.InputSource, 'hdmi1', 'HDMI 1');
-               // Standalone Step 5 tvService.addLinkedService(hdmi1InputService); // link to tv service
-               accessory.service.addLinkedService( linkedAccessory.service );
-
-               linkedAccessory.setupAllCharacteristicsForThisServices( linkedAccessory.service );
-
-               // Setup the fakegato service if defined in the config.json file
-               linkedAccessory.setupAccessoryFakeGatoService( linkedAccessory.fakegatoConfig );
-
-            });
-
-            accessory.setupAllCharacteristicsForThisServices( accessory.service );
-
-            // Setup the fakegato service if defined in the config.json file
-            accessory.setupAccessoryFakeGatoService( accessory.fakegatoConfig );
-
-            // Start polling for the accessory ...
-            // accessory.setupPolling();
-         });
-
-      }
-
-   } // createServicesForThisAccessoryAndItsChildren( accessories, cmd4PlatformAccessory )
-
-   setupPolling()
+   createServicesForThisStandaloneAccessoryAndItsChildren( accessory )
    {
-      this.log( FgMag + "Setting up polling for possibly %d accessories" + FgRm, cmd4Accessories.length );
-      // Set up polling of each accessory.
-      for( let i=0; i < cmd4Accessories.length; i++ )
-      {
-         let accessory = cmd4Accessories[i];
+      let properties = CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ];
 
-         this.log.debug("Setting up polling for:'%s'", accessory.displayName);
-         if ( accessory.polling && accessory.state_cmd )
-         {
-            switch ( typeof accessory.polling )
-            {
-               case "object":
-                  this.log.debug( "Characteristic polling for:%s", accessory.displayName );
-                  this.setupCharacteristicPolling( accessory );
-                  break;
-               case "string":
-               case "boolean":
-                  this.log.debug( "State polling for:%s", accessory.displayName );
-                  this.setupStatePollingPerAccessory( accessory );
-                  break;
-               default:
-                  this.log.error( FgRed + "Error" + FgRm + ": Something wrong with value of polling:%s\n       Check your config.json for errors.", accessory.polling );
-                  process.exit( 1 );
-             }
-          }
-      }
+      //
+      // Standalone Accessory
+      //
+      // Create the accessory's service
+      accessory.service = new properties.service( accessory.displayName, accessory.name )
+
+      // Create accessory's Information Service
+      this.log.debug( "Creating information service for standalone accessory:%s", accessory.displayName );
+      accessory.informationService = new API.hap.Service.AccessoryInformation( );
+
+      if ( accessory.model )
+         accessory.informationService
+              .setCharacteristic( API.hap.Characteristic.Model, accessory.model );
+
+      if ( accessory.manufacturer )
+         accessory.informationService
+              .setCharacteristic( API.hap.Characteristic.Manufacturer, accessory.manufacturer );
+
+      if ( accessory.serialNumber )
+         accessory.informationService
+              .setCharacteristic( API.hap.Characteristic.SerialNumber, accessory.serialNumber );
+
+
+      // Create the Standalone accessory's services for all its linked children
+      accessory.linkedAccessories.forEach( ( linkedAccessory ) =>
+      {
+         let properties = CMD4_DEVICE_TYPE_ENUM.properties[ linkedAccessory.typeIndex ];
+
+         // Standalone
+         linkedAccessory.service = new properties.service( linkedAccessory.displayName, linkedAccessory.name )
+
+         // Create Information Service
+         this.log.debug( "Creating information service for linkedAccessory:%s", linkedAccessory.displayName );
+         linkedAccessory.informationService = new API.hap.Service.AccessoryInformation( );
+
+         if ( linkedAccessory.model )
+            linkedAccessory.informationService
+                 .setCharacteristic( API.hap.Characteristic.Model, linkedAccessory.model );
+
+         if ( linkedAccessory.manufacturer )
+            linkedAccessory.informationService
+                 .setCharacteristic( API.hap.Characteristic.Manufacturer, linkedAccessory.manufacturer );
+
+         if ( linkedAccessory.serialNumber )
+            linkedAccessory.informationService
+                 .setCharacteristic( API.hap.Characteristic.SerialNumber, linkedAccessory.serialNumber );
+
+         this.log.debug( "Standalone Step 5. %s.service.addLinkedService( %s.service );", accessory.displayName, linkedAccessory.displayName );
+         // Standalone Step 5)
+         // A const hdmi1InputService = this.tvAccessory.addService(this.Service.InputSource, 'hdmi1', 'HDMI 1');
+         // Standalone Step 5 tvService.addLinkedService(hdmi1InputService); // link to tv service
+         accessory.service.addLinkedService( linkedAccessory.service );
+
+         linkedAccessory.addAllServiceCharacteristicsForAccessory( linkedAccessory );
+
+         // Setup the fakegato service if defined in the config.json file
+         linkedAccessory.setupAccessoryFakeGatoService( linkedAccessory.fakegatoConfig );
+
+
+         accessory.addAllServiceCharacteristicsForAccessory( accessory );
+
+         // Setup the fakegato service if defined in the config.json file
+         accessory.setupAccessoryFakeGatoService( accessory.fakegatoConfig );
+
+      });
    }
-
-   characteristicPolling ( accessory, accTypeEnumIndex, timeout, interval )
-   {
-      let self = accessory;
-
-      self.log.debug( "Doing Poll of index:%s characteristic:%s for:%s timeout=%s interval=%s", accTypeEnumIndex,
-             CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex].type, self.displayName, timeout, interval );
-
-      // Make sure that the characteristic exists
-      if ( accTypeEnumIndex < 0 )
-      {
-         self.log( "CMD4 WARNING: No such polling accTypeEnumIndex '%d' for:%s",
-            accTypeEnumIndex, self.displayName );
-         return;
-      }
-
-      // Clear polling
-      if ( this.listOfPollingCharacteristics[ accessory.displayName + accTypeEnumIndex ] == undefined )
-         clearTimeout( this.listOfPollingCharacteristics[ accessory.displayName + accTypeEnumIndex ] );
-
-      // i.e. Characteristic.On
-      // i.e.  Characteristic.RotationDirection
-      self.service.getCharacteristic(
-         CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic
-      ).getValue( );
-
-
-       this.listOfPollingCharacteristics[ accessory.displayName + accTypeEnumIndex ] =
-          setTimeout( this.characteristicPolling.bind(
-             this, accessory, accTypeEnumIndex, timeout, interval ), interval );
-
-   }
-
-   setupCharacteristicPolling( accessory )
-   {
-      let self = accessory;
-
-      self.log.debug( "Setting up:%s polling characteristics of accessory:%s",
-         self.polling.length, self.displayName );
-
-      for ( let jsonIndex = 0;
-                jsonIndex < self.polling.length;
-                jsonIndex ++ )
-      {
-         // *NEW* Characteristic polling is a json type
-         let jsonPollingConfig = self.polling[jsonIndex];
-
-         // The default timeout is 1 minute. Timeouts are in milliseconds
-         let timeout = DEFAULT_TIMEOUT;
-
-         // The defaault interval is 1 minute. Intervals are in seconds
-         let interval = DEFAULT_INTERVAL;
-
-         let ucKeyIndex = -1;
-
-         for ( let key in jsonPollingConfig )
-         {
-            let ucKey = ucFirst( key );
-            let value = jsonPollingConfig[ key ];
-
-            switch ( ucKey )
-            {
-               case "Timeout":
-                  // Timers are in milliseconds. A low value can result in failure to get/set values
-                  timeout = parseInt( value, 10 );
-                  if ( timeout < 500 )
-                  {
-                      this.log.warn( "Timeout for:%s is in milliseconds. A value of '%d' seems pretty low.",
-                             this.config.displayName, timeout );
-                  }
-                  break;
-               case "Interval":
-                  // Intervals are in seconds
-                  interval = parseInt( value, 10 ) * 1000;
-                  break;
-               default:
-                  // The key must be a characteristic property
-                  // but first check if one has already been defined as we can only handle one at a time.
-                  if ( ucKeyIndex != -1 )
-                  {
-                     this.log.error( FgRed + "Error" + FgRm + ": For charateristic polling, you can only define one characteristic per array item.\nCannot add '%s' as '%s' is already defined for %s.", ucKey, CMD4_ACC_TYPE_ENUM.properties[ ucKeyIndex ].type, self.displayName );
-                     process.exit( -1 );
-                  }
-                  ucKeyIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucKey );
-                  if ( ucKeyIndex < 0 )
-                  {
-                     self.log( "CMD4 WARNING: No such polling characteristic:%s for:%s",
-                          key, self.displayName );
-                      continue;
-                  }
-             }
-         }
-
-         self.log.debug( "Setting up accessory:%s for polling of:%s timeout:%s interval:%s", self.displayName, CMD4_ACC_TYPE_ENUM.properties[ ucKeyIndex ].type, timeout, interval );
-
-         this.listOfPollingCharacteristics[ accessory.displayName + ucKeyIndex ] =
-            setTimeout( this.characteristicPolling.bind( this, accessory, ucKeyIndex, timeout, interval ), interval );
-
-      }
-   }
-
-   // Change polling per accessory to characteristic polling of state traits
-   // Here we use the defaultPollingCharacteristics to set what characteristics
-   // will be polled if accessory polling was defined in the config.json file.
-   setupStatePollingPerAccessory( accessory )
-   {
-      // Make sure the defined characteristics will be polled
-      let pollingCharacteristicsArray = CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ].defaultPollingCharacteristics;
-
-      for ( let index = 0; index < pollingCharacteristicsArray.length; index++ )
-      {
-         let accTypeEnumIndex = pollingCharacteristicsArray[ index ];
-         this.listOfPollingCharacteristics[ accessory.displayName + accTypeEnumIndex ] =
-                  setTimeout( this.characteristicPolling.bind(
-                  this, accessory, accTypeEnumIndex, accessory.timeout, accessory.interval ), accessory.interval );
-      }
-   }
-
 }
+
 
 // Accessory definitions - THE GOOD STUFF STARTs HERE
 //
-//    An accessory can be either a standalone accessory with/without linked Accessories
-// or a platform accessory with/without linked accessories.
+//    An Homebridge accessory by default is passed the following params
 //
-// @parms::
-//   parentInfo - Where to get stuff like state_cmd or outputConstants, if not already
-//                defined by the accessory.
-//   accessoryConfig - The config information for this Cmd4Accessory.
+// @params:
+//   log        -  Logging functionality.
+//   config     -  The JSON description of the accessory.
+//   api        -  Homebridge API.
+//
+// @Optional params
+//   parentInfo -  Optionally passed from a parent as if this is a linked accessory,
+//                 or from a CMD4 Platform.
+//
 //
 class Cmd4Accessory
 {
-   constructor( log, parentInfo, accessoryConfig )
+   constructor( log, config, api, parentInfo )
    {
       this.log = log;
-
-      let msg = accessoryConfig.displayName;
-      if (parentInfo.name == "Standalone" || parentInfo.name == "Platform" )
-         msg = "( " + parentInfo.name + " ) " + msg;
-
-      this.log( FgMag + "Creating %s" + FgRm, msg);
+      this.config = config;
+      this.api = api;
       this.parentInfo = parentInfo;
-      this.config = accessoryConfig;
+
+      //this.log("Class Cmd4Accessory config %s", this.config );
+      this.log("Class Cmd4Accessory" );
+      //this.log("parentInfo %s", this.parentInfo );
+
+      // Use parent values (if any) or these defaults.
+      // LEVEL is a number, possibly 0 which must be handled more precisely.
+      this.CMD4 = ( parentInfo && parentInfo.CMD4 ) ? parentInfo.CMD4 : STANDALONE;
+      this.LEVEL = ( parentInfo && parentInfo.LEVEL !== undefined) ? parentInfo.LEVEL + 1 : 0;
+      this.COLLECTION = ( parentInfo && parentInfo.COLLECTION ) ? parentInfo.COLLECTION : [];
+
+      this.log("Cmd4Accessory LEVEL %s", this.LEVEL );
+      let typeMsg = Fg.Blu + "Creating ";
+
+      if ( this.CMD4 == STANDALONE )
+         if ( this.LEVEL > 0 )
+            typeMsg = typeMsg + "linked Standalone ( " + Fg.Rm + parentInfo.displayName + " )" + Fg.Blu;
+         else
+            typeMsg = typeMsg + "Standalone";
+
+
+      if ( this.CMD4 == PLATFORM )
+         if ( this.LEVEL > 1 )
+            typeMsg = typeMsg + "linked Platform ( " + Fg.Rm + parentInfo.displayName + " )" + Fg.Blu;
+         else
+            typeMsg = typeMsg + "Platform";
+
+      log( "%s Accessory: " + Fg.Rm + "%s" + Fg.Rm, typeMsg, config.displayName );
+
 
       this.services = [ ];
       this.linkedAccessories = [ ];
       this.listOfVariables = { };
       this.listOfConstants = { };
+
+      // Instead of polling per accessory, allow the config file to be polled per characteristic.
+      this.listOfPollingCharacteristics = { };
+
       // DisplayName and/or Name must be defined.
       // Update config, just in case it is not set there.
       if ( ! this.displayName )
          this.displayName = this.config.displayName = getAccessoryName( this.config );
 
 
-      // Bring the master config variables forward.
+      // Bring the parent config variables forward.
       // If they do not exist, they would still be undefined.
-      this.stateChangeResponseTime = parentInfo.stateChangeResponseTime;
-      this.interval = parentInfo.interval;
-      this.timeout = parentInfo.timeout;
-      this.state_cmd = parentInfo.state_cmd;
-      this.state_cmd_prefix = parentInfo.state_cmd_prefix;
-      this.state_cmd_suffix = parentInfo.state_cmd_suffix;
+      this.stateChangeResponseTime = (parentInfo && parentInfo.stateChangeResponseTime) ? parentInfo.stateChangeResponseTime : DEFAULT_INTERVAL;
+      this.interval = (parentInfo && parentInfo.interval) ? parentInfo.interval : DEFAULT_INTERVAL;
+      this.timeout = (parentInfo && parentInfo.timeout) ? parentInfo.timeout : DEFAULT_TIMEOUT;
 
-      // TKV8 causes a lot of issues if defined and trying to parse.
+      // undefined is acceptable.
+      this.state_cmd = parentInfo && parentInfo.state_cmd;
+      this.state_cmd_prefix = parentInfo && parentInfo.state_cmd_prefix;
+      this.state_cmd_suffix = parentInfo && parentInfo.state_cmd_suffix;
+
+      // TLV8 causes a lot of issues if defined and trying to parse.
       // Omit them by default.
-      this.allowTLV8 = false;
+      this.allowTLV8 = (parentInfo && parentInfo.allowTLV8) ? parentInfo.TLV8 : false;
 
       // Instead of local variables for every characteristic, create an array to
       // hold values for  all characteristics based on the size of all possible characteristics.
@@ -625,56 +498,23 @@ class Cmd4Accessory
       // If polling is defined it is set to true/false, otherwise false.
       this.polling = this.config.polling === true;
 
+      // Fakegato-history definitions from parent, if any.
+      this.storage = parentInfo && parentInfo.storage;
+      this.storagePath = parentInfo && parentInfo.storagePath;
+      this.folder = parentInfo && parentInfo.folder;
+      this.keyPath = parentInfo && parentInfo.keyPath;
+
+      // If outputConstants is defined it is set to true/false, otherwise true.
+      this.outputConstants = (parentInfo && parentInfo.outputConstants) ? parentInfo.outputConstants : true;
+
       // Get the supplied values from the accessory config.
       this.parseConfig( this.config );
 
-      // Get the properties for this accessories device type
-      let properties = CMD4_DEVICE_TYPE_ENUM.properties[ this.typeIndex ];
-
-      // Check if required characteristics should be added, or TLV8 removed.
-      for ( let accTypeEnumIndex = 0 ; accTypeEnumIndex < CMD4_ACC_TYPE_ENUM.EOL; accTypeEnumIndex++ )
-      {
-         // Get the properties for this accessories device type
-         let devProperties = CMD4_DEVICE_TYPE_ENUM.properties[ this.typeIndex ];
-
-         // See if the characteristic index is in the required characteristics of the device
-         let requiredIndex = devProperties.requiredCharacteristics.indexOfEnum( i => i.type === accTypeEnumIndex );
-
-         let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
-
-         // No matter what, remove it
-         if ( format == API.hap.Characteristic.Formats.TLV8 && this.allowTLV8 == false )
-         {
-            if ( this.getStoredValueForIndex( accTypeEnumIndex) != null )
-            {
-               this.setStoredValueForIndex( accTypeEnumIndex, null );
-
-               this.log.warn( "****** Removing TLV8 required characteristic :%s", CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type );
-            }
-            continue;
-         }
-
-         // if it is required and not stored, add it
-         if ( requiredIndex != -1 && this.getStoredValueForIndex( accTypeEnumIndex ) == null )
-         {
-            this.log.warn( "**** Adding required characteristic %s for %s", CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, this.displayName );
-            this.log.warn( "Not defining a required characteristic can be problematic" );
-
-            // Get the default value to store
-            let defaultValue = properties.requiredCharacteristics[ requiredIndex ].defaultValue;
-
-            // If ConfiguredName was not defined, then use the Accessories Name
-            if ( accTypeEnumIndex == CMD4_ACC_TYPE_ENUM.ConfiguredName )
-               defaultValue = getAccessoryName( this.config );
-
-            this.log.debug( "*****Adding default value %s for %s", defaultValue, this.displayName )
-
-            this.setStoredValueForIndex( accTypeEnumIndex, defaultValue );
-         }
-      }
+      // Add any required characteristics that are missing
+      this.addRequiredCharacteristicStoredValues( );
 
       // The accessory cannot have the same uuid as any other
-      checkAccessoryForDuplicateUUID( this.log, this );
+      checkAccessoryForDuplicateUUID( this );
 
       // The default respnse time is in seconds
       if ( ! this.stateChangeResponseTime )
@@ -684,24 +524,58 @@ class Cmd4Accessory
       this.checkPollingConfigForUnsetCharacteristics( this.polling );
 
       // Convert the accessoriesConfig (if any) to an array of Cmd4Accessory
-      this.accessories = this.accessoryTypeConfigToCmd4Accessories( this.config, this.accessoriesConfig );
+      if ( this.accessoriesConfig )
+      {
+         if ( ! this.parentInfo )
+         {
+            log.error( Fg.Red + "Error: Only Platform accessories can have accessories[]" );
+            process.exit( 666 );
+         }
+         log( "Creating accessories for: %s", this.displayName );
+         this.accessories = this.accessoryTypeConfigToCmd4Accessories( this.accessoriesConfig, this );
+      }
+
       // Convert the linkedTypes (if any) to an array of Cmd4Accessory
-      this.linkedAccessories = this.accessoryTypeConfigToCmd4Accessories( this.config, this.linkedAccessoriesConfig );
+      if ( this.linkedAccessoriesConfig )
+      {
+         // Note, Need to check LEVEL here"
+         log( "Creating linked accessories for: %s", this.displayName );
+         this.linkedAccessories = this.accessoryTypeConfigToCmd4Accessories( this.linkedAccessoriesConfig, this );
+      }
 
-   } // Cmd4Accessory ( log, parentInfo, accessoryConfig )
+      // Create all the services for the accessory, including fakegato and polling
+      // Only true Standalone accessories can have their services created and
+      // polling started. Otherwise the platform will have to do this.
+      if ( this.CMD4 == STANDALONE  && this.LEVEL == 0 )
+      {
+         log.debug( "Creating Standalone service for %s", this.displayName );
+         this.createServicesForStandaloneAccessoryAndItsChildren( this )
 
-   identify( callback ) {
+         log.debug( "Creating polling for Standalone accessory %s", this.displayName );
+         this.setupPollingOfAccessoryAndItsChildren( this );
+      } else
+         log( "- NOT - Creating polling for Standalone accessory %s", this.displayName );
+
+      api.on( "didFinishLaunching", ( ) =>
+      {
+         this.log.debug( Fg.Red + "Does this happen? CMD4Accessory In didFinishLaunching" );
+      });
+
+   } // Cmd4Accessory ( log, config, api, parentInfo )
+
+   identify( callback )
+   {
        callback( );
    }
 
    getServices( )
    {
-      //if ( this.services )
-      //{
-      //   console.log( "Returning:%s number of services for:%s", this.services.length, //this.displayName );
-      //} else {
-      //   console.log( "Returning this.services:%s for:%s", this.services, this.displayName );
-      //}
+      if ( this.services )
+      {
+         this.log( Fg.Red + "ZZZZ Returning:%s number of services for:%s" + Fg.Rm, this.services.length, this.displayName );
+      } else {
+         this.log( Fg.Red + "ZZZZ Returning this.services:%s for:%s" + Fg.Rm, this.services, this.displayName );
+      }
       return this.services;
    }
 
@@ -709,8 +583,8 @@ class Cmd4Accessory
    {
       if ( accTypeEnumIndex < 0 || accTypeEnumIndex > CMD4_ACC_TYPE_ENUM.EOL )
       {
-         this.log ( FgYlw + "Warning" + FgRm + ": setStoredValue - Characteristic:%s for:%s not known", accTypeEnumIndex, this.displayName );
-         this.log ( "Check your config.json file for this error" );
+         this.log.error ( Fg.Red + "Error" + Fg.Rm + ": setStoredValue - Characteristic:%s for:%s not known", accTypeEnumIndex, this.displayName );
+         this.log.error ( "Check your config.json file for this error" );
          process.exit( 1 );
       }
       this.storedValuesPerCharacteristic[ accTypeEnumIndex ] = value;
@@ -733,6 +607,57 @@ class Cmd4Accessory
          return undefined;
 
       return this.storedValuesPerCharacteristic[ accTypeEnumIndex ];
+   }
+
+   // Any required characteristic of an accessory that is not in the accessories
+   // config will be added later by the existance of its stored value, so
+   // find the missing characteristics and add their value s here.
+   addRequiredCharacteristicStoredValues ( )
+   {
+      // Get the properties for this accessories device type
+      let properties = CMD4_DEVICE_TYPE_ENUM.properties[ this.typeIndex ];
+
+      // Check if required characteristics should be added, or TLV8 removed.
+      for ( let accTypeEnumIndex = 0 ; accTypeEnumIndex < CMD4_ACC_TYPE_ENUM.EOL; accTypeEnumIndex++ )
+      {
+         // Get the properties for this accessories device type
+         let devProperties = CMD4_DEVICE_TYPE_ENUM.properties[ this.typeIndex ];
+
+         // See if the characteristic index is in the required characteristics of the device
+         let requiredIndex = devProperties.requiredCharacteristics.indexOfEnum( i => i.type === accTypeEnumIndex );
+
+         let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
+
+         // No matter what, remove it
+         if ( format == API.hap.Characteristic.Formats.TLV8 && this.allowTLV8 == false )
+         {
+            if ( this.getStoredValueForIndex( accTypeEnumIndex) != null )
+            {
+               this.setStoredValueForIndex( accTypeEnumIndex, null );
+
+               this.log.warn( "****** Removing TLV8 required characteristic: %s", CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type );
+            }
+            continue;
+         }
+
+         // if it is required and not stored, add it
+         if ( requiredIndex != -1 && this.getStoredValueForIndex( accTypeEnumIndex ) == null )
+         {
+            this.log.warn( "**** Adding required characteristic %s for %s", CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, this.displayName );
+            this.log.warn( "Not defining a required characteristic can be problematic" );
+
+            // Get the default value to store
+            let defaultValue = properties.requiredCharacteristics[ requiredIndex ].defaultValue;
+
+            // If ConfiguredName was not defined, then use the Accessories Name
+            if ( accTypeEnumIndex == CMD4_ACC_TYPE_ENUM.ConfiguredName )
+               defaultValue = getAccessoryName( this.config );
+
+            this.log.debug( "*****Adding default value %s for %s", defaultValue, this.displayName )
+
+            this.setStoredValueForIndex( accTypeEnumIndex, defaultValue );
+         }
+      }
    }
 
    checkPollingConfigForUnsetCharacteristics( pollingConfig )
@@ -800,8 +725,69 @@ class Cmd4Accessory
          }
       }
 
-      this.log.debug( "Checking for polling of unset characteristics complete. - " + FgGrn + "OK" + FgRm + "." );
+      this.log.debug( "Checking for polling of unset characteristics complete. - " + Fg.Grn + "OK" + Fg.Rm + "." );
    }
+
+   createServicesForStandaloneAccessoryAndItsChildren( accessory )
+   {
+      accessory.log( Fg.Red + "createServicesForStandaloneAccessoryAndItsChildren" + Fg.Rm );
+      let properties = CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ];
+
+      //
+      // Standalone Accessory
+      //
+      // Create the accessory's service
+      accessory.service = new properties.service( accessory.displayName, accessory.name )
+
+      accessory.log.debug( "Creating information service for standalone accessory:%s", accessory.displayName );
+
+
+      // Create the Standalone accessory's information service.
+      createAccessorysInformationService( accessory );
+
+      // Create the Standalone accessory's services for all its linked children
+      if ( accessory.linkedAccessories )
+      {
+         accessory.linkedAccessories.forEach( ( linkedAccessory ) =>
+         {
+            let properties = CMD4_DEVICE_TYPE_ENUM.properties[ linkedAccessory.typeIndex ];
+
+            linkedAccessory.service = new properties.service( linkedAccessory.displayName, linkedAccessory.name )
+            accessory.services.push( linkedAccessory.service );
+
+            // Double Check this !! 
+            // Create Information Service
+            //linkedAccessory.log.debug( "Creating information service for linkedAccessory:%s", linkedAccessory.displayName );
+            //createAccessorysInformationService( linkedAccessory );
+
+            accessory.log.debug( "Standalone Step 5. %s.service.addLinkedService( %s.service );", accessory.displayName, linkedAccessory.displayName );
+            // Standalone Step 5)
+            // A const hdmi1InputService = this.tvAccessory.addService(this.Service.InputSource, 'hdmi1', 'HDMI 1');
+            // Standalone Step 5 tvService.addLinkedService(hdmi1InputService); // link to tv service
+            accessory.service.addLinkedService( linkedAccessory.service );
+
+            linkedAccessory.addAllServiceCharacteristicsForAccessory( linkedAccessory );
+
+            // Setup the fakegato service if defined in the config.json file
+            linkedAccessory.setupAccessoryFakeGatoService( linkedAccessory.fakegatoConfig );
+
+         });
+      }
+
+      accessory.addAllServiceCharacteristicsForAccessory( accessory );
+
+      // Setup the fakegato service if defined in the config.json file
+      accessory.setupAccessoryFakeGatoService( accessory.fakegatoConfig );
+
+      accessory.services.push(accessory.service);
+
+      // Move the information service to the top of the list
+      accessory.services.unshift( accessory.informationService );
+
+      accessory.log( Fg.Red + "ZZZZ %s.services.length %s" + Fg.Rm, accessory.displayName, accessory.services.length);
+
+   }
+
 
    // ***********************************************
    //
@@ -854,7 +840,7 @@ class Cmd4Accessory
       exec( cmd, {timeout: self.timeout}, function ( error, stdout, stderr )
       {
          if ( error ) {
-            self.log( FgRed + "setGeneric %s function failed for %s Error:%s", characteristicString, self.displayName, error.message );
+            self.log( Fg.Red + "setGeneric %s function failed for %s Error:%s", characteristicString, self.displayName, error.message );
             self.log( stdout );
             self.log( stderr );
             callback( error );
@@ -1095,13 +1081,13 @@ class Cmd4Accessory
       {
          if ( characteristicProps[ key ] == undefined )
          {
-            this.log.error( FgRed + "Error" + FgRm + ": props for key: '%s' not in definition of %s", key, type );
+            this.log.error( Fg.Red + "Error" + Fg.Rm + ": props for key: '%s' not in definition of %s", key, type );
             process.exit( -1 );
 
          }
          if ( typeof characteristicProps[ key ] !=  typeof definitions[ key ] )
          {
-            this.log.error( FgRed + "Error" + FgRm + ": props for key: %s type %s not equal to definition of %s", key, typeof definitions[ key], typeof characteristicProps[ key] );
+            this.log.error( Fg.Red + "Error" + Fg.Rm + ": props for key: %s type %s not equal to definition of %s", key, typeof definitions[ key], typeof characteristicProps[ key] );
             process.exit( -1 );
          }
       }
@@ -1111,7 +1097,7 @@ class Cmd4Accessory
 
    // ***********************************************
    //
-   // setupAccessoryFakeGatoService:
+   // addAllServiceCharacteristicsForAccessory:
    //.    Method to set up all services for those characteristics in the
    //     config.json file.
    //
@@ -1141,9 +1127,9 @@ class Cmd4Accessory
    //       to work on my iMac.
    //
    // ***********************************************
-   setupAllCharacteristicsForThisServices( service )
+   addAllServiceCharacteristicsForAccessory( accessory )
    {
-       this.log.debug( "Setting up services" );
+       accessory.log.debug( "Adding All Service Characteristics for %s", accessory.displayName );
 
        let perms = "";
        let len = this.storedValuesPerCharacteristic.length;
@@ -1156,9 +1142,9 @@ class Cmd4Accessory
 
           // If there is a stored value for this characteristic ( defined by the config file )
           // Then we need to add the characteristic too
-          if ( this.storedValuesPerCharacteristic[ accTypeEnumIndex ] != undefined )
+          if ( accessory.storedValuesPerCharacteristic[ accTypeEnumIndex ] != undefined )
           {
-             this.log.debug( "Found characteristic:%s value:%s for:%s",
+             accessory.log.debug( "Found characteristic:%s value:%s for:%s",
                   CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type,
                   this.getStoredValueForIndex( accTypeEnumIndex ),
                   this.displayName );
@@ -1166,29 +1152,29 @@ class Cmd4Accessory
              // Get the permissions of characteristic ( Read/Write ... )
              // Both are 100% the same.
              // perms = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.perms
-             perms = service.getCharacteristic(
+             perms = accessory.service.getCharacteristic(
                 CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
                 .characteristic ).props.perms;
 
              // Find out if the characteristic is Optional and needs to be added
-             if ( ! service.testCharacteristic(
+             if ( ! accessory.service.testCharacteristic(
                   CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic ) )
              {
                 // We need to check if the characteristic is write only
                 if ( perms.indexOf( API.hap.Characteristic.Perms.WRITE ) != -1 )
                 {
                    // Since the characteristic is writeable, then add it.
-                   this.log.debug( "Adding optional characteristic:%s for: %s", CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, this.displayName );
-                   service.addCharacteristic(
+                   accessory.log.debug( "Adding optional characteristic:%s for: %s", CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, this.displayName );
+                   accessory.service.addCharacteristic(
                       CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].
                          characteristic );
                 }
              }
-             let props = this.configHasCharacteristicProps( accTypeEnumIndex );
+             let props = accessory.configHasCharacteristicProps( accTypeEnumIndex );
              if ( props )
              {
-                this.log.debug( "Overriding characteristic %s props for: %s ", CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, this.displayName );
-                  service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].
+                accessory.log.debug( "Overriding characteristic %s props for: %s ", CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, this.displayName );
+                  accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].
                          characteristic )
                   .setProps(
                   {
@@ -1202,28 +1188,28 @@ class Cmd4Accessory
              // Read and or write, we need to set the value once.
              // If the characteristic was optional and read only, this will add
              // it with the correct value.  You cannot add and set a read characteristic.
-             service.setCharacteristic(
+             accessory.service.setCharacteristic(
                 CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic,
                       this.getStoredValueForIndex( accTypeEnumIndex ) );
 
 
              // Add getValue funtion to service
-             if ( service.getCharacteristic(
+             if ( accessory.service.getCharacteristic(
                     CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
                     .characteristic ).listeners( "get" ).length == 0 )
              {
                 // Add Read services for characterisitcs, if possible
                 if ( perms.indexOf( API.hap.Characteristic.Perms.READ ) != -1 )
                 {
-                   service.getCharacteristic(
+                   accessory.service.getCharacteristic(
                       CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
                       .characteristic )
-                         .on( "get", this.getValue.bind( this, accTypeEnumIndex ) );
+                         .on( "get", accessory.getValue.bind( accessory, accTypeEnumIndex ) );
                 }
              }
 
              // Add setValue function to service
-             if ( service.getCharacteristic(
+             if ( accessory.service.getCharacteristic(
                   CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
                   .characteristic ).listeners( "set" ).length == 0 )
              {
@@ -1234,9 +1220,9 @@ class Cmd4Accessory
                    // five, context, accTypeEnumIndex, value , callback
                    // Why this works, beats me.
                    // five ends up equal to "2";
-                   let boundSetValue = this.setValue.bind( 1, 2, this, accTypeEnumIndex );
+                   let boundSetValue = accessory.setValue.bind( 1, 2, accessory, accTypeEnumIndex );
 
-                   service.getCharacteristic(
+                   accessory.service.getCharacteristic(
                       CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
                       .characteristic ).on( "set", ( value,callback ) => {
                           boundSetValue( value, callback );
@@ -1531,7 +1517,7 @@ class Cmd4Accessory
             this.services.push( this.loggingService );
          } else
          {
-            this.log( FgYlw + "WARNING" + FgRm + ": Cmd4 Unknown accessory config.storage:%s Expected:fs or googlrDrive for:%s", this.storage, this.displayName );
+            this.log( Fg.Ylw + "WARNING" + Fg.Rm + ": Cmd4 Unknown accessory config.storage:%s Expected:fs or googlrDrive for:%s", this.storage, this.displayName );
          }
       }
 
@@ -1552,7 +1538,7 @@ class Cmd4Accessory
    {
       if ( ! state_cmd )
       {
-         this.log.error( FgRed + "No state_cmd for: %s", this.displayName );
+         this.log.error( Fg.Red + "No state_cmd for: %s", this.displayName );
          process.exit( 666 );
       }
 
@@ -1791,7 +1777,7 @@ class Cmd4Accessory
 
    }
 
-   accessoryTypeConfigToCmd4Accessories( parentInfo, config )
+   accessoryTypeConfigToCmd4Accessories( config, parentInfo )
    {
       if ( ! config )
          return undefined;
@@ -1800,13 +1786,19 @@ class Cmd4Accessory
 
       if ( Array.isArray ( config ) )
       {
-         let accessories = config.map( ( accessoryConfig ) => { return new Cmd4Accessory( that.log, parentInfo, accessoryConfig ) } );
-         cmd4Accessories.push( ...accessories );
+         let accessories = config.map( ( accessoryConfig ) => { return new Cmd4Accessory( that.log, accessoryConfig, this.api, parentInfo ) } );
+
+         // Put the accessories into their correct collection array.
+         parentInfo.COLLECTION.push( ...accessories );
+
          return accessories;
       }
 
-      let accessory = new Cmd4Accessory( that.log, parentInfo, config );
-      cmd4Accessories.push( accessory );
+      let accessory = new Cmd4Accessory( that.log, config, this.api, parentInfo );
+
+      // Put the accessory into its correct collection array.
+      parentInfo.COLLECTION.push( accessory );
+
       return [ accessory ];
    }
 
@@ -1858,7 +1850,7 @@ class Cmd4Accessory
                this.typeIndex = CMD4_DEVICE_TYPE_ENUM.properties.indexOfEnum( i => i.deviceName === this.ucType );
                if ( this.typeIndex < 0 )
                {
-                  this.log.error( FgRed + "Error" + FgRm + ": Unknown device type:%s for %s", this.type, this.displayName );
+                  this.log.error( Fg.Red + "Error" + Fg.Rm + ": Unknown device type:%s for %s", this.type, this.displayName );
                   process.exit( 1 );
                }
 
@@ -1873,13 +1865,16 @@ class Cmd4Accessory
                this.UUID = value;
 
                break;
+           case "Accessory":
+               // Do nothing as this is a key for homebridge, not us
+               break;
            case "Category":
                // For those who define there own Category
                this.category = API.hap.Categories[ value ];
 
                if ( ! this.category )
                {
-                  this.log.error( FgRed + "Error" + FgRm + ": Category specified: '%s' is not a valid homebridge category.", value );
+                  this.log.error( Fg.Red + "Error" + Fg.Rm + ": Category specified: '%s' is not a valid homebridge category.", value );
                   process.exit( 666 );
                }
 
@@ -1977,13 +1972,19 @@ class Cmd4Accessory
 
                break;
             case "Storage":
+               this.storage = value;
+
+               break;
             case "StoragePath":
+               this.storagePath = value
+
+               break;
             case "Folder":
+               this.folder = value
+
+               break;
             case "KeyPath":
-               this.log( "Definitions of fakegato has changed to be more specific per characteristic" );
-               this.log( "and in line with fakegato." )
-               this.log( "Please see the README.md for further details." );
-               this.log( "Sorry for the inconvenience" );
+               this.keyPath = value
 
                break;
             case "Fakegato":
@@ -2046,7 +2047,7 @@ class Cmd4Accessory
 
       if ( ! this.validateStateCmd( this.state_cmd ) )
       {
-         this.log.error( FgRed + "Error" + FgRm + ": state_cmd: '%s'  is invalid for: %s", this.state_cmd, this.displayName );
+         this.log.error( Fg.Red + "Error" + Fg.Rm + ": state_cmd: '%s'  is invalid for: %s", this.state_cmd, this.displayName );
          process.exit( -1 );
       }
 
@@ -2062,13 +2063,191 @@ class Cmd4Accessory
       else
          this.state_cmd_suffix = "";
    }
+
+   setupPollingOfAccessoryAndItsChildren( accessory )
+   {
+      accessory.log.debug("Setting up polling for:'%s' and any of the children.", accessory.displayName);
+      if ( accessory.polling && accessory.state_cmd )
+      {
+         switch ( typeof accessory.polling )
+         {
+            case "object":
+               accessory.log.debug( "Characteristic polling for:%s", accessory.displayName );
+               this.setupCharacteristicPolling( accessory );
+               break;
+            case "string":
+            case "boolean":
+               accessory.log.debug( "State polling for:%s", accessory.displayName );
+               this.setupStatePollingPerAccessory( accessory );
+               break;
+            default:
+               accessory.log.error( Fg.Red + "Error" + Fg.Rm + ": Something wrong with value of polling:%s\n       Check your config.json for errors.", accessory.polling );
+               process.exit( 1 );
+          }
+      }
+
+      // accessory.log.debug("CMD4=%s LEVEL=%s for %s", accessory.CMD4, accessory.LEVEL, accessory.displayName );
+      // The linked accessory children are at different levels of recursion, so only
+      // allow what is posssible.
+      if ( accessory.linkedAccessories  &&
+            ( accessory.CMD4 == STANDALONE  && accessory.LEVEL == 0  ||
+              accessory.CMD4 == PLATFORM  && accessory.LEVEL == 1 )
+         )
+      {
+         accessory.linkedAccessories.forEach( ( linkedAccessory ) =>
+         {
+            accessory.log.debug("Setting up polling ( %s ) linked accessory:'%s'", accessory.displayName, linkedAccessory.displayName );
+            linkedAccessory.setupPollingOfAccessoryAndItsChildren( linkedAccessory );
+         });
+      }
+   }
+
+   // This is the self-reaccurring routine to poll a characteristic
+   characteristicPolling ( accessory, accTypeEnumIndex, timeout, interval )
+   {
+      let self = accessory;
+
+      self.log.debug( "Doing Poll of index:%s characteristic:%s for:%s timeout=%s interval=%s", accTypeEnumIndex,
+             CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex].type, self.displayName, timeout, interval );
+
+      // Make sure that the characteristic exists
+      if ( accTypeEnumIndex < 0 )
+      {
+         self.log( "CMD4 WARNING: No such polling accTypeEnumIndex '%d' for:%s",
+            accTypeEnumIndex, self.displayName );
+         return;
+      }
+
+      // Clear polling
+      if ( this.listOfPollingCharacteristics[ accessory.displayName + accTypeEnumIndex ] == undefined )
+         clearTimeout( this.listOfPollingCharacteristics[ accessory.displayName + accTypeEnumIndex ] );
+
+      // i.e. Characteristic.On
+      // i.e.  Characteristic.RotationDirection
+      self.service.getCharacteristic(
+         CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic
+      ).getValue( );
+
+
+       this.listOfPollingCharacteristics[ accessory.displayName + accTypeEnumIndex ] =
+          setTimeout( this.characteristicPolling.bind(
+             this, accessory, accTypeEnumIndex, timeout, interval ), interval );
+
+   }
+
+   setupCharacteristicPolling( accessory )
+   {
+      let self = accessory;
+
+      self.log.debug( "Setting up:%s polling characteristics of accessory:%s",
+         self.polling.length, self.displayName );
+
+      for ( let jsonIndex = 0;
+                jsonIndex < self.polling.length;
+                jsonIndex ++ )
+      {
+         // *NEW* Characteristic polling is a json type
+         let jsonPollingConfig = self.polling[jsonIndex];
+
+         // The default timeout is 1 minute. Timeouts are in milliseconds
+         let timeout = DEFAULT_TIMEOUT;
+
+         // The defaault interval is 1 minute. Intervals are in seconds
+         let interval = DEFAULT_INTERVAL;
+
+         let ucKeyIndex = -1;
+
+         for ( let key in jsonPollingConfig )
+         {
+            let ucKey = ucFirst( key );
+            let value = jsonPollingConfig[ key ];
+
+            switch ( ucKey )
+            {
+               case "Timeout":
+                  // Timers are in milliseconds. A low value can result in failure to get/set values
+                  timeout = parseInt( value, 10 );
+                  if ( timeout < 500 )
+                  {
+                      accessory.log.warn( "Timeout for:%s is in milliseconds. A value of '%d' seems pretty low.",
+                             this.config.displayName, timeout );
+                  }
+                  break;
+               case "Interval":
+                  // Intervals are in seconds
+                  interval = parseInt( value, 10 ) * 1000;
+                  break;
+               default:
+                  // The key must be a characteristic property
+                  // but first check if one has already been defined as we can only handle one at a time.
+                  if ( ucKeyIndex != -1 )
+                  {
+                     accessory.log.error( Fg.Red + "Error" + Fg.Rm + ": For charateristic polling, you can only define one characteristic per array item.\nCannot add '%s' as '%s' is already defined for %s.", ucKey, CMD4_ACC_TYPE_ENUM.properties[ ucKeyIndex ].type, self.displayName );
+                     process.exit( -1 );
+                  }
+                  ucKeyIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucKey );
+                  if ( ucKeyIndex < 0 )
+                  {
+                     accessory.log( "CMD4 WARNING: No such polling characteristic:%s for:%s",
+                          key, self.displayName );
+                      continue;
+                  }
+             }
+         }
+
+         accessory.log.debug( "Setting up accessory:%s for polling of:%s timeout:%s interval:%s", self.displayName, CMD4_ACC_TYPE_ENUM.properties[ ucKeyIndex ].type, timeout, interval );
+
+         this.listOfPollingCharacteristics[ accessory.displayName + ucKeyIndex ] =
+            setTimeout( this.characteristicPolling.bind( this, accessory, ucKeyIndex, timeout, interval ), interval );
+
+      }
+   }
+
+
+   // Change polling per accessory to characteristic polling of state traits
+   // Here we use the defaultPollingCharacteristics to set what characteristics
+   // will be polled if accessory polling was defined in the config.json file.
+   setupStatePollingPerAccessory( accessory )
+   {
+      // Make sure the defined characteristics will be polled
+      let pollingCharacteristicsArray = CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ].defaultPollingCharacteristics;
+
+      for ( let index = 0; index < pollingCharacteristicsArray.length; index++ )
+      {
+         let accTypeEnumIndex = pollingCharacteristicsArray[ index ];
+         this.listOfPollingCharacteristics[ accessory.displayName + accTypeEnumIndex ] =
+                  setTimeout( this.characteristicPolling.bind(
+                  this, accessory, accTypeEnumIndex, accessory.timeout, accessory.interval ), accessory.interval );
+      }
+   }
 }
 
+function createAccessorysInformationService( accessory )
+{
+   // Create accessory's Information Service
+   accessory.informationService = new API.hap.Service.AccessoryInformation( );
+
+   if ( accessory.model )
+      accessory.informationService
+         .setCharacteristic( API.hap.Characteristic.Model, accessory.model );
+
+   if ( accessory.manufacturer )
+      accessory.informationService
+         .setCharacteristic( API.hap.Characteristic.Manufacturer, accessory.manufacturer );
+
+   if ( accessory.serialNumber )
+      accessory.informationService
+         .setCharacteristic( API.hap.Characteristic.SerialNumber, accessory.serialNumber );
+
+   accessory.services.push( accessory.informationService );
+}
+
+
 // Compare accessory's UUID with those already created for possible duplicates
-function checkAccessoryForDuplicateUUID( log, accessory )
+function checkAccessoryForDuplicateUUID( accessory )
 {
    // check for UUID+subtype conflict
-   log.debug( "Checking " + accessory.name + " for Duplicate UUID: " + accessory.UUID );
+   accessory.log.debug( "Checking " + accessory.name + " for Duplicate UUID: " + accessory.UUID );
    for ( let existingAccessory in cmd4Accessories )
    {
       if ( accessory.UUID == existingAccessory.UUID )
@@ -2077,18 +2256,19 @@ function checkAccessoryForDuplicateUUID( log, accessory )
          // hap-nodejs/dist/lib/Accessory.js
          if ( accessory.service.subtype == existingAccessory.service.subtype )
          {
-            log.error( FgRed + "Error" + FgRm + ": Cannot add a bridged Accessory with the same UUID as another bridged Accessory: %s", getAccessoryName( existingAccessory ) );
+            accessory.log.error( Fg.Red + "Error" + Fg.Rm + ": Cannot add a bridged Accessory with the same UUID as another bridged Accessory: %s", getAccessoryName( existingAccessory ) );
 
             if ( accessory.name == existingAccessory.name )
-               log.error( FgRed + "Duplicate accessory names can cause this issue." );
+               accessory.log.error( Fg.Red + "Duplicate accessory names can cause this issue." );
 
-            log.error( FgRed + "It is wiser to define the second accessory in a different bridge." );
+            accessory.log.error( Fg.Red + "It is wiser to define the second accessory in a different bridge." );
 
             process.exit( 1 );
          }
       }
    }
-   log.debug( "No Duplicate UUID's for this Accessory - " + FgGrn + "OK" + FgRm + ". Using: " + accessory.UUID );
+
+   accessory.log.debug( "No Duplicate UUID's for this Accessory - " + Fg.Grn + "OK" + Fg.Rm + ". Using: " + accessory.UUID );
 }
 
 function checkForUpdates( )

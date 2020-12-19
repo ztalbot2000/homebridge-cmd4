@@ -157,7 +157,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000E5-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.accessory-properties
@@ -179,7 +179,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000A6-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.accessory-properties
@@ -197,7 +197,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log("TLB"); else console.log(c);
+                if ( c == "" ) console.log( "TLB" ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000057-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.accessoryIdentifier
@@ -213,7 +213,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000B0-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.active
@@ -230,13 +230,12 @@ switch(io)
                 // 1 - "Active"
 
                 break;
-
             }
             case "ActiveIdentifier":   // 4
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000E7-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.activeIdentifier
@@ -251,7 +250,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000021E-0000-1000-8000-0000023B
                 // Type: public.hap.characteristic.activityInterval
@@ -269,7 +268,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000001-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.administrator-only-access
@@ -287,7 +286,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(30); else console.log(c);
+                if ( c == "" ) console.log( 30 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000064-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.air-particulate.density
@@ -308,7 +307,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000065-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.air-particulate.size
@@ -331,7 +330,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000095-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.air-quality
@@ -357,7 +356,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000A4-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.AppMatchingIdentifier
@@ -373,7 +372,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000005-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.audio-feedback
@@ -391,7 +390,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(50); else console.log(c);
+                if ( c == "" ) console.log( 50 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000068-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.battery-level
@@ -410,7 +409,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(100); else console.log(c);
+                if ( c == "" ) console.log( 100 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000008-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.brightness
@@ -428,7 +427,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000123-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.battery-level
@@ -442,7 +441,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000021E-0000-1000-8000-00000246
                 // Type: public.hap.characteristic.CCASignalDetectThreshold
@@ -457,7 +456,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000021E-0000-1000-8000-00000245
                 // Type: public.hap.characteristic.CCASignalDetectThreshold
@@ -472,7 +471,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(100); else console.log(c);
+                if ( c == "" ) console.log( 100 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000008-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.brightness
@@ -485,14 +484,13 @@ switch(io)
                 // 0 - "DISABLE"
                 // 1 - "ENABLE"
 
-
                 break;
             }
             case "CarbonDioxideDetected":   // 18
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000092-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.carbon-dioxide.detected
@@ -514,7 +512,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000093-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.carbon-dioxide.level
@@ -531,7 +529,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000094-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.carbon-dioxide.peak-level
@@ -548,7 +546,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000069-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.carbon-monoxide.detected`
@@ -569,7 +567,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000090-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.carbon-monoxide.level
@@ -586,7 +584,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000091-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.carbon-monoxide.peak-level
@@ -603,7 +601,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000A3-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.category
@@ -621,7 +619,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000021E-0000-1000-8000-00000143
                 // Type: public.hap.characteristic.CharacteristicValueTransitionControl
@@ -635,7 +633,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000008F-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.charging-state
@@ -658,7 +656,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000DD-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.closedCaptions
@@ -680,7 +678,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(50); else console.log(c);
+                if ( c == "" ) console.log( 50 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000CE-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.color-temperature
@@ -698,7 +696,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000A0-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.configureBridgedAccessory
@@ -712,7 +710,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000009D-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.configureBridgedAccessoryStatus
@@ -740,7 +738,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000006A-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.contact-state
@@ -762,7 +760,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(32.4); else console.log(c);
+                if ( c == "" ) console.log( 32.4 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000000D-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.temperature.cooling-threshold
@@ -781,7 +779,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(2); else console.log(c);
+                if ( c == "" ) console.log( 2 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000A9-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.air-purifier.state.current
@@ -804,7 +802,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000006B-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.light-level.current
@@ -822,7 +820,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000000E-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.door-state.current
@@ -848,7 +846,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000AF-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.fan.state.current
@@ -871,7 +869,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 process.exit(0);
 
@@ -897,7 +895,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 process.exit(0);
 
@@ -922,7 +920,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000006C-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.horizontal-tilt.current
@@ -941,7 +939,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000B3-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.currentHumidifierDehumidifierState
@@ -965,7 +963,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(2); else console.log(c);
+                if ( c == "" ) console.log( 2 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000E0-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.currentMediaState
@@ -989,7 +987,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000006D-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.position.current
@@ -1008,7 +1006,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(60.2); else console.log(c);
+                if ( c == "" ) console.log( 60.2 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000010-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.relative-humidity.current
@@ -1027,7 +1025,7 @@ switch(io)
             {
                c = readData(device, characteristic);
 
-               if (c == "") console.log(0); else console.log(c);
+               if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                // UUID: 000000AA-0000-1000-8000-0026BB765291
                // Type: public.hap.characteristic.slat.state.current
@@ -1050,7 +1048,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(50.0); else console.log(c);
+                if ( c == "" ) console.log( 50.0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000011-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.temperature.current
@@ -1069,7 +1067,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000C1-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.tilt.current
@@ -1088,7 +1086,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log("11:15"); else console.log(c);
+                if ( c == "" ) console.log( "11.5" ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000009B-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.currentTime
@@ -1102,7 +1100,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000021E-0000-1000-8000-00000245
                 // Type: public.hap.characteristic.currentTransport
@@ -1117,7 +1115,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000006E-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.vertical-tilt.current
@@ -1136,7 +1134,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000135-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.currentVisibilityState
@@ -1155,7 +1153,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000021E-0000-1000-8000-00000138
                 // Type: public.hap.characteristic.dataStreamHAPTransport
@@ -1170,7 +1168,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000021E-0000-1000-8000-00000139
                 // Type: public.hap.characteristic.dataStreamHAPTransportInterrupt
@@ -1185,7 +1183,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000098-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.zoom-digital
@@ -1203,7 +1201,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(50); else console.log(c);
+                if ( c == "" ) console.log( 50 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000224-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.diagonalFieldOfView
@@ -1222,7 +1220,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000011D-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.zoom-digital
@@ -1241,7 +1239,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000009E-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.discoverBridgedAccessories
@@ -1260,7 +1258,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000009F-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.discoveredBridgedAccessories
@@ -1277,7 +1275,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000E7-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.displayOrder
@@ -1294,7 +1292,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000021E-0000-1000-8000-0000023D
                 // Type: public.hap.characteristic.EventRetransmissionMaximum
@@ -1311,7 +1309,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000223-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.eventSnapshotsActive
@@ -1330,7 +1328,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000021E-0000-1000-8000-0000023E
                 // Type: public.hap.characteristic.EventTransmissionCounters
@@ -1347,7 +1345,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000AC-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.filter.change-indication
@@ -1369,7 +1367,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(50); else console.log(c);
+                if ( c == "" ) console.log( 50 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000AB-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.filter.life-level
@@ -1387,7 +1385,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log("100.1.1"); else console.log(c);
+                if ( c == "" ) console.log( "100.1.1" ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000052-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.firmware.revision
@@ -1418,7 +1416,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log("100.1.1"); else console.log(c);
+                if ( c == "" ) console.log( "100.1.1" ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000053-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.hardware.revision
@@ -1449,7 +1447,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(64); else console.log(c);
+                if ( c == "" ) console.log( 64 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000021E-0000-1000-8000-0000024A
                 // Type: public.hap.characteristic.heartBeat
@@ -1464,7 +1462,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(25.2); else console.log(c);
+                if ( c == "" ) console.log( "25.2" ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000012-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.temperature.heating-threshold
@@ -1484,7 +1482,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000006F-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.position.hold
@@ -1498,7 +1496,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000006F-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.position.hold
@@ -1517,7 +1515,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(50); else console.log(c);
+                if ( c == "" ) console.log( "50" ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000013-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.hue
@@ -1578,7 +1576,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000E6-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.identifier
@@ -1593,7 +1591,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000011F-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.image-mirror
@@ -1613,7 +1611,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000011E-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.image-rotation
@@ -1633,7 +1631,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000D2-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.inUse
@@ -1655,7 +1653,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000DC-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.inputDeviceType
@@ -1682,7 +1680,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000DB-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.inputSourceType
@@ -1713,7 +1711,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000D6-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.isConfigured
@@ -1735,7 +1733,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000070-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.leak-detected
@@ -1757,7 +1755,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000009C-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.linkQuality
@@ -1778,7 +1776,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000019-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.lock-management.control-point
@@ -1791,7 +1789,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000001D-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.lock-mechanism.current-state
@@ -1816,8 +1814,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
-
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // Permissions: Paired Read, Notify
 
@@ -1845,7 +1842,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(26); else console.log(c);
+                if ( c == "" ) console.log( 26 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000001A-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.lock-management.auto-secure-timeout
@@ -1859,7 +1856,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000A7-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.lock-physical-controls
@@ -1881,7 +1878,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000001E-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.lock-mechanism.target-state
@@ -1904,7 +1901,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000001F-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.logs
@@ -1918,7 +1915,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(100); else console.log(c);
+                if ( c == "" ) console.log( 100 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000021E-0000-1000-8000-00000247
                 // Type: public.hap.characteristic.MACRetransmissionMaximum
@@ -1933,7 +1930,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(100); else console.log(c);
+                if ( c == "" ) console.log( 100 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000021E-0000-1000-8000-00000248
                 // Type: public.hap.characteristic.MACTransmissionCounters
@@ -1948,7 +1945,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000020-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.ManagedNetworkEnable
@@ -1967,7 +1964,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000227-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.manuallyDisabled
@@ -1986,7 +1983,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log("Hombridge"); else console.log(c);
+                if ( c == "" ) console.log( "Homebridge" ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000020-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.manufacturer
@@ -2002,7 +1999,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000E7-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.model
@@ -2018,7 +2015,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000022-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.motion-detected
@@ -2032,7 +2029,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000011A-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.mute
@@ -2066,7 +2063,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000023-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.networkAccessViolationControl
@@ -2081,7 +2078,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000020C-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.NetworkClientProfileControl
@@ -2096,7 +2093,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000020D-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.NetworkClientStatusControl
@@ -2111,7 +2108,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000011B-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.nightVision
@@ -2129,7 +2126,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(50.0); else console.log(c);
+                if ( c == "" ) console.log( "50.0" ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000C4-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.density.no2
@@ -2146,7 +2143,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000024-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.obstruction-detected
@@ -2160,7 +2157,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000071-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.occupancy-detected
@@ -2182,7 +2179,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000025-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.on
@@ -2196,7 +2193,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000021E-0000-1000-8000-00000232
                 // Type: public.hap.characteristic.OperatingStateResponse
@@ -2211,7 +2208,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log("1.0"); else console.log(c);
+                if ( c == "" ) console.log( "1.0" ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000011C-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.opticalZoom
@@ -2229,7 +2226,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000026-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.outlet-in-use
@@ -2243,7 +2240,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(50.0); else console.log(c);
+                if ( c == "" ) console.log( "50.0" ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000C3-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.density.ozone
@@ -2260,7 +2257,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(50.0); else console.log(c);
+                if ( c == "" ) console.log( "50.0" ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000C7-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.density.pm10
@@ -2277,7 +2274,8 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(50.0); else console.log(c);
+                if ( c == "" ) console.log( "50.0" ); else console.log( "\"%s\"", c );
+
                 // UUID: 000000C6-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.density.pm25
                 // Permissions: Paired Read, Notify
@@ -2293,7 +2291,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000004C-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.pairSetup
@@ -2308,7 +2306,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000004E-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.pairVerify
@@ -2323,7 +2321,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000004F-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.pairingFeatures
@@ -2338,7 +2336,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000050-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.pairingPairings
@@ -2353,7 +2351,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000DA-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.passwordSetting
@@ -2368,7 +2366,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000225-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.periodicSnapshotsActive
@@ -2387,7 +2385,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000E2-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.pictureMode
@@ -2412,7 +2410,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000021E-0000-1000-8000-0000023C
                 // Type: public.hap.characteristic.ping
@@ -2426,7 +2424,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(2); else console.log(c);
+                if ( c == "" ) console.log( "2" ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000072-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.position.state
@@ -2450,7 +2448,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000DF-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.powerModeSelection
@@ -2469,7 +2467,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000220-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.productData
@@ -2486,7 +2484,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000E7-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.programMode
@@ -2505,7 +2503,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000073-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.input-event
@@ -2525,11 +2523,11 @@ switch(io)
 
                 break;
             }
-           case "ProgrammableSwitchOutputState":   // 125
+            case "ProgrammableSwitchOutputState":   // 125
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000074-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.programmableSwitchOutputState
@@ -2550,7 +2548,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000063-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.reachable
@@ -2567,7 +2565,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000021E-0000-1000-8000-0000023F
                 // Type: public.hap.characteristic.ReceivedSignalStrengthIndication
@@ -2584,7 +2582,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000021E-0000-1000-8000-00000244
                 // Type: public.hap.characteristic.receiverSensitivity
@@ -2601,7 +2599,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000226-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.recordingAudioActive
@@ -2620,7 +2618,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000C9-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.relativeHumidityDehumidifierThreshold
@@ -2638,7 +2636,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000CA-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.relativeHumidityHumidifierThreshold
@@ -2658,7 +2656,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000005E-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.reachable
@@ -2673,7 +2671,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000005B-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.relayEnabled
@@ -2690,7 +2688,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000005C-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.relayState
@@ -2707,7 +2705,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000D4-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.remainingDuration
@@ -2726,7 +2724,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000E1-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.remoteKey
@@ -2756,7 +2754,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000AD-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.filter.reset-indication
@@ -2773,7 +2771,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID:00000028-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.rotation.direction
@@ -2792,7 +2790,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(100); else console.log(c);
+                if ( c == "" ) console.log( "100" ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000029-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.rotation.speed
@@ -2811,7 +2809,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(100); else console.log(c);
+                if ( c == "" ) console.log( "100" ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000020E-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.routerStatus
@@ -2826,13 +2824,14 @@ switch(io)
                 // Valid Values:
                 // "READY":     0  -
                 // "NOT_READY": 1  -
+
                 break;
             }
             case "Saturation":   // 141
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(50); else console.log(c);
+                if ( c == "" ) console.log( "50" ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000002F-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.saturation
@@ -2851,7 +2850,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000008E-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.security-system.alarm-type
@@ -2873,7 +2872,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(3); else console.log(c);
+                if ( c == "" ) console.log( "3" ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000066-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.security-system-state.current
@@ -2900,14 +2899,13 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000067-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.security-system-state.target
                 // Permissions: Paired Read, Paired Write, Notify
 
                 // Format: uint8
-
 
                 // Minimum Value: 0
                 // Maximum Value: 3
@@ -2927,7 +2925,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: SelectedAudioStreamConfiguration
                 // Type: public.hap.characteristic.SelectedAudioStreamConfiguration
@@ -2942,7 +2940,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000209-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.selectedCameraRecordingConfiguration
@@ -2957,7 +2955,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000117-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.selected-rtp-stream-configuration
@@ -2971,7 +2969,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log("ABC001"); else console.log(c);
+                if ( c == "" ) console.log( "ABC001" ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000030-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.serial-number
@@ -2987,8 +2985,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
-
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000CB-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.service-label-index
@@ -3005,8 +3002,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
-
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000CD-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.service-label-namespace
@@ -3029,7 +3025,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000D3-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.setDuration
@@ -3047,7 +3043,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: SetupDataStreamTransport
                 // Type: public.hap.characteristic.SetupDataStreamTransport
@@ -3064,7 +3060,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000118-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.setup-endpoints
@@ -3081,7 +3077,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000201-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.setupTransferTransport
@@ -3098,7 +3094,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: SignalToNoiseRatio
                 // Type: public.hap.characteristic.SignalToNoiseRatio
@@ -3112,7 +3108,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000068-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.SiriInputType
@@ -3123,8 +3119,8 @@ switch(io)
                 // minValue: 0
                 // maxValue: 0
 
-               // Valid Values:
-               // 0 - PUSH_BUTTON_TRIGGERED_APPLE_TV
+                // Valid Values:
+                // 0 - PUSH_BUTTON_TRIGGERED_APPLE_TV
 
                 break;
             }
@@ -3132,7 +3128,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000C0-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.type.slat
@@ -3154,7 +3150,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000E8-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.sleepDiscoveryMode
@@ -3175,7 +3171,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000E8-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.sleepInterval
@@ -3194,7 +3190,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000076-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.smoke-detected
@@ -3216,7 +3212,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(50); else console.log(c);
+                if ( c == "" ) console.log( "50" ); else console.log( "\"%s\"", c );
 
                 // UUID: SoftwareRevision
                 // Type: public.hap.characteristic.SoftwareRevision
@@ -3230,7 +3226,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000075-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.status-active
@@ -3244,7 +3240,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000077-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.status-fault
@@ -3264,7 +3260,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000078-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.statusJammed
@@ -3283,7 +3279,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000079-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.status-lo-batt
@@ -3305,7 +3301,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000007A-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.status-tampered
@@ -3323,7 +3319,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000120-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.streamingStatus
@@ -3341,7 +3337,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(50.0); else console.log(c);
+                if ( c == "" ) console.log( "50.0" ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000C5-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.density.so2
@@ -3358,7 +3354,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000207-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.SupportedAudioRecordingConfiguration
@@ -3373,7 +3369,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000115-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.supportedAudioStreamConfiguration
@@ -3390,7 +3386,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000205-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.SupportedCameraRecordingConfiguration
@@ -3407,7 +3403,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000130-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.SupportedDataStreamTransportConfiguration
@@ -3424,7 +3420,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000021E-0000-1000-8000-00000144
                 // Type: public.hap.characteristic.SupportedCharacteristicValueTransitionConfiguration
@@ -3441,7 +3437,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000021E-0000-1000-8000-00000238
                 // Type: public.hap.characteristic.SupportedDiagnosticsSnapshot
@@ -3458,7 +3454,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000116-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.supportedRTPConfiguration
@@ -3473,7 +3469,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000210-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.supportedRouterConfiguration
@@ -3488,7 +3484,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000202-0000-1000-8000-0026BB765291'
                 // Type: public.hap.characteristic.supportedTransferTransportConfiguration
@@ -3503,7 +3499,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000206-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.SupportedVideoRecordingConfiguration
@@ -3518,7 +3514,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000E7-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.supportedVideoStreamConfiguration
@@ -3533,7 +3529,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(100); else console.log(c);
+                if ( c == "" ) console.log( "100" ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000B6-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.swing-mode
@@ -3555,7 +3551,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000A8-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.air-purifier.state.target
@@ -3577,7 +3573,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000AE-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.targetAirQuality
@@ -3599,7 +3595,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000124-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.TargetControlList
@@ -3613,7 +3609,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000123-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.TargetControlSupportedConfiguration
@@ -3627,7 +3623,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000032-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.door-state.target
@@ -3650,7 +3646,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000BF-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.fan.state.target
@@ -3672,7 +3668,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000B2-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.targetHeaterCoolerState
@@ -3695,7 +3691,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000033-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.heating-cooling.target
@@ -3720,7 +3716,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000007B-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.horizontal-tilt.target
@@ -3739,7 +3735,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000B4-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.targetHumidifierDehumidifierState
@@ -3762,7 +3758,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(2); else console.log(c);
+                if ( c == "" ) console.log( "2" ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000137-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.targetMediaState
@@ -3787,7 +3783,7 @@ switch(io)
 
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID 0000007C-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.position.target
@@ -3806,7 +3802,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(50.0); else console.log(c);
+                if ( c == "" ) console.log( "50.0" ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000010-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.relative-humidity.current
@@ -3825,7 +3821,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000BE-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.targetSlatState
@@ -3847,7 +3843,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(50.0); else console.log(c);
+                if ( c == "" ) console.log( "50.0" ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000035-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.temperature.target
@@ -3866,7 +3862,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000C2-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.tilt.target
@@ -3885,7 +3881,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000007D-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.vertical-tilt.target
@@ -3904,7 +3900,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000134-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.targetVisibilityState
@@ -3926,7 +3922,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000036-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.temperature.units
@@ -3948,7 +3944,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000021C-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.thirdPartyCameraActive
@@ -3967,7 +3963,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000009A-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.timeUpdate
@@ -3984,7 +3980,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000021E-0000-1000-8000-00000242
                 // Type: public.hap.characteristic.TransmitPower
@@ -3993,13 +3989,14 @@ switch(io)
                 // Format: INT
 
                 // Valid Values
+
                 break;
             }
             case "TransmitPowerMaximum":   // 203
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000021E-0000-1000-8000-00000243
                 // Type: public.hap.characteristic.TransmitPowerMaximum
@@ -4008,13 +4005,14 @@ switch(io)
                 // Format: INT
 
                 // Valid Values
+
                 break;
             }
             case "TunnelConnectionTimeout":   // 204
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(5000); else console.log(c);
+                if ( c == "" ) console.log( "5000" ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000061-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.timeUpdate
@@ -4029,7 +4027,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000009A-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.timeUpdate
@@ -4046,7 +4044,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000059-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.tunneledAccessoryConnected
@@ -4063,7 +4061,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0.0); else console.log(c);
+                if ( c == "" ) console.log( "0.0" ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000058-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.timeUpdate
@@ -4080,7 +4078,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(50.0); else console.log(c);
+                if ( c == "" ) console.log( "50.0" ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000C8-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.density.voc
@@ -4097,7 +4095,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000D5-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.valveType
@@ -4115,14 +4113,13 @@ switch(io)
                 // 2 - SHOWER_HEAD
                 // 3 - WATER_FAUCET?
 
-
                 break;
             }
             case "Version":   // 210
             {
                 c = readData(device, characteristic);
 
-                if (c == "LockVersion") console.log(0); else console.log(c);
+                if ( c == "LockVersion" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000037-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.version
@@ -4138,7 +4135,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(50); else console.log(c);
+                if ( c == "" ) console.log( "50" ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000021E-0000-1000-8000-00000229
                 // Type: public.hap.characteristic.VideoAnalysisActive
@@ -4152,7 +4149,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000119-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.volume
@@ -4171,7 +4168,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000E9-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.volumeControlyype
@@ -4195,7 +4192,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(1); else console.log(c);
+                if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000EA-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.volumeSelector
@@ -4214,7 +4211,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000211-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.WANConfigurationList
@@ -4231,7 +4228,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000212-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.WANStatusList
@@ -4248,7 +4245,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000EA-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.wakeConfiguration
@@ -4265,7 +4262,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000B5-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.waterLevel
@@ -4282,7 +4279,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(50); else console.log(c);
+                if ( c == "" ) console.log( "50" ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000021E-0000-1000-8000-0000022C
                 // Type: public.hap.characteristic.WiFiCapabilities
@@ -4296,7 +4293,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000021E-0000-1000-8000-0000022D
                 // Type: public.hap.characteristic.WiFiCapabilities
@@ -4310,7 +4307,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(0); else console.log(c);
+                if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
 
                 // UUID: 000000B5-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.WiFiSatelliteStatus
