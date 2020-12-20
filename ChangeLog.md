@@ -2,7 +2,7 @@
 
 <BR><BR>
 ## ChangeLog
-* [**Whats new in 2.5**](#whats-new-in-25)
+* [**Whats new in 3.0.0**](#whats-new-in-300)
 * [**Whats new in 2.4.2**](#whats-new-in-242)
 * [**Whats new in 2.4.1**](#whats-new-in-241)
 * [**Whats new in 2.4.0**](#whats-new-in-240)
@@ -17,8 +17,15 @@
 * [**Whats new in 2.0**](#whats-new-in-20)
 
 <BR><BR>
-## Whats new in 2.5.0
-&nbsp;&nbsp;&nbsp; Big Changes to support IOS 14.re values
+## Whats new in 3.0.0
+&nbsp;&nbsp;&nbsp; Big Changes to support IOS 14 are here.
+&nbsp;&nbsp;&nbsp; - Proper definitions of Platform versus Standalone Accessories.
+&nbsp;&nbsp;&nbsp; - Ability to publish External Platforms for multiple TV's required in IOS 14.
+&nbsp;&nbsp;&nbsp; - Added 50+ new characteristics.
+&nbsp;&nbsp;&nbsp; - Added parsing of returned "quoted strings" for things like device names.
+&nbsp;&nbsp;&nbsp; - Added "Category" for hints to HomeKit of which icon to use for Platform Accessories.
+&nbsp;&nbsp;&nbsp; - Added the ability to define multiple Cmd4 Platforms.
+&nbsp;&nbsp;&nbsp; - Splitting documentation into two different areas, Quick install and Development.
 <BR><BR>
 ## Whats new in 2.4.2
 &nbsp;&nbsp;&nbsp; Bug fix for negative temperature values
