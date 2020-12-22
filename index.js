@@ -1,29 +1,45 @@
 'use strict';
+
+// 3rd Party includes
 const exec = require( "child_process" ).exec;
 const moment = require( "moment" );
 const fs = require( "fs" );
 const commandExistsSync = require( "command-exists" ).sync;
 
-const { getAccessoryName, getAccessoryDisplayName } = require( "./utils/getAccessoryNameFunctions" );
+// Cmd4 includes seperated out for Unit testing
+const { getAccessoryName, getAccessoryDisplayName
+      } = require( "./utils/getAccessoryNameFunctions" );
 let getAccessoryUUID = require( "./utils/getAccessoryUUID" );
 
-let isNumeric = require( "./utils/isNumeric" );
 let ucFirst = require( "./utils/ucFirst" );
 let indexOfEnum = require( "./utils/indexOfEnum" );
 
-// * For chaning validValue Constants to Values and back again
+// For changing validValue Constants to Values and back again
 var { transposeConstantToValidValue,
       transposeValueToValidConstant
     } = require( "./utils/transposeCMD4Props" );
 
-let isJSON = require( "./utils/isJSON" );
+// Correct type of given values to match characteristics format.
+let characteristicValueToItsProperType =
+   require( "./utils/characteristicValueToItsProperType" );
 
-const PLUGIN_NAME   = "homebridge-cmd4";
-const PLATFORM_NAME = "Cmd4";
+let isJSON = require( "./utils/isJSON" );
 
 // Pretty Colors
 var Fg = require("./utils/colors");
 
+// The Library files that know all.
+var ACC_DATA = require( "./lib/CMD4_ACC_TYPE_ENUM" );
+// This would be the uninitialized value ( No Characteristics )
+var CMD4_ACC_TYPE_ENUM = ACC_DATA.CMD4_ACC_TYPE_ENUM;
+
+var DEVICE_DATA = require( "./lib/CMD4_DEVICE_TYPE_ENUM" );
+// This would be the uninitialized value ( No Characteristics )
+var CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.CMD4_DEVICE_TYPE_ENUM;
+
+// Constants
+const PLUGIN_NAME   = "homebridge-cmd4";
+const PLATFORM_NAME = "Cmd4";
 
 const SLOW_STATE_CHANGE_RESPONSE_TIME   = 10000;  // 10 seconds
 const MEDIUM_STATE_CHANGE_RESPONSE_TIME = 3000;   // 3 seconds
@@ -40,31 +56,22 @@ const FAKEGATO_TYPE_ENERGY  = "energy",
       FAKEGATO_TYPE_THERMO  = "thermo",
       FAKEGATO_TYPE_AQUA    = "aqua";
 
-var FakeGatoHistoryService;
-var API;
-
-var ACC_DATA = require( "./lib/CMD4_ACC_TYPE_ENUM" );
-// This would be the uninitialized value ( No Characteristics )
-var CMD4_ACC_TYPE_ENUM = ACC_DATA.CMD4_ACC_TYPE_ENUM;
-
-var DEVICE_DATA = require( "./lib/CMD4_DEVICE_TYPE_ENUM" );
-// This would be the uninitialized value ( No Characteristics )
-var CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.CMD4_DEVICE_TYPE_ENUM;
-
 // Triggers which Array CMD4Accessory will be placed
 // Either cmd4Accessories or cmd4StandaloneAccessories
 const STANDALONE = "Standalone";
 const PLATFORM   = "Platform";
 const COLLECTION = "Collection";
 
+var FakeGatoHistoryService;
+var API;
 
-let cmd4Accessories = [ ];
-let cmd4StandaloneAccessories = [ ];
+// An Array of Homebridge Platforms
 let cmd4Platforms  = [ ];
 
-// Only one TV is allowed per bridge. circumvented by
+// Only one TV is allowed per bridge. Circumvented by
 // publishing the TV externally.
 let numberOfTVsPerBridge = 0;
+
 // Did not change to Class because export of class
 // does not like following exports needed for unit testing.
 module.exports =
@@ -87,11 +94,11 @@ module.exports =
                CMD4_DEVICE_TYPE_ENUM,
                api
              };
-    },
-    // These would be the uninitialized values,
-    // used for unit testing
-    CMD4_ACC_TYPE_ENUM: CMD4_ACC_TYPE_ENUM,      // properties would be { } empty.
-    CMD4_DEVICE_TYPE_ENUM: CMD4_DEVICE_TYPE_ENUM // properties would be { } empty.
+   },
+   // These would be the uninitialized values,
+   // used for unit testing
+   CMD4_ACC_TYPE_ENUM: CMD4_ACC_TYPE_ENUM,      // properties would be { } empty.
+   CMD4_DEVICE_TYPE_ENUM: CMD4_DEVICE_TYPE_ENUM // properties would be { } empty.
 }
 
 
@@ -100,14 +107,28 @@ class Cmd4Platform
 {
    constructor( log, config, api )
    {
+      log.debug( Fg.Blu + "Class Cmd4Platform" );
+
+      if ( config === undefined )
+         return;
+
       this.log = log;
-      this.config = config || {"platform": "cmd4"};
+      this.config = config;
       this.api = api;
-      this.cmd4Accessories = [];
 
-      this.log( Fg.Blu + "Class Cmd4Platform" );
+      // Pass along the trigger when creating the Cmd4Accessory.
+      // Note: The LEVEL starts at -1 as the first one gets incremented to Zero.
+      //
+      //       LEVEL 0 Accessories are Platform or Standalone Accessories.
+      //       LEVEL 1 Accessories are linked accessories.
+      //       LEVEL 2 Accessories are added Platform accessories coerced to
+      //               level 2 as a distinction. i.e. TelevisionSpeaker.
 
-      this.services = [];
+      this.CMD4 = PLATFORM;
+      this.LEVEL = -1;
+      this.COLLECTION = [ ];
+
+      this.services = [ ];
 
       setTimeout( checkForUpdates, 1800 );
 
@@ -143,17 +164,18 @@ class Cmd4Platform
 
       });
    }
-   getServices( )
-   {
-      // Needed ?
-      //if ( this.services )
-      //{
-      //   this.log( Fg.Red + "ZZZZ PLATFORM SERVICES Returning:%s number of services for:%s" + Fg.Rm, this.services.length, this.displayName );
-      //} else {
-      //   this.log( Fg.Red + "ZZZZ PLATFORM SERVICES Returning this.services:%s for:%s" + Fg.Rm, this.services, this.displayName );
-      //}
-      return this.services;
-   }
+
+   // Platforms do not use getServices. Good to know.
+   //getServices( )
+   //{
+   //   if ( this.services )
+   //   {
+   //      this.log( Fg.Red + "ZZZZ PLATFORM SERVICES Returning:%s number of services for:%s" + Fg.Rm, this.services.length, this.displayName );
+   //   } else {
+   //      this.log( Fg.Red + "ZZZZ PLATFORM SERVICES Returning this.services:%s for:%s" + Fg.Rm, this.services, this.displayName );
+   //   }
+   //   return this.services;
+   //}
 
    // As Per HomeBridge:
    // This function is invoked when homebridge restores cached accessories from disk at startup.
@@ -168,37 +190,19 @@ class Cmd4Platform
    }
 
    // These would be platform accessories with/without linked accessories
-   // parentInfo is: { CMD4: PLATFORM }
-   //processPlatformAccessoriesConfig( platformAccessoriesConfig, api, parentInfo )
    processPlatformAccessoriesConfig( platformAccessoriesConfig, api )
    {
-      if ( ! platformAccessoriesConfig )
-         return;
 
       let platform;
 
-      // Pass along the trigger when creating the Cmd4Accessory.
-      // Note: The LEVEL starts at -1 as the first one gets incremented to Zero.
-      //
-      //       LEVEL 0 Accessories are Platform or Standalone Accessories.
-      //       LEVEL 1 Accessories are linked accessories.
-      //       LEVEL 2 Accessories are added Platform accessories coerced to
-      //               level 2 as a distinction. i.e. TelevisionSpeaker.
-
-      this.CMD4 = PLATFORM;
-      this.LEVEL = -1;
-      this.COLLECTION = this.cmd4Accessories;
-
-      this.log.debug( `Fetching config.json Platform accessories.` );
-      for ( let index = 0; index < platformAccessoriesConfig.length; index++ )
+      platformAccessoriesConfig && platformAccessoriesConfig.forEach( ( config ) =>
       {
-         let config = platformAccessoriesConfig[ index ];
+         this.log.debug( `Fetching config.json Platform accessories.` );
 
          let that = this;
          let accessory = new Cmd4Accessory( that.log, config, this.api, this );
 
          // Put the accessory into its correct collection array.
-         //parentInfo.COLLECTION.push( accessory );
          this.COLLECTION.push( accessory );
 
          this.log.debug( `Created ( Platform ) accessory: ${ accessory.displayName }` );
@@ -211,15 +215,17 @@ class Cmd4Platform
          let category = devProperties.defaultCategory;
 
          // Create the platform Accessory.
-         // Step 1) this.tvAccessory = new api.platformAccessory( tvName, uuid );
+         // Step 1. this.tvAccessory = new api.platformAccessory( tvName, uuid );
+         // Categories are hints to HomeKit on which icon to choose for Published Platform Accessories
          if ( accessory.category == undefined )
          {
-            this.log.warn( Fg.Ylw + "Warning" + Fg.Rm + " It is highly suggested that you set the category for the platform accessory: %s to %s", accessory.displayName, category );
-
-            this.log.debug( "Step 1. platformAccessory = new platformAccessory(%s, uuid)",  config.displayName  );
+            this.log.debug( "Step 1. platformAccessory = new platformAccessory(%s, uuid)",  config.displayName );
             platform = new api.platformAccessory( accessory.displayName, accessory.UUID );
+
          } else {
+
             this.log.debug( "Step 1. platformAccessory = new platformAccessory(%s, uuid, %s)",  accessory.displayName, accessory.category  );
+
             platform = new api.platformAccessory( accessory.displayName, accessory.UUID, accessory.category );
             platform.category = accessory.category;
          }
@@ -227,7 +233,7 @@ class Cmd4Platform
          cmd4Platforms.push( platform );
 
 
-         // Platform Step 2 ) const tvService = this.tvAccessory.addService( this.Service.Television);
+         // Platform Step 2. const tvService = this.tvAccessory.addService( this.Service.Television);
          this.log.debug( `Step 2. ${ config.displayName }.service = platform.addService( this.Service.${ devProperties.deviceName }` );
          let service = platform.addService( devProperties.service );
 
@@ -236,7 +242,7 @@ class Cmd4Platform
          accessory.service = service;
 
 
-         // store a copy of the device object in the `accessory.context`
+         // Store a copy of the device object in the `accessory.context`
          // the `context` property can be used to store any data about the accessory you may need
          // this.platformAccessory.context.device = device;
 
@@ -249,11 +255,10 @@ class Cmd4Platform
          accessory.services.push( accessory.service );
          this.log( Fg.Red + "ZZZZ %s.services.length:%s" + Fg.Rm, accessory.displayName, accessory.services.length);
 
-         // Step 6) this.api.publishExternalAccessories( PLUGIN_NAME, [ this.tvAccessory ] );
+         // Step 6. this.api.publishExternalAccessories( PLUGIN_NAME, [ this.tvAccessory ] );
          if ( accessory.publishExternally )
          {
             this.log.debug( `Step 6. publishExternalAccessories: [ ${ accessory.displayName } ]` );
-            this.log.debug( `publishExternalAccessories: ${ accessory.name }` );
 
             api.publishExternalAccessories( PLUGIN_NAME, [ platform ] );
 
@@ -266,7 +271,7 @@ class Cmd4Platform
 
          accessory.log.debug( `Creating polling for Platform accessory: ${ accessory.displayName }` );
          accessory.setupPollingOfAccessoryAndItsChildren( accessory );
-      }
+      });
    }
 
    createServicesForPlatformAccessoryAndItsChildren( cmd4PlatformAccessory )
@@ -277,7 +282,7 @@ class Cmd4Platform
       // The cmd4PlatformAccessory has it's service created already
 
       // Create the service for all the accessories. i.e. Speaker Service
-      // Step 3)
+      // Step 3.
       //    const speakerService = this.tvAccessory.addService(this.Service.TelevisionSpeaker);
       cmd4PlatformAccessory.accessories && cmd4PlatformAccessory.accessories.forEach( ( addedAccessory ) =>
       {
@@ -303,7 +308,7 @@ class Cmd4Platform
          let properties = CMD4_DEVICE_TYPE_ENUM.properties[ linkedAccessory.typeIndex ];
 
          // Child accessories can have linked accessories. i.e. HDMI accessory
-         // Step 4)
+         // Step 4.
          //    const hdmi1InputService = this.tvAccessory.addService(this.Service.InputSource, `hdmi1', 'HDMI 1');
          this.log.debug( "Platform Step 4. %s.service = %s.addService:(%s.service, %s, %s);", linkedAccessory.displayName, cmd4PlatformAccessory.displayName, properties.deviceName, linkedAccessory.displayName, linkedAccessory.name );
          linkedAccessory.service = cmd4PlatformAccessory.platform.addService( properties.service, linkedAccessory.displayName, linkedAccessory.name );
@@ -325,78 +330,6 @@ class Cmd4Platform
       cmd4PlatformAccessory.setupAccessoryFakeGatoService( cmd4PlatformAccessory.fakegatoConfig );
 
    } // createServicesForPlatformAccessoryAndItsChildren( cmd4PlatformAccessory )
-
-
-   createServicesForThisStandaloneAccessoryAndItsChildren( accessory )
-   {
-      let properties = CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ];
-
-      //
-      // Standalone Accessory
-      //
-      // Create the accessory's service
-      accessory.service = new properties.service( accessory.displayName, accessory.name )
-
-      // Create accessory's Information Service
-      this.log.debug( `Creating information service for standalone accessory: ${ accessory.displayName }` );
-      accessory.informationService = new API.hap.Service.AccessoryInformation( );
-
-      if ( accessory.model )
-         accessory.informationService
-              .setCharacteristic( API.hap.Characteristic.Model, accessory.model );
-
-      if ( accessory.manufacturer )
-         accessory.informationService
-              .setCharacteristic( API.hap.Characteristic.Manufacturer, accessory.manufacturer );
-
-      if ( accessory.serialNumber )
-         accessory.informationService
-              .setCharacteristic( API.hap.Characteristic.SerialNumber, accessory.serialNumber );
-
-
-      // Create the Standalone accessory's services for all its linked children
-      accessory.linkedAccessories.forEach( ( linkedAccessory ) =>
-      {
-         let properties = CMD4_DEVICE_TYPE_ENUM.properties[ linkedAccessory.typeIndex ];
-
-         // Standalone
-         linkedAccessory.service = new properties.service( linkedAccessory.displayName, linkedAccessory.name )
-
-         // Create Information Service
-         this.log.debug( `Creating information service for linkedAccessory: ${ linkedAccessory.displayName }` );
-         linkedAccessory.informationService = new API.hap.Service.AccessoryInformation( );
-
-         if ( linkedAccessory.model )
-            linkedAccessory.informationService
-                 .setCharacteristic( API.hap.Characteristic.Model, linkedAccessory.model );
-
-         if ( linkedAccessory.manufacturer )
-            linkedAccessory.informationService
-                 .setCharacteristic( API.hap.Characteristic.Manufacturer, linkedAccessory.manufacturer );
-
-         if ( linkedAccessory.serialNumber )
-            linkedAccessory.informationService
-                 .setCharacteristic( API.hap.Characteristic.SerialNumber, linkedAccessory.serialNumber );
-
-         this.log.debug( `Standalone Step 5. ${accessory.displayName }.service.addLinkedService( ${ linkedAccessory.displayName }.service )` );
-         // Standalone Step 5)
-         // A const hdmi1InputService = this.tvAccessory.addService(this.Service.InputSource, 'hdmi1', 'HDMI 1');
-         // Standalone Step 5 tvService.addLinkedService(hdmi1InputService); // link to tv service
-         accessory.service.addLinkedService( linkedAccessory.service );
-
-         linkedAccessory.addAllServiceCharacteristicsForAccessory( linkedAccessory );
-
-         // Setup the fakegato service if defined in the config.json file
-         linkedAccessory.setupAccessoryFakeGatoService( linkedAccessory.fakegatoConfig );
-
-
-         accessory.addAllServiceCharacteristicsForAccessory( accessory );
-
-         // Setup the fakegato service if defined in the config.json file
-         accessory.setupAccessoryFakeGatoService( accessory.fakegatoConfig );
-
-      });
-   }
 }
 
 
@@ -427,7 +360,7 @@ class Cmd4Accessory
       // LEVEL is a number, possibly 0 which must be handled more precisely.
       this.CMD4 = ( parentInfo && parentInfo.CMD4 ) ? parentInfo.CMD4 : STANDALONE;
       this.LEVEL = ( parentInfo && parentInfo.LEVEL !== undefined) ? parentInfo.LEVEL + 1 : 0;
-      this.COLLECTION = ( parentInfo && parentInfo.COLLECTION ) ? parentInfo.COLLECTION : [];
+      this.COLLECTION = ( parentInfo && parentInfo.COLLECTION ) ? parentInfo.COLLECTION : [ ];
 
       // this.log( `CMD4=${ this.CMD4 } LEVEL=${ this.LEVEL }` );
 
@@ -631,13 +564,6 @@ class Cmd4Accessory
 
    checkPollingConfigForUnsetCharacteristics( pollingConfig )
    {
-      this.log.debug( `Checking for polling of unset characteristics.` );
-
-      if ( pollingConfig == undefined )
-      {
-         this.log.debug( `Polling config is null.  Assumed old style` );
-         return;
-      }
 
       if ( typeof pollingConfig != "object" )
       {
@@ -645,13 +571,10 @@ class Cmd4Accessory
          return;
       }
 
-      for ( let jsonIndex = 0;
-                jsonIndex < pollingConfig.length;
-                jsonIndex ++ )
-      {
-         // *NEW* Characteristic polling is a json type
-         let jsonPollingConfig = pollingConfig[ jsonIndex ];
+      this.log.debug( `Checking for polling of unset characteristics.` );
 
+      pollingConfig.forEach( ( jsonPollingConfig ) =>
+      {
          for ( let key in jsonPollingConfig )
          {
             let ucKey = ucFirst( key );
@@ -691,9 +614,7 @@ class Cmd4Accessory
                }
             }
          }
-      }
-
-      this.log.debug( "Checking for polling of unset characteristics complete. - " + Fg.Grn + "OK" + Fg.Rm + "." );
+      });
    }
 
    createServicesForStandaloneAccessoryAndItsChildren( accessory )
@@ -720,18 +641,20 @@ class Cmd4Accessory
          {
             let properties = CMD4_DEVICE_TYPE_ENUM.properties[ linkedAccessory.typeIndex ];
 
+            // Standalone Step 4.
+            //    const hdmi1InputService = this.tvAccessory.addService(this.Service.InputSource, `hdmi1', 'HDMI 1');
+            accessory.log.debug( `Standalone Step 4. linkedAccessory(${ accessory.displayName }).service = new Service(${ linkedAccessory.displayName }, ${ linkedAccessory.name })` );
             linkedAccessory.service = new properties.service( linkedAccessory.displayName, linkedAccessory.name )
             accessory.services.push( linkedAccessory.service );
 
-            // Double Check this !! 
+            // Hmmm Double Check this !! 
             // Create Information Service
             //linkedAccessory.log.debug( "Creating information service for linkedAccessory:%s", linkedAccessory.displayName );
             //createAccessorysInformationService( linkedAccessory );
 
             accessory.log.debug( `Standalone Step 5. ${ accessory.displayName }.service.addLinkedService( ${ linkedAccessory.displayName }` );
-            // Standalone Step 5)
-            // A const hdmi1InputService = this.tvAccessory.addService(this.Service.InputSource, `hdmi1', 'HDMI 1');
-            // Standalone Step 5 tvService.addLinkedService(hdmi1InputService); // link to tv service
+            // Standalone Step 5.
+            //    tvService.addLinkedService(hdmi1InputService); // link to tv service
             accessory.service.addLinkedService( linkedAccessory.service );
 
             linkedAccessory.addAllServiceCharacteristicsForAccessory( linkedAccessory );
@@ -834,7 +757,6 @@ class Cmd4Accessory
                      self.service.getCharacteristic( verifyCharacteristic ).getValue( );
                      callback( );
                   }, self.stateChangeResponseTime );
-
             }
 
             if ( responded == false )
@@ -856,17 +778,20 @@ class Cmd4Accessory
                   // I have seen this once where Homebridge dies, possibly after
                   // trying to delete the bridge.
                   self.log.warn( `Characteristic is null for name: ${ self.displayName } type: ${ self.config.type }` );
+
                } else if ( self.service == undefined )
                {
                   // I have seen this once where Homebridge dies, possibly after
                   // trying to delete the bridge.
                   self.log.warn( `self.service is null for name: ${ self.displayName } type: ${ self.config.type }` );
+
                } else if ( self.service.getCharacteristic( characteristic ) == undefined )
                {
                   // I have seen this once where Homebridge dies, possibly after
                   // trying to delete the bridge.
                   self.log.warn( `Service is null for name: ${ self.displayName } type: ${ self.config.type }` );
                }
+
                // A little bit of a speed boost, depending on the config
                if ( self.config.stateChangeResponseTime === undefined )
                {
@@ -912,17 +837,34 @@ class Cmd4Accessory
       // Execute command to Get a characteristics value for an accessory
       let child = exec( cmd, {timeout:self.timeout}, function ( error, stdout, stderr )
       {
-         if ( error ) {
+         if ( error )
+         {
             self.log( `getGeneric ${characteristicString } function for: ${ self.displayName } cmd: ${ cmd } failed.` );
             self.log( error );
             self.log( stdout );
             self.log( stderr );
             callback( error, 0 );
-         } else {
+
+         } else
+         {
             //let words = stdout.match(/\S+/gi);
             // Handle quotes words. Removes quotes
-            // Does not handle escaped quotes.
-            let words = stdout.match(/(\w|\s)*\w(?=")|\w+/g);
+            // Handles escaped quotes.
+            // Taken from: https://stackoverflow.com/questions/2817646/javascript-split-string-on-space-or-on-quotes-to-array
+            let words = stdout.match(/\\?.|^$/g).reduce((p, c) =>
+                        {
+                           if ( c === '"' )
+                           {
+                               p.quote ^= 1;
+                           }else if ( ! p.quote && c === ' ' )
+                           {
+                               p.a.push( '' );
+                           }else
+                           {
+                               p.a[ p.a.length-1 ] += c.replace( /\\(.)/,"$1" );
+                           }
+                           return  p;
+                        }, {a: ['']}).a
 
             // I'd rather trap here
             if ( words == undefined )
@@ -937,7 +879,9 @@ class Cmd4Accessory
                self.log( `getValue ${ characteristicString } function for: ${ self.displayName } returned no value` );
 
                callback( -1, 0 );
-            } else {
+
+            } else
+            {
                if ( words.length >=2 )
                {
                   self.log.warn( `Warning, Retrieving ${ characteristicString }, expected only one word value for: ${ self.displayName } of: ${ stdout }` );
@@ -949,65 +893,14 @@ class Cmd4Accessory
                // Even if outputConsts is not set, just in case, transpose it anyway.
                words[ 0 ] = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, words[ 0 ] )
 
+               // Return the appropriate type, by seeing what it is defined as in Homebridge,
+               words[ 0 ] = characteristicValueToItsProperType( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props, API.hap.Characteristic, words[ 0 ] );
 
-               let value = "";
+               // Store history using fakegato if set up
+               self.updateAccessoryAttribute( accTypeEnumIndex, words[ 0 ] );
 
-               // Return the appropriate type
-               // - IOS HomeKit does require a value over On/Off,
-               //   Hence the code below.
+               callback( null, words[ 0 ] );
 
-               if ( isNumeric( words[ 0 ] ) )
-               {
-                  // Fix support for decimal temperatures
-                  // parseFloat will change "15" "15.0" to "15"
-                  // but keeps numbers like "15.5"
-                  // So whatever is sent from the device
-                  // is used.
-                  // HomeKit and HomeBridge seems okay with this.
-                  // Eve sees the decimal numbers.
-                  value =  parseFloat( words[ 0 ], 10 );
-
-                  // Store history using fakegato if set up
-                  self.updateAccessoryAttribute( accTypeEnumIndex, value );
-
-                  callback( null, value );
-               } else if ( typeof words[ 0 ] == "boolean" )
-               {
-                  // Store history using fakegato if set up
-                  self.updateAccessoryAttribute( accTypeEnumIndex, words[ 0 ] );
-
-                  callback( null,words[ 0 ] );
-               } else {
-                  let lowerCaseWord = words[ 0 ].toLowerCase( );
-
-                  // Fix strings of true or on
-                  if ( lowerCaseWord  == "true" || lowerCaseWord == "on" )
-                  {
-                     value = 1;
-
-                     // Store history using fakegato if set up
-                     self.updateAccessoryAttribute( accTypeEnumIndex, value );
-
-                     callback( null, value );
-
-                  // Fix strings of false or off
-                  } else if ( lowerCaseWord == "false" || lowerCaseWord == "off" )
-                  {
-                     value = 0;
-
-                     // Store history using fakegato if set up
-                     self.updateAccessoryAttribute( accTypeEnumIndex, value );
-
-                     callback( null, value );
-                  } else {
-                     value = words[ 0 ];
-
-                     // Store history using fakegato if set up
-                     self.updateAccessoryAttribute( accTypeEnumIndex, value );
-
-                     callback( null, value );
-                  }
-               }
             }
          }
       });
@@ -1037,9 +930,7 @@ class Cmd4Accessory
          definitions = this.props[ ucType ];
 
       if ( ! definitions )
-      {
          return undefined;
-      }
 
       let rc = definitions;
       for ( let key in definitions )
@@ -1048,8 +939,8 @@ class Cmd4Accessory
          {
             this.log.error( Fg.Red + "Error" + Fg.Rm + ": props for key: '%s' not in definition of %s", key, type );
             process.exit( -1 );
-
          }
+
          if ( typeof characteristicProps[ key ] !=  typeof definitions[ key ] )
          {
             this.log.error( Fg.Red + "Error" + Fg.Rm + ": props for key: %s type %s not equal to definition of %s", key, typeof definitions[ key], typeof characteristicProps[ key] );
@@ -1063,7 +954,7 @@ class Cmd4Accessory
    // ***********************************************
    //
    // addAllServiceCharacteristicsForAccessory:
-   //.    Method to set up all services for those characteristics in the
+   //     Method to set up all services for those characteristics in the
    //     config.json file.
    //
    //
@@ -1135,6 +1026,7 @@ class Cmd4Accessory
                          characteristic );
                 }
              }
+
              let props = accessory.configHasCharacteristicProps( accTypeEnumIndex );
              if ( props )
              {
@@ -1493,7 +1385,6 @@ class Cmd4Accessory
          {
             this.log.warn( `config.storage: ${ this.storage } for: ${ this.displayName } set but polling is not enabled.` );
             this.log.warn( `      History will not be updated continiously.` );
-
          }
       }
    }
@@ -1584,7 +1475,6 @@ class Cmd4Accessory
 
       if ( Object.keys( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].validValues ).length > 0 )
       {
-
          // Even if outputConsts is not set, just in case, transpose it anyway.
          let newValue = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value ) ;
 
@@ -1593,6 +1483,9 @@ class Cmd4Accessory
             value = newValue;
          }
       }
+
+      // Return the appropriate type, by seeing what it is defined as in Homebridge,
+      value = characteristicValueToItsProperType( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props, API.hap.Characteristic, value );
 
       this.setStoredValueForIndex( accTypeEnumIndex, value );
    }
@@ -1667,7 +1560,6 @@ class Cmd4Accessory
 
      this.log.error( `Constants must be an array of/or list of key/value pairs: ${ constants }` );
      process.exit( -1 );
-
    }
 
    processVariables( variables )
@@ -1691,11 +1583,13 @@ class Cmd4Accessory
                this.log.error( `Variable definition for: ${ keyToAdd } must start with "\${" for clarity.` );
                process.exit( -1 );
             }
+
             if ( ! keyToAdd.endsWith( "}" ) )
             {
                this.log.error( `Variable definition for: ${ keyToAdd } must end with "}" for clarity.` );
                process.exit( -1 );
             }
+
             // remove any leading and trailing single quotes
             // so that using it for replacement will be easier.
             valueToAdd.replace(/^'/, "")
@@ -1711,7 +1605,6 @@ class Cmd4Accessory
 
       this.log.error( `Variables must be an array of/or list of key/value pairs: ${ variables }` );
       process.exit( -1 );
-
    }
 
    accessoryTypeConfigToCmd4Accessories( config, parentInfo )
@@ -1752,6 +1645,7 @@ class Cmd4Accessory
          this.log.error( `url is already defined as: ${ this.url } for: ${ url }` );
          process.exit( -1 );
       }
+
       this.url = this.replaceConstantsInString( url );
    }
 
@@ -1806,17 +1700,19 @@ class Cmd4Accessory
                break;
            case "Category":
                // For those who define there own Category
-               this.category = API.hap.Categories[ value ];
+               // Uppercase the category to be nice. Why do I know
+               // this will come back to bite me.
+               this.category = API.hap.Categories[ String( value ).toUpperCase( ) ];
 
                if ( ! this.category )
                {
-                  this.log.error( Fg.Red + "Error" + Fg.Rm + ": Category specified: '%s' is not a valid homebridge category.", value );
+                  this.log.error( `Category specified: ${ value } is not a valid homebridge category.` );
                   process.exit( 666 );
                }
 
                break;
             case "PublishExternally":
-               // The user can force the accessory to be published externally
+               // The user can make the accessory be published externally.
                this.publishExternally = value;
 
                break;
@@ -1983,7 +1879,7 @@ class Cmd4Accessory
       if ( ! this.validateStateCmd( this.state_cmd ) )
       {
          this.log.error( Fg.Red + "Error" + Fg.Rm + ": state_cmd: '%s'  is invalid for: %s", this.state_cmd, this.displayName );
-         process.exit( -1 );
+         process.exit( 666 );
       }
 
       // Handle seperation of strings of state_cmd for a prefix
@@ -1997,6 +1893,19 @@ class Cmd4Accessory
          this.state_cmd_suffix = " " + this.state_cmd_suffix;
       else
          this.state_cmd_suffix = "";
+
+      if ( this.typeIndex == CMD4_DEVICE_TYPE_ENUM.Television )
+      {
+          if ( this.CMD4 == PLATFORM &&  ( ! this.publishExternally || ! this.category ) ||
+               this.CMD4 == STANDALONE )
+          {
+               this.log.warn( 'Televisions should be Platform Accessories with "publishExternally": true, "category": "TELEVISION' );
+          }
+          if ( this.CMD4 == PLATFORM && ! this.publishExternally && ( numberOfTVsPerBridge += 1 ) > 1 )
+          {
+             this.log.warn( `Only one unpublished TV is allowed per bridge` );
+          }
+      }
    }
 
    setupPollingOfAccessoryAndItsChildren( accessory )
@@ -2073,7 +1982,6 @@ class Cmd4Accessory
        this.listOfPollingCharacteristics[ accessory.displayName + accTypeEnumIndex ] =
           setTimeout( this.characteristicPolling.bind(
              this, accessory, accTypeEnumIndex, timeout, interval ), interval );
-
    }
 
    setupCharacteristicPolling( accessory )
@@ -2136,7 +2044,6 @@ class Cmd4Accessory
 
          this.listOfPollingCharacteristics[ accessory.displayName + ucKeyIndex ] =
             setTimeout( this.characteristicPolling.bind( this, accessory, ucKeyIndex, timeout, interval ), interval );
-
       }
    }
 
@@ -2185,7 +2092,8 @@ function checkAccessoryForDuplicateUUID( accessory )
 {
    // check for UUID+subtype conflict
    accessory.log.debug( `Checking ${ accessory.name } for Duplicate UUID: ${ accessory.UUID }` );
-   for ( let existingAccessory in cmd4Accessories )
+
+   for ( let existingAccessory in accessory.COLLECTION )
    {
       if ( accessory.UUID == existingAccessory.UUID )
       {
@@ -2219,7 +2127,7 @@ function checkForUpdates( )
 
       if ( lv != myPkg.version )
       {
-            console.log( `\x1b[32m[UPDATE AVAILABLE] \x1b[0mVersion ${lv} of ${myPkg.name} is available. Any release notes can be found here: \x1b[4m${myPkg.changelog}\x1b[0m`);
+         console.log( `\x1b[32m[UPDATE AVAILABLE] \x1b[0mVersion ${lv} of ${myPkg.name} is available. Any release notes can be found here: \x1b[4m${myPkg.changelog}\x1b[0m`);
       }
    })( );
 }

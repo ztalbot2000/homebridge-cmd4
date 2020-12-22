@@ -760,7 +760,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if ( c == "" ) console.log( 32.4 ); else console.log( "\"%s\"", c );
+                if ( c == "" ) console.log( "32.4" ); else console.log( "\"%s\"", c );
 
                 // UUID: 0000000D-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.temperature.cooling-threshold
@@ -1006,7 +1006,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if ( c == "" ) console.log( 60.2 ); else console.log( "\"%s\"", c );
+                if ( c == "" ) console.log( "60.2" ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000010-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.relative-humidity.current
@@ -1048,7 +1048,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if ( c == "" ) console.log( 50.0 ); else console.log( "\"%s\"", c );
+                if ( c == "" ) console.log( "50.0" ); else console.log( "\"%s\"", c );
 
                 // UUID: 00000011-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.temperature.current
