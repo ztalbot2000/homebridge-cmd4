@@ -25,7 +25,9 @@
 &nbsp;&nbsp;&nbsp; - Added parsing of returned "quoted strings" for things like device names.
 &nbsp;&nbsp;&nbsp; - Added "Category" for hints to HomeKit of which icon to use for Platform Accessories.
 &nbsp;&nbsp;&nbsp; - Added the ability to define multiple Cmd4 Platforms.
-&nbsp;&nbsp;&nbsp; - Splitting documentation into two different areas, Quick install and Development.
+&nbsp;&nbsp;&nbsp; - Retrieved characteristic values are now converted to those defined by homebridge, instead of guessed by their possible types.
+&nbsp;&nbsp;&nbsp; - Moved some functions to utilities for easier unit testing.
+&nbsp;&nbsp;&nbsp; - Splitting documentation into two different areas, Quick install and Development to be less intimidating.
 <BR><BR>
 ## Whats new in 2.4.2
 &nbsp;&nbsp;&nbsp; Bug fix for negative temperature values
