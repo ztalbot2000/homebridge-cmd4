@@ -4,11 +4,11 @@
 ## Table of Contents
 * [**About CMD4 Developers Guide**](#about-cmd4-developers-guide)
 * [**Where to Begin**](#where-to-begin)
+* [**Homebridge API**](#homebridge-api)
+* [**Platform Accessories**](#platform-accessories)
+* [**Standard Accessories**](#standard-accessories)
 * [**Migrating from Homebridge-cmdswitch2**](#migrating-from-homebridge-cmdswitch2)
-* [**Other Example Shell Scripts**](#other-example-shell-scripts)
-* [**Troubleshooting**](#troubleshooting)
 * [**Developer Notes**](#developer-notes)
-* [**Troubleshooting your own scripts**](#troubleshooting-your-own-scripts)
 * [**Adding in fakegato history**](#adding-in-fakegato-history)
 * [**Unit Testing**](#unit-testing)
 * [**License**](#license)
@@ -351,7 +351,5 @@ Link References (Not Local)
 
 [homebridge]:https://github.com/nfarina/homebridge
 [homebridge_api]:https://developers.homebridge.io/#/
-[homekit_screenshot]:https://github.com/ztalbot2000/homebridge-cmd4/raw/master/screenshots/Homekit_screenshot.png
-[eve_screenshot]:https://github.com/ztalbot2000/homebridge-cmd4/raw/master/screenshots/Eve_screenshot.png
 [ztalbot2000]:https://github.com/ztalbot2000
 
