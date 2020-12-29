@@ -3,6 +3,7 @@
 
 const trueTypeOf = require( "../utils/trueTypeOf" );
 const isNumeric = require( "../utils/isNumeric" );
+const Fg = require( "../utils/colors" );
 
 // Description:
 //    Check if props for accTypeEnumIndex is defined in CMD4_ACC_TYPE_ENUM
@@ -131,7 +132,7 @@ function characteristicValueToItsProperType( props, Characteristic, value )
        case Characteristic.Formats.DATA:
        case Characteristic.Formats.TLV8:
        case Characteristic.Formats.DICTIONARY:
-          console.log( `Do not know how to convert value: ${ value }` );
+          console.log( Fg.Red + `Do not know how to convert value: ${ value }for ${ props.type }` );
           return value;
           break;
     }
