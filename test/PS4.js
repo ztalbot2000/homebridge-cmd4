@@ -51,14 +51,20 @@ describe('Testing load of index.js', ( ) =>
 // ************ TEST UNINITIALIZED CMD4_DEVICE_TYPE_ENUM EOL **************
 describe('Testing CMD4_DEVICE_TYPE_ENUM EOL', ( ) =>
 {
-   it('CMD4_DEVICE_TYPE_ENUM has EOL', ( ) =>
+   it('pluginModule.DEVICE_DATA is not null', ( ) =>
    {
-      assert.isNotNull(pluginModule.CMD4_DEVICE_TYPE_ENUM.EOL, 'EOL is null');
+      assert.isNotNull(pluginModule.DEVICE_DATA, 'DEVICE_DATA is null');
    });
 
-   it('CMD4_DEVICE_TYPE_ENUM.EOL = ' + DEVICE_EOL, ( ) =>
+   it('pluginModule.DEVICE_DATA.CMD4_DEVICE_TYPE_ENUM is not null', ( ) =>
    {
-      assert.equal(pluginModule.CMD4_DEVICE_TYPE_ENUM.EOL, DEVICE_EOL);
+      assert.isNotNull(pluginModule.DEVICE_DATA.CMD4_DEVICE_TYPE_ENUM, 'pluginModule.DEVICE_DATA.CMD4_DEVICE_TYPE_ENUM is null');
+   });
+
+   it('pluginModule.DEVICE_DATA.CMD4_DEVICE_TYPE_ENUM.EOL = ' + DEVICE_EOL, ( ) =>
+   {
+      assert.equal(pluginModule.DEVICE_DATA.CMD4_DEVICE_TYPE_ENUM.EOL, DEVICE_EOL,
+      'pluginModule.DEVICE_DATA.CMD4_DEVICE_TYPE_ENUM is incorrect: ' + pluginModule.DEVICE_DATA.CMD4_DEVICE_TYPE_ENUM.EOL );
    });
 });
 

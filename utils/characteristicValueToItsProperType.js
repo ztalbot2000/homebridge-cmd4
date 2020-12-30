@@ -8,28 +8,32 @@ const Fg = require( "../utils/colors" );
 // Description:
 //    Check if props for accTypeEnumIndex is defined in CMD4_ACC_TYPE_ENUM
 //
-// @param props - CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props;
+// @param log - Logging mechanism.
+// @param format - CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
 // @param Characteristic - api.hap.Characteristic
+// @param characteristicString - CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
 // @param value
+// @param allowTLV8 - true/false to omit message.
 //
 // @returns props or undefined
 //
-function characteristicValueToItsProperType( props, Characteristic, value )
+function characteristicValueToItsProperType( log, format, Characteristic, characteristicString, value, allowTLV8 )
 {
-    let format = props.format;
+    // if allowTLV8 is defined, use its value otherwise use false.
+    let allowTLV8Here = allowTLV8 === false;
 
-//  Formats["BOOL"] = "bool";
-//  Formats["INT"] = "int";
-//  Formats["FLOAT"] = "float";
-//  Formats["STRING"] = "string";
-//  Formats["UINT8"] = "uint8";
-//  Formats["UINT16"] = "uint16";
-//  Formats["UINT32"] = "uint32";
-//  Formats["UINT64"] = "uint64";
-//  Formats["DATA"] = "data";
-//  Formats["TLV8"] = "tlv8";
-//  Formats["ARRAY"] = "array";
-//  Formats["DICTIONARY"] = "dict";
+    //  Formats["BOOL"] = "bool";
+    //  Formats["INT"] = "int";
+    //  Formats["FLOAT"] = "float";
+    //  Formats["STRING"] = "string";
+    //  Formats["UINT8"] = "uint8";
+    //  Formats["UINT16"] = "uint16";
+    //  Formats["UINT32"] = "uint32";
+    //  Formats["UINT64"] = "uint64";
+    //  Formats["DATA"] = "data";
+    //  Formats["TLV8"] = "tlv8";
+    //  Formats["ARRAY"] = "array";
+    //  Formats["DICTIONARY"] = "dict";
 
     let type = trueTypeOf( value );
 
@@ -47,7 +51,7 @@ function characteristicValueToItsProperType( props, Characteristic, value )
               return parseFloat( value, 10 );
           }
           // If the value is not convertable, just return it.
-          console.log( `Cannot convert value: ${ value } to Float` );
+          log( `Cannot convert value: ${ value } to Float for ${ characteristicString }` );
 
           return value;
           break;
@@ -62,7 +66,7 @@ function characteristicValueToItsProperType( props, Characteristic, value )
           // If it cannot be converted, well it cant.
           if ( trueTypeOf( result ) != Number )
           {
-             console.log( `Cannot convert value: ${ value } to Number` );
+             log( `Cannot convert value: ${ value } to Number for ${ characteristicString }` );
 
              return value;
           }
@@ -81,7 +85,7 @@ function characteristicValueToItsProperType( props, Characteristic, value )
           }
 
           // If the value is not convertable, just return it.
-          console.log( `Cannot convert value: ${ value } to String` );
+          log( `Cannot convert value: ${ value } to String for ${ characteristicString }` );
 
           return value;
           break;
@@ -107,7 +111,7 @@ function characteristicValueToItsProperType( props, Characteristic, value )
           }
 
           // If the value is not convertable, just return it.
-          console.log( `Cannot convert value: ${ value } to String` );
+          log( `Cannot convert value: ${ value } to String for ${ characteristicString }` );
 
           return value;
        break;
@@ -125,14 +129,21 @@ function characteristicValueToItsProperType( props, Characteristic, value )
           }
 
           // If the value is not convertable, just return it.
-          console.log( `Cannot convert value: ${ value } to Array` );
+          log( `Cannot convert value: ${ value } to Array` );
 
           return value;
           break;
        case Characteristic.Formats.DATA:
+          log( Fg.Red + `Do not know how to convert value: ${ value } for ${ characteristicString } to DATA` );
+          return value;
+          break;
        case Characteristic.Formats.TLV8:
+          if ( allowTLV8Here && log.debug )
+             log.debug( Fg.Red + `Do not know how to convert value: ${ value } for ${ characteristicString } to TLV8` );
+          return value;
+          break;
        case Characteristic.Formats.DICTIONARY:
-          console.log( Fg.Red + `Do not know how to convert value: ${ value }for ${ props.type }` );
+             log( Fg.Red + `Do not know how to convert value: ${ value } for ${ characteristicString } to DICTIONARY` );
           return value;
           break;
     }

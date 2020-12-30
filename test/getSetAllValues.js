@@ -45,16 +45,16 @@ describe( "Testing load of index.js", ( ) =>
 });
 
 // ************ TEST UNINITIALIZED CMD4_DEVICE_TYPE_ENUM EOL **************
-describe( "Testing CMD4_DEVICE_TYPE_ENUM EOL", ( ) =>
+describe( "Quick Testing CMD4_DEVICE_TYPE_ENUM EOL", ( ) =>
 {
    it( "CMD4_DEVICE_TYPE_ENUM has EOL", ( ) =>
    {
-      assert.isNotNull( pluginModule.CMD4_DEVICE_TYPE_ENUM.EOL, "EOL is null" );
+      assert.isNotNull( pluginModule.DEVICE_DATA.CMD4_DEVICE_TYPE_ENUM.EOL, "EOL is null" );
    });
 
    it( "CMD4_DEVICE_TYPE_ENUM.EOL = " + DEVICE_EOL, ( ) =>
    {
-      assert.equal( pluginModule.CMD4_DEVICE_TYPE_ENUM.EOL, DEVICE_EOL );
+      assert.equal( pluginModule.DEVICE_DATA.CMD4_DEVICE_TYPE_ENUM.EOL, DEVICE_EOL );
    });
 });
 
@@ -116,6 +116,7 @@ describe( "Testing State.js Get Characteristics default written data ( " + CMD4_
 // *** TEST Set of Characteristic properties *******
 
 let dummyData = "X0X0Test";
+let dummyDataR = "\"" + dummyData + "\"";
 
 describe( "Testing State.js Set Characteristics ( " + CMD4_ACC_TYPE_ENUM.EOL + " of them )", ( ) =>
 {
@@ -161,7 +162,7 @@ describe( "Testing State.js Get Characteristics written data ( " + cmd4.CMD4_ACC
       let args2 = " Get Device " + characteristicString + " ";
       let args = ["Get", "Device", characteristicString];
 
-      it( accTypeEnumIndex + ": " + cmd + args2 + "should return: '" + dummyData + "'", ( ) =>
+      it( accTypeEnumIndex + ": " + cmd + args2 + "should return: " + dummyDataR , ( ) =>
       {
          const ps = child_process.spawnSync( cmd, args );
 
@@ -174,7 +175,7 @@ describe( "Testing State.js Get Characteristics written data ( " + cmd4.CMD4_ACC
            data = ps.stdout;
            // fixme ??? assert( data == dummyData, "data returned: '" + data + "'" );
            //  The carriage return is stripped by getValue
-           assert( data == dummyData + "\n", "data returned: '" + data + "'" );
+           assert( data == dummyDataR + "\n", "data returned:" + data );
 
            assert( data.length != 0, "data returned: " + data.length );
         }

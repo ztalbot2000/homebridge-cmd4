@@ -50,12 +50,13 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
    it('characteristicValueToItsProperType of AirParticulateSize of UINT8 Number should be Number .', ( ) =>
    {
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AirParticulateSize;
-      let characteristicProps = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props;
+      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+      let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
       let value = 60;
       let expectedResult = 60;
 
 
-      let result = characteristicValueToItsProperType(characteristicProps, Characteristic, value  );
+      let result = characteristicValueToItsProperType( console, format, Characteristic, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -63,12 +64,13 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
    it('characteristicValueToItsProperType of AirParticulateSize of UINT8 String should be Number .', ( ) =>
    {
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AirParticulateSize;
-      let characteristicProps = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props;
+      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+      let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
       let value = "60";
       let expectedResult = 60;
 
 
-      let result = characteristicValueToItsProperType(characteristicProps, Characteristic, value  );
+      let result = characteristicValueToItsProperType( console, format, Characteristic, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -76,12 +78,13 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
    it('characteristicValueToItsProperType of TargetTemperature of Float should be Float .', ( ) =>
    {
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetTemperature;
-      let characteristicProps = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props;
+      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+      let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
       let value = 60.2;
       let expectedResult = 60.2;
 
 
-      let result = characteristicValueToItsProperType(characteristicProps, Characteristic, value  );
+      let result = characteristicValueToItsProperType( console, format, Characteristic, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -89,12 +92,13 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
    it('characteristicValueToItsProperType of TargetTemperature of Float String should be Float .', ( ) =>
    {
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetTemperature;
-      let characteristicProps = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props;
+      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+      let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
       let value = "60.2";
       let expectedResult = 60.2;
 
 
-      let result = characteristicValueToItsProperType(characteristicProps, Characteristic, value  );
+      let result = characteristicValueToItsProperType( console, format, Characteristic, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -102,11 +106,12 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
    it('characteristicValueToItsProperType of Name of string1 should be String .', ( ) =>
    {
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Name;
-      let characteristicProps = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props;
+      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+      let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
       let value = "Device";
       let expectedResult = "Device";
 
-      let result = characteristicValueToItsProperType(characteristicProps, Characteristic, value  );
+      let result = characteristicValueToItsProperType( console, format, Characteristic, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -114,11 +119,12 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
    it('characteristicValueToItsProperType of Name of number should be String .', ( ) =>
    {
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Name;
-      let characteristicProps = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props;
+      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+      let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
       let value = 123;
       let expectedResult = "123";
 
-      let result = characteristicValueToItsProperType(characteristicProps, Characteristic, value  );
+      let result = characteristicValueToItsProperType( console, format, Characteristic, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -126,11 +132,12 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
    it('characteristicValueToItsProperType of Mute of FAlse should be false .', ( ) =>
    {
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
-      let characteristicProps = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props;
+      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+      let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
       let value = "FAlse";
       let expectedResult = false;
 
-      let result = characteristicValueToItsProperType(characteristicProps, Characteristic, value  );
+      let result = characteristicValueToItsProperType( console, format, Characteristic, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -138,11 +145,12 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
    it('characteristicValueToItsProperType of Mute of "FAlse" should be false .', ( ) =>
    {
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
-      let characteristicProps = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props;
+      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+      let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
       let value = "FAlse";
       let expectedResult = false;
 
-      let result = characteristicValueToItsProperType(characteristicProps, Characteristic, value  );
+      let result = characteristicValueToItsProperType( console, format, Characteristic, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -150,11 +158,12 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
    it('characteristicValueToItsProperType of Mute of "True" should be true .', ( ) =>
    {
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
-      let characteristicProps = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props;
+      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+      let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
       let value = "FAlse";
       let expectedResult = false;
 
-      let result = characteristicValueToItsProperType(characteristicProps, Characteristic, value  );
+      let result = characteristicValueToItsProperType( console, format, Characteristic, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -162,11 +171,12 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
    it('characteristicValueToItsProperType of Mute of false should be false .', ( ) =>
    {
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
-      let characteristicProps = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props;
+      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+      let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
       let value = false;
       let expectedResult = false;
 
-      let result = characteristicValueToItsProperType(characteristicProps, Characteristic, value  );
+      let result = characteristicValueToItsProperType( console, format, Characteristic, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -174,11 +184,12 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
    it('characteristicValueToItsProperType of Mute of true should be true .', ( ) =>
    {
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
-      let characteristicProps = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props;
+      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+      let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
       let value = true;
       let expectedResult = true;
 
-      let result = characteristicValueToItsProperType(characteristicProps, Characteristic, value  );
+      let result = characteristicValueToItsProperType( console, format, Characteristic, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -186,11 +197,12 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
    it('characteristicValueToItsProperType of Mute of 0 should be true .', ( ) =>
    {
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
-      let characteristicProps = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props;
+      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+      let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
       let value = 0;
       let expectedResult = true;
 
-      let result = characteristicValueToItsProperType(characteristicProps, Characteristic, value  );
+      let result = characteristicValueToItsProperType( console, format, Characteristic, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -198,11 +210,12 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
    it('characteristicValueToItsProperType of Mute of 1 should be false .', ( ) =>
    {
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
-      let characteristicProps = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props;
+      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+      let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
       let value = 1;
       let expectedResult = false;
 
-      let result = characteristicValueToItsProperType(characteristicProps, Characteristic, value  );
+      let result = characteristicValueToItsProperType( console, format, Characteristic, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
