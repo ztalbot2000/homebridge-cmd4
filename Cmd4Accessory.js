@@ -36,7 +36,7 @@ let CMD4_DEVICE_TYPE_ENUM = require( "./lib/CMD4_DEVICE_TYPE_ENUM" ).CMD4_DEVICE
 // Constants
 const constants = require( "./cmd4Constants" );
 
-let FakeGatoHistoryService;
+let FakeGatoHistoryService = null;
 
 // Only one TV is allowed per bridge. Circumvented by
 // publishing the TV externally.
@@ -114,6 +114,10 @@ class Cmd4Accessory
 
       // If polling is defined it is set to true/false, otherwise false.
       this.polling = this.config.polling === true;
+
+      // Init the Global Fakegato service once !
+      if ( FakeGatoHistoryService == null )
+        FakeGatoHistoryService = require( "fakegato-history" )( api );
 
       // Fakegato-history definitions from parent, if any.
       this.storage = parentInfo && parentInfo.storage;
@@ -822,7 +826,7 @@ class Cmd4Accessory
 
          switch ( this.eve )
          {
-            case FAKEGATO_TYPE_ENERGY:
+            case constants.FAKEGATO_TYPE_ENERGY:
             {
                firstParm   = this.fakegatoConfig[ constants.POWER_l ] || "0";
                ucFirstParm = ucFirst( firstParm )                     || "0";
@@ -840,7 +844,7 @@ class Cmd4Accessory
                   });
                break;
             }
-            case FAKEGATO_TYPE_ROOM:
+            case constants.FAKEGATO_TYPE_ROOM:
             {
                firstParm       = this.fakegatoConfig[ constants.TEMP_l ]     || "0";
                secondParm      = this.fakegatoConfig[ constants.HUMIDITY_l ] || "0";
@@ -872,7 +876,7 @@ class Cmd4Accessory
                   });
                break;
             }
-            case FAKEGATO_TYPE_WEATHER:
+            case constants.FAKEGATO_TYPE_WEATHER:
             {
                firstParm       = this.fakegatoConfig[ constants.TEMP_l ]     || "0";
                secondParm      = this.fakegatoConfig[ constants.PRESSURE_l ] || "0";
@@ -903,7 +907,7 @@ class Cmd4Accessory
                   });
                break;
             }
-            case FAKEGATO_TYPE_DOOR:
+            case constants.FAKEGATO_TYPE_DOOR:
             {
                firstParm   = this.fakegatoConfig[ constants.STATUS_l ] || "0";
                ucFirstParm = ucFirst( firstParm )                      || "0";
@@ -921,7 +925,7 @@ class Cmd4Accessory
                   });
                break;
             }
-            case FAKEGATO_TYPE_MOTION:
+            case constants.FAKEGATO_TYPE_MOTION:
             {
                firstParm   = this.fakegatoConfig[ constants.STATUS_l ] || "0";
                ucFirstParm = ucFirst( firstParm )                      || "0";
@@ -940,7 +944,7 @@ class Cmd4Accessory
                   });
                break;
             }
-            case FAKEGATO_TYPE_THERMO:
+            case constants.FAKEGATO_TYPE_THERMO:
             {
                firstParm       = this.fakegatoConfig[ constants.CURRENTTEMP_l ]   || "0";
                secondParm      = this.fakegatoConfig[ constants.SETTEMP_l ]       || "0";
@@ -971,7 +975,7 @@ class Cmd4Accessory
                   });
                break;
             }
-            case FAKEGATO_TYPE_AQUA:
+            case constants.FAKEGATO_TYPE_AQUA:
             {
                firstParm       = this.fakegatoConfig[ constants.STATUS_l ]      || "0";
                secondParm      = this.fakegatoConfig[ constants.WATERAMOUNT_l ] || "0";
@@ -1015,24 +1019,24 @@ class Cmd4Accessory
                 this.eve = fakegatoConfig[ key ];
                 switch( value )
                 {
-                    case FAKEGATO_TYPE_ENERGY:
-                    case FAKEGATO_TYPE_ROOM:
-                    case FAKEGATO_TYPE_WEATHER:
-                    case FAKEGATO_TYPE_DOOR:
-                    case FAKEGATO_TYPE_MOTION:
-                    case FAKEGATO_TYPE_THERMO:
-                    case FAKEGATO_TYPE_AQUA:
+                    case constants.FAKEGATO_TYPE_ENERGY:
+                    case constants.FAKEGATO_TYPE_ROOM:
+                    case constants.FAKEGATO_TYPE_WEATHER:
+                    case constants.FAKEGATO_TYPE_DOOR:
+                    case constants.FAKEGATO_TYPE_MOTION:
+                    case constants.FAKEGATO_TYPE_THERMO:
+                    case constants.FAKEGATO_TYPE_AQUA:
                        break;
                     default:
                        this.log( `Invalid fakegato eve type: ${ value }` );
                        this.log( "It must be one of ( %s, %s, %s, %s, %s, %s, %s )",
-                          FAKEGATO_TYPE_ENERGY,
-                          FAKEGATO_TYPE_ROOM,
-                          FAKEGATO_TYPE_WEATHER,
-                          FAKEGATO_TYPE_DOOR,
-                          FAKEGATO_TYPE_MOTION,
-                          FAKEGATO_TYPE_THERMO,
-                          FAKEGATO_TYPE_AQUA );
+                          constants.FAKEGATO_TYPE_ENERGY,
+                          constants.FAKEGATO_TYPE_ROOM,
+                          constants.FAKEGATO_TYPE_WEATHER,
+                          constants.FAKEGATO_TYPE_DOOR,
+                          constants.FAKEGATO_TYPE_MOTION,
+                          constants.FAKEGATO_TYPE_THERMO,
+                          constants.FAKEGATO_TYPE_AQUA );
                         this.log( `Check the Cmd4 README and ` );
                         this.log( `https://github.com/simont77/fakegato-history` );
                         process.exit( 1 );
