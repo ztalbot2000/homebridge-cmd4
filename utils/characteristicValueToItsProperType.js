@@ -10,6 +10,7 @@ const Fg = require( "../utils/colors" );
 //
 // @param log - Logging mechanism.
 // @param format - CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
+// @param displayName - config.displayName
 // @param Characteristic - api.hap.Characteristic
 // @param characteristicString - CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
 // @param value
@@ -17,7 +18,7 @@ const Fg = require( "../utils/colors" );
 //
 // @returns props or undefined
 //
-function characteristicValueToItsProperType( log, format, Characteristic, characteristicString, value, allowTLV8 )
+function characteristicValueToItsProperType( log, format, displayName, Characteristic, characteristicString, value, allowTLV8 )
 {
     // if allowTLV8 is defined, use its value otherwise use false.
     let allowTLV8Here = allowTLV8 === false;
@@ -51,7 +52,7 @@ function characteristicValueToItsProperType( log, format, Characteristic, charac
               return parseFloat( value, 10 );
           }
           // If the value is not convertable, just return it.
-          log( `Cannot convert value: ${ value } to Float for ${ characteristicString }` );
+          log( `${ displayName} ` + Fg.Red + `Cannot convert value: ${ value } to Float for ${ characteristicString }` + Fg.Rm );
 
           return value;
           break;
@@ -66,7 +67,7 @@ function characteristicValueToItsProperType( log, format, Characteristic, charac
           // If it cannot be converted, well it cant.
           if ( trueTypeOf( result ) != Number )
           {
-             log( `Cannot convert value: ${ value } to Number for ${ characteristicString }` );
+             log( `${ displayName} ` + Fg.Red + `Cannot convert value: ${ value } to INT for ${ characteristicString }` + Fg.Rm );
 
              return value;
           }
@@ -85,7 +86,7 @@ function characteristicValueToItsProperType( log, format, Characteristic, charac
           }
 
           // If the value is not convertable, just return it.
-          log( `Cannot convert value: ${ value } to String for ${ characteristicString }` );
+          log( `${ displayName} ` + Fg.Red + `Cannot convert value: ${ value } to String for ${ characteristicString }` + Fg.Rm );
 
           return value;
           break;
@@ -111,10 +112,10 @@ function characteristicValueToItsProperType( log, format, Characteristic, charac
           }
 
           // If the value is not convertable, just return it.
-          log( `Cannot convert value: ${ value } to String for ${ characteristicString }` );
+          log( `${ displayName} ` + Fg.Red + `Cannot convert value: ${ value } to Bool for ${ characteristicString }` + Fg.Rm );
 
           return value;
-       break;
+          break;
        case Characteristic.Formats.ARRAY:
           // If the value is a Number, return the conversion
           if ( type == Number ||
@@ -129,23 +130,30 @@ function characteristicValueToItsProperType( log, format, Characteristic, charac
           }
 
           // If the value is not convertable, just return it.
-          log( `Cannot convert value: ${ value } to Array` );
+          log( `${ displayName} ` + Fg.Yel + `Cannot convert value: ${ value } to Array` + Fg.Rm );
 
           return value;
           break;
        case Characteristic.Formats.DATA:
-          log( Fg.Red + `Do not know how to convert value: ${ value } for ${ characteristicString } to DATA` );
+          // DATA types cannot be converted, so if in debug mode, note it.
+          if ( log.debug )
+             log.debug( `${ displayName} ` + Fg.Yel + `Do not know how to convert value: ${ value } for ${ characteristicString } to DATA` + Fg.Rm );
           return value;
           break;
        case Characteristic.Formats.TLV8:
+          // TLV8 types cannot be converted, so if in debug mode, note it.
           if ( allowTLV8Here && log.debug )
-             log.debug( Fg.Red + `Do not know how to convert value: ${ value } for ${ characteristicString } to TLV8` );
+             log.debug( `${ displayName} ` + Fg.Yel + `Do not know how to convert value: ${ value } for ${ characteristicString } to TLV8` + Fg.Rm );
           return value;
           break;
        case Characteristic.Formats.DICTIONARY:
-             log( Fg.Red + `Do not know how to convert value: ${ value } for ${ characteristicString } to DICTIONARY` );
+          // DICTIONARY types cannot be converted, so if in debug mode, note it.
+          if ( log.debug )
+             log.debug( `${ displayName} ` + Fg.Yel + `Do not know how to convert value: ${ value } for ${ characteristicString } to DICTIONARY` + Fg.Rm );
           return value;
           break;
+       default:
+          log( `${ displayName} ` + Fg.Red + `Unknown format: ${ format } to convert value: ${ value } for ${ characteristicString }` + Fg.Rm );
     }
 }
 

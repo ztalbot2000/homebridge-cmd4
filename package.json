@@ -57,7 +57,7 @@
     "node": ">=4.4.0"
   },
   "homepage": "https://github.com/ztalbot2000/homebridge-cmd4#readme",
-  "changelog": "https://github.com/ztalbot2000/homebridge-cmd4#changelog",
+  "changelog": "https://github.com/ztalbot2000/homebridge-cmd4/blob/master/ChangeLog.md",
   "keywords": [
     "homebridge-plugin",
     "homebridge",

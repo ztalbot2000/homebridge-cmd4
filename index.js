@@ -1,9 +1,26 @@
 "use strict";
 
+//
+//                           Homebridge
+// Flow                     /          \
+//                         /            \
+//      api.registerPlatform             api.registerAccessory
+//     forEach Accessories{ }        Any { } before/after Accessories{ }
+//         Cmd4Platform                      Cmd4Accessory
+//         Cmd4Accessory
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 // The Cmd4 Classes
-//const Cmd4Accessory = require( "./Cmd4Accessory" ).Cmd4Accessory;
 const Cmd4Accessory = require( "./Cmd4Accessory" ).Cmd4Accessory;
-//const Cmd4Platform = require( "./CmdPlatform" ).Cmd4Platform;
 const Cmd4Platform = require( "./Cmd4Platform" ).Cmd4Platform;
 
 const settings = require( "./cmd4Settings" );
@@ -43,11 +60,16 @@ module.exports =
 
 function checkForUpdates( )
 {
+   // Don't show the updates message in mocha test mode
+   if ( process.argv.includes( "test/mocha-setup" ) )
+      return;
+
    const latestVersion = require( "latest-version" );
 
    const myPkg = require( "./package.json" );
 
-   ( async( ) => {
+   ( async( ) =>
+   {
       let lv = await latestVersion( myPkg.name );
 
       if ( lv != myPkg.version )

@@ -72,5 +72,21 @@ describe( "Testing trueTypeOf", ( ) =>
       let result = trueTypeOf( data );
       assert.equal( result, expectedResult, "trueTypeOf( " + data + " ) returned: " + result  + " expected: " +  expectedResult );
    });
+
+   it( "trueTypeOf should correctly identify a 0 as a Number", ( ) =>
+   {
+      let data = 0;
+      let expectedResult = Number;
+      let result = trueTypeOf( data );
+      assert.equal( result, expectedResult, "trueTypeOf( " + data + " ) returned: " + result  + " expected: " +  expectedResult );
+   });
+
+   it( "trueTypeOf should correctly identify a \"0\" as a Number", ( ) =>
+   {
+      let data = "0";
+      let expectedResult = Number;
+      let result = trueTypeOf( data );
+      assert.equal( result, expectedResult, "trueTypeOf( " + data + " ) returned: " + result  + " expected: " +  expectedResult );
+   });
 })
 

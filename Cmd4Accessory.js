@@ -611,7 +611,7 @@ class Cmd4Accessory
                words[ 0 ] = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, words[ 0 ] )
 
                // Return the appropriate type, by seeing what it is defined as in Homebridge,
-               words[ 0 ] = characteristicValueToItsProperType( self.log, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format, self.api.hap.Characteristic, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, words[ 0 ], self.allowTLV8 );
+               words[ 0 ] = characteristicValueToItsProperType( self.log, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format, self.displayName, self.api.hap.Characteristic, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, words[ 0 ], self.allowTLV8 );
 
                // Store history using fakegato if set up
                self.updateAccessoryAttribute( accTypeEnumIndex, words[ 0 ] );
@@ -1217,7 +1217,7 @@ class Cmd4Accessory
       }
 
       // Return the appropriate type, by seeing what it is defined as in Homebridge,
-      value = characteristicValueToItsProperType( this.log, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format, this.api.hap.Characteristic, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, value, this.allowTLV8 );
+      value = characteristicValueToItsProperType( this.log, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format, this.displayName, this.api.hap.Characteristic, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, value, this.allowTLV8 );
 
       this.setStoredValueForIndex( accTypeEnumIndex, value );
    }
