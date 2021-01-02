@@ -13,6 +13,7 @@ let getAccessoryUUID = require( "./utils/getAccessoryUUID" );
 
 let ucFirst = require( "./utils/ucFirst" );
 let indexOfEnum = require( "./utils/indexOfEnum" );
+let trueTypeOf = require( "./utils/trueTypeOf" );
 
 // For changing validValue Constants to Values and back again
 var { transposeConstantToValidValue,
@@ -278,11 +279,31 @@ class Cmd4Accessory
 
    checkPollingConfigForUnsetCharacteristics( pollingConfig )
    {
+      let type = trueTypeOf( pollingConfig );
 
-      if ( typeof pollingConfig != "object" )
+      switch( type )
       {
-         this.log.debug( `Polling config is old style. Nothing to check for unset polling characteristics` );
-         return;
+         case null:
+         case undefined:
+            this.log.debug( `No polling configured.` );
+            return;
+         case Boolean:
+            this.log.debug( `Polling config is old style. Nothing to check for unset polling characteristics` );
+            return;
+         case String:
+            this.log.error( `Unknown type for Polling ${ type }` );
+            process.exit( 444 );
+         case Array:
+            break;
+         case Object:
+            this.log.warn( `Polling config for ${ this.displayName } should be an array.` );
+            this.log.warn( `Converting to array, but this may be an error in the future.` );
+            // Convert the object to an Array and try again.
+            this.checkPollingConfigForUnsetCharacteristics( [ pollingConfig ] );
+            return;
+         default:
+            this.log( `CheckPollingForUnsetCharacteristics. UnHandled type: ${ type }` );
+            return;
       }
 
       this.log.debug( `Checking for polling of unset characteristics.` );
@@ -1410,13 +1431,6 @@ class Cmd4Accessory
          {
             case constants.TYPE:
                this.type = value;
-               this.ucType = ucFirst( value );
-               this.typeIndex = CMD4_DEVICE_TYPE_ENUM.properties.indexOfEnum( i => i.deviceName === this.ucType );
-               if ( this.typeIndex < 0 )
-               {
-                  this.log.error( Fg.Red + "Error" + Fg.Rm + ": Unknown device type:%s for %s", this.type, this.displayName );
-                  process.exit( 1 );
-               }
 
                break;
             case constants.DISPLAYNAME:
@@ -1593,6 +1607,14 @@ class Cmd4Accessory
       // Name and/or DisplayName must be defined.
       if ( ! this.name )
          this.name = getAccessoryName( config );
+
+      this.ucType = ucFirst( this.type );
+      this.typeIndex = CMD4_DEVICE_TYPE_ENUM.properties.indexOfEnum( i => i.deviceName === this.ucType );
+      if ( this.typeIndex < 0 )
+      {
+          this.log.error( Fg.Red + "Error" + Fg.Rm + ": Unknown device type:%s for %s", this.type, this.displayName );
+         process.exit( 1 );
+      }
 
       // UUID must be defined or created.
       this.UUID = getAccessoryUUID( config, this.api.hap.uuid );

@@ -9,6 +9,8 @@ function define(name, value) {
 
 // Pretty Colors
 define("Rm",  "\x1b[m");
+define("Brt", "\x1b[1m");
+define("Dim", "\x1b[2m");
 define("Und", "\x1b[4m");
 define("Blk", "\x1b[30m");
 define("Red", "\x1b[31m");

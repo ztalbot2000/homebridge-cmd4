@@ -1,11 +1,13 @@
 'use strict';
 
-const isNumeric = require( "../utils/isNumeric" );
-
 // Description:
 //    Determine the true type of an object, because typeOf is screwy
 //    for null/undefined.
 //
+//
+// NOTE: "0" or any qoted number is still a string.
+//       This function just fixes null/undefined.
+//       Use isNumeric if needed.
 //
 // @param m - type to check
 // @returns: Array, Boolean, Number, String, Object, null, undefined
@@ -25,9 +27,9 @@ function trueTypeOf( m )
          return Number;
          break;
      case "string":
-         // A String can still be a number
-         if ( isNumeric ( m ) )
-            return Number;
+         // If the string is actually a number, let the caller
+         // deal with it as our intent is just to fix undefined
+         // and null issues.
          return String;
          break;
      case "object":

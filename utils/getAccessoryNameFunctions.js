@@ -11,26 +11,21 @@
 
 var getAccessoryName = function ( config )
 {
-   if ( config.name )
-      return config.name;
+   if ( config.name ) return config.name;
+   if ( config.displayName ) return config.displayName;
 
-   if ( config.displayName )
-      return config.displayName;
-
-   console.log( "You must either, 'displayName' and or 'name' per accessory." );
-   process.exit( -1 );
+   console.log( "You must have a 'name' per accessory." );
+   process.exit( 333 );
 }
 
 var getAccessoryDisplayName = function ( config )
 {
-   if ( config.displayName )
-      return config.displayName;
+   if ( config.displayName ) return config.displayName;
 
-   if ( config.name )
-      return config.name;
+   if ( config.name ) return config.name;
 
    console.log( "You must either, 'displayName' and or 'name' per accessory." );
-   process.exit( -1 );
+   process.exit( 222 );
 }
 
 module.exports = { getAccessoryName,
