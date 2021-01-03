@@ -90,7 +90,7 @@ class Cmd4Accessory
       // DisplayName and/or Name must be defined.
       // Update config, just in case it is not set there.
       if ( ! this.displayName )
-         this.displayName = this.config.displayName = getAccessoryName( this.config );
+         this.displayName = this.config.displayName ||  getAccessoryName( this.config );
 
 
       // Bring the parent config variables forward.
@@ -279,32 +279,8 @@ class Cmd4Accessory
 
    checkPollingConfigForUnsetCharacteristics( pollingConfig )
    {
-      let type = trueTypeOf( pollingConfig );
-
-      switch( type )
-      {
-         case null:
-         case undefined:
-            this.log.debug( `No polling configured.` );
-            return;
-         case Boolean:
-            this.log.debug( `Polling config is old style. Nothing to check for unset polling characteristics` );
-            return;
-         case String:
-            this.log.error( `Unknown type for Polling ${ type }` );
-            process.exit( 444 );
-         case Array:
-            break;
-         case Object:
-            this.log.warn( `Polling config for ${ this.displayName } should be an array.` );
-            this.log.warn( `Converting to array, but this may be an error in the future.` );
-            // Convert the object to an Array and try again.
-            this.checkPollingConfigForUnsetCharacteristics( [ pollingConfig ] );
-            return;
-         default:
-            this.log( `CheckPollingForUnsetCharacteristics. UnHandled type: ${ type }` );
-            return;
-      }
+      if ( trueTypeOf( pollingConfig ) != Array )
+         return;
 
       this.log.debug( `Checking for polling of unset characteristics.` );
 
@@ -1652,6 +1628,34 @@ class Cmd4Accessory
           {
              this.log.warn( `Only one unpublished TV is allowed per bridge` );
           }
+      }
+
+      // Convert polling to an Array now so that it does not need to be done multiple times later.
+      let pollingType = trueTypeOf( this.polling );
+
+      switch( pollingType )
+      {
+         case null:
+         case undefined:
+            this.log.debug( `No polling configured.` );
+            return;
+         case Boolean:
+            this.log.debug( `Polling config is old style. Nothing to check for unset polling characteristics` );
+            return;
+         case String:
+            this.log.error( `Unknown type for Polling ${ pollingType }` );
+            process.exit( 444 );
+         case Array:
+            break;
+         case Object:
+            this.log.warn( `Polling config for ${ this.displayName } should be an array.` );
+            this.log.warn( `Converting to array, but this may be an error in the future.` );
+            // Convert the object to an Array and try again.
+            this.polling = [ this.polling ];
+            return;
+         default:
+            this.log( `Do not know how to handle polling type of: ${ pollingType }` );
+            return;
       }
    }
 

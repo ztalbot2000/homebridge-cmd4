@@ -54,8 +54,6 @@ class Cmd4Platform
 
       this.services = [ ];
 
-      this.reachable = true;
-
       // Define platform config for fakegato-history
       if ( this.config.storage != undefined )
       {
@@ -84,6 +82,16 @@ class Cmd4Platform
 
          this.discoverDevices( );
 
+         // Any accessory not reachable must have been removed, find them
+         for ( let accessory in this.COLLECTION )
+         {
+            if ( accessory.reachable == false )
+            {
+               this.log.debug( `Accessory ${ accessory.name } needs to be removed.` );
+               //this.removeAccessory( accessory );
+            }
+         }
+
       });
    }
 
@@ -104,8 +112,37 @@ class Cmd4Platform
    {
       this.log.debug( `Found cached accessory: ${ platformAccessory.displayName }` );
 
-      //this.api.unregisterPlatformAccessories(  settings.PLUGIN_NAME, settings.PLATFORM_NAME, [ platformAccessory ] );
       this.COLLECTION.push( platformAccessory );
+   }
+
+   removeAccessory( platformAccessory )
+   {
+      if ( ! platformAccessory )
+         return;
+
+      this.log.debug( `Removing Platform Accessory: ${ platformAccessory.displayName }` );
+
+      let idx = this.COLLECTION.indexOf( platformAccessory );
+      if  ( idx != -1 )
+      {
+         this.COLLECTION = this.COLLECTION.splice( idx, 1 );
+
+         this.api.unregisterPlatformAccessories(  settings.PLUGIN_NAME, settings.PLATFORM_NAME, [ platformAccessory ] );
+
+         this.log.debug( `Removed Platform Accessory: ${ platformAccessory.displayName }` );
+      }
+   }
+
+   configurationRequestHandler( context, request, callback )
+   {
+      // Hmmmm does not happen
+      this.log( Fg.Red + "In ConfigRequestHandler context:%s", context);
+      switch( context.step )
+      {
+         case 5:
+            this.log( Fg.Red + "Asked to remove" );
+            break;
+      }
    }
 
    // These would be platform accessories with/without linked accessories
@@ -187,6 +224,8 @@ class Cmd4Platform
          this.log.debug( `Created ( Platform ) accessory: ${ accessory.displayName }` );
 
 
+         platform.reachable = true;
+         platform.updateReachability(true);
 
 
          // Store a copy of the device object in the `accessory.context`
@@ -212,7 +251,7 @@ class Cmd4Platform
             {
                this.log.debug( `Step 6. publishExternalAccessories: [ ${ accessory.displayName } ]` );
 
-               api.publishExternalAccessories( settings.PLUGIN_NAME, [ platform ] );
+               this.api.publishExternalAccessories( settings.PLUGIN_NAME, [ platform ] );
 
             } else {
                this.log.debug( `Step 6. registerPlatformAccessories( ${ settings.PLUGIN_NAME }, ${ settings.PLATFORM_NAME }, [ ${  accessory.displayName } ] ) `);
