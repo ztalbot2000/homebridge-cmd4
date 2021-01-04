@@ -149,12 +149,14 @@ class Cmd4Platform
    discoverDevices( )
    {
       let platform;
+      let log=this.log;
+      let accessory;
 
       // loop over the discovered devices and register each one if it has not
       // already been registered.
       this.config.accessories && this.config.accessories.forEach( ( device ) =>
       {
-         this.log.debug( `Fetching config.json Platform accessories.` );
+         log.debug( `Fetching config.json Platform accessories.` );
          this.Service=this.api.hap.Service;
 
          let name = device.name = getAccessoryName( device );
@@ -168,28 +170,70 @@ class Cmd4Platform
          // See if an accessory with the same uuid has already been registered and
          // restored from the cached devices we stored in the `configureAccessory`
          // method above
-         //const existingAccessory = this.accessories.find(accessory => accessory.UUID === uuid);
          const existingAccessory = this.COLLECTION.find(accessory => accessory.UUID === uuid);
 
          if (existingAccessory)
          {
-            // the accessory already exists
-            this.log.debug( `Platform: ${ existingAccessory.displayName } already exists.` );
+            log.info('Restoring existing accessory from cache:', existingAccessory.displayName);
 
-            // if you need to update the accessory.context then you should run `api.updatePlatformAccessories`. eg.:
-            // existingAccessory.context.device = device;
-            // this.api.updatePlatformAccessories([existingAccessory]);
+            // if you need to update the accessory.context then you should run
+            // `api.updatePlatformAccessories`. eg.:
+            //    existingAccessory.context.device = device;
+            //    this.api.updatePlatformAccessories([existingAccessory]);
+            //existingAccessory.context.device = device;
+            //this.api.updatePlatformAccessories([existingAccessory]);
 
             // create the accessory handler for the restored accessory
             // this is imported from `platformAccessory.ts`
             // new ExamplePlatformAccessory(this, existingAccessory);
 
             platform = existingAccessory;
+            platform.Service = this.Service;
+
+            // Platform Step 2. const tvService = this.tvAccessory.addService( this.Service.Television );
+            //
+            log.debug("SavedContext=%s", existingAccessory.context.device );
+
+            let that = this;
+            accessory = new Cmd4Accessory( that.log, existingAccessory.context.device, this.api, this );
+            accessory.platform = platform;
+
+            // Store a copy of the device object in the `accessory.context`
+            // the `context` property can be used to store any data about the
+            // accessory you may need
+            accessory.platform.context.device = accessory.config;
+
+
+            // Get the properties for this accessories device type
+            let devProperties = CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ];
+
+            log.debug( `Step 2. ${ accessory.displayName }.service = platform.getService( Service.${ devProperties.deviceName }` );
+            accessory.service = platform.getService( devProperties.service );
+
+            // Determine which characteristics, if any, will be polled. This
+            // information is also used to define which service.getValue is
+            // used, either immediate, cached or polled.
+            accessory.determineCharacteristicsToPollOfAccessoryAndItsChildren( accessory );
+
+            // set up all services for those characteristics in the
+            // config.json file
+            accessory.addAllServiceCharacteristicsForAccessory( accessory );
+
+            // Create all the services for the accessory, including fakegato and polling
+            this.createServicesForAccessoriesChildren( accessory )
+
+
          } else
          {
+            //
+            // the accessory does not yet exist, so we need to create it
+            //
+            log.info('Adding new accessory:', displayName);
+
+            // Create the new PlatformAccessory
             if ( device.category == undefined )
             {
-               this.log.debug( `Step 1. platformAccessory = new platformAccessory( ${ displayName }, uuid )` );
+               log.debug( `Step 1. platformAccessory = new platformAccessory( ${ displayName }, uuid )` );
                platform = new this.api.platformAccessory( displayName, uuid );
 
             } else
@@ -200,80 +244,71 @@ class Cmd4Platform
 
                if ( ! category )
                {
-                  this.log.error( `Category specified: ${ device.category } is not a valid homebridge category.` );
+                  log.error( `Category specified: ${ device.category } is not a valid homebridge category.` );
                   process.exit( 666 );
                }
 
-               this.log.debug( `Step 1. platformAccessory = new platformAccessory( ${ displayName }, uuid, ${ category } )` );
+               log.debug( `Step 1. platformAccessory = new platformAccessory( ${ displayName }, uuid, ${ category } )` );
 
                platform = new api.platformAccessory( displayName, uuid, category );
             }
-         }
-         platform.Service = this.Service;
 
-         cmd4Platforms.push( platform );
+            platform.Service = this.Service;
 
-         this.log( Fg.Mag + "Configuring platformAccessory: " + Fg.Rm + device.displayName );
-         let that = this;
-         let accessory = new Cmd4Accessory( that.log, device, this.api, this );
-         accessory.platform = platform
+            log( Fg.Mag + "Configuring platformAccessory: " + Fg.Rm + device.displayName );
+            let that = this;
+            accessory = new Cmd4Accessory( that.log, device, this.api, this );
+            accessory.platform = platform
 
-         // Put the accessory into its correct collection array.
-         this.COLLECTION.push( accessory );
+            // Put the accessory into its correct collection array.
+            this.COLLECTION.push( accessory );
 
-         this.log.debug( `Created ( Platform ) accessory: ${ accessory.displayName }` );
+            log.debug( `Created ( Platform ) accessory: ${ accessory.displayName }` );
 
 
-         platform.reachable = true;
-         platform.updateReachability(true);
+            //platform.reachable = true;
+            //platform.updateReachability(true);
 
 
-         // Store a copy of the device object in the `accessory.context`
-         // the `context` property can be used to store any data about the accessory you may need
-         //this.platformAccessory.context.device = device;
+            // Store a copy of the device object in the `accessory.context`
+            // the `context` property can be used to store any data about the
+            // accessory you may need
+            accessory.platform.context.device = accessory.config;
 
-         //if ( existingAccessory && existingAccessory.UUID != platform.UUID )
-         if ( existingAccessory && existingAccessory.UUID == platform.UUID )
-         {
-            // noop
-            this.log.debug( `Noop ${ accessory.displayName }` );
-         } else
-         {
+            // Get the properties for this accessories device type
+            let devProperties = CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ];
+
+            // MOVE OUSTSIDE
+            // Platform Step 2. const tvService = this.tvAccessory.addService( this.Service.Television );
+            this.log.debug( `Step 2. ${ accessory.displayName }.service = platform.addService( this.Service.${ devProperties.deviceName }` );
+            accessory.service = platform.addService( devProperties.service );
+
             // Create all the services for the accessory, including fakegato and polling
-            this.createServicesForPlatformAccessoryAndItsChildren( accessory )
-
-
-            accessory.services.push( accessory.service );
-            this.log.debug( Fg.Blu + "%s.services.length:%s" + Fg.Rm, accessory.displayName, accessory.services.length );
+            this.createServicesForAccessoriesChildren( accessory )
 
             // Step 6. this.api.publishExternalAccessories( PLUGIN_NAME, [ this.tvAccessory ] );
             if ( accessory.publishExternally )
             {
-               this.log.debug( `Step 6. publishExternalAccessories: [ ${ accessory.displayName } ]` );
+               log.debug( `Step 6. publishExternalAccessories: [ ${ accessory.displayName } ]` );
 
                this.api.publishExternalAccessories( settings.PLUGIN_NAME, [ platform ] );
 
             } else {
-               this.log.debug( `Step 6. registerPlatformAccessories( ${ settings.PLUGIN_NAME }, ${ settings.PLATFORM_NAME }, [ ${  accessory.displayName } ] ) `);
+               log.debug( `Step 6. registerPlatformAccessories( ${ settings.PLUGIN_NAME }, ${ settings.PLATFORM_NAME }, [ ${  accessory.displayName } ] ) `);
 
                this.api.registerPlatformAccessories( settings.PLUGIN_NAME, settings.PLATFORM_NAME, [ platform ] );
 
                accessory.log.debug( `Creating polling for Platform accessory: ${ accessory.displayName }` );
             }
          }
-         accessory.setupPollingOfAccessoryAndItsChildren( accessory );
+
+         // Let the polling begin
+         accessory.startPollingForAccessoryAndItsChildren( accessory );
       });
    }
 
-   createServicesForPlatformAccessoryAndItsChildren( cmd4PlatformAccessory )
+   createServicesForAccessoriesChildren( cmd4PlatformAccessory )
    {
-      // Get the properties for this accessories device type
-      let devProperties = CMD4_DEVICE_TYPE_ENUM.properties[ cmd4PlatformAccessory.typeIndex ];
-
-      // Platform Step 2. const tvService = this.tvAccessory.addService( this.Service.Television );
-      this.log.debug( `Step 2. ${ cmd4PlatformAccessory.displayName }.service = platform.addService( this.Service.${ devProperties.deviceName }` );
-      cmd4PlatformAccessory.service = cmd4PlatformAccessory.platform.addService( devProperties.service );
-
       // Create the information Service for the platform itself
       // Unlike Standalone Accessories; The Platform information service is created
       // for us and the getService hangs off the platform, not the accessory.
@@ -381,8 +416,6 @@ function createAccessorysInformationService( accessory )
    if ( accessory.serialNumber )
       accessory.informationService
          .setCharacteristic( accessory.api.hap.Characteristic.SerialNumber, accessory.serialNumber );
-
-   accessory.services.push( accessory.informationService );
 }
 
 

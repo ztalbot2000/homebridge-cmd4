@@ -25,6 +25,8 @@
 * Added parsing of returned "quoted strings" for things like device names.
 * Added "Category" for hints to HomeKit of which icon to use for Platform Accessories.
 * Added the ability to define multiple Cmd4 Platforms.
+* Added option to Always fetch characteristics from device (As before, the default), fetch only the Cached value or fetch from the device only those Polled characteristics.
+* Added the ability to remember characteristic values over restarts.
 * Retrieved characteristic values are now converted to those defined by homebridge, instead of guessed by their possible types.
 * Moved some functions to utilities for easier unit testing.
 * Splitting documentation into three different areas, README, Advanced Troubleshooting and a Developers guide.

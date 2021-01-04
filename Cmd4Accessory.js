@@ -86,6 +86,7 @@ class Cmd4Accessory
 
       // Instead of polling per accessory, allow the config file to be polled per characteristic.
       this.listOfPollingCharacteristics = { };
+      this.listOfRunningPolls = { };
 
       // DisplayName and/or Name must be defined.
       // Update config, just in case it is not set there.
@@ -112,9 +113,11 @@ class Cmd4Accessory
       // hold values for  all characteristics based on the size of all possible characteristics.
       this.storedValuesPerCharacteristic = new Array( CMD4_ACC_TYPE_ENUM.EOL ).fill( null );
 
-
       // If polling is defined it is set to true/false, otherwise false.
       this.polling = this.config.polling === true;
+
+      // The default fetch is immediate.
+      this.fetch = this.config.fetch || 0;
 
       // Init the Global Fakegato service once !
       if ( FakeGatoHistoryService == null )
@@ -166,6 +169,11 @@ class Cmd4Accessory
          this.linkedAccessories = this.accessoryTypeConfigToCmd4Accessories( this.linkedAccessoriesConfig, this );
       }
 
+      // Determine which characteristics, if any, will be polled. This
+      // information is also used to define which service.getValue is
+      // used, either immediate, cached or polled.
+      this.determineCharacteristicsToPollOfAccessoryAndItsChildren( this );
+
       // Create all the services for the accessory, including fakegato and polling
       // Only true Standalone accessories can have their services created and
       // polling started. Otherwise the platform will have to do this.
@@ -175,7 +183,8 @@ class Cmd4Accessory
          this.createServicesForStandaloneAccessoryAndItsChildren( this )
 
          log.debug( `Creating polling for Standalone accessory: ${ this.displayName }` );
-         this.setupPollingOfAccessoryAndItsChildren( this );
+         //this.setupPollingOfAccessoryAndItsChildren( this );
+         this.startPollingForAccessoryAndItsChildren( this );
       }
 
    } // Cmd4Accessory ( log, config, api, parentInfo )
@@ -522,6 +531,34 @@ class Cmd4Accessory
 
    // ***********************************************
    //
+   // GetCachedValue:
+   //   This methos will return the cached value of a
+   //   characteristic of a accessory.
+   //
+   // ***********************************************
+   getCachedValue( accTypeEnumIndex, callback )
+   {
+      let self = this;
+
+      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+
+      let result = self.getStoredValueForIndex( accTypeEnumIndex );
+      if ( result == null || result == undefined )
+      {
+         self.log.debug( `getCachedValue ${ characteristicString } for: ${ self.displayName } has no cahed value` );
+         callback( null, null );
+      }
+
+      self.log.debug( `getCachedValue ${ characteristicString } for: ${ self.displayName } returned (CACHED) value: ${ result }` );
+
+      // Store history using fakegato if set up
+      self.updateAccessoryAttribute( accTypeEnumIndex, result );
+
+      callback( null, result );
+   }
+
+   // ***********************************************
+   //
    // GetValue: Method to call an external script
    //           that returns a single word that
    //           returns either a string or numerical
@@ -596,7 +633,7 @@ class Cmd4Accessory
 
             } else
             {
-               if ( words.length >=2 )
+               if ( words.length >= 2 )
                {
                   self.log.warn( `Warning, Retrieving ${ characteristicString }, expected only one word value for: ${ self.displayName } of: ${ stdout }` );
                }
@@ -705,9 +742,7 @@ class Cmd4Accessory
        let len = this.storedValuesPerCharacteristic.length;
 
        // Check every possible characteristic
-       for ( let accTypeEnumIndex = 0;
-            accTypeEnumIndex < len;
-            accTypeEnumIndex++ )
+       for ( let accTypeEnumIndex = 0; accTypeEnumIndex < len; accTypeEnumIndex++ )
        {
 
           // If there is a stored value for this characteristic ( defined by the config file )
@@ -772,10 +807,31 @@ class Cmd4Accessory
                 // Add Read services for characterisitcs, if possible
                 if ( perms.indexOf( this.api.hap.Characteristic.Perms.READ ) != -1 )
                 {
-                   accessory.service.getCharacteristic(
-                      CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
-                      .characteristic )
-                         .on( "get", accessory.getValue.bind( accessory, accTypeEnumIndex ) );
+
+                  // fetch
+                  // Set how getValue works, either immediately, cached or polled.
+                  // 0 -> Immediately -   Fetch immediately everything
+                  // 1 -> cached      -   Fetch omly whats cached
+                  // 2 -> Polled      -   Fetch cached, except for characteristics
+                  //                      which are polled are fetched immediately
+                  if ( accessory.fetch == 1 ||
+                       accessory.fetch == 2 && ! accessory.listOfPollingCharacteristics[ accTypeEnumIndex ] )
+                  {
+                     this.log.debug( Fg.Ylw + `Adding getCachedValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } `);
+                     //Get cachedValue
+                      accessory.service.getCharacteristic(
+                         CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
+                         .characteristic )
+                            .on( "get", accessory.getCachedValue.bind( accessory, accTypeEnumIndex ) );
+                  } else
+                  {
+                     this.log.debug( Fg.Ylw + `Adding getValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } `);
+                      accessory.service.getCharacteristic(
+                         CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
+                         .characteristic )
+                            .on( "get", accessory.getValue.bind( accessory, accTypeEnumIndex ) );
+                  }
+
                 }
              }
 
@@ -1491,6 +1547,35 @@ class Cmd4Accessory
                // Do not parse it yet as characteristics must be set first.
                this.polling = value;
                break;
+            case constants.FETCH:
+               // Do not parse it yet as characteristics must be set first.
+               this.fetch = value;
+               switch( value )
+               {
+                  case 0:
+                  case constants.FETCH_ALWAYS:
+
+                     this.fetch = 0;
+                     this.log.info( `Get values set to fetch: ${ constants.FETCH_ALWAYS }` );
+
+                     break;
+                  case 1:
+                  case constants.FETCH_CACHED:
+                     this.fetch = 1;
+                     this.log.info( `Get values set to fetch only: ${ constants.FETCH_CACHED }` );
+                     break;
+                  case 2:
+                  case constants.FETCH_POLLED:
+                     // Set them all to cached, polling will set the characteristic to immediate
+                     this.fetch = 2;
+                     this.log.info( `Get values set to fetch only when: ${ constants.FETCH_POLLED }` );
+                     break;
+                  default:
+                     this.log.error( Fg.Red + `Invalid value: ${ value } for ${ constants.FETCH }` + Fg.Rm );
+                     this.log.error( `Must be: [ 0 | ${ constants.FETCH_ALWAYS }, 1 | ${ constants.FETCH_CACHED }, 2 | ${ constants.FETCH_POLLED }` );
+                     process.exit( 312 ) ;
+               }
+               break;
             case constants.INTERVAL:
                // Intervals are in seconds
                this.interval = parseInt( value, 10 ) * 1000;
@@ -1593,7 +1678,7 @@ class Cmd4Accessory
       }
 
       // UUID must be defined or created.
-      this.UUID = getAccessoryUUID( config, this.api.hap.uuid );
+      this.UUID = this.UUID || getAccessoryUUID( config, this.api.hap.uuid );
 
       // Solve some issues people have encounterred who
       // have had problems with shell completion which is
@@ -1659,26 +1744,165 @@ class Cmd4Accessory
       }
    }
 
-   setupPollingOfAccessoryAndItsChildren( accessory )
+   determineCharacteristicsToPollOfAccessoryAndItsChildren( accessory )
    {
-      accessory.log.debug( `Setting up polling for: ${ accessory.displayName } and any of the children.` );
-      if ( accessory.polling && accessory.state_cmd )
+      // accessory.log.debug( "CMD4=%s LEVEL=%s for %s", accessory.CMD4, accessory.LEVEL, accessory.displayName );
+      // The linked accessory children are at different levels of recursion, so only
+      // allow what is posssible.
+      if ( accessory.linkedAccessories && accessory.LEVEL == 0 )
       {
-         switch ( typeof accessory.polling )
+         accessory.linkedAccessories.forEach( ( linkedAccessory ) =>
          {
-            case "object":
-               accessory.log.debug( `Characteristic polling for: ${ accessory.displayName }` );
-               this.setupCharacteristicPolling( accessory );
-               break;
-            case "string":
-            case "boolean":
-               accessory.log.debug( `State polling for: ${ accessory.displayName }` );
-               this.setupStatePollingPerAccessory( accessory );
-               break;
-            default:
-               accessory.log.error( Fg.Red + "Error" + Fg.Rm + ": Something wrong with value of polling:%s\n       Check your config.json for errors.", accessory.polling );
-               process.exit( 1 );
-          }
+            accessory.log.debug( `Setting up polling ( ${ accessory.displayName } ) linked accessory: ${ linkedAccessory.displayName }` );
+            linkedAccessory.determineCharacteristicsToPollOfAccessoryAndItsChildren( linkedAccessory );
+         });
+      }
+
+      // The Television Speaker Platform Example
+      if ( accessory.accessories && accessory.CMD4 == constants.PLATFORM && accessory.LEVEL == 0 )
+      {
+         accessory.accessories.forEach( ( addedAccessory ) =>
+         {
+            accessory.log.debug( `Setting up polling ( ${ accessory.displayName } ) added accessory: ${ addedAccessory.displayName }` );
+            addedAccessory.determineCharacteristicsToPollOfAccessoryAndItsChildren( addedAccessory );
+         });
+      }
+
+      // Polling can only be done if requested
+      if ( ! accessory.polling || ! accessory.state_cmd )
+         return;
+
+      accessory.log.debug( `Setting up polling for: ${ accessory.displayName } and any of the children.` );
+
+      switch ( typeof accessory.polling )
+      {
+         case "object":
+         {
+            accessory.log.debug( `Characteristic polling for: ${ accessory.displayName }` );
+
+            for ( let jsonIndex = 0; jsonIndex < accessory.polling.length; jsonIndex ++ )
+            {
+               // Characteristic polling is a json type
+               let jsonPollingConfig = accessory.polling[ jsonIndex ];
+
+               // The default timeout is 1 minute. Timeouts are in milliseconds
+               let timeout = constants.DEFAULT_TIMEOUT;
+
+               // The defaault interval is 1 minute. Intervals are in seconds
+               let interval = constants.DEFAULT_INTERVAL;
+
+
+               let accTypeEnumIndex = -1;
+               let warningDisplayed = false;
+
+               // All this code disappears in the next major release.
+               for ( let key in jsonPollingConfig )
+               {
+                  let ucKey = ucFirst( key );
+                  let value = jsonPollingConfig[ key ];
+
+                  switch ( ucKey )
+                  {
+                     case constants.TIMEOUT:
+                        // Timers are in milliseconds. A low value can result in failure to get/set values
+                        timeout = parseInt( value, 10 );
+                        if ( timeout < 500 )
+                           accessory.log.warn( `Timeout for: ${ accessory.displayName } is in milliseconds. A value of: ${ timeout } seems pretty low.` );
+
+                        break;
+                     case constants.INTERVAL:
+                        // Intervals are in seconds
+                        interval = parseInt( value, 10 ) * 1000;
+                        break;
+                     case constants.CHARACTERISTIC:
+                        let ucValue = ucFirst( value );
+                        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucValue );
+                        if ( accTypeEnumIndex < 0 )
+                        {
+                           accessory.log( `CMD4 WARNING: No such polling characteristic: ${ key } for: ${ accessory.displayName }` );
+                           continue;
+                        }
+                        break;
+                     default:
+                     {
+                        // The key must be a characteristic property
+                        // but first check if one has already been defined as we can only handle one at a time.
+                        if ( accTypeEnumIndex != -1 )
+                        {
+                           accessory.log.error( Fg.Red + "Error" + Fg.Rm + ": For charateristic polling, you can only define one characteristic per array item.\nCannot add '%s' as '%s' is already defined for %s.", ucKey, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, self.displayName );
+                           process.exit( -1 );
+                        }
+                        accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucKey );
+                        if ( accTypeEnumIndex < 0 )
+                        {
+                           accessory.log.warn( `CMD4 WARNING: No such polling characteristic: ${ key } for: ${ accessory.displayName }` );
+                           continue;
+                        }
+                        if ( warningDisplayed == false )
+                        {
+                           accessory.log.warn( `Characteristic polling has changed from: <characteristic>:<default value>` )
+                           accessory.log.warn( `to: "Characteristic": <characteristic>` );
+                           accessory.log.warn( `Please update your config.json for ${ accessory.displayName } accordingly to` );
+                           accessory.log.warn( `remove this message; As in the future, this warning will be an error.` );
+                           accessory.log.warn( `Sorry for the inconvenience.` );
+                           warningDisplayed = true;
+                        }
+                     }
+                  }
+
+               }
+
+               accessory.log.debug( `Setting up accessory: ${ accessory.displayName } for polling of: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } timeout: ${ timeout } interval: ${ interval }` );
+
+               this.listOfPollingCharacteristics[ accTypeEnumIndex ] = {"timeout": timeout, "interval": interval};
+
+            }
+            break;
+         }
+         case "string":
+         case "boolean":
+         {
+            // Change polling per accessory to characteristic polling of state traits
+            // Here we use the defaultPollingCharacteristics to set what characteristics
+            // will be polled if accessory polling was defined in the config.json file.
+
+            accessory.log.debug( `State polling for: ${ accessory.displayName }` );
+
+
+            // Make sure the defined characteristics will be polled
+            let pollingCharacteristicsArray = CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ].defaultPollingCharacteristics;
+
+            // There could be none.
+            for ( let index = 0; index < pollingCharacteristicsArray.length; index++ )
+            {
+                let accTypeEnumIndex = pollingCharacteristicsArray[ index ];
+
+                this.listOfPollingCharacteristics[ acctypeEnumIndex ] = {"timeout": accessory.timeout, "interval": accessory.interval};
+            }
+
+            break;
+         }
+         default:
+         {
+            accessory.log.error( Fg.Red + "Error" + Fg.Rm + ": Something wrong with value of polling:%s\n       Check your config.json for errors.", accessory.polling );
+            process.exit( 1 );
+         }
+      }
+   }
+
+   startPollingForAccessoryAndItsChildren( accessory )
+   {
+      let that = accessory;
+
+      accessory.log.debug( `Starting polling for: ${ accessory.displayName }.` );
+
+      for( let accTypeEnumIndex in accessory.listOfPollingCharacteristics )
+      {
+         let timeout = accessory.listOfPollingCharacteristics[ accTypeEnumIndex ].timeout;
+         let interval = accessory.listOfPollingCharacteristics[ accTypeEnumIndex ].interval;
+         that.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] =
+                     setTimeout( that.characteristicPolling.bind(
+                     that, accessory, accTypeEnumIndex, timeout, interval ), interval );
       }
 
       // accessory.log.debug( "CMD4=%s LEVEL=%s for %s", accessory.CMD4, accessory.LEVEL, accessory.displayName );
@@ -1689,7 +1913,7 @@ class Cmd4Accessory
          accessory.linkedAccessories.forEach( ( linkedAccessory ) =>
          {
             accessory.log.debug( `Setting up polling ( ${ accessory.displayName } ) linked accessory: ${ linkedAccessory.displayName }` );
-            linkedAccessory.setupPollingOfAccessoryAndItsChildren( linkedAccessory );
+            linkedAccessory.startPollingForAccessoryAndItsChildren( linkedAccessory );
          });
       }
 
@@ -1699,7 +1923,7 @@ class Cmd4Accessory
          accessory.accessories.forEach( ( addedAccessory ) =>
          {
             accessory.log.debug( `Setting up polling ( ${ accessory.displayName } ) added accessory: ${ addedAccessory.displayName }` );
-            addedAccessory.setupPollingOfAccessoryAndItsChildren( addedAccessory );
+            addedAccessory.startPollingForAccessoryAndItsChildren( addedAccessory );
          });
       }
    }
@@ -1720,17 +1944,18 @@ class Cmd4Accessory
       }
 
       // Clear polling
-      if ( this.listOfPollingCharacteristics[ accessory.displayName + accTypeEnumIndex ] == undefined )
-         clearTimeout( this.listOfPollingCharacteristics[ accessory.displayName + accTypeEnumIndex ] );
+      if ( this.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] == undefined )
+         clearTimeout( this.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] );
 
       // i.e. Characteristic.On
       // i.e.  Characteristic.RotationDirection
+      // For fetch since polling, always use getValue
       self.service.getCharacteristic(
          CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic
       ).getValue( );
 
 
-       this.listOfPollingCharacteristics[ accessory.displayName + accTypeEnumIndex ] =
+       this.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] =
           setTimeout( this.characteristicPolling.bind(
              this, accessory, accTypeEnumIndex, timeout, interval ), interval );
    }
@@ -1754,7 +1979,7 @@ class Cmd4Accessory
          // The defaault interval is 1 minute. Intervals are in seconds
          let interval = constants.DEFAULT_INTERVAL;
 
-         let ucKeyIndex = -1;
+         let accTypeEnumIndex = -1;
 
          for ( let key in jsonPollingConfig )
          {
@@ -1777,13 +2002,13 @@ class Cmd4Accessory
                default:
                   // The key must be a characteristic property
                   // but first check if one has already been defined as we can only handle one at a time.
-                  if ( ucKeyIndex != -1 )
+                  if ( accTypeEnumIndex != -1 )
                   {
-                     accessory.log.error( Fg.Red + "Error" + Fg.Rm + ": For charateristic polling, you can only define one characteristic per array item.\nCannot add '%s' as '%s' is already defined for %s.", ucKey, CMD4_ACC_TYPE_ENUM.properties[ ucKeyIndex ].type, self.displayName );
+                     accessory.log.error( Fg.Red + "Error" + Fg.Rm + ": For charateristic polling, you can only define one characteristic per array item.\nCannot add '%s' as '%s' is already defined for %s.", ucKey, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, self.displayName );
                      process.exit( -1 );
                   }
-                  ucKeyIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucKey );
-                  if ( ucKeyIndex < 0 )
+                  accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucKey );
+                  if ( accTypeEnumIndex < 0 )
                   {
                      accessory.log( `CMD4 WARNING: No such polling characteristic: ${ key } for: ${ self.displayName }` );
                      continue;
@@ -1791,30 +2016,14 @@ class Cmd4Accessory
              }
          }
 
-         accessory.log.debug( `Setting up accessory: ${ self.displayName } for polling of: ${ CMD4_ACC_TYPE_ENUM.properties[ ucKeyIndex ].type } timeout: ${ timeout } interval: ${ interval }` );
+         accessory.log.debug( `Setting up accessory: ${ self.displayName } for polling of: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } timeout: ${ timeout } interval: ${ interval }` );
 
-         this.listOfPollingCharacteristics[ accessory.displayName + ucKeyIndex ] =
-            setTimeout( this.characteristicPolling.bind( this, accessory, ucKeyIndex, timeout, interval ), interval );
+         this.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] =
+            setTimeout( this.characteristicPolling.bind( this, accessory, accTypeEnumIndex, timeout, interval ), interval );
       }
    }
 
 
-   // Change polling per accessory to characteristic polling of state traits
-   // Here we use the defaultPollingCharacteristics to set what characteristics
-   // will be polled if accessory polling was defined in the config.json file.
-   setupStatePollingPerAccessory( accessory )
-   {
-      // Make sure the defined characteristics will be polled
-      let pollingCharacteristicsArray = CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ].defaultPollingCharacteristics;
-
-      for ( let index = 0; index < pollingCharacteristicsArray.length; index++ )
-      {
-         let accTypeEnumIndex = pollingCharacteristicsArray[ index ];
-         this.listOfPollingCharacteristics[ accessory.displayName + accTypeEnumIndex ] =
-                  setTimeout( this.characteristicPolling.bind(
-                  this, accessory, accTypeEnumIndex, accessory.timeout, accessory.interval ), accessory.interval );
-      }
-   }
 }
 
 function createAccessorysInformationService( accessory )
