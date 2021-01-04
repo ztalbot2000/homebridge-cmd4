@@ -19,19 +19,15 @@ function trueTypeOf( m )
    {
       case Array:
          return Array;
-         break;
       case "boolean":
          return Boolean;
-         break;
       case "number":
          return Number;
-         break;
      case "string":
          // If the string is actually a number, let the caller
          // deal with it as our intent is just to fix undefined
          // and null issues.
          return String;
-         break;
      case "object":
          // null can be an object
          if ( m == null )
@@ -40,18 +36,16 @@ function trueTypeOf( m )
             return Array;
 
          return Object;
-         break;
      case "undefined":
          return undefined;
-         break;
       default:
          console.log("OOPS");
          process.exit( 666);
-   };
+   }
 
    if ( m == undefined )
    {
-      return undefine;
+      return undefined;
    }
 
    console.log("OOPS Again");

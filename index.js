@@ -26,7 +26,7 @@ const Cmd4Platform = require( "./Cmd4Platform" ).Cmd4Platform;
 const settings = require( "./cmd4Settings" );
 
 // Pretty colors
-const Fg = require( "./utils/colors" );
+const chalk = require( "chalk" );
 
 // The Library files that know all.
 var ACC_DATA = require( "./lib/CMD4_ACC_TYPE_ENUM" );
@@ -41,7 +41,7 @@ module.exports =
       let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, api.hap.Service, api.hap.Characteristic, api.hap.Categories );
 
       api.registerAccessory( settings.PLATFORM_NAME, Cmd4Accessory );
-      api.registerPlatform(settings.PLATFORM_NAME, Cmd4Platform);
+      api.registerPlatform( settings.PLATFORM_NAME, Cmd4Platform );
 
       setTimeout( checkForUpdates, 1800 );
 
@@ -74,7 +74,7 @@ function checkForUpdates( )
 
       if ( lv != myPkg.version )
       {
-         console.log( Fg.Grn + `[UPDATE AVAILABLE] ` + Fg.Rm + `Version ${lv} of ${myPkg.name} is available. Any release notes can be found here: ` + Fg.Und + `${myPkg.changelog}` + Fg.Rm );
+         console.log( chalk.green( `[UPDATE AVAILABLE] ` ) + `Version ${lv} of ${myPkg.name} is available. Any release notes can be found here: ` + chalk.underline( `${myPkg.changelog}` ) );
       }
    })( );
 }

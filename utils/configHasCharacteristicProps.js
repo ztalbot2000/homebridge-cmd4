@@ -58,7 +58,7 @@ function configHasCharacteristicProps( accTypeEnumIndex, props, CMD4_ACC_TYPE_EN
           return undefined;
        }
     }
-    return definitions;
+    return rc;
 }
 
 

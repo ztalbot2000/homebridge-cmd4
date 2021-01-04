@@ -1,18 +1,15 @@
 'use strict';
 
 // Cmd4 includes seperated out for Unit testing
-const { getAccessoryName, getAccessoryDisplayName
-      } = require( "./utils/getAccessoryNameFunctions" );
+//const { getAccessoryName, getAccessoryDisplayName
+//      } = require( "./utils/getAccessoryNameFunctions" );
+const getAccessoryDisplayName = require( "./utils/getAccessoryNameFunctions" ).getAccessoryDisplayName;
 let getAccessoryUUID = require( "./utils/getAccessoryUUID" );
 
-let ucFirst = require( "./utils/ucFirst" );
-let indexOfEnum = require( "./utils/indexOfEnum" );
-
 // Pretty Colors
-var Fg = require( "./utils/colors" );
+var chalk = require( "chalk" );
 
 // These would already be initialized by index.js
-let CMD4_ACC_TYPE_ENUM = require( "./lib/CMD4_ACC_TYPE_ENUM" ).CMD4_ACC_TYPE_ENUM;
 let CMD4_DEVICE_TYPE_ENUM = require( "./lib/CMD4_DEVICE_TYPE_ENUM" ).CMD4_DEVICE_TYPE_ENUM;
 
 // The Cmd4 Classes
@@ -22,15 +19,12 @@ const Cmd4Accessory = require( "./Cmd4Accessory" ).Cmd4Accessory;
 const settings = require( "./cmd4Settings" );
 const constants = require( "./cmd4Constants" );
 
-// An Array of Homebridge Platforms
-let cmd4Platforms  = [ ];
-
 // Platform definition
 class Cmd4Platform
 {
    constructor( log, config, api )
    {
-      log.debug( Fg.Blu + "Class Cmd4Platform" );
+      log.debug( chalk.blue( `Class Cmd4Platform` ) );
 
       if ( config === undefined )
          return;
@@ -60,7 +54,7 @@ class Cmd4Platform
          if ( this.config.storage == constants.FS || this.config.storage == constants.GOOGLEDRIVE )
             this.storage = this.config.storage;
          else
-            this.log.warn( Fg.Ylw + "WARNING" + Fg.Rm + `: Cmd4 Unknown platform.config.storage:{ this.storage } Expected:${ constants.FS } or ${ constants.GOOGLEDRIVE } for: ${ this.displayName }` );
+            this.log.warn( chalk.yellow( `WARNING` ) + `: Cmd4 Unknown platform.config.storage:{ this.storage } Expected:${ constants.FS } or ${ constants.GOOGLEDRIVE } for: ${ this.displayName }` );
       }
 
       // Define platform config storagePath for fakegato-history
@@ -133,17 +127,17 @@ class Cmd4Platform
       }
    }
 
-   configurationRequestHandler( context, request, callback )
-   {
-      // Hmmmm does not happen
-      this.log( Fg.Red + "In ConfigRequestHandler context:%s", context);
-      switch( context.step )
-      {
-         case 5:
-            this.log( Fg.Red + "Asked to remove" );
-            break;
-      }
-   }
+   // Hmmmm does not happen
+   //configurationRequestHandler( context, request, callback )
+   //{
+   //   this.log( chalk.red( `In ConfigRequestHandler context: ${ context }` ) );
+   //   switch( context.step )
+   //   {
+   //      case 5:
+   //         this.log( chalk.red( `Asked to remove` ) );
+   //         break;
+   //   }
+   //}
 
    // These would be platform accessories with/without linked accessories
    discoverDevices( )
@@ -159,7 +153,6 @@ class Cmd4Platform
          log.debug( `Fetching config.json Platform accessories.` );
          this.Service=this.api.hap.Service;
 
-         let name = device.name = getAccessoryName( device );
          let displayName = device.displayName = getAccessoryDisplayName( device );
 
          // generate a unique id for the accessory this should be generated from
@@ -250,12 +243,12 @@ class Cmd4Platform
 
                log.debug( `Step 1. platformAccessory = new platformAccessory( ${ displayName }, uuid, ${ category } )` );
 
-               platform = new api.platformAccessory( displayName, uuid, category );
+               platform = new this.api.platformAccessory( displayName, uuid, category );
             }
 
             platform.Service = this.Service;
 
-            log( Fg.Mag + "Configuring platformAccessory: " + Fg.Rm + device.displayName );
+            log( chalk.magenta( `Configuring platformAccessory: ` ) + `${ device.displayName }` );
             let that = this;
             accessory = new Cmd4Accessory( that.log, device, this.api, this );
             accessory.platform = platform
@@ -349,7 +342,7 @@ class Cmd4Platform
          let properties = CMD4_DEVICE_TYPE_ENUM.properties[ addedAccessory.typeIndex ];
 
          this.log.debug( `Platform Step 3, ${ addedAccessory.displayName }.service = PlatformAccessory: ${ cmd4PlatformAccessory.displayName } addService( Service:${ properties.deviceName } )` );
-         ;
+
          addedAccessory.service = cmd4PlatformAccessory.platform.addService( properties.service );
 
          addedAccessory.addAllServiceCharacteristicsForAccessory( addedAccessory );

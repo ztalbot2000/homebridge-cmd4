@@ -26,7 +26,8 @@ var transposeConstantToValidValue = function ( CMD4_ENUM_properties_obj, accType
       return;
    }
 
-   if ( CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues.hasOwnProperty( constantString ) )
+   //if ( CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues.hasOwnProperty( constantString ) )
+   if ( Object.prototype.hasOwnProperty.call( CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues, constantString ) )
    {
       let value = CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues[ constantString ];
 

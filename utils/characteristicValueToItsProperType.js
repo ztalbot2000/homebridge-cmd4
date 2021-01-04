@@ -55,12 +55,12 @@ function characteristicValueToItsProperType( log, requiredFormat, displayName, C
           log( `${ displayName} ` + Fg.Red + `Cannot convert value: ${ value } to Float for ${ characteristicString }` + Fg.Rm );
 
           return value;
-          break;
        case Characteristic.Formats.INT:
        case Characteristic.Formats.UINT8:
        case Characteristic.Formats.UINT16:
        case Characteristic.Formats.UINT32:
        case Characteristic.Formats.UINT64:
+       {
           // Convert it to a Number, no matter what
           let result = Number( value );
 
@@ -72,8 +72,9 @@ function characteristicValueToItsProperType( log, requiredFormat, displayName, C
              return value;
           }
           return result;
-          break;
+       }
        case Characteristic.Formats.STRING:
+       {
           if ( type == Number )
           {
              // If the value is a Number, return the conversion
@@ -89,8 +90,9 @@ function characteristicValueToItsProperType( log, requiredFormat, displayName, C
           log( `${ displayName} ` + Fg.Red + `Cannot convert value: ${ value } to String for ${ characteristicString }` + Fg.Rm );
 
           return value;
-          break;
+       }
        case Characteristic.Formats.BOOL:
+       {
 
           // If the value is a Number, return the conversion
           if ( type == Number )
@@ -125,8 +127,9 @@ function characteristicValueToItsProperType( log, requiredFormat, displayName, C
           log( `${ displayName} ` + Fg.Red + `Cannot convert value: ${ value } to Bool for ${ characteristicString }` + Fg.Rm );
 
           return value;
-          break;
+       }
        case Characteristic.Formats.ARRAY:
+       {
           // If the value is a Number, return the conversion
           if ( type == Number ||
                type == String ||
@@ -143,25 +146,28 @@ function characteristicValueToItsProperType( log, requiredFormat, displayName, C
           log( `${ displayName} ` + Fg.Ylw + `Cannot convert value: ${ value } to Array` + Fg.Rm );
 
           return value;
-          break;
+       }
        case Characteristic.Formats.DATA:
+       {
           // DATA types cannot be converted, so if in debug mode, note it.
           if ( log.debug )
              log.debug( `${ displayName} ` + Fg.Ylw + `Do not know how to convert value: ${ value } for ${ characteristicString } to DATA` + Fg.Rm );
           return value;
-          break;
+       }
        case Characteristic.Formats.TLV8:
+       {
           // TLV8 types cannot be converted, so if in debug mode, note it.
           if ( allowTLV8Here && log.debug )
              log.debug( `${ displayName} ` + Fg.Ylw + `Do not know how to convert value: ${ value } for ${ characteristicString } to TLV8` + Fg.Rm );
           return value;
-          break;
+       }
        case Characteristic.Formats.DICTIONARY:
+       {
           // DICTIONARY types cannot be converted, so if in debug mode, note it.
           if ( log.debug )
              log.debug( `${ displayName} ` + Fg.Ylw + `Do not know how to convert value: ${ value } for ${ characteristicString } to DICTIONARY` + Fg.Rm );
           return value;
-          break;
+       }
        default:
           log( `${ displayName} ` + Fg.Red + `Unknown requiredFormat: ${ requiredFormat } to convert value: ${ value } for ${ characteristicString }` + Fg.Rm );
     }

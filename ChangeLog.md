@@ -30,6 +30,8 @@
 * Retrieved characteristic values are now converted to those defined by homebridge, instead of guessed by their possible types.
 * Moved some functions to utilities for easier unit testing.
 * Splitting documentation into three different areas, README, Advanced Troubleshooting and a Developers guide.
+* Removed utility colors.js for package chalk.
+* Added eslint and fixed all recommended lint errors.
 
 # Important
 While this version appears backward compatible, there is a difference in that the Accessories are created as Platform Accessories as compared to Standard Accessories. The [Homebridge API](https://developers.homebridge.io/#/) documentation details the difference as does the new [Cmd4 Developers Guide](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/Developers.md).
