@@ -1,8 +1,6 @@
 'use strict';
 
 // Cmd4 includes seperated out for Unit testing
-//const { getAccessoryName, getAccessoryDisplayName
-//      } = require( "./utils/getAccessoryNameFunctions" );
 const getAccessoryDisplayName = require( "./utils/getAccessoryNameFunctions" ).getAccessoryDisplayName;
 let getAccessoryUUID = require( "./utils/getAccessoryUUID" );
 
@@ -48,6 +46,11 @@ class Cmd4Platform
 
       this.services = [ ];
 
+      // A way to backout restart recovery.
+      this.restartRecover = true;
+      if ( this.config[ constants.RESTART_RECOVER_l ] != undefined )
+          this.restartRecover = this.config[ constants.RESTART_RECOVER_l ];
+
       // Define platform config for fakegato-history
       if ( this.config.storage != undefined )
       {
@@ -72,7 +75,14 @@ class Cmd4Platform
       // didFinishLaunching is only called after the registerPlatform completes
       api.on( "didFinishLaunching", ( ) =>
       {
-         this.log.debug( "Cmd4Platform didFinishLaunching" );
+         this.log.info( chalk.blue( "Cmd4Platform didFinishLaunching" ) );
+
+         if ( this.restartRecover == false && this.COLLECTION.length > 0  )
+         {
+            this.log.info( chalk.yellow( `Removing ` ) + chalk.red( `*ALL* ` ) + chalk.yellow( `cached accessories as: ${ constants.RESTART_RECOVER_l } is set to false` ) );
+            this.api.unregisterPlatformAccessories(  settings.PLUGIN_NAME, settings.PLATFORM_NAME, this.COLLECTION );
+            this.COLLECTION = [ ];
+         }
 
          this.discoverDevices( );
 
@@ -105,7 +115,6 @@ class Cmd4Platform
    configureAccessory( platformAccessory )
    {
       this.log.debug( `Found cached accessory: ${ platformAccessory.displayName }` );
-
       this.COLLECTION.push( platformAccessory );
    }
 
@@ -114,7 +123,8 @@ class Cmd4Platform
       if ( ! platformAccessory )
          return;
 
-      this.log.debug( `Removing Platform Accessory: ${ platformAccessory.displayName }` );
+      let name=platformAccessory.displayName || platformAccessory.name;
+      this.log.debug( `Removing Platform Accessory: ${ name }` );
 
       let idx = this.COLLECTION.indexOf( platformAccessory );
       if  ( idx != -1 )
@@ -123,7 +133,7 @@ class Cmd4Platform
 
          this.api.unregisterPlatformAccessories(  settings.PLUGIN_NAME, settings.PLATFORM_NAME, [ platformAccessory ] );
 
-         this.log.debug( `Removed Platform Accessory: ${ platformAccessory.displayName }` );
+         this.log.debug( `Removed Platform Accessory: ${ name }` );
       }
    }
 
@@ -185,7 +195,7 @@ class Cmd4Platform
 
             // Platform Step 2. const tvService = this.tvAccessory.addService( this.Service.Television );
             //
-            log.debug("SavedContext=%s", existingAccessory.context.device );
+            //log.debug("SavedContext=%s", existingAccessory.context.device );
 
             let that = this;
             accessory = new Cmd4Accessory( that.log, existingAccessory.context.device, this.api, this );
@@ -206,7 +216,8 @@ class Cmd4Platform
             // Determine which characteristics, if any, will be polled. This
             // information is also used to define which service.getValue is
             // used, either immediate, cached or polled.
-            accessory.determineCharacteristicsToPollOfAccessoryAndItsChildren( accessory );
+            // Already done by new Cmd4Acc
+            // accessory.determineCharacteristicsToPollOfAccessoryAndItsChildren( accessory );
 
             // set up all services for those characteristics in the
             // config.json file
@@ -221,7 +232,7 @@ class Cmd4Platform
             //
             // the accessory does not yet exist, so we need to create it
             //
-            log.info('Adding new accessory:', displayName);
+            log.info('Adding new platformAccessory:', displayName);
 
             // Create the new PlatformAccessory
             if ( device.category == undefined )
@@ -256,7 +267,7 @@ class Cmd4Platform
             // Put the accessory into its correct collection array.
             this.COLLECTION.push( accessory );
 
-            log.debug( `Created ( Platform ) accessory: ${ accessory.displayName }` );
+            log.debug( `Created platformAccessory: ${ accessory.displayName }` );
 
 
             //platform.reachable = true;

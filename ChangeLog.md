@@ -19,18 +19,36 @@
 <BR><BR>
 ## Whats new in 3.0.0
 ### Changes to support IOS 14.
-* Proper definitions of Platform versus Standalone Accessories.
-* Ability to publish External Platforms for multiple TV's required in IOS 14.
-* Added 50+ new characteristics.
-* Added parsing of returned "quoted strings" for things like device names.
-* Added "Category" for hints to HomeKit of which icon to use for Platform Accessories.
-* Added the ability to define multiple Cmd4 Platforms.
-* Added option to Always fetch characteristics from device (As before, the default), fetch only the Cached value or fetch from the device only those Polled characteristics.
-* Added the ability to remember characteristic values over restarts.
+* Cmd4 now follows the [Homebridge Plugin Template](https://github.com/homebridge/homebridge-plugin-template). This means that:
+<UL>
+- Accessories[] are now platformAccessories and can be published externally with an optional category. i.e.<BR>
+&nbsp;&nbsp;&nbsp;{ "category": "TELEVISION" }
+- This allows multiple TV's to be configured per Bridge as separate platforms.
+- Accessory plugins can also be defined separately.
+- This fixes TV icons not being displayed in the Home App of IOS 14.
+</UL>
+* Number of Devices increased from 52 to 64.
+* Number of Characteristics increased from 160 to 221.
+* Returned "quoted strings" or 'quoted strings' are now acceptable.
+* Reduced child processes with new "fetch" option
+<UL>
+- { "fetch": "Always" } - As before ( Default )
+- { "fetch": "Cached" } - Never fetch characteristic value. Used cached. The cached value would be updated through polling.
+- { "fetch": "Polled" } - Polled characteristics act like before, "Always". Non polled characteristic values are fetched from cache.
+</UL>
+* Added the ability to remember characteristic values over restarts. This also means that device name changes and the like are possible.
 * Retrieved characteristic values are now converted to those defined by homebridge, instead of guessed by their possible types.
+* Accessory polling definition changes from:
+<UL> 
+- [{ < characteristic >:< defaultValue >, "interval":< sec >, "timeout": < msec > }]
+<BR>To<BR>
+- [ "characteristic": < characteristic >, "interval":< sec >, "timeout": < msec > }]
+	<BR> Note: Old style is still supported with warning.
+</UL>
 * Moved some functions to utilities for easier unit testing.
 * Splitting documentation into three different areas, README, Advanced Troubleshooting and a Developers guide.
 * Removed utility colors.js for package chalk.
+* Any strings used are now defined as constants and used throughout, limiting some possible typos.
 * Added eslint and fixed all recommended lint errors.
 
 # Important

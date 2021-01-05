@@ -53,8 +53,11 @@ exports.KEYPATH_l                = "keyPath";
 exports.FS                       = "fs";
 exports.GOOGLE_DRIVE             = "googleDrive";
 
-
 // Config Constnts
+exports.OUTPUTCONSTANTS          = "OutputConstants";
+exports.RESTART_RECOVER_l        = "restartRecover";
+
+// Platform Config Constnts
 exports.TYPE                     = "Type";
 exports.DISPLAYNAME              = "DisplayName";
 exports.UUID                     = "UUID";
@@ -67,7 +70,6 @@ exports.MODEL                    = "Model";
 exports.MANUFACTURER             = "Manufacturer";
 exports.SERIALNUMBER             = "SerialNumber";
 exports.FIRMWAREREVISION         = "FirmwareRevision";
-exports.OUTPUTCONSTANTS          = "OutputConstants";
 exports.CHARACTERISTIC           = "Characteristic";
 exports.TIMEOUT                  = "Timeout";
 exports.POLLING                  = "Polling";

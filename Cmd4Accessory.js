@@ -317,7 +317,7 @@ class Cmd4Accessory
                   break;
                }
                case constants.INTERVAL:
-                  {
+               {
                   // Intervals are in seconds
                   this.interval = parseInt( value, 10 ) * 1000;
                   break;
@@ -1570,19 +1570,19 @@ class Cmd4Accessory
                   case constants.FETCH_ALWAYS:
 
                      this.fetch = 0;
-                     this.log.info( `Get values set to fetch: ${ constants.FETCH_ALWAYS }` );
+                     this.log.debug( `Get values set to fetch: ${ constants.FETCH_ALWAYS }` );
 
                      break;
                   case 1:
                   case constants.FETCH_CACHED:
                      this.fetch = 1;
-                     this.log.info( `Get values set to fetch only: ${ constants.FETCH_CACHED }` );
+                     this.log.debug( `Get values set to fetch only: ${ constants.FETCH_CACHED }` );
                      break;
                   case 2:
                   case constants.FETCH_POLLED:
                      // Set them all to cached, polling will set the characteristic to immediate
                      this.fetch = 2;
-                     this.log.info( `Get values set to fetch only when: ${ constants.FETCH_POLLED }` );
+                     this.log.debug( `Get values set to fetch only when: ${ constants.FETCH_POLLED }` );
                      break;
                   default:
                      this.log.error( chalk.red( `Invalid value: ${ value } for ${ constants.FETCH }` ) );
@@ -1785,6 +1785,7 @@ class Cmd4Accessory
 
       accessory.log.debug( `Setting up polling for: ${ accessory.displayName } and any of the children.` );
 
+      let warningDisplayed = false;
       switch ( typeof accessory.polling )
       {
          case "object":
@@ -1802,9 +1803,7 @@ class Cmd4Accessory
                // The defaault interval is 1 minute. Intervals are in seconds
                let interval = constants.DEFAULT_INTERVAL;
 
-
                let accTypeEnumIndex = -1;
-               let warningDisplayed = false;
 
                // All this code disappears in the next major release.
                for ( let key in jsonPollingConfig )
@@ -1853,7 +1852,8 @@ class Cmd4Accessory
                         }
                         if ( warningDisplayed == false )
                         {
-                           accessory.log.warn( `Characteristic polling has changed from: <characteristic>:<default value>` )
+                           accessory.log.warn( `Characteristic polling has changed` )
+                           accessory.log.warn( `from: <characteristic>:<default value>` )
                            accessory.log.warn( `to: "Characteristic": <characteristic>` );
                            accessory.log.warn( `Please update your config.json for ${ accessory.displayName } accordingly to` );
                            accessory.log.warn( `remove this message; As in the future, this warning will be an error.` );
