@@ -76,7 +76,7 @@ class Cmd4Accessory
 
       let typeMsg =  [ "", "Linked ", "Added " ][ this.LEVEL ] || "";
 
-      log( chalk.red ( `Creating ${ typeMsg }${ this.CMD4 } Accessory type for : ${ config.displayName }` ) );
+      log.debug( chalk.blue ( `Creating ${ typeMsg }${ this.CMD4 } Accessory type for : ${ config.displayName }` ) );
 
       this.services = [ ];
       this.linkedAccessories = [ ];
@@ -380,7 +380,7 @@ class Cmd4Accessory
 
    createServicesForStandaloneAccessoryAndItsChildren( accessory )
    {
-      accessory.log( chalk.blue( `createServicesForStandaloneAccessoryAndItsChildren` ) );
+      accessory.log.debug( chalk.blue( `createServicesForStandaloneAccessoryAndItsChildren` ) );
       let properties = CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ];
 
       //
@@ -1711,6 +1711,12 @@ class Cmd4Accessory
          }
       }
 
+      if ( trueTypeOf( this.type ) != String )
+      {
+          this.log.error( chalk.red( `Error` ) + `: No device type given for: ${ this.displayName }` );
+         process.exit( 1 );
+      }
+
       this.ucType = ucFirst( this.type );
       this.typeIndex = CMD4_DEVICE_TYPE_ENUM.properties.indexOfEnum( i => i.deviceName === this.ucType );
       if ( this.typeIndex < 0 )
@@ -1726,7 +1732,8 @@ class Cmd4Accessory
       // have had problems with shell completion which is
       // only available from shell expansion.
 
-      if ( ! this.validateStateCmd( this.state_cmd ) )
+      // State_cmd is only required when polling is enabled.
+      if ( this.polling && ! this.validateStateCmd( this.state_cmd ) )
       {
          this.log.error( chalk.red( `Error` ) + `: state_cmd: "${ this.state_cmd }" is invalid for: ${ this.displayName }` );
          process.exit( 666 );
