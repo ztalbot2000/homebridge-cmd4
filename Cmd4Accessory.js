@@ -299,10 +299,14 @@ class Cmd4Accessory
 
       pollingConfig.forEach( ( jsonPollingConfig ) =>
       {
+         let value;
+         let valueToStore = null;
+         let accTypeEnumIndex = -1;
+
          for ( let key in jsonPollingConfig )
          {
             let ucKey = ucFirst( key );
-            let value = jsonPollingConfig[ key ];
+            value = jsonPollingConfig[ key ];
 
             switch ( ucKey )
             {
@@ -312,7 +316,7 @@ class Cmd4Accessory
                   this.timeout = parseInt( value, 10 );
                   if ( this.timeout < 500 )
                   {
-                     this.log.warn( `Timeout for: ${ this.config.displayName } is in milliseconds. A value of "${ this.timeout }" seems pretty low.` );
+                     this.log.warn( `Timeout for: ${ this.displayName } is in milliseconds. A value of "${ this.timeout }" seems pretty low.` );
                   }
                   break;
                }
@@ -322,27 +326,55 @@ class Cmd4Accessory
                   this.interval = parseInt( value, 10 ) * 1000;
                   break;
                }
+               case constants.CHARACTERISTIC:
+               {
+                  //2 checkPollingOfUnsetCharacteristics
+                  valueToStore = null;
+                  let ucValue = ucFirst( value );
+                  accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucValue );
+                  if ( accTypeEnumIndex < 0 )
+                  {
+                     this.log.error( chalk.red( `No such polling characteristic: ${ value } for: ${ this.displayName }` ) );
+                     process.exit( 176 );
+                  }
+                  // We can do this as this is a new way to do things.
+                  let storedValue = this.getStoredValueForIndex( accTypeEnumIndex );
+                  if ( storedValue == undefined )
+                  {
+                     this.log.error( `Polling for: "${ value }" requested, but characteristic` +
+                                     `is not in your config.json file for: ${ this.displayName }` );
+                     process.exit( 437 );
+                  }
+                  // This makes thinks nice down below.
+                  valueToStore = storedValue;
+                  break;
+               }
                default:
                {
-                  let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucKey );
+                  accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucKey );
 
                   if ( accTypeEnumIndex < 0  )
                   {
                     this.log.error( `OOPS: "${ key }" not found while parsing for characteristic polling. There something wrong with your config.json file?` );
                     process.exit( 1 );
-                  } else {
-                     if ( this.getStoredValueForIndex( accTypeEnumIndex ) == undefined )
-                     {
-                        this.log.warn( `Polling for: "${ key }" requested, but characteristic` );
-                        this.log.warn( `is not in your config.json file for: ${ this.displayName }` );
-                        this.log.warn( `This will be an error in the future.` );
-                     }
-
-                     this.setStoredValueForIndex( accTypeEnumIndex, value );
                   }
+                  valueToStore = value;
                }
             }
          }
+         if ( accTypeEnumIndex == -1 )
+         {
+            this.log.error( `No characteristic found while parsing for characteristic polling. There something wrong with your config.json file?` );
+            process.exit( 1 );
+         }
+         if ( this.getStoredValueForIndex( accTypeEnumIndex ) == undefined )
+         {
+            this.log.warn( `Polling for: "${ key }" requested, but characteristic` );
+            this.log.warn( `is not in your config.json file for: ${ this.displayName }` );
+            this.log.warn( `This will be an error in the future.` );
+         }
+
+         this.setStoredValueForIndex( accTypeEnumIndex, valueToStore );
       });
    }
 
@@ -1757,14 +1789,16 @@ class Cmd4Accessory
 
    determineCharacteristicsToPollOfAccessoryAndItsChildren( accessory )
    {
-      // accessory.log.debug( "CMD4=%s LEVEL=%s for %s", accessory.CMD4, accessory.LEVEL, accessory.displayName );
+      let log = accessory.log;
+
+      // log.debug( "CMD4=%s LEVEL=%s for %s", accessory.CMD4, accessory.LEVEL, accessory.displayName );
       // The linked accessory children are at different levels of recursion, so only
       // allow what is posssible.
       if ( accessory.linkedAccessories && accessory.LEVEL == 0 )
       {
          accessory.linkedAccessories.forEach( ( linkedAccessory ) =>
          {
-            accessory.log.debug( `Setting up polling ( ${ accessory.displayName } ) linked accessory: ${ linkedAccessory.displayName }` );
+            log.debug( `Setting up polling ( ${ accessory.displayName } ) linked accessory: ${ linkedAccessory.displayName }` );
             linkedAccessory.determineCharacteristicsToPollOfAccessoryAndItsChildren( linkedAccessory );
          });
       }
@@ -1774,7 +1808,7 @@ class Cmd4Accessory
       {
          accessory.accessories.forEach( ( addedAccessory ) =>
          {
-            accessory.log.debug( `Setting up polling ( ${ accessory.displayName } ) added accessory: ${ addedAccessory.displayName }` );
+            log.debug( `Setting up polling ( ${ accessory.displayName } ) added accessory: ${ addedAccessory.displayName }` );
             addedAccessory.determineCharacteristicsToPollOfAccessoryAndItsChildren( addedAccessory );
          });
       }
@@ -1783,14 +1817,14 @@ class Cmd4Accessory
       if ( ! accessory.polling || ! accessory.state_cmd )
          return;
 
-      accessory.log.debug( `Setting up polling for: ${ accessory.displayName } and any of the children.` );
+      log.debug( `Setting up polling for: ${ accessory.displayName } and any of the children.` );
 
       let warningDisplayed = false;
       switch ( typeof accessory.polling )
       {
          case "object":
          {
-            accessory.log.debug( `Characteristic polling for: ${ accessory.displayName }` );
+            log.debug( `Characteristic polling for: ${ accessory.displayName }` );
 
             for ( let jsonIndex = 0; jsonIndex < accessory.polling.length; jsonIndex ++ )
             {
@@ -1803,13 +1837,14 @@ class Cmd4Accessory
                // The defaault interval is 1 minute. Intervals are in seconds
                let interval = constants.DEFAULT_INTERVAL;
 
+               let value;
                let accTypeEnumIndex = -1;
 
                // All this code disappears in the next major release.
                for ( let key in jsonPollingConfig )
                {
                   let ucKey = ucFirst( key );
-                  let value = jsonPollingConfig[ key ];
+                  value = jsonPollingConfig[ key ];
 
                   switch ( ucKey )
                   {
@@ -1817,7 +1852,7 @@ class Cmd4Accessory
                         // Timers are in milliseconds. A low value can result in failure to get/set values
                         timeout = parseInt( value, 10 );
                         if ( timeout < 500 )
-                           accessory.log.warn( `Timeout for: ${ accessory.displayName } is in milliseconds. A value of: ${ timeout } seems pretty low.` );
+                           log.warn( `Timeout for: ${ accessory.displayName } is in milliseconds. A value of: ${ timeout } seems pretty low.` );
 
                         break;
                      case constants.INTERVAL:
@@ -1826,12 +1861,20 @@ class Cmd4Accessory
                         break;
                      case constants.CHARACTERISTIC:
                      {
+                        //1 DetermineCharacteristicsToPollAndItsChildren
                         let ucValue = ucFirst( value );
                         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucValue );
                         if ( accTypeEnumIndex < 0 )
                         {
-                           accessory.log( `CMD4 WARNING: No such polling characteristic: ${ key } for: ${ accessory.displayName }` );
-                           continue;
+                           log.error( chalk.red( `No such polling characteristic: ${ value } for: ${ accessory.displayName }` ) );
+                           process.exit( 177 );
+                        }
+                        // We can do this as this is a new way to do things.
+                        if ( this.getStoredValueForIndex( accTypeEnumIndex ) == undefined )
+                        {
+                           this.log.error( `Polling for: "${ value }" requested, but characteristic` +
+                                           `is not in your config.json file for: ${ this.displayName }` );
+                           process.exit( 477 );
                         }
                         break;
                      }
@@ -1841,31 +1884,30 @@ class Cmd4Accessory
                         // but first check if one has already been defined as we can only handle one at a time.
                         if ( accTypeEnumIndex != -1 )
                         {
-                           accessory.log.error( chalk.red( `Error` ) + `: For charateristic polling, you can only define one characteristic per array item.\nCannot add "${ ucKey }" as "${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }" is already defined for: ${ accessory.displayName }` );
+                           log.error( chalk.red( `Error` ) + `: For charateristic polling, you can only define one characteristic per array item.\nCannot add "${ ucKey }" as "${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }" is already defined for: ${ accessory.displayName }` );
                            process.exit( -1 );
                         }
                         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucKey );
                         if ( accTypeEnumIndex < 0 )
                         {
-                           accessory.log.warn( `CMD4 WARNING: No such polling characteristic: ${ key } for: ${ accessory.displayName }` );
-                           continue;
+                           log.error( chalk.red( `Error` ) + ` No such polling characteristic: ${ key } for: ${ accessory.displayName }` );
+                           process.exit( -1 );
                         }
                         if ( warningDisplayed == false )
                         {
-                           accessory.log.warn( `Characteristic polling has changed` )
-                           accessory.log.warn( `from: <characteristic>:<default value>` )
-                           accessory.log.warn( `to: "Characteristic": <characteristic>` );
-                           accessory.log.warn( `Please update your config.json for ${ accessory.displayName } accordingly to` );
-                           accessory.log.warn( `remove this message; As in the future, this warning will be an error.` );
-                           accessory.log.warn( `Sorry for the inconvenience.` );
+                           log.warn( `Characteristic polling has changed` )
+                           log.warn( `from: <characteristic>:<default value>` )
+                           log.warn( `to: "Characteristic": <characteristic>` );
+                           log.warn( `Please update your config.json for ${ accessory.displayName } accordingly to` );
+                           log.warn( `remove this message; As in the future, this warning will be an error.` );
+                           log.warn( `Sorry for the inconvenience.` );
                            warningDisplayed = true;
                         }
                      }
                   }
-
                }
 
-               accessory.log.debug( `Setting up accessory: ${ accessory.displayName } for polling of: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } timeout: ${ timeout } interval: ${ interval }` );
+               log.debug( `Setting up accessory: ${ accessory.displayName } for polling of: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } timeout: ${ timeout } interval: ${ interval }` );
 
                this.listOfPollingCharacteristics[ accTypeEnumIndex ] = {"timeout": timeout, "interval": interval};
 
@@ -1879,7 +1921,7 @@ class Cmd4Accessory
             // Here we use the defaultPollingCharacteristics to set what characteristics
             // will be polled if accessory polling was defined in the config.json file.
 
-            accessory.log.debug( `State polling for: ${ accessory.displayName }` );
+            log.debug( `State polling for: ${ accessory.displayName }` );
 
 
             // Make sure the defined characteristics will be polled
@@ -1897,7 +1939,7 @@ class Cmd4Accessory
          }
          default:
          {
-            accessory.log.error( chalk.red( `Error` ) + `: Something wrong with value of polling: ${ accessory.polling }\n       Check your config.json for errors.` );
+            log.error( chalk.red( `Error` ) + `: Something wrong with value of polling: ${ accessory.polling }\n       Check your config.json for errors.` );
             process.exit( 1 );
          }
       }
@@ -1972,71 +2014,6 @@ class Cmd4Accessory
           setTimeout( this.characteristicPolling.bind(
              this, accessory, accTypeEnumIndex, timeout, interval ), interval );
    }
-
-   setupCharacteristicPolling( accessory )
-   {
-      let self = accessory;
-
-      self.log.debug( `Setting up: ${ self.polling.length } polling characteristics of accessory: ${ self.displayName }` );
-
-      for ( let jsonIndex = 0;
-                jsonIndex < self.polling.length;
-                jsonIndex ++ )
-      {
-         // *NEW* Characteristic polling is a json type
-         let jsonPollingConfig = self.polling[ jsonIndex ];
-
-         // The default timeout is 1 minute. Timeouts are in milliseconds
-         let timeout = constants.DEFAULT_TIMEOUT;
-
-         // The defaault interval is 1 minute. Intervals are in seconds
-         let interval = constants.DEFAULT_INTERVAL;
-
-         let accTypeEnumIndex = -1;
-
-         for ( let key in jsonPollingConfig )
-         {
-            let ucKey = ucFirst( key );
-            let value = jsonPollingConfig[ key ];
-
-            switch ( ucKey )
-            {
-               case constants.TIMEOUT:
-                  // Timers are in milliseconds. A low value can result in failure to get/set values
-                  timeout = parseInt( value, 10 );
-                  if ( timeout < 500 )
-                     accessory.log.warn( `Timeout for: ${ this.config.displayName } is in milliseconds. A value of: ${ timeout } seems pretty low.` );
-
-                  break;
-               case constants.INTERVAL:
-                  // Intervals are in seconds
-                  interval = parseInt( value, 10 ) * 1000;
-                  break;
-               default:
-                  // The key must be a characteristic property
-                  // but first check if one has already been defined as we can only handle one at a time.
-                  if ( accTypeEnumIndex != -1 )
-                  {
-                     accessory.log.error( chalk.red( `Error` ) + `: For charateristic polling, you can only define one characteristic per array item.\nCannot add "${ ucKey }" as "${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }" is already defined for: ${ self.displayName }` );
-                     process.exit( -1 );
-                  }
-                  accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucKey );
-                  if ( accTypeEnumIndex < 0 )
-                  {
-                     accessory.log( `CMD4 WARNING: No such polling characteristic: ${ key } for: ${ self.displayName }` );
-                     continue;
-                  }
-             }
-         }
-
-         accessory.log.debug( `Setting up accessory: ${ self.displayName } for polling of: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } timeout: ${ timeout } interval: ${ interval }` );
-
-         this.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] =
-            setTimeout( this.characteristicPolling.bind( this, accessory, accTypeEnumIndex, timeout, interval ), interval );
-      }
-   }
-
-
 }
 
 function createAccessorysInformationService( accessory )
