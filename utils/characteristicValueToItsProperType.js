@@ -3,7 +3,7 @@
 
 const trueTypeOf = require( "../utils/trueTypeOf" );
 const isNumeric = require( "../utils/isNumeric" );
-const Fg = require( "../utils/colors" );
+const chalk = require( "chalk" );
 
 // Description:
 //    Check if props for accTypeEnumIndex is defined in CMD4_ACC_TYPE_ENUM
@@ -52,7 +52,7 @@ function characteristicValueToItsProperType( log, requiredFormat, displayName, C
               return parseFloat( value, 10 );
           }
           // If the value is not convertable, just return it.
-          log( `${ displayName} ` + Fg.Red + `Cannot convert value: ${ value } to Float for ${ characteristicString }` + Fg.Rm );
+          log( `${ displayName} ` + chalk.red( `Cannot convert value: ${ value } to Float for ${ characteristicString }`  ) );
 
           return value;
        case Characteristic.Formats.INT:
@@ -67,7 +67,7 @@ function characteristicValueToItsProperType( log, requiredFormat, displayName, C
           // If it cannot be converted, well it cant.
           if ( trueTypeOf( result ) != Number )
           {
-             log( `${ displayName} ` + Fg.Red + `Cannot convert value: ${ value } to INT for ${ characteristicString }` + Fg.Rm );
+             log( `${ displayName} ` + chalk.red( `Cannot convert value: ${ value } to INT for ${ characteristicString }` ) );
 
              return value;
           }
@@ -87,7 +87,7 @@ function characteristicValueToItsProperType( log, requiredFormat, displayName, C
           }
 
           // If the value is not convertable, just return it.
-          log( `${ displayName} ` + Fg.Red + `Cannot convert value: ${ value } to String for ${ characteristicString }` + Fg.Rm );
+          log( `${ displayName} ` + chalk.red ( `Cannot convert value: ${ value } to String for ${ characteristicString }` ) );
 
           return value;
        }
@@ -124,7 +124,7 @@ function characteristicValueToItsProperType( log, requiredFormat, displayName, C
           }
 
           // If the value is not convertable, just return it.
-          log( `${ displayName} ` + Fg.Red + `Cannot convert value: ${ value } to Bool for ${ characteristicString }` + Fg.Rm );
+          log( `${ displayName} ` + chalk.red( `Cannot convert value: ${ value } to Bool for ${ characteristicString }` ) );
 
           return value;
        }
@@ -143,7 +143,7 @@ function characteristicValueToItsProperType( log, requiredFormat, displayName, C
           }
 
           // If the value is not convertable, just return it.
-          log( `${ displayName} ` + Fg.Ylw + `Cannot convert value: ${ value } to Array` + Fg.Rm );
+          log( `${ displayName} ` + chalk.yellow( `Cannot convert value: ${ value } to Array`  ) );
 
           return value;
        }
@@ -151,25 +151,25 @@ function characteristicValueToItsProperType( log, requiredFormat, displayName, C
        {
           // DATA types cannot be converted, so if in debug mode, note it.
           if ( log.debug )
-             log.debug( `${ displayName} ` + Fg.Ylw + `Do not know how to convert value: ${ value } for ${ characteristicString } to DATA` + Fg.Rm );
+             log.debug( `${ displayName} ` + chalk.yellow( `Do not know how to convert value: ${ value } for ${ characteristicString } to DATA` ) );
           return value;
        }
        case Characteristic.Formats.TLV8:
        {
           // TLV8 types cannot be converted, so if in debug mode, note it.
           if ( allowTLV8Here && log.debug )
-             log.debug( `${ displayName} ` + Fg.Ylw + `Do not know how to convert value: ${ value } for ${ characteristicString } to TLV8` + Fg.Rm );
+             log.debug( `${ displayName} ` + chalk.yellow( `Do not know how to convert value: ${ value } for ${ characteristicString } to TLV8` ) );
           return value;
        }
        case Characteristic.Formats.DICTIONARY:
        {
           // DICTIONARY types cannot be converted, so if in debug mode, note it.
           if ( log.debug )
-             log.debug( `${ displayName} ` + Fg.Ylw + `Do not know how to convert value: ${ value } for ${ characteristicString } to DICTIONARY` + Fg.Rm );
+             log.debug( `${ displayName} ` + chalk.yellow( `Do not know how to convert value: ${ value } for ${ characteristicString } to DICTIONARY` ) );
           return value;
        }
        default:
-          log( `${ displayName} ` + Fg.Red + `Unknown requiredFormat: ${ requiredFormat } to convert value: ${ value } for ${ characteristicString }` + Fg.Rm );
+          log( `${ displayName} ` + chalk.red( `Unknown requiredFormat: ${ requiredFormat } to convert value: ${ value } for ${ characteristicString }` ) );
     }
 }
 

@@ -35,7 +35,7 @@ describe( "Testing load of index.js", ( ) =>
    });
 });
 
-// ******** QUICK TEST CMD4_ACC_TYPE_ENUM.properties *************
+// ******** QUICK TEST CMD4_ACC_TYPE_ENUM *************
 describe( "Quick Test load of CMD4_ACC_TYPE_ENUM", ( ) =>
 {
    it( "CMD4_ACC_TYPE_ENUM.EOL =" + ACC_EOL, ( ) =>
@@ -44,7 +44,7 @@ describe( "Quick Test load of CMD4_ACC_TYPE_ENUM", ( ) =>
    });
 });
 
-// ******** QUICK TEST CMD4_DEVICE_TYPE_ENUM.properties *************
+// ******** QUICK TEST CMD4_DEVICE_TYPE_ENUM *************
 describe( "Quick Test load of CMD4_DEVICE_TYPE_ENUM", ( ) =>
 {
    it( "CMD4_DEVICE_TYPE_ENUM.EOL =" + DEVICE_EOL, ( ) =>
