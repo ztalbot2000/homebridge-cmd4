@@ -35,7 +35,14 @@
 ## Features
 &nbsp;&nbsp;&nbsp; Cmd4 supports, Lights, Garage Door Openers, Outlets, Switches, Lock Maintenance Systems, Lock Management Systems, Humidity Sensors, Doors, Light Sensors, Temperature Sensors, Contact Sensors, Motion Sensors, Thermostats, Security Systems, Battery Services, Filter Maintenance Systems, Air Purifiers, Television, Television Speaker, Input Sources, Irrigation Systems,  ... everything but Camera Streaming since it is not pliable to a command line Interface.
 
-&nbsp;&nbsp;&nbsp; Cmd4 also supports polling, though care was taken to make sure accessories get updated after an adjustable response time so that accessories like a garage door is updated in HomeKit after it was closed or opened.
+&nbsp;&nbsp;&nbsp; Cmd4 also supports three types of polling, modified by the "fetch" directive. 
+<UL>
+<li> { "fetch": "Always" } - As before, Always fetch characteristic value. ( Default )
+<li> { "fetch": "Cached" } - Never fetch characteristic value. Use cached value. The cached value would have to be updated through polling.
+<li> { "fetch": "Polled" } - Polled characteristics act like before, "Always". Non polled characteristic values are fetched from cache.
+</UL>
+
+&nbsp;&nbsp;&nbsp; Cmd4 supports Fakegato History and retaining previous state over restarts.
 
 &nbsp;&nbsp;&nbsp; Cmd4 can be configured to respond to actual devices directly or by modifying the script file it calls.
 

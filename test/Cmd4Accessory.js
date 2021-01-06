@@ -64,9 +64,9 @@ describe('A simple Cmd4Accessory Test', ( ) =>
    {
       let parentInfo = undefined;
 
-      let result = new Cmd4Accessory( log, config, _api, parentInfo );
+      let accessory = new Cmd4Accessory( log, config, _api, parentInfo );
 
-      assert.instanceOf( result , Cmd4Accessory, "Expected result to be instance of Cmd4Accessory. Found %s" , result );
+      assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory. Found %s" , accessory );
    });
 });
 
@@ -81,9 +81,9 @@ describe('A simple Cmd4Accessory Test Debbuging enabled', ( ) =>
       let parentInfo = undefined;
       logger_1.setDebugEnabled( );
 
-      let result = new Cmd4Accessory( log, config, _api, parentInfo );
+      let accessory = new Cmd4Accessory( log, config, _api, parentInfo );
 
-      assert.instanceOf( result , Cmd4Accessory, "Expected result to be instance of Cmd4Accessory. Found %s" , result );
+      assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory. Found %s" , accessory );
 
       logger_1.setDebugEnabled( false );
    });
@@ -100,11 +100,11 @@ describe('Test Cmd4Accessory variables ', ( ) =>
    {
       let parentInfo = undefined;
 
-      let result = new Cmd4Accessory( log, config, _api, parentInfo );
+      let accessory = new Cmd4Accessory( log, config, _api, parentInfo );
 
-      assert.instanceOf( result , Cmd4Accessory, "Expected result to be instance of Cmd4Accessory. Found %s" , result );
+      assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory. Found %s" , accessory );
 
-      assert.equal( result.typeIndex , CMD4_DEVICE_TYPE_ENUM.Switch, "Expected typeIndex: %s Found: %s" , CMD4_DEVICE_TYPE_ENUM.Switch, result.typeIndex );
+      assert.equal( accessory.typeIndex , CMD4_DEVICE_TYPE_ENUM.Switch, "Expected typeIndex: %s Found: %s" , CMD4_DEVICE_TYPE_ENUM.Switch, accessory.typeIndex );
    });
 
    let parentInfo = undefined;
@@ -122,12 +122,134 @@ describe('Test Cmd4Accessory variables ', ( ) =>
          config.type = CMD4_DEVICE_TYPE_ENUM.properties[index].deviceName;
 
          log.info("Testing %s name: %s", index, config.name);
-         let result = new Cmd4Accessory( log, config, _api, parentInfo );
+         let accessory = new Cmd4Accessory( log, config, _api, parentInfo );
 
-         assert.instanceOf( result , Cmd4Accessory, "Expected result to be instance of Cmd4Accessory. Found %s" , result );
+         assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory. Found %s" , accessory );
 
-         assert.equal( result.typeIndex , index, "Expected typeIndex: %s for: %s. Found: %s" , index, config.type, result.typeIndex );
+         assert.equal( accessory.typeIndex , index, "Expected typeIndex: %s for: %s. Found: %s" , index, config.type, accessory.typeIndex );
       });
    }
+});
+
+describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
+{
+   let config={ name: "Test Switch",
+                type: "Switch",
+                on:   false
+              };
+   it( "Check that Array storedValuesPer characteristic is created", ( ) =>
+   {
+      let accessory = new Cmd4Accessory( log, config, _api );
+
+      assert.isArray( accessory.config.storedValuesPerCharacteristic, Cmd4Accessory, "Expected accessory.config.storedValuesPerCharacteristic to be an Array. Found %s" , typeof accessory.config.storedValuesPerCharacteristic );
+   });
+
+   it( "Check that storedValuesPer Array size is:  " + ACC_EOL, ( ) =>
+   {
+      let accessory = new Cmd4Accessory( log, config, _api );
+
+      assert.equal( accessory.config.storedValuesPerCharacteristic.length, ACC_EOL, "Expected accessory.config.storedValuesPerCharacteristic to size: %s. Found %s" , ACC_EOL, accessory.config.storedValuesPerCharacteristic.length );
+   });
+   it( "Check that storedValuesPerCharacteristic is set correctly for a switch", ( ) =>
+   {
+      let accessory = new Cmd4Accessory( log, config, _api );
+      let accIndex = CMD4_ACC_TYPE_ENUM.On;
+
+      for ( let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++)
+      {
+         let value = config.storedValuesPerCharacteristic[ index ];
+         if ( index == accIndex )
+            assert.isFalse( value, "Expected accessory.config.storedValuesPerCharacteristic[%s] is: %s. Found %s" , index, config.On, value );
+         else
+            assert.isNull( value, "Expected accessory.config.storedValuesPerCharacteristic[%s] is: Null. Found %s" , index, value );
+      }
+   });
+   it( "Check that setStoredValueForIndex works correctly for a switch", ( ) =>
+   {
+      let accessory = new Cmd4Accessory( log, config, _api );
+      let accIndex = CMD4_ACC_TYPE_ENUM.On;
+
+      config.On = true;
+      accessory.setStoredValueForIndex( CMD4_ACC_TYPE_ENUM.On, config.On );
+      for ( let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++)
+      {
+         let value = config.storedValuesPerCharacteristic[ index ];
+         if ( index == accIndex )
+            assert.isFalse( value, "Expected accessory.config.storedValuesPerCharacteristic[%s] is: %s. Found %s" , index, config.On, value );
+         else
+            assert.isNull( value, "Expected accessory.config.storedValuesPerCharacteristic[%s] is: Null. Found %s" , index, value );
+      }
+   });
+
+   it( "Check getStoredValueForIndex works correctly for a switch", ( ) =>
+   {
+      let accessory = new Cmd4Accessory( log, config, _api );
+      let accIndex = CMD4_ACC_TYPE_ENUM.On;
+
+      config.On = true;
+      accessory.setStoredValueForIndex( CMD4_ACC_TYPE_ENUM.On, config.On );
+      for ( let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++)
+      {
+         let value = config.storedValuesPerCharacteristic[ index ];
+         if ( index == accIndex )
+            assert.isFalse( value, "Expected accessory.config.storedValuesPerCharacteristic[%s] is: %s. Found %s" , index, config.On, value );
+         else
+            assert.isNull( value, "Expected accessory.config.storedValuesPerCharacteristic[%s] is: Null. Found %s" , index, value );
+      }
+      let result = accessory.getStoredValueForIndex( CMD4_ACC_TYPE_ENUM.On );
+      assert.equal( result, config.On, "Expected getStoredValueForIndex to return: %s. Found %s" , config.On, result );
+   });
+   it( "Check testStoredValueForIndex works correctly for a switch", ( ) =>
+   {
+      let accessory = new Cmd4Accessory( log, config, _api );
+      let accIndex = CMD4_ACC_TYPE_ENUM.On;
+
+      config.On = true;
+      accessory.setStoredValueForIndex( CMD4_ACC_TYPE_ENUM.On, config.On );
+      for ( let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++)
+      {
+         let value = accessory.testStoredValueForIndex( index );
+         if ( index == accIndex )
+            assert.equal( value, config.On, "Expected accessory.testStoredValueForIndex[%s] is: %s. Found %s" , index, config.On, value );
+         else
+            assert.isNull( value, "Expected accessory.testStoredValueForIndex[%s] is: Null. Found %s" , index, value );
+      }
+   });
+   it( "Check testStoredValueForIndex limits returns undefined", ( ) =>
+   {
+      let accessory = new Cmd4Accessory( log, config, _api );
+      let index = -1;
+
+      let value = accessory.testStoredValueForIndex( index );
+      assert.isUndefined( value, "Expected accessory.testStoredValueForIndex[%s] is: Null. Found %s" , index, value );
+
+      index = ACC_EOL + 1;
+      value = accessory.testStoredValueForIndex( index );
+      assert.isUndefined( value, "Expected accessory.testStoredValueForIndex[%s] is: Null. Found %s" , index, value );
+   });
+});
+describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChildren', ( ) =>
+{
+   let config={ name: "Test Switch",
+                type: "Switch",
+                on:   false,
+                state_cmd:   "node .homebridge/Cmd4Scripts/State.js",
+                polling: true
+              };
+   it( "Check that Device polling just returns", ( ) =>
+   {
+      let accessory = new Cmd4Accessory( log, config, _api );
+
+      //assert.isArray( accessory.config.storedValuesPerCharacteristic, Cmd4Accessory, "Expected accessory.config.storedValuesPerCharacteristic to be an Array. Found %s" , typeof accessory.config.storedValuesPerCharacteristic );
+   });
+
+   /*
+   it( "Check that storedValuesPer Array size is:  " + ACC_EOL, ( ) =>
+   {
+      let accessory = new Cmd4Accessory( log, config, _api );
+
+      assert.equal( accessory.config.storedValuesPerCharacteristic.length, ACC_EOL, "Expected accessory.config.storedValuesPerCharacteristic to size: %s. Found %s" , ACC_EOL, accessory.config.storedValuesPerCharacteristic.length );
+   });
+   */
 });
 

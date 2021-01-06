@@ -231,6 +231,9 @@ class Cmd4Accessory
       return this.config.storedValuesPerCharacteristic[ accTypeEnumIndex ];
    }
 
+   // Unlike get/set, testStoredValueForIndex does not call process.exit,
+   // but undefined for an illegal range, in the case that rogue runtime data
+   // dies not take down CMD4.
    testStoredValueForIndex( accTypeEnumIndex )
    {
       if ( accTypeEnumIndex < 0 || accTypeEnumIndex > CMD4_ACC_TYPE_ENUM.EOL )

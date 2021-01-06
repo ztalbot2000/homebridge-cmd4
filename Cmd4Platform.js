@@ -1,7 +1,8 @@
 'use strict';
 
 // Cmd4 includes seperated out for Unit testing
-const getAccessoryDisplayName = require( "./utils/getAccessoryNameFunctions" ).getAccessoryDisplayName;
+const { getAccessoryName,
+        getAccessoryDisplayName } = require( "./utils/getAccessoryNameFunctions" );
 let getAccessoryUUID = require( "./utils/getAccessoryUUID" );
 
 // Pretty Colors
@@ -163,6 +164,7 @@ class Cmd4Platform
          log.debug( `Fetching config.json Platform accessories.` );
          this.Service=this.api.hap.Service;
 
+         let name = device.name = getAccessoryName( device );
          let displayName = device.displayName = getAccessoryDisplayName( device );
 
          // generate a unique id for the accessory this should be generated from
