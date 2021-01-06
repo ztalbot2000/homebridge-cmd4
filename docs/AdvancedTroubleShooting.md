@@ -27,7 +27,7 @@
 <BR>
 &nbsp;&nbsp;&nbsp; *SHELL*> node .homebridge/Cmd4Scripts/State.js Get My_Fan On
 <BR><BR>
- 
+
 ### The Parameters Sent by Cmd4
 &nbsp;&nbsp;&nbsp; The second most important thing to remember is what Cmd4 sends for Get/Set requests. Your script must meet these requirements. These are defined as:<BR>
 <BR>

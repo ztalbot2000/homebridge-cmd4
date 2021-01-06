@@ -164,7 +164,7 @@ class Cmd4Platform
          log.debug( `Fetching config.json Platform accessories.` );
          this.Service=this.api.hap.Service;
 
-         let name = device.name = getAccessoryName( device );
+         device.name = getAccessoryName( device );
          let displayName = device.displayName = getAccessoryDisplayName( device );
 
          // generate a unique id for the accessory this should be generated from

@@ -12,6 +12,11 @@
 * [**Screenshots**](#screenshots)
 * [**Installation Details**](#installation-details)
 * [**Basic Troubleshooting**](#basic-troubleshooting)
+<UL>
+* [***Cannot add a Service with the same UUID***](#cannot-add-a-service-with-the-same-uuid)
+* [***Error: Command failed***](#error:-command-failed)
+* [***Debug Steps***](#debug-steps)
+</UL>
 * [**Advanced Troubleshooting For Developers**](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/AdvancedTroubleShooting.md)
 * [**Developers Guide**](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/DevelopersGuide.md)
 * [**Rationale**](#rationale)
@@ -35,7 +40,7 @@
 ## Features
 &nbsp;&nbsp;&nbsp; Cmd4 supports, Lights, Garage Door Openers, Outlets, Switches, Lock Maintenance Systems, Lock Management Systems, Humidity Sensors, Doors, Light Sensors, Temperature Sensors, Contact Sensors, Motion Sensors, Thermostats, Security Systems, Battery Services, Filter Maintenance Systems, Air Purifiers, Television, Television Speaker, Input Sources, Irrigation Systems,  ... everything but Camera Streaming since it is not pliable to a command line Interface.
 
-&nbsp;&nbsp;&nbsp; Cmd4 also supports three types of polling, modified by the "fetch" directive. 
+&nbsp;&nbsp;&nbsp; Cmd4 also supports three types of polling, modified by the "fetch" directive.
 <UL>
 <li> { "fetch": "Always" } - As before, Always fetch characteristic value. ( Default )
 <li> { "fetch": "Cached" } - Never fetch characteristic value. Use cached value. The cached value would have to be updated through polling.
@@ -86,7 +91,7 @@ See [homebridge](homebridge) for complete details.<BR>
 ### Step 5. Restart homebridge
 See [homebridge](homebridge) for complete details.<BR>
 
- 
+
 ### Step 6.  Try Homekit
 &nbsp;&nbsp;&nbsp; If you are not already familiar with Homekit, you may wish to look at the documentation for Homebridge and how to configure it with Homekit. The gist of it is that you enter the manual code defined in the config.json file. I chose 5555555 for simplicity.
 
@@ -94,25 +99,14 @@ See [homebridge](homebridge) for complete details.<BR>
 
 <BR><BR>
 ## Basic Troubleshooting
-### Step 1.  Change to your $HOME directory
-&nbsp;&nbsp;&nbsp; Homebridge is expected to run from a user's home directory where it can find the .homebridge/config.json file and the Cmd4Scripts.State.js command file.<BRA><BR>
-&nbsp;&nbsp;&nbsp; *SHELL*> `cd $HOME`
+### Error: Cannot add a Service with the same UUID
+&nbsp;&nbsp;&nbsp; All devices of the same type must have a unique UUID. However this error can occur over restarts when Cmd4 tries to use previous stored configurations that are Cmd4 tries to use.  The "restartRecover" directive is new since Cmd4 version 3.
 
-### Step 2.  Test the State.js command file
-&nbsp;&nbsp;&nbsp; *SHELL*> `node .homebridge/Cmd4Scripts/State.js Get My_Fan On`
-&nbsp;&nbsp;&nbsp; this should output: 0 or 'true'
- 
-### Step 3.  Run homebridge in debug mode
-&nbsp;&nbsp;&nbsp; *SHELL*> `DEBUG=* homebridge -D $HOME/`
 
-### Step 4.  Try executing the State.js script
-&nbsp;&nbsp;&nbsp; *SHELL*> `node .homebridge/Cmd4Scripts/State.js Get My_Fan On`
-&nbsp;&nbsp;&nbsp;&nbsp; This should output '0' or '1' or 'true' or 'false'
-&nbsp;&nbsp;&nbsp; *SHELL*> `node .homebridge/Cmd4Scripts/State.js Set My_Fan On false`
-&nbsp;&nbsp;&nbsp; *SHELL*> `node .homebridge/Cmd4Scripts/State.js Set My_Fan On true`
-&nbsp;&nbsp;&nbsp;&nbsp; This should store the fans status.
 
-### Step 5.  If you see the error message:
+### Error: Command failed
+&nbsp;&nbsp;&nbsp; This error is indicative to many situations. The most common is that the command took to long to run.
+
 ```
   Error: Command failed: /homebridge/Server.sh Get 'Server' 'On'
 
@@ -127,8 +121,28 @@ See [homebridge](homebridge) for complete details.<BR>
 
 ```
 
-The command may not exist, but also the timeout value in your config.json for that accessory may be too low.
+Check that the command exists, but also that the timeout value in your config.json for that accessory is not too low.
 
+## Debug Steps
+### Step 1.  Change to your $HOME directory
+&nbsp;&nbsp;&nbsp; Homebridge is expected to run from a user's home directory where it can find the .homebridge/config.json file and the Cmd4Scripts.State.js command file.<BRA><BR>
+&nbsp;&nbsp;&nbsp; *SHELL*> `cd $HOME`
+
+### Step 2.  Test the State.js command file
+&nbsp;&nbsp;&nbsp; *SHELL*> `node .homebridge/Cmd4Scripts/State.js Get My_Fan On`
+&nbsp;&nbsp;&nbsp; this should output: 0 or 'true'
+
+### Step 3.  Run homebridge in debug mode
+&nbsp;&nbsp;&nbsp; *SHELL*> `DEBUG=* homebridge -D $HOME/`
+
+### Step 4.  Try executing the State.js script
+&nbsp;&nbsp;&nbsp; *SHELL*> `node .homebridge/Cmd4Scripts/State.js Get My_Fan On`
+&nbsp;&nbsp;&nbsp;&nbsp; This should output '0' or '1' or 'true' or 'false'
+&nbsp;&nbsp;&nbsp; *SHELL*> `node .homebridge/Cmd4Scripts/State.js Set My_Fan On false`
+&nbsp;&nbsp;&nbsp; *SHELL*> `node .homebridge/Cmd4Scripts/State.js Set My_Fan On true`
+&nbsp;&nbsp;&nbsp;&nbsp; This should store the fans status.
+
+<BR><BR>
 ## Rationale
 &nbsp;&nbsp;&nbsp; After playing with homebridge-cmd and then homebridge-cmdswitch2, I really wanted to control as much as I could.  I did not have all the devices, but I did have a light and a Sony Android TV.  I wanted to control these and see what else I could do.<BR>
 &nbsp;&nbsp;&nbsp; If you were wondering what happened to version 3, well I learned a lot, hence the working cmd4.

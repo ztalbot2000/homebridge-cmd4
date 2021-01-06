@@ -33,17 +33,21 @@
 * Reduced child processes with new "fetch" option
 <UL>
 - { "fetch": "Always" } - As before ( Default )
-- { "fetch": "Cached" } - Never fetch characteristic value. Used cached. The cached value would be updated through polling.
+- { "fetch": "Cached" } - Never fetch characteristic value. Use cached value. The cached value would have to be updated through polling.
 - { "fetch": "Polled" } - Polled characteristics act like before, "Always". Non polled characteristic values are fetched from cache.
 </UL>
-* Added the ability to remember characteristic values over restarts. This also means that device name changes and the like are possible.
+* Added the ability to remember characteristic values over restarts. This also means that device name changes and the like are possible. Disabled by:
+<UL>
+   "restartRecover": false<BR>
+   In the section of the config.json where "platform": "Cmd4" is defined. Default is true.
+</UL>
 * Retrieved characteristic values are now converted to those defined by homebridge, instead of guessed by their possible types.
 * Accessory polling definition changes from:
-<UL> 
+<UL>
 - [{ < characteristic >:< defaultValue >, "interval":< sec >, "timeout": < msec > }]
 <BR>To<BR>
 - [ "characteristic": < characteristic >, "interval":< sec >, "timeout": < msec > }]
-	<BR> Note: Old style is still supported with warning.
+   <BR> Note: Old style is still supported with warning.
 </UL>
 * Moved some functions to utilities for easier unit testing.
 * Splitting documentation into three different areas, README, Advanced Troubleshooting and a Developers guide.
@@ -52,7 +56,7 @@
 * Added eslint and fixed all recommended lint errors.
 
 # Important
-While this version appears backward compatible, there is a difference in that the Accessories are created as Platform Accessories as compared to Standard Accessories. The [Homebridge API](https://developers.homebridge.io/#/) documentation details the difference as does the new [Cmd4 Developers Guide](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/Developers.md).
+While this version appears backward compatible, there is a difference in that the Accessories are created as Platform Accessories as compared to Standard Accessories. The [Homebridge API](https://developers.homebridge.io/#/) documentation details the difference as does the new [Cmd4 Developers Guide](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/DevelopersGuide.md).
 <BR><BR>
 ## Whats new in 2.4.2
 * Bug fix for negative temperature values

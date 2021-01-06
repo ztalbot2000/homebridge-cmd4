@@ -234,13 +234,17 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
                 type: "Switch",
                 on:   false,
                 state_cmd:   "node .homebridge/Cmd4Scripts/State.js",
+                interval: 10,                // seconds
+                StateChangeResponseTime: 1,  // seconds
+                timeout: 6000,               // msec
                 polling: true
               };
-   it( "Check that Device polling just returns", ( ) =>
+   it( "Check that Device polling just returns", function( done )
    {
       let accessory = new Cmd4Accessory( log, config, _api );
 
       //assert.isArray( accessory.config.storedValuesPerCharacteristic, Cmd4Accessory, "Expected accessory.config.storedValuesPerCharacteristic to be an Array. Found %s" , typeof accessory.config.storedValuesPerCharacteristic );
+      done( );
    });
 
    /*

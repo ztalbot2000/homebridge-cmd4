@@ -1,4 +1,4 @@
-# Homebridges-cmd4 - CMD4 Developers Guide.
+# Homebridges-cmd4 - Cmd4 Developers Guide.
 
 <BR><BR>
 ## Table of Contents
@@ -7,6 +7,8 @@
 * [**Homebridge API**](#homebridge-api)
 * [**Platform Accessories**](#platform-accessories)
 * [**Standard Accessories**](#standard-accessories)
+* [***New Cmd4 3.0 Directives***](#new-cmd4-30-directives)
+* [**Cmd4 Directives**](#cmd4-directives)
 * [**Migrating from Homebridge-cmdswitch2**](#migrating-from-homebridge-cmdswitch2)
 * [**Developer Notes**](#developer-notes)
 * [**Adding in fakegato history**](#adding-in-fakegato-history)
@@ -33,7 +35,7 @@
 <BR><BR>
 
 ## Platform Accessories
-&nbsp;&nbsp;&nbsp; The best way to explain the difference is to understand how the Homebridge API defines a Television as a Platform Accessory. [Homebridge Television](https://developers.homebridge.io/#/service/Television). CMD4 Version 3 can recreate the exact same configuration as:<as:
+&nbsp;&nbsp;&nbsp; The best way to explain the difference is to understand how the Homebridge API defines a Television as a Platform Accessory. [Homebridge Television](https://developers.homebridge.io/#/service/Television). Cmd4 Version 3 can recreate the exact same configuration as:<as:
 
 ```json
 {
@@ -49,6 +51,7 @@
       {
          "platform": "Cmd4",
          "outputConstants":                false,
+         "restartRecover":                 true,
          "accessories" :
          [
             {
@@ -69,16 +72,17 @@
                      "volumeSelector":         10,
                      "volumeControlType":      "ABSOLUTE",
                      "state_cmd": "node .homebridge/Cmd4Scripts/State.js",
+                "fetch":                  "cached"
                      "polling": [
-                        {"active":         "ACTIVE", "interval": 50,  "timeout": 5000},
-                        {"volumeSelector": 10,       "interval": 50,  "timeout": 5000}
+                        {"characteristic": "active",         "interval": 50,  "timeout": 5000},
+                        {"characteristic": "volumeSelector", "interval": 50,  "timeout": 5000}
                      ]
                   }
               ],
               "linkedTypes":
               [
                  {"type": "InputSource",
-                  "displayName": "HDMI1",
+                  "displayName":            "HDMI1",
                   "configuredName":         "HDMI 1",
                   "currentVisibilityState": "SHOWN",
                   "inputSourceType":        "HDMI",
@@ -114,9 +118,9 @@
                "pictureMode":               "STANDARD",
                "remoteKey":                 "SELECT",
                "polling": [
-                  {"active":                "ACTIVE", "interval": 50,  "timeout": 5000},
-                  {"activeIdentifier":       1,       "interval": 50,  "timeout": 5000},
-                  {"currentMediaState":     "STOP",   "interval": 540, "timeout": 5000}
+                  {"characteristic": "active",            "interval": 50,  "timeout": 5000},
+                  {"characteristic": "activeIdentifier",  "interval": 50,  "timeout": 5000},
+                  {"characteristic": "currentMediaState", "interval": 540, "timeout": 5000}
                ],
                "stateChangeResponseTime":    3,
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
@@ -128,22 +132,33 @@
 ```
 
 <BR>
-Note. There are two new json designations. The first is "category"<BR>
+### New Cmd4 3.0 Directives
+There are a few new important Cmd4 designations in Homebridge 3.0.
+<UL>
+<LI> The first is "category"<BR>
 ```json
    "category": "TELEVISION"
 ```
 <BR>
 This is the hint to homekit of which icon to use and for Televisions, a TV icon will not show without it.<BR>
-<BR>
-The second new json designation is "publishExternally"<BR>
+<LI>The second new designation is "publishExternally"<BR>
+
 ```json
-   "publishExternally": true
+   "publishExternally": true (Default is false)
 ```
-<BR>
 As per the Homebridge API, this allows the Platform Accessory to be published separately from the bridge and is a requirement for multiple TV's.<BR>
+<LI> The third new designation is "restartRecover"<BR>
+
+```json
+   "restartRecover": true (Default)
+```
+Cmd4 allows Homebridge to use saved state information over restarts. This is not completely falable, so you can disable this as well.
+</UL>
+
+See the [Cmd4 Developers Guide](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/Developers.md) for further information.
 
 ## Standard Accessories
-A Standard Accessory does not need a Platform. The Homebridge example given is. [Homebridge Switch](https://developers.homebridge.io/#/api/accessory-plugins). CMD4 Version 3 can recreate the exact same configuration as:<as:
+A Standard Accessory does not need a Platform. The Homebridge example given is. [Homebridge Switch](https://developers.homebridge.io/#/api/accessory-plugins). Cmd4 Version 3 can recreate the exact same configuration as:<as:
 
 ```json
 {
@@ -176,8 +191,79 @@ This configuration defines a Cmd4 Standard Accessory with the designation:<BR>
 ```
 <BR>
 Notice that there is no Platform definition. Otherwise everything is the same. You can even add linked accessories as before.<BR>
-<BR><BR>
 
+<BR><BR>
+## Cmd4 Directives
+&nbsp;&nbsp;&nbsp; Homebridge-Cmd4 has many directives, the most important being the "state_cmd". The provided config.min.json file shows many of the directives in action. Here is a list of all Cmd4 directives and their meaning. These are just the directives and not the hundreds of characteristics Cmd4 can handle that are documented in homebridge, the Cmd4 config.min.json file and the Cmd4 State.js script.
+
+<UL>
+   <LI> "outputConstants": < bool > Default is false.
+   <UL>
+      <LI> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1.
+   </UL>
+   <LI> "restartRecover": < bool > Default is true.
+   <UL>
+      <LI> If Cmd4 will use previous cached state information.
+   </UL>
+   <LI> "publishExternally": < bool > - Default is false.
+   <UL>
+      <LI> Tell Homebridge to publish the device as its own bridge.
+   </UL>
+   <LI> "fetch": < "always" | "cached" | "polled" >
+   <UL>
+      <li> { "fetch": "Always" } - As before Always fetch characteristic value. ( Default )
+      <li> { "fetch": "Cached" } - Never fetch characteristic value. Use cached value. The cached value would have to be updated through polling.
+      <li> { "fetch": "Polled" } - Polled characteristics act like before, "Always". Non polled characteristic values are fetched from cache.
+   </UL>
+   <LI> "stateChangeResponseTime": < sec >
+   <UL>
+      <LI>The time in seconds between a Set and Get command.
+   </UL>
+   <LI> "timeout": < msec >
+   <UL>
+      <LI> How long in milliseconds before killing the state_cmd.
+   </UL>
+   <LI> "polling": < bool > |
+                 [{"characteristic" < characteristic >, [ "interval": < sec >, "timeout": < msec > ] }]
+   <UL>
+      <LI> The first method indicates if Device Polling of Required Characteristics will Occur.
+      <LI> The second method indicates Characteristic Polling of the specified characteristics will occur.
+   </UL>
+   <LI> "state_cmd": < state_cmd >
+   <UL>
+      <LI>The command used to Get/Set Device characteristic State.
+   </UL>
+   <LI> "state_cmd_prefix": < String >.
+   <UL>
+      <LI> A String prepended to the < state_cmd >.
+   </UL>
+   <LI> "state_cmd_suffix": < String >
+   <UL>
+      <LI> A String appended to the < state_cmd >.
+   </UL>
+   <LI> "props": { < property >: < value > }
+   <UL>
+      <LI> A way to override Hap Characteristiic Properties<BR>
+         Only used to set min/max temperatures, for instance:
+      <BR>
+      "props" : { "CurrentTemperature": { "maxValue":100, "minValue": -100, "minStep": 0.1}}
+   </UL>
+   <LI> "category": < category >
+      <UL>
+         <LI>see [Homebridge Categories](https://developers.homebridge.io/#/categories) for a complete list of possible categories.
+      </UL>
+   <UL>
+      <LI> Defines the Homebridge Category to use for publishing Platform Accessories. i.e. TELEVISION, FAN ...<BR>
+         It is used as a Hint to HomeKit of which icon to use.
+   </UL>
+   <LI> "fakegato" - See the section, "Adding in fakegato-history" below.
+   <LI> "linkedTypes": < config >
+   <UL>
+      <LI> Other Cmd4 Accessories like Input Source for HDMI inputs.
+   </UL>
+</UL>
+
+<BR>
 ## Migrating from Homebridge-cmdswitch2
 &nbsp;&nbsp;&nbsp; Homebridge-cmdswitch2 is great if you just want to turn something On or Off; Hence the switch reference in its name. In fact, there is no need to migrate if that is all you want to do.
 
@@ -252,25 +338,25 @@ As a plugin, Homebridge-cmd4 easily coexists with Homebridge-cmdswitch2 or any o
 ### Step 3.  Contents of PS4.sh
 &nbsp;&nbsp;&nbsp; An equivalent script is:
 * [**PS4.sh**](https://github.com/ztalbot2000/homebridge-cmd4/raw/master/Extras/Cmd4Scripts/Examples/PS4.sh)
-<BR><BR>
 
+<BR><BR>
 ## Developer Notes
 ### Step 1.  The provided jsmin differs from others
 &nbsp;&nbsp;&nbsp; The resulting file is still readable. Only C and C++ comments are removed. The included config.json is created via:<BR>
 &nbsp;&nbsp;&nbsp; *SHELL*> `gcc jsmin.c -o jsmin`<BR>
 &nbsp;&nbsp;&nbsp; *SHELL*> `jsmin < config.min.json > config.json`
- 
+
 ### Step 2.  The parameters to the state_cmd
 &nbsp;&nbsp;&nbsp;  These are defined as:<BR>
 &nbsp;&nbsp;&nbsp; Get < Accessory Name > < Characteristic ><BR>
 &nbsp;&nbsp;&nbsp; Set < Accessory Name > < Characteristic > < Value >
- 
+
 ### Step 3.  Polling is supported
 &nbsp;&nbsp;&nbsp; Even if you do not use polling, care was taken that all Set Target states are immediately followed by a Get of the Current state. This is so that after closing a garage door for instance, Homekit gets updated that the door was closed.
- 
+
 ### Step 4.  Sending constants to your script.
 &nbsp;&nbsp;&nbsp; By placing in your config.json file the tag "outputConstants": true, instead of values, your script will receive constants instead of values (Where Applicable). Homebridge-Cmd4 will except constants or values as input.  See the config.min.json file for the defined constants.
- 
+
 ***Important***
 &nbsp;&nbsp;&nbsp; Homebridge-cmd4 just outputs the value to be set.  For whatever reason the lower layers of homebridge set on/off to be "true" and "false" instead of 0 & 1, which is incorrect, but changing it would break others scripts.
 &nbsp;&nbsp;&nbsp;  Homebridge-cmd4 has always recognized either 0/1 or true/false when receiving the devices value.
@@ -317,10 +403,10 @@ The value "0" should be used for any characteristics value which is not possible
              "interval": 60,   "timeout": 4000}
            ],
 ```
-<BR><BR>
 
+<BR><BR>
 ## Unit Testing
-&nbsp;&nbsp;&nbsp; Unit testing is done using the Mocha framework for Javascript and was introduced in homebridge-cmd4 version 2.1.2. There are 2796 test cases and they all run successfully.  They test the homebridge-cmd4 module to make sure that all characteristics, services and names are correct. They also test the provided State.js and PS4.sh for their respective Get/Set characteristics.  The provided config.json is also tested for proper definitions of all the homebridge-cmd4 config parameters.
+&nbsp;&nbsp;&nbsp; Unit testing is done using the Mocha framework for Javascript and was introduced in homebridge-cmd4 version 2.1.2. There are 2796 test cases and they all run successfully.  They test the homebridge-Cmd4 module to make sure that all characteristics, services and names are correct. They also test the provided State.js and PS4.sh for their respective Get/Set characteristics.  The provided config.json is also tested for proper definitions of all the homebridge-cmd4 config parameters.
 
 &nbsp;&nbsp;&nbsp; Unit testing is only possible in a development environment and can be achieved in the following manner.
 

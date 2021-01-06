@@ -72,7 +72,7 @@ class Cmd4Accessory
       this.LEVEL = ( parentInfo && parentInfo.LEVEL !== undefined ) ? parentInfo.LEVEL + 1 : 0;
       this.COLLECTION = ( parentInfo && parentInfo.COLLECTION ) ? parentInfo.COLLECTION : [ ];
 
-      // this.log( `CMD4=${ this.CMD4 } LEVEL=${ this.LEVEL }` );
+      // this.log.debug( `CMD4=${ this.CMD4 } LEVEL=${ this.LEVEL }` );
 
       let typeMsg =  [ "", "Linked ", "Added " ][ this.LEVEL ] || "";
 
@@ -155,7 +155,7 @@ class Cmd4Accessory
       // Convert the accessoriesConfig ( if any ) to an array of Cmd4Accessory
       if ( this.accessoriesConfig && this.CMD4 == constants.PLATFORM && this.LEVEL == 0 )
       {
-         log( `Creating accessories for: ${ this.displayName }` );
+         log.info( `Creating accessories for: ${ this.displayName }` );
          // Let me explain. Level 0 are standalone or platform.  Level 1 is linked. Added accessories
          // are on the same level as linked, but they are not linkedTypes, just added to the platform.
          // For Example: TelevisionSpeaker.
@@ -169,7 +169,7 @@ class Cmd4Accessory
       // Linked Accessories can be on Standalone or Platform Accessories.
       if ( this.linkedAccessoriesConfig && this.LEVEL == 0 )
       {
-         log( `Creating linked accessories for: ${ this.displayName }` );
+         log.info( `Creating linked accessories for: ${ this.displayName }` );
          this.linkedAccessories = this.accessoryTypeConfigToCmd4Accessories( this.linkedAccessoriesConfig, this );
       }
 
@@ -202,9 +202,9 @@ class Cmd4Accessory
    {
       //if ( this.services )
       //{
-      //   this.log( Fg.Red + "ZZZZ Returning:%s number of services for:%s" + Fg.Rm, this.services.length, this.displayName );
+      //   this.log.debug( Fg.Red + "ZZZZ Returning:%s number of services for:%s" + Fg.Rm, this.services.length, this.displayName );
       //} else {
-      //   this.log( Fg.Red + "ZZZZ Returning this.services:%s for:%s" + Fg.Rm, this.services, this.displayName );
+      //   this.log.debug( Fg.Red + "ZZZZ Returning this.services:%s for:%s" + Fg.Rm, this.services, this.displayName );
       //}
       return this.services;
    }
@@ -215,7 +215,7 @@ class Cmd4Accessory
       {
          this.log.error ( chalk.red( "Error" ) + ": setStoredValue - Characteristic:%s for:%s not known", accTypeEnumIndex, this.displayName );
          this.log.error ( `Check your config.json file for this error` );
-         process.exit( 1 );
+         process.exit( 200 );
       }
       this.config.storedValuesPerCharacteristic[ accTypeEnumIndex ] = value;
    }
@@ -224,9 +224,9 @@ class Cmd4Accessory
    {
       if ( accTypeEnumIndex < 0 || accTypeEnumIndex > CMD4_ACC_TYPE_ENUM.EOL )
       {
-         this.log( `CMD4 Warning: getStoredValue - Characteristic: ${ accTypeEnumIndex} for: ${ this.displayName }` );
-         this.log( `Check your config.json file for this error` );
-         process.exit( 1 );
+         this.log.error( `CMD4 Warning: getStoredValue - Characteristic: ${ accTypeEnumIndex} for: ${ this.displayName }` );
+         this.log.error( `Check your config.json file for this error` );
+         process.exit( 205 );
       }
       return this.config.storedValuesPerCharacteristic[ accTypeEnumIndex ];
    }
@@ -305,8 +305,9 @@ class Cmd4Accessory
          let value;
          let valueToStore = null;
          let accTypeEnumIndex = -1;
+         let key;
 
-         for ( let key in jsonPollingConfig )
+         for ( key in jsonPollingConfig )
          {
             let ucKey = ucFirst( key );
             value = jsonPollingConfig[ key ];
@@ -338,7 +339,7 @@ class Cmd4Accessory
                   if ( accTypeEnumIndex < 0 )
                   {
                      this.log.error( chalk.red( `No such polling characteristic: ${ value } for: ${ this.displayName }` ) );
-                     process.exit( 176 );
+                     process.exit( 210 );
                   }
                   // We can do this as this is a new way to do things.
                   let storedValue = this.getStoredValueForIndex( accTypeEnumIndex );
@@ -346,7 +347,7 @@ class Cmd4Accessory
                   {
                      this.log.error( `Polling for: "${ value }" requested, but characteristic` +
                                      `is not in your config.json file for: ${ this.displayName }` );
-                     process.exit( 437 );
+                     process.exit( 211 );
                   }
                   // This makes thinks nice down below.
                   valueToStore = storedValue;
@@ -359,7 +360,7 @@ class Cmd4Accessory
                   if ( accTypeEnumIndex < 0  )
                   {
                     this.log.error( `OOPS: "${ key }" not found while parsing for characteristic polling. There something wrong with your config.json file?` );
-                    process.exit( 1 );
+                    process.exit( 212 );
                   }
                   valueToStore = value;
                }
@@ -368,7 +369,7 @@ class Cmd4Accessory
          if ( accTypeEnumIndex == -1 )
          {
             this.log.error( `No characteristic found while parsing for characteristic polling. There something wrong with your config.json file?` );
-            process.exit( 1 );
+            process.exit( 213 );
          }
          if ( this.getStoredValueForIndex( accTypeEnumIndex ) == undefined )
          {
@@ -442,7 +443,7 @@ class Cmd4Accessory
       // Move the information service to the top of the list
       accessory.services.unshift( accessory.informationService );
 
-      // accessory.log( chalk.red("ZZZZ %s.services.length %s", accessory.displayName, accessory.services.length ) );
+      // accessory.log.info( chalk.red("ZZZZ %s.services.length %s", accessory.displayName, accessory.services.length ) );
 
    }
 
@@ -498,9 +499,9 @@ class Cmd4Accessory
       exec( cmd, { timeout: self.timeout }, function ( error, stdout, stderr )
       {
          if ( error ) {
-            self.log( chalk.red( `setGeneric ${ characteristicString } function failed for ${ self.displayName } Error: ${ error.message }` ) );
-            self.log( stdout );
-            self.log( stderr );
+            self.log.error( chalk.red( `setGeneric ${ characteristicString } function failed for ${ self.displayName } Error: ${ error.message }` ) );
+            self.log.error( stdout );
+            self.log.error( stderr );
             callback( error );
 
          } else {
@@ -634,10 +635,10 @@ class Cmd4Accessory
       {
          if ( error )
          {
-            self.log( `getGeneric ${ characteristicString } function for: ${ self.displayName } cmd: ${ cmd } failed.` );
-            self.log( error );
-            self.log( stdout );
-            self.log( stderr );
+            self.log.error( `getGeneric ${ characteristicString } function for: ${ self.displayName } cmd: ${ cmd } failed.` );
+            self.log.error( error );
+            self.log.error( stdout );
+            self.log.error( stderr );
             callback( error, 0 );
 
          } else
@@ -664,14 +665,14 @@ class Cmd4Accessory
             // I'd rather trap here
             if ( words == undefined )
             {
-               self.log( `Nothing retured from stdout for ${ characteristicString } ${ self.displayName }` );
-               self.log( stderr );
-               self.log( error );
-               self.log( stdout );
+               self.log.error( `Nothing retured from stdout for ${ characteristicString } ${ self.displayName }` );
+               self.log.error( stderr );
+               self.log.error( error );
+               self.log.error( stdout );
                callback( -1, 0 );
             } else if ( words.length <= 0 )
             {
-               self.log( `getValue ${ characteristicString } function for: ${ self.displayName } returned no value` );
+               self.log.error( `getValue ${ characteristicString } function for: ${ self.displayName } returned no value` );
 
                callback( -1, 0 );
 
@@ -733,13 +734,13 @@ class Cmd4Accessory
          if ( characteristicProps[ key ] == undefined )
          {
             this.log.error( chalk.red( "Error" ) + ": props for key: '%s' not in definition of %s", key, type );
-            process.exit( -1 );
+            process.exit( 220 );
          }
 
          if ( typeof characteristicProps[ key ] !=  typeof definitions[ key ] )
          {
             this.log.error( chalk.red( "Error" ) + ": props for key: %s type %s not equal to definition of %s", key, typeof definitions[ key], typeof characteristicProps[ key] );
-            process.exit( -1 );
+            process.exit( 221 );
          }
       }
 
@@ -908,7 +909,7 @@ class Cmd4Accessory
    {
       if ( accTypeEnumIndex < 0 || accTypeEnumIndex > CMD4_ACC_TYPE_ENUM.EOL )
       {
-         this.log( `Internal error: updateAccessoryAttribute - accTypeEnumIndex: ${ accTypeEnumIndex } for: ${ this.displayName } not found` );
+         this.log.error( `Internal error: updateAccessoryAttribute - accTypeEnumIndex: ${ accTypeEnumIndex } for: ${ this.displayName } not found` );
          return;
       }
 
@@ -1125,8 +1126,8 @@ class Cmd4Accessory
                     case constants.FAKEGATO_TYPE_AQUA:
                        break;
                     default:
-                       this.log( `Invalid fakegato eve type: ${ value }` );
-                       this.log( "It must be one of ( %s, %s, %s, %s, %s, %s, %s )",
+                       this.log.error( `Invalid fakegato eve type: ${ value }` );
+                       this.log.error( "It must be one of ( %s, %s, %s, %s, %s, %s, %s )",
                           constants.FAKEGATO_TYPE_ENERGY,
                           constants.FAKEGATO_TYPE_ROOM,
                           constants.FAKEGATO_TYPE_WEATHER,
@@ -1134,9 +1135,9 @@ class Cmd4Accessory
                           constants.FAKEGATO_TYPE_MOTION,
                           constants.FAKEGATO_TYPE_THERMO,
                           constants.FAKEGATO_TYPE_AQUA );
-                        this.log( `Check the Cmd4 README and ` );
-                        this.log( `https://github.com/simont77/fakegato-history` );
-                        process.exit( 1 );
+                        this.log.error( `Check the Cmd4 README and ` );
+                        this.log.error( `https://github.com/simont77/fakegato-history` );
+                        process.exit( 225 );
                 }
                 break;
              case constants.STORAGE:
@@ -1171,7 +1172,8 @@ class Cmd4Accessory
                  break;
               }
               default:
-                 this.log( `Invalid fakegato key: ${ key } in json.config for: ${ this.displayName }` );
+                 this.log.error( `Invalid fakegato key: ${ key } in json.config for: ${ this.displayName }` );
+                 process.exit( 216 );
           }
       }
 
@@ -1223,7 +1225,7 @@ class Cmd4Accessory
       if ( ! state_cmd )
       {
          this.log.error( chalk.red( `No state_cmd for: ${ this.displayName }` ) );
-         process.exit( 666 );
+         process.exit( 230 );
       }
 
       // Split the state_cmd into words.
@@ -1298,8 +1300,8 @@ class Cmd4Accessory
 
       if ( accTypeEnumIndex < 0 )
       {
-         this.log( `OOPS: "${ key }" not found for parsing key for Characteristics. There something wrong with your config.json file?` );
-         process.exit( 1 );
+         this.log.error( `OOPS: "${ key }" not found for parsing key for Characteristics. There something wrong with your config.json file?` );
+         process.exit( 235 );
       }
 
       if ( Object.keys( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].validValues ).length > 0 )
@@ -1338,7 +1340,7 @@ class Cmd4Accessory
             if ( typeof required != "string" )
             {
                this.log.error( `Requires definition: ${ required }  must be a string` );
-               process.exit( -1 );
+               process.exit( 240 );
             }
 
             this.log.debug( `Requiring ${ required }` );
@@ -1348,7 +1350,7 @@ class Cmd4Accessory
          return;
       }
       this.log.error( `Requires must be an array of/or list of key/value pairs: ${ requires }` );
-      process.exit( -1 );
+      process.exit( 241 );
    }
 
    processConstants( constants )
@@ -1370,13 +1372,13 @@ class Cmd4Accessory
             if ( ! keyToAdd.startsWith( "${" ) )
             {
                this.log.error( `Constant definition for: ${ keyToAdd } must start with "\${" for clarity.` );
-               process.exit( -1 );
+               process.exit( 245 );
             }
 
             if ( ! keyToAdd.endsWith( "}" ) )
             {
                this.log.error( `Constant definition for: ${ keyToAdd } must end with "}" for clarity.` );
-               process.exit( -1 );
+               process.exit( 246 );
             }
 
             // remove any leading and trailing single quotes
@@ -1390,7 +1392,7 @@ class Cmd4Accessory
      }
 
      this.log.error( `Constants must be an array of/or list of key/value pairs: ${ constants }` );
-     process.exit( -1 );
+     process.exit( 247 );
    }
 
    processVariables( variables )
@@ -1412,13 +1414,13 @@ class Cmd4Accessory
             if ( ! keyToAdd.startsWith( "${" ) )
             {
                this.log.error( `Variable definition for: ${ keyToAdd } must start with "\${" for clarity.` );
-               process.exit( -1 );
+               process.exit( 250 );
             }
 
             if ( ! keyToAdd.endsWith( "}" ) )
             {
                this.log.error( `Variable definition for: ${ keyToAdd } must end with "}" for clarity.` );
-               process.exit( -1 );
+               process.exit( 251 );
             }
 
             // remove any leading and trailing single quotes
@@ -1435,7 +1437,7 @@ class Cmd4Accessory
       }
 
       this.log.error( `Variables must be an array of/or list of key/value pairs: ${ variables }` );
-      process.exit( -1 );
+      process.exit( 252 );
    }
 
    accessoryTypeConfigToCmd4Accessories( config, parentInfo )
@@ -1468,13 +1470,13 @@ class Cmd4Accessory
       if ( typeof url != "string" )
       {
          this.log.error( `url must be a string: ${ url }` );
-         process.exit( -1 );
+         process.exit( 255 );
       }
 
       if ( this.url !== undefined )
       {
          this.log.error( `url is already defined as: ${ this.url } for: ${ url }` );
-         process.exit( -1 );
+         process.exit( 256 );
       }
 
       this.url = this.replaceConstantsInString( url );
@@ -1533,7 +1535,7 @@ class Cmd4Accessory
                if ( ! this.category )
                {
                   this.log.error( `Category specified: ${ value } is not a valid homebridge category.` );
-                  process.exit( 666 );
+                  process.exit( 260 );
                }
 
                break;
@@ -1622,7 +1624,7 @@ class Cmd4Accessory
                   default:
                      this.log.error( chalk.red( `Invalid value: ${ value } for ${ constants.FETCH }` ) );
                      this.log.error( `Must be: [ 0 | ${ constants.FETCH_ALWAYS }, 1 | ${ constants.FETCH_CACHED }, 2 | ${ constants.FETCH_POLLED }` );
-                     process.exit( 312 ) ;
+                     process.exit( 261 ) ;
                }
                break;
             case constants.INTERVAL:
@@ -1717,7 +1719,7 @@ class Cmd4Accessory
       if ( trueTypeOf( this.type ) != String )
       {
           this.log.error( chalk.red( `Error` ) + `: No device type given for: ${ this.displayName }` );
-         process.exit( 1 );
+         process.exit( 262 );
       }
 
       this.ucType = ucFirst( this.type );
@@ -1725,7 +1727,7 @@ class Cmd4Accessory
       if ( this.typeIndex < 0 )
       {
           this.log.error( chalk.red( `Error` ) + `: Unknown device type: ${ this.type } for: ${ this.displayName }` );
-         process.exit( 1 );
+         process.exit( 263 );
       }
 
       // UUID must be defined or created.
@@ -1739,7 +1741,7 @@ class Cmd4Accessory
       if ( this.polling && ! this.validateStateCmd( this.state_cmd ) )
       {
          this.log.error( chalk.red( `Error` ) + `: state_cmd: "${ this.state_cmd }" is invalid for: ${ this.displayName }` );
-         process.exit( 666 );
+         process.exit( 264 );
       }
 
       // Handle seperation of strings of state_cmd for a prefix
@@ -1781,7 +1783,7 @@ class Cmd4Accessory
             return;
          case String:
             this.log.error( `Unknown type for Polling ${ pollingType }` );
-            process.exit( 444 );
+            process.exit( 265 );
             return;
          case Array:
             break;
@@ -1792,7 +1794,8 @@ class Cmd4Accessory
             this.polling = [ this.polling ];
             return;
          default:
-            this.log( `Do not know how to handle polling type of: ${ pollingType }` );
+            this.log.error( `Do not know how to handle polling type of: ${ pollingType }` );
+            process.exit( 266 );
             return;
       }
    }
@@ -1877,14 +1880,14 @@ class Cmd4Accessory
                         if ( accTypeEnumIndex < 0 )
                         {
                            log.error( chalk.red( `No such polling characteristic: ${ value } for: ${ accessory.displayName }` ) );
-                           process.exit( 177 );
+                           process.exit( 261 );
                         }
                         // We can do this as this is a new way to do things.
                         if ( this.getStoredValueForIndex( accTypeEnumIndex ) == undefined )
                         {
                            this.log.error( `Polling for: "${ value }" requested, but characteristic` +
                                            `is not in your config.json file for: ${ this.displayName }` );
-                           process.exit( 477 );
+                           process.exit( 262 );
                         }
                         break;
                      }
@@ -1895,13 +1898,13 @@ class Cmd4Accessory
                         if ( accTypeEnumIndex != -1 )
                         {
                            log.error( chalk.red( `Error` ) + `: For charateristic polling, you can only define one characteristic per array item.\nCannot add "${ ucKey }" as "${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }" is already defined for: ${ accessory.displayName }` );
-                           process.exit( -1 );
+                           process.exit( 263 );
                         }
                         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucKey );
                         if ( accTypeEnumIndex < 0 )
                         {
                            log.error( chalk.red( `Error` ) + ` No such polling characteristic: ${ key } for: ${ accessory.displayName }` );
-                           process.exit( -1 );
+                           process.exit( 264 );
                         }
                         if ( warningDisplayed == false )
                         {
@@ -1950,7 +1953,7 @@ class Cmd4Accessory
          default:
          {
             log.error( chalk.red( `Error` ) + `: Something wrong with value of polling: ${ accessory.polling }\n       Check your config.json for errors.` );
-            process.exit( 1 );
+            process.exit( 262 );
          }
       }
    }
@@ -2068,7 +2071,7 @@ function checkAccessoryForDuplicateUUID( accessory )
 
             accessory.log.error( chalk.red( `It is wiser to define the second accessory in a different bridge.` ) );
 
-            process.exit( 1 );
+            process.exit( 270 );
          }
       }
    }
