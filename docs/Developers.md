@@ -313,8 +313,8 @@ As a plugin, Homebridge-cmd4 easily coexists with Homebridge-cmdswitch2 or any o
 ### Step 1.  The provided jsmin differs from others
 &nbsp;&nbsp;&nbsp; The resulting file is still readable. Only C and C++ comments are removed. The included config.json is created via:<BR>
 ```bash
-   *SHELL*> `gcc jsmin.c -o jsmin`
-   *SHELL*> `jsmin < config.min.json > config.json`
+   *SHELL*> gcc jsmin.c -o jsmin
+   *SHELL*> jsmin < config.min.json > config.json
 ```
 
 ### Step 2.  The parameters to the state_cmd
@@ -386,22 +386,22 @@ The value "0" should be used for any characteristics value which is not possible
 ### Step 1.  Install homebridge-cmd4 in a local environment
 &nbsp;&nbsp;&nbsp; This is done separate from the global environment and does not impact the global environment.<BR>
 ```bash
-   *SHELL*> `npm install homebridge-cmd4`
+   *SHELL*> npm install homebridge-cmd4
 ```
 
 ### Step 2.  Change to the homebridge-cmd4 directory
 ```bash
-   *SHELL*> `cd homebridge-cmd4`
+   *SHELL*> cd homebridge-cmd4
 ```
 
 ### Step 3.  Install homebridge-cmd4 development dependencies
 ```bash
-   *SHELL*> `npm install --save-dev`
+   *SHELL*> npm install --save-dev
 ```
 
 ### Step 4.  Run the provided test cases
 ```bash
-   *SHELL*> `npm test`
+   *SHELL*> npm test
 ```
 
 Note: There is one bug where the testcases do not run correctly every second attempt.  It has something to do with synchronous tests for Get/Set.  Please ignore it at this time.  Just run it again.

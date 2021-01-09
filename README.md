@@ -69,21 +69,26 @@ See [homebridge](homebridge) for complete details.<BR>
 
 
 ### Step 2.  Install Cmd4 Plugin
-&nbsp;&nbsp;&nbsp; *SHELL*> `sudo npm install -g --unsafe-perm homebridge-cmd4`
+&nbsp;&nbsp;&nbsp; *SHELL*> sudo npm install -g --unsafe-perm homebridge-cmd4
 
 
 ### Step 3.  Install State.js
-&nbsp;&nbsp;&nbsp; *SHELL*> `mkdir $HOME/.homebridge`<BR>
-&nbsp;&nbsp;&nbsp; *SHELL*> `mkdir $HOME/.homebridge/Cmd4Scripts`<BR>
-&nbsp;&nbsp;&nbsp; *SHELL*> `cp /usr/lib/node_modules/homebridge-cmd4/Extras/Cmd4Scripts/State.js $HOME/.homebridge/Cmd4Scripts/`<BR>
-&nbsp;&nbsp;&nbsp; *SHELL*> `cp /usr/lib/node_modules/homebridge-cmd4/Extras/Cmd4Scripts/CheckYourScript.sh $HOME/.homebridge/Cmd4Scripts/`<BR>
-&nbsp;&nbsp;&nbsp; *SHELL*> `chmod 700 .homebridge/Cmd4Scripts/State.js`<BR>
+
+```bash
+   *SHELL*> mkdir $HOME/.homebridge
+   *SHELL*> mkdir $HOME/.homebridge/Cmd4Scripts
+   *SHELL*> cp /usr/lib/node_modules/homebridge-cmd4/Extras/Cmd4Scripts/State.js $HOME/.homebridge/Cmd4Scripts/
+   *SHELL*> cp /usr/lib/node_modules/homebridge-cmd4/Extras/Cmd4Scripts/CheckYourScript.sh $HOME/.homebridge/Cmd4Scripts/
+   *SHELL*> chmod 700 .homebridge/Cmd4Scripts/State.js
+```
 <BR>
 
 ### Step 4.  Install/Update your config.json file
 &nbsp;&nbsp;&nbsp; Use the provided config.json file or add it to your own.
 
-&nbsp;&nbsp;&nbsp; *SHELL*> `cp /usr/lib/node_modules/homebridge-cmd4/Extras/config.json $HOME/.homebridge/`
+```bash
+   *SHELL*> cp /usr/lib/node_modules/homebridge-cmd4/Extras/config.json $HOME/.homebridge/
+```
 
 
 ### Step 5. Restart homebridge
@@ -125,35 +130,35 @@ Check that the command exists, but also that the timeout value in your config.js
 ### Step 1.  Change to your $HOME directory
 &nbsp;&nbsp;&nbsp; Homebridge is expected to run from a user's home directory where it can find the .homebridge/config.json file and the Cmd4Scripts.State.js command file.
 
-```basg
-   *SHELL*> `cd $HOME`
+```bash
+   *SHELL*> cd $HOME
 ```
 
 ### Step 2.  Test the State.js command file
 
 ```bash
-   *SHELL*> `node .homebridge/Cmd4Scripts/State.js Get My_Fan On`
+   *SHELL*> node .homebridge/Cmd4Scripts/State.js Get My_Fan On
 ```
 &nbsp;&nbsp;&nbsp; This should output: 0 or 'true'
 
 ### Step 3.  Run homebridge in debug mode
 
 ```bash
-   *SHELL*> `DEBUG=* homebridge -D`
+   *SHELL*> DEBUG=* homebridge -D
 ```
 
 ### Step 4.  Try executing the State.js script for a "Get" command.
 
 ```bash
-   *SHELL*> `node .homebridge/Cmd4Scripts/State.js Get My_Fan On`
+   *SHELL*> node .homebridge/Cmd4Scripts/State.js Get My_Fan On
 ```
 &nbsp;&nbsp;&nbsp;&nbsp; This should output '0' or '1' or 'true' or 'false'
 
 ### Step 5.  Try executing the State.js script for a "Set" command.
 
 ```bash
-   *SHELL*> `node .homebridge/Cmd4Scripts/State.js Set My_Fan On false`
-   *SHELL*> `node .homebridge/Cmd4Scripts/State.js Set My_Fan On true`
+   *SHELL*> node .homebridge/Cmd4Scripts/State.js Set My_Fan On false
+   *SHELL*> node .homebridge/Cmd4Scripts/State.js Set My_Fan On true
 ```
 &nbsp;&nbsp;&nbsp;&nbsp; This should store the fans status.
 
