@@ -40,9 +40,9 @@
 
 &nbsp;&nbsp;&nbsp; Cmd4 also supports three types of polling, modified by the "fetch" directive.
 <UL>
-<li> { "fetch": "Always" } - As before, Always fetch characteristic value. ( Default )
-<li> { "fetch": "Cached" } - Never fetch characteristic value. Use cached value. The cached value would have to be updated through polling.
-<li> { "fetch": "Polled" } - Polled characteristics act like before, "Always". Non polled characteristic values are fetched from cache.
+<LI> { "fetch": "Always" } - As before, Always fetch characteristic value. ( Default )
+<LI> { "fetch": "Cached" } - Never fetch characteristic value. Use cached value. The cached value would have to be updated through polling.
+<LI> { "fetch": "Polled" } - Polled characteristics act like before, "Always". Non polled characteristic values are fetched from cache.
 </UL>
 
 &nbsp;&nbsp;&nbsp; Cmd4 supports Fakegato History and retaining previous state over restarts.
@@ -54,13 +54,13 @@
 
 <BR><BR>
 ## Screenshots
-<h3 align="center">
+<H3 ALIGN="center">
   <img src="https://github.com/ztalbot2000/homebridge-cmd4/raw/master/screenshots/Homekit_screenshot.png">
-</h3>
+</H3>
 
-<h3 align="center">
+<H3 align="center">
   <img src="https://github.com/ztalbot2000/homebridge-cmd4/raw/master/screenshots/Eve_screenshot.png">
-</h3>
+</H3>
 
 <BR><BR>
 ## Installation Details
@@ -69,7 +69,10 @@ See [homebridge](homebridge) for complete details.<BR>
 
 
 ### Step 2.  Install Cmd4 Plugin
-&nbsp;&nbsp;&nbsp; *SHELL*> sudo npm install -g --unsafe-perm homebridge-cmd4
+
+```bash
+   *SHELL*> sudo npm install -g --unsafe-perm homebridge-cmd4
+```
 
 
 ### Step 3.  Install State.js

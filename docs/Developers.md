@@ -1,6 +1,6 @@
 # Homebridges-cmd4 - Cmd4 Developers Guide.
 
-<BR><BR>
+
 ## Table of Contents
 * [**About CMD4 Developers Guide**](#about-cmd4-developers-guide)
 * [**Where to Begin**](#where-to-begin)
@@ -15,24 +15,20 @@
 * [**Unit Testing**](#unit-testing)
 * [**License**](#license)
 
-<BR><BR>
 ## About CMD4 Developers Guide
 &nbsp;&nbsp;&nbsp; This document will help you understand what is needed to integrate your own scripts into Cmd4.
 
-<BR><BR>
 ## Where to begin
 &nbsp;&nbsp;&nbsp; Cmd4 comes with a fully populated and documented config.json file that points to a fully populated and configured State.js file. These are excellent places of reference.<BR>
 &nbsp;&nbsp;&nbsp; Next you should look at scripts that might already exist. Within the Cmd4 directory structure there is a path of "Extras/Cmd4Scripts/ExampleScripts" that may already exist for you as a starting point.<BR>
-* [**basic_ping.sh**](https://github.com/ztalbot2000/homebridge-cmd4/raw/master/Extras/Cmd4Scripts/Examples/basic_ping.sh)<BR>
-* [**advanced_ping.sh**](https://github.com/ztalbot2000/homebridge-cmd4/raw/master/Extras/Cmd4Scripts/Examples/advanced_ping.sh)<BR>
-* [**wakeonlan.sh**](https://github.com/ztalbot2000/homebridge-cmd4/raw/master/Extras/Cmd4Scripts/Examples/wakeonlan.sh)<BR>
-
-<BR><BR>
+* [**basic_ping.sh**](https://github.com/ztalbot2000/homebridge-cmd4/raw/master/Extras/Cmd4Scripts/Examples/basic_ping.sh)
+* [**advanced_ping.sh**](https://github.com/ztalbot2000/homebridge-cmd4/raw/master/Extras/Cmd4Scripts/Examples/advanced_ping.sh)
+* [**wakeonlan.sh**](https://github.com/ztalbot2000/homebridge-cmd4/raw/master/Extras/Cmd4Scripts/Examples/wakeonlan.sh)
 
 ## Homebridge API
 &nbsp;&nbsp;&nbsp; Cmd4 is not possible without Homebridge. Prior to Cmd4 Version 3, Cmd4 just created Standard Plugin Accessories. With Version 3 of Cmd4, Cmd4 follows the Hombridge API as defined on [Homebridge API](https://developers.homebridge.io/#/) to be followed exactly. Both Platform and Accessory Plugins can be created. In fact the examples can be recreated exactly.<BR>
-<BR>Note: The major difference in CMD4 Version 3 is that the default accessory created is a Platform Plugin as compared to an Accessory Plugin. This is beneficial as many more Platform with the same type can be created and they can be published externally as we shall see.<BR>
-<BR><BR>
+<BR>Note: The major difference in CMD4 Version 3 is that the default accessory created is a Platform Plugin as compared to an Accessory Plugin. This is beneficial as many more Platform with the same type can be created and they can be published externally as we shall see.
+
 
 ## Platform Accessories
 &nbsp;&nbsp;&nbsp; The best way to explain the difference is to understand how the Homebridge API defines a Television as a Platform Accessory. [Homebridge Television](https://developers.homebridge.io/#/service/Television). Cmd4 Version 3 can recreate the exact same configuration as:<as:
@@ -131,8 +127,6 @@
 }
 ```
 
-<BR>
-
 ### New Cmd4 3.0 Directives
 &nbsp;&nbsp;&nbsp;There are a few new important Cmd4 designations in Homebridge 3.0.
 <UL>
@@ -160,8 +154,6 @@ Cmd4 allows Homebridge to use saved state information over restarts. This is not
 </UL>
 
 See the [Cmd4 Developers Guide](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/Developers.md) for further information.
-
-<BR>
 
 ## Standard Accessories
 &nbsp;&nbsp;&nbsp;A Standard Accessory does not need a Platform. The Homebridge example given is. [Homebridge Switch](https://developers.homebridge.io/#/api/accessory-plugins). Cmd4 Version 3 can recreate the exact same configuration as:
@@ -199,40 +191,41 @@ This configuration defines a Cmd4 Standard Accessory with the designation:
 <BR>
 Notice that there is no Platform definition. Otherwise everything is the same. You can even add linked accessories as before.<BR>
 
-<BR><BR>
+
 ## Cmd4 Directives
 
 &nbsp;&nbsp;&nbsp; Homebridge-Cmd4 has many directives, the most important being the "state_cmd". The provided config.min.json file shows many of the directives in action. Here is a list of all Cmd4 directives and their meaning. These are just the directives and not the hundreds of characteristics Cmd4 can handle that are documented in homebridge, the Cmd4 config.min.json file and the Cmd4 State.js script.
 
 
-<TABLE width="100%" border=1>
-<TR align="left"><TD> Cmd4Directive <TD>     Type   <TD padding="50px">    Default  <TD>    Description  </TR>                                 
-<TR align="left"><TD> "outputConstants" <TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1 </TR>
-<TR align="left"><TD> "restartRecover" <TD> < Bool > <TD> true <TD> If Cmd4 will use previous cached state information </TR>
-<TR align="left"><TD> "publishExternally" <TD>  < Bool >  <TD>    false     <TD> Tell Homebridge to publish the device as its own bridge. </TR>
-<TR align="left"><TD> "fetch" <TD> < "Always" | "Cached" | "Polled" > <TD> "always" <TD> Tell Homebridge to publish the device as its own bridge.</TR>
-<TR align="left"><TD colspan=4>
+<TABLE WIDTH="100%" BORDER=1>
+<TR ALIGN="left"><TD> Cmd4Directive <TD>     Type   <TD PADDING="50px">    Default  <TD>    Description  </TR>                                 
+<TR ALIGN="left"><TD> "outputConstants" <TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1 </TR>
+<TR ALIGN="left"><TD> "restartRecover" <TD> < Bool > <TD> true <TD> If Cmd4 will use previous cached state information </TR>
+<TR ALIGN="left"><TD> "publishExternally" <TD>  < Bool >  <TD>    false     <TD> Tell Homebridge to publish the device as its own bridge. </TR>
+<TR ALIGN="left"><TD> "fetch" <TD> < "Always" | "Cached" | "Polled" > <TD> "Always" <TD> Tell Homebridge to publish the device as its own bridge.</TR>
+<TR ALIGN="left"><TD COLSPAN=4>
    i.e.<BR>
    <UL>
-      <li> { "fetch": "Always" } - As before Always fetch characteristic value. ( Default )
-      <li> { "fetch": "Cached" } - Never fetch characteristic value. Use cached value. The cached value would have to be updated through polling.
-      <li> { "fetch": "Polled" } - Polled characteristics act like before  (Always). Non polled characteristic values are fetched from cache.
+      <LI> { "fetch": "Always" } - As before Always fetch characteristic value. ( Default )
+      <LI> { "fetch": "Cached" } - Never fetch characteristic value. Use cached value. The cached value would have to be updated through polling.
+      <LI> { "fetch": "Polled" } - Polled characteristics act like before  (Always). Non polled characteristic values are fetched from cache.
   </UL>
 </TR>
-<TR align="left"><TD>  "stateChangeResponseTime" <TD> < seconds > <TD> 60 <TD> Tell Homebridge to publish the device as its own bridge.  </TR>
-<TR align="left"><TD> "timeout" <TD> < msec > <TD> false <TD> Tell Homebridge to publish the device as its own bridge.  </TR>
-<TR align="left"><TD> "polling" <TD> < Bool > <TD> false <TD> Tell Homebridge to publish the device as its own bridge.  </TR>
-<TR><TD><TD colspan=3> or  [{"characteristic" < characteristic >, [ "interval": < sec >, "timeout": < msec > ] }] </TR>
-<TR align="left"><TD> "state_cmd"    <TD>  < state_cmd >  <TD> undefined <TD> The command used to Get/Set Device characteristic State.  </TR>
-<TR align="left"><TD> "state_cmd_prefix" <TD>  < String >  <TD> undefined <TD> A String prepended to the < state_cmd >.  </TR>
-<TR align="left"><TD>   "state_cmd_suffix" <TD> < String > <TD> undefined <TD> A String appended to the < state_cmd >.  </TR>
-<TR align="left"><TD> "props" <TD>  < Bool >  <TD>    false     <TD> Tell Homebridge to publish the device as its own bridge.  </TR>
-<TR align="left"><TD> "category" <TD> < CATEGORY > <TD> undefined <TD> See <a href="https://developers.homebridge.io/#/categories">Homebridge Categories</a> for a complete list of possible categories.  </TR>
-<TR align="left"><TD>   "fakegato"    <TD>  < JSON >  <TD> undefined <TD> See the section, <a href="#fakegatotag"> "Adding in Fakegato history"</a> below.  </TR>
-<TR align="left"><TD>   "linkedTypes"    <TD>  < JSON >  <TD> undefined <TD> Other Cmd4 Accessories like Input Source for HDMI inputs. </TR>
+<TR ALIGN="left"><TD>  "stateChangeResponseTime" <TD> < seconds > <TD> 60 <TD> Tell Homebridge to publish the device as its own bridge.  </TR>
+<TR ALIGN="left"><TD> "timeout" <TD> < msec > <TD> false <TD> Tell Homebridge to publish the device as its own bridge.  </TR>
+<TR ALIGN="left"><TD> "polling" <TD> < Bool > <TD> false <TD> Tell Homebridge to publish the device as its own bridge.  </TR>
+<TR><TD><TD COLSPAN=3> or  [{"characteristic" < characteristic >, [ "interval": < sec >, "timeout": < msec > ] }] </TR>
+<TR ALIGN="left"><TD> "state_cmd"    <TD>  < state_cmd >  <TD> undefined <TD> The command used to Get/Set Device characteristic State.  </TR>
+<TR ALIGN="left"><TD> "state_cmd_prefix" <TD>  < String >  <TD> undefined <TD> A String prepended to the < state_cmd >.  </TR>
+<TR ALIGN="left"><TD>   "state_cmd_suffix" <TD> < String > <TD> undefined <TD> A String appended to the < state_cmd >.  </TR>
+<TR ALIGN="left"><TD> "props" <TD>  < Bool >  <TD>    false     <TD> A way to override Hap Characteristiic Properties<BR>
+         Only used to set min/max temperatures, for instance:</TR>
+<TR ALIGN="Left"><TD><TD COLSPAN=3>"props" : { "CurrentTemperature": { "maxValue":100, "minValue": -100, "minStep": 0.1}}</TR>
+<TR ALIGN="left"><TD> "category" <TD> < CATEGORY > <TD> undefined <TD> See <a href="https://developers.homebridge.io/#/categories">Homebridge Categories</a> for a complete list of possible categories.  </TR>
+<TR ALIGN="left"><TD>   "fakegato"    <TD>  < JSON >  <TD> undefined <TD> See the section, <a href="#fakegatotag"> "Adding in Fakegato history"</a> below.  </TR>
+<TR ALIGN="left"><TD>   "linkedTypes"    <TD>  < JSON >  <TD> undefined <TD> Other Cmd4 Accessories like Input Source for HDMI inputs. </TR>
 </TABLE>
 
-<BR><BR>
 ## Migrating from Homebridge-cmdswitch2
 &nbsp;&nbsp;&nbsp; Homebridge-cmdswitch2 is great if you just want to turn something On or Off; Hence the switch reference in its name. In fact, there is no need to migrate if that is all you want to do.
 
@@ -242,7 +235,6 @@ As a plugin, Homebridge-cmd4 easily coexists with Homebridge-cmdswitch2 or any o
 
 ### Step 1.  homebridge-cmdswitch2 config.json
 &nbsp;&nbsp;&nbsp; Homebridge-cmdswitch2 defines their *REQUIRED* fields in their config.json as:
-<BR>
 
 ```json
    ...
@@ -270,7 +262,10 @@ As a plugin, Homebridge-cmd4 easily coexists with Homebridge-cmdswitch2 or any o
 
 ### Step 2.  homebridge-cmd4 config.json
 &nbsp;&nbsp;&nbsp; Homebridge-cmd4 only uses one command string as there are many options beyond on/off. This command string is:
+
+```
    **`"state_cmd": "< path to some executable or script >"`**
+```
 
 &nbsp;&nbsp;&nbsp; In this example, we will use:
    **`"state_cmd": "bash .homebridge/Cmd4Scripts/PS4.sh"`**
@@ -308,10 +303,10 @@ As a plugin, Homebridge-cmd4 easily coexists with Homebridge-cmdswitch2 or any o
 &nbsp;&nbsp;&nbsp; An equivalent script is:
 * [**PS4.sh**](https://github.com/ztalbot2000/homebridge-cmd4/raw/master/Extras/Cmd4Scripts/Examples/PS4.sh)
 
-<BR><BR>
 ## Developer Notes
 ### Step 1.  The provided jsmin differs from others
-&nbsp;&nbsp;&nbsp; The resulting file is still readable. Only C and C++ comments are removed. The included config.json is created via:<BR>
+&nbsp;&nbsp;&nbsp; The resulting file is still readable. Only C and C++ comments are removed. The included config.json is created via:
+
 ```bash
    *SHELL*> gcc jsmin.c -o jsmin
    *SHELL*> jsmin < config.min.json > config.json
@@ -319,8 +314,11 @@ As a plugin, Homebridge-cmd4 easily coexists with Homebridge-cmdswitch2 or any o
 
 ### Step 2.  The parameters to the state_cmd
 &nbsp;&nbsp;&nbsp; These are defined as:<BR>
-&nbsp;&nbsp;&nbsp; Get < Accessory Name > < Characteristic ><BR>
-&nbsp;&nbsp;&nbsp; Set < Accessory Name > < Characteristic > < Value >
+
+```
+   Get < Accessory Name > < Characteristic >
+   Set < Accessory Name > < Characteristic > < Value >
+```
 
 ### Step 3.  Polling is supported
 &nbsp;&nbsp;&nbsp; Even if you do not use polling, care was taken that all Set Target states are immediately followed by a Get of the Current state. This is so that after closing a garage door for instance, Homekit gets updated that the door was closed.
@@ -334,9 +332,8 @@ As a plugin, Homebridge-cmd4 easily coexists with Homebridge-cmdswitch2 or any o
 When in doubt, check the parameters yourself.
 Thanks Florian for pointing out the original documented bash script was incorrect
 
-&nbsp;&nbsp;&nbsp; Your now ready to go and try Fans, Switches, Garage Doors, Locks, Sensors ....
+&nbsp;&nbsp;&nbsp; Your now ready to go and try Fans, Switches, Garage Doors, Locks, Sensors ... ✅
 
-<BR><BR>
 <DIV id="fakegatotag"></DIV>
 
 ## Adding in Fakegato history
@@ -377,36 +374,38 @@ The value "0" should be used for any characteristics value which is not possible
            ],
 ```
 
-<BR><BR>
 ## Unit Testing
 &nbsp;&nbsp;&nbsp; Unit testing is done using the Mocha framework for Javascript and was introduced in homebridge-cmd4 version 2.1.2. There are 2796 test cases and they all run successfully.  They test the homebridge-Cmd4 module to make sure that all characteristics, services and names are correct. They also test the provided State.js and PS4.sh for their respective Get/Set characteristics.  The provided config.json is also tested for proper definitions of all the homebridge-cmd4 config parameters.
 
 &nbsp;&nbsp;&nbsp; Unit testing is only possible in a development environment and can be achieved in the following manner.
 
 ### Step 1.  Install homebridge-cmd4 in a local environment
-&nbsp;&nbsp;&nbsp; This is done separate from the global environment and does not impact the global environment.<BR>
+&nbsp;&nbsp;&nbsp; This is done separate from the global environment and does not impact the global environment.
+
 ```bash
    *SHELL*> npm install homebridge-cmd4
 ```
 
 ### Step 2.  Change to the homebridge-cmd4 directory
+
 ```bash
    *SHELL*> cd homebridge-cmd4
 ```
 
 ### Step 3.  Install homebridge-cmd4 development dependencies
+
 ```bash
    *SHELL*> npm install --save-dev
 ```
 
 ### Step 4.  Run the provided test cases
+
 ```bash
    *SHELL*> npm test
 ```
 
 Note: There is one bug where the testcases do not run correctly every second attempt.  It has something to do with synchronous tests for Get/Set.  Please ignore it at this time.  Just run it again.
 
-<BR><BR>
 ## License
 See [LICENSE](LICENSE)
 

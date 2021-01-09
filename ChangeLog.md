@@ -1,6 +1,5 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
 
-<BR><BR>
 ## ChangeLog
 * [**Whats new in 3.0.0**](#whats-new-in-300)
 * [**Whats new in 2.4.2**](#whats-new-in-242)
@@ -16,13 +15,14 @@
 * [**Whats new in 2.1**](#whats-new-in-21)
 * [**Whats new in 2.0**](#whats-new-in-20)
 
-<BR><BR>
 ## Whats new in 3.0.0
 ### Changes to support IOS 14.
 * Cmd4 now follows the [Homebridge Plugin Template](https://github.com/homebridge/homebridge-plugin-template). This means that:
 
    * Accessories[] are now platformAccessories and can be published externally with an optional category. i.e.<BR>
-&nbsp;&nbsp;&nbsp;{ "category": "TELEVISION" }
+   ```json
+     { "category": "TELEVISION" }
+   ```
    * This allows multiple TV's to be configured per Bridge as separate platforms.
    * Accessory plugins can also be defined separately.
    * This fixes TV icons not being displayed in the Home App of IOS 14.
@@ -34,24 +34,25 @@
    * { "fetch": "Cached" } - Never fetch characteristic value. Use cached value. The cached value would have to be updated through polling.
    * { "fetch": "Polled" } - Polled characteristics act like before, "Always". Non polled characteristic values are fetched from cache.
 * Added the ability to remember characteristic values over restarts. This also means that device name changes and the like are possible. Disabled by:<BR>
-   "restartRecover": false<BR>
+```json
+   "restartRecover": false
+```
    In the section of the config.json where "platform": "Cmd4" is defined. Default is true.
 * Retrieved characteristic values are now converted to those defined by homebridge, instead of guessed by their possible types.
 * Accessory polling definition changes from:<BR>
 ```
    [{ < characteristic >:< defaultValue >, "interval":< sec >, "timeout": < msec > }]
 ```
-<BR>To:<BR>
+To:<BR>
 ```
    [ "characteristic": < characteristic >, "interval":< sec >, "timeout": < msec > }]
 ```
-<BR>
    Note: Old style is still supported with warning.
-   
+
 * Moved some functions to utilities for easier unit testing.
 * Splitting documentation into three different areas, README, Advanced Troubleshooting and a Developers guide.
 * Changed utility colors.js for package chalk.
-* Any strings are now constants, limiting some possible typos.
+* Internally, any string is now a constant, limiting some possible typos.
 * Added eslint and resolved all recommended lint errors.
 
 # Important
@@ -61,32 +62,27 @@ While this version appears backward compatible, there is a difference in that th
 * Bug fix for negative temperature values
 * Add in ability to change properties like minValue. Effect is none as not used, except for further testing.<BR>
 
-<BR><BR>
 ## Whats new in 2.4.1
 * Add check for duplicate UUID's that may be created and homebridge now complains about.
 * Fix issue were configuredName was not provided in users config.json.
 * Add an example of a DoorLock.sh with on a PI and using a GPIO to control it.
 * Add a tool to me debug users config.json files.
 
-<BR><BR>
 ## Whats new in 2.4.0
 * While a bump to the minor release, the changes are development only and also for any spelling errors.
 * The plugin was split into its respective program/lib/utility/ChangeLog modules.
 * Splitting the plugin allowed for better Unit testing.
 * What is new are some examples of scripts for ping and wake on lan and can be found in the Extras/CMD4Scripts/Examples sub-directory.
 
-<BR><BR>
 ## Whats new in 2.3.2
 * Minor changes for spelling and package updates. Nothing to see here. These are not the changes you are looking for.<BR>
 
-<BR><BR>
 ## Whats new in 2.3.1
 * Updates for Homebridge 1.0.4.
 * Added 'AUTO' as current heating state matching Apples Development documentation.
 * Increased default timeout to 8 seconds as HomeBridge 1.04 seems slower.<BR>
 * Pull in README update noted by Daniel.
 
-<BR><BR>
 ## Whats new in 2.3.0
 * Added state_cmd_prefix and state_cmd_suffix to possible state_cmd options.  This does what they intend to where:<BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<I><B>state_cmd_prefix</B></I> - adds a string before the state_cmd. i.e. state_cmd_prefix=sudo would create the Set command to be:<BR>
@@ -96,15 +92,12 @@ While this version appears backward compatible, there is a difference in that th
 &nbsp;&nbsp;&nbsp; Combining the two i.e. state_cmd_prefix=sudo state_cmd_suffix="00:16:AA:BB:1F:2D" would create the Get command to be:<BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sudo node .homebridge/Cmd4Scripts/State.js Get 'My_Fan' 00:16:AA:BB:1F:2D<BR>
 
-<BR><BR>
 ## Whats new in 2.2.5
 * There is a bug in github-version-checker.  I can't get around it so change to a direct comparison of what is in npm.
 
-<BR><BR>
 ## Whats new in 2.2.2
 * This minor version adds an error message when accidentally defining multiple characteristics for characteristic polling.
 
-<BR><BR>
 ## Whats new in 2.2.1
 * This minor version differentiates the optional characteristic 'Name' from displayName.
     displayName is used when creating the service.  It is essentially the same thing, but this follows the spec exactly.  You do not need to change your config.json file if you do not want too.
@@ -112,22 +105,18 @@ While this version appears backward compatible, there is a difference in that th
 * Homebridge does not allow you to getCharacteristic information easily.  This allows Cmd4 to stop you from using characteristics with a format of TLV8 that causes HomeBridge to fail to start.  This is why the new option:'allowTLV8' was created and set to false by default. Again just ignore it.
 * With all the properties defined, Test cases increases to 7644.
 
-<BR><BR>
 ## Whats new in 2.2
 * This version adds in linked accessories. HDMI Input sources for a TV are now shown in HomeKit as an example.
 * This release also defines constants for all the characteristics that has them.  Look at the config.min.json file for descriptions of the constants per characteristic.
 * The number of test cases increases because of constants to 4500.  That equates to almost 61\% more coverage, and less possible errors.
 * Finally this release adds in version checking so you are always up to date with the latest version of Homebridge-Cmd4.
 
-<BR><BR>
 ## Whats new in 2.1
 * This minor release fixes duplicate service calls for initializing an AccessoryInformation device, Television & TelevisionSpeaker.
 
 Mostly importantly it wipes out 5600 duplicate lines of code to one bound function.
 
-<BR><BR>
 ## Whats new in 2.0
 * 2This release changes the philosophy of homebridge-Cmd4 from Accessories that have known characteristics as per the HAP Spec to assigning any characteristic to any Accessory.
 
 There are 160 possible characteristics, 60 more than the previous version.  Also TV, TV Speaker, Input Source, Irrigation, Faucets and many other accessories are now available.
-

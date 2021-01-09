@@ -1,6 +1,5 @@
 # Homebridges-cmd4 - Advanced Trouble Shooting.
 
-<BR><BR>
 ## Table of Contents
 * [**About Advanced Trouble Shooting**](#about-advanced-trouble-shooting)
 * [**The #1 Thing to Remember**](#the-1-thing-to-remember)
@@ -12,11 +11,8 @@
 * [**Child process error message**](#child-process-error-message)
 * [**License**](#license)
 
-<BR><BR>
-
 ## About Advanced Trouble Shooting
 &nbsp;&nbsp;&nbsp; Unlike Basic Trouble Shooting, this guide is more for those who are having problems with their own scripts and what problems can arise when integrating them with Cmd4.
-<BR><BR>
 
 ## The #1 Thing to Remember
 &nbsp;&nbsp;&nbsp; Cmd4 runs your script in the background *WITHOUT ANY ENVIRONMENT* defined. Any variables, alias, special paths are not seen by your script so even if you run the script from the command line and it works, it may not from within Cmd4. Create a bash session without any environment set up like Cmd4 does with the command:<BR>
@@ -31,7 +27,6 @@
    *SHELL*> node .homebridge/Cmd4Scripts/State.js Get My_Fan On
 ```
 
-<BR><BR>
 ### The Parameters Sent by Cmd4
 &nbsp;&nbsp;&nbsp; The second most important thing to remember is what Cmd4 sends for Get/Set requests. Your script must meet these requirements. These are defined as:<BR>
 
@@ -40,7 +35,6 @@
    Set < Accessory Name > < Characteristic > < Value >
 ```
 
-<BR><BR>
 ## Troubleshooting your own scripts
 
 ### Execute your script from the command line interface for *Get*
@@ -63,7 +57,6 @@ Note: Your script must also exit with a 0 return code.
 ```
 <BR>
 Note: Your script must also exit with a 0 return code.
-<BR><BR>
 
 ### Debug mode is your best friend
 &nbsp;&nbsp;&nbsp; As with Basic Troubleshooting, if your script passes at the CLI, run homebridge in debug mode:<BR>
@@ -71,8 +64,6 @@ Note: Your script must also exit with a 0 return code.
 ```bash
    *Shell>* DEBUG=* homebridge -D
 ```
-<BR><BR>
-
 
 ## Debugging Fakegato history
 See [fakegato-history](https://github.com/simont77/fakegato-history)
@@ -108,7 +99,6 @@ See [fakegato-history](https://github.com/simont77/fakegato-history)
 ```
 
 Note: The value "0" should be used for any characteristics value which is not possible to retrieve.
-<BR><BR>
 
 ## Missing icons
 &nbsp;&nbsp;&nbsp;IOS 14 added a new category characteristic to give a hint to any GUI of which icon to use. The big impact was found in missing icons for Televisions. For Televisions you must add:<BR>
@@ -134,7 +124,7 @@ This category only takes effect for Platform Accessories.
   cmd: "/homebridge/Server.sh Get Server On"
 
   ```
-<BR>
+
 The command may not exist, but also the timeout value in your config.json for that accessory may be too low.
 
 
