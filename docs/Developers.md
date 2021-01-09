@@ -137,6 +137,7 @@
 &nbsp;&nbsp;&nbsp;There are a few new important Cmd4 designations in Homebridge 3.0.
 <UL>
 <LI> The first is "category"<BR>
+
 ```json
    "category": "TELEVISION"
 ```
@@ -163,7 +164,7 @@ See the [Cmd4 Developers Guide](https://github.com/ztalbot2000/homebridge-cmd4/b
 <BR>
 
 ## Standard Accessories
-&nbsp;&nbsp;&nbsp;A Standard Accessory does not need a Platform. The Homebridge example given is. [Homebridge Switch](https://developers.homebridge.io/#/api/accessory-plugins). Cmd4 Version 3 can recreate the exact same configuration as:<as:
+&nbsp;&nbsp;&nbsp;A Standard Accessory does not need a Platform. The Homebridge example given is. [Homebridge Switch](https://developers.homebridge.io/#/api/accessory-plugins). Cmd4 Version 3 can recreate the exact same configuration as:
 
 ```json
 {
@@ -206,16 +207,16 @@ Notice that there is no Platform definition. Otherwise everything is the same. Y
 
 <TABLE width="100%" border=1>
 <TR align="left"><TD> Cmd4Directive <TD>     Type   <TD padding="50px">    Default  <TD>    Description  </TR>                                 
-<TR align="left"><TD> "outputConstants" <TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 \| 1 </TR>
+<TR align="left"><TD> "outputConstants" <TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1 </TR>
 <TR align="left"><TD> "restartRecover" <TD> < Bool > <TD> true <TD> If Cmd4 will use previous cached state information </TR>
 <TR align="left"><TD> "publishExternally" <TD>  < Bool >  <TD>    false     <TD> Tell Homebridge to publish the device as its own bridge. </TR>
-<TR align="left"><TD> "fetch" <TD> < "always"  \| "cached"  \| "polled" > <TD> "always" <TD> Tell Homebridge to publish the device as its own bridge.</TR>
+<TR align="left"><TD> "fetch" <TD> < "Always" | "Cached" | "Polled" > <TD> "always" <TD> Tell Homebridge to publish the device as its own bridge.</TR>
 <TR align="left"><TD colspan=4>
    i.e.<BR>
    <UL>
       <li> { "fetch": "Always" } - As before Always fetch characteristic value. ( Default )
       <li> { "fetch": "Cached" } - Never fetch characteristic value. Use cached value. The cached value would have to be updated through polling.
-      <li> { "fetch": "Polled" } - Polled characteristics act like before, "Always". Non polled characteristic values are fetched from cache.
+      <li> { "fetch": "Polled" } - Polled characteristics act like before  (Always). Non polled characteristic values are fetched from cache.
   </UL>
 </TR>
 <TR align="left"><TD>  "stateChangeResponseTime" <TD> < seconds > <TD> 60 <TD> Tell Homebridge to publish the device as its own bridge.  </TR>
@@ -312,7 +313,7 @@ As a plugin, Homebridge-cmd4 easily coexists with Homebridge-cmdswitch2 or any o
 ### Step 1.  The provided jsmin differs from others
 &nbsp;&nbsp;&nbsp; The resulting file is still readable. Only C and C++ comments are removed. The included config.json is created via:<BR>
 ```bash
-   *SHELL*> `gcc jsmin.c -o jsmin`<BR>
+   *SHELL*> `gcc jsmin.c -o jsmin`
    *SHELL*> `jsmin < config.min.json > config.json`
 ```
 
@@ -417,4 +418,3 @@ Link References (Not Local)
 [homebridge]:https://github.com/nfarina/homebridge
 [homebridge_api]:https://developers.homebridge.io/#/
 [ztalbot2000]:https://github.com/ztalbot2000
-

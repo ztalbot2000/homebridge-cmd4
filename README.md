@@ -123,21 +123,38 @@ Check that the command exists, but also that the timeout value in your config.js
 
 ## Debug Steps
 ### Step 1.  Change to your $HOME directory
-&nbsp;&nbsp;&nbsp; Homebridge is expected to run from a user's home directory where it can find the .homebridge/config.json file and the Cmd4Scripts.State.js command file.<BRA><BR>
-&nbsp;&nbsp;&nbsp; *SHELL*> `cd $HOME`
+&nbsp;&nbsp;&nbsp; Homebridge is expected to run from a user's home directory where it can find the .homebridge/config.json file and the Cmd4Scripts.State.js command file.
+
+```basg
+   *SHELL*> `cd $HOME`
+```
 
 ### Step 2.  Test the State.js command file
-&nbsp;&nbsp;&nbsp; *SHELL*> `node .homebridge/Cmd4Scripts/State.js Get My_Fan On`
-&nbsp;&nbsp;&nbsp; this should output: 0 or 'true'
+
+```bash
+   *SHELL*> `node .homebridge/Cmd4Scripts/State.js Get My_Fan On`
+```
+&nbsp;&nbsp;&nbsp; This should output: 0 or 'true'
 
 ### Step 3.  Run homebridge in debug mode
-&nbsp;&nbsp;&nbsp; *SHELL*> `DEBUG=* homebridge -D $HOME/`
 
-### Step 4.  Try executing the State.js script
-&nbsp;&nbsp;&nbsp; *SHELL*> `node .homebridge/Cmd4Scripts/State.js Get My_Fan On`
+```bash
+   *SHELL*> `DEBUG=* homebridge -D`
+```
+
+### Step 4.  Try executing the State.js script for a "Get" command.
+
+```bash
+   *SHELL*> `node .homebridge/Cmd4Scripts/State.js Get My_Fan On`
+```
 &nbsp;&nbsp;&nbsp;&nbsp; This should output '0' or '1' or 'true' or 'false'
-&nbsp;&nbsp;&nbsp; *SHELL*> `node .homebridge/Cmd4Scripts/State.js Set My_Fan On false`
-&nbsp;&nbsp;&nbsp; *SHELL*> `node .homebridge/Cmd4Scripts/State.js Set My_Fan On true`
+
+### Step 5.  Try executing the State.js script for a "Set" command.
+
+```bash
+   *SHELL*> `node .homebridge/Cmd4Scripts/State.js Set My_Fan On false`
+   *SHELL*> `node .homebridge/Cmd4Scripts/State.js Set My_Fan On true`
+```
 &nbsp;&nbsp;&nbsp;&nbsp; This should store the fans status.
 
 <BR><BR>
@@ -197,4 +214,3 @@ Link References (Not Local)
 [homekit_screenshot]:https://github.com/ztalbot2000/homebridge-cmd4/raw/master/screenshots/Homekit_screenshot.png
 [eve_screenshot]:https://github.com/ztalbot2000/homebridge-cmd4/raw/master/screenshots/Eve_screenshot.png
 [ztalbot2000]:https://github.com/ztalbot2000
-

@@ -21,44 +21,56 @@
 ## The #1 Thing to Remember
 &nbsp;&nbsp;&nbsp; Cmd4 runs your script in the background *WITHOUT ANY ENVIRONMENT* defined. Any variables, alias, special paths are not seen by your script so even if you run the script from the command line and it works, it may not from within Cmd4. Create a bash session without any environment set up like Cmd4 does with the command:<BR>
 
-&nbsp;&nbsp;&nbsp; *SHELL*> env -i bash --noprofile --norc <BR>
+```bash
+   *SHELL*> env -i bash --noprofile --norc
+```
 <BR>
 &nbsp;&nbsp;&nbsp; From within this environment test your script like:<BR>
-<BR>
-&nbsp;&nbsp;&nbsp; *SHELL*> node .homebridge/Cmd4Scripts/State.js Get My_Fan On
-<BR><BR>
 
+```bash
+   *SHELL*> node .homebridge/Cmd4Scripts/State.js Get My_Fan On
+```
+
+<BR><BR>
 ### The Parameters Sent by Cmd4
 &nbsp;&nbsp;&nbsp; The second most important thing to remember is what Cmd4 sends for Get/Set requests. Your script must meet these requirements. These are defined as:<BR>
-<BR>
-&nbsp;&nbsp;&nbsp; Get < Accessory Name > < Characteristic ><BR>
-&nbsp;&nbsp;&nbsp; Set < Accessory Name > < Characteristic > < Value >
-<BR><BR>
 
+```
+   Get < Accessory Name > < Characteristic >
+   Set < Accessory Name > < Characteristic > < Value >
+```
+
+<BR><BR>
 ## Troubleshooting your own scripts
 
 ### Execute your script from the command line interface for *Get*
 &nbsp;&nbsp;&nbsp; Remembering that Cmd4 executes your script in a No environment setting. First execute your scripts from the CLI.<BR>
-<BR>
-&nbsp;&nbsp;&nbsp; *SHELL*> env -i bash --noprofile --norc <BR>
-&nbsp;&nbsp;&nbsp; *SHELL*> <your script path> Get < Accessory Name > < Characteristic ><BR>
+
+```bash
+*SHELL*> env -i bash --noprofile --norc
+*SHELL*> <your script path> Get < Accessory Name > < Characteristic >
+```
 <BR>
 The script must output a one word answer or multiple quoted words.<BR>
 Note: Your script must also exit with a 0 return code.
 <BR>
 ### Execute your script from the command line interface for *Set*
 &nbsp;&nbsp;&nbsp;Your script must respond to the Set command.<BR>
-<BR>
-&nbsp;&nbsp;&nbsp; *SHELL*> env -i bash --noprofile --norc <BR>
-&nbsp;&nbsp;&nbsp; *SHELL*> <your script path> Set < Accessory Name > < Characteristic > < value ><BR>
+
+```bash
+   *SHELL*> env -i bash --noprofile --norc
+   *SHELL*> <your script path> Set < Accessory Name > < Characteristic > < value >
+```
 <BR>
 Note: Your script must also exit with a 0 return code.
 <BR><BR>
 
 ### Debug mode is your best friend
 &nbsp;&nbsp;&nbsp; As with Basic Troubleshooting, if your script passes at the CLI, run homebridge in debug mode:<BR>
-<BR>
-&nbsp;&nbsp;&nbsp; *Shell>* DEBUG=* homebridge -D
+
+```bash
+   *Shell>* DEBUG=* homebridge -D
+```
 <BR><BR>
 
 
@@ -137,4 +149,3 @@ Link References (Not Local)
 
 [homebridge]:https://github.com/nfarina/homebridge
 [ztalbot2000]:https://github.com/ztalbot2000
-
