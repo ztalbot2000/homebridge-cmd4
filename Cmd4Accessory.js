@@ -12,8 +12,12 @@ const { getAccessoryName, getAccessoryDisplayName
 let getAccessoryUUID = require( "./utils/getAccessoryUUID" );
 
 let ucFirst = require( "./utils/ucFirst" );
-let indexOfEnum = require( "./utils/indexOfEnum" );
 let trueTypeOf = require( "./utils/trueTypeOf" );
+
+// The sObject.defineProperty is to resolve a lint issue.
+// See utils/indexOfEnumLintTest.js for further information.
+let indexOfEnum = require( "./utils/indexOfEnum" );
+Object.defineProperty(exports, "indexOfEnum", { enumerable: true, get: function () { return indexOfEnum.indexOfEnum; } });
 
 // For changing validValue Constants to Values and back again
 var { transposeConstantToValidValue,

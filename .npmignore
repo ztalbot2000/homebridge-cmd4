@@ -4,6 +4,7 @@
 *.swp
 jsmin
 .eslintrc.json
+utils/indexOfEnumLintTest.js
 screenshots
 test
 node_modules

@@ -1,10 +1,11 @@
 'use strict';
 
+
 // Description:
 //    Create an Object prototype to for getting an index of an enumerated type.
 //
 
-Object.defineProperty(Object.prototype, "indexOfEnum", {
+module.exports=Object.defineProperty(Object.prototype, "indexOfEnum", {
    value: function( predicate, fromIndex ) {
       let length = this == null ? 0 : Object.keys( this ).length;
       if ( !length )
@@ -26,5 +27,3 @@ Object.defineProperty(Object.prototype, "indexOfEnum", {
       return -1;
     }
 });
-
-module.exports = Object.defineProperty;
