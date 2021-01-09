@@ -11,7 +11,7 @@
 * [**Cmd4 Directives**](#cmd4-directives)
 * [**Migrating from Homebridge-cmdswitch2**](#migrating-from-homebridge-cmdswitch2)
 * [**Developer Notes**](#developer-notes)
-* [**Adding in Fakegato history**](#adding-in-fakegato-history)
+* [**Adding in Fakegato history**](#adding-in-fakegatohistory)
 * [**Unit Testing**](#unit-testing)
 * [**License**](#license)
 

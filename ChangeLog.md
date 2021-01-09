@@ -40,8 +40,8 @@
 * Accessory polling definition changes from:<BR>
 ```
    [{ < characteristic >:< defaultValue >, "interval":< sec >, "timeout": < msec > }]
-```<BR>
-To:<BR>
+```
+<BR>To:<BR>
 ```
    [ "characteristic": < characteristic >, "interval":< sec >, "timeout": < msec > }]
 ```
