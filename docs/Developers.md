@@ -228,7 +228,7 @@ Notice that there is no Platform definition. Otherwise everything is the same. Y
 <TR align="left"><TD>   "state_cmd_suffix" <TD> < String > <TD> undefined <TD> A String appended to the < state_cmd >.  </TR>
 <TR align="left"><TD> "props" <TD>  < Bool >  <TD>    false     <TD> Tell Homebridge to publish the device as its own bridge.  </TR>
 <TR align="left"><TD> "category" <TD> < CATEGORY > <TD> undefined <TD> See <a href="https://developers.homebridge.io/#/categories">Homebridge Categories</a> for a complete list of possible categories.  </TR>
-<TR align="left"><TD>   "fakegato"    <TD>  < JSON >  <TD> undefined <TD> See the section, <a href="#Adding in Fakegato history">"Adding in Fakegato history"</a> below.  </TR>
+<TR align="left"><TD>   "fakegato"    <TD>  < JSON >  <TD> undefined <TD> See the section, <a href="#fakegatotag"> "Adding in Fakegato history"</a> below.  </TR>
 <TR align="left"><TD>   "linkedTypes"    <TD>  < JSON >  <TD> undefined <TD> Other Cmd4 Accessories like Input Source for HDMI inputs. </TR>
 </TABLE>
 
@@ -337,7 +337,8 @@ Thanks Florian for pointing out the original documented bash script was incorrec
 &nbsp;&nbsp;&nbsp; Your now ready to go and try Fans, Switches, Garage Doors, Locks, Sensors ....
 
 <BR><BR>
-<DIV id="Adding in Fakegato history"></DIV>
+<DIV id="fakegatotag"></DIV>
+
 ## Adding in Fakegato history
 See [fakegato-history](https://github.com/simont77/fakegato-history)
 
