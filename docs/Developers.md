@@ -11,7 +11,7 @@
 * [**Cmd4 Directives**](#cmd4-directives)
 * [**Migrating from Homebridge-cmdswitch2**](#migrating-from-homebridge-cmdswitch2)
 * [**Developer Notes**](#developer-notes)
-* [**Adding in fakegato history**](#adding-in-fakegato-history)
+* [**Adding in Fakegato history**](#adding-in-fakegato-history)
 * [**Unit Testing**](#unit-testing)
 * [**License**](#license)
 
@@ -72,7 +72,7 @@
                      "volumeSelector":         10,
                      "volumeControlType":      "ABSOLUTE",
                      "state_cmd": "node .homebridge/Cmd4Scripts/State.js",
-                "fetch":                  "cached"
+                     "fetch":                  "cached",
                      "polling": [
                         {"characteristic": "active",         "interval": 50,  "timeout": 5000},
                         {"characteristic": "volumeSelector", "interval": 50,  "timeout": 5000}
@@ -133,20 +133,23 @@
 
 <BR>
 ### New Cmd4 3.0 Directives
+
 There are a few new important Cmd4 designations in Homebridge 3.0.
 <UL>
 <LI> The first is "category"<BR>
 ```json
    "category": "TELEVISION"
 ```
-<BR>
-This is the hint to homekit of which icon to use and for Televisions, a TV icon will not show without it.<BR>
+
+This is the hint to homekit of which icon to use and for Televisions, a TV icon will not show without it.
+<BR><BR>
 <LI>The second new designation is "publishExternally"<BR>
 
 ```json
    "publishExternally": true (Default is false)
 ```
-As per the Homebridge API, this allows the Platform Accessory to be published separately from the bridge and is a requirement for multiple TV's.<BR>
+As per the Homebridge API, this allows the Platform Accessory to be published separately from the bridge and is a requirement for multiple TV's.
+<BR><BR>
 <LI> The third new designation is "restartRecover"<BR>
 
 ```json
@@ -157,7 +160,9 @@ Cmd4 allows Homebridge to use saved state information over restarts. This is not
 
 See the [Cmd4 Developers Guide](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/Developers.md) for further information.
 
+<BR>
 ## Standard Accessories
+<BR>
 A Standard Accessory does not need a Platform. The Homebridge example given is. [Homebridge Switch](https://developers.homebridge.io/#/api/accessory-plugins). Cmd4 Version 3 can recreate the exact same configuration as:<as:
 
 ```json
@@ -185,7 +190,8 @@ A Standard Accessory does not need a Platform. The Homebridge example given is. 
 }
 ```
 
-This configuration defines a Cmd4 Standard Accessory with the designation:<BR>
+This configuration defines a Cmd4 Standard Accessory with the designation:
+
 ```json
    "accessory": "Cmd4"
 ```
@@ -194,76 +200,38 @@ Notice that there is no Platform definition. Otherwise everything is the same. Y
 
 <BR><BR>
 ## Cmd4 Directives
+
 &nbsp;&nbsp;&nbsp; Homebridge-Cmd4 has many directives, the most important being the "state_cmd". The provided config.min.json file shows many of the directives in action. Here is a list of all Cmd4 directives and their meaning. These are just the directives and not the hundreds of characteristics Cmd4 can handle that are documented in homebridge, the Cmd4 config.min.json file and the Cmd4 State.js script.
 
-<UL>
-   <LI> "outputConstants": < bool > Default is false.
-   <UL>
-      <LI> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1.
-   </UL>
-   <LI> "restartRecover": < bool > Default is true.
-   <UL>
-      <LI> If Cmd4 will use previous cached state information.
-   </UL>
-   <LI> "publishExternally": < bool > - Default is false.
-   <UL>
-      <LI> Tell Homebridge to publish the device as its own bridge.
-   </UL>
-   <LI> "fetch": < "always" | "cached" | "polled" >
+
+<TABLE width="100%" border=1>
+<TR align="left"><TD> Cmd4Directive <TD>     Type   <TD padding="50px">    Default  <TD>    Description  </TR>                                 
+<TR align="left"><TD> "outputConstants" <TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 \| 1 </TR>
+<TR align="left"><TD> "restartRecover" <TD> < Bool > <TD> true <TD> If Cmd4 will use previous cached state information </TR>
+<TR align="left"><TD> "publishExternally" <TD>  < Bool >  <TD>    false     <TD> Tell Homebridge to publish the device as its own bridge. </TR>
+<TR align="left"><TD> "fetch" <TD> < "always"  \| "cached"  \| "polled" > <TD> "always" <TD> Tell Homebridge to publish the device as its own bridge.</TR>
+<TR align="left"><TD colspan=4>
+   i.e.<BR>
    <UL>
       <li> { "fetch": "Always" } - As before Always fetch characteristic value. ( Default )
       <li> { "fetch": "Cached" } - Never fetch characteristic value. Use cached value. The cached value would have to be updated through polling.
       <li> { "fetch": "Polled" } - Polled characteristics act like before, "Always". Non polled characteristic values are fetched from cache.
-   </UL>
-   <LI> "stateChangeResponseTime": < sec >
-   <UL>
-      <LI>The time in seconds between a Set and Get command.
-   </UL>
-   <LI> "timeout": < msec >
-   <UL>
-      <LI> How long in milliseconds before killing the state_cmd.
-   </UL>
-   <LI> "polling": < bool > |
-                 [{"characteristic" < characteristic >, [ "interval": < sec >, "timeout": < msec > ] }]
-   <UL>
-      <LI> The first method indicates if Device Polling of Required Characteristics will Occur.
-      <LI> The second method indicates Characteristic Polling of the specified characteristics will occur.
-   </UL>
-   <LI> "state_cmd": < state_cmd >
-   <UL>
-      <LI>The command used to Get/Set Device characteristic State.
-   </UL>
-   <LI> "state_cmd_prefix": < String >.
-   <UL>
-      <LI> A String prepended to the < state_cmd >.
-   </UL>
-   <LI> "state_cmd_suffix": < String >
-   <UL>
-      <LI> A String appended to the < state_cmd >.
-   </UL>
-   <LI> "props": { < property >: < value > }
-   <UL>
-      <LI> A way to override Hap Characteristiic Properties<BR>
-         Only used to set min/max temperatures, for instance:
-      <BR>
-      "props" : { "CurrentTemperature": { "maxValue":100, "minValue": -100, "minStep": 0.1}}
-   </UL>
-   <LI> "category": < category >
-      <UL>
-         <LI>see [Homebridge Categories](https://developers.homebridge.io/#/categories) for a complete list of possible categories.
-      </UL>
-   <UL>
-      <LI> Defines the Homebridge Category to use for publishing Platform Accessories. i.e. TELEVISION, FAN ...<BR>
-         It is used as a Hint to HomeKit of which icon to use.
-   </UL>
-   <LI> "fakegato" - See the section, "Adding in fakegato-history" below.
-   <LI> "linkedTypes": < config >
-   <UL>
-      <LI> Other Cmd4 Accessories like Input Source for HDMI inputs.
-   </UL>
-</UL>
+  </UL>
+</TR>
+<TR align="left"><TD>  "stateChangeResponseTime" <TD> < seconds > <TD> 60 <TD> Tell Homebridge to publish the device as its own bridge.  </TR>
+<TR align="left"><TD> "timeout" <TD> < msec > <TD> false <TD> Tell Homebridge to publish the device as its own bridge.  </TR>
+<TR align="left"><TD> "polling" <TD> < Bool > <TD> false <TD> Tell Homebridge to publish the device as its own bridge.  </TR>
+<TR><TD><TD colspan=3> or  [{"characteristic" < characteristic >, [ "interval": < sec >, "timeout": < msec > ] }] </TR>
+<TR align="left"><TD> "state_cmd"    <TD>  < state_cmd >  <TD> undefined <TD> The command used to Get/Set Device characteristic State.  </TR>
+<TR align="left"><TD> "state_cmd_prefix" <TD>  < String >  <TD> undefined <TD> A String prepended to the < state_cmd >.  </TR>
+<TR align="left"><TD>   "state_cmd_suffix" <TD> < String > <TD> undefined <TD> A String appended to the < state_cmd >.  </TR>
+<TR align="left"><TD> "props" <TD>  < Bool >  <TD>    false     <TD> Tell Homebridge to publish the device as its own bridge.  </TR>
+<TR align="left"><TD> "category" <TD> < CATEGORY > <TD> undefined <TD> See <a href="https://developers.homebridge.io/#/categories">Homebridge Categories</a> for a complete list of possible categories.  </TR>
+<TR align="left"><TD>   "fakegato"    <TD>  < JSON >  <TD> undefined <TD> See the section, <a href="#Adding in Fakegato-history">"Adding in fakegato-history"</a> below.  </TR>
+<TR align="left"><TD>   "linkedTypes"    <TD>  < JSON >  <TD> undefined <TD> Other Cmd4 Accessories like Input Source for HDMI inputs. </TR>
+</TABLE>
 
-<BR>
+<BR><BR>
 ## Migrating from Homebridge-cmdswitch2
 &nbsp;&nbsp;&nbsp; Homebridge-cmdswitch2 is great if you just want to turn something On or Off; Hence the switch reference in its name. In fact, there is no need to migrate if that is all you want to do.
 
@@ -322,8 +290,8 @@ As a plugin, Homebridge-cmd4 easily coexists with Homebridge-cmdswitch2 or any o
              "type": "Switch",
              "name": "PS_4",
              "on": false,
-             "state_cmd": "bash .homebridge/Cmd4Scripts/PS4.sh"
-             "polling": true,     <OR>
+             "state_cmd": "bash .homebridge/Cmd4Scripts/PS4.sh",
+             "polling": true,     < OR >
              "polling": [{"on": false, "interval": 5, "timeout": 4000}
                         ],
              "interval": 5,
@@ -343,11 +311,13 @@ As a plugin, Homebridge-cmd4 easily coexists with Homebridge-cmdswitch2 or any o
 ## Developer Notes
 ### Step 1.  The provided jsmin differs from others
 &nbsp;&nbsp;&nbsp; The resulting file is still readable. Only C and C++ comments are removed. The included config.json is created via:<BR>
-&nbsp;&nbsp;&nbsp; *SHELL*> `gcc jsmin.c -o jsmin`<BR>
-&nbsp;&nbsp;&nbsp; *SHELL*> `jsmin < config.min.json > config.json`
+```bash
+   *SHELL*> `gcc jsmin.c -o jsmin`<BR>
+   *SHELL*> `jsmin < config.min.json > config.json`
+```
 
 ### Step 2.  The parameters to the state_cmd
-&nbsp;&nbsp;&nbsp;  These are defined as:<BR>
+&nbsp;&nbsp;&nbsp; These are defined as:<BR>
 &nbsp;&nbsp;&nbsp; Get < Accessory Name > < Characteristic ><BR>
 &nbsp;&nbsp;&nbsp; Set < Accessory Name > < Characteristic > < Value >
 
@@ -366,7 +336,8 @@ Thanks Florian for pointing out the original documented bash script was incorrec
 &nbsp;&nbsp;&nbsp; Your now ready to go and try Fans, Switches, Garage Doors, Locks, Sensors ....
 
 <BR><BR>
-## Adding in fakegato-history
+<DIV id="Adding in Fakegato-history"></DIV>
+## Adding in Fakegato-history
 See [fakegato-history](https://github.com/simont77/fakegato-history)
 
 &nbsp;&nbsp;&nbsp; Not all accessories are supported by Eve or fakegato-history. As more and more are, they can easily be added to Homebridge-Cmd4 if they are not already by following these step.
@@ -411,17 +382,25 @@ The value "0" should be used for any characteristics value which is not possible
 &nbsp;&nbsp;&nbsp; Unit testing is only possible in a development environment and can be achieved in the following manner.
 
 ### Step 1.  Install homebridge-cmd4 in a local environment
-&nbsp;&nbsp;&nbsp; This is done separate from the global environment and does not impact the global environment.<BR><BR>
-&nbsp;&nbsp;&nbsp; *SHELL*> `npm install homebridge-cmd4`
+&nbsp;&nbsp;&nbsp; This is done separate from the global environment and does not impact the global environment.<BR>
+```bash
+   *SHELL*> `npm install homebridge-cmd4`
+```
 
 ### Step 2.  Change to the homebridge-cmd4 directory
-&nbsp;&nbsp;&nbsp; *SHELL*> `cd homebridge-cmd4`
+```bash
+   *SHELL*> `cd homebridge-cmd4`
+```
 
 ### Step 3.  Install homebridge-cmd4 development dependencies
-&nbsp;&nbsp;&nbsp; *SHELL*> `npm install --save-dev`
+```bash
+   *SHELL*> `npm install --save-dev`
+```
 
 ### Step 4.  Run the provided test cases
-&nbsp;&nbsp;&nbsp; *SHELL*> `npm test`
+```bash
+   *SHELL*> `npm test`
+```
 
 Note: There is one bug where the testcases do not run correctly every second attempt.  It has something to do with synchronous tests for Get/Set.  Please ignore it at this time.  Just run it again.
 
