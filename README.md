@@ -12,11 +12,9 @@
 * [**Screenshots**](#screenshots)
 * [**Installation Details**](#installation-details)
 * [**Basic Troubleshooting**](#basic-troubleshooting)
-<UL>
-* [***Cannot add a Service with the same UUID***](#cannot-add-a-service-with-the-same-uuid)
-* [***Error: Command failed***](#error:-command-failed)
-* [***Debug Steps***](#debug-steps)
-</UL>
+   * [***Cannot add a Service with the same UUID***](#cannot-add-a-service-with-the-same-uuid)
+   * [***Error: Command failed***](#error:-command-failed)
+   * [***Debug Steps***](#debug-steps)
 * [**Advanced Troubleshooting For Developers**](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/AdvancedTroubleShooting.md)
 * [**Developers Guide**](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/DevelopersGuide.md)
 * [**Rationale**](#rationale)

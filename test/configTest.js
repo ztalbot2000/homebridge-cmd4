@@ -1,9 +1,15 @@
 'use strict';
 
+let indexOfEnum = require( "../utils/indexOfEnum" );
+Object.defineProperty(exports, "indexOfEnum", { enumerable: true, get: function () { return indexOfEnum.indexOfEnum; } });
+
+
 const cmd4Config = require( "../Extras/config.json" );
+const isJSON = require( "../utils/isJSON" );
+const ucFirst = require( "../utils/ucFirst" );
 
 
-describe( "Testing our config.json )", ( ) =>
+describe( "Testing our config.json", ( ) =>
 {
    it( "cmdConfig should be a JSON object", ( ) =>
    {
@@ -30,7 +36,7 @@ let CMD4_ACC_TYPE_ENUM = cmd4.CMD4_ACC_TYPE_ENUM;
 let CMD4_DEVICE_TYPE_ENUM = cmd4.CMD4_DEVICE_TYPE_ENUM;
 
 
-describe( "Testing our config.json )", ( ) =>
+describe( "Testing our config.json", ( ) =>
 {
    const accessories = cmd4Config.platforms[0].accessories;
    for ( let index=0; index < accessories.length; index ++ )
@@ -39,99 +45,6 @@ describe( "Testing our config.json )", ( ) =>
    }
 });
 
-describe( "Testing CMD4_DEVICE_TYPE_ENUM devices all defined", ( ) =>
-{
-   for ( let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++ )
-   //for ( let index=0; index < 2; index ++ )
-   {
-      let deviceToFind = CMD4_DEVICE_TYPE_ENUM.properties[ index ].deviceName;
-
-      // Skip those we do not care about
-      if ( deviceToFind == "AccessoryInformation"                         ||
-           deviceToFind == "AccessoryRuntimeInformation"                  ||
-           deviceToFind == "BridgeConfiguration"                          ||
-           deviceToFind == "BridgingState"                                ||
-           deviceToFind == "CameraControl"                                ||
-           deviceToFind == "CamaeraEventRecordingManagement"              ||
-           deviceToFind == "CameraRTPStreamManagement"                    ||
-           deviceToFind == "Diagnostic"                                   ||
-           deviceToFind == "Pairing"                                      ||
-           deviceToFind == "PowerManagement"                              ||
-           deviceToFind == "ProtocolInformation"                          ||
-           deviceToFind == "Siri"                                         ||
-           deviceToFind == "TargetControl"                                ||
-           deviceToFind == "TargetControlManagement"                      ||
-           deviceToFind == "TransferTransportManagement"                  ||
-           deviceToFind == "TunneledBTLEAccessoryService"
-         )
-         continue;
-
-      let deviceFound = "";
-
-      it( "CMD4_DEVICE_TYPE_ENUM.properties[" + index + "].deviceName ( " + deviceToFind + " ) should be defined in config.json", ( ) =>
-      {
-         const accessories = cmd4Config.platforms[0].accessories;
-         for ( let dindex=0; dindex < accessories.length; dindex ++ )
-         {
-             // console.log( "checking " + accessories[dindex].type + " for " + deviceToFind );
-             if ( accessories[dindex].type == deviceToFind )
-             {
-                deviceFound = deviceToFind;
-                dindex = 10000;
-             }
-         }
-
-         assert.equal( deviceFound, deviceToFind, "Device:" + deviceToFind + " not listed in config.json" );
-      });
-   }
-});
-
-describe( "Testing CMD4_DEVICE_TYPE_ENUM devices all defined", ( ) =>
-{
-   for ( let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++ )
-   //for ( let index=0; index < 2; index ++ )
-   {
-      let deviceToFind = CMD4_DEVICE_TYPE_ENUM.properties[index].deviceName;
-
-      // Skip those we do not care about
-      if ( deviceToFind == "AccessoryInformation"                         ||
-           deviceToFind == "AccessoryRuntimeInformation"                  ||
-           deviceToFind == "BridgeConfiguration"                          ||
-           deviceToFind == "BridgingState"                                ||
-           deviceToFind == "CameraControl"                                ||
-           deviceToFind == "CamaeraEventRecordingManagement"              ||
-           deviceToFind == "CameraRTPStreamManagement"                    ||
-           deviceToFind == "Diagnostic"                                   ||
-           deviceToFind == "Pairing"                                      ||
-           deviceToFind == "PowerManagement"                              ||
-           deviceToFind == "ProtocolInformation"                          ||
-           deviceToFind == "Siri"                                         ||
-           deviceToFind == "TargetControl"                                ||
-           deviceToFind == "TargetControlManagement"                      ||
-           deviceToFind == "TransferTransportManagement"                  ||
-           deviceToFind == "TunneledBTLEAccessoryService"
-         )
-         continue;
-
-      let deviceFound = "";
-
-      it( "CMD4_DEVICE_TYPE_ENUM.properties[" + index + "].deviceName ( " + deviceToFind + " ) should be defined in config.json", ( ) =>
-      {
-         const accessories = cmd4Config.platforms[0].accessories;
-         for ( let dindex=0; dindex < accessories.length; dindex ++ )
-         {
-             // console.log( "checking " + accessories[dindex].type + " for " + deviceToFind );
-             if ( accessories[dindex].type == deviceToFind )
-             {
-                deviceFound = deviceToFind;
-                dindex = 10000;
-             }
-         }
-
-         assert.equal( deviceFound, deviceToFind, "Device:" + deviceToFind + " not listed in config.json" );
-      });
-   }
-});
 
 function testAccessoryConfig ( accessoryConfig )
 {
@@ -220,6 +133,9 @@ function testAccessoryConfig ( accessoryConfig )
 
               break;
            case "Url":
+              break;
+           case "Fetch":
+               testFetch( value );
               break;
            default:
            {
@@ -390,6 +306,18 @@ function testInterval( interval )
       assert.isNumber( interval, "Invalid interval:" + interval );
    });
 }
+function testFetch( fetch )
+{
+   it( "Fetch:" + fetch + " should be a valid Boolean", ( ) =>
+   {
+      let rc = false;
+      let ucFetch = ucFirst( fetch );
+      if ( ucFetch == "Always" ) rc = true;
+      if ( ucFetch == "Cached" ) rc = true;
+      if ( ucFetch == "Polled" ) rc = true;
+      assert.isTrue( rc, "Invalid fetch: %s", fetch );
+   });
+}
 function testTimeout( timeout )
 {
    it( "Device timeout:" + timeout + " should be a valid number", ( ) =>
@@ -404,15 +332,30 @@ function testStateCmd ( state_cmd )
       assert.isString( state_cmd, "Invalid state_cmd:" + state_cmd );
    });
 }
-function testCharacteristic ( characteristic, value )
+function testCharacteristicString ( characteristic )
 {
-   describe( "Testing characteristic:" + characteristic, ( ) =>
+   describe( "Testing characteristic string:" + characteristic, ( ) =>
    {
-      let characteristicIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === characteristic );
+      let ucCharacteristic = ucFirst( characteristic );
+      let characteristicIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucCharacteristic );
 
       it( "Characteristic " + characteristic + " should be valid", ( ) =>
       {
          assert.isAbove( characteristicIndex, -1, "Invalid characteristic:" + characteristic );
+      });
+
+   });
+}
+function testCharacteristic ( characteristic, value )
+{
+   describe( "Testing characteristic:" + characteristic, ( ) =>
+   {
+      let ucCharacteristic = ucFirst( characteristic );
+      let characteristicIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucCharacteristic );
+
+      it( "Characteristic  string: " + characteristic + " should be valid", ( ) =>
+      {
+         assert.isAbove( characteristicIndex, -1, "Invalid characteristic string:" + characteristic );
       });
 
       // Check if properties is not null
@@ -466,6 +409,12 @@ function testPollingConfig( pollingConfig )
                      case "Interval":
 
                         testInterval( pollingConfig[cindex].interval );
+
+                        break;
+                     case "Characteristic":
+                        let value = pollingConfig[cindex].characteristic ||
+                                    pollingConfig[cindex].Characteristic;
+                        testCharacteristicString( value );
 
                         break;
                      default:
@@ -538,50 +487,4 @@ function testFakegatoConfig( fakegatoConfig )
          });
       }
    }
-}
-/**
- * @param string
- * @returns string with first character in upper case.
- */
-function ucFirst( string )
-{
-   switch( typeof string )
-   {
-      case undefined:
-
-         console.log( "Asked to upper case first character of NULL String" );
-         return "undefined";
-
-      case "boolean":
-      case "number":
-         return string;
-      case "string":
-         return string.charAt( 0).toUpperCase( ) + string.slice( 1 );
-      default:
-         console.log( "Asked to upper case first character of non String( %s):%s", typeof string, string );
-         return string;
-   }
-}
-/**
- * @param Object
- * @returns boolean
- */
-function isJSON ( m )
-{
-   if ( m.constructor === Array ) {
-      //console.log( "It is an array" );
-      return false;
-   }
-
-   if ( typeof m == "object" ) {
-      try{ m = JSON.stringify( m ); }
-      catch( err ) { return false; } }
-
-   if ( typeof m == "string" ) {
-      try{ m = JSON.parse( m ); }
-      catch ( err ) { return false; } }
-
-   if ( typeof m != "object" ) { return false; }
-   return true;
-
 }

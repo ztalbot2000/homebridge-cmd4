@@ -18,7 +18,20 @@ let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
 let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, _api.hap.Service, _api.hap.Characteristic, _api.hap.Categories );
 
 var Cmd4Accessory = require( "../Cmd4Accessory" ).Cmd4Accessory;
-log.info ("hello" );
+
+// Unfortunately this test never exits, because polling will start.
+// Warn the user of such
+//
+function abort()
+{
+   console.log("Test of Cmd4Accessory requires CTRL-c as polling was backgrounded");
+   setTimeout( abort, 1800 );
+}
+setTimeout( ( ) => { abort(); }, 1800 );
+
+// The default State_cmd is called from $HOME
+const home = require( "os" ).homedir();
+process.chdir( home );
 
 // ******** QUICK TEST of SETUP *************
 describe('Quick Test of Setup', ( ) =>

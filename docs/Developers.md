@@ -132,9 +132,9 @@
 ```
 
 <BR>
-### New Cmd4 3.0 Directives
 
-There are a few new important Cmd4 designations in Homebridge 3.0.
+### New Cmd4 3.0 Directives
+&nbsp;&nbsp;&nbsp;There are a few new important Cmd4 designations in Homebridge 3.0.
 <UL>
 <LI> The first is "category"<BR>
 ```json
@@ -161,9 +161,9 @@ Cmd4 allows Homebridge to use saved state information over restarts. This is not
 See the [Cmd4 Developers Guide](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/Developers.md) for further information.
 
 <BR>
+
 ## Standard Accessories
-<BR>
-A Standard Accessory does not need a Platform. The Homebridge example given is. [Homebridge Switch](https://developers.homebridge.io/#/api/accessory-plugins). Cmd4 Version 3 can recreate the exact same configuration as:<as:
+&nbsp;&nbsp;&nbsp;A Standard Accessory does not need a Platform. The Homebridge example given is. [Homebridge Switch](https://developers.homebridge.io/#/api/accessory-plugins). Cmd4 Version 3 can recreate the exact same configuration as:<as:
 
 ```json
 {

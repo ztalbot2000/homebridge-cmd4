@@ -3,7 +3,7 @@
 <BR><BR>
 ## Table of Contents
 * [**About Advanced Trouble Shooting**](#about-advanced-trouble-shooting)
-* [**The #1 Thing to Remember**](#the-#1-thing-to-remember)
+* [**The #1 Thing to Remember**](#the-1-thing-to-remember)
 * [**The Parameters sent by Cmd4**](#the-parameters-sent-by-cmd4)
 * [**Troubleshooting your own scripts**](#troubleshooting-your-own-scripts)
 * [**Debug mode is your best friend**](#debug-mode-is-your-best-friend)
