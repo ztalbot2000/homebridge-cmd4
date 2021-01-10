@@ -226,7 +226,7 @@ class Cmd4Platform
             accessory.addAllServiceCharacteristicsForAccessory( accessory );
 
             // Create all the services for the accessory, including fakegato and polling
-            this.createServicesForAccessoriesChildren( accessory )
+            this.createServicesForAccessoriesChildren( accessory, true )
 
 
          } else
@@ -290,7 +290,7 @@ class Cmd4Platform
             accessory.service = platform.addService( devProperties.service );
 
             // Create all the services for the accessory, including fakegato and polling
-            this.createServicesForAccessoriesChildren( accessory )
+            this.createServicesForAccessoriesChildren( accessory, false )
 
             // Step 6. this.api.publishExternalAccessories( PLUGIN_NAME, [ this.tvAccessory ] );
             if ( accessory.publishExternally )
@@ -313,7 +313,7 @@ class Cmd4Platform
       });
    }
 
-   createServicesForAccessoriesChildren( cmd4PlatformAccessory )
+   createServicesForAccessoriesChildren( cmd4PlatformAccessory, fromExisting )
    {
       // Create the information Service for the platform itself
       // Unlike Standalone Accessories; The Platform information service is created
@@ -351,16 +351,29 @@ class Cmd4Platform
       //    const speakerService = this.tvAccessory.addService( this.Service.TelevisionSpeaker );
       cmd4PlatformAccessory.accessories && cmd4PlatformAccessory.accessories.forEach( ( addedAccessory ) =>
       {
+         // Set the platform of the added accessories so that the accessories can call methods
+         // like this one.
+         addedAccessory.platform = cmd4PlatformAccessory.platform;
+
          // Get the properties for this accessory's device type
-         let properties = CMD4_DEVICE_TYPE_ENUM.properties[ addedAccessory.typeIndex ];
+         let devProperties = CMD4_DEVICE_TYPE_ENUM.properties[ addedAccessory.typeIndex ];
 
-         this.log.debug( `Platform Step 3, ${ addedAccessory.displayName }.service = PlatformAccessory: ${ cmd4PlatformAccessory.displayName } addService( Service:${ properties.deviceName } )` );
+         // Existing Accessories would have existing services
+         if ( fromExisting == true )
+         {
+            log.debug( `Platform (AddedAccessory-existing) Step 3, ${ accessory.displayName }.service = accessory.platform.getService( Service.${ devProperties.deviceName }` );
+            addedAccessory.service = addedAccessory.platform.getService( devProperties.service );
+         } else
+         {
 
-         addedAccessory.service = cmd4PlatformAccessory.platform.addService( properties.service );
+            this.log.debug( `Platform (AddedAccessory-new) Step 3, ${ addedAccessory.displayName }.service = PlatformAccessory: ${ cmd4PlatformAccessory.displayName } addService( Service:${ devProperties.deviceName } )` );
+
+            addedAccessory.service = cmd4PlatformAccessory.platform.addService( devProperties.service );
+         }
 
          addedAccessory.addAllServiceCharacteristicsForAccessory( addedAccessory );
          // Create Information Service for the addedAccessory
-         addedAccessory.log.debug( `Creating information service for Added Accessory: ${ addedAccessory.displayName }` );
+         addedAccessory.log.debug( `Creating information service for AddedAccessory: ${ addedAccessory.displayName }` );
             createAccessorysInformationService( addedAccessory );
 
           // Setup the fakegato service if defined in the config.json file
@@ -373,19 +386,37 @@ class Cmd4Platform
       // Create the service for all the linked accessories. i.e. HDMI Service
       cmd4PlatformAccessory.linkedAccessories && cmd4PlatformAccessory.linkedAccessories.forEach( ( linkedAccessory ) =>
       {
+         // Set the platform of the linked accessories so that the accessories can call methods
+         // like this one.
+         linkedAccessory.platform = cmd4PlatformAccessory.platform;
+
          // Get the properties for this linked Accessory device type
-         let properties = CMD4_DEVICE_TYPE_ENUM.properties[ linkedAccessory.typeIndex ];
+         let devProperties = CMD4_DEVICE_TYPE_ENUM.properties[ linkedAccessory.typeIndex ];
 
          // Child accessories can have linked accessories. i.e. HDMI accessory
          // Step 4.
          //    const hdmi1InputService = this.tvAccessory.addService( this.Service.InputSource, `hdmi1', 'HDMI 1' );
-         this.log.debug( `Platform Step 4. ${ linkedAccessory.displayName }.service = ${ cmd4PlatformAccessory.displayName }.addService:( ${ properties.deviceName }.service, ${linkedAccessory.displayName }, ${linkedAccessory.name } )` );
-         linkedAccessory.service = cmd4PlatformAccessory.platform.addService( properties.service, linkedAccessory.displayName, linkedAccessory.name );
+
+         // Existing Accessories would have existing services
+         if ( fromExisting == true )
+         {
+            this.log.debug( `Platform (LinkedAccessory-existing) Step 4. ${ linkedAccessory.displayName }.service = ${ cmd4PlatformAccessory.displayName }.addService:( ${ devProperties.deviceName }.service, ${linkedAccessory.displayName }, ${linkedAccessory.name } )` );
+
+            linkedAccessory.service = linkedAccessory.platform.getService( devProperties.service );
+         } else
+         {
+            this.log.debug( `Platform (LinkedAccessory-new) Step 4. ${ linkedAccessory.displayName }.service = ${ cmd4PlatformAccessory.displayName }.addService:( ${ devProperties.deviceName }.service, ${linkedAccessory.displayName }, ${linkedAccessory.name } )` );
+
+            linkedAccessory.service = cmd4PlatformAccessory.platform.addService( devProperties.service, linkedAccessory.displayName, linkedAccessory.name );
+         }
 
          linkedAccessory.addAllServiceCharacteristicsForAccessory( linkedAccessory );
 
-         this.log.debug( `Platform Step 5. ${ cmd4PlatformAccessory.displayName }.service.addLinkedService( ${ linkedAccessory.displayName }.service )` );
-         cmd4PlatformAccessory.service.addLinkedService( linkedAccessory.service );
+         if ( fromExisting == false )
+         {
+            this.log.debug( `Platform Step 5. ${ cmd4PlatformAccessory.displayName }.service.addLinkedService( ${ linkedAccessory.displayName }.service )` );
+            cmd4PlatformAccessory.service.addLinkedService( linkedAccessory.service );
+         }
 
          // Create Information Service for the linkedAccessory
          linkedAccessory.log.debug( `Creating information service for Linked Platform Accessory: ${ linkedAccessory.displayName }` );
