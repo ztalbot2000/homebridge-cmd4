@@ -9,15 +9,16 @@
    "platforms" :
    [
       {
-         "platform": "Cmd4",
-         "name": "Cmd4",
-         "outputConstants":                  false,
-         "restartRecover":                   true,
+         "platform":                       "Cmd4",
+         "name":                           "Cmd4",
+         "allowTLV8":                       false,
+         "outputConstants":                 false,
+         "restartRecover":                  true,
          "accessories" :
          [
             {
-               "type": "Fanv1",
-               "displayName": "My_v1Fan",
+               "type":                     "Fanv1",
+               "displayName":              "My_v1Fan",
                "on":                       "FALSE",
                "name":                     "My_v1Fan",
                "Manufacturer":             "Somebody",
@@ -28,8 +29,8 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "Fan",
-               "displayName": "My_Fan",
+               "type":                     "Fan",
+               "displayName":              "My_Fan",
                "on":                       "FALSE",
                "rotationDirection":        "COUNTER_CLOCKWISE",
                "rotationSpeed":             100,
@@ -46,8 +47,8 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "Fanv2",
-               "displayName": "My_v2Fan",
+               "type":                     "Fanv2",
+               "displayName":              "My_v2Fan",
                "active":                   "INACTIVE",
                "currentFanState":          "IDLE",
                "targetFanState":           "AUTO",
@@ -61,8 +62,8 @@
                "SerialNumber":             "12345",
                "stateChangeResponseTime":   3,
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
-             },
-             {
+            },
+            {
                "type": "GarageDoorOpener",
                "displayName": "My_GarageDoorOpener",
                "currentDoorState":         "OPEN",
@@ -80,12 +81,12 @@
                   {"characteristic": "lockCurrentState",     "interval": 540, "timeout": 8000}
                ],
                "stateChangeResponseTime":   10,
-               "state_cmd_prefix": "node",
-               "state_cmd": ".homebridge/Cmd4Scripts/State.js"
+               "state_cmd_prefix":         "node",
+               "state_cmd":                ".homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "Lightbulb",
-               "displayName": "My_OnOff_Light",
+               "type":                     "Lightbulb",
+               "displayName":              "My_OnOff_Light",
                "on":                       "FALSE",
                "name":                     "My_OnOff_Light",
                "Manufacturer":             "Somebody",
@@ -110,11 +111,12 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "LockManagement",
-               "displayName": "My_LockManagement",
+               "type":                     "LockManagement",
+               "displayName":              "My_LockManagement",
                "version":                  "1.2.3",
                "audioFeedback":            "FALSE",
-               "lockManagementAutoSecurityTimeout":  20,
+               "lockManagementAutoSecurityTimeout":
+                                            20,
                "administratorOnlyAccess":  "FALSE",
                "lockLastKnownAction":      "SECURED_PHYSICALLY_INTERIOR",
                "currentDoorState":         "OPEN",
@@ -127,8 +129,8 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "LockMechanism",
-               "displayName": "My_LockMechanism",
+               "type":                     "LockMechanism",
+               "displayName":              "My_LockMechanism",
                "lockCurrentState":         "UNSECURED",
                "lockTargetState":          "UNSECURED",
                "name":                     "My_LockMechanism",
@@ -139,8 +141,8 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "Outlet",
-               "displayName": "My_Outlet",
+               "type":                     "Outlet",
+               "displayName":              "My_Outlet",
                "on":                       "FALSE",
                "outletInUse":              "FALSE",
                "name":                     "My_Outlet",
@@ -151,8 +153,8 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "Switch",
-               "displayName": "My_Switch",
+               "type":                     "Switch",
+               "displayName":              "My_Switch",
                "on":                       "FALSE",
                "name":                     "My_Switch",
                "Manufacturer":             "Somebody",
@@ -162,8 +164,8 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "Thermostat",
-               "displayName": "My_Thermostat",
+               "type":                     "Thermostat",
+               "displayName":              "My_Thermostat",
                "currentHeatingCoolingState":
                                            "OFF",
                "targetHeatingCoolingState":
@@ -188,19 +190,19 @@
                ],
                "stateChangeResponseTime":   10,
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js",
-               "fakegato": {"eve":          "thermo",
-                            "currentTemp":  "currentTemperature",
-                            "setTemp":      "targetTemperature",
-                            "valvePosition": 0,
-                            "storage":      "fs",
-                            "storagePath":  ".homebridge/FakegatoStorage",
-                            "folder":       "folderName",
-                            "keyPath":      "/place/to/store/my/keys/"
+               "fakegato": {"eve":           "thermo",
+                            "currentTemp":   "currentTemperature",
+                            "setTemp":       "targetTemperature",
+                            "valvePosition":  0,
+                            "storage":       "fs",
+                            "storagePath":   ".homebridge/FakegatoStorage",
+                            "folder":        "folderName",
+                            "keyPath":       "/place/to/store/my/keys/"
                            }
             },
             {
-               "type": "AirQualitySensor",
-               "displayName": "My_AirQualitySensor",
+               "type":                     "AirQualitySensor",
+               "displayName":              "My_AirQualitySensor",
                "airQuality":               "EXCELLENT",
                "OzoneDensity":              50,
                "nitrogenDioxideDensity":    50,
@@ -220,8 +222,8 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "SecuritySystem",
-               "displayName": "My_SecuritySystem",
+               "type":                     "SecuritySystem",
+               "displayName":              "My_SecuritySystem",
                "securitySystemCurrentState":
                                            "DISARMED",
                "securitySystemTargetState":
@@ -237,10 +239,9 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "CarbonMonoxideSensor",
-               "displayName": "My_CO_Sensor",
-               "carbonMonoxideDetected":
-                                           "CO_LEVELS_NORMAL",
+               "type":                     "CarbonMonoxideSensor",
+               "displayName":              "My_CO_Sensor",
+               "carbonMonoxideDetected":   "CO_LEVELS_NORMAL",
                "statusActive":             "TRUE",
                "statusFault":              "NO_FAULT",
                "statusTampered":           "NOT_TAMPERED",
@@ -255,8 +256,8 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "ContactSensor",
-               "displayName": "My_ContactSensor",
+               "type":                     "ContactSensor",
+               "displayName":              "My_ContactSensor",
                "contactSensorState":       "CONTACT_DETECTED",
                "statusActive":             "TRUE",
                "statusFault":              "NO_FAULT",
@@ -270,8 +271,8 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "Door",
-               "displayName": "My_Door",
+               "type":                     "Door",
+               "displayName":              "My_Door",
                "currentPosition":           0,
                "targetPosition":            0,
                "positionState":            "STOPPED",
@@ -296,7 +297,7 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "HumiditySensor",
+               "type":                     "HumiditySensor",
                "displayName":              "My_HumiditySensor",
                "currentRelativeHumidity":   1,
                "statusActive":             "TRUE",
@@ -321,10 +322,10 @@
                             "folder":      "folderName",
                             "keyPath":     "/place/to/store/my/keys/"
                            }
-              },
-              {
-               "type": "LeakSensor",
-               "displayName": "My_LeakSensor",
+            },
+            {
+               "type":                     "LeakSensor",
+               "displayName":              "My_LeakSensor",
                "leakDetected":             "LEAK_NOT_DETECTED",
                "statusActive":             "TRUE",
                "statusFault":              "NO_FAULT",
@@ -338,8 +339,8 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "LightSensor",
-               "displayName": "My_LightSensor",
+               "type":                     "LightSensor",
+               "displayName":              "My_LightSensor",
                "currentAmbientLightLevel":  1,
                "statusActive":             "TRUE",
                "statusFault":              "NO_FAULT",
@@ -353,8 +354,8 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "MotionSensor",
-               "displayName": "My_MotionSensor",
+               "type":                     "MotionSensor",
+               "displayName":              "My_MotionSensor",
                "motionDetected":           "FALSE",
                "statusActive":             "TRUE",
                "statusFault":              "NO_FAULT",
@@ -368,8 +369,8 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "OccupancySensor",
-               "displayName": "My_OccupancySensor",
+               "type":                     "OccupancySensor",
+               "displayName":              "My_OccupancySensor",
                "occupancyDetected":        "OCCUPANCY_NOT_DETECTED",
                "statusActive":             "TRUE",
                "statusFault":              "NO_FAULT",
@@ -383,8 +384,8 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "SmokeSensor",
-               "displayName": "My_SmokeSensor",
+               "type":                     "SmokeSensor",
+               "displayName":              "My_SmokeSensor",
                "smokeDetected":            "SMOKE_NOT_DETECTED",
                "statusActive":             "TRUE",
                "statusFault":              "NO_FAULT",
@@ -398,8 +399,8 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "StatefulProgrammableSwitch",
-               "displayName": "My_StatefulProgrammableSwitch",
+               "type":                     "StatefulProgrammableSwitch",
+               "displayName":              "My_StatefulProgrammableSwitch",
                "programmableSwitchEvent":  "SINGLE_PRESS",
                "programmableSwitchOutputState":
                                             0,
@@ -411,8 +412,8 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "StatelessProgrammableSwitch",
-               "displayName": "My_StatelessProgrammableSwitch",
+               "type":                     "StatelessProgrammableSwitch",
+               "displayName":                     "My_StatelessProgrammableSwitch",
                "programmableSwitchEvent":  "SINGLE_PRESS",
                "name":                     "My_StatelessProgrammableSwitch",
                "serviceLabelIndex":         1,
@@ -423,8 +424,8 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "TemperatureSensor",
-               "displayName": "My_TemperatureSensor",
+               "type":                     "TemperatureSensor",
+               "displayName":                     "My_TemperatureSensor",
                "currentTemperature":        50.0,
                "currentRelativeHumidity":   20,
                "statusActive":             "TRUE",
@@ -452,8 +453,8 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "Window",
-               "displayName": "My_Window",
+               "type":                     "Window",
+               "displayName":              "My_Window",
                "currentPosition":           0,
                "targetPosition":            0,
                "positionState":            "STOPPED",
@@ -467,8 +468,8 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "WindowCovering",
-               "displayName": "My_WindowCovering",
+               "type":                     "WindowCovering",
+               "displayName":              "My_WindowCovering",
                "currentPosition":           0,
                "targetPosition":            0,
                "positionState":            "STOPPED",
@@ -486,8 +487,8 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "BatteryService",
-               "displayName": "My_BatteryService",
+               "type":                     "BatteryService",
+               "displayName":              "My_BatteryService",
                "batteryLevel":              50,
                "chargingState":            "NOT_CHARGING",
                "statusLowBattery":         "BATTERY_LEVEL_NORMAL",
@@ -499,8 +500,8 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "CarbonDioxideSensor",
-               "displayName": "My_CO2_Sensor",
+               "type":                     "CarbonDioxideSensor",
+               "displayName":              "My_CO2_Sensor",
                "carbonDioxideDetected":    "CO2_LEVELS_NORMAL",
                "statusActive":             "TRUE",
                "statusFault":              "NO_FAULT",
@@ -518,8 +519,8 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "Microphone",
-               "displayName": "My_Microphone",
+               "type":                     "Microphone",
+               "displayName":              "My_Microphone",
                "mute":                     "FALSE",
                "volume":                    5,
                "name":                     "My_Microphone",
@@ -530,8 +531,8 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "Speaker",
-               "displayName": "My_Speaker",
+               "type":                     "Speaker",
+               "displayName":              "My_Speaker",
                "mute":                     "FALSE",
                "volume":                    5,
                "name":                     "My_Speaker",
@@ -542,8 +543,8 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "DoorBell",
-               "displayName": "My_DoorBell",
+               "type":                     "DoorBell",
+               "displayName":              "My_DoorBell",
                "programmableSwitchEvent":  "SINGLE_PRESS",
                "brightness":                8,
                "volume":                    5,
@@ -555,8 +556,8 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "Slat",
-               "displayName": "My_Slat",
+               "type":                     "Slat",
+               "displayName":              "My_Slat",
                "slatType":                 "HORIZONTAL",
                "currentSlatState":         "FIXED",
                "name":                     "My_Slat",
@@ -585,8 +586,8 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "AirPurifier",
-               "displayName": "My_AirPurifier",
+               "type":                     "AirPurifier",
+               "displayName":              "My_AirPurifier",
                "active":                   "ACTIVE",
                "currentAirPurifierState":  "INACTIVE",
                "targetAirPurifierState":   "MANUAL",
@@ -601,8 +602,8 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "ServiceLabel",
-               "displayName": "My_ServiceLabel",
+               "type":                     "ServiceLabel",
+               "displayName":              "My_ServiceLabel",
                "serviceLabelNamespace":    "DOTS",
                "name":                     "My_ServiceLabel",
                "Manufacturer":             "Somebody",
@@ -612,141 +613,113 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "Television",
-               "displayName": "My_TV",
-               "active":                   "ACTIVE",
-               "activeIdentifier":          1234,
-               "configuredName":           "My_TV",
-               "sleepDiscoveryMode":       "ALWAYS_DISCOVERABLE",
+               "type":                      "Television",
+               "displayName":               "Tv_Combo",
+               "publishExternally":          true,
+               "category":                  "TELEVISION",
+               "active":                    "ACTIVE",
+               "activeIdentifier":           1,
+               "configuredName":            "TV_Combo",
+               "sleepDiscoveryMode":        "ALWAYS_DISCOVERABLE",
+               "linkedTypes":
+               [
+                  {
+                     "type":                   "InputSource",
+                     "displayName":            "HDMI1",
+                     "configuredName":         "HDMI1",
+                     "currentVisibilityState": "SHOWN",
+                     "inputSourceType":        "HDMI",
+                     "isConfigured":           "CONFIGURED",
+                     "identifier":              1,
+                     "targetVisibilityState":  "SHOWN",
+                     "name":                   "HDMI1",
+                     "Manufacturer":           "Somebody",
+                     "Model":                  "Anything",
+                     "SerialNumber":           "12345"
+                 },
+                 {   "type":                   "InputSource",
+                     "displayName":            "HDMI2",
+                     "configuredName":         "HDMI2",
+                     "currentVisibilityState": "SHOWN",
+                     "inputSourceType":        "HDMI",
+                     "isConfigured":           "CONFIGURED",
+                     "identifier":             2,
+                     "targetVisibilityState":  "SHOWN",
+                     "name":                   "HDMI2",
+                     "Manufacturer":           "Somebody",
+                     "Model":                  "Anything",
+                     "SerialNumber":           "12345"
+                  },
+                  {  "type":                   "InputSource",
+                     "displayName":            "HDMI3",
+                     "configuredName":         "HDMI3",
+                     "currentVisibilityState": "SHOWN",
+                     "inputSourceType":        "HDMI",
+                     "isConfigured":           "CONFIGURED",
+                     "identifier":              3,
+                     "targetVisibilityState":  "SHOWN",
+                     "name":                   "HDMI3",
+                     "Manufacturer":           "Somebody",
+                     "Model":                  "Anything",
+                     "SerialNumber":           "12345"
+                  },
+                  {  "type":                   "InputSource",
+                     "displayName":            "HDMI4",
+                     "configuredName":         "HDMI4",
+                     "currentVisibilityState": "SHOWN",
+                     "inputSourceType":        "HDMI",
+                     "isConfigured":           "CONFIGURED",
+                     "identifier":              4,
+                     "targetVisibilityState":  "SHOWN",
+                     "name":                   "HDMI4",
+                     "Manufacturer":           "Somebody",
+                     "Model":                  "Anything",
+                     "SerialNumber":           "12345"
+                  },
+                  {  "type":                   "InputSource",
+                     "displayName":            "Netflix",
+                     "configuredName":         "Netflix",
+                     "currentVisibilityState": "SHOWN",
+                     "inputSourceType":        "APPLICATION",
+                     "isConfigured":           "CONFIGURED",
+                     "identifier":              5,
+                     "targetVisibilityState":  "SHOWN",
+                     "name":                   "Netflix",
+                     "Manufacturer":           "Somebody",
+                     "Model":                  "Anything",
+                     "SerialNumber":           "12345"
+                  },
+                  {  "type":                   "TelevisionSpeaker",
+                     "displayName":            "TVSpeaker",
+                     "mute":                   "FALSE",
+                     "active":                 "ACTIVE",
+                     "volume":                 10,
+                     "volumeControlType":      "ABSOLUTE",
+                     "volumeSelector":         "INCREMENT",
+                     "name":                   "TVSpeaker",
+                     "Manufacturer":           "Somebody",
+                     "Model":                  "Anything",
+                     "SerialNumber":           "12345"
+                  }
+               ],
                "brightness":                8,
                "closedCaptions":           "DISABLED",
                "currentMediaState":        "STOP",
                "targetMediaState":         "STOP",
                "pictureMode":              "STANDARD",
                "remoteKey":                "SELECT",
-               "polling":
-               [
-                  {"characteristic": "active",               "interval": 50,  "timeout": 5000},
-                  {"characteristic": "currentMediaState",    "interval": 540, "timeout": 5000}
-               ],
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
-            },
-            {
-              "type": "Television",
-              "displayName": "Tv_Combo",
-              "active":                    "ACTIVE",
-              "activeIdentifier":           1,
-              "configuredName":            "TV_Combo",
-              "sleepDiscoveryMode":        "ALWAYS_DISCOVERABLE",
-              "requires": [{"${bravia}": "http"}],
-              "constants": {
-                  "${psk}": "123456",
-                  "${ipaddress}": "12Aa34bbcc",
-                  "${port}": "8091"
-              },
-              "variables": {
-                 "${remote}": "new BraviaRemoteControl(${ipaddress}, ${port}, ${psk})"
-              },
-              "url": "http://$ipaddress/sony/system",
-              "linkedTypes":
-              [
-                 {"type": "InputSource",
-                  "displayName": "HDMI1",
-                  "configuredName":         "HDMI1",
-                  "currentVisibilityState": "SHOWN",
-                  "inputSourceType":        "HDMI",
-                  "isConfigured":           "CONFIGURED",
-                  "identifier":              1,
-                  "targetVisibilityState":    "SHOWN",
-                  "name":                     "HDMI1",
-                  "Manufacturer":             "Somebody",
-                  "Model":                    "Anything",
-                  "SerialNumber":             "12345"
-                 },
-                 {"type": "InputSource",
-                  "displayName": "HDMI2",
-                   "configuredName":        "HDMI2",
-                   "currentVisibilityState":"SHOWN",
-                   "inputSourceType":       "HDMI",
-                   "isConfigured":          "CONFIGURED",
-                   "identifier":             2,
-                   "targetVisibilityState":    "SHOWN",
-                   "name":                     "HDMI2",
-                   "Manufacturer":             "Somebody",
-                   "Model":                    "Anything",
-                   "SerialNumber":             "12345"
-                  },
-                  {"type":                  "InputSource",
-                   "displayName":           "HDMI3",
-                   "configuredName":        "HDMI3",
-                   "currentVisibilityState":"SHOWN",
-                   "inputSourceType":       "HDMI",
-                   "isConfigured":          "CONFIGURED",
-                   "identifier":             3,
-                   "targetVisibilityState":    "SHOWN",
-                   "name":                     "HDMI3",
-                   "Manufacturer":             "Somebody",
-                   "Model":                    "Anything",
-                   "SerialNumber":             "12345"
-                  },
-                  {"type":                  "InputSource",
-                   "displayName":           "HDMI4",
-                   "configuredName":        "HDMI4",
-                   "currentVisibilityState":"SHOWN",
-                   "inputSourceType":       "HDMI",
-                   "isConfigured":          "CONFIGURED",
-                   "identifier":             4,
-                   "targetVisibilityState":    "SHOWN",
-                   "name":                     "HDMI4",
-                   "Manufacturer":             "Somebody",
-                   "Model":                    "Anything",
-                   "SerialNumber":             "12345"
-                  },
-                  {"type":                  "InputSource",
-                   "displayName":           "Netflix",
-                   "configuredName":        "Netflix",
-                   "currentVisibilityState":"SHOWN",
-                   "inputSourceType":       "APPLICATION",
-                   "isConfigured":          "CONFIGURED",
-                   "identifier":             5,
-                   "targetVisibilityState":    "SHOWN",
-                   "name":                     "Netflix",
-                   "Manufacturer":             "Somebody",
-                   "Model":                    "Anything",
-                   "SerialNumber":             "12345"
-                  },
-                  {"type": "TelevisionSpeaker",
-                   "displayName": "TVSpeaker",
-                   "mute":                     "FALSE",
-                   "active":                   "ACTIVE",
-                   "volume":                    10,
-                   "volumeControlType":        "ABSOLUTE",
-                   "volumeSelector":           "INCREMENT",
-                   "name":                     "TVSpeaker",
-                   "Manufacturer":             "Somebody",
-                   "Model":                    "Anything",
-                   "SerialNumber":             "12345"
-                  }
-               ],
-               "brightness":                 8,
-               "closedCaptions":            "DISABLED",
-               "currentMediaState":         "STOP",
-               "targetMediaState":          "STOP",
-               "pictureMode":               "STANDARD",
-               "remoteKey":                 "SELECT",
-               "Manufacturer":              "Sony",
-               "Model":                     "Android TV",
-               "SerialNumber":              "12345",
+               "Manufacturer":             "Sony",
+               "Model":                    "Android TV",
+               "SerialNumber":             "12345",
                "polling": [
                   {"characteristic": "active",                "interval": 50,  "timeout": 5000},
                   {"characteristic": "activeIdentifier",      "interval": 50,  "timeout": 5000},
                   {"characteristic": "currentMediaState",     "interval": 540, "timeout": 5000}
                ],
-               "stateChangeResponseTime":    3,
+               "stateChangeResponseTime":   3,
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
-             },
-             {
+            },
+            {
                "type": "TelevisionSpeaker",
                "displayName": "My_TVSpeaker",
                "mute":                     "FALSE",
@@ -764,14 +737,14 @@
                ],
                "stateChangeResponseTime":   3,
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
-             },
-             {
+            },
+            {
                "type": "InputSource",
                "displayName": "My_InputSource",
                "configuredName": "My_InputSource",
                "inputSourceType":          "HDMI",
-                "isConfigured":            "CONFIGURED",
-                "currentVisibilityState":  "SHOWN",
+               "isConfigured":            "CONFIGURED",
+               "currentVisibilityState":  "SHOWN",
                "inputDeviceType":          "TV",
                "targetVisibilityState":    "SHOWN",
                "name":                     "My_InputSource",
@@ -782,8 +755,8 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "IrrigationSystem",
-               "displayName": "My_IrrigationSystem",
+               "type":                     "IrrigationSystem",
+               "displayName":              "My_IrrigationSystem",
                "active":                   "ACTIVE",
                "programMode":              "PROGRAM_SCHEDULED",
                "inUse":                    "IN_USE",
@@ -817,16 +790,16 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "Relay",
-               "displayName": "My_Relay",
+               "type":                     "Relay",
+               "displayName":              "My_Relay",
                "relayEnabled":             "FALSE",
                "relayState":                0,
                "stateChangeResponseTime":   10,
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "TimeInformation",
-               "displayName": "My_TimeInformation",
+               "type":                     "TimeInformation",
+               "displayName":              "My_TimeInformation",
                "currentTime":              "11:15",
                "dayoftheWeek":              1,
                "timeUpdate":               "TRUE",
@@ -838,8 +811,8 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "Valve",
-               "displayName": "My_Valve",
+               "type":                     "Valve",
+               "displayName":              "My_Valve",
                "active":                   "ACTIVE",
                "inUse":                    "NOT_IN_USE",
                "valveType":                "GENERIC_VALVE",
@@ -856,8 +829,8 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "HeaterCooler",
-               "displayName": "My_HeaterCooler",
+               "type":                     "HeaterCooler",
+               "displayName":              "My_HeaterCooler",
                "active":                   "ACTIVE",
                "currentHeaterCoolerState": "HEATING",
                "targetHeaterCoolerState":  "AUTO",
@@ -902,9 +875,9 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "AccessControl",
-               "displayName": "My_AccessControl",
-               "AccessControlLevel":                      0,
+               "type":                     "AccessControl",
+               "displayName":              "My_AccessControl",
+               "AccessControlLevel":        0,
                "stateChangeResponseTime":   3,
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
@@ -920,33 +893,27 @@
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "SmartSpeaker",
-               "displayName": "My_SmartSpeaker",
+               "type":                     "SmartSpeaker",
+               "displayName":              "My_SmartSpeaker",
                "currentMediaState":        "STOP",
                "targetMediaState":         "STOP",
-               "name":                                       "My_SmartSpeaker",
-               "configuredName":                             "My_SmartSpeaker",
-               "volume":                                     5,
-               "mute":                                       "FALSE",
+               "name":                     "My_SmartSpeaker",
+               "configuredName":           "My_SmartSpeaker",
+               "volume":                    5,
+               "mute":                     "FALSE",
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "TargetControl",
-               "displayName": "My_TargetControl",
-               "ActiveIdentifier":                           1183,
-               "Active":                                     "ACTIVE",
+               "type":                     "TargetControl",
+               "displayName":              "My_TargetControl",
+               "ActiveIdentifier":          1183,
+               "Active":                   "ACTIVE",
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
-               "type": "WiFiRouter",
-               "displayName": "My_WiFiRouter",
-               "managedNetworkEnable":                       "DISABLED",
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
-            },
-            {
-               "type": "WiFiSatellite",
-               "displayName": "My_WiFiSatellite",
-               "WiFiSatelliteStatus":                        "NOT_CONNECTED",
+               "type":                    "WiFiSatellite",
+               "displayName":             "My_WiFiSatellite",
+               "WiFiSatelliteStatus":     "NOT_CONNECTED",
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             }
           ]
