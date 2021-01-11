@@ -17,8 +17,6 @@ describe( "Testing our config.json", ( ) =>
    });
 
 })
-//var API = require( "../node_modules/homebridge/lib/api" ).API;
-//var _api = new API( ); // object we feed to Plugins
 var HomebridgeAPI = require( "../node_modules/homebridge/lib/api" ).HomebridgeAPI;
 var _api = new HomebridgeAPI( ); // object we feed to Plugins
 

@@ -1142,7 +1142,7 @@ class Cmd4Accessory
                           constants.FAKEGATO_TYPE_MOTION,
                           constants.FAKEGATO_TYPE_THERMO,
                           constants.FAKEGATO_TYPE_AQUA );
-                        this.log.error( `Check the Cmd4 README and ` );
+                        this.log.error( `Check the Cmd4 README at ` );
                         this.log.error( `https://github.com/simont77/fakegato-history` );
                         process.exit( 225 );
                 }
@@ -1169,18 +1169,34 @@ class Cmd4Accessory
              case constants.CURRENTTEMP:
              case constants.VALVEPOSITION:
              {
-                 let ucValue = ucFirst( value );
-                 let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucValue );
+                let ucValue = ucFirst( value );
+                let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucValue );
 
-                 // make sure that the characteristic to log to fakegato is valid
-                 // and if it is not 0 for not used.
-                 if ( this.testStoredValueForIndex( accTypeEnumIndex ) == undefined && ucValue != "0" )
-                    this.log.warn( `Not a valid characteristic: ${ value } for fakegato to log of: ${ key }` );
-                 break;
-              }
-              default:
-                 this.log.error( `Invalid fakegato key: ${ key } in json.config for: ${ this.displayName }` );
-                 process.exit( 216 );
+                // make sure that the characteristic to log to fakegato is valid
+                // and if it is not 0 for not used.
+                if ( ucValue != "0" )
+                {
+                   if ( accTypeEnumIndex <0 )
+                   {
+                      this.log.error( chalk.red( `Error` ) + `Invalid characteristic: ${ value } for` +
+                                      ` fakegato to log of: ${ key }` );
+                      process.exit( 216 );
+                   }
+
+                   // Make this an error, so I do not get any more tickets.
+                   if ( this.listOfPollingCharacteristics[ accTypeEnumIndex ] == undefined )
+                   {
+                       this.log.error( chalk.red( 'Error' ) + `: Characteristic: ${ value } for fakegato` +
+                                       ` to log of: ${ key } is not being polled.\n` );
+                       this.log.error( `History can not be updated continiously.` );
+                       process.exit( 217 );
+                   }
+                }
+                break;
+             }
+             default:
+                this.log.error( `Invalid fakegato key: ${ key } in json.config for: ${ this.displayName }` );
+                process.exit( 218 );
           }
       }
 
@@ -1893,7 +1909,7 @@ class Cmd4Accessory
                         if ( this.getStoredValueForIndex( accTypeEnumIndex ) == undefined )
                         {
                            this.log.error( `Polling for: "${ value }" requested, but characteristic` +
-                                           `is not in your config.json file for: ${ this.displayName }` );
+                                           ` is not in your config.json file for: ${ this.displayName }` );
                            process.exit( 262 );
                         }
                         break;
@@ -2014,7 +2030,8 @@ class Cmd4Accessory
       // Make sure that the characteristic exists
       if ( accTypeEnumIndex < 0 )
       {
-         self.log.warn( `WARNING: No such polling accTypeEnumIndex: ${ accTypeEnumIndex } for: ${ self.displayName }` );
+         self.log.error( chalk.red( `Error` ) + `: No Such polling accTypeEnumIndex: ${ accTypeEnumIndex } for: ${ self.displayName }` );
+         process.exit( 263 );
          return;
       }
 

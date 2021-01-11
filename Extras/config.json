@@ -183,7 +183,8 @@
                "SerialNumber":             "12345",
                "polling": [
                   {"characteristic": "currentHeatingCoolingState", "interval": 540,  "timeout": 8000},
-                  {"characteristic": "currentTemperature",         "interval": 60,   "timeout": 8000}
+                  {"characteristic": "currentTemperature",         "interval": 60,   "timeout": 8000},
+                  {"characteristic": "targetTemperature",          "interval": 60,   "timeout": 8000}
                ],
                "stateChangeResponseTime":   10,
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js",
@@ -285,7 +286,7 @@
                   {"characteristic": "obstructionDetected", "interval": 50, "timeout": 8000}
                ],
                "fakegato": {"eve":         "door",
-                            "status":      "statusActive",
+                            "status":      "currentPosition",
                             "storage":     "fs",
                             "storagePath": ".homebridge/FakegatoStorage",
                             "folder":      "folderName",
@@ -296,7 +297,7 @@
             },
             {
                "type": "HumiditySensor",
-               "displayName": "My_HumiditySensor",
+               "displayName":              "My_HumiditySensor",
                "currentRelativeHumidity":   1,
                "statusActive":             "TRUE",
                "statusFault":              "NO_FAULT",
@@ -308,8 +309,11 @@
                "SerialNumber":             "12345",
                "stateChangeResponseTime":   3,
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js",
+               "polling": [
+                  {"characteristic": "currentRelativeHumidity", "interval": 50, "timeout": 8000}
+               ],
                "fakegato": {"eve":         "room",
-                            "temp":        "currentTemperature",
+                            "temp":        0,
                             "humidity":    "currentRelativeHumidity",
                             "ppm":          0,
                             "storage":     "fs",
