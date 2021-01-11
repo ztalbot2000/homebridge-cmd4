@@ -219,7 +219,7 @@ class Cmd4Accessory
    {
       if ( accTypeEnumIndex < 0 || accTypeEnumIndex > CMD4_ACC_TYPE_ENUM.EOL )
       {
-         this.log.error ( chalk.red( 'Error` ) + `: setStoredValue - Characteristic: ${ accTypeEnumIndex } for: ${ this.displayName } not known` );
+         this.log.error ( chalk.red( `Error` ) + `: setStoredValue - Characteristic: ${ accTypeEnumIndex } for: ${ this.displayName } not known` );
          this.log.error ( `Check your config.json file for this error` );
          process.exit( 200 );
       }
