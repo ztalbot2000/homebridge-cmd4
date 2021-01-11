@@ -219,7 +219,7 @@ class Cmd4Accessory
    {
       if ( accTypeEnumIndex < 0 || accTypeEnumIndex > CMD4_ACC_TYPE_ENUM.EOL )
       {
-         this.log.error ( chalk.red( "Error" ) + ": setStoredValue - Characteristic:%s for:%s not known", accTypeEnumIndex, this.displayName );
+         this.log.error ( chalk.red( `Error` ) + `: setStoredValue - Characteristic: ${ accTypeEnumIndex } for: ${ this.displayName } not known` );
          this.log.error ( `Check your config.json file for this error` );
          process.exit( 200 );
       }
@@ -740,13 +740,13 @@ class Cmd4Accessory
       {
          if ( characteristicProps[ key ] == undefined )
          {
-            this.log.error( chalk.red( "Error" ) + ": props for key: '%s' not in definition of %s", key, type );
+            this.log.error( chalk.red( `Error` ) + `: props for key: ${ key } not in definition of: ${ type }` );
             process.exit( 220 );
          }
 
          if ( typeof characteristicProps[ key ] !=  typeof definitions[ key ] )
          {
-            this.log.error( chalk.red( "Error" ) + ": props for key: %s type %s not equal to definition of %s", key, typeof definitions[ key], typeof characteristicProps[ key] );
+            this.log.error( chalk.red( `Error` ) + `: props for key: ${ key } type: ${ typeof definitions[ key] }  not equal to definition of: ${ typeof characteristicProps[ key] }` );
             process.exit( 221 );
          }
       }

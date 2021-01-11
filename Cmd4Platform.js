@@ -363,7 +363,7 @@ class Cmd4Platform
          // Existing Accessories would have existing services
          if ( fromExisting == true )
          {
-            log.debug( `Platform (AddedAccessory-existing) Step 3, ${ accessory.displayName }.service = accessory.platform.getService( Service.${ devProperties.deviceName }` );
+            addedAccessory.log.debug( `Platform (AddedAccessory-existing) Step 3, ${ addedAccessory.displayName }.service = accessory.platform.getService( Service.${ devProperties.deviceName }` );
             addedAccessory.service = addedAccessory.platform.getService( devProperties.service );
          } else
          {
