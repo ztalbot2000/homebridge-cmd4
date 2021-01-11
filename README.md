@@ -14,6 +14,7 @@
 * [**Basic Troubleshooting**](#basic-troubleshooting)
    * [***Cannot add a Service with the same UUID***](#error-cannot-add-a-service-with-the-same-uuid)
    * [***Error: Command failed***](#error-command-failed)
+   * [***Removing Cached Information***](#removing-cached-information)
    * [***Debug Steps***](#debug-steps)
 * [**Advanced Troubleshooting For Developers**](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/AdvancedTroubleShooting.md)
 * [**Developers Guide**](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/DevelopersGuide.md)
@@ -129,35 +130,46 @@ See [homebridge](homebridge) for complete details.<BR>
 
 Check that the command exists, but also that the timeout value in your config.json for that accessory is not too low.
 
-## Debug Steps
-### Step 1.  Change to your $HOME directory
+### Removing Cached Information
+&nbsp;&nbsp;&nbsp; Starting with Cmd4 Version 3 the *restartRecover* option, defaulted to true, will mean that sometimes changing the config.json accessory options will have no affect. There are two ways to resolve this.<BR>
+<UL>
+<LI> Restart with { restartRecover: false } set in your config.json.
+<LI> Remove Homebridges cached information.
+
+```bash
+   ^Shell*> rm -rf $HOME/.homebridge/accessories $HOME/.homebridge/persist
+```
+</UL>
+
+### Debug Steps
+#### Step 1.  Change to your $HOME directory
 &nbsp;&nbsp;&nbsp; Homebridge is expected to run from a user's home directory where it can find the .homebridge/config.json file and the Cmd4Scripts.State.js command file.
 
 ```bash
    *SHELL*> cd $HOME
 ```
 
-### Step 2.  Test the State.js command file
+#### Step 2.  Test the State.js command file
 
 ```bash
    *SHELL*> node .homebridge/Cmd4Scripts/State.js Get My_Fan On
 ```
 &nbsp;&nbsp;&nbsp; This should output: 0 or 'true'
 
-### Step 3.  Run homebridge in debug mode
+#### Step 3.  Run homebridge in debug mode
 
 ```bash
    *SHELL*> DEBUG=* homebridge -D
 ```
 
-### Step 4.  Try executing the State.js script for a "Get" command.
+#### Step 4.  Try executing the State.js script for a "Get" command.
 
 ```bash
    *SHELL*> node .homebridge/Cmd4Scripts/State.js Get My_Fan On
 ```
 &nbsp;&nbsp;&nbsp;&nbsp; This should output '0' or '1' or 'true' or 'false'
 
-### Step 5.  Try executing the State.js script for a "Set" command.
+#### Step 5.  Try executing the State.js script for a "Set" command.
 
 ```bash
    *SHELL*> node .homebridge/Cmd4Scripts/State.js Set My_Fan On false
