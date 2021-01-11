@@ -11,6 +11,8 @@ const { getAccessoryName, getAccessoryDisplayName
       } = require( "./utils/getAccessoryNameFunctions" );
 let getAccessoryUUID = require( "./utils/getAccessoryUUID" );
 
+let createAccessorysInformationService = require( "./utils/createAccessorysInformationService" );
+
 let ucFirst = require( "./utils/ucFirst" );
 let trueTypeOf = require( "./utils/trueTypeOf" );
 
@@ -146,7 +148,7 @@ class Cmd4Accessory
       this.addRequiredCharacteristicStoredValues( );
 
       // The accessory cannot have the same uuid as any other
-      checkAccessoryForDuplicateUUID( this );
+      checkAccessoryForDuplicateUUID( this, this.UUID );
 
       // The default response time is in seconds
       if ( ! this.stateChangeResponseTime )
@@ -221,6 +223,7 @@ class Cmd4Accessory
          this.log.error ( `Check your config.json file for this error` );
          process.exit( 200 );
       }
+
       this.config.storedValuesPerCharacteristic[ accTypeEnumIndex ] = value;
    }
 
@@ -1705,7 +1708,7 @@ class Cmd4Accessory
 
                break;
             case constants.ALLOWTLV8:
-               this.allowTLV8 = true;
+               this.allowTLV8 = value;
                break;
             case "StoredValuesPerCharacteristic":
                // Keep previous characteristic status.
@@ -1765,7 +1768,7 @@ class Cmd4Accessory
           if ( this.CMD4 == constants.PLATFORM &&  ( ! this.publishExternally || ! this.category ) ||
                this.CMD4 == constants.STANDALONE )
           {
-               this.log.warn( 'Televisions should be Platform Accessories with "publishExternally": true, "category": "TELEVISION' );
+               this.log.warn( 'Televisions should be Platform Accessories with "publishExternally": true, "category": "TELEVISION"' );
           }
           if ( this.CMD4 == constants.PLATFORM && ! this.publishExternally && ( numberOfTVsPerBridge += 1 ) > 1 )
           {
@@ -2033,36 +2036,15 @@ class Cmd4Accessory
    }
 }
 
-function createAccessorysInformationService( accessory )
-{
-   // Create accessory's Information Service
-   accessory.informationService = new accessory.api.hap.Service.AccessoryInformation( );
-
-   if ( accessory.model )
-      accessory.informationService
-         .setCharacteristic( accessory.api.hap.Characteristic.Model, accessory.model );
-
-   if ( accessory.manufacturer )
-      accessory.informationService
-         .setCharacteristic( accessory.api.hap.Characteristic.Manufacturer, accessory.manufacturer );
-
-   if ( accessory.serialNumber )
-      accessory.informationService
-         .setCharacteristic( accessory.api.hap.Characteristic.SerialNumber, accessory.serialNumber );
-
-   accessory.services.push( accessory.informationService );
-}
-
-
 // Compare accessory's UUID with those already created for possible duplicates
-function checkAccessoryForDuplicateUUID( accessory )
+function checkAccessoryForDuplicateUUID( accessory, UUID )
 {
    // check for UUID+subtype conflict
    accessory.log.debug( `Checking ${ accessory.name } for Duplicate UUID: ${ accessory.UUID }` );
 
    for ( let existingAccessory in accessory.COLLECTION )
    {
-      if ( accessory.UUID == existingAccessory.UUID )
+      if ( UUID == existingAccessory.UUID )
       {
          // This is the same check as what is in 
          // hap-nodejs/dist/lib/Accessory.js
@@ -2077,6 +2059,23 @@ function checkAccessoryForDuplicateUUID( accessory )
 
             process.exit( 270 );
          }
+      }
+      // Check for duplicates in Added accessories.
+      if ( accessory.addedAccessories && accessory.LEVEL == 0 )
+      {
+         accessory.accessories.forEach( ( addedAccessory ) =>
+         {
+            checkAccessoryForDuplicateUUID( addedAccessory, UUID );
+         });
+      }
+
+      // Check for duplicates in Linked accessories.
+      if ( accessory.linkedAccessories && accessory.LEVEL == 0 )
+      {
+         accessory.linkedAccessories.forEach( ( linkedAccessory ) =>
+         {
+            checkAccessoryForDuplicateUUID( linkedAccessory, UUID );
+         });
       }
    }
 

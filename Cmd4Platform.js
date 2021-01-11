@@ -5,6 +5,8 @@ const { getAccessoryName,
         getAccessoryDisplayName } = require( "./utils/getAccessoryNameFunctions" );
 let getAccessoryUUID = require( "./utils/getAccessoryUUID" );
 
+let createAccessorysInformationService = require( "./utils/createAccessorysInformationService" );
+
 // Pretty Colors
 var chalk = require( "chalk" );
 
@@ -374,7 +376,7 @@ class Cmd4Platform
          addedAccessory.addAllServiceCharacteristicsForAccessory( addedAccessory );
          // Create Information Service for the addedAccessory
          addedAccessory.log.debug( `Creating information service for AddedAccessory: ${ addedAccessory.displayName }` );
-            createAccessorysInformationService( addedAccessory );
+         createAccessorysInformationService( addedAccessory );
 
           // Setup the fakegato service if defined in the config.json file
          addedAccessory.setupAccessoryFakeGatoService( addedAccessory.fakegatoConfig );
@@ -436,24 +438,5 @@ class Cmd4Platform
       cmd4PlatformAccessory.setupAccessoryFakeGatoService( cmd4PlatformAccessory.fakegatoConfig );
    }
 }
-
-function createAccessorysInformationService( accessory )
-{
-   // Create accessory's Information Service
-   accessory.informationService = new accessory.api.hap.Service.AccessoryInformation( );
-
-   if ( accessory.model )
-      accessory.informationService
-         .setCharacteristic( accessory.api.hap.Characteristic.Model, accessory.model );
-
-   if ( accessory.manufacturer )
-      accessory.informationService
-         .setCharacteristic( accessory.api.hap.Characteristic.Manufacturer, accessory.manufacturer );
-
-   if ( accessory.serialNumber )
-      accessory.informationService
-         .setCharacteristic( accessory.api.hap.Characteristic.SerialNumber, accessory.serialNumber );
-}
-
 
 exports.Cmd4Platform = Cmd4Platform;

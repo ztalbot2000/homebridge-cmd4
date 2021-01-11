@@ -112,9 +112,7 @@
             {
                "type": "LockManagement",
                "displayName": "My_LockManagement",
-               "lockControlPoint":          0,
                "version":                  "1.2.3",
-               "logs":                      0,
                "audioFeedback":            "FALSE",
                "lockManagementAutoSecurityTimeout":  20,
                "administratorOnlyAccess":  "FALSE",
@@ -618,7 +616,6 @@
                "sleepDiscoveryMode":       "ALWAYS_DISCOVERABLE",
                "brightness":                8,
                "closedCaptions":           "DISABLED",
-               "displayOrder":             0,
                "currentMediaState":        "STOP",
                "targetMediaState":         "STOP",
                "pictureMode":              "STANDARD",
@@ -730,7 +727,6 @@
                ],
                "brightness":                 8,
                "closedCaptions":            "DISABLED",
-               "displayOrder":              0,
                "currentMediaState":         "STOP",
                "targetMediaState":          "STOP",
                "pictureMode":               "STANDARD",
@@ -821,7 +817,6 @@
                "displayName": "My_Relay",
                "relayEnabled":             "FALSE",
                "relayState":                0,
-               "RelayControlPoint":      0,
                "stateChangeResponseTime":   10,
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
@@ -936,20 +931,12 @@
                "displayName": "My_TargetControl",
                "ActiveIdentifier":                           1183,
                "Active":                                     "ACTIVE",
-               "ButtonEvent":                                0,
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
                "type": "WiFiRouter",
                "displayName": "My_WiFiRouter",
                "managedNetworkEnable":                       "DISABLED",
-               "NetworkAccessViolationControl":              0,
-               "NetworkClientProfileControl":                0,
-               "NetworkClientStatusControl":                 0,
-               "RouterStatus":                               "READY",
-               "SupportedRouterConfiguration":               0,
-               "WANConfigurationList":                       0,
-               "WANStatusList":                              0,
                "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
             },
             {
