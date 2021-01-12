@@ -64,15 +64,14 @@ function checkForUpdates( )
    if ( process.argv.includes( "test/mocha-setup" ) )
       return;
 
-   const latestVersion = require( "latest-version" );
-
+   const { getLatestVersion, isVersionNewerThanPackagedVersion }  = require( "./utils/versionChecker" );
    const myPkg = require( "./package.json" );
 
    ( async( ) =>
    {
-      let lv = await latestVersion( myPkg.name );
+      let lv = await getLatestVersion( );
 
-      if ( lv != myPkg.version )
+      if ( isVersionNewerThanPackagedVersion( lv ) )
       {
          console.log( chalk.green( `[UPDATE AVAILABLE] ` ) + `Version ${lv} of ${myPkg.name} is available. Any release notes can be found here: ` + chalk.underline( `${myPkg.changelog}` ) );
       }
