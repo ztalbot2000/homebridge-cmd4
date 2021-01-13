@@ -124,8 +124,8 @@ class Cmd4Accessory
       // If polling is defined it is set to true/false, otherwise false.
       this.polling = this.config.polling === true;
 
-      // The default fetch is immediate.
-      this.fetch = this.config.fetch || 0;
+      // The default fetch is immediate (Always).
+      this.fetch = this.config.fetch || constants.FETCH_ALWAYS;
 
       // Init the Global Fakegato service once !
       if ( FakeGatoHistoryService == null )
@@ -866,8 +866,8 @@ class Cmd4Accessory
                   // 1 -> cached      -   Fetch omly whats cached
                   // 2 -> Polled      -   Fetch cached, except for characteristics
                   //                      which are polled are fetched immediately
-                  if ( accessory.fetch == 1 ||
-                       accessory.fetch == 2 && ! accessory.listOfPollingCharacteristics[ accTypeEnumIndex ] )
+                  if ( accessory.fetch == constants.FETCH_CACHED ||
+                       accessory.fetch == constants.FETCH_POLLED && ! accessory.listOfPollingCharacteristics[ accTypeEnumIndex ] )
                   {
                      this.log.debug( chalk.yellow( `Adding getCachedValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ` ) );
                      //Get cachedValue
@@ -1622,31 +1622,19 @@ class Cmd4Accessory
                this.polling = value;
                break;
             case constants.FETCH:
-               // Do not parse it yet as characteristics must be set first.
-               this.fetch = value;
                switch( value )
                {
-                  case 0:
                   case constants.FETCH_ALWAYS:
-
-                     this.fetch = 0;
-                     this.log.debug( `Get values set to fetch: ${ constants.FETCH_ALWAYS }` );
-
-                     break;
-                  case 1:
                   case constants.FETCH_CACHED:
-                     this.fetch = 1;
-                     this.log.debug( `Get values set to fetch only: ${ constants.FETCH_CACHED }` );
-                     break;
-                  case 2:
                   case constants.FETCH_POLLED:
-                     // Set them all to cached, polling will set the characteristic to immediate
-                     this.fetch = 2;
-                     this.log.debug( `Get values set to fetch only when: ${ constants.FETCH_POLLED }` );
+
+                     this.fetch = value;
+                     this.log.debug( `Get values set to fetch: ${ value }` );
+
                      break;
                   default:
                      this.log.error( chalk.red( `Invalid value: ${ value } for ${ constants.FETCH }` ) );
-                     this.log.error( `Must be: [ 0 | ${ constants.FETCH_ALWAYS }, 1 | ${ constants.FETCH_CACHED }, 2 | ${ constants.FETCH_POLLED }` );
+                     this.log.error( `Must be: [ ${ constants.FETCH_ALWAYS } | ${ constants.FETCH_CACHED } | ${ constants.FETCH_POLLED }` );
                      process.exit( 261 ) ;
                }
                break;
@@ -1849,9 +1837,20 @@ class Cmd4Accessory
          });
       }
 
-      // Polling can only be done if requested
-      if ( ! accessory.polling || ! accessory.state_cmd )
+      // Polling cannot be done if there is no state_cmd
+      if ( ! accessory.state_cmd )
          return;
+
+      // Polling can only be done if requested,
+      // but fetch would have to equal 0 ( Always );
+      if ( accessory.fetch != constants.FETCH_ALWAYS && ! accessory.polling )
+      {
+         // This message is only valid when ...
+         if ( accessory.fetch == constants.FETCH_CACHED  ||
+              accessory.fetch == constants.FETCH_ALWAYS && accessory.polling )
+            log.warn( `Polling of accessory ${ accessory.displayName } ignored as fetch=${ accessory.fetch } and polling was not set` );
+         return;
+      }
 
       log.debug( `Setting up polling for: ${ accessory.displayName } and any of the children.` );
 
