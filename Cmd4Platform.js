@@ -7,6 +7,12 @@ let getAccessoryUUID = require( "./utils/getAccessoryUUID" );
 
 let createAccessorysInformationService = require( "./utils/createAccessorysInformationService" );
 
+// Cmd4 designations, like polling were always cached as part of Version 3.0.0 - 3.0.3
+// This is confusing but required as Cmd4 has so many possible options that handling
+// each individually would be impossible.  Instead do not cache the Cmd4 Designations.
+// Do a cross intersection merge of the Cmd4 designations.
+let updateCmd4CacheDesignations = require( "./utils/updateCmd4CacheDesignations" );
+
 // Pretty Colors
 var chalk = require( "chalk" );
 
@@ -182,6 +188,8 @@ class Cmd4Platform
          if (existingAccessory)
          {
             log.info('Restoring existing accessory from cache:', existingAccessory.displayName);
+
+            updateCmd4CacheDesignations( this.api, log, existingAccessory.context.device, device );
 
             // if you need to update the accessory.context then you should run
             // `api.updatePlatformAccessories`. eg.:
