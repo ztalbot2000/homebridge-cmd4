@@ -132,6 +132,7 @@ Check that the command exists, but also that the timeout value in your config.js
 
 ### Removing Cached Information
 &nbsp;&nbsp;&nbsp; Starting with Cmd4 Version 3 the *restartRecover* option, defaulted to true, will mean that sometimes changing the config.json accessory options will have no affect. There are two ways to resolve this.<BR>
+Note: As of version 3.0.4, Cmd4 directives like polling, state_cmd, etc will try to be restored from the config.json. 
 <UL>
 <LI> Restart with { restartRecover: false } set in your config.json.
 <LI> Remove Homebridges cached information.
