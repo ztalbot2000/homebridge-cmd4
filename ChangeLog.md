@@ -1,6 +1,7 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
 
 ## ChangeLog
+* [**Whats new in 3.0.4**](#whats-new-in-304)
 * [**Whats new in 3.0.0**](#whats-new-in-300)
 * [**Whats new in 2.4.2**](#whats-new-in-242)
 * [**Whats new in 2.4.1**](#whats-new-in-241)
@@ -14,6 +15,12 @@
 * [**Whats new in 2.2**](#whats-new-in-22)
 * [**Whats new in 2.1**](#whats-new-in-21)
 * [**Whats new in 2.0**](#whats-new-in-20)
+
+## Whats new in 3.0.4
+* BugFix of issue #76 for those who did not specify any polling type at all and "fetch": "Always" ( The default ) caused any characteristic state to be retrieved at all.
+* Minor improvement to the version checker that stopped post install notes from being displayed.
+* Allow Cmd4 cached directive changes, like "polling" to be overwritten over restarts.
+
 
 ## Whats new in 3.0.0
 ### Changes to support IOS 14.
