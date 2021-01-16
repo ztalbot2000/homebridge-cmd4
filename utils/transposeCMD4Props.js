@@ -28,12 +28,13 @@ var transposeConstantToValidValue = function ( CMD4_ENUM_properties_obj, accType
 
    if ( Object.prototype.hasOwnProperty.call( CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues, constantString ) )
    {
-      let value = CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues[ constantString ];
+      let lookupString = constantString;
 
-      // When we translate constants to Characteristic.<type>.values and value is a true/false
-      // result, than parsing words[ 0 ].lowercase fails.
-      // - I fixed that instead ...
-      //value = String( value );
+      // It is possible that the constantString is provided by the user and not capitalized.
+      if ( typeof constantString == String )
+         lookupstring  = contantString.toUpperCase( );
+
+      let value = CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues[ lookupString ];
 
       // console.log.debug( "Found value:%s for:%s", value, constantString );
 

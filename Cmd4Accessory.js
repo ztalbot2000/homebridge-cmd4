@@ -594,14 +594,22 @@ class Cmd4Accessory
 
       let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
 
-      let result = self.getStoredValueForIndex( accTypeEnumIndex );
-      if ( result == null || result == undefined )
+      let storedValue = self.getStoredValueForIndex( accTypeEnumIndex );
+      if ( storedValue == null || storedValue == undefined )
       {
-         self.log.debug( `getCachedValue ${ characteristicString } for: ${ self.displayName } has no cahed value` );
+         self.log.debug( `getCachedValue ${ characteristicString } for: ${ self.displayName } has no cached value` );
          callback( null, null );
       }
 
       self.log.debug( `getCachedValue ${ characteristicString } for: ${ self.displayName } returned (CACHED) value: ${ result }` );
+
+      // Just in case the cached value needs to be converted from a Constant to its valid value.
+      // I can't see this happening, but who knows between upgrades or restarts.
+      let transposedValue = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, storedValue );
+
+      // Return the appropriate type, by seeing what it is defined as in Homebridge,
+      let result = characteristicValueToItsProperType( self.log, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format, self.displayName, self.api.hap.Characteristic, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, transposedValue, self.allowTLV8 );
+
 
       // Store history using fakegato if set up
       self.updateAccessoryAttribute( accTypeEnumIndex, result );

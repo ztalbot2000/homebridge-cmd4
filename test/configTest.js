@@ -8,6 +8,8 @@ const cmd4Config = require( "../Extras/config.json" );
 const isJSON = require( "../utils/isJSON" );
 const ucFirst = require( "../utils/ucFirst" );
 
+// Constants
+const constants = require( "../cmd4Constants" );
 
 describe( "Testing our config.json", ( ) =>
 {
@@ -56,87 +58,103 @@ function testAccessoryConfig ( accessoryConfig )
 
          switch ( ucKey )
          {
-            case "Type":
+            case constants.TYPE:
                testType ( value );
 
                break;
-            case "DisplayName":
+            case constants.DISPLAYNAME:
                testName( value );
 
                break;
-            case "UUID":
+            case constants.UUID:
                testName( value );
 
                break;
-            case "Name":
+            case constants.ACCESSORY:
+               break;
+            case constants.CATEGORY:
+               break;
+            case constants.PUBLISHEXTERNALLY:
+               break;
+            case constants.PROPS:
+               break;
+            case constants.NAME:
                testName( value );
 
                break;
-            case "Model":
+            case constants.MODEL:
                testName( value );
 
                break;
-            case "Manufacturer":
+            case constants.MANUFACTURER:
                testName( value );
 
                break;
-            case "SerialNumber":
+            case constants.SERIALNUMBER:
                testName( value );
 
                break;
-            case "OutputConstants":
+            case constants.FIRMWAREREVISION:
                break;
-            case "Timeout":
+            case constants.OUTPUTCONSTANTS:
+               break;
+            case constants.TIMEOUT:
                testTimeout( value );
 
                break;
-            case "Polling":
+            case constants.POLLING:
                testPollingConfig( value );
 
                break;
-            case "Interval":
+            case constants.FETCH:
+               testFetch( value );
+              break;
+            case constants.INTERVAL:
               testInterval( value );
 
               break;
-           case "StateChangeResponseTime":
+           case constants.STATECHANGERESPONSETIME:
               testStateChangeResponseTime( value );
 
               break;
-           case "State_cmd_prefix":
+           case constants.STATE_CMD_PREFIX:
+              break;
+           case constants.STATE_CMD_SUFFIX:
+              break;
+           case constants.STATE_CMD:
               testStateCmd( value );
 
               break;
-           case "State_cmd":
-              testStateCmd( value );
-
+           case constants.STORAGE:
+           case constants.STORAGEPATH:
+           case constants.FOLDER:
+           case constants.KEYPATH:
               break;
-           case "State_cmd_suffix":
-              break;
-           case "Fakegato":
+           case constants.FAKEGATO:
               testFakegatoConfig( value );
 
               break;
-           case "Requires":
+           case constants.REQUIRES:
                break;
-           case "Constants":
+            case constants.CONSTANTS:
               processConstantsConfig( value );
 
               break;
-           case "Variables":
+           case constants.VARIABLES:
               processVariablesConfig( value );
               break;
-           case "LinkedTypes":
+           case constants.LINKEDTYPES:
 
               processLinkedTypesConfig ( value );
 
               break;
-           case "Url":
-              break;
-           case "Fetch":
-               testFetch( value );
+           case constants.ACCESSORIES:
+                break;
+           case constants.URL:
               break;
            default:
            {
+              //console.log("1 %s Testing %s", accessoryConfig.displayName, value);
               testCharacteristic( ucKey, value );
            }
         }
@@ -412,12 +430,14 @@ function testPollingConfig( pollingConfig )
                      case "Characteristic":
                         let value = pollingConfig[cindex].characteristic ||
                                     pollingConfig[cindex].Characteristic;
+                        // console.log("2 Testing %s", value);
                         testCharacteristicString( value );
 
                         break;
                      default:
                      {
                         let value = pollingConfig[cindex][pollingKey];
+                        // console.log("3 Testing %s", value);
                         describe( "Testing polling characteristic:" + pollingKey, ( ) =>
                         {
                            testCharacteristic ( ucPollingKey, value );

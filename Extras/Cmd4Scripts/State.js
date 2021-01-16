@@ -48,6 +48,8 @@
 //                    file, they will all appear fully functional within HomeKit. In this way you
 //                    can play with HomeKit and not have any physical devices at all.  Cool Eh!
 //
+// *IMPORTANT* - I cannot audit commented constants.  The lib/CMD4_DEVICE_ENUM.js is what is used
+//               for constant translations.
 
 'use strict';
 
@@ -228,8 +230,8 @@ switch(io)
             // Step Value: 1
 
             // Valid Values
-            // 0 - "Inactive"
-            // 1 - "Active"
+            // 0 - "INACTIVE"
+            // 1 - "ACTIVE"
 
             break;
          }
@@ -345,12 +347,12 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - "Unknown"
-            // 1 - "Excellent"
-            // 2 - "Good"
-            // 3 - "Fair"
-            // 4 - "Inferior"
-            // 5 - "Poor"
+            // 0 - "UNKNOWN"
+            // 1 - "EXCELLENT"
+            // 2 - "GOOD"
+            // 3 - "FAIR"
+            // 4 - "INFERIOR"
+            // 5 - "POOR"
 
             break;
          }
@@ -505,8 +507,8 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - "Carbon Dioxide levels are normal"
-            // 1 - "Carbon Dioxide levels are abnormal"
+            // 0 - "CO2_LEVELS_NORMAL"
+            // 1 - "CO2_LEVELS_ABNORMAL"
 
             break;
          }
@@ -560,8 +562,8 @@ switch(io)
             // Max Value: 1
 
             // Valid Values:
-            // 0 - "Carbon Monoxide levels are normal"
-            // 1 - "Carbon Monoxide levels are abnormal"
+            // 0 - "CO_LEVELS_NORMAL"
+            // 1 - "CO_LEVELS_ABNORMAL"
 
             break;
          }
@@ -648,9 +650,9 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - "Not Charging"
-            // 1 - "Charging"
-            // 2 - "Not Chargeable"
+            // 0 - "NOT_CHARGING"
+            // 1 - "CHARGING"
+            // 2 - "NOT_CHARGEABLE"
 
             break;
          }
@@ -671,8 +673,8 @@ switch(io)
             // Maximum Value: 1
 
             // Valid Values
-            // 0 - "Captions are Off"
-            // 1 - "Captions are On"
+            // 0 - "DISABLED"
+            // 1 - "ENSABLED"
 
             break;
          }
@@ -753,8 +755,8 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - "Contact is detected"
-            // 1 - "Contact is not detected"
+            // 0 - "CONTACT_DETECTED"
+            // 1 - "CONTACT_NOT_DETECTED"
 
             break;
          }
@@ -794,9 +796,9 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - "Inactive"
-            // 1 - "Idle"
-            // 2 - "Purifying Air"
+            // 0 - "INACTIVE"
+            // 1 - "IDLE"
+            // 2 - "PURIFYING_AIR"
 
             break;
          }
@@ -834,11 +836,11 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - "Open. The door is fully open."
-            // 1 - "Closed. The door is fully closed."
-            // 2 - "Opening. The door is actively opening."
-            // 3 - "Closing. The door is actively closing."
-            // 4 - "Stopped. The door is not moving, and it is not fully
+            // 0 - "OPEN"    -  The door is fully open."
+            // 1 - "CLOSED"  -  The door is fully closed."
+            // 2 - "OPENING" -  The door is actively opening."
+            // 3 - "CLOSING" -  The door is actively closing."
+            // 4 - "STOPPED" -  The door is not moving, and it is not fully
             //      open nor fully closed."
             // 5-255 - "Reserved"
 
@@ -861,9 +863,9 @@ switch(io)
             // Step Value: 1
 
             // Valid Values
-            // 0 - "Inactive"
-            // 1 - "Idle"
-            // 2 - "Blowing Air"
+            // 0 - "INACTIVE"
+            // 1 - "IDLE"
+            // 2 - "BLOWING_AIR"
 
             break;
          }
@@ -886,10 +888,10 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - INACTIVE
-            // 1 - IDLE
-            // 2 - HEATING
-            // 3 - COOLING
+            // 0 - "INACTIVE"
+            // 1 - "IDLE"
+            // 2 - "HEATING"
+            // 3 - "COOLING"
 
             break;
          }
@@ -912,9 +914,9 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - "Off."
-            // 1 - "Heat. The Heater is currently on."
-            // 2 - "Cool. Cooler is currently on."
+            // 0 - "OFF"  - The unit is off
+            // 1 - "HEAT" - The Heater is currently on.
+            // 2 - "COOL" - Cooler is currently on.
 
             break;
          }
@@ -954,10 +956,10 @@ switch(io)
             // Maximum Value: 3
 
             // Valid Values
-            // 0 - INACTIVE
-            // 1 - IDLE
-            // 2 - HUMIDIFYING
-            // 3 - DEHUMIDIFYING
+            // 0 - "INACTIVE"
+            // 1 - "IDLE"
+            // 2 - "HUMIDIFYING"
+            // 3 - "DEHUMIDIFYING"
 
             break;
          }
@@ -978,10 +980,12 @@ switch(io)
             // Maximum Value: 3
 
             // Valid Values
-            // 0 - PLAY
-            // 1 - PAUSE
-            // 2 - STOP
-            // 3 - Reserved ????
+            // 0 - "PLAY"
+            // 1 - "PAUSE"
+            // 2 - "STOP"
+            // 3 - "UNKNOWN3" - Reserved ????
+            // 4 - "LOADING"
+            // 3 - "INTERRUPTED'
 
             break;
          }
@@ -1040,9 +1044,9 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - "Fixed"
-            // 1 - "Jammed"
-            // 2 - "Swinging"
+            // 0 - "FIXED"
+            // 1 - "JAMMED"
+            // 2 - "SWINGING"
 
             break;
          }
@@ -1146,8 +1150,8 @@ switch(io)
             // Format: uint8
 
             // Valid Values
-            // 0 - SHOWN
-            // 1 - HIDDEN
+            // 0 - "SHOWN"
+            // 1 - "HIDDEN"
 
             break;
          }
@@ -1322,7 +1326,7 @@ switch(io)
 
             // Valid Values
             // 0 - "DISABLE" - Disable Snapshot
-            // 1 - "ENABLE" - Enable Snapshot
+            // 1 - "ENABLE"  - Enable Snapshot
 
             break;
          }
@@ -1360,8 +1364,8 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - "Filter does not need to be changed"
-            // 1 - "Filter needs to be changed"
+            // 0 - " FILTER_OK" - Filter does not need to be changed
+            // 1 - "CHANGE_FILTER" - Filter needs to be changed
 
             break;
          }
@@ -1508,8 +1512,8 @@ switch(io)
             // Format: uint8
 
             // Valid Values:
-            // "OFF" - 0    The Camera is inactive (off)
-            // "ON"  - 1    The Camera is active (on)
+            // 0 - "OFF" - The Camera is (off)
+            // 1 - "ON"  - The Camera is (on)
 
             break;
          }
@@ -1602,8 +1606,8 @@ switch(io)
             // Format: uint32
 
             // Valid Values
-            // 0 "Image is not mirrored"
-            // 1 "Image is mirrored"
+            // 0 - "FALSE" - Image is not mirrored
+            // 1 - "TRUE" - Image is mirrored
 
             // Unit arcdegrees
 
@@ -1622,10 +1626,10 @@ switch(io)
             // Format: float
 
             // Valid Values
-            // 0   - "No rotation"
-            // 90  - "Rotated 90 degrees to the right"
-            // 180 - "Rotated 180 degrees to the right (flipped vertically)"
-            // 270 - "Rotated 270 degrees to the right"
+            // 0   - No rotation
+            // 90  - Rotated 90 degrees to the right
+            // 180 - Rotated 180 degrees to the right (flipped vertically)
+            // 270 - Rotated 270 degrees to the right
 
             break;
          }
@@ -1646,8 +1650,8 @@ switch(io)
             // Maximum Value: 1
 
             // Valid Values
-            // 0 - NOT_IN_USE
-            // 1 - IN_USE
+            // 0 - "NOT_IN_USE"
+            // 1 - "IN_USE"
 
             break;
          }
@@ -1668,13 +1672,13 @@ switch(io)
             // Maximum Value: 6
 
             // Valid Values
-            // 0 - OTHER
-            // 1 - TV
-            // 2 - RECORDING
-            // 3 - TUNER
-            // 4 - PLAYBACK
-            // 5 - AUDIO_SYSTEM
-            // 6 - UNKNOWN_6 (Added in IOS 14)
+            // 0 - "OTHER"
+            // 1 - "TV"
+            // 2 - "RECORDING"
+            // 3 - "TUNER"
+            // 4 - "PLAYBACK"
+            // 5 - "AUDIO_SYSTEM"
+            // 6 - "UNKNOWN_6" - (Added in IOS 14)
 
             break;
          }
@@ -1695,17 +1699,17 @@ switch(io)
             // Maximum Value: 10
 
             // Valid Values
-            // 0  - OTHER
-            // 1  - HOME_SCREEN
-            // 2  - TUNER
-            // 3  - HDMI
-            // 4  - COMPOSITE_VIDEO
-            // 5  - S_VIDEO
-            // 6  - COMPONENT_VIDEO
-            // 7  - DVI
-            // 8  - AIRPLAY
-            // 9  - USB
-            // 10 - APPLICATION
+            // 0  - "OTHER"
+            // 1  - "HOME_SCREEN"
+            // 2  - "TUNER"
+            // 3  - "HDMI"
+            // 4  - "COMPOSITE_VIDEO"
+            // 5  - "S_VIDEO"
+            // 6  - "COMPONENT_VIDEO"
+            // 7  - "DVI"
+            // 8  - "AIRPLAY"
+            // 9  - "USB"
+            // 10 - "APPLICATION"
 
             break;
          }
@@ -1726,8 +1730,8 @@ switch(io)
             // Maximum Value: 1
 
             // Valid Values
-            // 0 - NOT_CONFIGURED
-            // 1 - CONFIGURED
+            // 0 - "NOT_CONFIGURED"
+            // 1 - "CONFIGURED"
 
             break;
          }
@@ -1748,8 +1752,8 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - "Leak is not detected"
-            // 1 - "Leak is detected"
+            // 0 - "LEAK_NOT_DETECTED" - Leak is not detected
+            // 1 - "LEAK_DETECTED"  - Leak is detected
 
             break;
          }
@@ -1804,10 +1808,10 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - "Unsecured"
-            // 1 - "Secured"
-            // 2 - "Jammed"
-            // 3 - "Unknown"
+            // 0 - "UNSECURED" - Unsecured
+            // 1 - "SECURED"   - Secured
+            // 2 - "JAMMED"    - Jammed
+            // 3 - "Unknown"   - unknown
             // 4-255 - "Reserved"
 
             break;
@@ -1827,15 +1831,15 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - "Secured using physical movement, interior"
-            // 1 - "Unsecured using physical movement, interior"
-            // 2 - "Secured using physical movement, exterior"
-            // 3 - "Unsecured using physical movement, exterior"
-            // 4 - "Secured with keypad"
-            // 5 - "Unsecured with keypad"
-            // 6 - "Secured remotely"
-            // 7 - "Unsecured remotely"
-            // 8 - "Secured with Automatic Secure timeout"
+            // 0 - "SECURED_PHYSICALLY_INTERIOR" - Secured using physical movement, interior
+            // 1 - "UNSECURED_PHYSICALLY_INTERIOR" - Unsecured using physical movement, interior
+            // 2 - "UNSECURED_PHYSICALLY_INTERIOR" - Secured using physical movement, exterior
+            // 3 - "UNSECURED_PHYSICALLY_EXTERIOR" - Unsecured using physical movement, exterior
+            // 4 - "SECURED_BY_KEYPAD" - Secured with keypad
+            // 5 - "UNSECURED_BY_KEYPAD" - Unsecured with keypad
+            // 6 - "SECURED_REMOTELY" - Secured remotely
+            // 7 - "UNSECURED_REMOTELY" - Unsecured remotely
+            // 8 - "SECURED_BY_AUTO_SECURE_TIMEOUT" - Secured with Automatic Secure timeout
             // 9-255 - "Reserved"
 
             break;
@@ -1871,8 +1875,8 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - "Control lock disabled"
-            // 1 - "Control lock enabled"
+            // 0 - "CONTROL_LOCK_DISABLED" - Control lock disabled
+            // 1 - "CONTROL_LOCK_ENABLED" - Control lock enabled
 
             break;
          }
@@ -1893,8 +1897,8 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - "Unsecured"
-            // 1 - "Secured"
+            // 0 - "UNSECURED"
+            // 1 - "SECURED"
             // 2-255 - "Reserved"
 
             break;
@@ -1956,9 +1960,9 @@ switch(io)
 
             // Format: uint8
             // Valid Values:
-            // "DISABLED": 0  - Network is Disabled
-            // "ENABLED":  1  - Network is Enabled
-            // "UNKNOWN":  2  - Network is unknown
+            // 0 - "DISABLED"  - Network is Disabled
+            // 1 - "ENABLED"   - Network is Enabled
+            // 2 - "UNKNOWN"   - Network is unknown
 
             break;
          }
@@ -1976,8 +1980,8 @@ switch(io)
             // Format: Bool
 
             // Valid Values:
-            // "ENABLED":   0  - Device has been Manually Disabled
-            // "DISABLED":  1  - Device has been Manually Enabled
+            // 0 - "ENABLED"  - Device has been Manually Disabled
+            // 1 - "DISABLED" - Device has been Manually Enabled
 
             break;
          }
@@ -2040,8 +2044,8 @@ switch(io)
             // Format: bool
 
             // Valid Values:
-            // 0 - "Mute is Off / Audio is On"
-            // 1 - "Mute is On / There is no Audio"
+            // 0 - "FALSE - Mute is Off / Audio is On
+            // 1 - "TRUE" - Mute is On / There is no Audio
 
             break;
          }
@@ -2119,8 +2123,8 @@ switch(io)
             // Format: bool (false) and 1 (true)
 
             // Valid Values
-            // 0 - "Disable night-vision mode"
-            // 1 - "Enable night-vision mode"
+            // 0 - "FALSE" - Disable night-vision mode
+            // 1 - "TRUE"  - Enable night-vision mode
 
             break;
          }
@@ -2172,8 +2176,8 @@ switch(io)
             // Step Value: 1
 
             // Valid Values
-            // 0 - "Occupancy is not detected"
-            // 1 - "Occupancy is detected"
+            // 0 - "FALSE" - Occupancy is not detected
+            // 1 - "TRUE" - Occupancy is detected
 
             break;
          }
@@ -2397,14 +2401,14 @@ switch(io)
             // Format: uint16
 
             // Valid Values
-            // 0 - OTHER
-            // 1 - STANDARD
-            // 2 - CALIBRATED
-            // 3 - CALIBRATED_DARK
-            // 4 - VIVID
-            // 5 - GAME
-            // 6 - COMPUTER
-            // 7 - CUSTOM
+            // 0 - "OTHER"
+            // 1 - "STANDARD"
+            // 2 - "CALIBRATED"
+            // 3 - "CALIBRATED_DARK"
+            // 4 - "VIVID"
+            // 5 - "GAME"
+            // 6 - "COMPUTER"
+            // 7 - "CUSTOM"
 
             break;
          }
@@ -2439,10 +2443,10 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // - 0 "Going to the minimum value specified in metadata"
-            // - 1 "Going to the maximum value specified in metadata"
-            // - 2 "Stopped"
-            // - 3-255 "Reserved"
+            // 0 - "DECREASING" - Going to the minimum value specified in metadata
+            // 1 - "INCREASING" - Going to the maximum value specified in metadata
+            // 2 - "STOPPED"
+            // 3-255 "Reserved"
 
             break;
          }
@@ -2460,8 +2464,8 @@ switch(io)
             // Format: uint8
 
             // Valid Values
-            // 0 - SHOW
-            // 1 - HIDE
+            // 0 - "SHOW"
+            // 1 - "HIDE"
 
             break;
          }
@@ -2495,9 +2499,9 @@ switch(io)
             // Format: uint8
 
             // Valid Values
-            // 0 - NO_PROGRAM_SCHEDULED
-            // 1 - PROGRAM_SCHEDULED
-            // 1 - PROGRAM_SCHEDULED_MANUAL_MODE
+            // 0 - "NO_PROGRAM_SCHEDULED"
+            // 1 - "PROGRAM_SCHEDULED"
+            // 1 - "PROGRAM_SCHEDULED_MANUAL_MODE"
 
             break;
          }
@@ -2518,9 +2522,9 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - "Single Press"
-            // 1 - "Double Press"
-            // 2 - "Long Press"
+            // 0 - "SINGLE_PRESS"
+            // 1 - "DOUBLE_PRESS"
+            // 2 - "LONG_PRESS"
             // 3-255 - "Reserved"
 
             break;
@@ -2611,8 +2615,8 @@ switch(io)
             // Format: uint8
 
             // Valid Values:
-            // "DISABLE": 0  -
-            // "ENABLE":  0  -
+            // 0 - "DISABLE"
+            // 1 - "ENABLE"
 
             break;
          }
@@ -2736,19 +2740,19 @@ switch(io)
             // Format: uint8
 
             // Valid Values
-            // 0  - REWIND = 0;
-            // 1  - FAST_FORWARD
-            // 2  - NEXT_TRACK
-            // 3  - PREVIOUS_TRACK
-            // 4  - ARROW_UP
-            // 5  - ARROW_DOWN
-            // 6  - ARROW_LEFT
-            // 7  - ARROW_RIGHT
-            // 8  - SELECT
-            // 9  - BACK
-            // 10 - EXIT
-            // 11 - PLAY_PAUSE
-            // 12 - INFORMATION
+            // 0  - "REWIND"
+            // 1  - "FAST_FORWARD"
+            // 2  - "NEXT_TRACK"
+            // 3  - "PREVIOUS_TRACK"
+            // 4  - "ARROW_UP"
+            // 5  - "ARROW_DOWN"
+            // 6  - "ARROW_LEFT"
+            // 7  - "ARROW_RIGHT"
+            // 8  - "SELECT"
+            // 9  - "BACK"
+            // 10 - "EXIT"
+            // 11 - "PLAY_PAUSE"
+            // 12 - "INFORMATION"
 
             break;
          }
@@ -2782,8 +2786,8 @@ switch(io)
 
             // Step Value: 1
             // Valid Values
-            // 0 - "Clockwise"
-            // 1 - "Counter-clockwise"
+            // 0 - "CLOCKWISE"
+            // 1 - "COUNTER_CLOCKWISE"
             // 2-255 "Reserved"
 
             break;
@@ -2824,8 +2828,8 @@ switch(io)
             // Maximum Value: 1
 
             // Valid Values:
-            // "READY":     0  -
-            // "NOT_READY": 1  -
+            // 0 - "READY"
+            // 1 - "NOT_READY"
 
             break;
          }
@@ -2865,8 +2869,8 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - "When alert cleared"
-            // 1 - "Unknown Cause"
+            // 0 - When alert cleared
+            // 1 - Unknown Cause
 
             break;
          }
@@ -2887,13 +2891,13 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - "Stay Arm. The home is occupied and the residents are
+            // 0 - "STAY_ARM"  - The home is occupied and the residents are
             //      active. e.g. morning or evenings"
-            // 1 - "Away Arm. The home is unoccupied"
-            // 2 - "Night Arm. The home is occupied and the residents are sleeping"
-            // 3 - "Disarmed"
-            // 4 - "Alarm Triggered"
-            // 5 - 255 - "Reserved"
+            // 1 - "AWAY_ARM"  -  The home is unoccupied"
+            // 2 - "NIGHT ARM" -  The home is occupied and the residents are sleeping"
+            // 3 - "DISARMED"
+            // 4 - "ALARM_TRIGGERED"
+            // 5 - 255 - Reserved
 
             break;
          }
@@ -2914,12 +2918,12 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - "Stay Arm. The home is occupied and the residents
-            //      are active. e.g. morning or evenings"
-            // 1 - "Away Arm. The home is unoccupied"
-            // 2 - "Night Arm. The home is occupied and the residents are sleeping"
+            // 0 - "StAY_ARM"  - The home is occupied and the residents
+            //      are active. e.g. morning or evenings
+            // 1 - "AWAY_ARM"  - The home is unoccupied
+            // 2 - "NIGHT_ARM" - The home is occupied and the residents are sleeping
             //
-            // 3 - 255 - "Reserved"
+            // 3 - 255 - Reserved
 
             break;
          }
@@ -3017,8 +3021,8 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - "Dots. For example, "." ".." "..." "....""
-            // 1 - "Arabic numerals. For example, "0,1,2,3"
+            // 0 - "DOTS" -  For example, "." ".." "..." "....""
+            // 1 - "ARABIC_NUMERALS" . For example, "0,1,2,3"
             // 2-255 - "Reserved"
 
             break;
@@ -3122,7 +3126,7 @@ switch(io)
             // maxValue: 0
 
             // Valid Values:
-            // 0 - PUSH_BUTTON_TRIGGERED_APPLE_TV
+            // 0 - "PUSH_BUTTON_TRIGGERED_APPLE_TV"
 
             break;
          }
@@ -3143,8 +3147,8 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - "Horizontal"
-            // 1 - "Vertical"
+            // 0 - "HORIZONTAL"
+            // 1 - "VERTICAL"
 
             break;
          }
@@ -3164,8 +3168,8 @@ switch(io)
             // Maximum Value: 1
 
             // Valid Values
-            // 0 - NOT_DISCOVERABLE
-            // 1 - ALWAYS_DISCOVERABLE
+            // 0 - "NOT_DISCOVERABLE"
+            // 1 - "ALWAYS_DISCOVERABLE"
 
             break;
          }
@@ -3205,8 +3209,8 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - "Smoke is not detected"
-            // 1 - "Smoke is detected"
+            // 0 - "SMOKE_NOT_DETECTED" - Smoke is not detected
+            // 1 - "SMOKE_DETECTED" - Smoke is detected
 
             break;
          }
@@ -3217,7 +3221,7 @@ switch(io)
             if ( c == "" ) console.log( "50" ); else console.log( "\"%s\"", c );
 
             // UUID: SoftwareRevision
-                // Type: public.hap.characteristic.SoftwareRevision
+            // Type: public.hap.characteristic.SoftwareRevision
             // Permissions: Read
 
             // Format: string
@@ -3253,8 +3257,8 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - "No Fault"
-            // 1 - "General Fault"
+            // 0 - "NO_FAULT"
+            // 1 - "GENERAL_FAULT"
 
             break;
          }
@@ -3272,8 +3276,8 @@ switch(io)
             // Format: uint8
 
             // Valid Values
-            // 0 - NOT_JAMMED
-            // 1 - JAMMED
+            // 0 - "NOT_JAMMED"
+            // 1 - "JAMMED"
 
             break;
          }
@@ -3294,8 +3298,8 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - "Battery level is normal"
-            // 1 - "Battery level is low"
+            // 0 - "BATTERY_LEVEL_NORMAL" - Battery level is normal
+            // 1 - "BATTERY_LEVEL_LOW"    - Battery level is low
 
             break;
          }
@@ -3312,8 +3316,8 @@ switch(io)
             // Format: uint8
 
             // Valid Values:
-            // 0 - "Accessory is not tampered"
-            // 1 - "Accessory is tampered with"
+            // 0 - "NOT_TAMPERED" - Accessory is not tampered"
+            // 1 - "TAMPERED"     - Accessory is tampered with
 
             break;
          }
@@ -3544,8 +3548,8 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - "Swing disabled"
-            // 1 - "Swing enabled"
+            // 0 - "SWING_DISABLED"
+            // 1 - "SWING_ENABLED"
 
             break;
          }
@@ -3566,8 +3570,8 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - "Manual"
-            // 1 - "Auto"
+            // 0 - "MANUAL"
+            // 1 - "AUTO"
 
             break;
          }
@@ -3587,9 +3591,9 @@ switch(io)
             // Maximum Value: 0
 
             // Valid Values
-            // 0 - EXCELLENT
-            // 1 - GOOD
-            // 2 - FAIR
+            // 0 - "EXCELLENT"
+            // 1 - "GOOD"
+            // 2 - "FAIR"
 
             break;
          }
@@ -3638,8 +3642,8 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - "Open"
-            // 1 - "Closed"
+            // 0 - "OPEN"
+            // 1 - "CLOSED"
             // 2-255 - "Reserved"
 
             break;
@@ -3661,8 +3665,8 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - "Manual"
-            // 1 - "Auto"
+            // 0 - "MANUAL"
+            // 1 - "AUTO"
 
             break;
          }
@@ -3683,9 +3687,9 @@ switch(io)
             // Maximum Value: 2
 
             // Valid Values
-            // 0 - AUTO
-            // 1 - HEAT
-            // 2 - COOL
+            // 0 - "AUTO"
+            // 1 - "HEAT"
+            // 2 - "COOL"
 
             break;
          }
@@ -3706,11 +3710,11 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - "Off"
-            // 1 - "Heat. If the current temperature is below the target
-            //      temperature then turn on heating."
-            // 2 - "Cool. If the current temperature is above the target
-            //      temperature then turn on cooling."
+            // 0 - "OFF"
+            // 1 - "HEAT" -  If the current temperature is below the target
+            //               temperature then turn on heating.
+            // 2 - "COOL" -  If the current temperature is above the target
+            //               temperature then turn on cooling.
 
             break;
          }
@@ -3750,9 +3754,9 @@ switch(io)
             // Maximum Value: 2
 
             // Valid Values
-            // 0 - HUMIDIFIER_OR_DEHUMIDIFIER
-            // 1 - HUMIDIFIER
-            // 2 - DEHUMIDIFIER
+            // 0 - "HUMIDIFIER_OR_DEHUMIDIFIER"
+            // 1 - "HUMIDIFIER"
+            // 2 - "DEHUMIDIFIER"
 
             break;
          }
@@ -3773,9 +3777,9 @@ switch(io)
             // Maximum Value: 3
 
             // Valid Values
-            // 0 - PLAY
-            // 1 - PAUSE
-            // 2 - STOP
+            // 0 - "PLAY"
+            // 1 - "PAUSE"
+            // 2 - "STOP"
             // 3 - Reserved ????
 
             break;
@@ -3836,8 +3840,8 @@ switch(io)
             // Maximum Value: 1
 
             // Valid Values
-            // 0 - MANUAL
-            // 1 - AUTO
+            // 0 - "MANUAL"
+            // 1 - "AUTO"
 
             break;
          }
@@ -3915,8 +3919,8 @@ switch(io)
             // Maximum Value: 1
 
             // Valid Values
-            // 0 - SHOWN
-            // 1 - HIDDEN
+            // 0 - "SHOWN"
+            // 1 - "HIDDEN"
 
             break;
          }
@@ -3937,8 +3941,8 @@ switch(io)
             // Step Value: 1
 
             // Valid Values:
-            // 0 - Celcius
-            // 1 - Fehrenheit
+            // 0 - "CELCIUS"
+            // 1 - "FEHRENHEIT"
 
             break;
          }
@@ -3956,8 +3960,8 @@ switch(io)
             // Format: uint8
 
             // Valid Values
-            // "OFF": 0   -
-            // "ON":  1   -
+            // 0 - "OFF"
+            // 1 - "ON"
 
             break;
          }
@@ -4110,10 +4114,10 @@ switch(io)
             // Maximum Value: 3
 
             // Valid Values
-            // 0 - GENERIC_VALVE
-            // 1 - IRRIGATION
-            // 2 - SHOWER_HEAD
-            // 3 - WATER_FAUCET?
+            // 0 - "GENERIC_VALVE"
+            // 1 - "IRRIGATION"
+            // 2 - "SHOWER_HEAD"
+            // 3 - "WATER_FAUCET?"
 
             break;
          }
@@ -4183,10 +4187,10 @@ switch(io)
             // Maximum Value: 1
 
             // Valid Values
-            // 0 - NONE
-            // 1 - RELATIVE
-            // 2 - RELATIVE_WITH_CURRENT
-            // 3 - ABSOLUTE
+            // 0 - "NONE"
+            // 1 - "RELATIVE"
+            // 2 - "RELATIVE_WITH_CURRENT"
+            // 3 - "ABSOLUTE"
 
             break;
          }
@@ -4204,8 +4208,8 @@ switch(io)
             // Format: uint8
 
             // Valid Values
-            // 0 - INCREMENT
-            // 1 - DECREMENT
+            // 0 - "INCREMENT"
+            // 1 - "DECREMENT"
 
             break;
          }
@@ -4321,9 +4325,9 @@ switch(io)
             // Maximum: 2
 
             // Valid Values
-            // "UNKNOWN":       0 -
-            // "CONNECTED":     1 -
-            // "NOT_CONNECTED": 2 -
+            // 0 - "UNKNOWN"
+            // 1 - "CONNECTED"
+            // 2 - "NOT_CONNECTED"
 
             break;
          }

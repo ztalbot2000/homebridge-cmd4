@@ -12,18 +12,47 @@ describe( 'Cleaning up any old Cmd4States/Status_Device_* files ...', ( ) =>
    {
       for ( var file of files )
       {
-         fs.unlink( file, function( err, result )
+         // To use the promise of unlink, it must be in an async function
+         // so put it in one.  Why not unLinkSync, because for whatever reason
+         // some files were notbremoved synchronously.
+         ( async( ) =>
          {
-            it('file:' + file +' should be removed', function ( done )
+            await fs.unlink( file, function( err, result )
             {
-               if ( err && err.code != 'ENOENT' )
-                  assert.isNull( err, 'file not removed err: ' + err + " result: " + result );
-               done( );
+               it('file:' + file +' should be removed', function ( done )
+               {
+                  if ( err && err.code != 'ENOENT' )
+                     assert.isNull( err, 'file not removed err: ' + err + " result: " + result );
+                  done( );
+               });
             });
          });
       }
    })
 });
+
+
+
+function removeStateFileThatShouldAlreadyBeRemoved( characteristicString )
+{
+   let stateFile = cmd4StateDir + "Status_Device_" + characteristicString;
+   if (fs.existsSync( stateFile ))
+   {
+      // console.log(' *** BLAST! The path exists.' + stateFile );
+      // To use the promise of unlink, it must be in an async function
+      // so put it in one.  Why not unLinkSync, because for whatever reason
+      // some files were notbremoved synchronously.
+      ( async( ) =>
+      {
+         fs.unlink( stateFile, function( err, result )
+         {
+            if ( err && err.code != 'ENOENT' )
+               assert.isNull( err, 'file not removed err: ' + err + " result: " + result );
+         });
+      });
+   };
+}
+
 
 // ***************** TEST LOADING **********************
 
@@ -96,6 +125,9 @@ describe( "Testing State.js Get Characteristics default written data ( " + CMD4_
       it( accTypeEnumIndex + ": " + cmd + args2 + "should return something", ( ) =>
       {
 
+         // Why twice with two awaits, beats me !
+         removeStateFileThatShouldAlreadyBeRemoved( characteristicString );
+
          const ps = child_process.spawnSync( cmd, args );
 
          var data="not set by me";
@@ -133,7 +165,7 @@ describe( "Testing State.js Set Characteristics ( " + CMD4_ACC_TYPE_ENUM.EOL + "
       {
          var data="not set by me";
 
-         console.log( "status is '%s'", ps.status );
+         // console.log( "status is '%s'", ps.status );
          if ( ps.status !== 0 )
          {
             assert.equal( ps.status, 0, "Process error stdout: " + ps.stdout + " stderr: " + ps.stderr + " status: " + ps.status + " signal: " + ps.signal );
