@@ -18,8 +18,6 @@ const { isUpgrade }  = require( "./utils/versionChecker" );
       {
          console.log( chalk.green( `[UPDATE AVAILABLE] ` ) + `Version ${lv} of ${myPkg.name} is available. Any release notes can be found here: ` + chalk.underline( `${myPkg.changelog}` ) );
       }
-      console.log( chalk.cyan( `HomeBridge-Cmd4 Version 3.0.4+ Important information` ) );
-      console.log( `* Cmd4 directives like polling, state_cmd, etc will try to be restored from the config.json.\n` );
 
       console.log( chalk.underline( `HomeBridge-Cmd4 Version 3.0.0+ Notes:\n` ) );
       console.log( chalk.green( `* ` ) + `For new users, you will need to follow the README to continue the configuration of HomeBridge-CMD4.\n` );

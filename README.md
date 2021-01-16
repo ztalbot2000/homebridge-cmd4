@@ -218,7 +218,9 @@ Based on the best of:
 * [homebridge-real-fake-garage-doors]https://github.com/plasticrake/homebridge-real-fake-garage-doors.git
 * [homebridge-homeseer]https://github.com/jrhubott/homebridge-homeseer.git
 * Thanks to TimofeyK for all his help with fakegato and for suggesting it.
+* Thanks to Mitch Williams for his endless encouragement.
 * Thanks especially to those who continue to work on Homebridge and those who make it better.
+* And most importantly my Wife.
 
 <BR><BR>
 ## License

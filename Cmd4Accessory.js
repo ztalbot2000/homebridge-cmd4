@@ -601,7 +601,7 @@ class Cmd4Accessory
          callback( null, null );
       }
 
-      self.log.debug( `getCachedValue ${ characteristicString } for: ${ self.displayName } returned (CACHED) value: ${ result }` );
+      self.log.debug( `getCachedValue ${ characteristicString } for: ${ self.displayName } returned (CACHED) value: ${ storedValue }` );
 
       // Just in case the cached value needs to be converted from a Constant to its valid value.
       // I can't see this happening, but who knows between upgrades or restarts.
@@ -1992,10 +1992,15 @@ class Cmd4Accessory
    {
       let that = accessory;
 
-      accessory.log.debug( `Starting polling for: ${ accessory.displayName }.` );
+      let msgDisplayed = false;
 
       for( let accTypeEnumIndex in accessory.listOfPollingCharacteristics )
       {
+         if ( msgDisplayed == false )
+         {
+            accessory.log.debug( `Starting polling for: ${ accessory.displayName }.` );
+            msgDisplayed = true;
+         }
          let timeout = accessory.listOfPollingCharacteristics[ accTypeEnumIndex ].timeout;
          let interval = accessory.listOfPollingCharacteristics[ accTypeEnumIndex ].interval;
          that.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] =
@@ -2010,7 +2015,6 @@ class Cmd4Accessory
       {
          accessory.linkedAccessories.forEach( ( linkedAccessory ) =>
          {
-            accessory.log.debug( `Setting up polling ( ${ accessory.displayName } ) linked accessory: ${ linkedAccessory.displayName }` );
             linkedAccessory.startPollingForAccessoryAndItsChildren( linkedAccessory );
          });
       }
@@ -2020,7 +2024,6 @@ class Cmd4Accessory
       {
          accessory.accessories.forEach( ( addedAccessory ) =>
          {
-            accessory.log.debug( `Setting up polling ( ${ accessory.displayName } ) added accessory: ${ addedAccessory.displayName }` );
             addedAccessory.startPollingForAccessoryAndItsChildren( addedAccessory );
          });
       }

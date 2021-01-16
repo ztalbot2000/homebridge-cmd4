@@ -1,6 +1,7 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
 
 ## ChangeLog
+* [**Whats new in 3.0.5**](#whats-new-in-305)
 * [**Whats new in 3.0.4**](#whats-new-in-304)
 * [**Whats new in 3.0.0**](#whats-new-in-300)
 * [**Whats new in 2.4.2**](#whats-new-in-242)
@@ -15,6 +16,10 @@
 * [**Whats new in 2.2**](#whats-new-in-22)
 * [**Whats new in 2.1**](#whats-new-in-21)
 * [**Whats new in 2.0**](#whats-new-in-20)
+
+## Whats new in 3.0.5
+* Fix of issue #78.  Most constants were not documented correctly and 3.0 no longer uppercased them for you. Put back this capability and fix the documentation.
+* Fix Bug: ReferenceError: Cannot access 'result' before initialization when Fetch is set to Cached and some other details.
 
 ## Whats new in 3.0.4
 * BugFix of issue #76 for those who did not specify any polling type at all and "fetch": "Always" ( The default ) caused any characteristic state to be retrieved at all.

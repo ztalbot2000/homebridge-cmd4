@@ -313,8 +313,6 @@ class Cmd4Platform
                log.debug( `Step 6. registerPlatformAccessories( ${ settings.PLUGIN_NAME }, ${ settings.PLATFORM_NAME }, [ ${  accessory.displayName } ] ) `);
 
                this.api.registerPlatformAccessories( settings.PLUGIN_NAME, settings.PLATFORM_NAME, [ platform ] );
-
-               accessory.log.debug( `Creating polling for Platform accessory: ${ accessory.displayName }` );
             }
          }
 
