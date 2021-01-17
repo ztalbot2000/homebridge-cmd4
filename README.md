@@ -50,7 +50,7 @@
 
 &nbsp;&nbsp;&nbsp; Cmd4 can be configured to respond to actual devices directly or by modifying the script file it calls.
 
-&nbsp;&nbsp;&nbsp; Cmd4 Version 2.0 supported linked Accessories and the latest 3.0 Version supports both Platform plugin and Accessory plugin configurations as documented on [developers.homebridge.io](developers.homebridge.io).
+&nbsp;&nbsp;&nbsp; Cmd4 Version 2.0 supported linked Accessories and the latest 3.0 Version supports both Platform plugin and Accessory plugin configurations as documented on [developers.homebridge.io](https://developers.homebridge.io).
 
 
 <BR><BR>
