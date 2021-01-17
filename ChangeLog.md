@@ -1,6 +1,7 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
 
 ## ChangeLog
+* **Whats new in 3.0.6 - Accidentaly publish a config.schhema, please ignore it is somethin in the works and is not useable yet.
 * [**Whats new in 3.0.5**](#whats-new-in-305)
 * [**Whats new in 3.0.4**](#whats-new-in-304)
 * [**Whats new in 3.0.0**](#whats-new-in-300)
