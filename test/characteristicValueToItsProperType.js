@@ -169,8 +169,8 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       let displayName = "testDevice";
       let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
       let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
-      let value = "FAlse";
-      let expectedResult = false;
+      let value = "true";
+      let expectedResult = true;
 
       let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
 
@@ -205,13 +205,27 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
 
-   it('characteristicValueToItsProperType of Mute of 0 should be true.', ( ) =>
+   it('characteristicValueToItsProperType of Mute of 0 should be false.', ( ) =>
    {
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
       let displayName = "testDevice";
       let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
       let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
       let value = 0;
+      let expectedResult = false;
+
+      let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
+
+      assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
+   });
+
+   it('characteristicValueToItsProperType of Mute of 1 should be true (On).', ( ) =>
+   {
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
+      let displayName = "testDevice";
+      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+      let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
+      let value = 1;
       let expectedResult = true;
 
       let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
@@ -219,13 +233,13 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
 
-   it('characteristicValueToItsProperType of Mute of 1 should be false.', ( ) =>
+   it('characteristicValueToItsProperType of BOOL of 0 should be false (Off) .', ( ) =>
    {
-      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.On;
       let displayName = "testDevice";
       let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
       let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
-      let value = 1;
+      let value = 0;
       let expectedResult = false;
 
       let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
@@ -233,13 +247,13 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
 
-   it('characteristicValueToItsProperType of BOOL of 0 should be true.', ( ) =>
+   it('characteristicValueToItsProperType of BOOL of 1 should be True (On).', ( ) =>
    {
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.On;
       let displayName = "testDevice";
       let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
       let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
-      let value = 0;
+      let value = 1;
       let expectedResult = true;
 
       let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
@@ -247,68 +261,54 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
 
-   it('characteristicValueToItsProperType of BOOL of 1 should be false.', ( ) =>
-   {
-      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.On;
-      let displayName = "testDevice";
-      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
-      let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
-      let value = 1;
-      let expectedResult = false;
-
-      let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
-
-      assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
-   });
-
-   it('characteristicValueToItsProperType of Mute of 1 should be false.', ( ) =>
+   it('characteristicValueToItsProperType of Mute of 1 should be true .', ( ) =>
    {
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
       let displayName = "testDevice";
       let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
       let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
       let value = 1;
-      let expectedResult = false;
+      let expectedResult = true;
 
       let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
 
-   it('characteristicValueToItsProperType of Mute of "1" should be false.', ( ) =>
+   it('characteristicValueToItsProperType of Mute of "1" should be True (On).', ( ) =>
    {
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
       let displayName = "testDevice";
       let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
       let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
       let value = "1";
-      let expectedResult = false;
+      let expectedResult = true;
 
       let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
-   it('characteristicValueToItsProperType of Mute of 0 should be true.', ( ) =>
+   it('characteristicValueToItsProperType of Mute of 0 should be false (off).', ( ) =>
    {
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
       let displayName = "testDevice";
       let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
       let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
       let value = 0;
-      let expectedResult = true;
+      let expectedResult = false;
 
       let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
-   it('characteristicValueToItsProperType of Mute of "0" should be true.', ( ) =>
+   it('characteristicValueToItsProperType of Mute of "0" should be false.', ( ) =>
    {
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
       let displayName = "testDevice";
       let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
       let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
       let value = "0";
-      let expectedResult = true;
+      let expectedResult = false;
 
       let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
 

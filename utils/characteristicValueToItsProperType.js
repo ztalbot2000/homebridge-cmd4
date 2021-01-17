@@ -97,13 +97,15 @@ function characteristicValueToItsProperType( log, requiredFormat, displayName, C
           // If the value is a Number, return the conversion
           if ( type == Number )
           {
-             if ( value == 0 ) return true;
-             if ( value == 1 ) return false;
+             if ( value == 0 ) return false;
+             if ( value == 1 ) return true;
 
              // Handle string numbers being a BOOL
              // Identified correctly or not
-             if ( value == "0" ) return true;
-             if ( value == "1" ) return false;
+             // 0 is off/false
+             // 1 is on/true
+             if ( value == "0" ) return false;
+             if ( value == "1" ) return true;
 
           } else if ( type == String )
           {
@@ -114,8 +116,10 @@ function characteristicValueToItsProperType( log, requiredFormat, displayName, C
 
              // Handle string numbers being a BOOL
              // Identified correctly or not
-             if ( value == "0" ) return true;
-             if ( value == "1" ) return false;
+             // 0 is off/false
+             // 1 is on/true
+             if ( value == "0" ) return false;
+             if ( value == "1" ) return true;
 
           } else if ( type == Boolean )
           {
