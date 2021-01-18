@@ -50,7 +50,7 @@
 
 &nbsp;&nbsp;&nbsp; Cmd4 can be configured to respond to actual devices directly or by modifying the script file it calls.
 
-&nbsp;&nbsp;&nbsp; Cmd4 Version 2.0 supported linked Accessories and the latest 3.0 Version supports both Platform plugin and Accessory plugin configurations as documented on [developers.homebridge.io](developers.homebridge.io).
+&nbsp;&nbsp;&nbsp; Cmd4 Version 2.0 supported linked Accessories and the latest 3.0 Version supports both Platform plugin and Accessory plugin configurations as documented on [developers.homebridge.io](https://developers.homebridge.io).
 
 
 <BR><BR>
@@ -66,7 +66,7 @@
 <BR><BR>
 ## Installation Details
 ### Step 1.  Install Homebridge
-See [homebridge](homebridge) for complete details.<BR>
+See [homebridge](https://github.com/homebridge/homebridge) for complete details.<BR>
 
 
 ### Step 2.  Install Cmd4 Plugin
@@ -96,7 +96,7 @@ See [homebridge](homebridge) for complete details.<BR>
 
 
 ### Step 5. Restart homebridge
-See [homebridge](homebridge) for complete details.<BR>
+See [homebridge](https://github.com/homebridge/homebridge) for complete details.<BR>
 
 
 ### Step 6.  Try Homekit
@@ -132,7 +132,7 @@ Check that the command exists, but also that the timeout value in your config.js
 
 ### Removing Cached Information
 &nbsp;&nbsp;&nbsp; Starting with Cmd4 Version 3 the *restartRecover* option, defaulted to true, will mean that sometimes changing the config.json accessory options will have no affect. There are two ways to resolve this.<BR>
-Note: As of version 3.0.4, Cmd4 directives like polling, state_cmd, etc will try to be restored from the config.json. 
+Note: As of version 3.0.4, Cmd4 directives like polling, state_cmd, etc will try to be restored from the config.json.
 <UL>
 <LI> Restart with { restartRecover: false } set in your config.json.
 <LI> Remove Homebridges cached information.
@@ -204,8 +204,8 @@ Note: As of version 3.0.4, Cmd4 directives like polling, state_cmd, etc will try
 
 ### Promotion
 &nbsp;&nbsp;&nbsp; Like the project? Please support to ensure continued development going forward:
-* Star this repo on [GitHub][homebridge-cmd4-repo]
-* Follow the repo on [GitHub][homebridge-cmd4-repo]
+* Star this repo on [GitHub](https://github.com/ztalbot2000/homebridge-cmd4/subscription)
+* Follow the repo on [GitHub](https://github.com/ztalbot2000/homebridge-cmd4/subscription)
 * Follow me
   * [ztalbot2000](https://github.com/ztalbot2000)
 
@@ -213,10 +213,10 @@ Note: As of version 3.0.4, Cmd4 directives like polling, state_cmd, etc will try
 <BR><BR>
 ## Inspiration and special thanks
 Based on the best of:
-* [homebridge-cmd]https://github.com/senyoltw/homebridge-cmd.git
-* [homebridge-cmdswitch2]https://github.com/luisiam/homebridge-cmdswitch2.git
-* [homebridge-real-fake-garage-doors]https://github.com/plasticrake/homebridge-real-fake-garage-doors.git
-* [homebridge-homeseer]https://github.com/jrhubott/homebridge-homeseer.git
+* [homebridge-cmd](https://github.com/senyoltw/homebridge-cmd.git)
+* [homebridge-cmdswitch2](https://github.com/luisiam/homebridge-cmdswitch2.git)
+* [homebridge-real-fake-garage-doors](https://github.com/plasticrake/homebridge-real-fake-garage-doors.git)
+* [homebridge-homeseer](https://github.com/jrhubott/homebridge-homeseer.git)
 * Thanks to TimofeyK for all his help with fakegato and for suggesting it.
 * Thanks to Mitch Williams for his endless encouragement.
 * Thanks especially to those who continue to work on Homebridge and those who make it better.
