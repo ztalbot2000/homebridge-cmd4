@@ -213,28 +213,62 @@ function addCharacteristicContent_WithinBody(acc_type_enum, characteristic )
 ` );
    if ( props.format )
       fid.write(
-`         <tr><TD> Format: </TD><TD> ${props.format }</TD></tr>
+`         <tr><TD> Format: </TD><TD> ${ props.format }</TD></tr>
 ` );
       if ( props.unit )
          fid.write(
-`         <tr><TD> Unit: </TD><TD>  ${props.unit }</TD></tr>
+`         <tr><TD> Unit: </TD><TD>  ${ props.unit }</TD></tr>
 ` );
    if ( props.minValue )
       fid.write(
-`         <tr><TD> Min Value: </TD><TD>  ${props.minValue }</TD></tr>
+`         <tr><TD> Min Value: </TD><TD>  ${ props.minValue }</TD></tr>
 ` );
       if ( props.maxValue )
          fid.write(
-`         <tr><TD> Max Value: </TD><TD>  ${props.maxValue }</TD></tr>
+`         <tr><TD> Max Value: </TD><TD>  ${ props.maxValue }</TD></tr>
 ` );
    if ( props.minStep )
       fid.write(
-`         <tr><TD> Min Step: </TD><TD>  ${props.minStep }</TD></tr>
+`         <tr><TD> Min Step: </TD><TD>  ${ props.minStep }</TD></tr>
 ` );
-      if ( props.permissions )
+      if ( props.perms )
+      {
+         let output = "";
+         let comma = "";
+         props.perms.forEach( ( perm ) =>
+         {
+            switch( perm )
+            {
+               case "pr":
+                  output = output + comma + "Paired Read";
+                  commaNeeded = true;
+                  break;
+               case "pw":
+                  output = output + comma + "Paired Write";
+                  commaNeeded = true;
+                  break;
+               case "ev":
+                  output = output + comma + "Events";
+                  commaNeeded = true;
+                  break;
+               case "tw":
+                  output = output + comma + "Timed Write";
+                  commaNeeded = true;
+                  break;
+               case "wr":
+                  output = output + comma + "Write Response";
+                  commaNeeded = true;
+                  break;
+               default:
+                  console.log( "Unknown perm: %s", perm );
+                  process.exit(333);
+            }
+            comma = ", ";
+         });
          fid.write(
-`         <tr><TD> Permissions: </TD><TD>  ${props.permissions }</TD></tr>
+`         <tr><TD> Perms: </TD><TD>  ${ output }</TD></tr>
 ` );
+      }
       fid.write(
 `      </table>
 ` );
