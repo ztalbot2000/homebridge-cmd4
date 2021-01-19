@@ -91,7 +91,7 @@
     "test": "node_modules/.bin/mocha --file test/mocha-setup --ignore test/Cmd4Accessory.js",
     "Note": "printf 'testing Cmd4Accessory spawns processes, so its ommitted from blanket testing'",
     "testCmd4Accessory.js": "node_modules/.bin/mocha --file test/mocha-setup test/Cmd4Accessory.js",
-    "lint": "eslint --ext .js *.js utils/*.js lib/*.js",
+    "lint": "eslint --ext .js *.js utils/*.js lib/*.js local/*",
     "postinstall": "node postinstall.js"
   },
   "version": "3.0.7"

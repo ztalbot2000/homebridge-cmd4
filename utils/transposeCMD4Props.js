@@ -32,7 +32,7 @@ var transposeConstantToValidValue = function ( CMD4_ENUM_properties_obj, accType
 
       // It is possible that the constantString is provided by the user and not capitalized.
       if ( typeof constantString == String )
-         lookupstring  = contantString.toUpperCase( );
+         lookupString  = constantString.toUpperCase( );
 
       let value = CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues[ lookupString ];
 
