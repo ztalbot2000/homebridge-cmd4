@@ -107,6 +107,7 @@ BODY {
 
 h1 {
    FONT-SIZE: 2.5rem;
+   padding-top: 4rem;
 }
 h2 {
    FONT-SIZE: 1.5rem;
@@ -134,10 +135,23 @@ td {
 
 tr:nth-child(even) { background-color: #f2f2f2 }
 
-h1, h2, h3, h4, h5 {
+note {
+   FONT-STYLE: italic;
+   FONT-SIZE: 1rem;
+   COLOR: #5d6778;
+   PADDING: 2rem;
+}
+
+h1, h2, h3, h4, h5, note {
    FONT-FAMILY: Poppins,sans-serif;
    MARGIN-TOP: 0;
    MARGIN-BOTTOM: .5rem;
+   font-weight: 500;
+   line-height: 1.2;
+}
+
+* {
+   box-sizing: border-box;
 }
 
 @media screen and (max-height: 450px) {
@@ -274,6 +288,7 @@ function addCharacteristicContent_WithinBody(acc_type_enum, characteristic )
    fid.write(
 `      </table>
 ` );
+   // Constants definition Table
    let defs = Object.keys( definition.validValues );
    if ( defs.length > 0 )
    {
@@ -285,13 +300,26 @@ function addCharacteristicContent_WithinBody(acc_type_enum, characteristic )
       defs.forEach( ( def ) =>
       {
          fid.write(
-`         <tr><TD> ${ definition.validValues[ def ] } </TD><TD> ${ def } </TD></tr>
+`         <tr><TD> ${ definition.validValues[ def ] } </TD><TD> "${ def }" </TD></tr>
 ` );
       });
       fid.write(
 `     </table>
 ` );
    }
+
+   // Verify Chsracteristic Notes
+   let verify = definition.verifyCharacteristic;
+   if ( verify )
+   {
+      fid.write(
+`       <h4>Note:</h4>
+       <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#${ verify.name }">${ verify.name }</a></note>
+` );
+   }
+
+
+   // Closing DIV of Characteristic
       fid.write(
 `   </DIV>
 ` );
