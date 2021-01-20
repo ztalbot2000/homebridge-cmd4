@@ -46,6 +46,36 @@ describe( "Testing INITIALIZED CMD4_DEVICE_TYPE_ENUM", ( ) =>
    let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
    let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, _api.hap.Service, _api.hap.Characteristic, _api.hap.Categories );
 
+
+   // *** TEST CMD4_DEVICE_TYPE_ENUM.properties[].UUID *******
+   describe('Testing Initialized CMD4_DEVICE_TYPE_ENUM.properties[].UUID', ( ) =>
+   {
+      it('Testing CMD4_DEVICE_TYPE_ENUM.properties[].UUID is a string ', ( ) =>
+      {
+         for (let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++ )
+         {
+            let result = CMD4_DEVICE_TYPE_ENUM.properties[ index ].UUID;
+
+            // Make sure that the UUID we defined is valid.
+            expect(result).to.be.a( "string", " result is not a string. result:" + result + " at index: " + index );
+
+         }
+      });
+
+      it('Testing CMD4_DEVICE_TYPE_ENUM.properties[].UUID is same as in hap string ', ( ) =>
+      {
+         for (let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++ )
+         {
+            let service = CMD4_DEVICE_TYPE_ENUM.properties[ index ].service;
+            let hapUUID = service.UUID;
+            let result = CMD4_DEVICE_TYPE_ENUM.properties[ index ].UUID;
+
+            // Make sure that the UUID we defined is valid.
+            expect(result).to.equal( hapUUID, " Our UUID is not the same at index: " + index + ". result:" + result );
+         }
+      });
+   });
+
    // *** TEST CMD4_DEVICE_TYPE_ENUM.properties[].service *******
    describe('Testing Initialized CMD4_DEVICE_TYPE_ENUM.properties[].service', ( ) =>
    {
@@ -88,7 +118,7 @@ describe( "Testing INITIALIZED CMD4_DEVICE_TYPE_ENUM", ( ) =>
          describe('Testing CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].publishExternally ', ( ) =>
          {
 
-            assert.isBoolean(CMD4_DEVICE_TYPE_ENUM.properties[ index ].publishExternally, "CMD4_ACC_TYPE_ENUM.properties[" + index + "].publishExternally is not a true|false" );
+            assert.isBoolean(CMD4_DEVICE_TYPE_ENUM.properties[ index ].publishExternally, "CMD4_DEVICE_TYPE_ENUM.properties[" + index + "].publishExternally is not a true|false" );
 
          });
       }
@@ -121,7 +151,7 @@ describe( "Testing INITIALIZED CMD4_DEVICE_TYPE_ENUM", ( ) =>
          describe('Testing CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].publishExternally ', ( ) =>
          {
 
-            assert.isBoolean(CMD4_DEVICE_TYPE_ENUM.properties[ index ].publishExternally, "CMD4_ACC_TYPE_ENUM.properties[" + index + "].publishExternally is not a true|false" );
+            assert.isBoolean(CMD4_DEVICE_TYPE_ENUM.properties[ index ].publishExternally, "CMD4_DEVICE_TYPE_ENUM.properties[" + index + "].publishExternally is not a true|false" );
 
          });
       }
