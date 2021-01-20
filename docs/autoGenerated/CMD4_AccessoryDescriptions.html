@@ -29,6 +29,8 @@ BODY {
   BACKGROUND: #eee;
   OVERFLOW-X: hidden;
   PADDING: 8px 0;
+  OVERFLOW-Y: auto;
+  max-height: calc( 100vh - 9rem);
 }
 
 .sidenav a {
@@ -366,6 +368,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> INACTIVE </TD></tr>
+         <tr><TD> 1 </TD><TD> ACTIVE </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="ActiveIdentifier"></a>
@@ -400,6 +408,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Format: </TD><TD> bool</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> false </TD><TD> FALSE </TD></tr>
+         <tr><TD> true </TD><TD> TRUE </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="AirParticulateDensity"></a>
@@ -425,6 +439,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> _2_5_M </TD></tr>
+         <tr><TD> 1 </TD><TD> _10_M </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="AirQuality"></a>
@@ -437,6 +457,16 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  5</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> UNKNOWN </TD></tr>
+         <tr><TD> 1 </TD><TD> EXCELLENT </TD></tr>
+         <tr><TD> 2 </TD><TD> GOOD </TD></tr>
+         <tr><TD> 3 </TD><TD> FAIR </TD></tr>
+         <tr><TD> 4 </TD><TD> INFERIOR </TD></tr>
+         <tr><TD> 5 </TD><TD> POOR </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="AppMatchingIdentifier"></a>
@@ -459,6 +489,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Format: </TD><TD> bool</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> false </TD><TD> FALSE </TD></tr>
+         <tr><TD> true </TD><TD> TRUE </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="BatteryLevel"></a>
@@ -531,6 +567,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Format: </TD><TD> uint8</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events, Timed Write</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> DISABLE </TD></tr>
+         <tr><TD> 1 </TD><TD> ENABLE </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="CarbonDioxideDetected"></a>
@@ -543,6 +585,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> CO2_LEVELS_NORMAL </TD></tr>
+         <tr><TD> 1 </TD><TD> CO2_LEVELS_ABNORMAL </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="CarbonDioxideLevel"></a>
@@ -579,6 +627,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> CO_LEVELS_NORMAL </TD></tr>
+         <tr><TD> 1 </TD><TD> CO_LEVELS_ABNORMAL </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="CarbonMonoxideLevel"></a>
@@ -640,6 +694,13 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  2</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> NOT_CHARGING </TD></tr>
+         <tr><TD> 1 </TD><TD> CHARGING </TD></tr>
+         <tr><TD> 2 </TD><TD> NOT_CHARGEABLE </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="ClosedCaptions"></a>
@@ -652,6 +713,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> DISABLED </TD></tr>
+         <tr><TD> 1 </TD><TD> ENABLED </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="ColorTemperature"></a>
@@ -711,6 +778,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> CONTACT_DETECTED </TD></tr>
+         <tr><TD> 1 </TD><TD> CONTACT_NOT_DETECTED </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="CoolingThresholdTemperature"></a>
@@ -738,6 +811,13 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  2</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> INACTIVE </TD></tr>
+         <tr><TD> 1 </TD><TD> IDLE </TD></tr>
+         <tr><TD> 2 </TD><TD> PURIFYING_AIR </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="CurrentAmbientLightLevel"></a>
@@ -764,6 +844,15 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  4</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> OPEN </TD></tr>
+         <tr><TD> 1 </TD><TD> CLOSED </TD></tr>
+         <tr><TD> 2 </TD><TD> OPENING </TD></tr>
+         <tr><TD> 3 </TD><TD> CLOSING </TD></tr>
+         <tr><TD> 4 </TD><TD> STOPPED </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="CurrentFanState"></a>
@@ -776,6 +865,13 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  2</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> INACTIVE </TD></tr>
+         <tr><TD> 1 </TD><TD> IDLE </TD></tr>
+         <tr><TD> 2 </TD><TD> BLOWING_AIR </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="CurrentHeaterCoolerState"></a>
@@ -788,6 +884,14 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  3</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> INACTIVE </TD></tr>
+         <tr><TD> 1 </TD><TD> IDLE </TD></tr>
+         <tr><TD> 2 </TD><TD> HEATING </TD></tr>
+         <tr><TD> 3 </TD><TD> COOLING </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="CurrentHeatingCoolingState"></a>
@@ -800,6 +904,14 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  3</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> OFF </TD></tr>
+         <tr><TD> 1 </TD><TD> HEAT </TD></tr>
+         <tr><TD> 2 </TD><TD> COOL </TD></tr>
+         <tr><TD> undefined </TD><TD> AUTO </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="CurrentHorizontalTiltAngle"></a>
@@ -827,6 +939,14 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  3</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> INACTIVE </TD></tr>
+         <tr><TD> 1 </TD><TD> IDLE </TD></tr>
+         <tr><TD> 2 </TD><TD> HUMIDIFYING </TD></tr>
+         <tr><TD> 3 </TD><TD> DEHUMIDIFYING </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="CurrentMediaState"></a>
@@ -839,6 +959,16 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  5</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> PLAY </TD></tr>
+         <tr><TD> 1 </TD><TD> PAUSE </TD></tr>
+         <tr><TD> 2 </TD><TD> STOP </TD></tr>
+         <tr><TD> 3 </TD><TD> UNKNOWN3 </TD></tr>
+         <tr><TD> 4 </TD><TD> LOADING </TD></tr>
+         <tr><TD> 5 </TD><TD> INTERRUPTED </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="CurrentPosition"></a>
@@ -879,6 +1009,13 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  2</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> FIXED </TD></tr>
+         <tr><TD> 1 </TD><TD> JAMMED </TD></tr>
+         <tr><TD> 2 </TD><TD> SWINGING </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="CurrentTemperature"></a>
@@ -930,6 +1067,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Format: </TD><TD> bool</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> false </TD><TD> FALSE </TD></tr>
+         <tr><TD> true </TD><TD> TRUE </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="CurrentVerticalTiltAngle"></a>
@@ -957,6 +1100,14 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  3</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> SHOWN </TD></tr>
+         <tr><TD> 1 </TD><TD> HIDDEN </TD></tr>
+         <tr><TD> 2 </TD><TD> UNKNOWN2 </TD></tr>
+         <tr><TD> 3 </TD><TD> UNKNOWN3 </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="DataStreamHAPTransport"></a>
@@ -1073,6 +1224,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Format: </TD><TD> uint8</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> DISABLE </TD></tr>
+         <tr><TD> 1 </TD><TD> ENABLE </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="EventTransmissionCounters"></a>
@@ -1096,6 +1253,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> FILTER_OK </TD></tr>
+         <tr><TD> 1 </TD><TD> CHANGE_FILTER </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="FilterLifeLevel"></a>
@@ -1166,6 +1329,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Format: </TD><TD> bool</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Write</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> false </TD><TD> FALSE </TD></tr>
+         <tr><TD> true </TD><TD> TRUE </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="HomeKitCameraActive"></a>
@@ -1177,6 +1346,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Format: </TD><TD> uint8</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events, Timed Write</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> OFF </TD></tr>
+         <tr><TD> 1 </TD><TD> ON </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="Hue"></a>
@@ -1214,6 +1389,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Format: </TD><TD> bool</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Write</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> false </TD><TD> FALSE </TD></tr>
+         <tr><TD> true </TD><TD> TRUE </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="ImageMirroring"></a>
@@ -1225,6 +1406,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Format: </TD><TD> bool</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> false </TD><TD> FALSE </TD></tr>
+         <tr><TD> true </TD><TD> TRUE </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="ImageRotation"></a>
@@ -1251,6 +1438,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> NOT_IN_USE </TD></tr>
+         <tr><TD> 1 </TD><TD> IN_USE </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="InputDeviceType"></a>
@@ -1263,6 +1456,17 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  6</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> OTHER </TD></tr>
+         <tr><TD> 1 </TD><TD> TV </TD></tr>
+         <tr><TD> 2 </TD><TD> RECORDING </TD></tr>
+         <tr><TD> 3 </TD><TD> TUNER </TD></tr>
+         <tr><TD> 4 </TD><TD> PLAYBACK </TD></tr>
+         <tr><TD> 5 </TD><TD> AUDIO_SYSTEM </TD></tr>
+         <tr><TD> 6 </TD><TD> UNKNOWN_6 </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="InputSourceType"></a>
@@ -1275,6 +1479,21 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  10</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> OTHER </TD></tr>
+         <tr><TD> 1 </TD><TD> HOME_SCREEN </TD></tr>
+         <tr><TD> 2 </TD><TD> TUNER </TD></tr>
+         <tr><TD> 3 </TD><TD> HDMI </TD></tr>
+         <tr><TD> 4 </TD><TD> COMPOSITE_VIDEO </TD></tr>
+         <tr><TD> 5 </TD><TD> S_VIDEO </TD></tr>
+         <tr><TD> 6 </TD><TD> COMPONENT_VIDEO </TD></tr>
+         <tr><TD> 7 </TD><TD> DVI </TD></tr>
+         <tr><TD> 8 </TD><TD> AIRPLAY </TD></tr>
+         <tr><TD> 9 </TD><TD> USB </TD></tr>
+         <tr><TD> 10 </TD><TD> APPLICATION </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="IsConfigured"></a>
@@ -1287,6 +1506,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> NOT_CONFIGURED </TD></tr>
+         <tr><TD> 1 </TD><TD> CONFIGURED </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="LeakDetected"></a>
@@ -1299,6 +1524,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> LEAK_NOT_DETECTED </TD></tr>
+         <tr><TD> 1 </TD><TD> LEAK_DETECTED </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="LinkQuality"></a>
@@ -1336,6 +1567,14 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  3</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> UNSECURED </TD></tr>
+         <tr><TD> 1 </TD><TD> SECURED </TD></tr>
+         <tr><TD> 2 </TD><TD> JAMMED </TD></tr>
+         <tr><TD> 3 </TD><TD> UNKNOWN </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="LockLastKnownAction"></a>
@@ -1348,6 +1587,19 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  8</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> SECURED_PHYSICALLY_INTERIOR </TD></tr>
+         <tr><TD> 1 </TD><TD> UNSECURED_PHYSICALLY_INTERIOR </TD></tr>
+         <tr><TD> 2 </TD><TD> SECURED_PHYSICALLY_EXTERIOR </TD></tr>
+         <tr><TD> 3 </TD><TD> UNSECURED_PHYSICALLY_EXTERIOR </TD></tr>
+         <tr><TD> 4 </TD><TD> SECURED_BY_KEYPAD </TD></tr>
+         <tr><TD> 5 </TD><TD> UNSECURED_BY_KEYPAD </TD></tr>
+         <tr><TD> 6 </TD><TD> SECURED_REMOTELY </TD></tr>
+         <tr><TD> 7 </TD><TD> UNSECURED_REMOTELY </TD></tr>
+         <tr><TD> 8 </TD><TD> SECURED_BY_AUTO_SECURE_TIMEOUT </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="LockManagementAutoSecurityTimeout"></a>
@@ -1372,6 +1624,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> CONTROL_LOCK_DISABLED </TD></tr>
+         <tr><TD> 1 </TD><TD> CONTROL_LOCK_ENABLED </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="LockTargetState"></a>
@@ -1384,6 +1642,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> UNSECURED </TD></tr>
+         <tr><TD> 1 </TD><TD> SECURED </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="Logs"></a>
@@ -1429,6 +1693,13 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events, Timed Write</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> DISABLED </TD></tr>
+         <tr><TD> 1 </TD><TD> ENABLED </TD></tr>
+         <tr><TD> 2 </TD><TD> UNKNOWN </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="ManuallyDisabled"></a>
@@ -1440,6 +1711,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Format: </TD><TD> bool</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> ENABLED </TD></tr>
+         <tr><TD> 1 </TD><TD> DISABLED </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="Manufacturer"></a>
@@ -1473,6 +1750,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Format: </TD><TD> bool</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> false </TD><TD> FALSE </TD></tr>
+         <tr><TD> true </TD><TD> TRUE </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="Mute"></a>
@@ -1484,6 +1767,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Format: </TD><TD> bool</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> false </TD><TD> FALSE </TD></tr>
+         <tr><TD> true </TD><TD> TRUE </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="Name"></a>
@@ -1539,6 +1828,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Format: </TD><TD> bool</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events, Timed Write</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> false </TD><TD> FALSE </TD></tr>
+         <tr><TD> true </TD><TD> TRUE </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="NitrogenDioxideDensity"></a>
@@ -1563,6 +1858,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Format: </TD><TD> bool</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> false </TD><TD> FALSE </TD></tr>
+         <tr><TD> true </TD><TD> TRUE </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="OccupancyDetected"></a>
@@ -1575,6 +1876,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> OCCUPANCY_NOT_DETECTED </TD></tr>
+         <tr><TD> 1 </TD><TD> OCCUPANCY_DETECTED </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="On"></a>
@@ -1586,6 +1893,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Format: </TD><TD> bool</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> false </TD><TD> FALSE </TD></tr>
+         <tr><TD> true </TD><TD> TRUE </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="OperatingStateResponse"></a>
@@ -1619,6 +1932,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Format: </TD><TD> bool</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> false </TD><TD> FALSE </TD></tr>
+         <tr><TD> true </TD><TD> TRUE </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="OzoneDensity"></a>
@@ -1724,6 +2043,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Format: </TD><TD> uint8</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> DISABLE </TD></tr>
+         <tr><TD> 1 </TD><TD> ENABLE </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="PictureMode"></a>
@@ -1736,6 +2061,24 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  13</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> OTHER </TD></tr>
+         <tr><TD> 1 </TD><TD> STANDARD </TD></tr>
+         <tr><TD> 2 </TD><TD> CALIBRATED </TD></tr>
+         <tr><TD> 3 </TD><TD> CALIBRATED_DARK </TD></tr>
+         <tr><TD> 4 </TD><TD> VIVID </TD></tr>
+         <tr><TD> 5 </TD><TD> GAME </TD></tr>
+         <tr><TD> 6 </TD><TD> COMPUTER </TD></tr>
+         <tr><TD> 7 </TD><TD> CUSTOM </TD></tr>
+         <tr><TD> 8 </TD><TD> UNKNOWN8 </TD></tr>
+         <tr><TD> 9 </TD><TD> UNKNOWN9 </TD></tr>
+         <tr><TD> 10 </TD><TD> UNKNOWN10 </TD></tr>
+         <tr><TD> 11 </TD><TD> UNKNOWN11 </TD></tr>
+         <tr><TD> 12 </TD><TD> UNKNOWN12 </TD></tr>
+         <tr><TD> 13 </TD><TD> UNKNOWN13 </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="Ping"></a>
@@ -1759,6 +2102,13 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  2</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> DECREASING </TD></tr>
+         <tr><TD> 1 </TD><TD> INCREASING </TD></tr>
+         <tr><TD> 2 </TD><TD> STOPPED </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="PowerModeSelection"></a>
@@ -1771,6 +2121,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Write</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> SHOW </TD></tr>
+         <tr><TD> 1 </TD><TD> HIDE </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="ProductData"></a>
@@ -1794,6 +2150,13 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  2</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> NO_PROGRAM_SCHEDULED </TD></tr>
+         <tr><TD> 1 </TD><TD> PROGRAM_SCHEDULED </TD></tr>
+         <tr><TD> 2 </TD><TD> PROGRAM_SCHEDULED_MANUAL_MODE_ </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="ProgrammableSwitchEvent"></a>
@@ -1806,6 +2169,13 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  2</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> SINGLE_PRESS </TD></tr>
+         <tr><TD> 1 </TD><TD> DOUBLE_PRESS </TD></tr>
+         <tr><TD> 2 </TD><TD> LONG_PRESS </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="ProgrammableSwitchOutputState"></a>
@@ -1830,6 +2200,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Format: </TD><TD> bool</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> false </TD><TD> FALSE </TD></tr>
+         <tr><TD> true </TD><TD> TRUE </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="ReceivedSignalStrengthIndication"></a>
@@ -1863,6 +2239,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Format: </TD><TD> uint8</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> DISABLE </TD></tr>
+         <tr><TD> 1 </TD><TD> ENABLE </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="RelativeHumidityDehumidifierThreshold"></a>
@@ -1912,6 +2294,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Format: </TD><TD> bool</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> false </TD><TD> FALSE </TD></tr>
+         <tr><TD> true </TD><TD> TRUE </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="RelayState"></a>
@@ -1948,6 +2336,27 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  16</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Write</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> REWIND </TD></tr>
+         <tr><TD> 1 </TD><TD> FAST_FORWARD </TD></tr>
+         <tr><TD> 2 </TD><TD> NEXT_TRACK </TD></tr>
+         <tr><TD> 3 </TD><TD> PREVIOUS_TRACK </TD></tr>
+         <tr><TD> 4 </TD><TD> ARROW_UP </TD></tr>
+         <tr><TD> 5 </TD><TD> ARROW_DOWN </TD></tr>
+         <tr><TD> 6 </TD><TD> ARROW_LEFT </TD></tr>
+         <tr><TD> 7 </TD><TD> ARROW_RIGHT </TD></tr>
+         <tr><TD> 8 </TD><TD> SELECT </TD></tr>
+         <tr><TD> 9 </TD><TD> BACK </TD></tr>
+         <tr><TD> 10 </TD><TD> EXIT </TD></tr>
+         <tr><TD> 11 </TD><TD> PLAY_PAUSE </TD></tr>
+         <tr><TD> 12 </TD><TD> UNKNOWN12 </TD></tr>
+         <tr><TD> 13 </TD><TD> UNKNOWN13 </TD></tr>
+         <tr><TD> 14 </TD><TD> UNKNOWN14 </TD></tr>
+         <tr><TD> 15 </TD><TD> INFORMATION </TD></tr>
+         <tr><TD> 16 </TD><TD> UNKNOWN16 </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="ResetFilterIndication"></a>
@@ -1974,6 +2383,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> CLOCKWISE </TD></tr>
+         <tr><TD> 1 </TD><TD> COUNTER_CLOCKWISE </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="RotationSpeed"></a>
@@ -2000,6 +2415,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> READY </TD></tr>
+         <tr><TD> 1 </TD><TD> NOT_READY </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="Saturation"></a>
@@ -2039,6 +2460,15 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  4</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> STAY_ARM </TD></tr>
+         <tr><TD> 1 </TD><TD> AWAY_ARM </TD></tr>
+         <tr><TD> 2 </TD><TD> NIGHT_ARM </TD></tr>
+         <tr><TD> 3 </TD><TD> DISARMED </TD></tr>
+         <tr><TD> 4 </TD><TD> ALARM_TRIGGERED </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="SecuritySystemTargetState"></a>
@@ -2051,6 +2481,14 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  3</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> STAY_ARM </TD></tr>
+         <tr><TD> 1 </TD><TD> AWAY_ARM </TD></tr>
+         <tr><TD> 2 </TD><TD> NIGHT_ARM </TD></tr>
+         <tr><TD> 3 </TD><TD> DISARM </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="SelectedAudioStreamConfiguration"></a>
@@ -2121,6 +2559,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> DOTS </TD></tr>
+         <tr><TD> 1 </TD><TD> ARABIC_NUMERALS </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="SetDuration"></a>
@@ -2189,6 +2633,11 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Format: </TD><TD> uint8</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> PUSH_BUTTON_TRIGGERED_APPLE_TV </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="SlatType"></a>
@@ -2201,6 +2650,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> HORIZONTAL </TD></tr>
+         <tr><TD> 1 </TD><TD> VERTICAL </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="SleepDiscoveryMode"></a>
@@ -2213,6 +2668,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> NOT_DISCOVERABLE </TD></tr>
+         <tr><TD> 1 </TD><TD> ALWAYS_DISCOVERABLE </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="SleepInterval"></a>
@@ -2237,6 +2698,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> SMOKE_NOT_DETECTED </TD></tr>
+         <tr><TD> 1 </TD><TD> SMOKE_DETECTED </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="SoftwareRevision"></a>
@@ -2259,6 +2726,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Format: </TD><TD> bool</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> false </TD><TD> FALSE </TD></tr>
+         <tr><TD> true </TD><TD> TRUE </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="StatusFault"></a>
@@ -2271,6 +2744,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> NO_FAULT </TD></tr>
+         <tr><TD> 1 </TD><TD> GENERAL_FAULT </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="StatusJammed"></a>
@@ -2283,6 +2762,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> NOT_JAMMED </TD></tr>
+         <tr><TD> 1 </TD><TD> JAMMED </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="StatusLowBattery"></a>
@@ -2295,6 +2780,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> BATTERY_LEVEL_NORMAL </TD></tr>
+         <tr><TD> 1 </TD><TD> BATTERY_LEVEL_LOW </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="StatusTampered"></a>
@@ -2307,6 +2798,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> NOT_TAMPERED </TD></tr>
+         <tr><TD> 1 </TD><TD> TAMPERED </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="StreamingStatus"></a>
@@ -2464,6 +2961,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> SWING_DISABLED </TD></tr>
+         <tr><TD> 1 </TD><TD> SWING_ENABLED </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="TargetAirPurifierState"></a>
@@ -2476,6 +2979,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> MANUAL </TD></tr>
+         <tr><TD> 1 </TD><TD> AUTO </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="TargetAirQuality"></a>
@@ -2488,6 +2997,13 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  2</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> EXCELLENT </TD></tr>
+         <tr><TD> 1 </TD><TD> GOOD </TD></tr>
+         <tr><TD> 2 </TD><TD> FAIR </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="TargetControlList"></a>
@@ -2522,6 +3038,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> OPEN </TD></tr>
+         <tr><TD> 1 </TD><TD> CLOSED </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="TargetFanState"></a>
@@ -2534,6 +3056,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> MANUAL </TD></tr>
+         <tr><TD> 1 </TD><TD> AUTO </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="TargetHeaterCoolerState"></a>
@@ -2546,6 +3074,13 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  2</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> AUTO </TD></tr>
+         <tr><TD> 1 </TD><TD> HEAT </TD></tr>
+         <tr><TD> 2 </TD><TD> COOL </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="TargetHeatingCoolingState"></a>
@@ -2558,6 +3093,14 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  3</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> OFF </TD></tr>
+         <tr><TD> 1 </TD><TD> HEAT </TD></tr>
+         <tr><TD> 2 </TD><TD> COOL </TD></tr>
+         <tr><TD> 3 </TD><TD> AUTO </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="TargetHorizontalTiltAngle"></a>
@@ -2585,6 +3128,13 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  2</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> HUMIDIFIER_OR_DEHUMIDIFIER </TD></tr>
+         <tr><TD> 1 </TD><TD> HUMIDIFIER </TD></tr>
+         <tr><TD> 2 </TD><TD> DEHUMIDIFIER </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="TargetMediaState"></a>
@@ -2597,6 +3147,14 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  2</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> PLAY </TD></tr>
+         <tr><TD> 1 </TD><TD> PAUSE </TD></tr>
+         <tr><TD> 2 </TD><TD> STOP </TD></tr>
+         <tr><TD> 3 </TD><TD> UNKNOWN3 </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="TargetPosition"></a>
@@ -2637,6 +3195,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> MANUAL </TD></tr>
+         <tr><TD> 1 </TD><TD> AUTO </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="TargetTemperature"></a>
@@ -2694,6 +3258,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> SHOWN </TD></tr>
+         <tr><TD> 1 </TD><TD> HIDDEN </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="TemperatureDisplayUnits"></a>
@@ -2706,6 +3276,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> CELSIUS </TD></tr>
+         <tr><TD> 1 </TD><TD> FAHRENHEIT </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="ThirdPartyCameraActive"></a>
@@ -2717,6 +3293,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Format: </TD><TD> uint8</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> OFF </TD></tr>
+         <tr><TD> 1 </TD><TD> ON </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="TimeUpdate"></a>
@@ -2728,6 +3310,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Format: </TD><TD> bool</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> false </TD><TD> FALSE </TD></tr>
+         <tr><TD> true </TD><TD> TRUE </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="TransmitPower"></a>
@@ -2772,6 +3360,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Format: </TD><TD> bool</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Write, Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> false </TD><TD> FALSE </TD></tr>
+         <tr><TD> true </TD><TD> TRUE </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="TunneledAccessoryConnected"></a>
@@ -2783,6 +3377,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Format: </TD><TD> bool</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Write, Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> false </TD><TD> FALSE </TD></tr>
+         <tr><TD> true </TD><TD> TRUE </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="TunneledAccessoryStateNumber"></a>
@@ -2819,6 +3419,14 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  3</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> GENERIC_VALVE </TD></tr>
+         <tr><TD> 1 </TD><TD> IRRIGATION </TD></tr>
+         <tr><TD> 2 </TD><TD> SHOWER_HEAD </TD></tr>
+         <tr><TD> 3 </TD><TD> WATER_FAUCET </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="Version"></a>
@@ -2867,6 +3475,14 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  3</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> NONE </TD></tr>
+         <tr><TD> 1 </TD><TD> RELATIVE </TD></tr>
+         <tr><TD> 2 </TD><TD> RELATIVE_WITH_CURRENT </TD></tr>
+         <tr><TD> 3 </TD><TD> ABSOLUTE </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="VolumeSelector"></a>
@@ -2879,6 +3495,12 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  1</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Write</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> INCREMENT </TD></tr>
+         <tr><TD> 1 </TD><TD> DECREMENT </TD></tr>
+     </table>
    </DIV>
    <div>
       <a name="WANConfigurationList"></a>
@@ -2958,6 +3580,13 @@ h1, h2, h3, h4, h5 {
          <tr><TD> Max Value: </TD><TD>  2</TD></tr>
          <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
       </table>
+      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+         <tr><TD> 0 </TD><TD> UNKNOWN </TD></tr>
+         <tr><TD> 1 </TD><TD> CONNECTED </TD></tr>
+         <tr><TD> 2 </TD><TD> NOT_CONNECTED </TD></tr>
+     </table>
    </DIV>
 </DIV>
 </BODY>

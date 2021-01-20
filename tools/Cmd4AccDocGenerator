@@ -82,6 +82,8 @@ BODY {
   BACKGROUND: #eee;
   OVERFLOW-X: hidden;
   PADDING: 8px 0;
+  OVERFLOW-Y: auto;
+  max-height: calc( 100vh - 9rem);
 }
 
 .sidenav a {
@@ -215,7 +217,7 @@ function addCharacteristicContent_WithinBody(acc_type_enum, characteristic )
       fid.write(
 `         <tr><TD> Format: </TD><TD> ${ props.format }</TD></tr>
 ` );
-      if ( props.unit )
+   if ( props.unit )
          fid.write(
 `         <tr><TD> Unit: </TD><TD>  ${ props.unit }</TD></tr>
 ` );
@@ -223,65 +225,74 @@ function addCharacteristicContent_WithinBody(acc_type_enum, characteristic )
       fid.write(
 `         <tr><TD> Min Value: </TD><TD>  ${ props.minValue }</TD></tr>
 ` );
-      if ( props.maxValue )
-         fid.write(
+   if ( props.maxValue )
+      fid.write(
 `         <tr><TD> Max Value: </TD><TD>  ${ props.maxValue }</TD></tr>
 ` );
    if ( props.minStep )
       fid.write(
 `         <tr><TD> Min Step: </TD><TD>  ${ props.minStep }</TD></tr>
 ` );
-      if ( props.perms )
+   if ( props.perms )
+   {
+      let output = "";
+      let comma = "";
+      props.perms.forEach( ( perm ) =>
       {
-         let output = "";
-         let comma = "";
-         props.perms.forEach( ( perm ) =>
+         switch( perm )
          {
-            switch( perm )
-            {
-               case "pr":
-                  output = output + comma + "Paired Read";
-                  commaNeeded = true;
-                  break;
-               case "pw":
-                  output = output + comma + "Paired Write";
-                  commaNeeded = true;
-                  break;
-               case "ev":
-                  output = output + comma + "Events";
-                  commaNeeded = true;
-                  break;
-               case "tw":
-                  output = output + comma + "Timed Write";
-                  commaNeeded = true;
-                  break;
-               case "wr":
-                  output = output + comma + "Write Response";
-                  commaNeeded = true;
-                  break;
-               default:
-                  console.log( "Unknown perm: %s", perm );
-                  process.exit(333);
-            }
-            comma = ", ";
-         });
-         fid.write(
+            case "pr":
+               output = output + comma + "Paired Read";
+               commaNeeded = true;
+               break;
+            case "pw":
+               output = output + comma + "Paired Write";
+               commaNeeded = true;
+               break;
+            case "ev":
+               output = output + comma + "Events";
+               commaNeeded = true;
+               break;
+            case "tw":
+               output = output + comma + "Timed Write";
+               commaNeeded = true;
+               break;
+            case "wr":
+               output = output + comma + "Write Response";
+               commaNeeded = true;
+               break;
+            default:
+               console.log( "Unknown perm: %s", perm );
+               process.exit(333);
+         }
+         comma = ", ";
+      });
+      fid.write(
 `         <tr><TD> Perms: </TD><TD>  ${ output }</TD></tr>
 ` );
-      }
-      fid.write(
-`      </table>
-` );
-   if ( props.defaultValues )
-   {
-      fid.write(
-`      <h3>Default Values</h3>
-      <table>
-         <tr><TD> Default values: </TD><TD>  ${characteristic.UUID }</TD></tr>
-      </table>
-`  ) ;
    }
    fid.write(
+`      </table>
+` );
+   let defs = Object.keys( definition.validValues );
+   if ( defs.length > 0 )
+   {
+      fid.write(
+`      <h3>Constants</h3>
+       <table>
+          <TD> Value </TD><TD> String </TD>
+` );
+      defs.forEach( ( def ) =>
+      {
+         fid.write(
+`         <tr><TD> ${ definition.validValues[ def ] } </TD><TD> ${ def } </TD></tr>
+` );
+      });
+      fid.write(
+`     </table>
+` );
+   }
+      fid.write(
 `   </DIV>
 ` );
 }
