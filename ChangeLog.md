@@ -1,7 +1,8 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
 
 ## ChangeLog
-* [**Whats new in 3.0.7**](#whats-new-in-308)
+* [**Whats new in 3.0.9**](#whats-new-in-309)
+* [**Whats new in 3.0.8**](#whats-new-in-308)
 * [**Whats new in 3.0.7**](#whats-new-in-307)
 * [**Whats new in 3.0.5**](#whats-new-in-305)
 * [**Whats new in 3.0.4**](#whats-new-in-304)
@@ -18,6 +19,10 @@
 * [**Whats new in 2.2**](#whats-new-in-22)
 * [**Whats new in 2.1**](#whats-new-in-21)
 * [**Whats new in 2.0**](#whats-new-in-20)
+
+## Whats new in 3.0.9
+* Fix removal of fetch, causing caching of the designation to result
+  in "Invalid value: undefined for Fetch"
 
 ## Whats new in 3.0.8
 * Fix outputConstants not outputting anything if no translation

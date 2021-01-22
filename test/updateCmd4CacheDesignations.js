@@ -401,6 +401,49 @@ describe( "Testing updateCmd4CacheDesignations", ( ) =>
 
    });
 
+   it( "updateCmd4CacheDesignations should delete CMD4 designation fetched ", ( ) =>
+   {
+      // console.log("***IN TEST 7 ***");
+      // The names must be the same for UUID to work
+      let existingConfig = {
+         "name": "John",
+         "state_cmd": OLD,
+         "fetch": "Always"
+      };
+
+      // This would have already been placed in the accessory
+      // I wish I had named linkedAccessoriesConfig and linkedTypes the same !!!
+      addUUIDs( existingConfig );
+
+      let newConfig = {
+         "name": "John",
+         "state_cmd": OLD
+      };
+
+      updateCmd4CacheDesignations( _api, log, existingConfig, newConfig );
+
+      for ( let key in existingConfig )
+      {
+         switch ( key )   // name state_cmd or fetch
+         {
+            case ("fetch"):
+            {
+               switch ( existingConfig.fetch )
+               {
+                  case "Always":
+                  case "Polled":
+                  case "Cached":
+                     console.log("e.set has NOT been deleted");
+                     assert.fail( "existingAccessory.config fetch was not deleted: " + existingConfig );
+                     break;
+                  default:
+                     console.log("e.set has been deleted");
+                     assert( true == true, "existingAccessory.config fetch was properly deleted " );
+               }
+            }
+         }
+      }
+   });
 })
 
 // Existing accessories saved by homebridge would have a UUID for every accessory, any of its linkedTypes or added Accessories.
