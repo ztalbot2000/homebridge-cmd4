@@ -17,23 +17,10 @@ describe( "Initializing our plugin module", ( ) => {});
 var HomebridgeAPI = require( "../node_modules/homebridge/lib/api" ).HomebridgeAPI;
 var _api = new HomebridgeAPI( ); // object we feed to Plugins
 
-var cmd4 = pluginModule.default( _api );
-let CMD4_ACC_TYPE_ENUM = cmd4.CMD4_ACC_TYPE_ENUM;
-let CMD4_DEVICE_TYPE_ENUM = cmd4.CMD4_DEVICE_TYPE_ENUM;
+ // Init the library for all to use
+let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
+let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, _api.hap.Service, _api.hap.Characteristic, _api.hap.Categories );
 
-// ************ QUICK TEST PLUGIN WAS Loaded Successfully **************
-describe( "Testing load of index.js", ( ) =>
-{
-   it( "Testing require of index.js", ( ) =>
-   {
-      expect( pluginModule ).not.to.be.a( "null", "loaded plugin was null" );
-   });
-
-   it( "index.js default initializer should be found", ( ) =>
-   {
-      expect( pluginModule.default ).to.be.a( "function", "plugin has no default init function t: " + typeof pluginModule.default);
-   });
-});
 
 // ******** QUICK TEST CMD4_ACC_TYPE_ENUM *************
 describe( "Quick Test load of CMD4_ACC_TYPE_ENUM", ( ) =>
@@ -92,10 +79,124 @@ describe( "Testing extractKeyValue", ( ) =>
 
 });
 
+describe( "Testing transposeConstantToValidValue", ( ) =>
+{
+   it( "transposeConstantToValidValue should return originalfor no translation ", ( ) =>
+   {
+      // has {} for validValues
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AccessControlLevel;
+      let constantToBeChecked = "DUMMY";
+      let expectedResult = constantToBeChecked;
+
+      let result = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, constantToBeChecked );
+
+      expect( result ).to.equal( expectedResult, "transposeConstantToValidValue from " + constantToBeChecked + " returned " + result + " instead of " + expectedResult + " for " + CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type );
+   });
+
+   it( "transposeConstantToValidValue should return correct constant for 0-INACTIVE ", ( ) =>
+   {
+      // has { "INACTIVE" & "ACTIVE"} for validValues
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Active;
+      let constantToBeChecked = "INACTIVE";
+      let expectedResult = 0;
+
+      let result = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, constantToBeChecked );
+
+      expect( result ).to.equal( expectedResult, "transposeConstantToValidValue from " + constantToBeChecked + " returned " + result + " instead of " + expectedResult + " for " + CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type );
+   });
+
+   it( "transposeConstantToValidValue should return correct constant for 0-iNACTIVE ", ( ) =>
+   {
+      // has { "INACTIVE" & "ACTIVE"} for validValues
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Active;
+      let constantToBeChecked = "INACTIVE";
+      let expectedResult = 0;
+
+      let result = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, constantToBeChecked );
+
+      expect( result ).to.equal( expectedResult, "transposeConstantToValidValue from " + constantToBeChecked + " returned " + result + " instead of " + expectedResult + " for " + CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type );
+   });
+
+   it( "transposeConstantToValidValue should return correct constant for 1-ACTIVE ", ( ) =>
+   {
+      // has { "INACTIVE" & "ACTIVE"} for validValues
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Active;
+      let constantToBeChecked = "ACTIVE";
+      let expectedResult = 1;
+
+      let result = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, constantToBeChecked );
+
+      expect( result ).to.equal( expectedResult, "transposeConstantToValidValue from " + constantToBeChecked + " returned " + result + " instead of " + expectedResult + " for " + CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type );
+   });
+
+   it( "transposeConstantToValidValue should return correct constant false ", ( ) =>
+   {
+      // has { "FALSE" & "TRUE"} for validValues
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AdministratorOnlyAccess;
+      let constantToBeChecked = "TRUE";
+      let expectedResult = true;
+
+      let result = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, constantToBeChecked );
+
+      expect( result ).to.equal( expectedResult, "transposeConstantToValidValue from " + constantToBeChecked + " returned " + result + " instead of " + expectedResult + " for " + CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type );
+   });
+});
 
 
-// ******** TEST transposeValueToValidConstant.*************
 describe( "Testing transposeValueToValidConstant", ( ) =>
+{
+   it( "transposeValueToValidConstant should return original for no translation ", ( ) =>
+   {
+      // has {} for validValues
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AccessControlLevel;
+      let valueToBeChecked = "DUMMY";
+      let expectedResult = valueToBeChecked;
+
+      let result = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, valueToBeChecked );
+
+      expect( result ).to.equal( expectedResult, "transposeValueToValidConstant from " + valueToBeChecked + " returned " + result + " instead of " + expectedResult + " for " + CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type );
+   });
+
+   it( "transposeValueToValidConstant should return correct constant for 0-INACTIVE ", ( ) =>
+   {
+      // has { "INACTIVE" & "ACTIVE"} for validValues
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Active;
+      let valueToBeChecked = 0;
+      let expectedResult = "INACTIVE";
+
+      let result = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, valueToBeChecked );
+
+      expect( result ).to.equal( expectedResult, "transposeValueToValidConstant from " + valueToBeChecked + " returned " + result + " instead of " + expectedResult + " for " + CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type );
+   });
+
+   it( "transposeValueToValidConstant should return correct constant for 1-ACTIVE ", ( ) =>
+   {
+      // has { "INACTIVE" & "ACTIVE"} for validValues
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Active;
+      let valueToBeChecked = 1;
+      let expectedResult = "ACTIVE";
+
+      let result = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, valueToBeChecked );
+
+      expect( result ).to.equal( expectedResult, "transposeValueToValidConstant from " + valueToBeChecked + " returned " + result + " instead of " + expectedResult + " for " + CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type );
+   });
+
+   it( "transposeValueToValidConstant should return correct constant false ", ( ) =>
+   {
+      // has { "FALSE" & "TRUE"} for validValues
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AdministratorOnlyAccess;
+      let valueToBeChecked = true;
+      let expectedResult = "TRUE";
+
+      let result = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, valueToBeChecked );
+
+      expect( result ).to.equal( expectedResult, "transposeValueToValidConstant from " + valueToBeChecked + " returned " + result + " instead of " + expectedResult + " for " + CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type );
+   });
+});
+
+
+// TEST all Possible validValues for transposeValueToValidConstant
+describe( "Testing all Possible validValues for  transposeValueToValidConstant", ( ) =>
 {
    for ( let index = 0; index < CMD4_ACC_TYPE_ENUM.EOL; index ++ )
    // for ( let index = CMD4_ACC_TYPE_ENUM.EOL -1 ; index < CMD4_ACC_TYPE_ENUM.EOL; index ++ )
@@ -122,8 +223,9 @@ describe( "Testing transposeValueToValidConstant", ( ) =>
    //testTransposeValueTo( CMD4_ACC_TYPE_ENUM.properties, 0, {"one": "1", "two": "2"}, false );
    testTransposeValueTo( CMD4_ACC_TYPE_ENUM.properties, 0, 7, false );
 });
-// ******** TEST transposeConstantToValidVa.*************
-describe( "Testing transposeConstantToValidValue", ( ) =>
+
+// TEST all Possible transposeConstantToValidValue
+describe( "Testing all Possible transposeConstantToValidValue", ( ) =>
 {
    for ( let index =0 ; index < CMD4_ACC_TYPE_ENUM.EOL; index ++ )
    // for ( let index = CMD4_ACC_TYPE_ENUM.EOL -1 ; index < CMD4_ACC_TYPE_ENUM.EOL; index ++ )

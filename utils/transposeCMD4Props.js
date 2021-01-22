@@ -23,7 +23,8 @@ var transposeConstantToValidValue = function ( CMD4_ENUM_properties_obj, accType
    if ( Object.keys( CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues ).length < 0 )
    {
       //console.log.debug( "No constants to transpose for:%s", constantString );
-      return;
+      // Return the original as it should be used instead of nothing
+      return constantString;
    }
 
    if ( Object.prototype.hasOwnProperty.call( CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues, constantString ) )
@@ -47,11 +48,12 @@ var transposeConstantToValidValue = function ( CMD4_ENUM_properties_obj, accType
 // Used to convet ValidValues Value to its corresponding Constant.
 var transposeValueToValidConstant = function (  CMD4_ENUM_properties_obj, accTypeEnumIndex, valueString )
 {
-   //console.log( "check index:%s", accTypeEnumIndex );
+   console.log( "check index:%s", accTypeEnumIndex );
    if ( Object.keys( CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues ).length < 0)
    {
       //console.log( "No constants to transpose for:%s", valueString );
-      return;
+      // Return the original as it should be used instead of nothing
+      return valueString;
    }
 
    let constant = extractKeyValue( CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues, valueString );

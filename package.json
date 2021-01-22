@@ -1,6 +1,6 @@
 {
-  "_from": "homebridge-cmd4@3.0.6",
-  "_id": "homebridge-cmd4@3.0.7",
+  "_from": "homebridge-cmd4@3.0.7",
+  "_id": "homebridge-cmd4@3.0.8",
   "_inBundle": false,
   "_integrity": "sha512-Q39XXNNaxpBENc4AXvqoWoW+5OVZE24OLYLm+4RqCxJmyQDAGLNsokL+dh2JU++YaZRdycASfnG/8sylpocGAg==",
   "_location": "/homebridge-cmd4",
@@ -8,20 +8,20 @@
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "homebridge-cmd4@3.0.7",
+    "raw": "homebridge-cmd4@3.0.8",
     "name": "homebridge-cmd4",
     "escapedName": "homebridge-cmd4",
-    "rawSpec": "3.0.7",
+    "rawSpec": "3.0.8",
     "saveSpec": null,
-    "fetchSpec": "3.0.7"
+    "fetchSpec": "3.0.8"
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/homebridge-cmd4/-/homebridge-cmd4-3.0.7.tgz",
+  "_resolved": "https://registry.npmjs.org/homebridge-cmd4/-/homebridge-cmd4-3.0.8.tgz",
   "_shasum": "8329f6094809108460224f10a094f94da979d32e",
-  "_spec": "homebridge-cmd4@3.0.7",
+  "_spec": "homebridge-cmd4@3.0.8",
   "_where": "/private/var/root",
   "author": {
     "name": "John Talbot"
@@ -91,8 +91,8 @@
     "test": "node_modules/.bin/mocha --file test/mocha-setup --ignore test/Cmd4Accessory.js",
     "Note": "printf 'testing Cmd4Accessory spawns processes, so its ommitted from blanket testing'",
     "testCmd4Accessory.js": "node_modules/.bin/mocha --file test/mocha-setup test/Cmd4Accessory.js",
-    "lint": "eslint --ext .js *.js utils/*.js lib/*.js local/*",
+    "lint": "eslint --ext .js *.js utils/*.js lib/*.js",
     "postinstall": "node postinstall.js"
   },
-  "version": "3.0.7"
+  "version": "3.0.8"
 }
