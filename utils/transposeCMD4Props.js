@@ -18,40 +18,38 @@ var extractKeyValue = function ( obj, value )
 }
 
 // Used to convet ValidValus from a Constant to their corresponding value.
-var transposeConstantToValidValue = function ( CMD4_ENUM_properties_obj, accTypeEnumIndex, constantString )
+var transposeConstantToValidValue = function ( log, CMD4_ENUM_properties_obj, accTypeEnumIndex, constantString )
 {
    if ( Object.keys( CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues ).length < 0 )
    {
-      //console.log.debug( "No constants to transpose for:%s", constantString );
+      //log.debug( "transposeConstantToValidValue: No constants to transpose for:%s", constantString );
       // Return the original as it should be used instead of nothing
       return constantString;
    }
 
-   if ( Object.prototype.hasOwnProperty.call( CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues, constantString ) )
+   // In case constantString is not a string, ie false
+   let lookupString = "" + constantString;
+   let ucConstantString = lookupString.toUpperCase();
+
+   if ( Object.prototype.hasOwnProperty.call( CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues, ucConstantString ) )
    {
-      let lookupString = constantString;
+      let value = CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues[ ucConstantString ];
 
-      // It is possible that the constantString is provided by the user and not capitalized.
-      if ( typeof constantString == String )
-         lookupString  = constantString.toUpperCase( );
-
-      let value = CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues[ lookupString ];
-
-      // console.log.debug( "Found value:%s for:%s", value, constantString );
+      //log.debug( "transposeConstantToValidValue: Found value:%s for:%s", value, constantString );
 
       return value;
    }
-   //console.log.debug( "No value found for constant:%s", constantString );
+   //log.debug( "transposeConstantToValidValue: No value found for constant:%s", constantString );
    return constantString;
 }
 
 // Used to convet ValidValues Value to its corresponding Constant.
-var transposeValueToValidConstant = function (  CMD4_ENUM_properties_obj, accTypeEnumIndex, valueString )
+var transposeValueToValidConstant = function ( log, CMD4_ENUM_properties_obj, accTypeEnumIndex, valueString )
 {
-   console.log( "check index:%s", accTypeEnumIndex );
+   //log.debug( "transposeValueToValidConstant: check index:%s", accTypeEnumIndex );
    if ( Object.keys( CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues ).length < 0)
    {
-      //console.log( "No constants to transpose for:%s", valueString );
+      //log.debug( "transposeValueToValidConstant: No constants to transpose for:%s", valueString );
       // Return the original as it should be used instead of nothing
       return valueString;
    }
@@ -60,7 +58,7 @@ var transposeValueToValidConstant = function (  CMD4_ENUM_properties_obj, accTyp
 
    if ( constant == undefined )
    {
-      //console.log.debug( "No constant found for value:%s", valueString );
+      //log.debug( "transposeValueToValidConstant: No constant found for value:%s", valueString );
       return valueString;
    }
    return constant;

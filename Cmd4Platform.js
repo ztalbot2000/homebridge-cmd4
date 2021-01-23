@@ -78,10 +78,14 @@ class Cmd4Platform
       // Define platform config keyPath for fakegato-history
       this.keyPath = this.config.keyPath;
 
-      // If outputConstants is defined it is set to true/false, otherwise false.
-      this.outputConstants = this.config.outputConstants === true;
+      // Direct if constants should be sent or their value.
+      if ( this.config.outputConstants == true )
+         this.outputConstants = true;
+      else
+         this.outputConstants = false;
 
-      // didFinishLaunching is only called after the registerPlatform completes
+      // didFinishLaunching is only called after the
+      // registerPlatform completes.
       api.on( "didFinishLaunching", ( ) =>
       {
          this.log.info( chalk.blue( "Cmd4Platform didFinishLaunching" ) );

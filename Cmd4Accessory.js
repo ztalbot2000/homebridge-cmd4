@@ -121,11 +121,20 @@ class Cmd4Accessory
       this.config.storedValuesPerCharacteristic = config.storedValuesPerCharacteristic ||
              new Array( CMD4_ACC_TYPE_ENUM.EOL ).fill( null );
 
-      // If polling is defined it is set to true/false, otherwise false.
-      this.polling = this.config.polling === true;
+      // Direct if polling should be set or false.
+      if ( this.config.polling == true )
+         this.polling = true;
+      else
+         this.polling = false;
 
       // The default fetch is immediate (Always).
-      this.fetch = this.config.fetch || constants.FETCH_ALWAYS;
+      if ( this.config.fetch == constants.FETCH_AWAYS  ||
+           this.config.fetch == constants.FETCH_CACHED ||
+           this.config.fetch == constants.FETCH_POLLED
+         )
+         this.fetch = this.config.fetch
+      else
+         this.fetch = constants.FETCH_ALWAYS;
 
       // Init the Global Fakegato service once !
       if ( FakeGatoHistoryService == null )
@@ -137,8 +146,11 @@ class Cmd4Accessory
       this.folder = parentInfo && parentInfo.folder;
       this.keyPath = parentInfo && parentInfo.keyPath;
 
-      // If outputConstants is defined it is set to true/false, otherwise true.
-      this.outputConstants = ( parentInfo && parentInfo.outputConstants ) ? parentInfo.outputConstants : true;
+      // Direct if constants should be sent or their value.
+      if ( parentInfo && parentInfo.outputConstants == true )
+         this.outputConstants = true;
+      else
+         this.outputConstants = false;
 
       // Get the supplied values from the accessory config.
       this.parseConfig( this.config );
@@ -162,8 +174,11 @@ class Cmd4Accessory
       if ( this.accessoriesConfig && this.CMD4 == constants.PLATFORM && this.LEVEL == 0 )
       {
          log.info( `Creating accessories for: ${ this.displayName }` );
-         // Let me explain. Level 0 are standalone or platform.  Level 1 is linked. Added accessories
-         // are on the same level as linked, but they are not linkedTypes, just added to the platform.
+         // Let me explain.
+         // Level 0 are standalone or platform.
+         // Level 1 is linked.
+         // Added accessories are on the same level as linked,
+         // but they are not linkedTypes, just added to the platform.
          // For Example: TelevisionSpeaker.
          let savedLevel = this.LEVEL;
          this.LEVEL = 1; // will be incremented to 2.
@@ -491,13 +506,17 @@ class Cmd4Accessory
 
       let cmd;
 
+      console.log(" setValue: outputConstants: %s", self.outputConstants );
 
       if ( self.outputConstants == true )
       {
-         let constant = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value );
+         let constant = transposeValueToValidConstant( self.log, CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value );
          cmd = self.state_cmd_prefix + self.state_cmd + " Set '" + self.displayName + "' '" + characteristicString  + "' '" + constant  + "'" + self.state_cmd_suffix;
       } else {
-         cmd = self.state_cmd_prefix + self.state_cmd + " Set '" + self.displayName + "' '" + characteristicString  + "' '" + value  + "'" + self.state_cmd_suffix;
+
+         let nonConstant = transposeConstantToValidValue( self.log, CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value );
+
+         cmd = self.state_cmd_prefix + self.state_cmd + " Set '" + self.displayName + "' '" + characteristicString  + "' '" + nonConstant  + "'" + self.state_cmd_suffix;
       }
       self.log.debug( `setValue ${ characteristicString } function for: ${ self.displayName } cmd: ${ cmd }` );
 
@@ -603,11 +622,14 @@ class Cmd4Accessory
 
       self.log.debug( `getCachedValue ${ characteristicString } for: ${ self.displayName } returned (CACHED) value: ${ storedValue }` );
 
-      // Just in case the cached value needs to be converted from a Constant to its valid value.
-      // I can't see this happening, but who knows between upgrades or restarts.
-      let transposedValue = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, storedValue );
+      // Just in case the cached value needs to be converted from
+      // a Constant to its valid value.
+      // I can't see this happening, but who knows between upgrades
+      // or restarts.
+      let transposedValue = transposeConstantToValidValue( self.log, CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, storedValue );
 
-      // Return the appropriate type, by seeing what it is defined as in Homebridge,
+      // Return the appropriate type, by seeing what it is defined as
+      // in Homebridge,
       let result = characteristicValueToItsProperType( self.log, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format, self.displayName, self.api.hap.Characteristic, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, transposedValue, self.allowTLV8 );
 
 
@@ -701,10 +723,12 @@ class Cmd4Accessory
                self.log.debug( `getValue ${ characteristicString } function for: ${ self.displayName } returned: ${ words[ 0 ] }` );
 
 
-               // Even if outputConsts is not set, just in case, transpose it anyway.
-               words[ 0 ] = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, words[ 0 ] )
+               // Even if outputConsts is not set, just in case, transpose
+               // it anyway.
+               words[ 0 ] = transposeConstantToValidValue( self.log, CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, words[ 0 ] )
 
-               // Return the appropriate type, by seeing what it is defined as in Homebridge,
+               // Return the appropriate type, by seeing what it is
+               // defined as in Homebridge,
                words[ 0 ] = characteristicValueToItsProperType( self.log, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format, self.displayName, self.api.hap.Characteristic, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, words[ 0 ], self.allowTLV8 );
 
                // Store history using fakegato if set up
@@ -1338,7 +1362,7 @@ class Cmd4Accessory
       if ( Object.keys( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].validValues ).length > 0 )
       {
          // Even if outputConsts is not set, just in case, transpose it anyway.
-         let newValue = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value ) ;
+         let newValue = transposeConstantToValidValue( this.log, CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value ) ;
 
          if ( value != newValue )
          {
