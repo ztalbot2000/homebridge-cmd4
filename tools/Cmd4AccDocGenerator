@@ -1,12 +1,63 @@
 #!/opt/homebrew/bin/node
 
+// Note:
+// Must read https://docs.github.com/en/rest/reference/markdown#render-an-arbitrary-markdown-document
+// https://gist.github.com
+
+//             _______________________________________
+//            |                 Margin                |
+//            |   _________________________________   |
+//            |  |              Border             |  |
+//            |  |   ___________________________   |  |
+//            |  |  |           Padding         |  |  |
+//            |  |  |   _____________________   |  |  |
+//            |  |  |  |                     |  |  |  |
+//            |  |  |  |        Content      |  |  |  |
+//            |  |  |  |_____________________|  |  |  |
+//            |  |  |                           |  |  |
+//            |  |  |___________________________|  |  |
+//            |  |                                 |  |
+//            |  |_________________________________|  |
+//            |                                       |
+//            |_______________________________________|
+
+
+
+//    _____________________________________________________
+//   | Header - Fixed-Top
+//   |  ________________________________________________
+//   | | container - fluid
+//   | | ____________________________________________
+//   | || Logo
+//   | ||____________________________________________
+//   | || Search
+//   | ||____________________________________________
+//   | |________________________________________________
+//   |_____________________________________________________
+//   | Body
+//   |    ______________________________________________
+//   |   | SideNav
+//   |   |
+//   |   |______________________________________________
+//   |   | Main
+
 // Cmd4 Constants and Settings
 //const constants = require( "../cmd4Constants" );
 //const settings = require( "../cmd4Settings" );
 
+// For changing validValue Constants to Values and back again
+var { transposeConstantToValidValue,
+      transposeValueToValidConstant
+    } = require( "../utils/transposeCMD4Props" );
+
 // Required to initialize CMD4 Accessory & Device lookup tables.
 let HomebridgeAPI = require( "../node_modules/homebridge/lib/api" ).HomebridgeAPI;
 let _api = new HomebridgeAPI( ); // object we feed to Plugins
+
+var logger_1 = require("../node_modules/homebridge/lib/logger");
+Object.defineProperty(exports, "LogLevel", { enumerable: true, get: function () { return logger_1.LogLevel; } });
+const log = logger_1.Logger.internal;
+
 
 // These would be the uninitialized values.
 let ACC_DATA = require('../lib/CMD4_ACC_TYPE_ENUM');
@@ -91,18 +142,74 @@ BODY {
    line-height: 1.5;
    color: #252930;          /* blackish */
    text-align: left;
-   background-color: #fff;   /* white */
+   background-color: white;
 }
 
-.logo {
-  position: fixed;
-  TOP:0;   /* Why without this it's 10, beats me */
+.fixed-bottom, .fixed-top {
+   POSITION: fixed;
+   LEFT: 0;
+   z-index: 1030;
+   background-color: white;
+}
+.fixed-top {
+   TOP: 0;
+}
+
+.header {
+   /* The header div goes all across the top */
+   WIDTH: 100%;
+   box-shadow: 0 1px 4px 0 rgba(0,0,0,.1);
+}
+
+.position-relative {
+   position: relative;
+}
+
+.float-left {
+   float: left;
+}
+
+.container-fluid {
+   width: 100%;
+   padding-right:15px;
+   padding-left:15px;
+   margin-right:auto;
+   margin-left:auto;
+}
+
+.flex {
+   display: flex;
+}
+
+.align-items-center {
+   align-items: center;
+}
+
+
+.site-logo {
   box-shadow: 0 1px 4px 0 rgba(0,0,0,.1);
-  background: #fff;
-  /* The logo div goes all across the top */
-  width: 100%;
+  BACKGROUND: white;
+  display: inline-block;
+}
+.site-text {
+  BACKGROUND: white;
+  position: relative;
+  display: inline-block;
+  transform: translate( 0, 25% );
 }
 
+.nav-link:before {
+   background-color: #fbf5ff;
+   content: " ";
+   display: inline-block;
+   height: inherit;
+   left: 0;
+   margin-top: -.5rem;
+   position: absolute;
+   width: 3px;
+   height: 100%;
+   border-radius: 1rem;
+}
 
 /* Fixed sidenav */
 .sidenav
@@ -120,7 +227,7 @@ BODY {
 }
 
 /* Style the sidenav links and the dropdown button */
-.sidenav a, .dropdown-btn {
+.sidenav a, .dropdown-btn, .accordion {
   PADDING: 6px 8px 6px 16px;  /* Top, Right, Bottom,Left */
   TEXT-DECORATION: none;
   FONT: 10.5px Poppins;
@@ -136,9 +243,22 @@ BODY {
 }
 
 /* On mouse-over */
-.sidenav a:hover .dropdown-btn: hover
+.sidenav a:hover, .dropdown-btn: hover, .accordion: hover
 {
   COLOR: #064579;   /* darker blue */
+}
+
+.accordion
+{
+  transition: 0.4s;
+}
+
+/* accordion type divs */
+.panel {
+  padding: 0 0px;
+  display: none;
+  background-color: white;
+  overflow: hidden;
 }
 
 .main {
@@ -196,9 +316,14 @@ block-warning a {
 }
 
 /* Add an active class to the active dropdown button */
-.active {
-  background-color: green;
-  color: white;
+.active, .accordion: hover {
+
+  /* The background color of the active buttons */
+  background-color: #ccc;   /* light gray */
+
+  /* The width of item is the width of the div */
+  /* Otherwise buttons appear half blocked */
+  width: 100%;
 }
 
 /* Dropdown container (hidden by default).
@@ -223,7 +348,7 @@ block-warning a {
 /* Some media queries for responsiveness */
 @media screen and (max-height: 450px) {
   .sidenav {PADDING-TOP: 15px;}
-  .sidenav a {FONT-SIZE: 18px;}
+  .sidenav a {FONT-SIZE: 12px;}  /* height of items in dropdown */
 }
 </STYLE>\n` );
 
@@ -237,23 +362,39 @@ function addBody ()
 {
    wfs( `<BODY>\n` );
 
+   addFixedHeader_WithinBody();
 
    addContentDiv_WithinBody( );
 
+   addAccordionScript_WithinEndOfBody();
    addDropDownScript_WithinEndOfBody();
 
    wfs( `</BODY>\n` );
 }
 
+function addFluidHeader_WithinFixedHeader()
+{
+   wf( "+", `<div class="container-fluid position-relative">\n` );
+
+      addLogoDiv_WithinFluidHeader( );
+
+   endDiv( "container-fluid" );
+}
+function addFixedHeader_WithinBody()
+{
+   wf( "+", `<HEADER class="header fixed-top">\n` );
+
+      addFluidHeader_WithinFixedHeader();
+
+   wf( "-", `</HEADER>\n` );
+}
+
+
 function addContentDiv_WithinBody( )
 {
    wf( "+", `<div class="content">\n` );
 
-   addLogoDiv_WithinContentDiv( );
-
-   addSideNavDivices_WithinContentDiv( )
-
-   //addSideNavAcc_WithinContentDiv( )
+   addSideNav_WithinContentDiv( )
 
    addDevicePages_WithinContentDiv( )
 
@@ -263,13 +404,39 @@ function addContentDiv_WithinBody( )
 
 }
 
-function addLogoDiv_WithinContentDiv( )
+function addLogoDiv_WithinFluidHeader( )
 {
-   wf( "+", `<div class="logo">\n` );
+   wf( "+", `<div class="site-logo">\n` );
 
-   wfs( `<img src="assets/images/Cmd4_icon.svg" width="40px" alt="logo">\n` );
+      wfs( `<img class="float-left" src="assets/images/Cmd4_icon.svg" width="40px" alt="logo">\n` );
 
-   endDiv( "logo" );
+      wf( "+", `<div class="site-text">\n` );
+        wfs(`Cmd4\n`);
+      endDiv( "site-text" );
+
+   endDiv( "site-logo" );
+}
+// For this to work, it must be at the end of the Body
+function addAccordionScript_WithinEndOfBody( )
+{
+   wf( "+", `<script>\n` );
+   wfs(
+`var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.display === "block") {
+      panel.style.display = "none";
+    } else {
+      panel.style.display = "block";
+    }
+  });
+}
+` );
+   wf( "-", `</script>\n` );
 }
 
 // For this to work, it must be at the end of the Body
@@ -302,51 +469,72 @@ for (let i = 0; i < dropdown.length; i++)
 
 }
 
-function addSideNavDivices_WithinContentDiv( )
+function addSideNav_WithinContentDiv( )
 {
    wf( "+", `<div class="sidenav">\n` );
 
-      wfs( `<a href="#">PlaceHolder 1</a>\n` );
-      wfs( `<a href="#">PlaceHolder 2</a>\n` );
-      wf( "+", `<button class="dropdown-btn">Devices\n` );
-         wfs( `<i class="fa fa-caret-down"></i>\n` );
-      wf( "-", `</button>\n` );
+      addSideNavIntroduction_WithinSideNav ();
+
+      //wfs( `<a href="#">PlaceHolder 1</a>\n` );
+      //wfs( `<a href="#">PlaceHolder 2</a>\n` );
+
+      addSideNavDevices_WithinSideNav( );
+
+      //wfs( `<a href="#">PlaceHolder 3</a>\n` );
+
+      addSideNavCharacteristics_WithinSideNav( );
+
+      //wfs( `<a href="#">PlaceHolder 4</a>\n` );
+
+   endDiv( "sidenav" );
+}
+function addSideNavDevices_WithinSideNav( )
+{
+
+   // Accordion button for Devices
+   wf( "+", `<button class="accordion">Devices\n` );
+      wfs( `<i class="fa fa-caret-down"></i>\n` );
+   wf( "-", `</button>\n` );
 
 
-      wf( "+", `<div class="dropdown-container">\n` );
-         for ( let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++)
-         {
-            let deviceName = CMD4_DEVICE_TYPE_ENUM.properties[ index ].deviceName;
+   wf( "+", `<div class="panel">\n` );
 
-            wfs( `<a href="#${ deviceName }">${ deviceName }</a>\n` );
-         }
-      endDiv( "dropdownContainer" );
-      wfs( `<a href="#">PlaceHolder 3</a>\n` );
+      for ( let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++)
+      {
+         let deviceName = CMD4_DEVICE_TYPE_ENUM.properties[ index ].deviceName;
 
-      // Drop down button for Characteristics
-      wf( "+", `<button class="dropdown-btn">Characteristics\n` );
-         wfs( `<i class="fa fa-caret-down"></i>\n` );
-      wf( "-", `</button>\n` );
+         wfs( `<a href="#${ deviceName }">${ deviceName }</a>\n` );
+      }
+
+   endDiv( "panel" );
+}
+function addSideNavIntroduction_WithinSideNav ()
+{
+      // I Hope this works on Github!
+      //wfs( `<a href="../../README.md">Cmd4 README</a>\n` );
+}
+function addSideNavCharacteristics_WithinSideNav( )
+{
+   // Accordion button for Characteristics
+   wf( "+", `<button class="accordion">Characteristics\n` );
+      wfs( `<i class="fa fa-caret-down"></i>\n` );
+   wf( "-", `</button>\n` );
 
 
-      wf( "+", `<div class="dropdown-container">\n` );
+   wf( "+", `<div class="panel">\n` );
       for ( let index=0; index < CMD4_ACC_TYPE_ENUM.EOL; index ++)
       {
          let characteristic = CMD4_ACC_TYPE_ENUM.properties[ index ].type;
 
          wfs( `<a href="#${ characteristic }">${ characteristic }</a>\n` );
       }
+   endDiv( "panel" );
 
-      endDiv( "dropdownContainer" );
-      wfs( `<a href="#">PlaceHolder 3</a>\n` );
-
-   endDiv( "sidenav" );
 }
 
 function addDevicePages_WithinContentDiv( )
 {
-   wf( "+",
-      `<div class="main">\n` );
+   wf( "+", `<div class="main">\n` );
    wfs( `<h2>CMD4 Device Properties</h2>\n` );
    wfs( `<p>This auto generated document replaces the hard coded, impossible to maintain definitions in what was the State.js script and other locations.</p>\n` );
 
@@ -379,14 +567,20 @@ function addSingleDeviceContent(device_type_enum, deviceName )
    if ( requiredCharacteristics && requiredCharacteristics.length > 0 )
    {
       wf( "+", `<table>\n` );
-      wfs( `<TD> </TD><TD> Default Value </TD>\n` );
+      wfs( `<TD> </TD><TD> Default Value </TD><TD> Constant </TD>\n` );
 
       requiredCharacteristics.forEach( ( characteristic ) =>
       {
          // Look up the characteristic index given, to its string value
          let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ characteristic.type ].type;
          let defaultValue = characteristic.defaultValue;
-         wfs( `<tr><Td><UL><LI><a href="#${ characteristicString }">${ characteristicString }</a></UL></TD><TD> ${ defaultValue } </TD>\n` );
+
+         let constant = transposeValueToValidConstant( log, CMD4_ACC_TYPE_ENUM.properties, characteristic.type, defaultValue );
+
+         if ( constant == defaultValue )
+            constant = "n/a";
+
+         wfs( `<tr><Td><UL><LI><a href="#${ characteristicString }">${ characteristicString }</a></UL></TD><TD> ${ defaultValue } </TD><TD> ${ constant } </TD>\n` );
       });
       wf( "-", `</Table>\n` );
    }

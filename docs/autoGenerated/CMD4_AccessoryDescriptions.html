@@ -19,18 +19,74 @@ BODY {
    line-height: 1.5;
    color: #252930;          /* blackish */
    text-align: left;
-   background-color: #fff;   /* white */
+   background-color: white;
 }
 
-.logo {
-  position: fixed;
-  TOP:0;   /* Why without this it's 10, beats me */
+.fixed-bottom, .fixed-top {
+   POSITION: fixed;
+   LEFT: 0;
+   z-index: 1030;
+   background-color: white;
+}
+.fixed-top {
+   TOP: 0;
+}
+
+.header {
+   /* The header div goes all across the top */
+   WIDTH: 100%;
+   box-shadow: 0 1px 4px 0 rgba(0,0,0,.1);
+}
+
+.position-relative {
+   position: relative;
+}
+
+.float-left {
+   float: left;
+}
+
+.container-fluid {
+   width: 100%;
+   padding-right:15px;
+   padding-left:15px;
+   margin-right:auto;
+   margin-left:auto;
+}
+
+.flex {
+   display: flex;
+}
+
+.align-items-center {
+   align-items: center;
+}
+
+
+.site-logo {
   box-shadow: 0 1px 4px 0 rgba(0,0,0,.1);
-  background: #fff;
-  /* The logo div goes all across the top */
-  width: 100%;
+  BACKGROUND: white;
+  display: inline-block;
+}
+.site-text {
+  BACKGROUND: white;
+  position: relative;
+  display: inline-block;
+  transform: translate( 0, 25% );
 }
 
+.nav-link:before {
+   background-color: #fbf5ff;
+   content: " ";
+   display: inline-block;
+   height: inherit;
+   left: 0;
+   margin-top: -.5rem;
+   position: absolute;
+   width: 3px;
+   height: 100%;
+   border-radius: 1rem;
+}
 
 /* Fixed sidenav */
 .sidenav
@@ -48,7 +104,7 @@ BODY {
 }
 
 /* Style the sidenav links and the dropdown button */
-.sidenav a, .dropdown-btn {
+.sidenav a, .dropdown-btn, .accordion {
   PADDING: 6px 8px 6px 16px;  /* Top, Right, Bottom,Left */
   TEXT-DECORATION: none;
   FONT: 10.5px Poppins;
@@ -64,9 +120,22 @@ BODY {
 }
 
 /* On mouse-over */
-.sidenav a:hover .dropdown-btn: hover
+.sidenav a:hover, .dropdown-btn: hover, .accordion: hover
 {
   COLOR: #064579;   /* darker blue */
+}
+
+.accordion
+{
+  transition: 0.4s;
+}
+
+/* accordion type divs */
+.panel {
+  padding: 0 0px;
+  display: none;
+  background-color: white;
+  overflow: hidden;
 }
 
 .main {
@@ -124,9 +193,14 @@ block-warning a {
 }
 
 /* Add an active class to the active dropdown button */
-.active {
-  background-color: green;
-  color: white;
+.active, .accordion: hover {
+
+  /* The background color of the active buttons */
+  background-color: #ccc;   /* light gray */
+
+  /* The width of item is the width of the div */
+  /* Otherwise buttons appear half blocked */
+  width: 100%;
 }
 
 /* Dropdown container (hidden by default).
@@ -151,22 +225,27 @@ block-warning a {
 /* Some media queries for responsiveness */
 @media screen and (max-height: 450px) {
   .sidenav {PADDING-TOP: 15px;}
-  .sidenav a {FONT-SIZE: 18px;}
+  .sidenav a {FONT-SIZE: 12px;}
 }
 </STYLE>
 </HEAD>
 <BODY>
+<HEADER class="header fixed-top">
+   <div class="container-fluid position-relative">
+      <div class="site-logo">
+         <img class="float-left" src="assets/images/Cmd4_icon.svg" width="40px" alt="logo">
+         <div class="site-text">
+            Cmd4
+         </DIV>   <!-- site-text -->
+      </DIV>   <!-- site-logo -->
+   </DIV>   <!-- container-fluid -->
+</HEADER>
 <div class="content">
-   <div class="logo">
-      <img src="assets/images/Cmd4_icon.svg" width="40px" alt="logo">
-   </DIV>   <!-- logo -->
    <div class="sidenav">
-      <a href="#">PlaceHolder 1</a>
-      <a href="#">PlaceHolder 2</a>
-      <button class="dropdown-btn">Devices
+      <button class="accordion">Devices
          <i class="fa fa-caret-down"></i>
       </button>
-      <div class="dropdown-container">
+      <div class="panel">
          <a href="#AccessControl">AccessControl</a>
          <a href="#AccessoryRuntimeInformation">AccessoryRuntimeInformation</a>
          <a href="#AccessoryInformation">AccessoryInformation</a>
@@ -233,12 +312,11 @@ block-warning a {
          <a href="#WiFiSatellite">WiFiSatellite</a>
          <a href="#Window">Window</a>
          <a href="#WindowCovering">WindowCovering</a>
-      </DIV>   <!-- dropdownContainer -->
-      <a href="#">PlaceHolder 3</a>
-      <button class="dropdown-btn">Characteristics
+      </DIV>   <!-- panel -->
+      <button class="accordion">Characteristics
          <i class="fa fa-caret-down"></i>
       </button>
-      <div class="dropdown-container">
+      <div class="panel">
          <a href="#AccessControlLevel">AccessControlLevel</a>
          <a href="#AccessoryFlags">AccessoryFlags</a>
          <a href="#AccessoryIdentifier">AccessoryIdentifier</a>
@@ -461,8 +539,7 @@ block-warning a {
          <a href="#WiFiCapabilities">WiFiCapabilities</a>
          <a href="#WiFiConfigurationControl">WiFiConfigurationControl</a>
          <a href="#WiFiSatelliteStatus">WiFiSatelliteStatus</a>
-      </DIV>   <!-- dropdownContainer -->
-      <a href="#">PlaceHolder 3</a>
+      </DIV>   <!-- panel -->
    </DIV>   <!-- sidenav -->
    <div class="main">
       <h2>CMD4 Device Properties</h2>
@@ -473,8 +550,8 @@ block-warning a {
          <p>UUID:000000DA-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#AccessControlLevel">AccessControlLevel</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#AccessControlLevel">AccessControlLevel</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -490,8 +567,8 @@ block-warning a {
          <p>UUID:00000203-0000-1000-8000-00000239</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#Ping">Ping</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#Ping">Ping</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -509,13 +586,13 @@ block-warning a {
          <p>UUID:0000003E-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#Identify">Identify</a></UL></TD><TD> true </TD>
-            <tr><Td><UL><LI><a href="#Manufacturer">Manufacturer</a></UL></TD><TD> Cmd4 </TD>
-            <tr><Td><UL><LI><a href="#Model">Model</a></UL></TD><TD> Model </TD>
-            <tr><Td><UL><LI><a href="#Name">Name</a></UL></TD><TD> My_AccessoryInformation </TD>
-            <tr><Td><UL><LI><a href="#SerialNumber">SerialNumber</a></UL></TD><TD> ABC001 </TD>
-            <tr><Td><UL><LI><a href="#FirmwareRevision">FirmwareRevision</a></UL></TD><TD> 100.1.1 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#Identify">Identify</a></UL></TD><TD> 1 </TD><TD> TRUE </TD>
+            <tr><Td><UL><LI><a href="#Manufacturer">Manufacturer</a></UL></TD><TD> Cmd4 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#Model">Model</a></UL></TD><TD> Model </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#Name">Name</a></UL></TD><TD> My_AccessoryInformation </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#SerialNumber">SerialNumber</a></UL></TD><TD> ABC001 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#FirmwareRevision">FirmwareRevision</a></UL></TD><TD> 100.1.1 </TD><TD> n/a </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -537,10 +614,10 @@ block-warning a {
          <p>UUID:000000BB-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#Active">Active</a></UL></TD><TD> 1 </TD>
-            <tr><Td><UL><LI><a href="#CurrentAirPurifierState">CurrentAirPurifierState</a></UL></TD><TD> 2 </TD>
-            <tr><Td><UL><LI><a href="#TargetAirPurifierState">TargetAirPurifierState</a></UL></TD><TD> 1 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#Active">Active</a></UL></TD><TD> 1 </TD><TD> ACTIVE </TD>
+            <tr><Td><UL><LI><a href="#CurrentAirPurifierState">CurrentAirPurifierState</a></UL></TD><TD> 2 </TD><TD> PURIFYING_AIR </TD>
+            <tr><Td><UL><LI><a href="#TargetAirPurifierState">TargetAirPurifierState</a></UL></TD><TD> 1 </TD><TD> AUTO </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -564,8 +641,8 @@ block-warning a {
          <p>UUID:0000008D-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#AirQuality">AirQuality</a></UL></TD><TD> 2 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#AirQuality">AirQuality</a></UL></TD><TD> 2 </TD><TD> GOOD </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -598,10 +675,10 @@ block-warning a {
          <p>UUID:00000096-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#BatteryLevel">BatteryLevel</a></UL></TD><TD> 50 </TD>
-            <tr><Td><UL><LI><a href="#ChargingState">ChargingState</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#StatusLowBattery">StatusLowBattery</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#BatteryLevel">BatteryLevel</a></UL></TD><TD> 50 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#ChargingState">ChargingState</a></UL></TD><TD> 0 </TD><TD> NOT_CHARGING </TD>
+            <tr><Td><UL><LI><a href="#StatusLowBattery">StatusLowBattery</a></UL></TD><TD> 0 </TD><TD> BATTERY_LEVEL_NORMAL </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -622,8 +699,8 @@ block-warning a {
          <p>UUID:000000A1-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#ConfigureBridgedAccessoryStatus">ConfigureBridgedAccessoryStatus</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#ConfigureBridgedAccessoryStatus">ConfigureBridgedAccessoryStatus</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -647,11 +724,11 @@ block-warning a {
          <p>UUID:00000062-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#Reachable">Reachable</a></UL></TD><TD> true </TD>
-            <tr><Td><UL><LI><a href="#LinkQuality">LinkQuality</a></UL></TD><TD> 1 </TD>
-            <tr><Td><UL><LI><a href="#AccessoryIdentifier">AccessoryIdentifier</a></UL></TD><TD> id999 </TD>
-            <tr><Td><UL><LI><a href="#Category">Category</a></UL></TD><TD> 16 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#Reachable">Reachable</a></UL></TD><TD> 1 </TD><TD> TRUE </TD>
+            <tr><Td><UL><LI><a href="#LinkQuality">LinkQuality</a></UL></TD><TD> 1 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#AccessoryIdentifier">AccessoryIdentifier</a></UL></TD><TD> id999 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#Category">Category</a></UL></TD><TD> 16 </TD><TD> n/a </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -672,12 +749,12 @@ block-warning a {
          <p>UUID:00000204-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#Active">Active</a></UL></TD><TD> 1 </TD>
-            <tr><Td><UL><LI><a href="#SupportedCameraRecordingConfiguration">SupportedCameraRecordingConfiguration</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#SupportedVideoRecordingConfiguration">SupportedVideoRecordingConfiguration</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#SupportedAudioRecordingConfiguration">SupportedAudioRecordingConfiguration</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#SelectedCameraRecordingConfiguration">SelectedCameraRecordingConfiguration</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#Active">Active</a></UL></TD><TD> 1 </TD><TD> ACTIVE </TD>
+            <tr><Td><UL><LI><a href="#SupportedCameraRecordingConfiguration">SupportedCameraRecordingConfiguration</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#SupportedVideoRecordingConfiguration">SupportedVideoRecordingConfiguration</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#SupportedAudioRecordingConfiguration">SupportedAudioRecordingConfiguration</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#SelectedCameraRecordingConfiguration">SelectedCameraRecordingConfiguration</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -698,8 +775,8 @@ block-warning a {
          <p>UUID:00000111-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#On">On</a></UL></TD><TD> true </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#On">On</a></UL></TD><TD> 1 </TD><TD> TRUE </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -729,13 +806,13 @@ block-warning a {
          <p>UUID:00000110-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#SupportedVideoStreamConfiguration">SupportedVideoStreamConfiguration</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#SupportedAudioStreamConfiguration">SupportedAudioStreamConfiguration</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#SupportedRTPConfiguration">SupportedRTPConfiguration</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#SelectedRTPStreamConfiguration">SelectedRTPStreamConfiguration</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#StreamingStatus">StreamingStatus</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#SetupEndpoints">SetupEndpoints</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#SupportedVideoStreamConfiguration">SupportedVideoStreamConfiguration</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#SupportedAudioStreamConfiguration">SupportedAudioStreamConfiguration</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#SupportedRTPConfiguration">SupportedRTPConfiguration</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#SelectedRTPStreamConfiguration">SelectedRTPStreamConfiguration</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#StreamingStatus">StreamingStatus</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#SetupEndpoints">SetupEndpoints</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -751,9 +828,9 @@ block-warning a {
          <p>UUID:0000021A-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#EventSnapshotsActive">EventSnapshotsActive</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#HomeKitCameraActive">HomeKitCameraActive</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#EventSnapshotsActive">EventSnapshotsActive</a></UL></TD><TD> 0 </TD><TD> DISABLE </TD>
+            <tr><Td><UL><LI><a href="#HomeKitCameraActive">HomeKitCameraActive</a></UL></TD><TD> 0 </TD><TD> OFF </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -773,8 +850,8 @@ block-warning a {
          <p>UUID:00000097-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#CarbonDioxideDetected">CarbonDioxideDetected</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#CarbonDioxideDetected">CarbonDioxideDetected</a></UL></TD><TD> 0 </TD><TD> CO2_LEVELS_NORMAL </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -801,8 +878,8 @@ block-warning a {
          <p>UUID:0000007F-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#CarbonMonoxideDetected">CarbonMonoxideDetected</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#CarbonMonoxideDetected">CarbonMonoxideDetected</a></UL></TD><TD> 0 </TD><TD> CO_LEVELS_NORMAL </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -829,8 +906,8 @@ block-warning a {
          <p>UUID:00000080-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#ContactSensorState">ContactSensorState</a></UL></TD><TD> 1 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#ContactSensorState">ContactSensorState</a></UL></TD><TD> 1 </TD><TD> CONTACT_NOT_DETECTED </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -855,8 +932,8 @@ block-warning a {
          <p>UUID:00000203-0000-1000-8000-00000237</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#SupportedDiagnosticsSnapshot">SupportedDiagnosticsSnapshot</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#SupportedDiagnosticsSnapshot">SupportedDiagnosticsSnapshot</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <H3>Example config.json entry</H3>
@@ -869,10 +946,10 @@ block-warning a {
          <p>UUID:00000081-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#CurrentPosition">CurrentPosition</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#PositionState">PositionState</a></UL></TD><TD> 2 </TD>
-            <tr><Td><UL><LI><a href="#TargetPosition">TargetPosition</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#CurrentPosition">CurrentPosition</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#PositionState">PositionState</a></UL></TD><TD> 2 </TD><TD> STOPPED </TD>
+            <tr><Td><UL><LI><a href="#TargetPosition">TargetPosition</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -895,8 +972,8 @@ block-warning a {
          <p>UUID:00000121-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#ProgrammableSwitchEvent">ProgrammableSwitchEvent</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#ProgrammableSwitchEvent">ProgrammableSwitchEvent</a></UL></TD><TD> 0 </TD><TD> SINGLE_PRESS </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -919,8 +996,8 @@ block-warning a {
          <p>UUID:00000040-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#On">On</a></UL></TD><TD> false </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#On">On</a></UL></TD><TD> 0 </TD><TD> FALSE </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -943,8 +1020,8 @@ block-warning a {
          <p>UUID:00000040-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#On">On</a></UL></TD><TD> false </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#On">On</a></UL></TD><TD> 0 </TD><TD> FALSE </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -967,8 +1044,8 @@ block-warning a {
          <p>UUID:000000B7-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#Active">Active</a></UL></TD><TD> 1 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#Active">Active</a></UL></TD><TD> 1 </TD><TD> ACTIVE </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -995,8 +1072,8 @@ block-warning a {
          <p>UUID:000000D7-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#Active">Active</a></UL></TD><TD> 1 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#Active">Active</a></UL></TD><TD> 1 </TD><TD> ACTIVE </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1018,8 +1095,8 @@ block-warning a {
          <p>UUID:000000BA-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#FilterChangeIndication">FilterChangeIndication</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#FilterChangeIndication">FilterChangeIndication</a></UL></TD><TD> 0 </TD><TD> FILTER_OK </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1042,10 +1119,10 @@ block-warning a {
          <p>UUID:00000041-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#CurrentDoorState">CurrentDoorState</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#TargetDoorState">TargetDoorState</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#ObstructionDetected">ObstructionDetected</a></UL></TD><TD> true </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#CurrentDoorState">CurrentDoorState</a></UL></TD><TD> 0 </TD><TD> OPEN </TD>
+            <tr><Td><UL><LI><a href="#TargetDoorState">TargetDoorState</a></UL></TD><TD> 0 </TD><TD> OPEN </TD>
+            <tr><Td><UL><LI><a href="#ObstructionDetected">ObstructionDetected</a></UL></TD><TD> 1 </TD><TD> TRUE </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1068,11 +1145,11 @@ block-warning a {
          <p>UUID:000000BC-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#Active">Active</a></UL></TD><TD> 1 </TD>
-            <tr><Td><UL><LI><a href="#CurrentHeaterCoolerState">CurrentHeaterCoolerState</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#TargetHeaterCoolerState">TargetHeaterCoolerState</a></UL></TD><TD> 1 </TD>
-            <tr><Td><UL><LI><a href="#CurrentTemperature">CurrentTemperature</a></UL></TD><TD> 50 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#Active">Active</a></UL></TD><TD> 1 </TD><TD> ACTIVE </TD>
+            <tr><Td><UL><LI><a href="#CurrentHeaterCoolerState">CurrentHeaterCoolerState</a></UL></TD><TD> 0 </TD><TD> INACTIVE </TD>
+            <tr><Td><UL><LI><a href="#TargetHeaterCoolerState">TargetHeaterCoolerState</a></UL></TD><TD> 1 </TD><TD> HEAT </TD>
+            <tr><Td><UL><LI><a href="#CurrentTemperature">CurrentTemperature</a></UL></TD><TD> 50 </TD><TD> n/a </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1099,11 +1176,11 @@ block-warning a {
          <p>UUID:000000BD-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#CurrentRelativeHumidity">CurrentRelativeHumidity</a></UL></TD><TD> 60 </TD>
-            <tr><Td><UL><LI><a href="#CurrentHumidifierDehumidifierState">CurrentHumidifierDehumidifierState</a></UL></TD><TD> 1 </TD>
-            <tr><Td><UL><LI><a href="#TargetHumidifierDehumidifierState">TargetHumidifierDehumidifierState</a></UL></TD><TD> 2 </TD>
-            <tr><Td><UL><LI><a href="#Active">Active</a></UL></TD><TD> 1 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#CurrentRelativeHumidity">CurrentRelativeHumidity</a></UL></TD><TD> 60 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#CurrentHumidifierDehumidifierState">CurrentHumidifierDehumidifierState</a></UL></TD><TD> 1 </TD><TD> IDLE </TD>
+            <tr><Td><UL><LI><a href="#TargetHumidifierDehumidifierState">TargetHumidifierDehumidifierState</a></UL></TD><TD> 2 </TD><TD> DEHUMIDIFIER </TD>
+            <tr><Td><UL><LI><a href="#Active">Active</a></UL></TD><TD> 1 </TD><TD> ACTIVE </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1130,8 +1207,8 @@ block-warning a {
          <p>UUID:00000082-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#CurrentRelativeHumidity">CurrentRelativeHumidity</a></UL></TD><TD> 60 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#CurrentRelativeHumidity">CurrentRelativeHumidity</a></UL></TD><TD> 60 </TD><TD> n/a </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1156,11 +1233,11 @@ block-warning a {
          <p>UUID:000000D9-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#ConfiguredName">ConfiguredName</a></UL></TD><TD> My_InputSource </TD>
-            <tr><Td><UL><LI><a href="#InputSourceType">InputSourceType</a></UL></TD><TD> 1 </TD>
-            <tr><Td><UL><LI><a href="#IsConfigured">IsConfigured</a></UL></TD><TD> 1 </TD>
-            <tr><Td><UL><LI><a href="#CurrentVisibilityState">CurrentVisibilityState</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#ConfiguredName">ConfiguredName</a></UL></TD><TD> My_InputSource </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#InputSourceType">InputSourceType</a></UL></TD><TD> 1 </TD><TD> HOME_SCREEN </TD>
+            <tr><Td><UL><LI><a href="#IsConfigured">IsConfigured</a></UL></TD><TD> 1 </TD><TD> CONFIGURED </TD>
+            <tr><Td><UL><LI><a href="#CurrentVisibilityState">CurrentVisibilityState</a></UL></TD><TD> 0 </TD><TD> SHOWN </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1184,10 +1261,10 @@ block-warning a {
          <p>UUID:000000CF-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#Active">Active</a></UL></TD><TD> 1 </TD>
-            <tr><Td><UL><LI><a href="#ProgramMode">ProgramMode</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#InUse">InUse</a></UL></TD><TD> 1 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#Active">Active</a></UL></TD><TD> 1 </TD><TD> ACTIVE </TD>
+            <tr><Td><UL><LI><a href="#ProgramMode">ProgramMode</a></UL></TD><TD> 0 </TD><TD> NO_PROGRAM_SCHEDULED </TD>
+            <tr><Td><UL><LI><a href="#InUse">InUse</a></UL></TD><TD> 1 </TD><TD> IN_USE </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1210,8 +1287,8 @@ block-warning a {
          <p>UUID:00000083-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#LeakDetected">LeakDetected</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#LeakDetected">LeakDetected</a></UL></TD><TD> 0 </TD><TD> LEAK_NOT_DETECTED </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1236,8 +1313,8 @@ block-warning a {
          <p>UUID:00000084-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#CurrentAmbientLightLevel">CurrentAmbientLightLevel</a></UL></TD><TD> 1 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#CurrentAmbientLightLevel">CurrentAmbientLightLevel</a></UL></TD><TD> 1 </TD><TD> n/a </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1262,8 +1339,8 @@ block-warning a {
          <p>UUID:00000043-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#On">On</a></UL></TD><TD> false </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#On">On</a></UL></TD><TD> 0 </TD><TD> FALSE </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1288,9 +1365,9 @@ block-warning a {
          <p>UUID:00000044-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#LockControlPoint">LockControlPoint</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#Version">Version</a></UL></TD><TD> 0.0.0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#LockControlPoint">LockControlPoint</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#Version">Version</a></UL></TD><TD> 0.0.0 </TD><TD> n/a </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1313,9 +1390,9 @@ block-warning a {
          <p>UUID:00000045-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#LockCurrentState">LockCurrentState</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#LockTargetState">LockTargetState</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#LockCurrentState">LockCurrentState</a></UL></TD><TD> 0 </TD><TD> UNSECURED </TD>
+            <tr><Td><UL><LI><a href="#LockTargetState">LockTargetState</a></UL></TD><TD> 0 </TD><TD> UNSECURED </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1336,8 +1413,8 @@ block-warning a {
          <p>UUID:00000112-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#Mute">Mute</a></UL></TD><TD> false </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#Mute">Mute</a></UL></TD><TD> 0 </TD><TD> FALSE </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1359,8 +1436,8 @@ block-warning a {
          <p>UUID:00000085-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#MotionDetected">MotionDetected</a></UL></TD><TD> true </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#MotionDetected">MotionDetected</a></UL></TD><TD> 1 </TD><TD> TRUE </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1385,8 +1462,8 @@ block-warning a {
          <p>UUID:00000086-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#OccupancyDetected">OccupancyDetected</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#OccupancyDetected">OccupancyDetected</a></UL></TD><TD> 0 </TD><TD> OCCUPANCY_NOT_DETECTED </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1411,9 +1488,9 @@ block-warning a {
          <p>UUID:00000047-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#On">On</a></UL></TD><TD> false </TD>
-            <tr><Td><UL><LI><a href="#OutletInUse">OutletInUse</a></UL></TD><TD> false </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#On">On</a></UL></TD><TD> 0 </TD><TD> FALSE </TD>
+            <tr><Td><UL><LI><a href="#OutletInUse">OutletInUse</a></UL></TD><TD> 0 </TD><TD> FALSE </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1434,11 +1511,11 @@ block-warning a {
          <p>UUID:00000055-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#PairingFeatures">PairingFeatures</a></UL></TD><TD> 1 </TD>
-            <tr><Td><UL><LI><a href="#PairVerify">PairVerify</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#PairingFeatures">PairingFeatures</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#PairingPairings">PairingPairings</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#PairingFeatures">PairingFeatures</a></UL></TD><TD> 1 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#PairVerify">PairVerify</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#PairingFeatures">PairingFeatures</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#PairingPairings">PairingPairings</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <H3>Default Polling Characteristics</H3>
@@ -1456,8 +1533,8 @@ block-warning a {
          <p>UUID:00000221-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#WakeConfiguration">WakeConfiguration</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#WakeConfiguration">WakeConfiguration</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <H3>Example config.json entry</H3>
@@ -1470,8 +1547,8 @@ block-warning a {
          <p>UUID:000000A2-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#Version">Version</a></UL></TD><TD> 1.2.3 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#Version">Version</a></UL></TD><TD> 1.2.3 </TD><TD> n/a </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <H3>Default Polling Characteristics</H3>
@@ -1489,10 +1566,10 @@ block-warning a {
          <p>UUID:0000005A-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#RelayEnabled">RelayEnabled</a></UL></TD><TD> true </TD>
-            <tr><Td><UL><LI><a href="#RelayState">RelayState</a></UL></TD><TD> 1 </TD>
-            <tr><Td><UL><LI><a href="#RelayControlPoint">RelayControlPoint</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#RelayEnabled">RelayEnabled</a></UL></TD><TD> 1 </TD><TD> TRUE </TD>
+            <tr><Td><UL><LI><a href="#RelayState">RelayState</a></UL></TD><TD> 1 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#RelayControlPoint">RelayControlPoint</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <H3>Default Polling Characteristics</H3>
@@ -1511,9 +1588,9 @@ block-warning a {
          <p>UUID:0000007E-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#SecuritySystemCurrentState">SecuritySystemCurrentState</a></UL></TD><TD> 3 </TD>
-            <tr><Td><UL><LI><a href="#SecuritySystemTargetState">SecuritySystemTargetState</a></UL></TD><TD> 3 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#SecuritySystemCurrentState">SecuritySystemCurrentState</a></UL></TD><TD> 3 </TD><TD> DISARMED </TD>
+            <tr><Td><UL><LI><a href="#SecuritySystemTargetState">SecuritySystemTargetState</a></UL></TD><TD> 3 </TD><TD> DISARM </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1537,8 +1614,8 @@ block-warning a {
          <p>UUID:000000CC-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#ServiceLabelNamespace">ServiceLabelNamespace</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#ServiceLabelNamespace">ServiceLabelNamespace</a></UL></TD><TD> 0 </TD><TD> DOTS </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1559,8 +1636,8 @@ block-warning a {
          <p>UUID:00000133-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#SiriInputType">SiriInputType</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#SiriInputType">SiriInputType</a></UL></TD><TD> 0 </TD><TD> PUSH_BUTTON_TRIGGERED_APPLE_TV </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <H3>Example config.json entry</H3>
@@ -1573,9 +1650,9 @@ block-warning a {
          <p>UUID:000000B9-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#SlatType">SlatType</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#CurrentSlatState">CurrentSlatState</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#SlatType">SlatType</a></UL></TD><TD> 0 </TD><TD> HORIZONTAL </TD>
+            <tr><Td><UL><LI><a href="#CurrentSlatState">CurrentSlatState</a></UL></TD><TD> 0 </TD><TD> FIXED </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1599,9 +1676,9 @@ block-warning a {
          <p>UUID:00000228-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#CurrentMediaState">CurrentMediaState</a></UL></TD><TD> 2 </TD>
-            <tr><Td><UL><LI><a href="#TargetMediaState">TargetMediaState</a></UL></TD><TD> 2 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#CurrentMediaState">CurrentMediaState</a></UL></TD><TD> 2 </TD><TD> STOP </TD>
+            <tr><Td><UL><LI><a href="#TargetMediaState">TargetMediaState</a></UL></TD><TD> 2 </TD><TD> STOP </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1620,8 +1697,8 @@ block-warning a {
          <p>UUID:00000087-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#SmokeDetected">SmokeDetected</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#SmokeDetected">SmokeDetected</a></UL></TD><TD> 0 </TD><TD> SMOKE_NOT_DETECTED </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1646,8 +1723,8 @@ block-warning a {
          <p>UUID:00000113-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#Mute">Mute</a></UL></TD><TD> true </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#Mute">Mute</a></UL></TD><TD> 0 </TD><TD> FALSE </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1669,9 +1746,9 @@ block-warning a {
          <p>UUID:00000088-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#ProgrammableSwitchEvent">ProgrammableSwitchEvent</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#ProgrammableSwitchOutputState">ProgrammableSwitchOutputState</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#ProgrammableSwitchEvent">ProgrammableSwitchEvent</a></UL></TD><TD> 0 </TD><TD> SINGLE_PRESS </TD>
+            <tr><Td><UL><LI><a href="#ProgrammableSwitchOutputState">ProgrammableSwitchOutputState</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1692,8 +1769,8 @@ block-warning a {
          <p>UUID:00000089-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#ProgrammableSwitchEvent">ProgrammableSwitchEvent</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#ProgrammableSwitchEvent">ProgrammableSwitchEvent</a></UL></TD><TD> 0 </TD><TD> SINGLE_PRESS </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1715,8 +1792,8 @@ block-warning a {
          <p>UUID:00000049-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#On">On</a></UL></TD><TD> false </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#On">On</a></UL></TD><TD> 0 </TD><TD> FALSE </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1737,10 +1814,10 @@ block-warning a {
          <p>UUID:00000125-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#ActiveIdentifier">ActiveIdentifier</a></UL></TD><TD> 7 </TD>
-            <tr><Td><UL><LI><a href="#Active">Active</a></UL></TD><TD> 1 </TD>
-            <tr><Td><UL><LI><a href="#ButtonEvent">ButtonEvent</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#ActiveIdentifier">ActiveIdentifier</a></UL></TD><TD> 7 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#Active">Active</a></UL></TD><TD> 1 </TD><TD> ACTIVE </TD>
+            <tr><Td><UL><LI><a href="#ButtonEvent">ButtonEvent</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1756,9 +1833,9 @@ block-warning a {
          <p>UUID:00000122-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#TargetControlSupportedConfiguration">TargetControlSupportedConfiguration</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#TargetControlList">TargetControlList</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#TargetControlSupportedConfiguration">TargetControlSupportedConfiguration</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#TargetControlList">TargetControlList</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <H3>Example config.json entry</H3>
@@ -1771,12 +1848,12 @@ block-warning a {
          <p>UUID:000000D8-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#Active">Active</a></UL></TD><TD> 1 </TD>
-            <tr><Td><UL><LI><a href="#ActiveIdentifier">ActiveIdentifier</a></UL></TD><TD> 123 </TD>
-            <tr><Td><UL><LI><a href="#ConfiguredName">ConfiguredName</a></UL></TD><TD> My_Tv </TD>
-            <tr><Td><UL><LI><a href="#RemoteKey">RemoteKey</a></UL></TD><TD> 8 </TD>
-            <tr><Td><UL><LI><a href="#SleepDiscoveryMode">SleepDiscoveryMode</a></UL></TD><TD> 1 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#Active">Active</a></UL></TD><TD> 1 </TD><TD> ACTIVE </TD>
+            <tr><Td><UL><LI><a href="#ActiveIdentifier">ActiveIdentifier</a></UL></TD><TD> 123 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#ConfiguredName">ConfiguredName</a></UL></TD><TD> My_Tv </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#RemoteKey">RemoteKey</a></UL></TD><TD> 8 </TD><TD> SELECT </TD>
+            <tr><Td><UL><LI><a href="#SleepDiscoveryMode">SleepDiscoveryMode</a></UL></TD><TD> 1 </TD><TD> ALWAYS_DISCOVERABLE </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1803,8 +1880,8 @@ block-warning a {
          <p>UUID:00000113-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#Mute">Mute</a></UL></TD><TD> false </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#Mute">Mute</a></UL></TD><TD> 0 </TD><TD> FALSE </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1829,8 +1906,8 @@ block-warning a {
          <p>UUID:0000008A-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#CurrentTemperature">CurrentTemperature</a></UL></TD><TD> 50 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#CurrentTemperature">CurrentTemperature</a></UL></TD><TD> 50 </TD><TD> n/a </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1855,12 +1932,12 @@ block-warning a {
          <p>UUID:0000004A-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#CurrentHeatingCoolingState">CurrentHeatingCoolingState</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#TargetHeatingCoolingState">TargetHeatingCoolingState</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#CurrentTemperature">CurrentTemperature</a></UL></TD><TD> 50 </TD>
-            <tr><Td><UL><LI><a href="#TargetTemperature">TargetTemperature</a></UL></TD><TD> 50 </TD>
-            <tr><Td><UL><LI><a href="#TemperatureDisplayUnits">TemperatureDisplayUnits</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#CurrentHeatingCoolingState">CurrentHeatingCoolingState</a></UL></TD><TD> 0 </TD><TD> OFF </TD>
+            <tr><Td><UL><LI><a href="#TargetHeatingCoolingState">TargetHeatingCoolingState</a></UL></TD><TD> 0 </TD><TD> OFF </TD>
+            <tr><Td><UL><LI><a href="#CurrentTemperature">CurrentTemperature</a></UL></TD><TD> 50 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#TargetTemperature">TargetTemperature</a></UL></TD><TD> 50 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#TemperatureDisplayUnits">TemperatureDisplayUnits</a></UL></TD><TD> 0 </TD><TD> CELSIUS </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1885,10 +1962,10 @@ block-warning a {
          <p>UUID:00000099-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#CurrentTime">CurrentTime</a></UL></TD><TD> 11:15 </TD>
-            <tr><Td><UL><LI><a href="#DayoftheWeek">DayoftheWeek</a></UL></TD><TD> 1 </TD>
-            <tr><Td><UL><LI><a href="#TimeUpdate">TimeUpdate</a></UL></TD><TD> false </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#CurrentTime">CurrentTime</a></UL></TD><TD> 11:15 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#DayoftheWeek">DayoftheWeek</a></UL></TD><TD> 1 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#TimeUpdate">TimeUpdate</a></UL></TD><TD> 0 </TD><TD> FALSE </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1909,9 +1986,9 @@ block-warning a {
          <p>UUID:00000203-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#SupportedTransferTransportConfiguration">SupportedTransferTransportConfiguration</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#SetupTransferTransport">SetupTransferTransport</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#SupportedTransferTransportConfiguration">SupportedTransferTransportConfiguration</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#SetupTransferTransport">SetupTransferTransport</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <H3>Example config.json entry</H3>
@@ -1924,13 +2001,13 @@ block-warning a {
          <p>UUID:00000056-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#Name">Name</a></UL></TD><TD> My_TunnelB </TD>
-            <tr><Td><UL><LI><a href="#AccessoryIdentifier">AccessoryIdentifier</a></UL></TD><TD> TLB </TD>
-            <tr><Td><UL><LI><a href="#TunneledAccessoryStateNumber">TunneledAccessoryStateNumber</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#TunneledAccessoryConnected">TunneledAccessoryConnected</a></UL></TD><TD> false </TD>
-            <tr><Td><UL><LI><a href="#TunneledAccessoryAdvertising">TunneledAccessoryAdvertising</a></UL></TD><TD> false </TD>
-            <tr><Td><UL><LI><a href="#TunnelConnectionTimeout">TunnelConnectionTimeout</a></UL></TD><TD> 5000 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#Name">Name</a></UL></TD><TD> My_TunnelB </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#AccessoryIdentifier">AccessoryIdentifier</a></UL></TD><TD> TLB </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#TunneledAccessoryStateNumber">TunneledAccessoryStateNumber</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#TunneledAccessoryConnected">TunneledAccessoryConnected</a></UL></TD><TD> 0 </TD><TD> FALSE </TD>
+            <tr><Td><UL><LI><a href="#TunneledAccessoryAdvertising">TunneledAccessoryAdvertising</a></UL></TD><TD> 0 </TD><TD> FALSE </TD>
+            <tr><Td><UL><LI><a href="#TunnelConnectionTimeout">TunnelConnectionTimeout</a></UL></TD><TD> 5000 </TD><TD> n/a </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <H3>Default Polling Characteristics</H3>
@@ -1948,10 +2025,10 @@ block-warning a {
          <p>UUID:000000D0-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#Active">Active</a></UL></TD><TD> 1 </TD>
-            <tr><Td><UL><LI><a href="#InUse">InUse</a></UL></TD><TD> 1 </TD>
-            <tr><Td><UL><LI><a href="#ValveType">ValveType</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#Active">Active</a></UL></TD><TD> 1 </TD><TD> ACTIVE </TD>
+            <tr><Td><UL><LI><a href="#InUse">InUse</a></UL></TD><TD> 1 </TD><TD> IN_USE </TD>
+            <tr><Td><UL><LI><a href="#ValveType">ValveType</a></UL></TD><TD> 0 </TD><TD> GENERIC_VALVE </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -1977,16 +2054,16 @@ block-warning a {
          <p>UUID:0000020A-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#ConfiguredName">ConfiguredName</a></UL></TD><TD> My_WiFiRouter </TD>
-            <tr><Td><UL><LI><a href="#ManagedNetworkEnable">ManagedNetworkEnable</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#NetworkAccessViolationControl">NetworkAccessViolationControl</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#NetworkClientProfileControl">NetworkClientProfileControl</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#NetworkClientStatusControl">NetworkClientStatusControl</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#RouterStatus">RouterStatus</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#SupportedRouterConfiguration">SupportedRouterConfiguration</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#WANConfigurationList">WANConfigurationList</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#WANStatusList">WANStatusList</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#ConfiguredName">ConfiguredName</a></UL></TD><TD> My_WiFiRouter </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#ManagedNetworkEnable">ManagedNetworkEnable</a></UL></TD><TD> 0 </TD><TD> DISABLED </TD>
+            <tr><Td><UL><LI><a href="#NetworkAccessViolationControl">NetworkAccessViolationControl</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#NetworkClientProfileControl">NetworkClientProfileControl</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#NetworkClientStatusControl">NetworkClientStatusControl</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#RouterStatus">RouterStatus</a></UL></TD><TD> 0 </TD><TD> READY </TD>
+            <tr><Td><UL><LI><a href="#SupportedRouterConfiguration">SupportedRouterConfiguration</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#WANConfigurationList">WANConfigurationList</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#WANStatusList">WANStatusList</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <H3>Example config.json entry</H3>
@@ -1999,8 +2076,8 @@ block-warning a {
          <p>UUID:0000020F-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#WiFiSatelliteStatus">WiFiSatelliteStatus</a></UL></TD><TD> 2 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#WiFiSatelliteStatus">WiFiSatelliteStatus</a></UL></TD><TD> 2 </TD><TD> NOT_CONNECTED </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <H3>Example config.json entry</H3>
@@ -2013,10 +2090,10 @@ block-warning a {
          <p>UUID:0000008B-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#CurrentPosition">CurrentPosition</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#PositionState">PositionState</a></UL></TD><TD> 2 </TD>
-            <tr><Td><UL><LI><a href="#TargetPosition">TargetPosition</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#CurrentPosition">CurrentPosition</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#PositionState">PositionState</a></UL></TD><TD> 2 </TD><TD> STOPPED </TD>
+            <tr><Td><UL><LI><a href="#TargetPosition">TargetPosition</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -2039,10 +2116,10 @@ block-warning a {
          <p>UUID:0000008C-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
-            <TD> </TD><TD> Default Value </TD>
-            <tr><Td><UL><LI><a href="#CurrentPosition">CurrentPosition</a></UL></TD><TD> 0 </TD>
-            <tr><Td><UL><LI><a href="#PositionState">PositionState</a></UL></TD><TD> 2 </TD>
-            <tr><Td><UL><LI><a href="#TargetPosition">TargetPosition</a></UL></TD><TD> 0 </TD>
+            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
+            <tr><Td><UL><LI><a href="#CurrentPosition">CurrentPosition</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
+            <tr><Td><UL><LI><a href="#PositionState">PositionState</a></UL></TD><TD> 2 </TD><TD> STOPPED </TD>
+            <tr><Td><UL><LI><a href="#TargetPosition">TargetPosition</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
          </Table>
          <H3>Optional Characteristics</H3>
          <UL>
@@ -2158,8 +2235,8 @@ block-warning a {
          <h3>Constants</h3>
          <table>
             <TD> Value </TD><TD> String </TD>
-            <tr><TD> false </TD><TD> "FALSE" </TD></tr>
-            <tr><TD> true </TD><TD> "TRUE" </TD></tr>
+            <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
+            <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
       </DIV>
       <div>
@@ -2239,8 +2316,8 @@ block-warning a {
          <h3>Constants</h3>
          <table>
             <TD> Value </TD><TD> String </TD>
-            <tr><TD> false </TD><TD> "FALSE" </TD></tr>
-            <tr><TD> true </TD><TD> "TRUE" </TD></tr>
+            <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
+            <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
       </DIV>
       <div>
@@ -2817,8 +2894,8 @@ block-warning a {
          <h3>Constants</h3>
          <table>
             <TD> Value </TD><TD> String </TD>
-            <tr><TD> false </TD><TD> "FALSE" </TD></tr>
-            <tr><TD> true </TD><TD> "TRUE" </TD></tr>
+            <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
+            <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
       </DIV>
       <div>
@@ -3079,8 +3156,8 @@ block-warning a {
          <h3>Constants</h3>
          <table>
             <TD> Value </TD><TD> String </TD>
-            <tr><TD> false </TD><TD> "FALSE" </TD></tr>
-            <tr><TD> true </TD><TD> "TRUE" </TD></tr>
+            <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
+            <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
       </DIV>
       <div>
@@ -3139,8 +3216,8 @@ block-warning a {
          <h3>Constants</h3>
          <table>
             <TD> Value </TD><TD> String </TD>
-            <tr><TD> false </TD><TD> "FALSE" </TD></tr>
-            <tr><TD> true </TD><TD> "TRUE" </TD></tr>
+            <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
+            <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
       </DIV>
       <div>
@@ -3156,8 +3233,8 @@ block-warning a {
          <h3>Constants</h3>
          <table>
             <TD> Value </TD><TD> String </TD>
-            <tr><TD> false </TD><TD> "FALSE" </TD></tr>
-            <tr><TD> true </TD><TD> "TRUE" </TD></tr>
+            <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
+            <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
       </DIV>
       <div>
@@ -3502,8 +3579,8 @@ block-warning a {
          <h3>Constants</h3>
          <table>
             <TD> Value </TD><TD> String </TD>
-            <tr><TD> false </TD><TD> "FALSE" </TD></tr>
-            <tr><TD> true </TD><TD> "TRUE" </TD></tr>
+            <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
+            <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
       </DIV>
       <div>
@@ -3519,8 +3596,8 @@ block-warning a {
          <h3>Constants</h3>
          <table>
             <TD> Value </TD><TD> String </TD>
-            <tr><TD> false </TD><TD> "FALSE" </TD></tr>
-            <tr><TD> true </TD><TD> "TRUE" </TD></tr>
+            <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
+            <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
       </DIV>
       <div>
@@ -3580,8 +3657,8 @@ block-warning a {
          <h3>Constants</h3>
          <table>
             <TD> Value </TD><TD> String </TD>
-            <tr><TD> false </TD><TD> "FALSE" </TD></tr>
-            <tr><TD> true </TD><TD> "TRUE" </TD></tr>
+            <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
+            <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
       </DIV>
       <div>
@@ -3610,8 +3687,8 @@ block-warning a {
          <h3>Constants</h3>
          <table>
             <TD> Value </TD><TD> String </TD>
-            <tr><TD> false </TD><TD> "FALSE" </TD></tr>
-            <tr><TD> true </TD><TD> "TRUE" </TD></tr>
+            <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
+            <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
       </DIV>
       <div>
@@ -3645,8 +3722,8 @@ block-warning a {
          <h3>Constants</h3>
          <table>
             <TD> Value </TD><TD> String </TD>
-            <tr><TD> false </TD><TD> "FALSE" </TD></tr>
-            <tr><TD> true </TD><TD> "TRUE" </TD></tr>
+            <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
+            <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
       </DIV>
       <div>
@@ -3684,8 +3761,8 @@ block-warning a {
          <h3>Constants</h3>
          <table>
             <TD> Value </TD><TD> String </TD>
-            <tr><TD> false </TD><TD> "FALSE" </TD></tr>
-            <tr><TD> true </TD><TD> "TRUE" </TD></tr>
+            <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
+            <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
       </DIV>
       <div>
@@ -3952,8 +4029,8 @@ block-warning a {
          <h3>Constants</h3>
          <table>
             <TD> Value </TD><TD> String </TD>
-            <tr><TD> false </TD><TD> "FALSE" </TD></tr>
-            <tr><TD> true </TD><TD> "TRUE" </TD></tr>
+            <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
+            <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
       </DIV>
       <div>
@@ -4046,8 +4123,8 @@ block-warning a {
          <h3>Constants</h3>
          <table>
             <TD> Value </TD><TD> String </TD>
-            <tr><TD> false </TD><TD> "FALSE" </TD></tr>
-            <tr><TD> true </TD><TD> "TRUE" </TD></tr>
+            <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
+            <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
       </DIV>
       <div>
@@ -4480,8 +4557,8 @@ block-warning a {
          <h3>Constants</h3>
          <table>
             <TD> Value </TD><TD> String </TD>
-            <tr><TD> false </TD><TD> "FALSE" </TD></tr>
-            <tr><TD> true </TD><TD> "TRUE" </TD></tr>
+            <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
+            <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
       </DIV>
       <div>
@@ -5096,8 +5173,8 @@ block-warning a {
          <h3>Constants</h3>
          <table>
             <TD> Value </TD><TD> String </TD>
-            <tr><TD> false </TD><TD> "FALSE" </TD></tr>
-            <tr><TD> true </TD><TD> "TRUE" </TD></tr>
+            <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
+            <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
       </DIV>
       <div>
@@ -5146,8 +5223,8 @@ block-warning a {
          <h3>Constants</h3>
          <table>
             <TD> Value </TD><TD> String </TD>
-            <tr><TD> false </TD><TD> "FALSE" </TD></tr>
-            <tr><TD> true </TD><TD> "TRUE" </TD></tr>
+            <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
+            <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
       </DIV>
       <div>
@@ -5163,8 +5240,8 @@ block-warning a {
          <h3>Constants</h3>
          <table>
             <TD> Value </TD><TD> String </TD>
-            <tr><TD> false </TD><TD> "FALSE" </TD></tr>
-            <tr><TD> true </TD><TD> "TRUE" </TD></tr>
+            <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
+            <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
       </DIV>
       <div>
@@ -5373,6 +5450,22 @@ block-warning a {
       </DIV>
    </DIV>   <!-- ACC Page -->
 </DIV>   <!-- content -->
+<script>
+   var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.display === "block") {
+      panel.style.display = "none";
+    } else {
+      panel.style.display = "block";
+    }
+  });
+}
+</script>
 <script>
    
 // Loop through all dropdown buttons to toggle between hiding and
