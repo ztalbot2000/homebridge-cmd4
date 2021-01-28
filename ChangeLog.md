@@ -1,6 +1,7 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
 
 ## ChangeLog
+* [**Whats new in 3.0.12**](#whats-new-in-3012)
 * [**Whats new in 3.0.11**](#whats-new-in-3011)
 * [**Whats new in 3.0.9**](#whats-new-in-309)
 * [**Whats new in 3.0.8**](#whats-new-in-308)
@@ -20,6 +21,10 @@
 * [**Whats new in 2.2**](#whats-new-in-22)
 * [**Whats new in 2.1**](#whats-new-in-21)
 * [**Whats new in 2.0**](#whats-new-in-20)
+
+## Whats new in 3.0.12
+* Absolutely no changes. Advertise deprecation notice of State.js and
+  new Cmd4 GitHub Pages at: https://ztalbot2000.github.io/homebridge-cmd4
 
 ## Whats new in 3.0.11
 * Fix for output constants occuring if not default not set.

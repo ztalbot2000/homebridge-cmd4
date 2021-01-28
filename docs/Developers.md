@@ -9,6 +9,7 @@
 * [**Standard Accessories**](#standard-accessories)
 * [***New Cmd4 3.0 Directives***](#new-cmd4-30-directives)
 * [**Cmd4 Directives**](#cmd4-directives)
+* [**Cmd4 Devices and Characteristics**](#cmd4-devices-and-characteristics)
 * [**Migrating from Homebridge-cmdswitch2**](#migrating-from-homebridge-cmdswitch2)
 * [**Developer Notes**](#developer-notes)
 * [**Adding in Fakegato history**](#adding-in-fakegato-history)
@@ -19,7 +20,8 @@
 &nbsp;&nbsp;&nbsp; This document will help you understand what is needed to integrate your own scripts into Cmd4.
 
 ## Where to begin
-&nbsp;&nbsp;&nbsp; Cmd4 comes with a fully populated and documented config.json file that points to a fully populated and configured State.js file. These are excellent places of reference.<BR>
+&nbsp;&nbsp;&nbsp; Cmd4 comes with a fully populated and documented [**config.json**](https://github.com/ztalbot2000/homebridge-cmd4/raw/master/Extras/config.json) file, this Developers Guide, an [Advanced](https://ztalbot2000.github.io/homebridge-cmd4/AdvancedTroubleShooting.md) troubleshoting guide for you the script writer and finally some auto generated device and characteristic description documentation [https://ztalbot2000.github.io/homebridge-cmd4](https://ztalbot2000.github.io/homebridge-cmd4/#).<BR>
+
 &nbsp;&nbsp;&nbsp; Next you should look at scripts that might already exist. Within the Cmd4 directory structure there is a path of "Extras/Cmd4Scripts/ExampleScripts" that may already exist for you as a starting point.<BR>
 * [**basic_ping.sh**](https://github.com/ztalbot2000/homebridge-cmd4/raw/master/Extras/Cmd4Scripts/Examples/basic_ping.sh)
 * [**advanced_ping.sh**](https://github.com/ztalbot2000/homebridge-cmd4/raw/master/Extras/Cmd4Scripts/Examples/advanced_ping.sh)
@@ -68,7 +70,7 @@
                      "active":                 "ENABLED",
                      "volumeSelector":         10,
                      "volumeControlType":      "ABSOLUTE",
-                     "state_cmd": "node .homebridge/Cmd4Scripts/State.js",
+                     "state_cmd": "node .homebridge/YourScriptHere.js",
                      "fetch":                  "cached",
                      "polling": [
                         {"characteristic": "active",         "interval": 50,  "timeout": 5000},
@@ -120,7 +122,7 @@
                   {"characteristic": "currentMediaState", "interval": 540, "timeout": 5000}
                ],
                "stateChangeResponseTime":    3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "state_cmd": "node .homebridge/YourScriptHere.js"
              }
           ]
        }
@@ -178,7 +180,7 @@ See the [Cmd4 Developers Guide](https://github.com/ztalbot2000/homebridge-cmd4/b
           "Manufacturer":             "Custom Manufacturer",
           "Model":                    "Custom Model",
           "stateChangeResponseTime":   3,
-          "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+          "state_cmd": "node .homebridge/YourScriptHere.js"
        }
     ]
 }
@@ -195,114 +197,11 @@ Notice that there is no Platform definition. Otherwise everything is the same. Y
 
 ## Cmd4 Directives
 
-&nbsp;&nbsp;&nbsp; Homebridge-Cmd4 has many directives, the most important being the "state_cmd". The provided config.min.json file shows many of the directives in action. Here is a list of all Cmd4 directives and their meaning. These are just the directives and not the hundreds of characteristics Cmd4 can handle that are documented in homebridge, the Cmd4 config.min.json file and the Cmd4 State.js script.
+&nbsp;&nbsp;&nbsp; Homebridge-Cmd4 has many directives, the most important being the "state_cmd". The provided config.min.json file shows many of the directives in action. A complete list of all Cmd4 directives can be found in the auoto generated Cmd4 documentation found at :[https://ztalbot2000.github.io/homebridge-cmd4](https://ztalbot2000.github.io/homebridge-cmd4).
 
+## Cmd4 Devices and Characteristics
 
-<TABLE WIDTH="100%" BORDER=1>
-<TR ALIGN="left"><TD> Cmd4Directive <TD>     Type   <TD PADDING="50px">    Default  <TD>    Description  </TR>                                 
-<TR ALIGN="left"><TD> "outputConstants" <TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1 </TR>
-<TR ALIGN="left"><TD> "restartRecover" <TD> < Bool > <TD> true <TD> If Cmd4 will use previous cached state information </TR>
-<TR ALIGN="left"><TD> "publishExternally" <TD>  < Bool >  <TD>    false     <TD> Tell Homebridge to publish the device as its own bridge. </TR>
-<TR ALIGN="left"><TD> "fetch" <TD> < "Always" | "Cached" | "Polled" > <TD> "Always" <TD> Tell Homebridge to publish the device as its own bridge.</TR>
-<TR ALIGN="left"><TD COLSPAN=4>
-   i.e.<BR>
-   <UL>
-      <LI> { "fetch": "Always" } - As before Always fetch characteristic value. ( Default )
-      <LI> { "fetch": "Cached" } - Never fetch characteristic value. Use cached value. The cached value would have to be updated through polling.
-      <LI> { "fetch": "Polled" } - Polled characteristics act like before  (Always). Non polled characteristic values are fetched from cache.
-  </UL>
-</TR>
-<TR ALIGN="left"><TD>  "stateChangeResponseTime" <TD> < seconds > <TD> 60 <TD> Tell Homebridge to publish the device as its own bridge.  </TR>
-<TR ALIGN="left"><TD> "timeout" <TD> < msec > <TD> false <TD> Tell Homebridge to publish the device as its own bridge.  </TR>
-<TR ALIGN="left"><TD> "polling" <TD> < Bool > <TD> false <TD> Tell Homebridge to publish the device as its own bridge.  </TR>
-<TR><TD><TD COLSPAN=3> or  [{"characteristic" < characteristic >, [ "interval": < sec >, "timeout": < msec > ] }] </TR>
-<TR ALIGN="left"><TD> "state_cmd"    <TD>  < state_cmd >  <TD> undefined <TD> The command used to Get/Set Device characteristic State.  </TR>
-<TR ALIGN="left"><TD> "state_cmd_prefix" <TD>  < String >  <TD> undefined <TD> A String prepended to the < state_cmd >.  </TR>
-<TR ALIGN="left"><TD>   "state_cmd_suffix" <TD> < String > <TD> undefined <TD> A String appended to the < state_cmd >.  </TR>
-<TR ALIGN="left"><TD> "props" <TD>  < Bool >  <TD>    false     <TD> A way to override Hap Characteristiic Properties<BR>
-         Only used to set min/max temperatures, for instance:</TR>
-<TR ALIGN="Left"><TD><TD COLSPAN=3>"props" : { "CurrentTemperature": { "maxValue":100, "minValue": -100, "minStep": 0.1}}</TR>
-<TR ALIGN="left"><TD> "category" <TD> < CATEGORY > <TD> undefined <TD> See <a href="https://developers.homebridge.io/#/categories">Homebridge Categories</a> for a complete list of possible categories.  </TR>
-<TR ALIGN="left"><TD>   "fakegato"    <TD>  < JSON >  <TD> undefined <TD> See the section, <a href="#fakegatotag"> "Adding in Fakegato history"</a> below.  </TR>
-<TR ALIGN="left"><TD>   "linkedTypes"    <TD>  < JSON >  <TD> undefined <TD> Other Cmd4 Accessories like Input Source for HDMI inputs. </TR>
-</TABLE>
-
-## Migrating from Homebridge-cmdswitch2
-&nbsp;&nbsp;&nbsp; Homebridge-cmdswitch2 is great if you just want to turn something On or Off; Hence the switch reference in its name. In fact, there is no need to migrate if that is all you want to do.
-
-As a plugin, Homebridge-cmd4 easily coexists with Homebridge-cmdswitch2 or any other homebridge plugin. However, if you want to do something more finite, like adjusting the brightness or getting the value of a DAC, then Homebridge-Cmd4 is for you.
-
-&nbsp;&nbsp;&nbsp; If you do wish to move anyway to Cmd4 or wish to see another example of interfacing to a real device, here is a very simple example without any parameter checking on how it would be done for a switch.
-
-### Step 1.  homebridge-cmdswitch2 config.json
-&nbsp;&nbsp;&nbsp; Homebridge-cmdswitch2 defines their *REQUIRED* fields in their config.json as:
-
-```json
-   ...
-   "platforms": [{
-   "platform": "cmdSwitch2",
-   "name": "CMD Switch",
-   "switches": [{
-       "name" : "HTPC",
-       "on_cmd": "wakeonlan XX:XX:XX:XX:XX:XX",
-       "off_cmd": "net rpc shutdown -I XXX.XXX.XXX.XXX -U user%password",
-       "state_cmd": "ping -c 2 -W 1 XXX.XXX.XXX.XXX | grep -i '2 received'"
-   }, {
-       "name" : "Playstation 4",
-       "on_cmd": "ps4-waker",
-       "off_cmd": "ps4-waker standby",
-       "state_cmd": "ps4-waker search | grep -i '200 Ok'",
-       "polling": true,
-       "interval": 5,
-       "timeout": 2000,
-      }]
-   }]
-   ...
-
-```
-
-### Step 2.  homebridge-cmd4 config.json
-&nbsp;&nbsp;&nbsp; Homebridge-cmd4 only uses one command string as there are many options beyond on/off. This command string is:
-
-```
-   **`"state_cmd": "< path to some executable or script >"`**
-```
-
-&nbsp;&nbsp;&nbsp; In this example, we will use:
-   **`"state_cmd": "bash .homebridge/Cmd4Scripts/PS4.sh"`**
-
-   Note: for the device name, DO NOT USE SPACES as this
-         will cause problems parsing the command line.
-
-&nbsp;&nbsp;&nbsp; The config.json file for homebridge-cmd4 now looks like:
-
-```json
-   ...
-   {
-      "platform": "Cmd4",
-      "name": "Cmd4",
-      "accessories":
-      [
-         {
-             "type": "Switch",
-             "name": "PS_4",
-             "on": false,
-             "state_cmd": "bash .homebridge/Cmd4Scripts/PS4.sh",
-             "polling": true,     < OR >
-             "polling": [{"on": false, "interval": 5, "timeout": 4000}
-                        ],
-             "interval": 5,
-             "timeout": 4000,
-          }
-      ]
-   }
-   ...
-
-```
-
-### Step 3.  Contents of PS4.sh
-&nbsp;&nbsp;&nbsp; An equivalent script is:
-* [**PS4.sh**](https://github.com/ztalbot2000/homebridge-cmd4/raw/master/Extras/Cmd4Scripts/Examples/PS4.sh)
+&nbsp;&nbsp;&nbsp; Homebridge-Cmd4 supports 62 Devices and over 200 Characteristics which are described in the previously mentioned config.min.json file and on the  auto generated github pages at: [https://ztalbot2000.github.io/homebridge-cmd4](https://ztalbot2000.github.io/homebridge-cmd4).
 
 ## Developer Notes
 ### Step 1.  The provided jsmin differs from others
@@ -376,7 +275,7 @@ The value "0" should be used for any characteristics value which is not possible
 ```
 
 ## Unit Testing
-&nbsp;&nbsp;&nbsp; Unit testing is done using the Mocha framework for Javascript and was introduced in homebridge-cmd4 version 2.1.2. There are 2796 test cases and they all run successfully.  They test the homebridge-Cmd4 module to make sure that all characteristics, services and names are correct. They also test the provided State.js and PS4.sh for their respective Get/Set characteristics.  The provided config.json is also tested for proper definitions of all the homebridge-cmd4 config parameters.
+&nbsp;&nbsp;&nbsp; Unit testing is done using the Mocha framework for Javascript and was introduced in homebridge-cmd4 version 2.1.2. There are 2796 test cases and they all run successfully.  They test the homebridge-Cmd4 module to make sure that all characteristics, services and names are correct. The provided config.json is also tested for proper definitions of all the homebridge-cmd4 config parameters.
 
 &nbsp;&nbsp;&nbsp; Unit testing is only possible in a development environment and can be achieved in the following manner.
 

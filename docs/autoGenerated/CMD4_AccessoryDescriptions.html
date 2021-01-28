@@ -12,6 +12,8 @@
 <TITLE>CMD4 Devices</TITLE>
 <META NAME="viewport" CONTENT="width=device-width, initial-scale=1">
 <STYLE>
+
+/* Fallback styling */
 BODY {
    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
    font-size: 1rem;
@@ -22,6 +24,7 @@ BODY {
    background-color: white;
 }
 
+/* Common styling used inline */
 .fixed-bottom, .fixed-top {
    POSITION: fixed;
    LEFT: 0;
@@ -31,19 +34,24 @@ BODY {
 .fixed-top {
    TOP: 0;
 }
+.position-relative {
+   position: relative;
+}
+.float-left {
+   float: left;
+}
+.flex {
+   display: flex;
+}
+.align-items-center {
+   align-items: center;
+}
+
 
 .header {
    /* The header div goes all across the top */
    WIDTH: 100%;
    box-shadow: 0 1px 4px 0 rgba(0,0,0,.1);
-}
-
-.position-relative {
-   position: relative;
-}
-
-.float-left {
-   float: left;
 }
 
 .container-fluid {
@@ -52,14 +60,6 @@ BODY {
    padding-left:15px;
    margin-right:auto;
    margin-left:auto;
-}
-
-.flex {
-   display: flex;
-}
-
-.align-items-center {
-   align-items: center;
 }
 
 
@@ -143,6 +143,7 @@ BODY {
   PADDING: 55px 10px; /* Top, Right, Bottom, Left */
 }
 
+/* Common paragraph sytling */
 h1 {
    FONT-SIZE: 2.5rem;
    padding-top: 4rem;
@@ -154,32 +155,6 @@ h1, h2, h3, h4, h5 {
   COLOR: #252930;
   FONT-WEIGHT: 600;
 }
-
-table {
-   display: table;
-   border-collapse: collapse;
-   -webkit-border-horizontal-spacing: 2px;
-   -webkit-border-vertical-spacing: 2px;
-   border-top-color: gray;
-   width: 100%;
-   margin-bottom: 1rem;
-}
-
-td {
-   padding: .75rem;
-   vertical-align: top;
-   border-top: 1px solid #e7e9ed;
-}
-
-tr:nth-child(even) { background-color: #f2f2f2 }  /* off white */
-
-note {
-   FONT-STYLE: italic;
-   FONT-SIZE: 1rem;
-   COLOR: #5d6778;   /* blue-ish gray */
-   PADDING: 2rem;
-}
-
 h1, h2, h3, h4, h5, note, p {
    FONT-FAMILY: Poppins,sans-serif;
    MARGIN-TOP: 0;
@@ -187,6 +162,35 @@ h1, h2, h3, h4, h5, note, p {
    font-weight: 500;
    line-height: 1.2;
 }
+note {
+   FONT-STYLE: italic;
+   FONT-SIZE: 1rem;
+   COLOR: #5d6778;   /* blue-ish gray */
+   PADDING: 2rem;
+}
+
+
+/* Table styling */
+table {
+   display: table;
+   border-collapse: collapse;
+   -webkit-border-horizontal-spacing: 2px;
+   -webkit-border-vertical-spacing: 2px;
+   width: 100%;
+   margin-bottom: 1rem;
+}
+th {
+   FONT-WEIGHT: bold;
+   border: 1px solid #e7e9ed;
+   text-align: center;
+}
+td {
+   padding: .75rem;
+   vertical-align: top;
+   border-top: 1px solid #e7e9ed;
+   FONT-WEIGHT: normal;
+}
+tr:nth-child(even) { background-color: #f2f2f2 }  /* off white */
 
 block-warning a {
    color: #d09c13;     /* Orange-ish */
@@ -203,21 +207,12 @@ block-warning a {
   width: 100%;
 }
 
-/* Dropdown container (hidden by default).
-   Optional: add a lighter background color and some
-   left padding to change the design of the dropdown content */
-.dropdown-container {
-  display: none;
-  background-color: #262626;   /* light black */
-  padding-left: 8px;
-}
-
 /* Optional: Style the caret down icon */
 .fa-caret-down {
   float: right;
-  padding-right: 8px;
 }
 
+/* Apply box-sizing to everything */
 * {
    box-sizing: border-box;
 }
@@ -225,7 +220,7 @@ block-warning a {
 /* Some media queries for responsiveness */
 @media screen and (max-height: 450px) {
   .sidenav {PADDING-TOP: 15px;}
-  .sidenav a {FONT-SIZE: 12px;}
+  .sidenav a {FONT-SIZE: 12px;}  /* height of items in accordion dropdown */
 }
 </STYLE>
 </HEAD>
@@ -540,6 +535,38 @@ block-warning a {
          <a href="#WiFiConfigurationControl">WiFiConfigurationControl</a>
          <a href="#WiFiSatelliteStatus">WiFiSatelliteStatus</a>
       </DIV>   <!-- panel -->
+      <button class="accordion">Directives
+         <i class="fa fa-caret-down"></i>
+      </button>
+      <div class="panel">
+         <a href="#OutputConstants_D">OutputConstants</a>
+         <a href="#restartRecover_D">restartRecover</a>
+      </DIV>   <!-- panel -->
+      <button class="accordion">Accessory Directives
+         <i class="fa fa-caret-down"></i>
+      </button>
+      <div class="panel">
+         <a href="#Fetch">Fetch</a>
+         <a href="#Fakegato">Fakegato</a>
+         <a href="#PublishExternally">PublishExternally</a>
+         <a href="#State_cmd_prefix">State_cmd_prefix</a>
+         <a href="#State_cmd_suffix">State_cmd_suffix</a>
+         <a href="#State_cmd">State_cmd</a>
+         <a href="#Polling">Polling</a>
+         <a href="#Interval">Interval</a>
+         <a href="#StateChangeResponseTime">StateChangeResponseTime</a>
+         <a href="#LinkedTypes">LinkedTypes</a>
+         <a href="#OutputConstants">OutputConstants</a>
+      </DIV>   <!-- panel -->
+      <button class="accordion">Script Templates
+         <i class="fa fa-caret-down"></i>
+      </button>
+      <div class="panel">
+         <a href="#JS Template">JS Template</a>
+         <a href="#Bash Template">Bash Template</a>
+      </DIV>   <!-- panel -->
+      <a href=https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/Developers.md>Developers Guide</a>
+      <a href=https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/AdvancedTroubleShooting.md>Advanced TroubleShooting</a>
    </DIV>   <!-- sidenav -->
    <div class="main">
       <h2>CMD4 Device Properties</h2>
@@ -558,8 +585,18 @@ block-warning a {
             <LI><a href="#PasswordSetting">PasswordSetting</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: AccessControl,
+            Name: "MY_AccessControl",
+            DisplayName: "MY_AccessControl",
+            AccessControlLevel: "0",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="AccessoryRuntimeInformation"></a>
@@ -577,8 +614,21 @@ block-warning a {
             <LI><a href="#SleepInterval">SleepInterval</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: AccessoryRuntimeInformation,
+            Name: "MY_AccessoryRuntimeInformation",
+            DisplayName: "MY_AccessoryRuntimeInformation",
+            Ping: "0",
+            ActivityInterval: < UINT32 >,
+            HeartBeat: < UINT32 >,
+            SleepInterval: < UINT32 >,
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="AccessoryInformation"></a>
@@ -605,8 +655,25 @@ block-warning a {
             <LI><a href="#Identify">Identify</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: AccessoryInformation,
+            Name: "MY_AccessoryInformation",
+            DisplayName: "MY_AccessoryInformation",
+            Identify: "1",
+            Manufacturer: "Cmd4",
+            Model: "Model",
+            Name: "My_AccessoryInformation",
+            SerialNumber: "ABC001",
+            FirmwareRevision: "100.1.1",
+            HardwareRevision: "< STRING> ",
+            AccessoryFlags: < UINT32 >,
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="AirPurifier"></a>
@@ -632,8 +699,24 @@ block-warning a {
             <LI><a href="#Active">Active</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: AirPurifier,
+            Name: "MY_AirPurifier",
+            DisplayName: "MY_AirPurifier",
+            Active: "1",
+            CurrentAirPurifierState: "2",
+            TargetAirPurifierState: "1",
+            LockPhysicalControls: < UINT8 >,
+            Name: "< STRING> ",
+            SwingMode: < UINT8 >,
+            Unknown format float,
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="AirQualitySensor"></a>
@@ -666,8 +749,31 @@ block-warning a {
             <LI><a href="#AirQuality">AirQuality</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: AirQualitySensor,
+            Name: "MY_AirQualitySensor",
+            DisplayName: "MY_AirQualitySensor",
+            AirQuality: "2",
+            StatusActive: < BOOLEAN >,
+            StatusFault: < UINT8 >,
+            StatusTampered: < UINT8 >,
+            StatusLowBattery: < UINT8 >,
+            Name: "< STRING> ",
+            Unknown format float,
+            Unknown format float,
+            Unknown format float,
+            Unknown format float,
+            Unknown format float,
+            Unknown format float,
+            Unknown format float,
+            Unknown format float,
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="BatteryService"></a>
@@ -690,8 +796,21 @@ block-warning a {
             <LI><a href="#StatusLowBattery">StatusLowBattery</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: BatteryService,
+            Name: "MY_BatteryService",
+            DisplayName: "MY_BatteryService",
+            BatteryLevel: "50",
+            ChargingState: "0",
+            StatusLowBattery: "0",
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="BridgeConfiguration"></a>
@@ -715,8 +834,20 @@ block-warning a {
             <LI><a href="#ConfigureBridgedAccessoryStatus">ConfigureBridgedAccessoryStatus</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: BridgeConfiguration,
+            Name: "MY_BridgeConfiguration",
+            DisplayName: "MY_BridgeConfiguration",
+            ConfigureBridgedAccessoryStatus: "0",
+            DiscoverBridgedAccessories: < UINT8 >,
+            DiscoveredBridgedAccessories: < UINT16 >,
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="BridgingState"></a>
@@ -740,8 +871,22 @@ block-warning a {
             <LI><a href="#Reachable">Reachable</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: BridgingState,
+            Name: "MY_BridgingState",
+            DisplayName: "MY_BridgingState",
+            Reachable: "1",
+            LinkQuality: "1",
+            AccessoryIdentifier: "id999",
+            Category: "16",
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="CameraEventRecordingManagement"></a>
@@ -766,8 +911,23 @@ block-warning a {
             <LI><a href="#Active">Active</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: CameraEventRecordingManagement,
+            Name: "MY_CameraEventRecordingManagement",
+            DisplayName: "MY_CameraEventRecordingManagement",
+            Active: "1",
+            SupportedCameraRecordingConfiguration: "0",
+            SupportedVideoRecordingConfiguration: "0",
+            SupportedAudioRecordingConfiguration: "0",
+            SelectedCameraRecordingConfiguration: "0",
+            RecordingAudioActive: < UINT8 >,
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="CameraControl"></a>
@@ -797,8 +957,28 @@ block-warning a {
             <LI><a href="#On">On</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: CameraControl,
+            Name: "MY_CameraControl",
+            DisplayName: "MY_CameraControl",
+            On: "1",
+            CurrentHorizontalTiltAngle: < INT >,
+            CurrentVerticalTiltAngle: < INT >,
+            TargetHorizontalTiltAngle: < INT >,
+            TargetVerticalTiltAngle: < INT >,
+            NightVision: < BOOLEAN >,
+            Unknown format float,
+            Unknown format float,
+            Unknown format float,
+            ImageMirroring: < BOOLEAN >,
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="CameraRTPStreamManagement"></a>
@@ -819,8 +999,24 @@ block-warning a {
             <LI><a href="#Name">Name</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: CameraRTPStreamManagement,
+            Name: "MY_CameraRTPStreamManagement",
+            DisplayName: "MY_CameraRTPStreamManagement",
+            SupportedVideoStreamConfiguration: "0",
+            SupportedAudioStreamConfiguration: "0",
+            SupportedRTPConfiguration: "0",
+            SelectedRTPStreamConfiguration: "0",
+            StreamingStatus: "0",
+            SetupEndpoints: "0",
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="CameraOperatingMode"></a>
@@ -841,8 +1037,24 @@ block-warning a {
             <LI><a href="#PeriodicSnapshotsActive">PeriodicSnapshotsActive</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: CameraOperatingMode,
+            Name: "MY_CameraOperatingMode",
+            DisplayName: "MY_CameraOperatingMode",
+            EventSnapshotsActive: "0",
+            HomeKitCameraActive: "0",
+            ManuallyDisabled: < BOOLEAN >,
+            NightVision: < BOOLEAN >,
+            ThirdPartyCameraActive: < UINT8 >,
+            CameraOperatingModeIndicator: < UINT8 >,
+            PeriodicSnapshotsActive: < UINT8 >,
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="CarbonDioxideSensor"></a>
@@ -869,8 +1081,25 @@ block-warning a {
             <LI><a href="#CarbonDioxideDetected">CarbonDioxideDetected</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: CarbonDioxideSensor,
+            Name: "MY_CarbonDioxideSensor",
+            DisplayName: "MY_CarbonDioxideSensor",
+            CarbonDioxideDetected: "0",
+            StatusActive: < BOOLEAN >,
+            StatusFault: < UINT8 >,
+            StatusLowBattery: < UINT8 >,
+            StatusTampered: < UINT8 >,
+            Unknown format float,
+            Unknown format float,
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="CarbonMonoxideSensor"></a>
@@ -897,8 +1126,25 @@ block-warning a {
             <LI><a href="#CarbonMonoxideDetected">CarbonMonoxideDetected</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: CarbonMonoxideSensor,
+            Name: "MY_CarbonMonoxideSensor",
+            DisplayName: "MY_CarbonMonoxideSensor",
+            CarbonMonoxideDetected: "0",
+            StatusActive: < BOOLEAN >,
+            StatusFault: < UINT8 >,
+            StatusLowBattery: < UINT8 >,
+            StatusTampered: < UINT8 >,
+            Unknown format float,
+            Unknown format float,
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="ContactSensor"></a>
@@ -923,8 +1169,23 @@ block-warning a {
             <LI><a href="#ContactSensorState">ContactSensorState</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: ContactSensor,
+            Name: "MY_ContactSensor",
+            DisplayName: "MY_ContactSensor",
+            ContactSensorState: "1",
+            StatusActive: < BOOLEAN >,
+            StatusFault: < UINT8 >,
+            StatusTampered: < UINT8 >,
+            StatusLowBattery: < UINT8 >,
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="Diagnostics"></a>
@@ -937,8 +1198,18 @@ block-warning a {
          </Table>
          <H3>Optional Characteristics</H3>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: Diagnostics,
+            Name: "MY_Diagnostics",
+            DisplayName: "MY_Diagnostics",
+            SupportedDiagnosticsSnapshot: "0",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="Door"></a>
@@ -963,8 +1234,23 @@ block-warning a {
             <LI><a href="#CurrentPosition">CurrentPosition</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: Door,
+            Name: "MY_Door",
+            DisplayName: "MY_Door",
+            CurrentPosition: "0",
+            PositionState: "2",
+            TargetPosition: "0",
+            HoldPosition: < BOOLEAN >,
+            ObstructionDetected: < BOOLEAN >,
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="DoorBell"></a>
@@ -987,8 +1273,21 @@ block-warning a {
             <LI><a href="#ProgrammableSwitchEvent">ProgrammableSwitchEvent</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: DoorBell,
+            Name: "MY_DoorBell",
+            DisplayName: "MY_DoorBell",
+            ProgrammableSwitchEvent: "0",
+            Brightness: < INT >,
+            Volume: < UINT8 >,
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="Fan"></a>
@@ -1011,8 +1310,21 @@ block-warning a {
             <LI><a href="#On">On</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: Fan,
+            Name: "MY_Fan",
+            DisplayName: "MY_Fan",
+            On: "0",
+            RotationDirection: < INT >,
+            Unknown format float,
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="Fanv1"></a>
@@ -1035,8 +1347,21 @@ block-warning a {
             <LI><a href="#On">On</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: Fanv1,
+            Name: "MY_Fanv1",
+            DisplayName: "MY_Fanv1",
+            On: "0",
+            RotationDirection: < INT >,
+            Unknown format float,
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="Fanv2"></a>
@@ -1063,8 +1388,25 @@ block-warning a {
             <LI><a href="#Active">Active</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: Fanv2,
+            Name: "MY_Fanv2",
+            DisplayName: "MY_Fanv2",
+            Active: "1",
+            CurrentFanState: < UINT8 >,
+            TargetFanState: < UINT8 >,
+            LockPhysicalControls: < UINT8 >,
+            Name: "< STRING> ",
+            RotationDirection: < INT >,
+            Unknown format float,
+            SwingMode: < UINT8 >,
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="Faucet"></a>
@@ -1086,8 +1428,20 @@ block-warning a {
             <LI><a href="#Active">Active</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: Faucet,
+            Name: "MY_Faucet",
+            DisplayName: "MY_Faucet",
+            Active: "1",
+            Name: "< STRING> ",
+            StatusFault: < UINT8 >,
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="FilterMaintenance"></a>
@@ -1110,8 +1464,21 @@ block-warning a {
             <LI><a href="#FilterChangeIndication">FilterChangeIndication</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: FilterMaintenance,
+            Name: "MY_FilterMaintenance",
+            DisplayName: "MY_FilterMaintenance",
+            FilterChangeIndication: "0",
+            Unknown format float,
+            ResetFilterIndication: < UINT8 >,
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="GarageDoorOpener"></a>
@@ -1136,8 +1503,23 @@ block-warning a {
             <LI><a href="#CurrentDoorState">CurrentDoorState</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: GarageDoorOpener,
+            Name: "MY_GarageDoorOpener",
+            DisplayName: "MY_GarageDoorOpener",
+            CurrentDoorState: "0",
+            TargetDoorState: "0",
+            ObstructionDetected: "1",
+            LockCurrentState: < UINT8 >,
+            LockTargetState: < UINT8 >,
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="HeaterCooler"></a>
@@ -1167,8 +1549,28 @@ block-warning a {
             <LI><a href="#Active">Active</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: HeaterCooler,
+            Name: "MY_HeaterCooler",
+            DisplayName: "MY_HeaterCooler",
+            Active: "1",
+            CurrentHeaterCoolerState: "0",
+            TargetHeaterCoolerState: "1",
+            CurrentTemperature: "50",
+            LockPhysicalControls: < UINT8 >,
+            Name: "< STRING> ",
+            SwingMode: < UINT8 >,
+            Unknown format float,
+            Unknown format float,
+            TemperatureDisplayUnits: < UINT8 >,
+            Unknown format float,
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="HumidifierDehumidifier"></a>
@@ -1198,8 +1600,28 @@ block-warning a {
             <LI><a href="#Active">Active</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: HumidifierDehumidifier,
+            Name: "MY_HumidifierDehumidifier",
+            DisplayName: "MY_HumidifierDehumidifier",
+            CurrentRelativeHumidity: "60",
+            CurrentHumidifierDehumidifierState: "1",
+            TargetHumidifierDehumidifierState: "2",
+            Active: "1",
+            LockPhysicalControls: < UINT8 >,
+            Name: "< STRING> ",
+            SwingMode: < UINT8 >,
+            Unknown format float,
+            Unknown format float,
+            Unknown format float,
+            Unknown format float,
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="HumiditySensor"></a>
@@ -1224,8 +1646,23 @@ block-warning a {
             <LI><a href="#CurrentRelativeHumidity">CurrentRelativeHumidity</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: HumiditySensor,
+            Name: "MY_HumiditySensor",
+            DisplayName: "MY_HumiditySensor",
+            CurrentRelativeHumidity: "60",
+            StatusActive: < BOOLEAN >,
+            StatusFault: < UINT8 >,
+            StatusTampered: < UINT8 >,
+            StatusLowBattery: < UINT8 >,
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="InputSource"></a>
@@ -1252,8 +1689,25 @@ block-warning a {
             <LI><a href="#CurrentVisibilityState">CurrentVisibilityState</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: InputSource,
+            Name: "MY_InputSource",
+            DisplayName: "MY_InputSource",
+            ConfiguredName: "My_InputSource",
+            InputSourceType: "1",
+            IsConfigured: "1",
+            CurrentVisibilityState: "0",
+            Identifier: < UINT32 >,
+            InputDeviceType: < UINT8 >,
+            TargetVisibilityState: < UINT8 >,
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="IrrigationSystem"></a>
@@ -1278,8 +1732,23 @@ block-warning a {
             <LI><a href="#Active">Active</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: IrrigationSystem,
+            Name: "MY_IrrigationSystem",
+            DisplayName: "MY_IrrigationSystem",
+            Active: "1",
+            ProgramMode: "0",
+            InUse: "1",
+            Name: "< STRING> ",
+            RemainingDuration: < UINT32 >,
+            StatusFault: < UINT8 >,
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="LeakSensor"></a>
@@ -1304,8 +1773,23 @@ block-warning a {
             <LI><a href="#LeakDetected">LeakDetected</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: LeakSensor,
+            Name: "MY_LeakSensor",
+            DisplayName: "MY_LeakSensor",
+            LeakDetected: "0",
+            StatusActive: < BOOLEAN >,
+            StatusFault: < UINT8 >,
+            StatusTampered: < UINT8 >,
+            StatusLowBattery: < UINT8 >,
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="LightSensor"></a>
@@ -1330,8 +1814,23 @@ block-warning a {
             <LI><a href="#CurrentAmbientLightLevel">CurrentAmbientLightLevel</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: LightSensor,
+            Name: "MY_LightSensor",
+            DisplayName: "MY_LightSensor",
+            CurrentAmbientLightLevel: "1",
+            StatusActive: < BOOLEAN >,
+            StatusFault: < UINT8 >,
+            StatusTampered: < UINT8 >,
+            StatusLowBattery: < UINT8 >,
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="Lightbulb"></a>
@@ -1356,8 +1855,23 @@ block-warning a {
             <LI><a href="#On">On</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: Lightbulb,
+            Name: "MY_Lightbulb",
+            DisplayName: "MY_Lightbulb",
+            On: "0",
+            Brightness: < INT >,
+            Unknown format float,
+            Unknown format float,
+            Name: "< STRING> ",
+            ColorTemperature: < UINT32 >,
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="LockManagement"></a>
@@ -1381,8 +1895,26 @@ block-warning a {
             <LI><a href="#Name">Name</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: LockManagement,
+            Name: "MY_LockManagement",
+            DisplayName: "MY_LockManagement",
+            LockControlPoint: "0",
+            Version: "0.0.0",
+            AudioFeedback: < BOOLEAN >,
+            LockManagementAutoSecurityTimeout: < UINT32 >,
+            AdministratorOnlyAccess: < BOOLEAN >,
+            LockLastKnownAction: < UINT8 >,
+            CurrentDoorState: < UINT8 >,
+            MotionDetected: < BOOLEAN >,
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="LockMechanism"></a>
@@ -1404,8 +1936,20 @@ block-warning a {
             <LI><a href="#LockCurrentState">LockCurrentState</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: LockMechanism,
+            Name: "MY_LockMechanism",
+            DisplayName: "MY_LockMechanism",
+            LockCurrentState: "0",
+            LockTargetState: "0",
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="Microphone"></a>
@@ -1427,8 +1971,20 @@ block-warning a {
             <LI><a href="#Mute">Mute</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: Microphone,
+            Name: "MY_Microphone",
+            DisplayName: "MY_Microphone",
+            Mute: "0",
+            Volume: < UINT8 >,
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="MotionSensor"></a>
@@ -1453,8 +2009,23 @@ block-warning a {
             <LI><a href="#MotionDetected">MotionDetected</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: MotionSensor,
+            Name: "MY_MotionSensor",
+            DisplayName: "MY_MotionSensor",
+            MotionDetected: "1",
+            StatusActive: < BOOLEAN >,
+            StatusFault: < UINT8 >,
+            StatusTampered: < UINT8 >,
+            StatusLowBattery: < UINT8 >,
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="OccupancySensor"></a>
@@ -1479,8 +2050,23 @@ block-warning a {
             <LI><a href="#OccupancyDetected">OccupancyDetected</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: OccupancySensor,
+            Name: "MY_OccupancySensor",
+            DisplayName: "MY_OccupancySensor",
+            OccupancyDetected: "0",
+            StatusActive: < BOOLEAN >,
+            StatusFault: < UINT8 >,
+            StatusTampered: < UINT8 >,
+            StatusLowBattery: < UINT8 >,
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="Outlet"></a>
@@ -1502,8 +2088,20 @@ block-warning a {
             <LI><a href="#On">On</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: Outlet,
+            Name: "MY_Outlet",
+            DisplayName: "MY_Outlet",
+            On: "0",
+            OutletInUse: "0",
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="Pairing"></a>
@@ -1524,8 +2122,21 @@ block-warning a {
             <LI><a href="#PairingFeatures">PairingFeatures</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: Pairing,
+            Name: "MY_Pairing",
+            DisplayName: "MY_Pairing",
+            PairingFeatures: "1",
+            PairVerify: "0",
+            PairingFeatures: "0",
+            PairingPairings: "0",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="PowerManagement"></a>
@@ -1538,8 +2149,18 @@ block-warning a {
          </Table>
          <H3>Optional Characteristics</H3>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: PowerManagement,
+            Name: "MY_PowerManagement",
+            DisplayName: "MY_PowerManagement",
+            WakeConfiguration: "0",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="ProtocolInformation"></a>
@@ -1557,8 +2178,18 @@ block-warning a {
             <LI><a href="#Version">Version</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: ProtocolInformation,
+            Name: "MY_ProtocolInformation",
+            DisplayName: "MY_ProtocolInformation",
+            Version: "1.2.3",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="Relay"></a>
@@ -1579,8 +2210,20 @@ block-warning a {
             <LI><a href="#RelayState">RelayState</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: Relay,
+            Name: "MY_Relay",
+            DisplayName: "MY_Relay",
+            RelayEnabled: "1",
+            RelayState: "1",
+            RelayControlPoint: "0",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="SecuritySystem"></a>
@@ -1605,8 +2248,23 @@ block-warning a {
             <LI><a href="#SecuritySystemCurrentState">SecuritySystemCurrentState</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: SecuritySystem,
+            Name: "MY_SecuritySystem",
+            DisplayName: "MY_SecuritySystem",
+            SecuritySystemCurrentState: "3",
+            SecuritySystemTargetState: "3",
+            StatusFault: < UINT8 >,
+            StatusTampered: < UINT8 >,
+            SecuritySystemAlarmType: < UINT8 >,
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="ServiceLabel"></a>
@@ -1627,8 +2285,19 @@ block-warning a {
             <LI><a href="#ServiceLabelNamespace">ServiceLabelNamespace</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: ServiceLabel,
+            Name: "MY_ServiceLabel",
+            DisplayName: "MY_ServiceLabel",
+            ServiceLabelNamespace: "0",
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="Siri"></a>
@@ -1641,8 +2310,18 @@ block-warning a {
          </Table>
          <H3>Optional Characteristics</H3>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: Siri,
+            Name: "MY_Siri",
+            DisplayName: "MY_Siri",
+            SiriInputType: "0",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="Slat"></a>
@@ -1667,8 +2346,23 @@ block-warning a {
             <LI><a href="#CurrentSlatState">CurrentSlatState</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: Slat,
+            Name: "MY_Slat",
+            DisplayName: "MY_Slat",
+            SlatType: "0",
+            CurrentSlatState: "0",
+            Name: "< STRING> ",
+            CurrentTiltAngle: < INT >,
+            TargetTiltAngle: < INT >,
+            SwingMode: < UINT8 >,
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="SmartSpeaker"></a>
@@ -1688,8 +2382,23 @@ block-warning a {
             <LI><a href="#Mute">Mute</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: SmartSpeaker,
+            Name: "MY_SmartSpeaker",
+            DisplayName: "MY_SmartSpeaker",
+            CurrentMediaState: "2",
+            TargetMediaState: "2",
+            Name: "< STRING> ",
+            ConfiguredName: "< STRING> ",
+            Volume: < UINT8 >,
+            Mute: < BOOLEAN >,
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="SmokeSensor"></a>
@@ -1714,8 +2423,23 @@ block-warning a {
             <LI><a href="#SmokeDetected">SmokeDetected</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: SmokeSensor,
+            Name: "MY_SmokeSensor",
+            DisplayName: "MY_SmokeSensor",
+            SmokeDetected: "0",
+            StatusActive: < BOOLEAN >,
+            StatusFault: < UINT8 >,
+            StatusTampered: < UINT8 >,
+            StatusLowBattery: < UINT8 >,
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="Speaker"></a>
@@ -1737,8 +2461,20 @@ block-warning a {
             <LI><a href="#Mute">Mute</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: Speaker,
+            Name: "MY_Speaker",
+            DisplayName: "MY_Speaker",
+            Mute: "0",
+            Volume: < UINT8 >,
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="StatefulProgrammableSwitch"></a>
@@ -1760,8 +2496,20 @@ block-warning a {
             <LI><a href="#ProgrammableSwitchEvent">ProgrammableSwitchEvent</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: StatefulProgrammableSwitch,
+            Name: "MY_StatefulProgrammableSwitch",
+            DisplayName: "MY_StatefulProgrammableSwitch",
+            ProgrammableSwitchEvent: "0",
+            ProgrammableSwitchOutputState: "0",
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="StatelessProgrammableSwitch"></a>
@@ -1783,8 +2531,20 @@ block-warning a {
             <LI><a href="#ProgrammableSwitchEvent">ProgrammableSwitchEvent</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: StatelessProgrammableSwitch,
+            Name: "MY_StatelessProgrammableSwitch",
+            DisplayName: "MY_StatelessProgrammableSwitch",
+            ProgrammableSwitchEvent: "0",
+            Name: "< STRING> ",
+            ServiceLabelIndex: < UINT8 >,
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="Switch"></a>
@@ -1805,8 +2565,19 @@ block-warning a {
             <LI><a href="#On">On</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: Switch,
+            Name: "MY_Switch",
+            DisplayName: "MY_Switch",
+            On: "0",
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="TargetControl"></a>
@@ -1824,8 +2595,21 @@ block-warning a {
             <LI><a href="#Name">Name</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: TargetControl,
+            Name: "MY_TargetControl",
+            DisplayName: "MY_TargetControl",
+            ActiveIdentifier: "7",
+            Active: "1",
+            ButtonEvent: "0",
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="TargetControlManagement"></a>
@@ -1839,8 +2623,19 @@ block-warning a {
          </Table>
          <H3>Optional Characteristics</H3>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: TargetControlManagement,
+            Name: "MY_TargetControlManagement",
+            DisplayName: "MY_TargetControlManagement",
+            TargetControlSupportedConfiguration: "0",
+            TargetControlList: "0",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="Television"></a>
@@ -1871,8 +2666,28 @@ block-warning a {
             <LI><a href="#Active">Active</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: Television,
+            Name: "MY_Television",
+            DisplayName: "MY_Television",
+            Active: "1",
+            ActiveIdentifier: "123",
+            ConfiguredName: "My_Tv",
+            RemoteKey: "8",
+            SleepDiscoveryMode: "1",
+            Brightness: < INT >,
+            ClosedCaptions: < UINT8 >,
+            CurrentMediaState: < UINT8 >,
+            TargetMediaState: < UINT8 >,
+            PictureMode: < UINT8 >,
+            PowerModeSelection: < UINT8 >,
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="TelevisionSpeaker"></a>
@@ -1897,8 +2712,23 @@ block-warning a {
             <LI><a href="#Mute">Mute</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: TelevisionSpeaker,
+            Name: "MY_TelevisionSpeaker",
+            DisplayName: "MY_TelevisionSpeaker",
+            Mute: "0",
+            Active: < UINT8 >,
+            Volume: < UINT8 >,
+            VolumeControlType: < UINT8 >,
+            VolumeSelector: < UINT8 >,
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="TemperatureSensor"></a>
@@ -1923,8 +2753,23 @@ block-warning a {
             <LI><a href="#CurrentTemperature">CurrentTemperature</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: TemperatureSensor,
+            Name: "MY_TemperatureSensor",
+            DisplayName: "MY_TemperatureSensor",
+            CurrentTemperature: "50",
+            StatusActive: < BOOLEAN >,
+            StatusFault: < UINT8 >,
+            StatusLowBattery: < UINT8 >,
+            StatusTampered: < UINT8 >,
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="Thermostat"></a>
@@ -1953,8 +2798,27 @@ block-warning a {
             <LI><a href="#CurrentTemperature">CurrentTemperature</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: Thermostat,
+            Name: "MY_Thermostat",
+            DisplayName: "MY_Thermostat",
+            CurrentHeatingCoolingState: "0",
+            TargetHeatingCoolingState: "0",
+            CurrentTemperature: "50",
+            TargetTemperature: "50",
+            TemperatureDisplayUnits: "0",
+            Unknown format float,
+            Unknown format float,
+            Unknown format float,
+            Unknown format float,
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="TimeInformation"></a>
@@ -1977,8 +2841,21 @@ block-warning a {
             <LI><a href="#CurrentTime">CurrentTime</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: TimeInformation,
+            Name: "MY_TimeInformation",
+            DisplayName: "MY_TimeInformation",
+            CurrentTime: "11:15",
+            DayoftheWeek: "1",
+            TimeUpdate: "0",
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="TransferTransportManagement"></a>
@@ -1992,8 +2869,19 @@ block-warning a {
          </Table>
          <H3>Optional Characteristics</H3>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: TransferTransportManagement,
+            Name: "MY_TransferTransportManagement",
+            DisplayName: "MY_TransferTransportManagement",
+            SupportedTransferTransportConfiguration: "0",
+            SetupTransferTransport: "0",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="TunneledBTLEAccessoryService"></a>
@@ -2016,8 +2904,23 @@ block-warning a {
             <LI><a href="#TunneledAccessoryConnected">TunneledAccessoryConnected</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: TunneledBTLEAccessoryService,
+            Name: "MY_TunneledBTLEAccessoryService",
+            DisplayName: "MY_TunneledBTLEAccessoryService",
+            Name: "My_TunnelB",
+            AccessoryIdentifier: "TLB",
+            TunneledAccessoryStateNumber: "0",
+            TunneledAccessoryConnected: "0",
+            TunneledAccessoryAdvertising: "0",
+            TunnelConnectionTimeout: "5000",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="Valve"></a>
@@ -2045,8 +2948,26 @@ block-warning a {
             <LI><a href="#Active">Active</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: Valve,
+            Name: "MY_Valve",
+            DisplayName: "MY_Valve",
+            Active: "1",
+            InUse: "1",
+            ValveType: "0",
+            SetDuration: < UINT32 >,
+            RemainingDuration: < UINT32 >,
+            IsConfigured: < UINT8 >,
+            ServiceLabelIndex: < UINT8 >,
+            StatusFault: < UINT8 >,
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="WiFiRouter"></a>
@@ -2067,8 +2988,26 @@ block-warning a {
          </Table>
          <H3>Optional Characteristics</H3>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: WiFiRouter,
+            Name: "MY_WiFiRouter",
+            DisplayName: "MY_WiFiRouter",
+            ConfiguredName: "My_WiFiRouter",
+            ManagedNetworkEnable: "0",
+            NetworkAccessViolationControl: "0",
+            NetworkClientProfileControl: "0",
+            NetworkClientStatusControl: "0",
+            RouterStatus: "0",
+            SupportedRouterConfiguration: "0",
+            WANConfigurationList: "0",
+            WANStatusList: "0",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="WiFiSatellite"></a>
@@ -2081,8 +3020,18 @@ block-warning a {
          </Table>
          <H3>Optional Characteristics</H3>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: WiFiSatellite,
+            Name: "MY_WiFiSatellite",
+            DisplayName: "MY_WiFiSatellite",
+            WiFiSatelliteStatus: "2",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="Window"></a>
@@ -2107,8 +3056,23 @@ block-warning a {
             <LI><a href="#CurrentPosition">CurrentPosition</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: Window,
+            Name: "MY_Window",
+            DisplayName: "MY_Window",
+            CurrentPosition: "0",
+            PositionState: "2",
+            TargetPosition: "0",
+            HoldPosition: < BOOLEAN >,
+            ObstructionDetected: < BOOLEAN >,
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
       <div class="Device">
          <a name="WindowCovering"></a>
@@ -2137,8 +3101,27 @@ block-warning a {
             <LI><a href="#CurrentPosition">CurrentPosition</a>
          </UL>
          <H3>Example config.json entry</H3>
-         <H4 class="block-quote">
-         </H4>
+         <pre>
+         {
+            Type: WindowCovering,
+            Name: "MY_WindowCovering",
+            DisplayName: "MY_WindowCovering",
+            CurrentPosition: "0",
+            PositionState: "2",
+            TargetPosition: "0",
+            HoldPosition: < BOOLEAN >,
+            TargetHorizontalTiltAngle: < INT >,
+            TargetVerticalTiltAngle: < INT >,
+            CurrentHorizontalTiltAngle: < INT >,
+            CurrentVerticalTiltAngle: < INT >,
+            ObstructionDetected: < BOOLEAN >,
+            Name: "< STRING> ",
+            <a href="#State_cmd">State_cmd</a>: < "STRING" >,
+            <a href="#Polling">Polling</a>: < POLLING>
+
+         }
+         </pre>
+         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- Device -->
    </DIV>   <!-- main -->
    <div class="main">
@@ -5449,6 +6432,348 @@ block-warning a {
          </table>
       </DIV>
    </DIV>   <!-- ACC Page -->
+   <div class="main">
+      <h2>CMD4 Directives</h2>
+      <p>These directives appear within the "Cmd4" plugin header and reflect how Cmd4 will behave overall.</p>
+      <TABLE WIDTH="100%">
+         <TR ALIGN="left"><TH>Cmd4Directive<TH>Type<TH PADDING="50px">Default<TH>Description</TR>
+         <TR ALIGN="left"><TD><a name="OutputConstants_D">OutputConstants</a><TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1 </TR>
+         <TR ALIGN="left"><TD><a name="restartRecover_D"> restartRecover</a><TD> < Bool > <TD> true <TD> If Cmd4 will use previous cached state information </TR>
+      </TABLE>
+   </DIV>   <!-- main -->
+   <div class="main">
+      <h2><a name="CMD4 Accessory Directives">CMD4 Accessory Directives</a></h2>
+      <p>These directives appear within the characteristic section of the Cmd4 Accessory</p>
+      <TABLE WIDTH="100%" border: 1px solid black >
+         <TR cols="4" ALIGN="left"><TH>Cmd4Directive<TH>Type<TH PADDING="50px">Default<TH>Description</TR>
+         <TR ALIGN="left"><TD><a name="OutputConstants">OutputConstants</a><TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1 </TR>
+         <TR ALIGN="left"><TD><a name="PublishExternally">PublishExternally</a><TD>  < Bool >  <TD>    false     <TD> Tell Homebridge to publish the device as its own bridge. </TR>
+         <TR ALIGN="left"><TD><a name="Fetch">Fetch</a><TD> < "Always" | "Cached" | "Polled" > <TD> "Always" <TD> Tell Homebridge to publish the device as its own bridge.</TR>
+         <TR ALIGN="left"><TD COLSPAN=4>
+            i.e.<BR>
+            <UL>
+               <LI> { "Fetch": "<a name="Always">Always</a>" } - As before Always fetch characteristic value. ( Default )
+               <LI> { "Fetch": "<a name="Cached">Cached</a>" } - Never fetch characteristic value. Use cached value. The cached value would have to be updated through polling.
+               <LI> { "Fetch": "<a name="Polled">Polled</a>" } - Polled characteristics act like before  (Always). Non polled characteristic values are fetched from cache.
+           </UL>
+         </TR>
+         <TR ALIGN="left"><TD><a name="StateChangeResponseTime">StateChangeResponseTime</a><TD> < seconds > <TD> 60 <TD> How long to wait between a Set and Get command.</TR>
+         <TR ALIGN="left"><TD><a name="Timeout">Timeout</a><TD> < msec > <TD> <TD> How long before killing the state command.</TR>
+         <TR ALIGN="left"><TD><a name="Polling">Polling</a><TD> < Bool > <TD> false <TD> If the characteristics should be polled for state change.</TR>
+         <TR><TD><TD COLSPAN=3> or  [{"characteristic" < characteristic >, [ "interval": < sec >, "timeout": < msec > ] }] </TR>
+         <TR ALIGN="left"><TD><a name="State_cmd">State_cmd</a><TD>  < State_cmd > <TD> See Description <TD> The command used to Get/Set Device characteristic State.</TR>
+         <TR><TD COLSPAN="4">The State_cmd represents the path to your script. Cmd4 appends the Get/Set shown.<BR>
+         State_cmd Get < DisplayName > < characteristic ><BR>
+         State_cmd Set < DisplayName > < characteristic > < value ></TD></TR>
+         <TR ALIGN="left"><TD><a name="State_cmd_prefix">State_cmd_prefix</a><TD>  < String > <TD> <TD> A String prepended to the < State_cmd >.</TR>
+         <TR ALIGN="left"><TD><a name="State_cmd_suffix">State_cmd_suffix</a><TD> < String > <TD> <TD> A String appended to the < State_cmd >.</TR>
+         <TR ALIGN="left"><TD><a name="Props">Props</a><TD>  < Bool >  <TD>    false     <TD> A way to override Hap Characteristiic Properties<BR>
+                  Only used to set min/max temperatures, for instance:</TR>
+         <TR ALIGN="Left"><TD><TD COLSPAN=3>"Props" : { "CurrentTemperature": { "maxValue":100, "minValue": -100, "minStep": 0.1}}</TR>
+         <TR ALIGN="left"><TD><a name="Category">Category</a><TD> < CATEGORY > <TD> undefined <TD> See <a href="https://developers.homebridge.io/#/categories">Homebridge Categories</a> for a complete list of possible categories.  </TR>
+         <TR ALIGN="left"><TD><a name="Fakegato">Fakegato</a><TD>  < JSON >  <TD> <TD> See the section, <a href="https://github.com/ztalbot2000/homebridge-cmd4/README.md#fakegatotag"> "Adding in Fakegato history"</a> below.</TR>
+         <TR ALIGN="left"><TD><a name="LinkedTypes">LinkedTypes</a><TD>  < JSON >  <TD> <TD> Other Cmd4 Accessories like Input Source for HDMI inputs. </TR>
+      </TABLE>
+   </DIV>   <!-- main -->
+   <div class="main">
+      <h2><a name="JS Template">Example Cmd4 JavaScript Template</a></h2>
+      <p> This script is auto generated from: <a href=https://github.com/ztalbot2000/homebridge-cmd4/blob/master/./Extras/Cmd4Scripts/Examples/ExampleJavaScript_template.js>./Extras/Cmd4Scripts/Examples/ExampleJavaScript_template.js </a></p>
+      <pre>
+#!/usr/local/bin/node
+//  ExampleScript_template.js
+//
+// Description:
+//   This script is a goood starting place for you to create Cmd4 Scripts
+//   of your own
+//
+// Parameters are:
+//    Get < any accessory name > < characteristic >
+//    Set < any accessory name > < characteristic > < value >
+//
+// Note 1: These paramaters match the those of the Cmd4 plugin.
+//         A full lost of supported devices and characteristics can be
+//         found at:
+//         https://ztalbot2000.github.io/homebridge-cmd4
+//
+// How it works:
+//    The Cmd4 plugin will call this script to retrieve those states
+//    you have defined as not Cached to Get/Set your devices characteristic
+//    states.
+//
+//    For example:
+//       node ExampleScript_template.js Set My_Door TargetDoorState 0
+//     or
+//       node ExampleScript.js Get My_Door CurrentDoorState
+//
+//
+
+'use strict';
+
+var length = process.argv.length;
+var device = "My_Door";
+var io = "";
+var characteristic = "";
+var option = "";
+
+if ( length == 2 ) process.exit( 0 );
+
+if ( length <= 2 ) {
+    console.log( "Usage: " + process.argv[0] + " < Get > < AccessoryName > < Characteristic >" );
+    console.log( "       " + process.argv[0] + " < Set > < AccessoryName > < Characteristic > < Value >" );
+    process.exit( -1 );
+}
+
+if ( length >= 2 ) io = process.argv[2];
+if ( length >= 3 ) device = process.argv[3];
+if ( length >= 4 ) characteristic  = process.argv[4];
+if ( length >= 5 ) option  = process.argv[5];
+
+var c = "";
+
+switch( io )
+{
+    case "Get":
+    {
+        switch( characteristic )
+        {
+            case "CurrentDoorState":
+            {
+               console.log( 0 );
+
+               // See https://ztalbot2000.github.io/homebridge-cmd4
+               // For the possible values and characteristics
+               // available per device. It will show somethink like:
+               // Valid Values:
+               // 0 - "Open. The door is fully open."
+               // 1 - "Closed. The door is fully closed."
+               // 2 - "Opening. The door is actively opening."
+               // 3 - "Closing. The door is actively closing."
+               // 4 - "Stopped. The door is not moving, and it is not fully
+               //      open nor fully closed."
+               // 5-255 - "Reserved"
+
+               break;
+            }
+            case "TargetDoorState":
+            {
+                console.log( 0 );
+                break;
+            }
+            case "ObstructionDetected":
+            {
+                console.log ( 0 );
+                break;
+            }
+            case "LockCurrentState":
+            {
+                console.log ( 0 );
+                break;
+            }
+            default:
+                console.error( "Unhandled characteristic for:"  + io  +  " Device:" + device  +  " Characteristic:" + characteristic );
+                process.exit( -1 );
+        }
+
+        break;
+
+    } // End of Switch for "Get"
+    case "Set":
+    {
+        switch( characteristic )
+        {
+            case "CurrentDoorState":
+            {
+               // Current Door State is not settable. The
+               // call would be to TargetDoorState. This is here
+               // for debugging only.
+
+               break;
+            }
+            case "TargetDoorState":
+            {
+                // Do something of your own here.
+
+                break;
+            }
+            case "ObstructionDetected":
+            {
+               // Obstruction Detected is not settable. It
+               // call is a read-only characteristic. This is here
+               // for debugging only.
+               break;
+            }
+            case "LockCurrentState":
+            {
+                // Lock Current State is not settable. It
+                // call is a read-only characteristic. This is here
+                // for debugging only.
+                break;
+            }
+            default:
+                console.error( "UnHandled Characteristic for:"  + io  +  " Device:" + device  +  " Characteristic:" + characteristic );
+                process.exit( -1 );
+        }
+
+        break;
+    } // End of Switch Device for "Set"
+    default:
+        console.error( "Unknown IO" + io );
+        process.exit( -1 );
+}
+
+//console.log( "Say What Device:" + device + " Characteristic:" + characteristic + " Option:" + option );
+
+// You must exit with a zero status, confirming the script rannsuccessfully.
+process.exit( 0 );
+
+
+      </pre>
+   </DIV>   <!-- main -->
+   <div class="main">
+      <h2><a name="Bash Template">Example Cmd4 Shell Script Template</a></h2>
+      <p> This script is auto generated from: <a href=https://github.com/ztalbot2000/homebridge-cmd4/blob/master/./Extras/Cmd4Scripts/Examples/ExampleShellScript_template.sh>./Extras/Cmd4Scripts/Examples/ExampleShellScript_template.sh </a></p>
+      <pre>
+#!/bin/bash
+
+#  ExampleScript_template.sh
+#
+# Description:
+#   This script is a goood starting place for you to create Cmd4 Scripts
+#   of your own
+#
+# Parameters are:
+#    Get < any accessory name > < characteristic>
+#    Set < any accessory name > < characteristic> < value >
+#
+# Note 1: These paramaters match the those of the Cmd4 plugin.
+#         A full lost of supported devices and characteristics can be
+#         found at:
+#         https://ztalbot2000.github.io/homebridge-cmd4
+#
+# How it works:
+#
+#    The Cmd4 plugin will call this script to retrieve those states
+#    you have defined as not Cached to Get/Set your devices characteristic
+#    states.
+#
+#    For example:
+#       bash ExampleScript_template.sh Set My_Door TargetDoorState 0
+#     or
+#       bash ExampleScript.sh Get My_Door CurrentDoorState
+#
+
+set -e
+
+# Exit immediately for unbound variables.
+set -u
+
+
+length=$#
+device=""
+io=""
+characteristic=""
+option=""
+
+if [ $length -le 1 ]; then
+   printf "Usage: $0 Get < AccessoryName > < characteristic >\n"
+   printf "Usage: $0 Set < AccessoryName > < characteristic > < Value >\n"
+   exit -1
+fi
+
+# printf "args =$#\n"   # debug
+# printf "arg1 =$1\n"   # debug
+
+if [ $length -ge 1 ]; then
+    io=$1
+    # printf "io=$io\n"   # debug
+fi
+if [ $length -ge 2 ]; then
+    device=$2
+    # printf "device = ${device}\n"   # debug
+fi
+if [ $length -ge 3 ]; then
+    characteristic=$3
+    # printf "Characteristic = ${characteristic}\n"   # debug
+fi
+if [ $length -ge 4 ]; then
+    option=$4
+    # printf "option = ${option}\n"   # debug
+fi
+
+if [ "${io}" == "Get" ]; then
+   case $characteristic in
+      'CurrentDoorState')
+
+         printf "0\n"          # Door is open
+
+         # See https://ztalbot2000.github.io/homebridge-cmd4
+         # For the possible values and characteristics
+         # available per device. It will show somethink like:
+         # Valid Values:
+         # 0 - "Open. The door is fully open."
+         # 1 - "Closed. The door is fully closed."
+         # 2 - "Opening. The door is actively opening."
+         # 3 - "Closing. The door is actively closing."
+         # 4 - "Stopped. The door is not moving, and it is not fully
+         #      open nor fully closed."
+         # 5-255 - "Reserved"
+         exit 0
+         ;;
+      'TargetDoorState')
+         printf "0\n"
+         exit 0
+         ;;
+      'ObstructionDetected')
+         printf "0\n"
+         exit 0
+         ;;
+      'LockCurrentState')
+         printf "0\n"
+         exit 0
+         ;;
+      *)
+         printf "UnHandled Get ${device}  Characteristic ${characteristic}\n"
+         exit -1
+         ;;
+    esac
+fi
+if [ "${io}" == 'Set' ]; then
+   case $characteristic in
+      'CurrentDoorState')
+         # Current Door State is not settable. The
+         # call would be to TargetDoorState. This is here
+         # for debugging only.
+
+         exit 0
+         ;;
+      'TargetDoorState')
+         # Do something of your own here.
+         exit 0
+         ;;
+      'ObstructionDetected')
+         # Obstruction Detected is not settable. It
+         # call is a read-only characteristic. This is here
+         # for debugging only.
+         exit 0
+         ;;
+      'LockCurrentState')
+         # Lock Current State is not settable. It
+         # call is a read-only characteristic. This is here
+         # for debugging only.
+         exit 0
+         ;;
+      *)
+         printf "UnHandled Set GarageDoorOpenner Characteristic ${characteristic}"
+         exit -1
+         ;;
+    esac
+fi
+printf "Unknown io command ${io}\n"
+exit -1
+
+
+      </pre>
+   </DIV>   <!-- main -->
 </DIV>   <!-- content -->
 <script>
    var acc = document.getElementsByClassName("accordion");

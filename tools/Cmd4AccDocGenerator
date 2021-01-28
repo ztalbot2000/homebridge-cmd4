@@ -3,6 +3,11 @@
 // Note:
 // Must read https://docs.github.com/en/rest/reference/markdown#render-an-arbitrary-markdown-document
 // https://gist.github.com
+//
+// Good Learning sites:
+// https://www.w3schools.com/jquery/jquery_get_started.asp
+// https://www.w3schools.com/howto/howto_css_sidebar_icons.asp
+
 
 //             _______________________________________
 //            |                 Margin                |
@@ -42,7 +47,7 @@
 //   |   | Main
 
 // Cmd4 Constants and Settings
-//const constants = require( "../cmd4Constants" );
+const constants = require( "../cmd4Constants" );
 //const settings = require( "../cmd4Settings" );
 
 // For changing validValue Constants to Values and back again
@@ -66,6 +71,7 @@ let DEVICE_DATA = require('../lib/CMD4_DEVICE_TYPE_ENUM');
 // Init the library for all to use
 let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
 let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, _api.hap.Service, _api.hap.Characteristic, _api.hap.Categories );
+let Characteristic = _api.hap.Characteristic;
 
 
 
@@ -283,15 +289,21 @@ table {
    border-collapse: collapse;
    -webkit-border-horizontal-spacing: 2px;
    -webkit-border-vertical-spacing: 2px;
-   border-top-color: gray;
    width: 100%;
    margin-bottom: 1rem;
+}
+
+th {
+   FONT-WEIGHT: bold;
+   border: 1px solid #e7e9ed;
+   text-align: center;
 }
 
 td {
    padding: .75rem;
    vertical-align: top;
    border-top: 1px solid #e7e9ed;
+   FONT-WEIGHT: normal;
 }
 
 tr:nth-child(even) { background-color: #f2f2f2 }  /* off white */
@@ -400,6 +412,10 @@ function addContentDiv_WithinBody( )
 
    addAccPages_WithinContentDiv( );
 
+   addCmd4DirectivePages_WithinContentDiv( );
+
+   addCmd4AccessoryDirectivePages_WithinContentDiv();
+
    endDiv( "content" );
 
 }
@@ -475,16 +491,13 @@ function addSideNav_WithinContentDiv( )
 
       addSideNavIntroduction_WithinSideNav ();
 
-      //wfs( `<a href="#">PlaceHolder 1</a>\n` );
-      //wfs( `<a href="#">PlaceHolder 2</a>\n` );
-
       addSideNavDevices_WithinSideNav( );
-
-      //wfs( `<a href="#">PlaceHolder 3</a>\n` );
 
       addSideNavCharacteristics_WithinSideNav( );
 
-      //wfs( `<a href="#">PlaceHolder 4</a>\n` );
+      addSideNavCmd4Directives_WithinSideNav( );
+
+      addSideNavCmd4AccessoryDirectives_WithinSideNav( );
 
    endDiv( "sidenav" );
 }
@@ -531,6 +544,44 @@ function addSideNavCharacteristics_WithinSideNav( )
    endDiv( "panel" );
 
 }
+function addSideNavCmd4Directives_WithinSideNav( )
+{
+   // Accordion button for Characteristics
+   wf( "+", `<button class="accordion">Cmd4 Directives\n` );
+      wfs( `<i class="fa fa-caret-down"></i>\n` );
+   wf( "-", `</button>\n` );
+
+   wf( "+", `<div class="panel">\n` );
+      wfs( `<a href="#${ constants.OUTPUTCONSTANTS }_D">${ constants.OUTPUTCONSTANTS }</a>\n` );
+      wfs( `<a href="#${ constants.RESTART_RECOVER_l }_D">${ constants.RESTART_RECOVER_l }</a>\n` );
+   endDiv( "panel" );
+
+}
+
+
+function addSideNavCmd4AccessoryDirectives_WithinSideNav( )
+{
+   // Accordion button for Characteristics
+   wf( "+", `<button class="accordion">Cmd4 Accessory Directives\n` );
+      wfs( `<i class="fa fa-caret-down"></i>\n` );
+   wf( "-", `</button>\n` );
+
+
+   wf( "+", `<div class="panel">\n` );
+      wfs( `<a href="#${ constants.FETCH }">${ constants.FETCH }</a>\n` );
+      wfs( `<a href="#${ constants.FAKEGATO }">${ constants.FAKEGATO }</a>\n` );
+      wfs( `<a href="#${ constants.PUBLISHEXTERNALLY }">${ constants.PUBLISHEXTERNALLY }</a>\n` );
+      wfs( `<a href="#${ constants.STATE_CMD_PREFIX }">${ constants.STATE_CMD_PREFIX }</a>\n` );
+      wfs( `<a href="#${ constants.STATE_CMD_SUFFIX }">${ constants.STATE_CMD_SUFFIX }</a>\n` );
+      wfs( `<a href="#${ constants.STATE_CMD }">${ constants.STATE_CMD }</a>\n` );
+      wfs( `<a href="#${ constants.POLLING }">${ constants.POLLING }</a>\n` );
+      wfs( `<a href="#${ constants.INTERVAL }">${ constants.INTERVAL }</a>\n` );
+      wfs( `<a href="#${ constants.STATECHANGERESPONSETIME }">${ constants.STATECHANGERESPONSETIME }</a>\n` );
+      wfs( `<a href="#${ constants.LINKEDTYPES }">${ constants.LINKEDTYPES }</a>\n` );
+      wfs( `<a href="#${ constants.OUTPUTCONSTANTS }">${ constants.OUTPUTCONSTANTS }</a>\n` );
+   endDiv( "panel" );
+
+}
 
 function addDevicePages_WithinContentDiv( )
 {
@@ -548,6 +599,103 @@ function addDevicePages_WithinContentDiv( )
    endDiv( "main" );
 }
 
+function addCmd4DirectivePages_WithinContentDiv( )
+{
+   wf( "+", `<div class="main">\n` );
+
+   wfs( `<h2>CMD4 Directives</h2>\n` );
+   wfs( `<p>These directives appear within the "Cmd4" plugin header and reflect how Cmd4 will behave overall.</p>\n` );
+
+
+   wf( "+", `<TABLE WIDTH="100%">\n` );
+   wfs( `<TR ALIGN="left"><TH>Cmd4Directive<TH>Type<TH PADDING="50px">Default<TH>Description</TR>\n` );
+
+   // outputConstants
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.OUTPUTCONSTANTS }_D">${ constants.OUTPUTCONSTANTS }</a><TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1 </TR>\n` );
+
+   // restartRecover
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.RESTART_RECOVER_l }_D"> ${ constants.RESTART_RECOVER_l }</a><TD> < Bool > <TD> true <TD> If Cmd4 will use previous cached state information </TR>\n` );
+
+   wf( "-", `</TABLE>\n` );
+   endDiv( "main" );
+
+}
+
+function addCmd4AccessoryDirectivePages_WithinContentDiv( )
+{
+   wf( "+", `<div class="main">\n` );
+
+   wfs( `<h2><a name="CMD4 Accessory Directives">CMD4 Accessory Directives</a></h2>\n` );
+   wfs( `<p>These directives appear within the characteristic section of the Cmd4 Accessory</p>\n` );
+
+   wf( "+", `<TABLE WIDTH="100%" border: 1px solid black >\n` );
+   wfs( `<TR cols="4" ALIGN="left"><TH>Cmd4Directive<TH>Type<TH PADDING="50px">Default<TH>Description</TR>\n` );
+
+   // outputConstants
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.OUTPUTCONSTANTS }">${ constants.OUTPUTCONSTANTS }</a><TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1 </TR>\n` );
+
+   // publishExternally
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.PUBLISHEXTERNALLY }">${ constants.PUBLISHEXTERNALLY }</a><TD>  < Bool >  <TD>    false     <TD> Tell Homebridge to publish the device as its own bridge. </TR>\n` );
+
+   // fetch
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.FETCH }">${ constants.FETCH }</a><TD> < "${ constants.FETCH_ALWAYS }" | "${ constants.FETCH_CACHED }" | "${ constants.FETCH_POLLED }" > <TD> "${ constants.FETCH_ALWAYS }" <TD> Tell Homebridge to publish the device as its own bridge.</TR>\n` );
+
+   wfs( `<TR ALIGN="left"><TD COLSPAN=4>\n` );
+   wfs( `   i.e.<BR>\n` );
+   wfs( `   <UL>\n` );
+   // fetch Always
+   wfs( `      <LI> { "${constants.FETCH}": "<a name="${ constants.FETCH_ALWAYS }">${ constants.FETCH_ALWAYS }</a>" } - As before Always fetch characteristic value. ( Default )\n` );
+   // fetch Cached
+   wfs( `      <LI> { "${constants.FETCH}": "<a name="${ constants.FETCH_CACHED }">${ constants.FETCH_CACHED }</a>" } - Never fetch characteristic value. Use cached value. The cached value would have to be updated through polling.\n` );
+   // fetch Polled
+   wfs( `      <LI> { "${constants.FETCH}": "<a name="${ constants.FETCH_POLLED }">${ constants.FETCH_POLLED }</a>" } - Polled characteristics act like before  (Always). Non polled characteristic values are fetched from cache.\n` );
+   wfs( `  </UL>\n` );
+   wfs( `</TR>\n` );
+
+   // stateChangeResponseTime
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATECHANGERESPONSETIME }">${ constants.STATECHANGERESPONSETIME }</a><TD> < seconds > <TD> 60 <TD> How long to wait between a Set and Get command.</TR>\n` );
+
+   // timeout
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.TIMEOUT }">${ constants.TIMEOUT }</a><TD> < msec > <TD> <TD> How long before killing the state command.</TR>\n` );
+
+   // polling
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.POLLING }">${ constants.POLLING }</a><TD> < Bool > <TD> false <TD> If the characteristics should be polled for state change.</TR>\n` );
+
+   wfs( `<TR><TD><TD COLSPAN=3> or  [{"characteristic" < characteristic >, [ "interval": < sec >, "timeout": < msec > ] }] </TR>\n` );
+
+   // state_cmd
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATE_CMD }">${ constants.STATE_CMD }</a><TD>  < ${ constants.STATE_CMD } > <TD> See Description <TD> The command used to Get/Set Device characteristic State.</TR>\n` );
+   wfs( `<TR><TD COLSPAN="4">The ${ constants.STATE_CMD } represents the path to your script. Cmd4 appends the Get/Set shown.<BR>\n` );
+   wfs( `${ constants.STATE_CMD } Get < DisplayName > < characteristic ><BR>\n` );
+   wfs( `${ constants.STATE_CMD } Set < DisplayName > < characteristic > < value ></TD></TR>\n` );
+
+   // state_cmd_prefix
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATE_CMD_PREFIX }">${ constants.STATE_CMD_PREFIX }</a><TD>  < String > <TD> <TD> A String prepended to the < ${ constants.STATE_CMD } >.</TR>\n` );
+
+   // state_cmd_suffix
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATE_CMD_SUFFIX }">${ constants.STATE_CMD_SUFFIX }</a><TD> < String > <TD> <TD> A String appended to the < ${ constants.STATE_CMD } >.</TR>\n` );
+
+   // props
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.PROPS }">${ constants.PROPS }</a><TD>  < Bool >  <TD>    false     <TD> A way to override Hap Characteristiic Properties<BR>\n` );
+   wfs( `         Only used to set min/max temperatures, for instance:</TR>\n` );
+   wfs( `<TR ALIGN="Left"><TD><TD COLSPAN=3>"${ constants.PROPS }" : { "CurrentTemperature": { "maxValue":100, "minValue": -100, "minStep": 0.1}}</TR>\n` );
+
+   // category
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.CATEGORY }">${ constants.CATEGORY }</a><TD> < CATEGORY > <TD> undefined <TD> See <a href="https://developers.homebridge.io/#/categories">Homebridge Categories</a> for a complete list of possible categories.  </TR>\n` );
+
+   // fakegato
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.FAKEGATO }">${ constants.FAKEGATO }</a><TD>  < JSON >  <TD> <TD> See the section, <a href="https://github.com/ztalbot2000/homebridge-cmd4/README.md#fakegatotag"> "Adding in Fakegato history"</a> below.</TR>\n` );
+
+   // linkedTypes
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.LINKEDTYPES }">${ constants.LINKEDTYPES }</a><TD>  < JSON >  <TD> <TD> Other Cmd4 Accessories like Input Source for HDMI inputs. </TR>\n` );
+
+
+   wf( "-", `</TABLE>\n` );
+   endDiv( "main" );
+
+}
+
+
 
 function addSingleDeviceContent(device_type_enum, deviceName )
 {
@@ -555,9 +703,9 @@ function addSingleDeviceContent(device_type_enum, deviceName )
    let requiredCharacteristics = definition.requiredCharacteristics;
    let optionalCharacteristics = definition.optionalCharacteristics;
    let defaultPollingCharacteristics = definition.defaultPollingCharacteristics;
+
    // Start Div
-   wf( "+",
-      `<div class="Device">\n` );
+   wf( "+", `<div class="Device">\n` );
    wfs( `<a name="${ deviceName }"></a>\n` );
    wfs( `<header><h1>${ deviceName }</h1></header>\n` );
    wfs( `<p>UUID:${ definition.UUID }</p>\n` );
@@ -615,8 +763,107 @@ function addSingleDeviceContent(device_type_enum, deviceName )
       wf( "-", `</UL>\n` );
    }
    wfs( `<H3>Example config.json entry</H3>\n` );
-   wfs( `<H4 class="block-quote">\n` );
-   wfs( `</H4>\n` );
+   commaNeeded = true;
+
+   // This is pre-formatted text
+   wfs( `<pre>\n` );
+
+   // The stuff in the brace will be indented
+   wf( "+", `{\n` );
+   wfs( `${ constants.TYPE }: ${ definition.deviceName },\n` );
+   wfs( `${ constants.NAME }: "MY_${ definition.deviceName }",\n` );
+   wfs( `${ constants.DISPLAYNAME }: "MY_${ definition.deviceName }"` );
+   if ( requiredCharacteristics && requiredCharacteristics.length > 0 )
+   {
+      requiredCharacteristics.forEach( ( characteristic ) =>
+      {
+         let requiredDefinition = CMD4_ACC_TYPE_ENUM.properties[ characteristic.type ];
+         if ( commaNeeded )
+            w( `,\n` );
+
+         // Look up the characteristic index given, to its string value
+         let characteristicString = requiredDefinition.type;
+         let defaultValue = characteristic.defaultValue;
+         wfs( `${ characteristicString }: "${ defaultValue}"` );
+      });
+   }
+
+   if ( optionalCharacteristics && optionalCharacteristics.length > 0 )
+   {
+      optionalCharacteristics.forEach( ( characteristic ) =>
+      {
+         let optionalDefinition = CMD4_ACC_TYPE_ENUM.properties[ characteristic ];
+         let characteristicString = optionalDefinition.type;
+
+         if ( optionalDefinition.type == CMD4_ACC_TYPE_ENUM.Name )
+            return;
+
+         // Do not show TLV8 characteristics
+         let format = optionalDefinition.props.format;
+         switch( format )
+         {
+            case Characteristic.Formats.TLV8:
+               return;
+            case Characteristic.Formats.INT:
+               if ( commaNeeded ) w( `,\n` );
+               wfs( `${ characteristicString }: < INT >` );
+               break;
+            case Characteristic.Formats.UINT8:
+               if ( commaNeeded ) w( `,\n` );
+               wfs( `${ characteristicString }: < UINT8 >` );
+               break;
+            case Characteristic.Formats.UINT16:
+               if ( commaNeeded ) w( `,\n` );
+               wfs( `${ characteristicString }: < UINT16 >` );
+               break;
+            case Characteristic.Formats.UINT32:
+               if ( commaNeeded ) w( `,\n` );
+               wfs( `${ characteristicString }: < UINT32 >` );
+               break;
+            case Characteristic.Formats.UINT64:
+               if ( commaNeeded ) w( `,\n` );
+               wfs( `${ characteristicString }: < UINT64 >` );
+               break;
+            case Characteristic.Formats.STRING:
+               if ( commaNeeded ) w( `,\n` );
+               wfs( `${ characteristicString }: "< STRING> "` );
+               break;
+            case Characteristic.Formats.BOOL:
+               if ( commaNeeded ) w( `,\n` );
+               wfs( `${ characteristicString }: < BOOLEAN >` );
+               break;
+            case Characteristic.Formats.ARRAY:
+               if ( commaNeeded ) w( `,\n` );
+               wfs( `${ characteristicString }: < ARRAY >` );
+               break;
+            case Characteristic.Formats.DATA:
+               if ( commaNeeded ) w( `,\n` );
+               wfs( `${ characteristicString }: < DATA >` );
+               break;
+            case Characteristic.Formats.DICTIONARY:
+               if ( commaNeeded ) w( `,\n` );
+               wfs( `${ characteristicString }: < DICTIONARY >` );
+               break;
+            default:
+               if ( commaNeeded ) w( `,\n` );
+               wfs( `Unknown format ${ format }` );
+         }
+      });
+   }
+
+   if ( commaNeeded ) w( `,\n` );
+      wfs( `<a href="#${ constants.STATE_CMD }">${ constants.STATE_CMD }</a>: < "STRING" >,\n` );
+   wfs( `<a href="#${ constants.POLLING }">${ constants.POLLING }</a>: < POLLING>\n` );
+   // The last carriage return before the close brace
+   w( `\n` );
+
+   // End of the indented stuff in the brace
+   wf( "-", `}\n` );
+
+   // End of pre-formatted text
+   wfs( `</pre>\n` );
+
+   wfs( `See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>\n` );
 
    endDiv( "Device" );
 }
@@ -765,9 +1012,15 @@ function wf( level, text )
       divLevel++;
 }
 
+// Convenience function for wfs. writing to same level.
 function wfs( text )
 {
    wf( "nc", text );
+}
+// Convenience function to write to fid, no formatting, as is.
+function w( text )
+{
+   fid.write( text );
 }
 
 createHTMLCmd4AccDocument( );

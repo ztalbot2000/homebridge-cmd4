@@ -24,7 +24,7 @@
 &nbsp;&nbsp;&nbsp; From within this environment test your script like:<BR>
 
 ```bash
-   *SHELL*> node .homebridge/Cmd4Scripts/State.js Get My_Fan On
+   *SHELL*> node .homebridge/YourScriptHere.js Get My_Fan On
 ```
 
 ### The Parameters Sent by Cmd4
