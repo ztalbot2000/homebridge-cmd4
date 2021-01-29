@@ -54,6 +54,7 @@ BODY {
    box-shadow: 0 1px 4px 0 rgba(0,0,0,.1);
 }
 
+/* This houses the Logo */
 .container-fluid {
    width: 100%;
    padding-right:15px;
@@ -141,6 +142,12 @@ BODY {
 .main {
   MARGIN-LEFT: 148px; /* Same width as the sidebar + left position in px */
   PADDING: 55px 10px; /* Top, Right, Bottom, Left */
+}
+
+/* Div within main, holding page information */
+/* This is also used to hide all the sections at startup */
+.section {
+  display: none; /* initially hidden */
 }
 
 /* Common paragraph sytling */
@@ -241,337 +248,342 @@ block-warning a {
          <i class="fa fa-caret-down"></i>
       </button>
       <div class="panel">
-         <a href="#AccessControl">AccessControl</a>
-         <a href="#AccessoryRuntimeInformation">AccessoryRuntimeInformation</a>
-         <a href="#AccessoryInformation">AccessoryInformation</a>
-         <a href="#AirPurifier">AirPurifier</a>
-         <a href="#AirQualitySensor">AirQualitySensor</a>
-         <a href="#BatteryService">BatteryService</a>
-         <a href="#BridgeConfiguration">BridgeConfiguration</a>
-         <a href="#BridgingState">BridgingState</a>
-         <a href="#CameraEventRecordingManagement">CameraEventRecordingManagement</a>
-         <a href="#CameraControl">CameraControl</a>
-         <a href="#CameraRTPStreamManagement">CameraRTPStreamManagement</a>
-         <a href="#CameraOperatingMode">CameraOperatingMode</a>
-         <a href="#CarbonDioxideSensor">CarbonDioxideSensor</a>
-         <a href="#CarbonMonoxideSensor">CarbonMonoxideSensor</a>
-         <a href="#ContactSensor">ContactSensor</a>
-         <a href="#Diagnostics">Diagnostics</a>
-         <a href="#Door">Door</a>
-         <a href="#DoorBell">DoorBell</a>
-         <a href="#Fan">Fan</a>
-         <a href="#Fanv1">Fanv1</a>
-         <a href="#Fanv2">Fanv2</a>
-         <a href="#Faucet">Faucet</a>
-         <a href="#FilterMaintenance">FilterMaintenance</a>
-         <a href="#GarageDoorOpener">GarageDoorOpener</a>
-         <a href="#HeaterCooler">HeaterCooler</a>
-         <a href="#HumidifierDehumidifier">HumidifierDehumidifier</a>
-         <a href="#HumiditySensor">HumiditySensor</a>
-         <a href="#InputSource">InputSource</a>
-         <a href="#IrrigationSystem">IrrigationSystem</a>
-         <a href="#LeakSensor">LeakSensor</a>
-         <a href="#LightSensor">LightSensor</a>
-         <a href="#Lightbulb">Lightbulb</a>
-         <a href="#LockManagement">LockManagement</a>
-         <a href="#LockMechanism">LockMechanism</a>
-         <a href="#Microphone">Microphone</a>
-         <a href="#MotionSensor">MotionSensor</a>
-         <a href="#OccupancySensor">OccupancySensor</a>
-         <a href="#Outlet">Outlet</a>
-         <a href="#Pairing">Pairing</a>
-         <a href="#PowerManagement">PowerManagement</a>
-         <a href="#ProtocolInformation">ProtocolInformation</a>
-         <a href="#Relay">Relay</a>
-         <a href="#SecuritySystem">SecuritySystem</a>
-         <a href="#ServiceLabel">ServiceLabel</a>
-         <a href="#Siri">Siri</a>
-         <a href="#Slat">Slat</a>
-         <a href="#SmartSpeaker">SmartSpeaker</a>
-         <a href="#SmokeSensor">SmokeSensor</a>
-         <a href="#Speaker">Speaker</a>
-         <a href="#StatefulProgrammableSwitch">StatefulProgrammableSwitch</a>
-         <a href="#StatelessProgrammableSwitch">StatelessProgrammableSwitch</a>
-         <a href="#Switch">Switch</a>
-         <a href="#TargetControl">TargetControl</a>
-         <a href="#TargetControlManagement">TargetControlManagement</a>
-         <a href="#Television">Television</a>
-         <a href="#TelevisionSpeaker">TelevisionSpeaker</a>
-         <a href="#TemperatureSensor">TemperatureSensor</a>
-         <a href="#Thermostat">Thermostat</a>
-         <a href="#TimeInformation">TimeInformation</a>
-         <a href="#TransferTransportManagement">TransferTransportManagement</a>
-         <a href="#TunneledBTLEAccessoryService">TunneledBTLEAccessoryService</a>
-         <a href="#Valve">Valve</a>
-         <a href="#WiFiRouter">WiFiRouter</a>
-         <a href="#WiFiSatellite">WiFiSatellite</a>
-         <a href="#Window">Window</a>
-         <a href="#WindowCovering">WindowCovering</a>
+         <a href="#AccessControl" onclick="toggleVisibility( 'AccessControl');">AccessControl</a>
+         <a href="#AccessoryRuntimeInformation" onclick="toggleVisibility( 'AccessoryRuntimeInformation');">AccessoryRuntimeInformation</a>
+         <a href="#AccessoryInformation" onclick="toggleVisibility( 'AccessoryInformation');">AccessoryInformation</a>
+         <a href="#AirPurifier" onclick="toggleVisibility( 'AirPurifier');">AirPurifier</a>
+         <a href="#AirQualitySensor" onclick="toggleVisibility( 'AirQualitySensor');">AirQualitySensor</a>
+         <a href="#BatteryService" onclick="toggleVisibility( 'BatteryService');">BatteryService</a>
+         <a href="#BridgeConfiguration" onclick="toggleVisibility( 'BridgeConfiguration');">BridgeConfiguration</a>
+         <a href="#BridgingState" onclick="toggleVisibility( 'BridgingState');">BridgingState</a>
+         <a href="#CameraEventRecordingManagement" onclick="toggleVisibility( 'CameraEventRecordingManagement');">CameraEventRecordingManagement</a>
+         <a href="#CameraControl" onclick="toggleVisibility( 'CameraControl');">CameraControl</a>
+         <a href="#CameraRTPStreamManagement" onclick="toggleVisibility( 'CameraRTPStreamManagement');">CameraRTPStreamManagement</a>
+         <a href="#CameraOperatingMode" onclick="toggleVisibility( 'CameraOperatingMode');">CameraOperatingMode</a>
+         <a href="#CarbonDioxideSensor" onclick="toggleVisibility( 'CarbonDioxideSensor');">CarbonDioxideSensor</a>
+         <a href="#CarbonMonoxideSensor" onclick="toggleVisibility( 'CarbonMonoxideSensor');">CarbonMonoxideSensor</a>
+         <a href="#ContactSensor" onclick="toggleVisibility( 'ContactSensor');">ContactSensor</a>
+         <a href="#Diagnostics" onclick="toggleVisibility( 'Diagnostics');">Diagnostics</a>
+         <a href="#Door" onclick="toggleVisibility( 'Door');">Door</a>
+         <a href="#DoorBell" onclick="toggleVisibility( 'DoorBell');">DoorBell</a>
+         <a href="#Fan" onclick="toggleVisibility( 'Fan');">Fan</a>
+         <a href="#Fanv1" onclick="toggleVisibility( 'Fanv1');">Fanv1</a>
+         <a href="#Fanv2" onclick="toggleVisibility( 'Fanv2');">Fanv2</a>
+         <a href="#Faucet" onclick="toggleVisibility( 'Faucet');">Faucet</a>
+         <a href="#FilterMaintenance" onclick="toggleVisibility( 'FilterMaintenance');">FilterMaintenance</a>
+         <a href="#GarageDoorOpener" onclick="toggleVisibility( 'GarageDoorOpener');">GarageDoorOpener</a>
+         <a href="#HeaterCooler" onclick="toggleVisibility( 'HeaterCooler');">HeaterCooler</a>
+         <a href="#HumidifierDehumidifier" onclick="toggleVisibility( 'HumidifierDehumidifier');">HumidifierDehumidifier</a>
+         <a href="#HumiditySensor" onclick="toggleVisibility( 'HumiditySensor');">HumiditySensor</a>
+         <a href="#InputSource" onclick="toggleVisibility( 'InputSource');">InputSource</a>
+         <a href="#IrrigationSystem" onclick="toggleVisibility( 'IrrigationSystem');">IrrigationSystem</a>
+         <a href="#LeakSensor" onclick="toggleVisibility( 'LeakSensor');">LeakSensor</a>
+         <a href="#LightSensor" onclick="toggleVisibility( 'LightSensor');">LightSensor</a>
+         <a href="#Lightbulb" onclick="toggleVisibility( 'Lightbulb');">Lightbulb</a>
+         <a href="#LockManagement" onclick="toggleVisibility( 'LockManagement');">LockManagement</a>
+         <a href="#LockMechanism" onclick="toggleVisibility( 'LockMechanism');">LockMechanism</a>
+         <a href="#Microphone" onclick="toggleVisibility( 'Microphone');">Microphone</a>
+         <a href="#MotionSensor" onclick="toggleVisibility( 'MotionSensor');">MotionSensor</a>
+         <a href="#OccupancySensor" onclick="toggleVisibility( 'OccupancySensor');">OccupancySensor</a>
+         <a href="#Outlet" onclick="toggleVisibility( 'Outlet');">Outlet</a>
+         <a href="#Pairing" onclick="toggleVisibility( 'Pairing');">Pairing</a>
+         <a href="#PowerManagement" onclick="toggleVisibility( 'PowerManagement');">PowerManagement</a>
+         <a href="#ProtocolInformation" onclick="toggleVisibility( 'ProtocolInformation');">ProtocolInformation</a>
+         <a href="#Relay" onclick="toggleVisibility( 'Relay');">Relay</a>
+         <a href="#SecuritySystem" onclick="toggleVisibility( 'SecuritySystem');">SecuritySystem</a>
+         <a href="#ServiceLabel" onclick="toggleVisibility( 'ServiceLabel');">ServiceLabel</a>
+         <a href="#Siri" onclick="toggleVisibility( 'Siri');">Siri</a>
+         <a href="#Slat" onclick="toggleVisibility( 'Slat');">Slat</a>
+         <a href="#SmartSpeaker" onclick="toggleVisibility( 'SmartSpeaker');">SmartSpeaker</a>
+         <a href="#SmokeSensor" onclick="toggleVisibility( 'SmokeSensor');">SmokeSensor</a>
+         <a href="#Speaker" onclick="toggleVisibility( 'Speaker');">Speaker</a>
+         <a href="#StatefulProgrammableSwitch" onclick="toggleVisibility( 'StatefulProgrammableSwitch');">StatefulProgrammableSwitch</a>
+         <a href="#StatelessProgrammableSwitch" onclick="toggleVisibility( 'StatelessProgrammableSwitch');">StatelessProgrammableSwitch</a>
+         <a href="#Switch" onclick="toggleVisibility( 'Switch');">Switch</a>
+         <a href="#TargetControl" onclick="toggleVisibility( 'TargetControl');">TargetControl</a>
+         <a href="#TargetControlManagement" onclick="toggleVisibility( 'TargetControlManagement');">TargetControlManagement</a>
+         <a href="#Television" onclick="toggleVisibility( 'Television');">Television</a>
+         <a href="#TelevisionSpeaker" onclick="toggleVisibility( 'TelevisionSpeaker');">TelevisionSpeaker</a>
+         <a href="#TemperatureSensor" onclick="toggleVisibility( 'TemperatureSensor');">TemperatureSensor</a>
+         <a href="#Thermostat" onclick="toggleVisibility( 'Thermostat');">Thermostat</a>
+         <a href="#TimeInformation" onclick="toggleVisibility( 'TimeInformation');">TimeInformation</a>
+         <a href="#TransferTransportManagement" onclick="toggleVisibility( 'TransferTransportManagement');">TransferTransportManagement</a>
+         <a href="#TunneledBTLEAccessoryService" onclick="toggleVisibility( 'TunneledBTLEAccessoryService');">TunneledBTLEAccessoryService</a>
+         <a href="#Valve" onclick="toggleVisibility( 'Valve');">Valve</a>
+         <a href="#WiFiRouter" onclick="toggleVisibility( 'WiFiRouter');">WiFiRouter</a>
+         <a href="#WiFiSatellite" onclick="toggleVisibility( 'WiFiSatellite');">WiFiSatellite</a>
+         <a href="#Window" onclick="toggleVisibility( 'Window');">Window</a>
+         <a href="#WindowCovering" onclick="toggleVisibility( 'WindowCovering');">WindowCovering</a>
       </DIV>   <!-- panel -->
       <button class="accordion">Characteristics
          <i class="fa fa-caret-down"></i>
       </button>
       <div class="panel">
-         <a href="#AccessControlLevel">AccessControlLevel</a>
-         <a href="#AccessoryFlags">AccessoryFlags</a>
-         <a href="#AccessoryIdentifier">AccessoryIdentifier</a>
-         <a href="#Active">Active</a>
-         <a href="#ActiveIdentifier">ActiveIdentifier</a>
-         <a href="#ActivityInterval">ActivityInterval</a>
-         <a href="#AdministratorOnlyAccess">AdministratorOnlyAccess</a>
-         <a href="#AirParticulateDensity">AirParticulateDensity</a>
-         <a href="#AirParticulateSize">AirParticulateSize</a>
-         <a href="#AirQuality">AirQuality</a>
-         <a href="#AppMatchingIdentifier">AppMatchingIdentifier</a>
-         <a href="#AudioFeedback">AudioFeedback</a>
-         <a href="#BatteryLevel">BatteryLevel</a>
-         <a href="#Brightness">Brightness</a>
-         <a href="#ButtonEvent">ButtonEvent</a>
-         <a href="#CCAEnergyDetectThreshold">CCAEnergyDetectThreshold</a>
-         <a href="#CCASignalDetectThreshold">CCASignalDetectThreshold</a>
-         <a href="#CameraOperatingModeIndicator">CameraOperatingModeIndicator</a>
-         <a href="#CarbonDioxideDetected">CarbonDioxideDetected</a>
-         <a href="#CarbonDioxideLevel">CarbonDioxideLevel</a>
-         <a href="#CarbonDioxidePeakLevel">CarbonDioxidePeakLevel</a>
-         <a href="#CarbonMonoxideDetected">CarbonMonoxideDetected</a>
-         <a href="#CarbonMonoxideLevel">CarbonMonoxideLevel</a>
-         <a href="#CarbonMonoxidePeakLevel">CarbonMonoxidePeakLevel</a>
-         <a href="#Category">Category</a>
-         <a href="#CharacteristicValueTransitionControl">CharacteristicValueTransitionControl</a>
-         <a href="#ChargingState">ChargingState</a>
-         <a href="#ClosedCaptions">ClosedCaptions</a>
-         <a href="#ColorTemperature">ColorTemperature</a>
-         <a href="#ConfigureBridgedAccessory">ConfigureBridgedAccessory</a>
-         <a href="#ConfigureBridgedAccessoryStatus">ConfigureBridgedAccessoryStatus</a>
-         <a href="#ConfiguredName">ConfiguredName</a>
-         <a href="#ContactSensorState">ContactSensorState</a>
-         <a href="#CoolingThresholdTemperature">CoolingThresholdTemperature</a>
-         <a href="#CurrentAirPurifierState">CurrentAirPurifierState</a>
-         <a href="#CurrentAmbientLightLevel">CurrentAmbientLightLevel</a>
-         <a href="#CurrentDoorState">CurrentDoorState</a>
-         <a href="#CurrentFanState">CurrentFanState</a>
-         <a href="#CurrentHeaterCoolerState">CurrentHeaterCoolerState</a>
-         <a href="#CurrentHeatingCoolingState">CurrentHeatingCoolingState</a>
-         <a href="#CurrentHorizontalTiltAngle">CurrentHorizontalTiltAngle</a>
-         <a href="#CurrentHumidifierDehumidifierState">CurrentHumidifierDehumidifierState</a>
-         <a href="#CurrentMediaState">CurrentMediaState</a>
-         <a href="#CurrentPosition">CurrentPosition</a>
-         <a href="#CurrentRelativeHumidity">CurrentRelativeHumidity</a>
-         <a href="#CurrentSlatState">CurrentSlatState</a>
-         <a href="#CurrentTemperature">CurrentTemperature</a>
-         <a href="#CurrentTiltAngle">CurrentTiltAngle</a>
-         <a href="#CurrentTime">CurrentTime</a>
-         <a href="#CurrentTransport">CurrentTransport</a>
-         <a href="#CurrentVerticalTiltAngle">CurrentVerticalTiltAngle</a>
-         <a href="#CurrentVisibilityState">CurrentVisibilityState</a>
-         <a href="#DataStreamHAPTransport">DataStreamHAPTransport</a>
-         <a href="#DataStreamHAPTransportInterrupt">DataStreamHAPTransportInterrupt</a>
-         <a href="#DayoftheWeek">DayoftheWeek</a>
-         <a href="#DiagonalFieldOfView">DiagonalFieldOfView</a>
-         <a href="#DigitalZoom">DigitalZoom</a>
-         <a href="#DiscoverBridgedAccessories">DiscoverBridgedAccessories</a>
-         <a href="#DiscoveredBridgedAccessories">DiscoveredBridgedAccessories</a>
-         <a href="#DisplayOrder">DisplayOrder</a>
-         <a href="#EventRetransmissionMaximum">EventRetransmissionMaximum</a>
-         <a href="#EventSnapshotsActive">EventSnapshotsActive</a>
-         <a href="#EventTransmissionCounters">EventTransmissionCounters</a>
-         <a href="#FilterChangeIndication">FilterChangeIndication</a>
-         <a href="#FilterLifeLevel">FilterLifeLevel</a>
-         <a href="#FirmwareRevision">FirmwareRevision</a>
-         <a href="#HardwareRevision">HardwareRevision</a>
-         <a href="#HeartBeat">HeartBeat</a>
-         <a href="#HeatingThresholdTemperature">HeatingThresholdTemperature</a>
-         <a href="#HoldPosition">HoldPosition</a>
-         <a href="#HomeKitCameraActive">HomeKitCameraActive</a>
-         <a href="#Hue">Hue</a>
-         <a href="#Identifier">Identifier</a>
-         <a href="#Identify">Identify</a>
-         <a href="#ImageMirroring">ImageMirroring</a>
-         <a href="#ImageRotation">ImageRotation</a>
-         <a href="#InUse">InUse</a>
-         <a href="#InputDeviceType">InputDeviceType</a>
-         <a href="#InputSourceType">InputSourceType</a>
-         <a href="#IsConfigured">IsConfigured</a>
-         <a href="#LeakDetected">LeakDetected</a>
-         <a href="#LinkQuality">LinkQuality</a>
-         <a href="#LockControlPoint">LockControlPoint</a>
-         <a href="#LockCurrentState">LockCurrentState</a>
-         <a href="#LockLastKnownAction">LockLastKnownAction</a>
-         <a href="#LockManagementAutoSecurityTimeout">LockManagementAutoSecurityTimeout</a>
-         <a href="#LockPhysicalControls">LockPhysicalControls</a>
-         <a href="#LockTargetState">LockTargetState</a>
-         <a href="#Logs">Logs</a>
-         <a href="#MACRetransmissionMaximum">MACRetransmissionMaximum</a>
-         <a href="#MACTransmissionCounters">MACTransmissionCounters</a>
-         <a href="#ManagedNetworkEnable">ManagedNetworkEnable</a>
-         <a href="#ManuallyDisabled">ManuallyDisabled</a>
-         <a href="#Manufacturer">Manufacturer</a>
-         <a href="#Model">Model</a>
-         <a href="#MotionDetected">MotionDetected</a>
-         <a href="#Mute">Mute</a>
-         <a href="#Name">Name</a>
-         <a href="#NetworkAccessViolationControl">NetworkAccessViolationControl</a>
-         <a href="#NetworkClientProfileControl">NetworkClientProfileControl</a>
-         <a href="#NetworkClientStatusControl">NetworkClientStatusControl</a>
-         <a href="#NightVision">NightVision</a>
-         <a href="#NitrogenDioxideDensity">NitrogenDioxideDensity</a>
-         <a href="#ObstructionDetected">ObstructionDetected</a>
-         <a href="#OccupancyDetected">OccupancyDetected</a>
-         <a href="#On">On</a>
-         <a href="#OperatingStateResponse">OperatingStateResponse</a>
-         <a href="#OpticalZoom">OpticalZoom</a>
-         <a href="#OutletInUse">OutletInUse</a>
-         <a href="#OzoneDensity">OzoneDensity</a>
-         <a href="#PM10Density">PM10Density</a>
-         <a href="#PM2_5Density">PM2_5Density</a>
-         <a href="#PairSetup">PairSetup</a>
-         <a href="#PairVerify">PairVerify</a>
-         <a href="#PairingFeatures">PairingFeatures</a>
-         <a href="#PairingPairings">PairingPairings</a>
-         <a href="#PasswordSetting">PasswordSetting</a>
-         <a href="#PeriodicSnapshotsActive">PeriodicSnapshotsActive</a>
-         <a href="#PictureMode">PictureMode</a>
-         <a href="#Ping">Ping</a>
-         <a href="#PositionState">PositionState</a>
-         <a href="#PowerModeSelection">PowerModeSelection</a>
-         <a href="#ProductData">ProductData</a>
-         <a href="#ProgramMode">ProgramMode</a>
-         <a href="#ProgrammableSwitchEvent">ProgrammableSwitchEvent</a>
-         <a href="#ProgrammableSwitchOutputState">ProgrammableSwitchOutputState</a>
-         <a href="#Reachable">Reachable</a>
-         <a href="#ReceivedSignalStrengthIndication">ReceivedSignalStrengthIndication</a>
-         <a href="#ReceiverSensitivity">ReceiverSensitivity</a>
-         <a href="#RecordingAudioActive">RecordingAudioActive</a>
-         <a href="#RelativeHumidityDehumidifierThreshold">RelativeHumidityDehumidifierThreshold</a>
-         <a href="#RelativeHumidityHumidifierThreshold">RelativeHumidityHumidifierThreshold</a>
-         <a href="#RelayControlPoint">RelayControlPoint</a>
-         <a href="#RelayEnabled">RelayEnabled</a>
-         <a href="#RelayState">RelayState</a>
-         <a href="#RemainingDuration">RemainingDuration</a>
-         <a href="#RemoteKey">RemoteKey</a>
-         <a href="#ResetFilterIndication">ResetFilterIndication</a>
-         <a href="#RotationDirection">RotationDirection</a>
-         <a href="#RotationSpeed">RotationSpeed</a>
-         <a href="#RouterStatus">RouterStatus</a>
-         <a href="#Saturation">Saturation</a>
-         <a href="#SecuritySystemAlarmType">SecuritySystemAlarmType</a>
-         <a href="#SecuritySystemCurrentState">SecuritySystemCurrentState</a>
-         <a href="#SecuritySystemTargetState">SecuritySystemTargetState</a>
-         <a href="#SelectedAudioStreamConfiguration">SelectedAudioStreamConfiguration</a>
-         <a href="#SelectedCameraRecordingConfiguration">SelectedCameraRecordingConfiguration</a>
-         <a href="#SelectedRTPStreamConfiguration">SelectedRTPStreamConfiguration</a>
-         <a href="#SerialNumber">SerialNumber</a>
-         <a href="#ServiceLabelIndex">ServiceLabelIndex</a>
-         <a href="#ServiceLabelNamespace">ServiceLabelNamespace</a>
-         <a href="#SetDuration">SetDuration</a>
-         <a href="#SetupDataStreamTransport">SetupDataStreamTransport</a>
-         <a href="#SetupEndpoints">SetupEndpoints</a>
-         <a href="#SetupTransferTransport">SetupTransferTransport</a>
-         <a href="#SignalToNoiseRatio">SignalToNoiseRatio</a>
-         <a href="#SiriInputType">SiriInputType</a>
-         <a href="#SlatType">SlatType</a>
-         <a href="#SleepDiscoveryMode">SleepDiscoveryMode</a>
-         <a href="#SleepInterval">SleepInterval</a>
-         <a href="#SmokeDetected">SmokeDetected</a>
-         <a href="#SoftwareRevision">SoftwareRevision</a>
-         <a href="#StatusActive">StatusActive</a>
-         <a href="#StatusFault">StatusFault</a>
-         <a href="#StatusJammed">StatusJammed</a>
-         <a href="#StatusLowBattery">StatusLowBattery</a>
-         <a href="#StatusTampered">StatusTampered</a>
-         <a href="#StreamingStatus">StreamingStatus</a>
-         <a href="#SulphurDioxideDensity">SulphurDioxideDensity</a>
-         <a href="#SupportedAudioRecordingConfiguration">SupportedAudioRecordingConfiguration</a>
-         <a href="#SupportedAudioStreamConfiguration">SupportedAudioStreamConfiguration</a>
-         <a href="#SupportedCameraRecordingConfiguration">SupportedCameraRecordingConfiguration</a>
-         <a href="#SupportedDataStreamTransportConfiguration">SupportedDataStreamTransportConfiguration</a>
-         <a href="#SupportedCharacteristicValueTransitionConfiguration">SupportedCharacteristicValueTransitionConfiguration</a>
-         <a href="#SupportedDiagnosticsSnapshot">SupportedDiagnosticsSnapshot</a>
-         <a href="#SupportedRTPConfiguration">SupportedRTPConfiguration</a>
-         <a href="#SupportedRouterConfiguration">SupportedRouterConfiguration</a>
-         <a href="#SupportedTransferTransportConfiguration">SupportedTransferTransportConfiguration</a>
-         <a href="#SupportedVideoRecordingConfiguration">SupportedVideoRecordingConfiguration</a>
-         <a href="#SupportedVideoStreamConfiguration">SupportedVideoStreamConfiguration</a>
-         <a href="#SwingMode">SwingMode</a>
-         <a href="#TargetAirPurifierState">TargetAirPurifierState</a>
-         <a href="#TargetAirQuality">TargetAirQuality</a>
-         <a href="#TargetControlList">TargetControlList</a>
-         <a href="#TargetControlSupportedConfiguration">TargetControlSupportedConfiguration</a>
-         <a href="#TargetDoorState">TargetDoorState</a>
-         <a href="#TargetFanState">TargetFanState</a>
-         <a href="#TargetHeaterCoolerState">TargetHeaterCoolerState</a>
-         <a href="#TargetHeatingCoolingState">TargetHeatingCoolingState</a>
-         <a href="#TargetHorizontalTiltAngle">TargetHorizontalTiltAngle</a>
-         <a href="#TargetHumidifierDehumidifierState">TargetHumidifierDehumidifierState</a>
-         <a href="#TargetMediaState">TargetMediaState</a>
-         <a href="#TargetPosition">TargetPosition</a>
-         <a href="#TargetRelativeHumidity">TargetRelativeHumidity</a>
-         <a href="#TargetSlatState">TargetSlatState</a>
-         <a href="#TargetTemperature">TargetTemperature</a>
-         <a href="#TargetTiltAngle">TargetTiltAngle</a>
-         <a href="#TargetVerticalTiltAngle">TargetVerticalTiltAngle</a>
-         <a href="#TargetVisibilityState">TargetVisibilityState</a>
-         <a href="#TemperatureDisplayUnits">TemperatureDisplayUnits</a>
-         <a href="#ThirdPartyCameraActive">ThirdPartyCameraActive</a>
-         <a href="#TimeUpdate">TimeUpdate</a>
-         <a href="#TransmitPower">TransmitPower</a>
-         <a href="#TransmitPowerMaximum">TransmitPowerMaximum</a>
-         <a href="#TunnelConnectionTimeout">TunnelConnectionTimeout</a>
-         <a href="#TunneledAccessoryAdvertising">TunneledAccessoryAdvertising</a>
-         <a href="#TunneledAccessoryConnected">TunneledAccessoryConnected</a>
-         <a href="#TunneledAccessoryStateNumber">TunneledAccessoryStateNumber</a>
-         <a href="#VOCDensity">VOCDensity</a>
-         <a href="#ValveType">ValveType</a>
-         <a href="#Version">Version</a>
-         <a href="#VideoAnalysisActive">VideoAnalysisActive</a>
-         <a href="#Volume">Volume</a>
-         <a href="#VolumeControlType">VolumeControlType</a>
-         <a href="#VolumeSelector">VolumeSelector</a>
-         <a href="#WANConfigurationList">WANConfigurationList</a>
-         <a href="#WANStatusList">WANStatusList</a>
-         <a href="#WakeConfiguration">WakeConfiguration</a>
-         <a href="#WaterLevel">WaterLevel</a>
-         <a href="#WiFiCapabilities">WiFiCapabilities</a>
-         <a href="#WiFiConfigurationControl">WiFiConfigurationControl</a>
-         <a href="#WiFiSatelliteStatus">WiFiSatelliteStatus</a>
+         <a href="#AccessControlLevel" onclick="toggleVisibility( 'AccessControlLevel');">AccessControlLevel</a>
+         <a href="#AccessoryFlags" onclick="toggleVisibility( 'AccessoryFlags');">AccessoryFlags</a>
+         <a href="#AccessoryIdentifier" onclick="toggleVisibility( 'AccessoryIdentifier');">AccessoryIdentifier</a>
+         <a href="#Active" onclick="toggleVisibility( 'Active');">Active</a>
+         <a href="#ActiveIdentifier" onclick="toggleVisibility( 'ActiveIdentifier');">ActiveIdentifier</a>
+         <a href="#ActivityInterval" onclick="toggleVisibility( 'ActivityInterval');">ActivityInterval</a>
+         <a href="#AdministratorOnlyAccess" onclick="toggleVisibility( 'AdministratorOnlyAccess');">AdministratorOnlyAccess</a>
+         <a href="#AirParticulateDensity" onclick="toggleVisibility( 'AirParticulateDensity');">AirParticulateDensity</a>
+         <a href="#AirParticulateSize" onclick="toggleVisibility( 'AirParticulateSize');">AirParticulateSize</a>
+         <a href="#AirQuality" onclick="toggleVisibility( 'AirQuality');">AirQuality</a>
+         <a href="#AppMatchingIdentifier" onclick="toggleVisibility( 'AppMatchingIdentifier');">AppMatchingIdentifier</a>
+         <a href="#AudioFeedback" onclick="toggleVisibility( 'AudioFeedback');">AudioFeedback</a>
+         <a href="#BatteryLevel" onclick="toggleVisibility( 'BatteryLevel');">BatteryLevel</a>
+         <a href="#Brightness" onclick="toggleVisibility( 'Brightness');">Brightness</a>
+         <a href="#ButtonEvent" onclick="toggleVisibility( 'ButtonEvent');">ButtonEvent</a>
+         <a href="#CCAEnergyDetectThreshold" onclick="toggleVisibility( 'CCAEnergyDetectThreshold');">CCAEnergyDetectThreshold</a>
+         <a href="#CCASignalDetectThreshold" onclick="toggleVisibility( 'CCASignalDetectThreshold');">CCASignalDetectThreshold</a>
+         <a href="#CameraOperatingModeIndicator" onclick="toggleVisibility( 'CameraOperatingModeIndicator');">CameraOperatingModeIndicator</a>
+         <a href="#CarbonDioxideDetected" onclick="toggleVisibility( 'CarbonDioxideDetected');">CarbonDioxideDetected</a>
+         <a href="#CarbonDioxideLevel" onclick="toggleVisibility( 'CarbonDioxideLevel');">CarbonDioxideLevel</a>
+         <a href="#CarbonDioxidePeakLevel" onclick="toggleVisibility( 'CarbonDioxidePeakLevel');">CarbonDioxidePeakLevel</a>
+         <a href="#CarbonMonoxideDetected" onclick="toggleVisibility( 'CarbonMonoxideDetected');">CarbonMonoxideDetected</a>
+         <a href="#CarbonMonoxideLevel" onclick="toggleVisibility( 'CarbonMonoxideLevel');">CarbonMonoxideLevel</a>
+         <a href="#CarbonMonoxidePeakLevel" onclick="toggleVisibility( 'CarbonMonoxidePeakLevel');">CarbonMonoxidePeakLevel</a>
+         <a href="#Category" onclick="toggleVisibility( 'Category');">Category</a>
+         <a href="#CharacteristicValueTransitionControl" onclick="toggleVisibility( 'CharacteristicValueTransitionControl');">CharacteristicValueTransitionControl</a>
+         <a href="#ChargingState" onclick="toggleVisibility( 'ChargingState');">ChargingState</a>
+         <a href="#ClosedCaptions" onclick="toggleVisibility( 'ClosedCaptions');">ClosedCaptions</a>
+         <a href="#ColorTemperature" onclick="toggleVisibility( 'ColorTemperature');">ColorTemperature</a>
+         <a href="#ConfigureBridgedAccessory" onclick="toggleVisibility( 'ConfigureBridgedAccessory');">ConfigureBridgedAccessory</a>
+         <a href="#ConfigureBridgedAccessoryStatus" onclick="toggleVisibility( 'ConfigureBridgedAccessoryStatus');">ConfigureBridgedAccessoryStatus</a>
+         <a href="#ConfiguredName" onclick="toggleVisibility( 'ConfiguredName');">ConfiguredName</a>
+         <a href="#ContactSensorState" onclick="toggleVisibility( 'ContactSensorState');">ContactSensorState</a>
+         <a href="#CoolingThresholdTemperature" onclick="toggleVisibility( 'CoolingThresholdTemperature');">CoolingThresholdTemperature</a>
+         <a href="#CurrentAirPurifierState" onclick="toggleVisibility( 'CurrentAirPurifierState');">CurrentAirPurifierState</a>
+         <a href="#CurrentAmbientLightLevel" onclick="toggleVisibility( 'CurrentAmbientLightLevel');">CurrentAmbientLightLevel</a>
+         <a href="#CurrentDoorState" onclick="toggleVisibility( 'CurrentDoorState');">CurrentDoorState</a>
+         <a href="#CurrentFanState" onclick="toggleVisibility( 'CurrentFanState');">CurrentFanState</a>
+         <a href="#CurrentHeaterCoolerState" onclick="toggleVisibility( 'CurrentHeaterCoolerState');">CurrentHeaterCoolerState</a>
+         <a href="#CurrentHeatingCoolingState" onclick="toggleVisibility( 'CurrentHeatingCoolingState');">CurrentHeatingCoolingState</a>
+         <a href="#CurrentHorizontalTiltAngle" onclick="toggleVisibility( 'CurrentHorizontalTiltAngle');">CurrentHorizontalTiltAngle</a>
+         <a href="#CurrentHumidifierDehumidifierState" onclick="toggleVisibility( 'CurrentHumidifierDehumidifierState');">CurrentHumidifierDehumidifierState</a>
+         <a href="#CurrentMediaState" onclick="toggleVisibility( 'CurrentMediaState');">CurrentMediaState</a>
+         <a href="#CurrentPosition" onclick="toggleVisibility( 'CurrentPosition');">CurrentPosition</a>
+         <a href="#CurrentRelativeHumidity" onclick="toggleVisibility( 'CurrentRelativeHumidity');">CurrentRelativeHumidity</a>
+         <a href="#CurrentSlatState" onclick="toggleVisibility( 'CurrentSlatState');">CurrentSlatState</a>
+         <a href="#CurrentTemperature" onclick="toggleVisibility( 'CurrentTemperature');">CurrentTemperature</a>
+         <a href="#CurrentTiltAngle" onclick="toggleVisibility( 'CurrentTiltAngle');">CurrentTiltAngle</a>
+         <a href="#CurrentTime" onclick="toggleVisibility( 'CurrentTime');">CurrentTime</a>
+         <a href="#CurrentTransport" onclick="toggleVisibility( 'CurrentTransport');">CurrentTransport</a>
+         <a href="#CurrentVerticalTiltAngle" onclick="toggleVisibility( 'CurrentVerticalTiltAngle');">CurrentVerticalTiltAngle</a>
+         <a href="#CurrentVisibilityState" onclick="toggleVisibility( 'CurrentVisibilityState');">CurrentVisibilityState</a>
+         <a href="#DataStreamHAPTransport" onclick="toggleVisibility( 'DataStreamHAPTransport');">DataStreamHAPTransport</a>
+         <a href="#DataStreamHAPTransportInterrupt" onclick="toggleVisibility( 'DataStreamHAPTransportInterrupt');">DataStreamHAPTransportInterrupt</a>
+         <a href="#DayoftheWeek" onclick="toggleVisibility( 'DayoftheWeek');">DayoftheWeek</a>
+         <a href="#DiagonalFieldOfView" onclick="toggleVisibility( 'DiagonalFieldOfView');">DiagonalFieldOfView</a>
+         <a href="#DigitalZoom" onclick="toggleVisibility( 'DigitalZoom');">DigitalZoom</a>
+         <a href="#DiscoverBridgedAccessories" onclick="toggleVisibility( 'DiscoverBridgedAccessories');">DiscoverBridgedAccessories</a>
+         <a href="#DiscoveredBridgedAccessories" onclick="toggleVisibility( 'DiscoveredBridgedAccessories');">DiscoveredBridgedAccessories</a>
+         <a href="#DisplayOrder" onclick="toggleVisibility( 'DisplayOrder');">DisplayOrder</a>
+         <a href="#EventRetransmissionMaximum" onclick="toggleVisibility( 'EventRetransmissionMaximum');">EventRetransmissionMaximum</a>
+         <a href="#EventSnapshotsActive" onclick="toggleVisibility( 'EventSnapshotsActive');">EventSnapshotsActive</a>
+         <a href="#EventTransmissionCounters" onclick="toggleVisibility( 'EventTransmissionCounters');">EventTransmissionCounters</a>
+         <a href="#FilterChangeIndication" onclick="toggleVisibility( 'FilterChangeIndication');">FilterChangeIndication</a>
+         <a href="#FilterLifeLevel" onclick="toggleVisibility( 'FilterLifeLevel');">FilterLifeLevel</a>
+         <a href="#FirmwareRevision" onclick="toggleVisibility( 'FirmwareRevision');">FirmwareRevision</a>
+         <a href="#HardwareRevision" onclick="toggleVisibility( 'HardwareRevision');">HardwareRevision</a>
+         <a href="#HeartBeat" onclick="toggleVisibility( 'HeartBeat');">HeartBeat</a>
+         <a href="#HeatingThresholdTemperature" onclick="toggleVisibility( 'HeatingThresholdTemperature');">HeatingThresholdTemperature</a>
+         <a href="#HoldPosition" onclick="toggleVisibility( 'HoldPosition');">HoldPosition</a>
+         <a href="#HomeKitCameraActive" onclick="toggleVisibility( 'HomeKitCameraActive');">HomeKitCameraActive</a>
+         <a href="#Hue" onclick="toggleVisibility( 'Hue');">Hue</a>
+         <a href="#Identifier" onclick="toggleVisibility( 'Identifier');">Identifier</a>
+         <a href="#Identify" onclick="toggleVisibility( 'Identify');">Identify</a>
+         <a href="#ImageMirroring" onclick="toggleVisibility( 'ImageMirroring');">ImageMirroring</a>
+         <a href="#ImageRotation" onclick="toggleVisibility( 'ImageRotation');">ImageRotation</a>
+         <a href="#InUse" onclick="toggleVisibility( 'InUse');">InUse</a>
+         <a href="#InputDeviceType" onclick="toggleVisibility( 'InputDeviceType');">InputDeviceType</a>
+         <a href="#InputSourceType" onclick="toggleVisibility( 'InputSourceType');">InputSourceType</a>
+         <a href="#IsConfigured" onclick="toggleVisibility( 'IsConfigured');">IsConfigured</a>
+         <a href="#LeakDetected" onclick="toggleVisibility( 'LeakDetected');">LeakDetected</a>
+         <a href="#LinkQuality" onclick="toggleVisibility( 'LinkQuality');">LinkQuality</a>
+         <a href="#LockControlPoint" onclick="toggleVisibility( 'LockControlPoint');">LockControlPoint</a>
+         <a href="#LockCurrentState" onclick="toggleVisibility( 'LockCurrentState');">LockCurrentState</a>
+         <a href="#LockLastKnownAction" onclick="toggleVisibility( 'LockLastKnownAction');">LockLastKnownAction</a>
+         <a href="#LockManagementAutoSecurityTimeout" onclick="toggleVisibility( 'LockManagementAutoSecurityTimeout');">LockManagementAutoSecurityTimeout</a>
+         <a href="#LockPhysicalControls" onclick="toggleVisibility( 'LockPhysicalControls');">LockPhysicalControls</a>
+         <a href="#LockTargetState" onclick="toggleVisibility( 'LockTargetState');">LockTargetState</a>
+         <a href="#Logs" onclick="toggleVisibility( 'Logs');">Logs</a>
+         <a href="#MACRetransmissionMaximum" onclick="toggleVisibility( 'MACRetransmissionMaximum');">MACRetransmissionMaximum</a>
+         <a href="#MACTransmissionCounters" onclick="toggleVisibility( 'MACTransmissionCounters');">MACTransmissionCounters</a>
+         <a href="#ManagedNetworkEnable" onclick="toggleVisibility( 'ManagedNetworkEnable');">ManagedNetworkEnable</a>
+         <a href="#ManuallyDisabled" onclick="toggleVisibility( 'ManuallyDisabled');">ManuallyDisabled</a>
+         <a href="#Manufacturer" onclick="toggleVisibility( 'Manufacturer');">Manufacturer</a>
+         <a href="#Model" onclick="toggleVisibility( 'Model');">Model</a>
+         <a href="#MotionDetected" onclick="toggleVisibility( 'MotionDetected');">MotionDetected</a>
+         <a href="#Mute" onclick="toggleVisibility( 'Mute');">Mute</a>
+         <a href="#Name" onclick="toggleVisibility( 'Name');">Name</a>
+         <a href="#NetworkAccessViolationControl" onclick="toggleVisibility( 'NetworkAccessViolationControl');">NetworkAccessViolationControl</a>
+         <a href="#NetworkClientProfileControl" onclick="toggleVisibility( 'NetworkClientProfileControl');">NetworkClientProfileControl</a>
+         <a href="#NetworkClientStatusControl" onclick="toggleVisibility( 'NetworkClientStatusControl');">NetworkClientStatusControl</a>
+         <a href="#NightVision" onclick="toggleVisibility( 'NightVision');">NightVision</a>
+         <a href="#NitrogenDioxideDensity" onclick="toggleVisibility( 'NitrogenDioxideDensity');">NitrogenDioxideDensity</a>
+         <a href="#ObstructionDetected" onclick="toggleVisibility( 'ObstructionDetected');">ObstructionDetected</a>
+         <a href="#OccupancyDetected" onclick="toggleVisibility( 'OccupancyDetected');">OccupancyDetected</a>
+         <a href="#On" onclick="toggleVisibility( 'On');">On</a>
+         <a href="#OperatingStateResponse" onclick="toggleVisibility( 'OperatingStateResponse');">OperatingStateResponse</a>
+         <a href="#OpticalZoom" onclick="toggleVisibility( 'OpticalZoom');">OpticalZoom</a>
+         <a href="#OutletInUse" onclick="toggleVisibility( 'OutletInUse');">OutletInUse</a>
+         <a href="#OzoneDensity" onclick="toggleVisibility( 'OzoneDensity');">OzoneDensity</a>
+         <a href="#PM10Density" onclick="toggleVisibility( 'PM10Density');">PM10Density</a>
+         <a href="#PM2_5Density" onclick="toggleVisibility( 'PM2_5Density');">PM2_5Density</a>
+         <a href="#PairSetup" onclick="toggleVisibility( 'PairSetup');">PairSetup</a>
+         <a href="#PairVerify" onclick="toggleVisibility( 'PairVerify');">PairVerify</a>
+         <a href="#PairingFeatures" onclick="toggleVisibility( 'PairingFeatures');">PairingFeatures</a>
+         <a href="#PairingPairings" onclick="toggleVisibility( 'PairingPairings');">PairingPairings</a>
+         <a href="#PasswordSetting" onclick="toggleVisibility( 'PasswordSetting');">PasswordSetting</a>
+         <a href="#PeriodicSnapshotsActive" onclick="toggleVisibility( 'PeriodicSnapshotsActive');">PeriodicSnapshotsActive</a>
+         <a href="#PictureMode" onclick="toggleVisibility( 'PictureMode');">PictureMode</a>
+         <a href="#Ping" onclick="toggleVisibility( 'Ping');">Ping</a>
+         <a href="#PositionState" onclick="toggleVisibility( 'PositionState');">PositionState</a>
+         <a href="#PowerModeSelection" onclick="toggleVisibility( 'PowerModeSelection');">PowerModeSelection</a>
+         <a href="#ProductData" onclick="toggleVisibility( 'ProductData');">ProductData</a>
+         <a href="#ProgramMode" onclick="toggleVisibility( 'ProgramMode');">ProgramMode</a>
+         <a href="#ProgrammableSwitchEvent" onclick="toggleVisibility( 'ProgrammableSwitchEvent');">ProgrammableSwitchEvent</a>
+         <a href="#ProgrammableSwitchOutputState" onclick="toggleVisibility( 'ProgrammableSwitchOutputState');">ProgrammableSwitchOutputState</a>
+         <a href="#Reachable" onclick="toggleVisibility( 'Reachable');">Reachable</a>
+         <a href="#ReceivedSignalStrengthIndication" onclick="toggleVisibility( 'ReceivedSignalStrengthIndication');">ReceivedSignalStrengthIndication</a>
+         <a href="#ReceiverSensitivity" onclick="toggleVisibility( 'ReceiverSensitivity');">ReceiverSensitivity</a>
+         <a href="#RecordingAudioActive" onclick="toggleVisibility( 'RecordingAudioActive');">RecordingAudioActive</a>
+         <a href="#RelativeHumidityDehumidifierThreshold" onclick="toggleVisibility( 'RelativeHumidityDehumidifierThreshold');">RelativeHumidityDehumidifierThreshold</a>
+         <a href="#RelativeHumidityHumidifierThreshold" onclick="toggleVisibility( 'RelativeHumidityHumidifierThreshold');">RelativeHumidityHumidifierThreshold</a>
+         <a href="#RelayControlPoint" onclick="toggleVisibility( 'RelayControlPoint');">RelayControlPoint</a>
+         <a href="#RelayEnabled" onclick="toggleVisibility( 'RelayEnabled');">RelayEnabled</a>
+         <a href="#RelayState" onclick="toggleVisibility( 'RelayState');">RelayState</a>
+         <a href="#RemainingDuration" onclick="toggleVisibility( 'RemainingDuration');">RemainingDuration</a>
+         <a href="#RemoteKey" onclick="toggleVisibility( 'RemoteKey');">RemoteKey</a>
+         <a href="#ResetFilterIndication" onclick="toggleVisibility( 'ResetFilterIndication');">ResetFilterIndication</a>
+         <a href="#RotationDirection" onclick="toggleVisibility( 'RotationDirection');">RotationDirection</a>
+         <a href="#RotationSpeed" onclick="toggleVisibility( 'RotationSpeed');">RotationSpeed</a>
+         <a href="#RouterStatus" onclick="toggleVisibility( 'RouterStatus');">RouterStatus</a>
+         <a href="#Saturation" onclick="toggleVisibility( 'Saturation');">Saturation</a>
+         <a href="#SecuritySystemAlarmType" onclick="toggleVisibility( 'SecuritySystemAlarmType');">SecuritySystemAlarmType</a>
+         <a href="#SecuritySystemCurrentState" onclick="toggleVisibility( 'SecuritySystemCurrentState');">SecuritySystemCurrentState</a>
+         <a href="#SecuritySystemTargetState" onclick="toggleVisibility( 'SecuritySystemTargetState');">SecuritySystemTargetState</a>
+         <a href="#SelectedAudioStreamConfiguration" onclick="toggleVisibility( 'SelectedAudioStreamConfiguration');">SelectedAudioStreamConfiguration</a>
+         <a href="#SelectedCameraRecordingConfiguration" onclick="toggleVisibility( 'SelectedCameraRecordingConfiguration');">SelectedCameraRecordingConfiguration</a>
+         <a href="#SelectedRTPStreamConfiguration" onclick="toggleVisibility( 'SelectedRTPStreamConfiguration');">SelectedRTPStreamConfiguration</a>
+         <a href="#SerialNumber" onclick="toggleVisibility( 'SerialNumber');">SerialNumber</a>
+         <a href="#ServiceLabelIndex" onclick="toggleVisibility( 'ServiceLabelIndex');">ServiceLabelIndex</a>
+         <a href="#ServiceLabelNamespace" onclick="toggleVisibility( 'ServiceLabelNamespace');">ServiceLabelNamespace</a>
+         <a href="#SetDuration" onclick="toggleVisibility( 'SetDuration');">SetDuration</a>
+         <a href="#SetupDataStreamTransport" onclick="toggleVisibility( 'SetupDataStreamTransport');">SetupDataStreamTransport</a>
+         <a href="#SetupEndpoints" onclick="toggleVisibility( 'SetupEndpoints');">SetupEndpoints</a>
+         <a href="#SetupTransferTransport" onclick="toggleVisibility( 'SetupTransferTransport');">SetupTransferTransport</a>
+         <a href="#SignalToNoiseRatio" onclick="toggleVisibility( 'SignalToNoiseRatio');">SignalToNoiseRatio</a>
+         <a href="#SiriInputType" onclick="toggleVisibility( 'SiriInputType');">SiriInputType</a>
+         <a href="#SlatType" onclick="toggleVisibility( 'SlatType');">SlatType</a>
+         <a href="#SleepDiscoveryMode" onclick="toggleVisibility( 'SleepDiscoveryMode');">SleepDiscoveryMode</a>
+         <a href="#SleepInterval" onclick="toggleVisibility( 'SleepInterval');">SleepInterval</a>
+         <a href="#SmokeDetected" onclick="toggleVisibility( 'SmokeDetected');">SmokeDetected</a>
+         <a href="#SoftwareRevision" onclick="toggleVisibility( 'SoftwareRevision');">SoftwareRevision</a>
+         <a href="#StatusActive" onclick="toggleVisibility( 'StatusActive');">StatusActive</a>
+         <a href="#StatusFault" onclick="toggleVisibility( 'StatusFault');">StatusFault</a>
+         <a href="#StatusJammed" onclick="toggleVisibility( 'StatusJammed');">StatusJammed</a>
+         <a href="#StatusLowBattery" onclick="toggleVisibility( 'StatusLowBattery');">StatusLowBattery</a>
+         <a href="#StatusTampered" onclick="toggleVisibility( 'StatusTampered');">StatusTampered</a>
+         <a href="#StreamingStatus" onclick="toggleVisibility( 'StreamingStatus');">StreamingStatus</a>
+         <a href="#SulphurDioxideDensity" onclick="toggleVisibility( 'SulphurDioxideDensity');">SulphurDioxideDensity</a>
+         <a href="#SupportedAudioRecordingConfiguration" onclick="toggleVisibility( 'SupportedAudioRecordingConfiguration');">SupportedAudioRecordingConfiguration</a>
+         <a href="#SupportedAudioStreamConfiguration" onclick="toggleVisibility( 'SupportedAudioStreamConfiguration');">SupportedAudioStreamConfiguration</a>
+         <a href="#SupportedCameraRecordingConfiguration" onclick="toggleVisibility( 'SupportedCameraRecordingConfiguration');">SupportedCameraRecordingConfiguration</a>
+         <a href="#SupportedDataStreamTransportConfiguration" onclick="toggleVisibility( 'SupportedDataStreamTransportConfiguration');">SupportedDataStreamTransportConfiguration</a>
+         <a href="#SupportedCharacteristicValueTransitionConfiguration" onclick="toggleVisibility( 'SupportedCharacteristicValueTransitionConfiguration');">SupportedCharacteristicValueTransitionConfiguration</a>
+         <a href="#SupportedDiagnosticsSnapshot" onclick="toggleVisibility( 'SupportedDiagnosticsSnapshot');">SupportedDiagnosticsSnapshot</a>
+         <a href="#SupportedRTPConfiguration" onclick="toggleVisibility( 'SupportedRTPConfiguration');">SupportedRTPConfiguration</a>
+         <a href="#SupportedRouterConfiguration" onclick="toggleVisibility( 'SupportedRouterConfiguration');">SupportedRouterConfiguration</a>
+         <a href="#SupportedTransferTransportConfiguration" onclick="toggleVisibility( 'SupportedTransferTransportConfiguration');">SupportedTransferTransportConfiguration</a>
+         <a href="#SupportedVideoRecordingConfiguration" onclick="toggleVisibility( 'SupportedVideoRecordingConfiguration');">SupportedVideoRecordingConfiguration</a>
+         <a href="#SupportedVideoStreamConfiguration" onclick="toggleVisibility( 'SupportedVideoStreamConfiguration');">SupportedVideoStreamConfiguration</a>
+         <a href="#SwingMode" onclick="toggleVisibility( 'SwingMode');">SwingMode</a>
+         <a href="#TargetAirPurifierState" onclick="toggleVisibility( 'TargetAirPurifierState');">TargetAirPurifierState</a>
+         <a href="#TargetAirQuality" onclick="toggleVisibility( 'TargetAirQuality');">TargetAirQuality</a>
+         <a href="#TargetControlList" onclick="toggleVisibility( 'TargetControlList');">TargetControlList</a>
+         <a href="#TargetControlSupportedConfiguration" onclick="toggleVisibility( 'TargetControlSupportedConfiguration');">TargetControlSupportedConfiguration</a>
+         <a href="#TargetDoorState" onclick="toggleVisibility( 'TargetDoorState');">TargetDoorState</a>
+         <a href="#TargetFanState" onclick="toggleVisibility( 'TargetFanState');">TargetFanState</a>
+         <a href="#TargetHeaterCoolerState" onclick="toggleVisibility( 'TargetHeaterCoolerState');">TargetHeaterCoolerState</a>
+         <a href="#TargetHeatingCoolingState" onclick="toggleVisibility( 'TargetHeatingCoolingState');">TargetHeatingCoolingState</a>
+         <a href="#TargetHorizontalTiltAngle" onclick="toggleVisibility( 'TargetHorizontalTiltAngle');">TargetHorizontalTiltAngle</a>
+         <a href="#TargetHumidifierDehumidifierState" onclick="toggleVisibility( 'TargetHumidifierDehumidifierState');">TargetHumidifierDehumidifierState</a>
+         <a href="#TargetMediaState" onclick="toggleVisibility( 'TargetMediaState');">TargetMediaState</a>
+         <a href="#TargetPosition" onclick="toggleVisibility( 'TargetPosition');">TargetPosition</a>
+         <a href="#TargetRelativeHumidity" onclick="toggleVisibility( 'TargetRelativeHumidity');">TargetRelativeHumidity</a>
+         <a href="#TargetSlatState" onclick="toggleVisibility( 'TargetSlatState');">TargetSlatState</a>
+         <a href="#TargetTemperature" onclick="toggleVisibility( 'TargetTemperature');">TargetTemperature</a>
+         <a href="#TargetTiltAngle" onclick="toggleVisibility( 'TargetTiltAngle');">TargetTiltAngle</a>
+         <a href="#TargetVerticalTiltAngle" onclick="toggleVisibility( 'TargetVerticalTiltAngle');">TargetVerticalTiltAngle</a>
+         <a href="#TargetVisibilityState" onclick="toggleVisibility( 'TargetVisibilityState');">TargetVisibilityState</a>
+         <a href="#TemperatureDisplayUnits" onclick="toggleVisibility( 'TemperatureDisplayUnits');">TemperatureDisplayUnits</a>
+         <a href="#ThirdPartyCameraActive" onclick="toggleVisibility( 'ThirdPartyCameraActive');">ThirdPartyCameraActive</a>
+         <a href="#TimeUpdate" onclick="toggleVisibility( 'TimeUpdate');">TimeUpdate</a>
+         <a href="#TransmitPower" onclick="toggleVisibility( 'TransmitPower');">TransmitPower</a>
+         <a href="#TransmitPowerMaximum" onclick="toggleVisibility( 'TransmitPowerMaximum');">TransmitPowerMaximum</a>
+         <a href="#TunnelConnectionTimeout" onclick="toggleVisibility( 'TunnelConnectionTimeout');">TunnelConnectionTimeout</a>
+         <a href="#TunneledAccessoryAdvertising" onclick="toggleVisibility( 'TunneledAccessoryAdvertising');">TunneledAccessoryAdvertising</a>
+         <a href="#TunneledAccessoryConnected" onclick="toggleVisibility( 'TunneledAccessoryConnected');">TunneledAccessoryConnected</a>
+         <a href="#TunneledAccessoryStateNumber" onclick="toggleVisibility( 'TunneledAccessoryStateNumber');">TunneledAccessoryStateNumber</a>
+         <a href="#VOCDensity" onclick="toggleVisibility( 'VOCDensity');">VOCDensity</a>
+         <a href="#ValveType" onclick="toggleVisibility( 'ValveType');">ValveType</a>
+         <a href="#Version" onclick="toggleVisibility( 'Version');">Version</a>
+         <a href="#VideoAnalysisActive" onclick="toggleVisibility( 'VideoAnalysisActive');">VideoAnalysisActive</a>
+         <a href="#Volume" onclick="toggleVisibility( 'Volume');">Volume</a>
+         <a href="#VolumeControlType" onclick="toggleVisibility( 'VolumeControlType');">VolumeControlType</a>
+         <a href="#VolumeSelector" onclick="toggleVisibility( 'VolumeSelector');">VolumeSelector</a>
+         <a href="#WANConfigurationList" onclick="toggleVisibility( 'WANConfigurationList');">WANConfigurationList</a>
+         <a href="#WANStatusList" onclick="toggleVisibility( 'WANStatusList');">WANStatusList</a>
+         <a href="#WakeConfiguration" onclick="toggleVisibility( 'WakeConfiguration');">WakeConfiguration</a>
+         <a href="#WaterLevel" onclick="toggleVisibility( 'WaterLevel');">WaterLevel</a>
+         <a href="#WiFiCapabilities" onclick="toggleVisibility( 'WiFiCapabilities');">WiFiCapabilities</a>
+         <a href="#WiFiConfigurationControl" onclick="toggleVisibility( 'WiFiConfigurationControl');">WiFiConfigurationControl</a>
+         <a href="#WiFiSatelliteStatus" onclick="toggleVisibility( 'WiFiSatelliteStatus');">WiFiSatelliteStatus</a>
       </DIV>   <!-- panel -->
       <button class="accordion">Directives
          <i class="fa fa-caret-down"></i>
       </button>
       <div class="panel">
-         <a href="#OutputConstants_D">OutputConstants</a>
-         <a href="#restartRecover_D">restartRecover</a>
+         <a href="#OutputConstants_D" onclick="toggleVisibility( 'Directives');">OutputConstants</a>
+         <a href="#undefined_D" onclick="toggleVisibility( 'Directives');">restartRecover</a>
       </DIV>   <!-- panel -->
       <button class="accordion">Accessory Directives
          <i class="fa fa-caret-down"></i>
       </button>
       <div class="panel">
-         <a href="#Fetch">Fetch</a>
-         <a href="#Fakegato">Fakegato</a>
-         <a href="#PublishExternally">PublishExternally</a>
-         <a href="#State_cmd_prefix">State_cmd_prefix</a>
-         <a href="#State_cmd_suffix">State_cmd_suffix</a>
-         <a href="#State_cmd">State_cmd</a>
-         <a href="#Polling">Polling</a>
-         <a href="#Interval">Interval</a>
-         <a href="#StateChangeResponseTime">StateChangeResponseTime</a>
-         <a href="#LinkedTypes">LinkedTypes</a>
+         <a href="#Fetch" onclick="toggleVisibility( 'AccessoryDirectives');">Fetch</a>
+         <a href="#Fakegato" onclick="toggleVisibility( 'AccessoryDirectives');">Fakegato</a>
+         <a href="#PublishExternally" onclick="toggleVisibility( 'AccessoryDirectives');">PublishExternally</a>
+         <a href="#State_cmd_prefix" onclick="toggleVisibility( 'AccessoryDirectives');">State_cmd_prefix</a>
+         <a href="#State_cmd_suffix" onclick="toggleVisibility( 'AccessoryDirectives');">State_cmd_suffix</a>
+         <a href="#State_cmd" onclick="toggleVisibility( 'AccessoryDirectives');">State_cmd</a>
+         <a href="#Polling" onclick="toggleVisibility( 'AccessoryDirectives');">Polling</a>
+         <a href="#Interval" onclick="toggleVisibility( 'AccessoryDirectives');">Interval</a>
+         <a href="#StateChangeResponseTime" onclick="toggleVisibility( 'AccessoryDirectives');">StateChangeResponseTime</a>
+         <a href="#LinkedTypes" onclick="toggleVisibility( 'AccessoryDirectives');">LinkedTypes</a>
          <a href="#OutputConstants">OutputConstants</a>
+         <a href="#OutputConstants" onclick="toggleVisibility( 'AccessoryDirectives');">OutputConstants</a>
       </DIV>   <!-- panel -->
       <button class="accordion">Script Templates
          <i class="fa fa-caret-down"></i>
       </button>
       <div class="panel">
-         <a href="#JS Template">JS Template</a>
-         <a href="#Bash Template">Bash Template</a>
+         <a href="#JS Template" onclick="toggleVisibility( 'JS Template');">JS Template</a>
+         <a href="#Bash Template" onclick="toggleVisibility( 'Bash Template');">Bash Template</a>
       </DIV>   <!-- panel -->
       <a href=https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/Developers.md>Developers Guide</a>
       <a href=https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/AdvancedTroubleShooting.md>Advanced TroubleShooting</a>
    </DIV>   <!-- sidenav -->
    <div class="main">
-      <h2>CMD4 Device Properties</h2>
-      <p>This auto generated document replaces the hard coded, impossible to maintain definitions in what was the State.js script and other locations.</p>
-      <div class="Device">
+      <h2>CMD4 Portal</h2>
+      <p>This auto generated document replaces much of the hard coded definitions and is the portal to everything that is Cmd4.</p>
+      <p>Enjoy</p>
+      <p>&nbsp;&nbsp;&nbsp;John Talbot</p>
+   </DIV>   <!-- main -->
+   <div class="main">
+      <div id="AccessControl" class="section">
          <a name="AccessControl"></a>
          <header><h1>AccessControl</h1></header>
          <p>UUID:000000DA-0000-1000-8000-0026BB765291</p>
@@ -597,8 +609,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- AccessControl -->
+      <div id="AccessoryRuntimeInformation" class="section">
          <a name="AccessoryRuntimeInformation"></a>
          <header><h1>AccessoryRuntimeInformation</h1></header>
          <p>UUID:00000203-0000-1000-8000-00000239</p>
@@ -629,8 +641,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- AccessoryRuntimeInformation -->
+      <div id="AccessoryInformation" class="section">
          <a name="AccessoryInformation"></a>
          <header><h1>AccessoryInformation</h1></header>
          <p>UUID:0000003E-0000-1000-8000-0026BB765291</p>
@@ -674,8 +686,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- AccessoryInformation -->
+      <div id="AirPurifier" class="section">
          <a name="AirPurifier"></a>
          <header><h1>AirPurifier</h1></header>
          <p>UUID:000000BB-0000-1000-8000-0026BB765291</p>
@@ -717,8 +729,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- AirPurifier -->
+      <div id="AirQualitySensor" class="section">
          <a name="AirQualitySensor"></a>
          <header><h1>AirQualitySensor</h1></header>
          <p>UUID:0000008D-0000-1000-8000-0026BB765291</p>
@@ -774,8 +786,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- AirQualitySensor -->
+      <div id="BatteryService" class="section">
          <a name="BatteryService"></a>
          <header><h1>BatteryService</h1></header>
          <p>UUID:00000096-0000-1000-8000-0026BB765291</p>
@@ -811,8 +823,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- BatteryService -->
+      <div id="BridgeConfiguration" class="section">
          <a name="BridgeConfiguration"></a>
          <header><h1>BridgeConfiguration</h1></header>
          <p>UUID:000000A1-0000-1000-8000-0026BB765291</p>
@@ -848,8 +860,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- BridgeConfiguration -->
+      <div id="BridgingState" class="section">
          <a name="BridgingState"></a>
          <header><h1>BridgingState</h1></header>
          <p>UUID:00000062-0000-1000-8000-0026BB765291</p>
@@ -887,8 +899,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- BridgingState -->
+      <div id="CameraEventRecordingManagement" class="section">
          <a name="CameraEventRecordingManagement"></a>
          <header><h1>CameraEventRecordingManagement</h1></header>
          <p>UUID:00000204-0000-1000-8000-0026BB765291</p>
@@ -928,8 +940,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- CameraEventRecordingManagement -->
+      <div id="CameraControl" class="section">
          <a name="CameraControl"></a>
          <header><h1>CameraControl</h1></header>
          <p>UUID:00000111-0000-1000-8000-0026BB765291</p>
@@ -979,8 +991,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- CameraControl -->
+      <div id="CameraRTPStreamManagement" class="section">
          <a name="CameraRTPStreamManagement"></a>
          <header><h1>CameraRTPStreamManagement</h1></header>
          <p>UUID:00000110-0000-1000-8000-0026BB765291</p>
@@ -1017,8 +1029,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- CameraRTPStreamManagement -->
+      <div id="CameraOperatingMode" class="section">
          <a name="CameraOperatingMode"></a>
          <header><h1>CameraOperatingMode</h1></header>
          <p>UUID:0000021A-0000-1000-8000-0026BB765291</p>
@@ -1055,8 +1067,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- CameraOperatingMode -->
+      <div id="CarbonDioxideSensor" class="section">
          <a name="CarbonDioxideSensor"></a>
          <header><h1>CarbonDioxideSensor</h1></header>
          <p>UUID:00000097-0000-1000-8000-0026BB765291</p>
@@ -1100,8 +1112,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- CarbonDioxideSensor -->
+      <div id="CarbonMonoxideSensor" class="section">
          <a name="CarbonMonoxideSensor"></a>
          <header><h1>CarbonMonoxideSensor</h1></header>
          <p>UUID:0000007F-0000-1000-8000-0026BB765291</p>
@@ -1145,8 +1157,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- CarbonMonoxideSensor -->
+      <div id="ContactSensor" class="section">
          <a name="ContactSensor"></a>
          <header><h1>ContactSensor</h1></header>
          <p>UUID:00000080-0000-1000-8000-0026BB765291</p>
@@ -1186,8 +1198,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- ContactSensor -->
+      <div id="Diagnostics" class="section">
          <a name="Diagnostics"></a>
          <header><h1>Diagnostics</h1></header>
          <p>UUID:00000203-0000-1000-8000-00000237</p>
@@ -1210,8 +1222,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- Diagnostics -->
+      <div id="Door" class="section">
          <a name="Door"></a>
          <header><h1>Door</h1></header>
          <p>UUID:00000081-0000-1000-8000-0026BB765291</p>
@@ -1251,8 +1263,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- Door -->
+      <div id="DoorBell" class="section">
          <a name="DoorBell"></a>
          <header><h1>DoorBell</h1></header>
          <p>UUID:00000121-0000-1000-8000-0026BB765291</p>
@@ -1288,8 +1300,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- DoorBell -->
+      <div id="Fan" class="section">
          <a name="Fan"></a>
          <header><h1>Fan</h1></header>
          <p>UUID:00000040-0000-1000-8000-0026BB765291</p>
@@ -1325,8 +1337,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- Fan -->
+      <div id="Fanv1" class="section">
          <a name="Fanv1"></a>
          <header><h1>Fanv1</h1></header>
          <p>UUID:00000040-0000-1000-8000-0026BB765291</p>
@@ -1362,8 +1374,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- Fanv1 -->
+      <div id="Fanv2" class="section">
          <a name="Fanv2"></a>
          <header><h1>Fanv2</h1></header>
          <p>UUID:000000B7-0000-1000-8000-0026BB765291</p>
@@ -1407,8 +1419,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- Fanv2 -->
+      <div id="Faucet" class="section">
          <a name="Faucet"></a>
          <header><h1>Faucet</h1></header>
          <p>UUID:000000D7-0000-1000-8000-0026BB765291</p>
@@ -1442,8 +1454,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- Faucet -->
+      <div id="FilterMaintenance" class="section">
          <a name="FilterMaintenance"></a>
          <header><h1>FilterMaintenance</h1></header>
          <p>UUID:000000BA-0000-1000-8000-0026BB765291</p>
@@ -1479,8 +1491,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- FilterMaintenance -->
+      <div id="GarageDoorOpener" class="section">
          <a name="GarageDoorOpener"></a>
          <header><h1>GarageDoorOpener</h1></header>
          <p>UUID:00000041-0000-1000-8000-0026BB765291</p>
@@ -1520,8 +1532,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- GarageDoorOpener -->
+      <div id="HeaterCooler" class="section">
          <a name="HeaterCooler"></a>
          <header><h1>HeaterCooler</h1></header>
          <p>UUID:000000BC-0000-1000-8000-0026BB765291</p>
@@ -1571,8 +1583,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- HeaterCooler -->
+      <div id="HumidifierDehumidifier" class="section">
          <a name="HumidifierDehumidifier"></a>
          <header><h1>HumidifierDehumidifier</h1></header>
          <p>UUID:000000BD-0000-1000-8000-0026BB765291</p>
@@ -1622,8 +1634,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- HumidifierDehumidifier -->
+      <div id="HumiditySensor" class="section">
          <a name="HumiditySensor"></a>
          <header><h1>HumiditySensor</h1></header>
          <p>UUID:00000082-0000-1000-8000-0026BB765291</p>
@@ -1663,8 +1675,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- HumiditySensor -->
+      <div id="InputSource" class="section">
          <a name="InputSource"></a>
          <header><h1>InputSource</h1></header>
          <p>UUID:000000D9-0000-1000-8000-0026BB765291</p>
@@ -1708,8 +1720,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- InputSource -->
+      <div id="IrrigationSystem" class="section">
          <a name="IrrigationSystem"></a>
          <header><h1>IrrigationSystem</h1></header>
          <p>UUID:000000CF-0000-1000-8000-0026BB765291</p>
@@ -1749,8 +1761,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- IrrigationSystem -->
+      <div id="LeakSensor" class="section">
          <a name="LeakSensor"></a>
          <header><h1>LeakSensor</h1></header>
          <p>UUID:00000083-0000-1000-8000-0026BB765291</p>
@@ -1790,8 +1802,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- LeakSensor -->
+      <div id="LightSensor" class="section">
          <a name="LightSensor"></a>
          <header><h1>LightSensor</h1></header>
          <p>UUID:00000084-0000-1000-8000-0026BB765291</p>
@@ -1831,8 +1843,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- LightSensor -->
+      <div id="Lightbulb" class="section">
          <a name="Lightbulb"></a>
          <header><h1>Lightbulb</h1></header>
          <p>UUID:00000043-0000-1000-8000-0026BB765291</p>
@@ -1872,8 +1884,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- Lightbulb -->
+      <div id="LockManagement" class="section">
          <a name="LockManagement"></a>
          <header><h1>LockManagement</h1></header>
          <p>UUID:00000044-0000-1000-8000-0026BB765291</p>
@@ -1915,8 +1927,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- LockManagement -->
+      <div id="LockMechanism" class="section">
          <a name="LockMechanism"></a>
          <header><h1>LockMechanism</h1></header>
          <p>UUID:00000045-0000-1000-8000-0026BB765291</p>
@@ -1950,8 +1962,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- LockMechanism -->
+      <div id="Microphone" class="section">
          <a name="Microphone"></a>
          <header><h1>Microphone</h1></header>
          <p>UUID:00000112-0000-1000-8000-0026BB765291</p>
@@ -1985,8 +1997,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- Microphone -->
+      <div id="MotionSensor" class="section">
          <a name="MotionSensor"></a>
          <header><h1>MotionSensor</h1></header>
          <p>UUID:00000085-0000-1000-8000-0026BB765291</p>
@@ -2026,8 +2038,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- MotionSensor -->
+      <div id="OccupancySensor" class="section">
          <a name="OccupancySensor"></a>
          <header><h1>OccupancySensor</h1></header>
          <p>UUID:00000086-0000-1000-8000-0026BB765291</p>
@@ -2067,8 +2079,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- OccupancySensor -->
+      <div id="Outlet" class="section">
          <a name="Outlet"></a>
          <header><h1>Outlet</h1></header>
          <p>UUID:00000047-0000-1000-8000-0026BB765291</p>
@@ -2102,8 +2114,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- Outlet -->
+      <div id="Pairing" class="section">
          <a name="Pairing"></a>
          <header><h1>Pairing</h1></header>
          <p>UUID:00000055-0000-1000-8000-0026BB765291</p>
@@ -2137,8 +2149,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- Pairing -->
+      <div id="PowerManagement" class="section">
          <a name="PowerManagement"></a>
          <header><h1>PowerManagement</h1></header>
          <p>UUID:00000221-0000-1000-8000-0026BB765291</p>
@@ -2161,8 +2173,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- PowerManagement -->
+      <div id="ProtocolInformation" class="section">
          <a name="ProtocolInformation"></a>
          <header><h1>ProtocolInformation</h1></header>
          <p>UUID:000000A2-0000-1000-8000-0026BB765291</p>
@@ -2190,8 +2202,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- ProtocolInformation -->
+      <div id="Relay" class="section">
          <a name="Relay"></a>
          <header><h1>Relay</h1></header>
          <p>UUID:0000005A-0000-1000-8000-0026BB765291</p>
@@ -2224,8 +2236,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- Relay -->
+      <div id="SecuritySystem" class="section">
          <a name="SecuritySystem"></a>
          <header><h1>SecuritySystem</h1></header>
          <p>UUID:0000007E-0000-1000-8000-0026BB765291</p>
@@ -2265,8 +2277,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- SecuritySystem -->
+      <div id="ServiceLabel" class="section">
          <a name="ServiceLabel"></a>
          <header><h1>ServiceLabel</h1></header>
          <p>UUID:000000CC-0000-1000-8000-0026BB765291</p>
@@ -2298,8 +2310,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- ServiceLabel -->
+      <div id="Siri" class="section">
          <a name="Siri"></a>
          <header><h1>Siri</h1></header>
          <p>UUID:00000133-0000-1000-8000-0026BB765291</p>
@@ -2322,8 +2334,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- Siri -->
+      <div id="Slat" class="section">
          <a name="Slat"></a>
          <header><h1>Slat</h1></header>
          <p>UUID:000000B9-0000-1000-8000-0026BB765291</p>
@@ -2363,8 +2375,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- Slat -->
+      <div id="SmartSpeaker" class="section">
          <a name="SmartSpeaker"></a>
          <header><h1>SmartSpeaker</h1></header>
          <p>UUID:00000228-0000-1000-8000-0026BB765291</p>
@@ -2399,8 +2411,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- SmartSpeaker -->
+      <div id="SmokeSensor" class="section">
          <a name="SmokeSensor"></a>
          <header><h1>SmokeSensor</h1></header>
          <p>UUID:00000087-0000-1000-8000-0026BB765291</p>
@@ -2440,8 +2452,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- SmokeSensor -->
+      <div id="Speaker" class="section">
          <a name="Speaker"></a>
          <header><h1>Speaker</h1></header>
          <p>UUID:00000113-0000-1000-8000-0026BB765291</p>
@@ -2475,8 +2487,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- Speaker -->
+      <div id="StatefulProgrammableSwitch" class="section">
          <a name="StatefulProgrammableSwitch"></a>
          <header><h1>StatefulProgrammableSwitch</h1></header>
          <p>UUID:00000088-0000-1000-8000-0026BB765291</p>
@@ -2510,8 +2522,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- StatefulProgrammableSwitch -->
+      <div id="StatelessProgrammableSwitch" class="section">
          <a name="StatelessProgrammableSwitch"></a>
          <header><h1>StatelessProgrammableSwitch</h1></header>
          <p>UUID:00000089-0000-1000-8000-0026BB765291</p>
@@ -2545,8 +2557,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- StatelessProgrammableSwitch -->
+      <div id="Switch" class="section">
          <a name="Switch"></a>
          <header><h1>Switch</h1></header>
          <p>UUID:00000049-0000-1000-8000-0026BB765291</p>
@@ -2578,8 +2590,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- Switch -->
+      <div id="TargetControl" class="section">
          <a name="TargetControl"></a>
          <header><h1>TargetControl</h1></header>
          <p>UUID:00000125-0000-1000-8000-0026BB765291</p>
@@ -2610,8 +2622,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- TargetControl -->
+      <div id="TargetControlManagement" class="section">
          <a name="TargetControlManagement"></a>
          <header><h1>TargetControlManagement</h1></header>
          <p>UUID:00000122-0000-1000-8000-0026BB765291</p>
@@ -2636,8 +2648,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- TargetControlManagement -->
+      <div id="Television" class="section">
          <a name="Television"></a>
          <header><h1>Television</h1></header>
          <p>UUID:000000D8-0000-1000-8000-0026BB765291</p>
@@ -2688,8 +2700,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- Television -->
+      <div id="TelevisionSpeaker" class="section">
          <a name="TelevisionSpeaker"></a>
          <header><h1>TelevisionSpeaker</h1></header>
          <p>UUID:00000113-0000-1000-8000-0026BB765291</p>
@@ -2729,8 +2741,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- TelevisionSpeaker -->
+      <div id="TemperatureSensor" class="section">
          <a name="TemperatureSensor"></a>
          <header><h1>TemperatureSensor</h1></header>
          <p>UUID:0000008A-0000-1000-8000-0026BB765291</p>
@@ -2770,8 +2782,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- TemperatureSensor -->
+      <div id="Thermostat" class="section">
          <a name="Thermostat"></a>
          <header><h1>Thermostat</h1></header>
          <p>UUID:0000004A-0000-1000-8000-0026BB765291</p>
@@ -2819,8 +2831,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- Thermostat -->
+      <div id="TimeInformation" class="section">
          <a name="TimeInformation"></a>
          <header><h1>TimeInformation</h1></header>
          <p>UUID:00000099-0000-1000-8000-0026BB765291</p>
@@ -2856,8 +2868,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- TimeInformation -->
+      <div id="TransferTransportManagement" class="section">
          <a name="TransferTransportManagement"></a>
          <header><h1>TransferTransportManagement</h1></header>
          <p>UUID:00000203-0000-1000-8000-0026BB765291</p>
@@ -2882,8 +2894,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- TransferTransportManagement -->
+      <div id="TunneledBTLEAccessoryService" class="section">
          <a name="TunneledBTLEAccessoryService"></a>
          <header><h1>TunneledBTLEAccessoryService</h1></header>
          <p>UUID:00000056-0000-1000-8000-0026BB765291</p>
@@ -2921,8 +2933,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- TunneledBTLEAccessoryService -->
+      <div id="Valve" class="section">
          <a name="Valve"></a>
          <header><h1>Valve</h1></header>
          <p>UUID:000000D0-0000-1000-8000-0026BB765291</p>
@@ -2968,8 +2980,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- Valve -->
+      <div id="WiFiRouter" class="section">
          <a name="WiFiRouter"></a>
          <header><h1>WiFiRouter</h1></header>
          <p>UUID:0000020A-0000-1000-8000-0026BB765291</p>
@@ -3008,8 +3020,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- WiFiRouter -->
+      <div id="WiFiSatellite" class="section">
          <a name="WiFiSatellite"></a>
          <header><h1>WiFiSatellite</h1></header>
          <p>UUID:0000020F-0000-1000-8000-0026BB765291</p>
@@ -3032,8 +3044,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- WiFiSatellite -->
+      <div id="Window" class="section">
          <a name="Window"></a>
          <header><h1>Window</h1></header>
          <p>UUID:0000008B-0000-1000-8000-0026BB765291</p>
@@ -3073,8 +3085,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-      <div class="Device">
+      </DIV>   <!-- Window -->
+      <div id="WindowCovering" class="section">
          <a name="WindowCovering"></a>
          <header><h1>WindowCovering</h1></header>
          <p>UUID:0000008C-0000-1000-8000-0026BB765291</p>
@@ -3122,12 +3134,8 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Device -->
-   </DIV>   <!-- main -->
-   <div class="main">
-      <h2>CMD4 Characteristic Properties</h2>
-      <p>This auto generated document replaces the hard coded, impossible to maintain definitions in what was the State.js script and other locations.</p>
-      <div>
+      </DIV>   <!-- WindowCovering -->
+      <div id="AccessControlLevel" class="section" >
          <a name="AccessControlLevel"></a>
          <header><h1>AccessControlLevel</h1></header>
          <h3>Properties</h3>
@@ -3139,8 +3147,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Events, Paired Read, Paired Write</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- AccessControlLevel -->
+      <div id="AccessoryFlags" class="section" >
          <a name="AccessoryFlags"></a>
          <header><h1>AccessoryFlags</h1></header>
          <h3>Properties</h3>
@@ -3150,8 +3158,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> uint32</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- AccessoryFlags -->
+      <div id="AccessoryIdentifier" class="section" >
          <a name="AccessoryIdentifier"></a>
          <header><h1>AccessoryIdentifier</h1></header>
          <h3>Properties</h3>
@@ -3161,8 +3169,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> string</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- AccessoryIdentifier -->
+      <div id="Active" class="section" >
          <a name="Active"></a>
          <header><h1>Active</h1></header>
          <h3>Properties</h3>
@@ -3181,8 +3189,8 @@ block-warning a {
          </table>
          <h4>Note:</h4>
          <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#Active">Active</a></note>
-      </DIV>
-      <div>
+      </DIV>   <!-- Active -->
+      <div id="ActiveIdentifier" class="section" >
          <a name="ActiveIdentifier"></a>
          <header><h1>ActiveIdentifier</h1></header>
          <h3>Properties</h3>
@@ -3192,8 +3200,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> uint32</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- ActiveIdentifier -->
+      <div id="ActivityInterval" class="section" >
          <a name="ActivityInterval"></a>
          <header><h1>ActivityInterval</h1></header>
          <h3>Properties</h3>
@@ -3204,8 +3212,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- ActivityInterval -->
+      <div id="AdministratorOnlyAccess" class="section" >
          <a name="AdministratorOnlyAccess"></a>
          <header><h1>AdministratorOnlyAccess</h1></header>
          <h3>Properties</h3>
@@ -3221,8 +3229,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
             <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- AdministratorOnlyAccess -->
+      <div id="AirParticulateDensity" class="section" >
          <a name="AirParticulateDensity"></a>
          <header><h1>AirParticulateDensity</h1></header>
          <h3>Properties</h3>
@@ -3234,8 +3242,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- AirParticulateDensity -->
+      <div id="AirParticulateSize" class="section" >
          <a name="AirParticulateSize"></a>
          <header><h1>AirParticulateSize</h1></header>
          <h3>Properties</h3>
@@ -3252,8 +3260,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "_2_5_M" </TD></tr>
             <tr><TD> 1 </TD><TD> "_10_M" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- AirParticulateSize -->
+      <div id="AirQuality" class="section" >
          <a name="AirQuality"></a>
          <header><h1>AirQuality</h1></header>
          <h3>Properties</h3>
@@ -3274,8 +3282,8 @@ block-warning a {
             <tr><TD> 4 </TD><TD> "INFERIOR" </TD></tr>
             <tr><TD> 5 </TD><TD> "POOR" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- AirQuality -->
+      <div id="AppMatchingIdentifier" class="section" >
          <a name="AppMatchingIdentifier"></a>
          <header><h1>AppMatchingIdentifier</h1></header>
          <h3>Properties</h3>
@@ -3285,8 +3293,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- AppMatchingIdentifier -->
+      <div id="AudioFeedback" class="section" >
          <a name="AudioFeedback"></a>
          <header><h1>AudioFeedback</h1></header>
          <h3>Properties</h3>
@@ -3302,8 +3310,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
             <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- AudioFeedback -->
+      <div id="BatteryLevel" class="section" >
          <a name="BatteryLevel"></a>
          <header><h1>BatteryLevel</h1></header>
          <h3>Properties</h3>
@@ -3316,8 +3324,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- BatteryLevel -->
+      <div id="Brightness" class="section" >
          <a name="Brightness"></a>
          <header><h1>Brightness</h1></header>
          <h3>Properties</h3>
@@ -3330,8 +3338,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- Brightness -->
+      <div id="ButtonEvent" class="section" >
          <a name="ButtonEvent"></a>
          <header><h1>ButtonEvent</h1></header>
          <h3>Properties</h3>
@@ -3341,8 +3349,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- ButtonEvent -->
+      <div id="CCAEnergyDetectThreshold" class="section" >
          <a name="CCAEnergyDetectThreshold"></a>
          <header><h1>CCAEnergyDetectThreshold</h1></header>
          <h3>Properties</h3>
@@ -3352,8 +3360,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> int</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- CCAEnergyDetectThreshold -->
+      <div id="CCASignalDetectThreshold" class="section" >
          <a name="CCASignalDetectThreshold"></a>
          <header><h1>CCASignalDetectThreshold</h1></header>
          <h3>Properties</h3>
@@ -3363,8 +3371,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> int</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- CCASignalDetectThreshold -->
+      <div id="CameraOperatingModeIndicator" class="section" >
          <a name="CameraOperatingModeIndicator"></a>
          <header><h1>CameraOperatingModeIndicator</h1></header>
          <h3>Properties</h3>
@@ -3380,8 +3388,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "DISABLE" </TD></tr>
             <tr><TD> 1 </TD><TD> "ENABLE" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- CameraOperatingModeIndicator -->
+      <div id="CarbonDioxideDetected" class="section" >
          <a name="CarbonDioxideDetected"></a>
          <header><h1>CarbonDioxideDetected</h1></header>
          <h3>Properties</h3>
@@ -3398,8 +3406,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "CO2_LEVELS_NORMAL" </TD></tr>
             <tr><TD> 1 </TD><TD> "CO2_LEVELS_ABNORMAL" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- CarbonDioxideDetected -->
+      <div id="CarbonDioxideLevel" class="section" >
          <a name="CarbonDioxideLevel"></a>
          <header><h1>CarbonDioxideLevel</h1></header>
          <h3>Properties</h3>
@@ -3410,8 +3418,8 @@ block-warning a {
             <tr><TD> Max Value: </TD><TD>  100000</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- CarbonDioxideLevel -->
+      <div id="CarbonDioxidePeakLevel" class="section" >
          <a name="CarbonDioxidePeakLevel"></a>
          <header><h1>CarbonDioxidePeakLevel</h1></header>
          <h3>Properties</h3>
@@ -3422,8 +3430,8 @@ block-warning a {
             <tr><TD> Max Value: </TD><TD>  100000</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- CarbonDioxidePeakLevel -->
+      <div id="CarbonMonoxideDetected" class="section" >
          <a name="CarbonMonoxideDetected"></a>
          <header><h1>CarbonMonoxideDetected</h1></header>
          <h3>Properties</h3>
@@ -3440,8 +3448,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "CO_LEVELS_NORMAL" </TD></tr>
             <tr><TD> 1 </TD><TD> "CO_LEVELS_ABNORMAL" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- CarbonMonoxideDetected -->
+      <div id="CarbonMonoxideLevel" class="section" >
          <a name="CarbonMonoxideLevel"></a>
          <header><h1>CarbonMonoxideLevel</h1></header>
          <h3>Properties</h3>
@@ -3452,8 +3460,8 @@ block-warning a {
             <tr><TD> Max Value: </TD><TD>  100</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- CarbonMonoxideLevel -->
+      <div id="CarbonMonoxidePeakLevel" class="section" >
          <a name="CarbonMonoxidePeakLevel"></a>
          <header><h1>CarbonMonoxidePeakLevel</h1></header>
          <h3>Properties</h3>
@@ -3464,8 +3472,8 @@ block-warning a {
             <tr><TD> Max Value: </TD><TD>  100</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- CarbonMonoxidePeakLevel -->
+      <div id="Category" class="section" >
          <a name="Category"></a>
          <header><h1>Category</h1></header>
          <h3>Properties</h3>
@@ -3478,8 +3486,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- Category -->
+      <div id="CharacteristicValueTransitionControl" class="section" >
          <a name="CharacteristicValueTransitionControl"></a>
          <header><h1>CharacteristicValueTransitionControl</h1></header>
          <h3>Properties</h3>
@@ -3489,8 +3497,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- CharacteristicValueTransitionControl -->
+      <div id="ChargingState" class="section" >
          <a name="ChargingState"></a>
          <header><h1>ChargingState</h1></header>
          <h3>Properties</h3>
@@ -3508,8 +3516,8 @@ block-warning a {
             <tr><TD> 1 </TD><TD> "CHARGING" </TD></tr>
             <tr><TD> 2 </TD><TD> "NOT_CHARGEABLE" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- ChargingState -->
+      <div id="ClosedCaptions" class="section" >
          <a name="ClosedCaptions"></a>
          <header><h1>ClosedCaptions</h1></header>
          <h3>Properties</h3>
@@ -3526,8 +3534,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "DISABLED" </TD></tr>
             <tr><TD> 1 </TD><TD> "ENABLED" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- ClosedCaptions -->
+      <div id="ColorTemperature" class="section" >
          <a name="ColorTemperature"></a>
          <header><h1>ColorTemperature</h1></header>
          <h3>Properties</h3>
@@ -3540,8 +3548,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- ColorTemperature -->
+      <div id="ConfigureBridgedAccessory" class="section" >
          <a name="ConfigureBridgedAccessory"></a>
          <header><h1>ConfigureBridgedAccessory</h1></header>
          <h3>Properties</h3>
@@ -3551,8 +3559,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Write</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- ConfigureBridgedAccessory -->
+      <div id="ConfigureBridgedAccessoryStatus" class="section" >
          <a name="ConfigureBridgedAccessoryStatus"></a>
          <header><h1>ConfigureBridgedAccessoryStatus</h1></header>
          <h3>Properties</h3>
@@ -3562,8 +3570,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- ConfigureBridgedAccessoryStatus -->
+      <div id="ConfiguredName" class="section" >
          <a name="ConfiguredName"></a>
          <header><h1>ConfiguredName</h1></header>
          <h3>Properties</h3>
@@ -3573,8 +3581,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> string</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- ConfiguredName -->
+      <div id="ContactSensorState" class="section" >
          <a name="ContactSensorState"></a>
          <header><h1>ContactSensorState</h1></header>
          <h3>Properties</h3>
@@ -3591,8 +3599,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "CONTACT_DETECTED" </TD></tr>
             <tr><TD> 1 </TD><TD> "CONTACT_NOT_DETECTED" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- ContactSensorState -->
+      <div id="CoolingThresholdTemperature" class="section" >
          <a name="CoolingThresholdTemperature"></a>
          <header><h1>CoolingThresholdTemperature</h1></header>
          <h3>Properties</h3>
@@ -3606,8 +3614,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  0.1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- CoolingThresholdTemperature -->
+      <div id="CurrentAirPurifierState" class="section" >
          <a name="CurrentAirPurifierState"></a>
          <header><h1>CurrentAirPurifierState</h1></header>
          <h3>Properties</h3>
@@ -3625,8 +3633,8 @@ block-warning a {
             <tr><TD> 1 </TD><TD> "IDLE" </TD></tr>
             <tr><TD> 2 </TD><TD> "PURIFYING_AIR" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- CurrentAirPurifierState -->
+      <div id="CurrentAmbientLightLevel" class="section" >
          <a name="CurrentAmbientLightLevel"></a>
          <header><h1>CurrentAmbientLightLevel</h1></header>
          <h3>Properties</h3>
@@ -3639,8 +3647,8 @@ block-warning a {
             <tr><TD> Max Value: </TD><TD>  100000</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- CurrentAmbientLightLevel -->
+      <div id="CurrentDoorState" class="section" >
          <a name="CurrentDoorState"></a>
          <header><h1>CurrentDoorState</h1></header>
          <h3>Properties</h3>
@@ -3660,8 +3668,8 @@ block-warning a {
             <tr><TD> 3 </TD><TD> "CLOSING" </TD></tr>
             <tr><TD> 4 </TD><TD> "STOPPED" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- CurrentDoorState -->
+      <div id="CurrentFanState" class="section" >
          <a name="CurrentFanState"></a>
          <header><h1>CurrentFanState</h1></header>
          <h3>Properties</h3>
@@ -3679,8 +3687,8 @@ block-warning a {
             <tr><TD> 1 </TD><TD> "IDLE" </TD></tr>
             <tr><TD> 2 </TD><TD> "BLOWING_AIR" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- CurrentFanState -->
+      <div id="CurrentHeaterCoolerState" class="section" >
          <a name="CurrentHeaterCoolerState"></a>
          <header><h1>CurrentHeaterCoolerState</h1></header>
          <h3>Properties</h3>
@@ -3699,8 +3707,8 @@ block-warning a {
             <tr><TD> 2 </TD><TD> "HEATING" </TD></tr>
             <tr><TD> 3 </TD><TD> "COOLING" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- CurrentHeaterCoolerState -->
+      <div id="CurrentHeatingCoolingState" class="section" >
          <a name="CurrentHeatingCoolingState"></a>
          <header><h1>CurrentHeatingCoolingState</h1></header>
          <h3>Properties</h3>
@@ -3719,8 +3727,8 @@ block-warning a {
             <tr><TD> 2 </TD><TD> "COOL" </TD></tr>
             <tr><TD> undefined </TD><TD> "AUTO" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- CurrentHeatingCoolingState -->
+      <div id="CurrentHorizontalTiltAngle" class="section" >
          <a name="CurrentHorizontalTiltAngle"></a>
          <header><h1>CurrentHorizontalTiltAngle</h1></header>
          <h3>Properties</h3>
@@ -3734,8 +3742,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- CurrentHorizontalTiltAngle -->
+      <div id="CurrentHumidifierDehumidifierState" class="section" >
          <a name="CurrentHumidifierDehumidifierState"></a>
          <header><h1>CurrentHumidifierDehumidifierState</h1></header>
          <h3>Properties</h3>
@@ -3754,8 +3762,8 @@ block-warning a {
             <tr><TD> 2 </TD><TD> "HUMIDIFYING" </TD></tr>
             <tr><TD> 3 </TD><TD> "DEHUMIDIFYING" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- CurrentHumidifierDehumidifierState -->
+      <div id="CurrentMediaState" class="section" >
          <a name="CurrentMediaState"></a>
          <header><h1>CurrentMediaState</h1></header>
          <h3>Properties</h3>
@@ -3776,8 +3784,8 @@ block-warning a {
             <tr><TD> 4 </TD><TD> "LOADING" </TD></tr>
             <tr><TD> 5 </TD><TD> "INTERRUPTED" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- CurrentMediaState -->
+      <div id="CurrentPosition" class="section" >
          <a name="CurrentPosition"></a>
          <header><h1>CurrentPosition</h1></header>
          <h3>Properties</h3>
@@ -3790,8 +3798,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- CurrentPosition -->
+      <div id="CurrentRelativeHumidity" class="section" >
          <a name="CurrentRelativeHumidity"></a>
          <header><h1>CurrentRelativeHumidity</h1></header>
          <h3>Properties</h3>
@@ -3804,8 +3812,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- CurrentRelativeHumidity -->
+      <div id="CurrentSlatState" class="section" >
          <a name="CurrentSlatState"></a>
          <header><h1>CurrentSlatState</h1></header>
          <h3>Properties</h3>
@@ -3823,8 +3831,8 @@ block-warning a {
             <tr><TD> 1 </TD><TD> "JAMMED" </TD></tr>
             <tr><TD> 2 </TD><TD> "SWINGING" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- CurrentSlatState -->
+      <div id="CurrentTemperature" class="section" >
          <a name="CurrentTemperature"></a>
          <header><h1>CurrentTemperature</h1></header>
          <h3>Properties</h3>
@@ -3837,8 +3845,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  0.1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- CurrentTemperature -->
+      <div id="CurrentTiltAngle" class="section" >
          <a name="CurrentTiltAngle"></a>
          <header><h1>CurrentTiltAngle</h1></header>
          <h3>Properties</h3>
@@ -3852,8 +3860,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- CurrentTiltAngle -->
+      <div id="CurrentTime" class="section" >
          <a name="CurrentTime"></a>
          <header><h1>CurrentTime</h1></header>
          <h3>Properties</h3>
@@ -3863,8 +3871,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> string</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- CurrentTime -->
+      <div id="CurrentTransport" class="section" >
          <a name="CurrentTransport"></a>
          <header><h1>CurrentTransport</h1></header>
          <h3>Properties</h3>
@@ -3880,8 +3888,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
             <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- CurrentTransport -->
+      <div id="CurrentVerticalTiltAngle" class="section" >
          <a name="CurrentVerticalTiltAngle"></a>
          <header><h1>CurrentVerticalTiltAngle</h1></header>
          <h3>Properties</h3>
@@ -3895,8 +3903,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- CurrentVerticalTiltAngle -->
+      <div id="CurrentVisibilityState" class="section" >
          <a name="CurrentVisibilityState"></a>
          <header><h1>CurrentVisibilityState</h1></header>
          <h3>Properties</h3>
@@ -3915,8 +3923,8 @@ block-warning a {
             <tr><TD> 2 </TD><TD> "UNKNOWN2" </TD></tr>
             <tr><TD> 3 </TD><TD> "UNKNOWN3" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- CurrentVisibilityState -->
+      <div id="DataStreamHAPTransport" class="section" >
          <a name="DataStreamHAPTransport"></a>
          <header><h1>DataStreamHAPTransport</h1></header>
          <h3>Properties</h3>
@@ -3926,8 +3934,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Write Response</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- DataStreamHAPTransport -->
+      <div id="DataStreamHAPTransportInterrupt" class="section" >
          <a name="DataStreamHAPTransportInterrupt"></a>
          <header><h1>DataStreamHAPTransportInterrupt</h1></header>
          <h3>Properties</h3>
@@ -3937,8 +3945,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- DataStreamHAPTransportInterrupt -->
+      <div id="DayoftheWeek" class="section" >
          <a name="DayoftheWeek"></a>
          <header><h1>DayoftheWeek</h1></header>
          <h3>Properties</h3>
@@ -3951,8 +3959,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- DayoftheWeek -->
+      <div id="DiagonalFieldOfView" class="section" >
          <a name="DiagonalFieldOfView"></a>
          <header><h1>DiagonalFieldOfView</h1></header>
          <h3>Properties</h3>
@@ -3965,8 +3973,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- DiagonalFieldOfView -->
+      <div id="DigitalZoom" class="section" >
          <a name="DigitalZoom"></a>
          <header><h1>DigitalZoom</h1></header>
          <h3>Properties</h3>
@@ -3976,8 +3984,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> float</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- DigitalZoom -->
+      <div id="DiscoverBridgedAccessories" class="section" >
          <a name="DiscoverBridgedAccessories"></a>
          <header><h1>DiscoverBridgedAccessories</h1></header>
          <h3>Properties</h3>
@@ -3987,8 +3995,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- DiscoverBridgedAccessories -->
+      <div id="DiscoveredBridgedAccessories" class="section" >
          <a name="DiscoveredBridgedAccessories"></a>
          <header><h1>DiscoveredBridgedAccessories</h1></header>
          <h3>Properties</h3>
@@ -3998,8 +4006,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> uint16</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- DiscoveredBridgedAccessories -->
+      <div id="DisplayOrder" class="section" >
          <a name="DisplayOrder"></a>
          <header><h1>DisplayOrder</h1></header>
          <h3>Properties</h3>
@@ -4009,8 +4017,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- DisplayOrder -->
+      <div id="EventRetransmissionMaximum" class="section" >
          <a name="EventRetransmissionMaximum"></a>
          <header><h1>EventRetransmissionMaximum</h1></header>
          <h3>Properties</h3>
@@ -4020,8 +4028,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- EventRetransmissionMaximum -->
+      <div id="EventSnapshotsActive" class="section" >
          <a name="EventSnapshotsActive"></a>
          <header><h1>EventSnapshotsActive</h1></header>
          <h3>Properties</h3>
@@ -4037,8 +4045,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "DISABLE" </TD></tr>
             <tr><TD> 1 </TD><TD> "ENABLE" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- EventSnapshotsActive -->
+      <div id="EventTransmissionCounters" class="section" >
          <a name="EventTransmissionCounters"></a>
          <header><h1>EventTransmissionCounters</h1></header>
          <h3>Properties</h3>
@@ -4048,8 +4056,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> uint32</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- EventTransmissionCounters -->
+      <div id="FilterChangeIndication" class="section" >
          <a name="FilterChangeIndication"></a>
          <header><h1>FilterChangeIndication</h1></header>
          <h3>Properties</h3>
@@ -4066,8 +4074,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "FILTER_OK" </TD></tr>
             <tr><TD> 1 </TD><TD> "CHANGE_FILTER" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- FilterChangeIndication -->
+      <div id="FilterLifeLevel" class="section" >
          <a name="FilterLifeLevel"></a>
          <header><h1>FilterLifeLevel</h1></header>
          <h3>Properties</h3>
@@ -4078,8 +4086,8 @@ block-warning a {
             <tr><TD> Max Value: </TD><TD>  100</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- FilterLifeLevel -->
+      <div id="FirmwareRevision" class="section" >
          <a name="FirmwareRevision"></a>
          <header><h1>FirmwareRevision</h1></header>
          <h3>Properties</h3>
@@ -4089,8 +4097,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> string</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- FirmwareRevision -->
+      <div id="HardwareRevision" class="section" >
          <a name="HardwareRevision"></a>
          <header><h1>HardwareRevision</h1></header>
          <h3>Properties</h3>
@@ -4100,8 +4108,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> string</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- HardwareRevision -->
+      <div id="HeartBeat" class="section" >
          <a name="HeartBeat"></a>
          <header><h1>HeartBeat</h1></header>
          <h3>Properties</h3>
@@ -4111,8 +4119,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> uint32</TD></tr>
             <tr><TD> Perms: </TD><TD>  Events, Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- HeartBeat -->
+      <div id="HeatingThresholdTemperature" class="section" >
          <a name="HeatingThresholdTemperature"></a>
          <header><h1>HeatingThresholdTemperature</h1></header>
          <h3>Properties</h3>
@@ -4125,8 +4133,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  0.1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- HeatingThresholdTemperature -->
+      <div id="HoldPosition" class="section" >
          <a name="HoldPosition"></a>
          <header><h1>HoldPosition</h1></header>
          <h3>Properties</h3>
@@ -4142,8 +4150,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
             <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- HoldPosition -->
+      <div id="HomeKitCameraActive" class="section" >
          <a name="HomeKitCameraActive"></a>
          <header><h1>HomeKitCameraActive</h1></header>
          <h3>Properties</h3>
@@ -4159,8 +4167,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "OFF" </TD></tr>
             <tr><TD> 1 </TD><TD> "ON" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- HomeKitCameraActive -->
+      <div id="Hue" class="section" >
          <a name="Hue"></a>
          <header><h1>Hue</h1></header>
          <h3>Properties</h3>
@@ -4173,8 +4181,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- Hue -->
+      <div id="Identifier" class="section" >
          <a name="Identifier"></a>
          <header><h1>Identifier</h1></header>
          <h3>Properties</h3>
@@ -4185,8 +4193,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- Identifier -->
+      <div id="Identify" class="section" >
          <a name="Identify"></a>
          <header><h1>Identify</h1></header>
          <h3>Properties</h3>
@@ -4202,8 +4210,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
             <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- Identify -->
+      <div id="ImageMirroring" class="section" >
          <a name="ImageMirroring"></a>
          <header><h1>ImageMirroring</h1></header>
          <h3>Properties</h3>
@@ -4219,8 +4227,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
             <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- ImageMirroring -->
+      <div id="ImageRotation" class="section" >
          <a name="ImageRotation"></a>
          <header><h1>ImageRotation</h1></header>
          <h3>Properties</h3>
@@ -4233,8 +4241,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  90</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- ImageRotation -->
+      <div id="InUse" class="section" >
          <a name="InUse"></a>
          <header><h1>InUse</h1></header>
          <h3>Properties</h3>
@@ -4251,8 +4259,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "NOT_IN_USE" </TD></tr>
             <tr><TD> 1 </TD><TD> "IN_USE" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- InUse -->
+      <div id="InputDeviceType" class="section" >
          <a name="InputDeviceType"></a>
          <header><h1>InputDeviceType</h1></header>
          <h3>Properties</h3>
@@ -4274,8 +4282,8 @@ block-warning a {
             <tr><TD> 5 </TD><TD> "AUDIO_SYSTEM" </TD></tr>
             <tr><TD> 6 </TD><TD> "UNKNOWN_6" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- InputDeviceType -->
+      <div id="InputSourceType" class="section" >
          <a name="InputSourceType"></a>
          <header><h1>InputSourceType</h1></header>
          <h3>Properties</h3>
@@ -4301,8 +4309,8 @@ block-warning a {
             <tr><TD> 9 </TD><TD> "USB" </TD></tr>
             <tr><TD> 10 </TD><TD> "APPLICATION" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- InputSourceType -->
+      <div id="IsConfigured" class="section" >
          <a name="IsConfigured"></a>
          <header><h1>IsConfigured</h1></header>
          <h3>Properties</h3>
@@ -4319,8 +4327,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "NOT_CONFIGURED" </TD></tr>
             <tr><TD> 1 </TD><TD> "CONFIGURED" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- IsConfigured -->
+      <div id="LeakDetected" class="section" >
          <a name="LeakDetected"></a>
          <header><h1>LeakDetected</h1></header>
          <h3>Properties</h3>
@@ -4337,8 +4345,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "LEAK_NOT_DETECTED" </TD></tr>
             <tr><TD> 1 </TD><TD> "LEAK_DETECTED" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- LeakDetected -->
+      <div id="LinkQuality" class="section" >
          <a name="LinkQuality"></a>
          <header><h1>LinkQuality</h1></header>
          <h3>Properties</h3>
@@ -4351,8 +4359,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- LinkQuality -->
+      <div id="LockControlPoint" class="section" >
          <a name="LockControlPoint"></a>
          <header><h1>LockControlPoint</h1></header>
          <h3>Properties</h3>
@@ -4362,8 +4370,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Write</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- LockControlPoint -->
+      <div id="LockCurrentState" class="section" >
          <a name="LockCurrentState"></a>
          <header><h1>LockCurrentState</h1></header>
          <h3>Properties</h3>
@@ -4382,8 +4390,8 @@ block-warning a {
             <tr><TD> 2 </TD><TD> "JAMMED" </TD></tr>
             <tr><TD> 3 </TD><TD> "UNKNOWN" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- LockCurrentState -->
+      <div id="LockLastKnownAction" class="section" >
          <a name="LockLastKnownAction"></a>
          <header><h1>LockLastKnownAction</h1></header>
          <h3>Properties</h3>
@@ -4407,8 +4415,8 @@ block-warning a {
             <tr><TD> 7 </TD><TD> "UNSECURED_REMOTELY" </TD></tr>
             <tr><TD> 8 </TD><TD> "SECURED_BY_AUTO_SECURE_TIMEOUT" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- LockLastKnownAction -->
+      <div id="LockManagementAutoSecurityTimeout" class="section" >
          <a name="LockManagementAutoSecurityTimeout"></a>
          <header><h1>LockManagementAutoSecurityTimeout</h1></header>
          <h3>Properties</h3>
@@ -4419,8 +4427,8 @@ block-warning a {
             <tr><TD> Unit: </TD><TD>  seconds</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- LockManagementAutoSecurityTimeout -->
+      <div id="LockPhysicalControls" class="section" >
          <a name="LockPhysicalControls"></a>
          <header><h1>LockPhysicalControls</h1></header>
          <h3>Properties</h3>
@@ -4437,8 +4445,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "CONTROL_LOCK_DISABLED" </TD></tr>
             <tr><TD> 1 </TD><TD> "CONTROL_LOCK_ENABLED" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- LockPhysicalControls -->
+      <div id="LockTargetState" class="section" >
          <a name="LockTargetState"></a>
          <header><h1>LockTargetState</h1></header>
          <h3>Properties</h3>
@@ -4457,8 +4465,8 @@ block-warning a {
          </table>
          <h4>Note:</h4>
          <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#LockCurrentState">LockCurrentState</a></note>
-      </DIV>
-      <div>
+      </DIV>   <!-- LockTargetState -->
+      <div id="Logs" class="section" >
          <a name="Logs"></a>
          <header><h1>Logs</h1></header>
          <h3>Properties</h3>
@@ -4468,8 +4476,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- Logs -->
+      <div id="MACRetransmissionMaximum" class="section" >
          <a name="MACRetransmissionMaximum"></a>
          <header><h1>MACRetransmissionMaximum</h1></header>
          <h3>Properties</h3>
@@ -4479,8 +4487,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- MACRetransmissionMaximum -->
+      <div id="MACTransmissionCounters" class="section" >
          <a name="MACTransmissionCounters"></a>
          <header><h1>MACTransmissionCounters</h1></header>
          <h3>Properties</h3>
@@ -4490,8 +4498,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> data</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- MACTransmissionCounters -->
+      <div id="ManagedNetworkEnable" class="section" >
          <a name="ManagedNetworkEnable"></a>
          <header><h1>ManagedNetworkEnable</h1></header>
          <h3>Properties</h3>
@@ -4509,8 +4517,8 @@ block-warning a {
             <tr><TD> 1 </TD><TD> "ENABLED" </TD></tr>
             <tr><TD> 2 </TD><TD> "UNKNOWN" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- ManagedNetworkEnable -->
+      <div id="ManuallyDisabled" class="section" >
          <a name="ManuallyDisabled"></a>
          <header><h1>ManuallyDisabled</h1></header>
          <h3>Properties</h3>
@@ -4526,8 +4534,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "ENABLED" </TD></tr>
             <tr><TD> 1 </TD><TD> "DISABLED" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- ManuallyDisabled -->
+      <div id="Manufacturer" class="section" >
          <a name="Manufacturer"></a>
          <header><h1>Manufacturer</h1></header>
          <h3>Properties</h3>
@@ -4537,8 +4545,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> string</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- Manufacturer -->
+      <div id="Model" class="section" >
          <a name="Model"></a>
          <header><h1>Model</h1></header>
          <h3>Properties</h3>
@@ -4548,8 +4556,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> string</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- Model -->
+      <div id="MotionDetected" class="section" >
          <a name="MotionDetected"></a>
          <header><h1>MotionDetected</h1></header>
          <h3>Properties</h3>
@@ -4565,8 +4573,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
             <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- MotionDetected -->
+      <div id="Mute" class="section" >
          <a name="Mute"></a>
          <header><h1>Mute</h1></header>
          <h3>Properties</h3>
@@ -4582,8 +4590,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
             <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- Mute -->
+      <div id="Name" class="section" >
          <a name="Name"></a>
          <header><h1>Name</h1></header>
          <h3>Properties</h3>
@@ -4593,8 +4601,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> string</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- Name -->
+      <div id="NetworkAccessViolationControl" class="section" >
          <a name="NetworkAccessViolationControl"></a>
          <header><h1>NetworkAccessViolationControl</h1></header>
          <h3>Properties</h3>
@@ -4604,8 +4612,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events, Timed Write, Write Response</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- NetworkAccessViolationControl -->
+      <div id="NetworkClientProfileControl" class="section" >
          <a name="NetworkClientProfileControl"></a>
          <header><h1>NetworkClientProfileControl</h1></header>
          <h3>Properties</h3>
@@ -4615,8 +4623,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events, Timed Write, Write Response</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- NetworkClientProfileControl -->
+      <div id="NetworkClientStatusControl" class="section" >
          <a name="NetworkClientStatusControl"></a>
          <header><h1>NetworkClientStatusControl</h1></header>
          <h3>Properties</h3>
@@ -4626,8 +4634,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Write Response</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- NetworkClientStatusControl -->
+      <div id="NightVision" class="section" >
          <a name="NightVision"></a>
          <header><h1>NightVision</h1></header>
          <h3>Properties</h3>
@@ -4643,8 +4651,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
             <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- NightVision -->
+      <div id="NitrogenDioxideDensity" class="section" >
          <a name="NitrogenDioxideDensity"></a>
          <header><h1>NitrogenDioxideDensity</h1></header>
          <h3>Properties</h3>
@@ -4656,8 +4664,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- NitrogenDioxideDensity -->
+      <div id="ObstructionDetected" class="section" >
          <a name="ObstructionDetected"></a>
          <header><h1>ObstructionDetected</h1></header>
          <h3>Properties</h3>
@@ -4673,8 +4681,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
             <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- ObstructionDetected -->
+      <div id="OccupancyDetected" class="section" >
          <a name="OccupancyDetected"></a>
          <header><h1>OccupancyDetected</h1></header>
          <h3>Properties</h3>
@@ -4691,8 +4699,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "OCCUPANCY_NOT_DETECTED" </TD></tr>
             <tr><TD> 1 </TD><TD> "OCCUPANCY_DETECTED" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- OccupancyDetected -->
+      <div id="On" class="section" >
          <a name="On"></a>
          <header><h1>On</h1></header>
          <h3>Properties</h3>
@@ -4708,8 +4716,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
             <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- On -->
+      <div id="OperatingStateResponse" class="section" >
          <a name="OperatingStateResponse"></a>
          <header><h1>OperatingStateResponse</h1></header>
          <h3>Properties</h3>
@@ -4719,8 +4727,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- OperatingStateResponse -->
+      <div id="OpticalZoom" class="section" >
          <a name="OpticalZoom"></a>
          <header><h1>OpticalZoom</h1></header>
          <h3>Properties</h3>
@@ -4730,8 +4738,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> float</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- OpticalZoom -->
+      <div id="OutletInUse" class="section" >
          <a name="OutletInUse"></a>
          <header><h1>OutletInUse</h1></header>
          <h3>Properties</h3>
@@ -4747,8 +4755,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
             <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- OutletInUse -->
+      <div id="OzoneDensity" class="section" >
          <a name="OzoneDensity"></a>
          <header><h1>OzoneDensity</h1></header>
          <h3>Properties</h3>
@@ -4760,8 +4768,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- OzoneDensity -->
+      <div id="PM10Density" class="section" >
          <a name="PM10Density"></a>
          <header><h1>PM10Density</h1></header>
          <h3>Properties</h3>
@@ -4773,8 +4781,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- PM10Density -->
+      <div id="PM2_5Density" class="section" >
          <a name="PM2_5Density"></a>
          <header><h1>PM2_5Density</h1></header>
          <h3>Properties</h3>
@@ -4786,8 +4794,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- PM2_5Density -->
+      <div id="PairSetup" class="section" >
          <a name="PairSetup"></a>
          <header><h1>PairSetup</h1></header>
          <h3>Properties</h3>
@@ -4797,8 +4805,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- PairSetup -->
+      <div id="PairVerify" class="section" >
          <a name="PairVerify"></a>
          <header><h1>PairVerify</h1></header>
          <h3>Properties</h3>
@@ -4808,8 +4816,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- PairVerify -->
+      <div id="PairingFeatures" class="section" >
          <a name="PairingFeatures"></a>
          <header><h1>PairingFeatures</h1></header>
          <h3>Properties</h3>
@@ -4819,8 +4827,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- PairingFeatures -->
+      <div id="PairingPairings" class="section" >
          <a name="PairingPairings"></a>
          <header><h1>PairingPairings</h1></header>
          <h3>Properties</h3>
@@ -4830,8 +4838,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- PairingPairings -->
+      <div id="PasswordSetting" class="section" >
          <a name="PasswordSetting"></a>
          <header><h1>PasswordSetting</h1></header>
          <h3>Properties</h3>
@@ -4841,8 +4849,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Events, Paired Read, Paired Write</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- PasswordSetting -->
+      <div id="PeriodicSnapshotsActive" class="section" >
          <a name="PeriodicSnapshotsActive"></a>
          <header><h1>PeriodicSnapshotsActive</h1></header>
          <h3>Properties</h3>
@@ -4858,8 +4866,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "DISABLE" </TD></tr>
             <tr><TD> 1 </TD><TD> "ENABLE" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- PeriodicSnapshotsActive -->
+      <div id="PictureMode" class="section" >
          <a name="PictureMode"></a>
          <header><h1>PictureMode</h1></header>
          <h3>Properties</h3>
@@ -4888,8 +4896,8 @@ block-warning a {
             <tr><TD> 12 </TD><TD> "UNKNOWN12" </TD></tr>
             <tr><TD> 13 </TD><TD> "UNKNOWN13" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- PictureMode -->
+      <div id="Ping" class="section" >
          <a name="Ping"></a>
          <header><h1>Ping</h1></header>
          <h3>Properties</h3>
@@ -4899,8 +4907,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> data</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- Ping -->
+      <div id="PositionState" class="section" >
          <a name="PositionState"></a>
          <header><h1>PositionState</h1></header>
          <h3>Properties</h3>
@@ -4918,8 +4926,8 @@ block-warning a {
             <tr><TD> 1 </TD><TD> "INCREASING" </TD></tr>
             <tr><TD> 2 </TD><TD> "STOPPED" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- PositionState -->
+      <div id="PowerModeSelection" class="section" >
          <a name="PowerModeSelection"></a>
          <header><h1>PowerModeSelection</h1></header>
          <h3>Properties</h3>
@@ -4936,8 +4944,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "SHOW" </TD></tr>
             <tr><TD> 1 </TD><TD> "HIDE" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- PowerModeSelection -->
+      <div id="ProductData" class="section" >
          <a name="ProductData"></a>
          <header><h1>ProductData</h1></header>
          <h3>Properties</h3>
@@ -4947,8 +4955,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> data</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- ProductData -->
+      <div id="ProgramMode" class="section" >
          <a name="ProgramMode"></a>
          <header><h1>ProgramMode</h1></header>
          <h3>Properties</h3>
@@ -4966,8 +4974,8 @@ block-warning a {
             <tr><TD> 1 </TD><TD> "PROGRAM_SCHEDULED" </TD></tr>
             <tr><TD> 2 </TD><TD> "PROGRAM_SCHEDULED_MANUAL_MODE_" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- ProgramMode -->
+      <div id="ProgrammableSwitchEvent" class="section" >
          <a name="ProgrammableSwitchEvent"></a>
          <header><h1>ProgrammableSwitchEvent</h1></header>
          <h3>Properties</h3>
@@ -4985,8 +4993,8 @@ block-warning a {
             <tr><TD> 1 </TD><TD> "DOUBLE_PRESS" </TD></tr>
             <tr><TD> 2 </TD><TD> "LONG_PRESS" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- ProgrammableSwitchEvent -->
+      <div id="ProgrammableSwitchOutputState" class="section" >
          <a name="ProgrammableSwitchOutputState"></a>
          <header><h1>ProgrammableSwitchOutputState</h1></header>
          <h3>Properties</h3>
@@ -4998,8 +5006,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- ProgrammableSwitchOutputState -->
+      <div id="Reachable" class="section" >
          <a name="Reachable"></a>
          <header><h1>Reachable</h1></header>
          <h3>Properties</h3>
@@ -5015,8 +5023,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
             <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- Reachable -->
+      <div id="ReceivedSignalStrengthIndication" class="section" >
          <a name="ReceivedSignalStrengthIndication"></a>
          <header><h1>ReceivedSignalStrengthIndication</h1></header>
          <h3>Properties</h3>
@@ -5026,8 +5034,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> int</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- ReceivedSignalStrengthIndication -->
+      <div id="ReceiverSensitivity" class="section" >
          <a name="ReceiverSensitivity"></a>
          <header><h1>ReceiverSensitivity</h1></header>
          <h3>Properties</h3>
@@ -5037,8 +5045,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> int</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- ReceiverSensitivity -->
+      <div id="RecordingAudioActive" class="section" >
          <a name="RecordingAudioActive"></a>
          <header><h1>RecordingAudioActive</h1></header>
          <h3>Properties</h3>
@@ -5054,8 +5062,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "DISABLE" </TD></tr>
             <tr><TD> 1 </TD><TD> "ENABLE" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- RecordingAudioActive -->
+      <div id="RelativeHumidityDehumidifierThreshold" class="section" >
          <a name="RelativeHumidityDehumidifierThreshold"></a>
          <header><h1>RelativeHumidityDehumidifierThreshold</h1></header>
          <h3>Properties</h3>
@@ -5067,8 +5075,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- RelativeHumidityDehumidifierThreshold -->
+      <div id="RelativeHumidityHumidifierThreshold" class="section" >
          <a name="RelativeHumidityHumidifierThreshold"></a>
          <header><h1>RelativeHumidityHumidifierThreshold</h1></header>
          <h3>Properties</h3>
@@ -5081,8 +5089,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- RelativeHumidityHumidifierThreshold -->
+      <div id="RelayControlPoint" class="section" >
          <a name="RelayControlPoint"></a>
          <header><h1>RelayControlPoint</h1></header>
          <h3>Properties</h3>
@@ -5092,8 +5100,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- RelayControlPoint -->
+      <div id="RelayEnabled" class="section" >
          <a name="RelayEnabled"></a>
          <header><h1>RelayEnabled</h1></header>
          <h3>Properties</h3>
@@ -5109,8 +5117,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
             <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- RelayEnabled -->
+      <div id="RelayState" class="section" >
          <a name="RelayState"></a>
          <header><h1>RelayState</h1></header>
          <h3>Properties</h3>
@@ -5120,8 +5128,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- RelayState -->
+      <div id="RemainingDuration" class="section" >
          <a name="RemainingDuration"></a>
          <header><h1>RemainingDuration</h1></header>
          <h3>Properties</h3>
@@ -5133,8 +5141,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- RemainingDuration -->
+      <div id="RemoteKey" class="section" >
          <a name="RemoteKey"></a>
          <header><h1>RemoteKey</h1></header>
          <h3>Properties</h3>
@@ -5166,8 +5174,8 @@ block-warning a {
             <tr><TD> 15 </TD><TD> "INFORMATION" </TD></tr>
             <tr><TD> 16 </TD><TD> "UNKNOWN16" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- RemoteKey -->
+      <div id="ResetFilterIndication" class="section" >
          <a name="ResetFilterIndication"></a>
          <header><h1>ResetFilterIndication</h1></header>
          <h3>Properties</h3>
@@ -5180,8 +5188,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Write</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- ResetFilterIndication -->
+      <div id="RotationDirection" class="section" >
          <a name="RotationDirection"></a>
          <header><h1>RotationDirection</h1></header>
          <h3>Properties</h3>
@@ -5198,8 +5206,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "CLOCKWISE" </TD></tr>
             <tr><TD> 1 </TD><TD> "COUNTER_CLOCKWISE" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- RotationDirection -->
+      <div id="RotationSpeed" class="section" >
          <a name="RotationSpeed"></a>
          <header><h1>RotationSpeed</h1></header>
          <h3>Properties</h3>
@@ -5212,8 +5220,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- RotationSpeed -->
+      <div id="RouterStatus" class="section" >
          <a name="RouterStatus"></a>
          <header><h1>RouterStatus</h1></header>
          <h3>Properties</h3>
@@ -5230,8 +5238,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "READY" </TD></tr>
             <tr><TD> 1 </TD><TD> "NOT_READY" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- RouterStatus -->
+      <div id="Saturation" class="section" >
          <a name="Saturation"></a>
          <header><h1>Saturation</h1></header>
          <h3>Properties</h3>
@@ -5244,8 +5252,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- Saturation -->
+      <div id="SecuritySystemAlarmType" class="section" >
          <a name="SecuritySystemAlarmType"></a>
          <header><h1>SecuritySystemAlarmType</h1></header>
          <h3>Properties</h3>
@@ -5257,8 +5265,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SecuritySystemAlarmType -->
+      <div id="SecuritySystemCurrentState" class="section" >
          <a name="SecuritySystemCurrentState"></a>
          <header><h1>SecuritySystemCurrentState</h1></header>
          <h3>Properties</h3>
@@ -5278,8 +5286,8 @@ block-warning a {
             <tr><TD> 3 </TD><TD> "DISARMED" </TD></tr>
             <tr><TD> 4 </TD><TD> "ALARM_TRIGGERED" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SecuritySystemCurrentState -->
+      <div id="SecuritySystemTargetState" class="section" >
          <a name="SecuritySystemTargetState"></a>
          <header><h1>SecuritySystemTargetState</h1></header>
          <h3>Properties</h3>
@@ -5300,8 +5308,8 @@ block-warning a {
          </table>
          <h4>Note:</h4>
          <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#SecuritySystemCurrentState">SecuritySystemCurrentState</a></note>
-      </DIV>
-      <div>
+      </DIV>   <!-- SecuritySystemTargetState -->
+      <div id="SelectedAudioStreamConfiguration" class="section" >
          <a name="SelectedAudioStreamConfiguration"></a>
          <header><h1>SelectedAudioStreamConfiguration</h1></header>
          <h3>Properties</h3>
@@ -5311,8 +5319,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SelectedAudioStreamConfiguration -->
+      <div id="SelectedCameraRecordingConfiguration" class="section" >
          <a name="SelectedCameraRecordingConfiguration"></a>
          <header><h1>SelectedCameraRecordingConfiguration</h1></header>
          <h3>Properties</h3>
@@ -5322,8 +5330,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SelectedCameraRecordingConfiguration -->
+      <div id="SelectedRTPStreamConfiguration" class="section" >
          <a name="SelectedRTPStreamConfiguration"></a>
          <header><h1>SelectedRTPStreamConfiguration</h1></header>
          <h3>Properties</h3>
@@ -5333,8 +5341,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SelectedRTPStreamConfiguration -->
+      <div id="SerialNumber" class="section" >
          <a name="SerialNumber"></a>
          <header><h1>SerialNumber</h1></header>
          <h3>Properties</h3>
@@ -5344,8 +5352,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> string</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SerialNumber -->
+      <div id="ServiceLabelIndex" class="section" >
          <a name="ServiceLabelIndex"></a>
          <header><h1>ServiceLabelIndex</h1></header>
          <h3>Properties</h3>
@@ -5358,8 +5366,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- ServiceLabelIndex -->
+      <div id="ServiceLabelNamespace" class="section" >
          <a name="ServiceLabelNamespace"></a>
          <header><h1>ServiceLabelNamespace</h1></header>
          <h3>Properties</h3>
@@ -5376,8 +5384,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "DOTS" </TD></tr>
             <tr><TD> 1 </TD><TD> "ARABIC_NUMERALS" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- ServiceLabelNamespace -->
+      <div id="SetDuration" class="section" >
          <a name="SetDuration"></a>
          <header><h1>SetDuration</h1></header>
          <h3>Properties</h3>
@@ -5389,8 +5397,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SetDuration -->
+      <div id="SetupDataStreamTransport" class="section" >
          <a name="SetupDataStreamTransport"></a>
          <header><h1>SetupDataStreamTransport</h1></header>
          <h3>Properties</h3>
@@ -5400,8 +5408,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Write Response</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SetupDataStreamTransport -->
+      <div id="SetupEndpoints" class="section" >
          <a name="SetupEndpoints"></a>
          <header><h1>SetupEndpoints</h1></header>
          <h3>Properties</h3>
@@ -5411,8 +5419,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SetupEndpoints -->
+      <div id="SetupTransferTransport" class="section" >
          <a name="SetupTransferTransport"></a>
          <header><h1>SetupTransferTransport</h1></header>
          <h3>Properties</h3>
@@ -5422,8 +5430,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Write, Write Response</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SetupTransferTransport -->
+      <div id="SignalToNoiseRatio" class="section" >
          <a name="SignalToNoiseRatio"></a>
          <header><h1>SignalToNoiseRatio</h1></header>
          <h3>Properties</h3>
@@ -5433,8 +5441,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> int</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SignalToNoiseRatio -->
+      <div id="SiriInputType" class="section" >
          <a name="SiriInputType"></a>
          <header><h1>SiriInputType</h1></header>
          <h3>Properties</h3>
@@ -5449,8 +5457,8 @@ block-warning a {
             <TD> Value </TD><TD> String </TD>
             <tr><TD> 0 </TD><TD> "PUSH_BUTTON_TRIGGERED_APPLE_TV" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SiriInputType -->
+      <div id="SlatType" class="section" >
          <a name="SlatType"></a>
          <header><h1>SlatType</h1></header>
          <h3>Properties</h3>
@@ -5467,8 +5475,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "HORIZONTAL" </TD></tr>
             <tr><TD> 1 </TD><TD> "VERTICAL" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SlatType -->
+      <div id="SleepDiscoveryMode" class="section" >
          <a name="SleepDiscoveryMode"></a>
          <header><h1>SleepDiscoveryMode</h1></header>
          <h3>Properties</h3>
@@ -5485,8 +5493,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "NOT_DISCOVERABLE" </TD></tr>
             <tr><TD> 1 </TD><TD> "ALWAYS_DISCOVERABLE" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SleepDiscoveryMode -->
+      <div id="SleepInterval" class="section" >
          <a name="SleepInterval"></a>
          <header><h1>SleepInterval</h1></header>
          <h3>Properties</h3>
@@ -5497,8 +5505,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SleepInterval -->
+      <div id="SmokeDetected" class="section" >
          <a name="SmokeDetected"></a>
          <header><h1>SmokeDetected</h1></header>
          <h3>Properties</h3>
@@ -5515,8 +5523,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "SMOKE_NOT_DETECTED" </TD></tr>
             <tr><TD> 1 </TD><TD> "SMOKE_DETECTED" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SmokeDetected -->
+      <div id="SoftwareRevision" class="section" >
          <a name="SoftwareRevision"></a>
          <header><h1>SoftwareRevision</h1></header>
          <h3>Properties</h3>
@@ -5526,8 +5534,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> string</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SoftwareRevision -->
+      <div id="StatusActive" class="section" >
          <a name="StatusActive"></a>
          <header><h1>StatusActive</h1></header>
          <h3>Properties</h3>
@@ -5543,8 +5551,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
             <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- StatusActive -->
+      <div id="StatusFault" class="section" >
          <a name="StatusFault"></a>
          <header><h1>StatusFault</h1></header>
          <h3>Properties</h3>
@@ -5561,8 +5569,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "NO_FAULT" </TD></tr>
             <tr><TD> 1 </TD><TD> "GENERAL_FAULT" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- StatusFault -->
+      <div id="StatusJammed" class="section" >
          <a name="StatusJammed"></a>
          <header><h1>StatusJammed</h1></header>
          <h3>Properties</h3>
@@ -5579,8 +5587,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "NOT_JAMMED" </TD></tr>
             <tr><TD> 1 </TD><TD> "JAMMED" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- StatusJammed -->
+      <div id="StatusLowBattery" class="section" >
          <a name="StatusLowBattery"></a>
          <header><h1>StatusLowBattery</h1></header>
          <h3>Properties</h3>
@@ -5597,8 +5605,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "BATTERY_LEVEL_NORMAL" </TD></tr>
             <tr><TD> 1 </TD><TD> "BATTERY_LEVEL_LOW" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- StatusLowBattery -->
+      <div id="StatusTampered" class="section" >
          <a name="StatusTampered"></a>
          <header><h1>StatusTampered</h1></header>
          <h3>Properties</h3>
@@ -5615,8 +5623,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "NOT_TAMPERED" </TD></tr>
             <tr><TD> 1 </TD><TD> "TAMPERED" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- StatusTampered -->
+      <div id="StreamingStatus" class="section" >
          <a name="StreamingStatus"></a>
          <header><h1>StreamingStatus</h1></header>
          <h3>Properties</h3>
@@ -5626,8 +5634,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- StreamingStatus -->
+      <div id="SulphurDioxideDensity" class="section" >
          <a name="SulphurDioxideDensity"></a>
          <header><h1>SulphurDioxideDensity</h1></header>
          <h3>Properties</h3>
@@ -5639,8 +5647,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SulphurDioxideDensity -->
+      <div id="SupportedAudioRecordingConfiguration" class="section" >
          <a name="SupportedAudioRecordingConfiguration"></a>
          <header><h1>SupportedAudioRecordingConfiguration</h1></header>
          <h3>Properties</h3>
@@ -5650,8 +5658,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SupportedAudioRecordingConfiguration -->
+      <div id="SupportedAudioStreamConfiguration" class="section" >
          <a name="SupportedAudioStreamConfiguration"></a>
          <header><h1>SupportedAudioStreamConfiguration</h1></header>
          <h3>Properties</h3>
@@ -5661,8 +5669,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SupportedAudioStreamConfiguration -->
+      <div id="SupportedCameraRecordingConfiguration" class="section" >
          <a name="SupportedCameraRecordingConfiguration"></a>
          <header><h1>SupportedCameraRecordingConfiguration</h1></header>
          <h3>Properties</h3>
@@ -5672,8 +5680,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SupportedCameraRecordingConfiguration -->
+      <div id="SupportedDataStreamTransportConfiguration" class="section" >
          <a name="SupportedDataStreamTransportConfiguration"></a>
          <header><h1>SupportedDataStreamTransportConfiguration</h1></header>
          <h3>Properties</h3>
@@ -5683,8 +5691,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SupportedDataStreamTransportConfiguration -->
+      <div id="SupportedCharacteristicValueTransitionConfiguration" class="section" >
          <a name="SupportedCharacteristicValueTransitionConfiguration"></a>
          <header><h1>SupportedCharacteristicValueTransitionConfiguration</h1></header>
          <h3>Properties</h3>
@@ -5694,8 +5702,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SupportedCharacteristicValueTransitionConfiguration -->
+      <div id="SupportedDiagnosticsSnapshot" class="section" >
          <a name="SupportedDiagnosticsSnapshot"></a>
          <header><h1>SupportedDiagnosticsSnapshot</h1></header>
          <h3>Properties</h3>
@@ -5705,8 +5713,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SupportedDiagnosticsSnapshot -->
+      <div id="SupportedRTPConfiguration" class="section" >
          <a name="SupportedRTPConfiguration"></a>
          <header><h1>SupportedRTPConfiguration</h1></header>
          <h3>Properties</h3>
@@ -5716,8 +5724,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SupportedRTPConfiguration -->
+      <div id="SupportedRouterConfiguration" class="section" >
          <a name="SupportedRouterConfiguration"></a>
          <header><h1>SupportedRouterConfiguration</h1></header>
          <h3>Properties</h3>
@@ -5727,8 +5735,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SupportedRouterConfiguration -->
+      <div id="SupportedTransferTransportConfiguration" class="section" >
          <a name="SupportedTransferTransportConfiguration"></a>
          <header><h1>SupportedTransferTransportConfiguration</h1></header>
          <h3>Properties</h3>
@@ -5738,8 +5746,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SupportedTransferTransportConfiguration -->
+      <div id="SupportedVideoRecordingConfiguration" class="section" >
          <a name="SupportedVideoRecordingConfiguration"></a>
          <header><h1>SupportedVideoRecordingConfiguration</h1></header>
          <h3>Properties</h3>
@@ -5749,8 +5757,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SupportedVideoRecordingConfiguration -->
+      <div id="SupportedVideoStreamConfiguration" class="section" >
          <a name="SupportedVideoStreamConfiguration"></a>
          <header><h1>SupportedVideoStreamConfiguration</h1></header>
          <h3>Properties</h3>
@@ -5760,8 +5768,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SupportedVideoStreamConfiguration -->
+      <div id="SwingMode" class="section" >
          <a name="SwingMode"></a>
          <header><h1>SwingMode</h1></header>
          <h3>Properties</h3>
@@ -5778,8 +5786,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "SWING_DISABLED" </TD></tr>
             <tr><TD> 1 </TD><TD> "SWING_ENABLED" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- SwingMode -->
+      <div id="TargetAirPurifierState" class="section" >
          <a name="TargetAirPurifierState"></a>
          <header><h1>TargetAirPurifierState</h1></header>
          <h3>Properties</h3>
@@ -5798,8 +5806,8 @@ block-warning a {
          </table>
          <h4>Note:</h4>
          <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentAirPurifierState">CurrentAirPurifierState</a></note>
-      </DIV>
-      <div>
+      </DIV>   <!-- TargetAirPurifierState -->
+      <div id="TargetAirQuality" class="section" >
          <a name="TargetAirQuality"></a>
          <header><h1>TargetAirQuality</h1></header>
          <h3>Properties</h3>
@@ -5819,8 +5827,8 @@ block-warning a {
          </table>
          <h4>Note:</h4>
          <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#AirQuality">AirQuality</a></note>
-      </DIV>
-      <div>
+      </DIV>   <!-- TargetAirQuality -->
+      <div id="TargetControlList" class="section" >
          <a name="TargetControlList"></a>
          <header><h1>TargetControlList</h1></header>
          <h3>Properties</h3>
@@ -5830,8 +5838,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Write, Paired Read, Write Response</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- TargetControlList -->
+      <div id="TargetControlSupportedConfiguration" class="section" >
          <a name="TargetControlSupportedConfiguration"></a>
          <header><h1>TargetControlSupportedConfiguration</h1></header>
          <h3>Properties</h3>
@@ -5841,8 +5849,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- TargetControlSupportedConfiguration -->
+      <div id="TargetDoorState" class="section" >
          <a name="TargetDoorState"></a>
          <header><h1>TargetDoorState</h1></header>
          <h3>Properties</h3>
@@ -5861,8 +5869,8 @@ block-warning a {
          </table>
          <h4>Note:</h4>
          <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentDoorState">CurrentDoorState</a></note>
-      </DIV>
-      <div>
+      </DIV>   <!-- TargetDoorState -->
+      <div id="TargetFanState" class="section" >
          <a name="TargetFanState"></a>
          <header><h1>TargetFanState</h1></header>
          <h3>Properties</h3>
@@ -5881,8 +5889,8 @@ block-warning a {
          </table>
          <h4>Note:</h4>
          <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentFanState">CurrentFanState</a></note>
-      </DIV>
-      <div>
+      </DIV>   <!-- TargetFanState -->
+      <div id="TargetHeaterCoolerState" class="section" >
          <a name="TargetHeaterCoolerState"></a>
          <header><h1>TargetHeaterCoolerState</h1></header>
          <h3>Properties</h3>
@@ -5902,8 +5910,8 @@ block-warning a {
          </table>
          <h4>Note:</h4>
          <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentHeaterCoolerState">CurrentHeaterCoolerState</a></note>
-      </DIV>
-      <div>
+      </DIV>   <!-- TargetHeaterCoolerState -->
+      <div id="TargetHeatingCoolingState" class="section" >
          <a name="TargetHeatingCoolingState"></a>
          <header><h1>TargetHeatingCoolingState</h1></header>
          <h3>Properties</h3>
@@ -5924,8 +5932,8 @@ block-warning a {
          </table>
          <h4>Note:</h4>
          <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentHeatingCoolingState">CurrentHeatingCoolingState</a></note>
-      </DIV>
-      <div>
+      </DIV>   <!-- TargetHeatingCoolingState -->
+      <div id="TargetHorizontalTiltAngle" class="section" >
          <a name="TargetHorizontalTiltAngle"></a>
          <header><h1>TargetHorizontalTiltAngle</h1></header>
          <h3>Properties</h3>
@@ -5941,8 +5949,8 @@ block-warning a {
          </table>
          <h4>Note:</h4>
          <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentHorizontalTiltAngle">CurrentHorizontalTiltAngle</a></note>
-      </DIV>
-      <div>
+      </DIV>   <!-- TargetHorizontalTiltAngle -->
+      <div id="TargetHumidifierDehumidifierState" class="section" >
          <a name="TargetHumidifierDehumidifierState"></a>
          <header><h1>TargetHumidifierDehumidifierState</h1></header>
          <h3>Properties</h3>
@@ -5962,8 +5970,8 @@ block-warning a {
          </table>
          <h4>Note:</h4>
          <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentHumidifierDehumidifierState">CurrentHumidifierDehumidifierState</a></note>
-      </DIV>
-      <div>
+      </DIV>   <!-- TargetHumidifierDehumidifierState -->
+      <div id="TargetMediaState" class="section" >
          <a name="TargetMediaState"></a>
          <header><h1>TargetMediaState</h1></header>
          <h3>Properties</h3>
@@ -5984,8 +5992,8 @@ block-warning a {
          </table>
          <h4>Note:</h4>
          <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentMediaState">CurrentMediaState</a></note>
-      </DIV>
-      <div>
+      </DIV>   <!-- TargetMediaState -->
+      <div id="TargetPosition" class="section" >
          <a name="TargetPosition"></a>
          <header><h1>TargetPosition</h1></header>
          <h3>Properties</h3>
@@ -6000,8 +6008,8 @@ block-warning a {
          </table>
          <h4>Note:</h4>
          <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentPosition">CurrentPosition</a></note>
-      </DIV>
-      <div>
+      </DIV>   <!-- TargetPosition -->
+      <div id="TargetRelativeHumidity" class="section" >
          <a name="TargetRelativeHumidity"></a>
          <header><h1>TargetRelativeHumidity</h1></header>
          <h3>Properties</h3>
@@ -6016,8 +6024,8 @@ block-warning a {
          </table>
          <h4>Note:</h4>
          <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentRelativeHumidity">CurrentRelativeHumidity</a></note>
-      </DIV>
-      <div>
+      </DIV>   <!-- TargetRelativeHumidity -->
+      <div id="TargetSlatState" class="section" >
          <a name="TargetSlatState"></a>
          <header><h1>TargetSlatState</h1></header>
          <h3>Properties</h3>
@@ -6036,8 +6044,8 @@ block-warning a {
          </table>
          <h4>Note:</h4>
          <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentSlatState">CurrentSlatState</a></note>
-      </DIV>
-      <div>
+      </DIV>   <!-- TargetSlatState -->
+      <div id="TargetTemperature" class="section" >
          <a name="TargetTemperature"></a>
          <header><h1>TargetTemperature</h1></header>
          <h3>Properties</h3>
@@ -6053,8 +6061,8 @@ block-warning a {
          </table>
          <h4>Note:</h4>
          <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentTemperature">CurrentTemperature</a></note>
-      </DIV>
-      <div>
+      </DIV>   <!-- TargetTemperature -->
+      <div id="TargetTiltAngle" class="section" >
          <a name="TargetTiltAngle"></a>
          <header><h1>TargetTiltAngle</h1></header>
          <h3>Properties</h3>
@@ -6070,8 +6078,8 @@ block-warning a {
          </table>
          <h4>Note:</h4>
          <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentTiltAngle">CurrentTiltAngle</a></note>
-      </DIV>
-      <div>
+      </DIV>   <!-- TargetTiltAngle -->
+      <div id="TargetVerticalTiltAngle" class="section" >
          <a name="TargetVerticalTiltAngle"></a>
          <header><h1>TargetVerticalTiltAngle</h1></header>
          <h3>Properties</h3>
@@ -6087,8 +6095,8 @@ block-warning a {
          </table>
          <h4>Note:</h4>
          <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentVerticalTiltAngle">CurrentVerticalTiltAngle</a></note>
-      </DIV>
-      <div>
+      </DIV>   <!-- TargetVerticalTiltAngle -->
+      <div id="TargetVisibilityState" class="section" >
          <a name="TargetVisibilityState"></a>
          <header><h1>TargetVisibilityState</h1></header>
          <h3>Properties</h3>
@@ -6107,8 +6115,8 @@ block-warning a {
          </table>
          <h4>Note:</h4>
          <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentVisibilityState">CurrentVisibilityState</a></note>
-      </DIV>
-      <div>
+      </DIV>   <!-- TargetVisibilityState -->
+      <div id="TemperatureDisplayUnits" class="section" >
          <a name="TemperatureDisplayUnits"></a>
          <header><h1>TemperatureDisplayUnits</h1></header>
          <h3>Properties</h3>
@@ -6125,8 +6133,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "CELSIUS" </TD></tr>
             <tr><TD> 1 </TD><TD> "FAHRENHEIT" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- TemperatureDisplayUnits -->
+      <div id="ThirdPartyCameraActive" class="section" >
          <a name="ThirdPartyCameraActive"></a>
          <header><h1>ThirdPartyCameraActive</h1></header>
          <h3>Properties</h3>
@@ -6142,8 +6150,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "OFF" </TD></tr>
             <tr><TD> 1 </TD><TD> "ON" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- ThirdPartyCameraActive -->
+      <div id="TimeUpdate" class="section" >
          <a name="TimeUpdate"></a>
          <header><h1>TimeUpdate</h1></header>
          <h3>Properties</h3>
@@ -6159,8 +6167,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
             <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- TimeUpdate -->
+      <div id="TransmitPower" class="section" >
          <a name="TransmitPower"></a>
          <header><h1>TransmitPower</h1></header>
          <h3>Properties</h3>
@@ -6170,8 +6178,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> int</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- TransmitPower -->
+      <div id="TransmitPowerMaximum" class="section" >
          <a name="TransmitPowerMaximum"></a>
          <header><h1>TransmitPowerMaximum</h1></header>
          <h3>Properties</h3>
@@ -6181,8 +6189,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> int</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- TransmitPowerMaximum -->
+      <div id="TunnelConnectionTimeout" class="section" >
          <a name="TunnelConnectionTimeout"></a>
          <header><h1>TunnelConnectionTimeout</h1></header>
          <h3>Properties</h3>
@@ -6192,8 +6200,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> uint32</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Write, Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- TunnelConnectionTimeout -->
+      <div id="TunneledAccessoryAdvertising" class="section" >
          <a name="TunneledAccessoryAdvertising"></a>
          <header><h1>TunneledAccessoryAdvertising</h1></header>
          <h3>Properties</h3>
@@ -6209,8 +6217,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
             <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- TunneledAccessoryAdvertising -->
+      <div id="TunneledAccessoryConnected" class="section" >
          <a name="TunneledAccessoryConnected"></a>
          <header><h1>TunneledAccessoryConnected</h1></header>
          <h3>Properties</h3>
@@ -6226,8 +6234,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "FALSE" </TD></tr>
             <tr><TD> 1 </TD><TD> "TRUE" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- TunneledAccessoryConnected -->
+      <div id="TunneledAccessoryStateNumber" class="section" >
          <a name="TunneledAccessoryStateNumber"></a>
          <header><h1>TunneledAccessoryStateNumber</h1></header>
          <h3>Properties</h3>
@@ -6237,8 +6245,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> float</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- TunneledAccessoryStateNumber -->
+      <div id="VOCDensity" class="section" >
          <a name="VOCDensity"></a>
          <header><h1>VOCDensity</h1></header>
          <h3>Properties</h3>
@@ -6250,8 +6258,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- VOCDensity -->
+      <div id="ValveType" class="section" >
          <a name="ValveType"></a>
          <header><h1>ValveType</h1></header>
          <h3>Properties</h3>
@@ -6270,8 +6278,8 @@ block-warning a {
             <tr><TD> 2 </TD><TD> "SHOWER_HEAD" </TD></tr>
             <tr><TD> 3 </TD><TD> "WATER_FAUCET" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- ValveType -->
+      <div id="Version" class="section" >
          <a name="Version"></a>
          <header><h1>Version</h1></header>
          <h3>Properties</h3>
@@ -6281,8 +6289,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> string</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- Version -->
+      <div id="VideoAnalysisActive" class="section" >
          <a name="VideoAnalysisActive"></a>
          <header><h1>VideoAnalysisActive</h1></header>
          <h3>Properties</h3>
@@ -6292,8 +6300,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- VideoAnalysisActive -->
+      <div id="Volume" class="section" >
          <a name="Volume"></a>
          <header><h1>Volume</h1></header>
          <h3>Properties</h3>
@@ -6306,8 +6314,8 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- Volume -->
+      <div id="VolumeControlType" class="section" >
          <a name="VolumeControlType"></a>
          <header><h1>VolumeControlType</h1></header>
          <h3>Properties</h3>
@@ -6326,8 +6334,8 @@ block-warning a {
             <tr><TD> 2 </TD><TD> "RELATIVE_WITH_CURRENT" </TD></tr>
             <tr><TD> 3 </TD><TD> "ABSOLUTE" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- VolumeControlType -->
+      <div id="VolumeSelector" class="section" >
          <a name="VolumeSelector"></a>
          <header><h1>VolumeSelector</h1></header>
          <h3>Properties</h3>
@@ -6344,8 +6352,8 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "INCREMENT" </TD></tr>
             <tr><TD> 1 </TD><TD> "DECREMENT" </TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- VolumeSelector -->
+      <div id="WANConfigurationList" class="section" >
          <a name="WANConfigurationList"></a>
          <header><h1>WANConfigurationList</h1></header>
          <h3>Properties</h3>
@@ -6355,8 +6363,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- WANConfigurationList -->
+      <div id="WANStatusList" class="section" >
          <a name="WANStatusList"></a>
          <header><h1>WANStatusList</h1></header>
          <h3>Properties</h3>
@@ -6366,8 +6374,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- WANStatusList -->
+      <div id="WakeConfiguration" class="section" >
          <a name="WakeConfiguration"></a>
          <header><h1>WakeConfiguration</h1></header>
          <h3>Properties</h3>
@@ -6377,8 +6385,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- WakeConfiguration -->
+      <div id="WaterLevel" class="section" >
          <a name="WaterLevel"></a>
          <header><h1>WaterLevel</h1></header>
          <h3>Properties</h3>
@@ -6389,8 +6397,8 @@ block-warning a {
             <tr><TD> Max Value: </TD><TD>  100</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- WaterLevel -->
+      <div id="WiFiCapabilities" class="section" >
          <a name="WiFiCapabilities"></a>
          <header><h1>WiFiCapabilities</h1></header>
          <h3>Properties</h3>
@@ -6400,8 +6408,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> uint32</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- WiFiCapabilities -->
+      <div id="WiFiConfigurationControl" class="section" >
          <a name="WiFiConfigurationControl"></a>
          <header><h1>WiFiConfigurationControl</h1></header>
          <h3>Properties</h3>
@@ -6411,8 +6419,8 @@ block-warning a {
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events, Timed Write, Write Response</TD></tr>
          </table>
-      </DIV>
-      <div>
+      </DIV>   <!-- WiFiConfigurationControl -->
+      <div id="WiFiSatelliteStatus" class="section" >
          <a name="WiFiSatelliteStatus"></a>
          <header><h1>WiFiSatelliteStatus</h1></header>
          <h3>Properties</h3>
@@ -6430,55 +6438,54 @@ block-warning a {
             <tr><TD> 1 </TD><TD> "CONNECTED" </TD></tr>
             <tr><TD> 2 </TD><TD> "NOT_CONNECTED" </TD></tr>
          </table>
-      </DIV>
-   </DIV>   <!-- ACC Page -->
-   <div class="main">
-      <h2>CMD4 Directives</h2>
-      <p>These directives appear within the "Cmd4" plugin header and reflect how Cmd4 will behave overall.</p>
-      <TABLE WIDTH="100%">
-         <TR ALIGN="left"><TH>Cmd4Directive<TH>Type<TH PADDING="50px">Default<TH>Description</TR>
-         <TR ALIGN="left"><TD><a name="OutputConstants_D">OutputConstants</a><TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1 </TR>
-         <TR ALIGN="left"><TD><a name="restartRecover_D"> restartRecover</a><TD> < Bool > <TD> true <TD> If Cmd4 will use previous cached state information </TR>
-      </TABLE>
-   </DIV>   <!-- main -->
-   <div class="main">
-      <h2><a name="CMD4 Accessory Directives">CMD4 Accessory Directives</a></h2>
-      <p>These directives appear within the characteristic section of the Cmd4 Accessory</p>
-      <TABLE WIDTH="100%" border: 1px solid black >
-         <TR cols="4" ALIGN="left"><TH>Cmd4Directive<TH>Type<TH PADDING="50px">Default<TH>Description</TR>
-         <TR ALIGN="left"><TD><a name="OutputConstants">OutputConstants</a><TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1 </TR>
-         <TR ALIGN="left"><TD><a name="PublishExternally">PublishExternally</a><TD>  < Bool >  <TD>    false     <TD> Tell Homebridge to publish the device as its own bridge. </TR>
-         <TR ALIGN="left"><TD><a name="Fetch">Fetch</a><TD> < "Always" | "Cached" | "Polled" > <TD> "Always" <TD> Tell Homebridge to publish the device as its own bridge.</TR>
-         <TR ALIGN="left"><TD COLSPAN=4>
-            i.e.<BR>
-            <UL>
-               <LI> { "Fetch": "<a name="Always">Always</a>" } - As before Always fetch characteristic value. ( Default )
-               <LI> { "Fetch": "<a name="Cached">Cached</a>" } - Never fetch characteristic value. Use cached value. The cached value would have to be updated through polling.
-               <LI> { "Fetch": "<a name="Polled">Polled</a>" } - Polled characteristics act like before  (Always). Non polled characteristic values are fetched from cache.
-           </UL>
-         </TR>
-         <TR ALIGN="left"><TD><a name="StateChangeResponseTime">StateChangeResponseTime</a><TD> < seconds > <TD> 60 <TD> How long to wait between a Set and Get command.</TR>
-         <TR ALIGN="left"><TD><a name="Timeout">Timeout</a><TD> < msec > <TD> <TD> How long before killing the state command.</TR>
-         <TR ALIGN="left"><TD><a name="Polling">Polling</a><TD> < Bool > <TD> false <TD> If the characteristics should be polled for state change.</TR>
-         <TR><TD><TD COLSPAN=3> or  [{"characteristic" < characteristic >, [ "interval": < sec >, "timeout": < msec > ] }] </TR>
-         <TR ALIGN="left"><TD><a name="State_cmd">State_cmd</a><TD>  < State_cmd > <TD> See Description <TD> The command used to Get/Set Device characteristic State.</TR>
-         <TR><TD COLSPAN="4">The State_cmd represents the path to your script. Cmd4 appends the Get/Set shown.<BR>
-         State_cmd Get < DisplayName > < characteristic ><BR>
-         State_cmd Set < DisplayName > < characteristic > < value ></TD></TR>
-         <TR ALIGN="left"><TD><a name="State_cmd_prefix">State_cmd_prefix</a><TD>  < String > <TD> <TD> A String prepended to the < State_cmd >.</TR>
-         <TR ALIGN="left"><TD><a name="State_cmd_suffix">State_cmd_suffix</a><TD> < String > <TD> <TD> A String appended to the < State_cmd >.</TR>
-         <TR ALIGN="left"><TD><a name="Props">Props</a><TD>  < Bool >  <TD>    false     <TD> A way to override Hap Characteristiic Properties<BR>
-                  Only used to set min/max temperatures, for instance:</TR>
-         <TR ALIGN="Left"><TD><TD COLSPAN=3>"Props" : { "CurrentTemperature": { "maxValue":100, "minValue": -100, "minStep": 0.1}}</TR>
-         <TR ALIGN="left"><TD><a name="Category">Category</a><TD> < CATEGORY > <TD> undefined <TD> See <a href="https://developers.homebridge.io/#/categories">Homebridge Categories</a> for a complete list of possible categories.  </TR>
-         <TR ALIGN="left"><TD><a name="Fakegato">Fakegato</a><TD>  < JSON >  <TD> <TD> See the section, <a href="https://github.com/ztalbot2000/homebridge-cmd4/README.md#fakegatotag"> "Adding in Fakegato history"</a> below.</TR>
-         <TR ALIGN="left"><TD><a name="LinkedTypes">LinkedTypes</a><TD>  < JSON >  <TD> <TD> Other Cmd4 Accessories like Input Source for HDMI inputs. </TR>
-      </TABLE>
-   </DIV>   <!-- main -->
-   <div class="main">
-      <h2><a name="JS Template">Example Cmd4 JavaScript Template</a></h2>
-      <p> This script is auto generated from: <a href=https://github.com/ztalbot2000/homebridge-cmd4/blob/master/./Extras/Cmd4Scripts/Examples/ExampleJavaScript_template.js>./Extras/Cmd4Scripts/Examples/ExampleJavaScript_template.js </a></p>
-      <pre>
+      </DIV>   <!-- WiFiSatelliteStatus -->
+      <div id="Directives" class="section">
+         <h2>CMD4 Directives</h2>
+         <p>These directives appear within the "Cmd4" plugin header and reflect how Cmd4 will behave overall.</p>
+         <TABLE WIDTH="100%">
+            <TR ALIGN="left"><TH>Cmd4Directive<TH>Type<TH PADDING="50px">Default<TH>Description</TR>
+            <TR ALIGN="left"><TD><a name="OutputConstants_D">OutputConstants</a><TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1 </TR>
+            <TR ALIGN="left"><TD><a name="restartRecover_D"> restartRecover</a><TD> < Bool > <TD> true <TD> If Cmd4 will use previous cached state information </TR>
+         </TABLE>
+      </DIV>   <!-- main -->
+      <div id="AccessoryDirectives" class="section">
+         <h2><a name="CMD4 Accessory Directives">CMD4 Accessory Directives</a></h2>
+         <p>These directives appear within the characteristic section of the Cmd4 Accessory</p>
+         <TABLE WIDTH="100%" border: 1px solid black >
+            <TR cols="4" ALIGN="left"><TH>Cmd4Directive<TH>Type<TH PADDING="50px">Default<TH>Description</TR>
+            <TR ALIGN="left"><TD><a name="OutputConstants">OutputConstants</a><TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1 </TR>
+            <TR ALIGN="left"><TD><a name="PublishExternally">PublishExternally</a><TD>  < Bool >  <TD>    false     <TD> Tell Homebridge to publish the device as its own bridge. </TR>
+            <TR ALIGN="left"><TD><a name="Fetch">Fetch</a><TD> < "Always" | "Cached" | "Polled" > <TD> "Always" <TD> Tell Homebridge to publish the device as its own bridge.</TR>
+            <TR ALIGN="left"><TD COLSPAN=4>
+               i.e.<BR>
+               <UL>
+                  <LI> { "Fetch": "<a name="Always">Always</a>" } - As before Always fetch characteristic value. ( Default )
+                  <LI> { "Fetch": "<a name="Cached">Cached</a>" } - Never fetch characteristic value. Use cached value. The cached value would have to be updated through polling.
+                  <LI> { "Fetch": "<a name="Polled">Polled</a>" } - Polled characteristics act like before  (Always). Non polled characteristic values are fetched from cache.
+              </UL>
+            </TR>
+            <TR ALIGN="left"><TD><a name="StateChangeResponseTime">StateChangeResponseTime</a><TD> < seconds > <TD> 60 <TD> How long to wait between a Set and Get command.</TR>
+            <TR ALIGN="left"><TD><a name="Timeout">Timeout</a><TD> < msec > <TD> <TD> How long before killing the state command.</TR>
+            <TR ALIGN="left"><TD><a name="Polling">Polling</a><TD> < Bool > <TD> false <TD> If the characteristics should be polled for state change.</TR>
+            <TR><TD><TD COLSPAN=3> or  [{"characteristic" < characteristic >, [ "interval": < sec >, "timeout": < msec > ] }] </TR>
+            <TR ALIGN="left"><TD><a name="State_cmd">State_cmd</a><TD>  < State_cmd > <TD> See Description <TD> The command used to Get/Set Device characteristic State.</TR>
+            <TR><TD COLSPAN="4">The State_cmd represents the path to your script. Cmd4 appends the Get/Set shown.<BR>
+            State_cmd Get < DisplayName > < characteristic ><BR>
+            State_cmd Set < DisplayName > < characteristic > < value ></TD></TR>
+            <TR ALIGN="left"><TD><a name="State_cmd_prefix">State_cmd_prefix</a><TD>  < String > <TD> <TD> A String prepended to the < State_cmd >.</TR>
+            <TR ALIGN="left"><TD><a name="State_cmd_suffix">State_cmd_suffix</a><TD> < String > <TD> <TD> A String appended to the < State_cmd >.</TR>
+            <TR ALIGN="left"><TD><a name="Props">Props</a><TD>  < Bool >  <TD>    false     <TD> A way to override Hap Characteristiic Properties<BR>
+                     Only used to set min/max temperatures, for instance:</TR>
+            <TR ALIGN="Left"><TD><TD COLSPAN=3>"Props" : { "CurrentTemperature": { "maxValue":100, "minValue": -100, "minStep": 0.1}}</TR>
+            <TR ALIGN="left"><TD><a name="Category">Category</a><TD> < CATEGORY > <TD> undefined <TD> See <a href="https://developers.homebridge.io/#/categories">Homebridge Categories</a> for a complete list of possible categories.  </TR>
+            <TR ALIGN="left"><TD><a name="Fakegato">Fakegato</a><TD>  < JSON >  <TD> <TD> See the section, <a href="https://github.com/ztalbot2000/homebridge-cmd4/README.md#fakegatotag"> "Adding in Fakegato history"</a> below.</TR>
+            <TR ALIGN="left"><TD><a name="LinkedTypes">LinkedTypes</a><TD>  < JSON >  <TD> <TD> Other Cmd4 Accessories like Input Source for HDMI inputs. </TR>
+         </TABLE>
+      </DIV>   <!-- main -->
+      <div id="JS Template" class="section">
+         <h2><a name="JS Template">Example Cmd4 JavaScript Template</a></h2>
+         <p> This script is auto generated from: <a href=https://github.com/ztalbot2000/homebridge-cmd4/blob/master/./Extras/Cmd4Scripts/Examples/ExampleJavaScript_template.js>./Extras/Cmd4Scripts/Examples/ExampleJavaScript_template.js </a></p>
+         <pre>
 #!/usr/local/bin/node
 //  ExampleScript_template.js
 //
@@ -6627,12 +6634,12 @@ switch( io )
 process.exit( 0 );
 
 
-      </pre>
-   </DIV>   <!-- main -->
-   <div class="main">
-      <h2><a name="Bash Template">Example Cmd4 Shell Script Template</a></h2>
-      <p> This script is auto generated from: <a href=https://github.com/ztalbot2000/homebridge-cmd4/blob/master/./Extras/Cmd4Scripts/Examples/ExampleShellScript_template.sh>./Extras/Cmd4Scripts/Examples/ExampleShellScript_template.sh </a></p>
-      <pre>
+         </pre>
+      </DIV>   <!-- main -->
+      <div id="Bash Template" class="section">
+         <h2><a name="Bash Template">Example Cmd4 Shell Script Template</a></h2>
+         <p> This script is auto generated from: <a href=https://github.com/ztalbot2000/homebridge-cmd4/blob/master/./Extras/Cmd4Scripts/Examples/ExampleShellScript_template.sh>./Extras/Cmd4Scripts/Examples/ExampleShellScript_template.sh </a></p>
+         <pre>
 #!/bin/bash
 
 #  ExampleScript_template.sh
@@ -6772,7 +6779,8 @@ printf "Unknown io command ${io}\n"
 exit -1
 
 
-      </pre>
+         </pre>
+      </DIV>   <!-- main -->
    </DIV>   <!-- main -->
 </DIV>   <!-- content -->
 <script>
@@ -6812,6 +6820,27 @@ for (let i = 0; i < dropdown.length; i++)
         dropdownContent.style.display = "block";
      }
   });
+}
+</script>
+<script type="text/javascript">
+   
+function toggleVisibility( id )
+{
+   var e = document.getElementById( id );
+   /* Hide the last one off */
+   if ( window.lastToggledE !== undefined )
+   {
+      window.lastToggledE.style.display = "none";
+   }
+
+   /* Show the new one on */
+   if ( e.style.display = "none" )
+   {
+      e.style.display = "block";
+   }
+
+   /* Set the last one to this one */
+   window.lastToggledE = e;
 }
 </script>
 </BODY>
