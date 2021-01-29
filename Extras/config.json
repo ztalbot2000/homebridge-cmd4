@@ -14,6 +14,7 @@
          "allowTLV8":                       false,
          "outputConstants":                 false,
          "restartRecover":                  true,
+         "fetch":                          "Cached",
          "accessories" :
          [
             {
@@ -25,8 +26,7 @@
                "model":                    "Anything",
                "serialNumber":             "12345",
                "stateChangeResponseTime":   3,
-               "fetch":                    "Cached",
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "fetch":                    "Cached"
             },
             {
                "type":                     "Fan",
@@ -39,12 +39,7 @@
                "model":                    "Anything",
                "serialNumber":             "12345",
                "outputConstants":           true,
-               "polling": [
-                  {"characteristic": "rotationDirection",    "interval": 40, "timeout": 8000},
-                  {"characteristic": "on",                   "interval": 40, "timeout": 8000}
-               ],
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "Fanv2",
@@ -60,8 +55,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type": "GarageDoorOpener",
@@ -75,14 +69,8 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "polling": [
-                  {"characteristic": "currentDoorState",     "interval": 540, "timeout": 8000},
-                  {"characteristic": "obstructionDetected",  "interval": 540, "timeout": 8000},
-                  {"characteristic": "lockCurrentState",     "interval": 540, "timeout": 8000}
-               ],
                "stateChangeResponseTime":   10,
-               "state_cmd_prefix":         "node",
-               "state_cmd":                ".homebridge/Cmd4Scripts/State.js"
+               "state_cmd_prefix":         "node"
             },
             {
                "type":                     "Lightbulb",
@@ -92,8 +80,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type": "Lightbulb",
@@ -107,8 +94,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "LockManagement",
@@ -125,8 +111,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "LockMechanism",
@@ -137,8 +122,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "Outlet",
@@ -149,8 +133,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "Switch",
@@ -160,8 +143,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "Thermostat",
@@ -183,22 +165,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "polling": [
-                  {"characteristic": "currentHeatingCoolingState", "interval": 540,  "timeout": 8000},
-                  {"characteristic": "currentTemperature",         "interval": 60,   "timeout": 8000},
-                  {"characteristic": "targetTemperature",          "interval": 60,   "timeout": 8000}
-               ],
-               "stateChangeResponseTime":   10,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js",
-               "fakegato": {"eve":           "thermo",
-                            "currentTemp":   "currentTemperature",
-                            "setTemp":       "targetTemperature",
-                            "valvePosition":  0,
-                            "storage":       "fs",
-                            "storagePath":   ".homebridge/FakegatoStorage",
-                            "folder":        "folderName",
-                            "keyPath":       "/place/to/store/my/keys/"
-                           }
+               "stateChangeResponseTime":   10
             },
             {
                "type":                     "AirQualitySensor",
@@ -218,8 +185,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "SecuritySystem",
@@ -235,8 +201,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "CarbonMonoxideSensor",
@@ -252,8 +217,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "ContactSensor",
@@ -267,8 +231,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "Door",
@@ -282,19 +245,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "polling": [
-                  {"characteristic": "currentPosition",     "interval": 80, "timeout": 8000},
-                  {"characteristic": "obstructionDetected", "interval": 50, "timeout": 8000}
-               ],
-               "fakegato": {"eve":         "door",
-                            "status":      "currentPosition",
-                            "storage":     "fs",
-                            "storagePath": ".homebridge/FakegatoStorage",
-                            "folder":      "folderName",
-                            "keyPath":     "/place/to/store/my/keys/"
-                           },
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "HumiditySensor",
@@ -308,20 +259,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js",
-               "polling": [
-                  {"characteristic": "currentRelativeHumidity", "interval": 50, "timeout": 8000}
-               ],
-               "fakegato": {"eve":         "room",
-                            "temp":        0,
-                            "humidity":    "currentRelativeHumidity",
-                            "ppm":          0,
-                            "storage":     "fs",
-                            "storagePath": ".homebridge/FakegatoStorage",
-                            "folder":      "folderName",
-                            "keyPath":     "/place/to/store/my/keys/"
-                           }
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "LeakSensor",
@@ -335,8 +273,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "LightSensor",
@@ -350,8 +287,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "MotionSensor",
@@ -365,8 +301,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "OccupancySensor",
@@ -380,8 +315,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "SmokeSensor",
@@ -395,8 +329,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "StatefulProgrammableSwitch",
@@ -408,8 +341,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "StatelessProgrammableSwitch",
@@ -420,8 +352,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "TemperatureSensor",
@@ -436,21 +367,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "polling":
-               [
-                  {"characteristic": "currentTemperature",       "interval": 50, "timeout": 8000},
-                  {"characteristic": "currentRelativeHumidity",  "interval": 40, "timeout": 8000}
-               ],
-               "fakegato": {"eve":         "room",
-                            "temp":        "currentTemperature",
-                            "humidity":    "currentRelativeHumidity",
-                            "storage":     "fs",
-                            "storagePath": ".homebridge/FakegatoStorage",
-                            "folder":      "folderName",
-                            "keyPath":     "/place/to/store/my/keys/"
-                           },
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "Window",
@@ -464,8 +381,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "WindowCovering",
@@ -483,8 +399,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "BatteryService",
@@ -496,8 +411,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "CarbonDioxideSensor",
@@ -513,10 +427,8 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "polling":                   false,
                "interval":                  540,
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "Microphone",
@@ -527,8 +439,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "Speaker",
@@ -539,8 +450,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "DoorBell",
@@ -552,8 +462,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "Slat",
@@ -567,10 +476,8 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "polling":                   false,
                "interval":                  540,
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type": "FilterMaintenance",
@@ -582,8 +489,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "AirPurifier",
@@ -598,8 +504,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "ServiceLabel",
@@ -609,8 +514,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                      "Television",
@@ -711,13 +615,7 @@
                "manufacturer":             "Sony",
                "model":                    "Android TV",
                "serialNumber":             "12345",
-               "polling": [
-                  {"characteristic": "active",                "interval": 50,  "timeout": 5000},
-                  {"characteristic": "activeIdentifier",      "interval": 50,  "timeout": 5000},
-                  {"characteristic": "currentMediaState",     "interval": 540, "timeout": 5000}
-               ],
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type": "TelevisionSpeaker",
@@ -731,12 +629,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "polling": [
-                  {"characteristic": "active",               "interval": 50, "timeout": 5000},
-                  {"characteristic": "volume",               "interval": 50, "timeout": 5000}
-               ],
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type": "InputSource",
@@ -751,8 +644,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "IrrigationSystem",
@@ -766,12 +658,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "polling": [
-                  {"characteristic": "active",               "interval": 50,  "timeout": 5000},
-                  {"characteristic": "statusFault",          "interval": 300, "timeout": 5000}
-               ],
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type": "Faucet",
@@ -782,20 +669,14 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "polling": [
-                  {"characteristic": "active",               "interval": 50,  "timeout": 5000},
-                  {"characteristic": "statusFault",          "interval": 300, "timeout": 5000}
-               ],
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "Relay",
                "displayName":              "My_Relay",
                "relayEnabled":             "FALSE",
                "relayState":                0,
-               "stateChangeResponseTime":   10,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   10
             },
             {
                "type":                     "TimeInformation",
@@ -807,8 +688,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "Valve",
@@ -825,8 +705,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "HeaterCooler",
@@ -847,8 +726,7 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type": "HumidifierDehumidifier",
@@ -871,15 +749,13 @@
                "manufacturer":             "Somebody",
                "model":                    "Anything",
                "serialNumber":             "12345",
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type":                     "AccessControl",
                "displayName":              "My_AccessControl",
                "AccessControlLevel":        0,
-               "stateChangeResponseTime":   3,
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "stateChangeResponseTime":   3
             },
             {
                "type": "CameraOperatingMode",
@@ -889,8 +765,7 @@
                "manuallyDisabled":                       "DISABLED",
                "nightVision":                            "FALSE",
                "thirdPartyCameraActive":                 "OFF",
-               "periodicSnapshotsActive":                "DISABLE",
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "periodicSnapshotsActive":                "DISABLE"
             },
             {
                "type":                     "SmartSpeaker",
@@ -900,21 +775,18 @@
                "name":                     "My_SmartSpeaker",
                "configuredName":           "My_SmartSpeaker",
                "volume":                    5,
-               "mute":                     "FALSE",
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "mute":                     "FALSE"
             },
             {
                "type":                     "TargetControl",
                "displayName":              "My_TargetControl",
                "ActiveIdentifier":          1183,
-               "Active":                   "ACTIVE",
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "Active":                   "ACTIVE"
             },
             {
                "type":                    "WiFiSatellite",
                "displayName":             "My_WiFiSatellite",
-               "WiFiSatelliteStatus":     "NOT_CONNECTED",
-               "state_cmd": "node .homebridge/Cmd4Scripts/State.js"
+               "WiFiSatelliteStatus":     "NOT_CONNECTED"
             }
           ]
        }

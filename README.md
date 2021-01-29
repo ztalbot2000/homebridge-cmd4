@@ -32,8 +32,8 @@
 
 <BR><BR>
 ## How the Cmd4 Plugin Works
-&nbsp;&nbsp;&nbsp; Cmd4 comes with a fully populated and documented config.json file that points to a fully populated and configured State.js file that you put in a Cmd4Scripts subdirectory of your .homebridge directory.
-   The Cmd4 Plugin reads and understands the config.json file containing every possible HomeKit type. When you point HomeKit to Homebridge, all the devices become populated, and between the homebridge-cmd4 plugin and the State.js command file, HomeKit acts and behaves if you actually have the Accessory!
+&nbsp;&nbsp;&nbsp; Cmd4 comes with a fully populated and documented config.json file that is set to using just the cached entry's in the config file itself. This makes HomeKit behave as if you actually have all these Accessories!
+   If you choose to add in your own scripts, the Cmd4 Github pages at [ http://ztalbot2000.github.io/homebridge-cmd4](https://ztalbot2000.github.io/homebridge-cmd4) have example script templates and further development instructions.
 
 <BR><BR>
 ## Features
@@ -75,19 +75,9 @@ See [homebridge](homebridge) for complete details.<BR>
    *SHELL*> sudo npm install -g --unsafe-perm homebridge-cmd4
 ```
 
-
-### Step 3.  Install State.js
-
-```bash
-   *SHELL*> mkdir $HOME/.homebridge
-   *SHELL*> mkdir $HOME/.homebridge/Cmd4Scripts
-   *SHELL*> cp /usr/lib/node_modules/homebridge-cmd4/Extras/Cmd4Scripts/State.js $HOME/.homebridge/Cmd4Scripts/
-   *SHELL*> cp /usr/lib/node_modules/homebridge-cmd4/Extras/Cmd4Scripts/CheckYourScript.sh $HOME/.homebridge/Cmd4Scripts/
-   *SHELL*> chmod 700 .homebridge/Cmd4Scripts/State.js
-```
 <BR>
 
-### Step 4.  Install/Update your config.json file
+### Step 3.  Install/Update your config.json file
 &nbsp;&nbsp;&nbsp; Use the provided config.json file or add it to your own.
 
 ```bash
@@ -95,11 +85,11 @@ See [homebridge](homebridge) for complete details.<BR>
 ```
 
 
-### Step 5. Restart homebridge
+### Step 4. Restart homebridge
 See [homebridge](homebridge) for complete details.<BR>
 
 
-### Step 6.  Try Homekit
+### Step 5.  Try Homekit
 &nbsp;&nbsp;&nbsp; If you are not already familiar with Homekit, you may wish to look at the documentation for Homebridge and how to configure it with Homekit. The gist of it is that you enter the manual code defined in the config.json file. I chose 5555555 for simplicity.
 
 ### That's it! Enjoy all your new Virtual Accessories!. ✅
@@ -144,39 +134,18 @@ Note: As of version 3.0.4, Cmd4 directives like polling, state_cmd, etc will try
 
 ### Debug Steps
 #### Step 1.  Change to your $HOME directory
-&nbsp;&nbsp;&nbsp; Homebridge is expected to run from a user's home directory where it can find the .homebridge/config.json file and the Cmd4Scripts.State.js command file.
+&nbsp;&nbsp;&nbsp; Homebridge is expected to run from a user's home directory where it can find the .homebridge/config.json.
 
 ```bash
    *SHELL*> cd $HOME
 ```
 
-#### Step 2.  Test the State.js command file
-
-```bash
-   *SHELL*> node .homebridge/Cmd4Scripts/State.js Get My_Fan On
-```
-&nbsp;&nbsp;&nbsp; This should output: 0 or 'true'
-
-#### Step 3.  Run homebridge in debug mode
+#### Step 2.  Run homebridge in debug mode
 
 ```bash
    *SHELL*> DEBUG=* homebridge -D
 ```
 
-#### Step 4.  Try executing the State.js script for a "Get" command.
-
-```bash
-   *SHELL*> node .homebridge/Cmd4Scripts/State.js Get My_Fan On
-```
-&nbsp;&nbsp;&nbsp;&nbsp; This should output '0' or '1' or 'true' or 'false'
-
-#### Step 5.  Try executing the State.js script for a "Set" command.
-
-```bash
-   *SHELL*> node .homebridge/Cmd4Scripts/State.js Set My_Fan On false
-   *SHELL*> node .homebridge/Cmd4Scripts/State.js Set My_Fan On true
-```
-&nbsp;&nbsp;&nbsp;&nbsp; This should store the fans status.
 
 <BR><BR>
 ## Rationale
