@@ -3,6 +3,7 @@
 global.fs = require('fs')
 global.assert = require( "chai" ).assert;
 global.expect = require( "chai" ).expect;
+global.sinon  = require( "sinon" );
 
 global.ACC_EOL = 222;
 global.DEVICE_EOL = 66;

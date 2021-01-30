@@ -1,0 +1,6 @@
+#!/bin/bash
+echo "blast" > /tmp/blast;
+
+echo ACTIVE;
+
+exit 0;

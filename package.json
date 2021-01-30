@@ -46,7 +46,8 @@
     "eslint": "^7.17.0",
     "hap-nodejs": "^0.8.5",
     "homebridge": "^1.1.7",
-    "mocha": "^8.0.1"
+    "mocha": "^8.0.1",
+    "sinon": "^9.2.4"
   },
   "directories": {
     "test": "test",
