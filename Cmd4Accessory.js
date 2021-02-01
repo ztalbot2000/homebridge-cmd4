@@ -497,16 +497,13 @@ class Cmd4Accessory
    //
    //       - Where he value in <> is an one of CMD4_ACC_TYPE_ENUM
    // ***********************************************
-   setValue( five, context, accTypeEnumIndex, value, callback )
+   setValue( accTypeEnumIndex, value, callback )
    {
-      let self = context;
+      let self = this;
 
       let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
-      let characteristic = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic;
 
       let cmd;
-
-      console.log(" setValue: outputConstants: %s", self.outputConstants );
 
       if ( self.outputConstants == true )
       {
@@ -518,7 +515,8 @@ class Cmd4Accessory
 
          cmd = self.state_cmd_prefix + self.state_cmd + " Set '" + self.displayName + "' '" + characteristicString  + "' '" + nonConstant  + "'" + self.state_cmd_suffix;
       }
-      self.log.debug( `setValue ${ characteristicString } function for: ${ self.displayName } cmd: ${ cmd }` );
+
+      self.log.debug( `setvalue accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } cmd: ${ cmd }` );
 
 
       // Execute command to Set a characteristic value for an accessory
@@ -530,73 +528,21 @@ class Cmd4Accessory
             self.log.error( stderr );
             callback( error );
 
-         } else {
+            return;
+         }
 
-            // Since we are in an exec, make sure we reply
-            // with the corresponding getValue.
-            let responded  = false;
+         let verifyCharacteristic = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex].verifyCharacteristic;
 
-            // Setting *Target* states require a get afterwards
-            // Why this is needed and must be set the same, I do
-            // not know, but without it, IOS Homekit spins its
-            // wheels.
-            // Documenting bugs are good.  Bonus points for me!
-// Double Check this ..
-            let verifyCharacteristic = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex].verifyCharacteristic;
-
-            if ( verifyCharacteristic != null )
-            {
-               responded  = true;
+         if ( verifyCharacteristic != null )
+         {
                setTimeout( ( ) => {
                      self.service.getCharacteristic( verifyCharacteristic ).getValue( );
-                     callback( );
+                     callback( null );
                   }, self.stateChangeResponseTime );
-            }
+                  return;
+          }
+          callback( null );
 
-            if ( responded == false )
-            {
-               // So why do we do this?
-               // I have found that IOS HomeKit will have a spinning
-               // Indicator that will never stop, unless you do a get
-               // before the final callback. This could all be because
-               // use exec, compared to other plugins, but this works.
-               // More bonus points for documentation!
-
-               // The exceptions are handled above; Respond with the
-               // corresponding getValue.
-               if ( self.config.stateChangeResponseTime === undefined )
-                  self.stateChangeResponseTime = constants.FAST_STATE_CHANGE_RESPONSE_TIME;
-
-               if ( characteristic == undefined )
-               {
-                  // I have seen this once where Homebridge dies, possibly after
-                  // trying to delete the bridge.
-                  self.log.warn( `Characteristic is null for name: ${ self.displayName } type: ${ self.config.type }` );
-
-               } else if ( self.service == undefined )
-               {
-                  // I have seen this once where Homebridge dies, possibly after
-                  // trying to delete the bridge.
-                  self.log.warn( `self.service is null for name: ${ self.displayName } type: ${ self.config.type }` );
-
-               } else if ( self.service.getCharacteristic( characteristic ) == undefined )
-               {
-                  // I have seen this once where Homebridge dies, possibly after
-                  // trying to delete the bridge.
-                  self.log.warn( `Service is null for name: ${ self.displayName } type: ${ self.config.type }` );
-               }
-
-               // A little bit of a speed boost, depending on the config
-               if ( self.config.stateChangeResponseTime === undefined )
-               {
-                  callback( );
-               } else {
-                  setTimeout( ( ) => {
-                     callback( );
-                  }, self.stateChangeResponseTime );
-               }
-            }
-         }
       });
    }
 
@@ -927,16 +873,15 @@ class Cmd4Accessory
                 // Add Write services for characterisitcs, if possible
                 if ( perms.indexOf( this.api.hap.Characteristic.Perms.WRITE ) != -1 )
                 {
-                   // GetService has parameters:
-                   // five, context, accTypeEnumIndex, value , callback
-                   // Why this works, beats me.
-                   // five ends up equal to "2";
-                   let boundSetValue = accessory.setValue.bind( 1, 2, accessory, accTypeEnumIndex );
-
+                   // setValue has parameters:
+                   // accTypeEnumIndex, value, callback
+                   // The first bound value though is "this"
+                   let boundSetValue = accessory.setValue.bind( this, accTypeEnumIndex );
                    accessory.service.getCharacteristic(
                       CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
                       .characteristic ).on( "set", ( value,callback ) => {
                           boundSetValue( value, callback );
+
                    });
                 }
              }

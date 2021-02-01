@@ -24,7 +24,7 @@ let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, _api.hap.Servi
 // A config file to play with.
 let TVConfig =
 {
-    name:                     "MySwitch",
+    name:                     "My_Television",
     type:                     "Television",
     category:                 "TELEVISION",
     publishExternally:        true,

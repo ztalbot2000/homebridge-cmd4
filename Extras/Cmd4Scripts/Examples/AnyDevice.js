@@ -63,7 +63,7 @@ if (length <= 2) {
 }
 
 if (length >= 2) io = process.argv[2];
-if (length >= 3) device = "ANY_DEVICE";
+if (length >= 3) device = process.argv[3];
 if (length >= 4) characteristic  = process.argv[4];
 if (length >= 5) option  = process.argv[5];
 
@@ -901,7 +901,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(50.0); else console.log(c);
+                if (c == "") console.log(-20.2); else console.log(c);
 
                 // UUID: 00000011-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.temperature.current
@@ -2991,7 +2991,7 @@ switch(io)
             {
                 c = readData(device, characteristic);
 
-                if (c == "") console.log(50.0); else console.log(c);
+                if (c == "") console.log(-20.2); else console.log(c);
 
                 // UUID: 00000035-0000-1000-8000-0026BB765291
                 // Type: public.hap.characteristic.temperature.target
