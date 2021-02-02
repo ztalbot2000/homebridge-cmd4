@@ -1,6 +1,7 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
 
 ## ChangeLog
+* [**Whats new in 3.0.14**](#whats-new-in-3015)
 * [**Whats new in 3.0.14**](#whats-new-in-3014)
 * [**Whats new in 3.0.12**](#whats-new-in-3012)
 * [**Whats new in 3.0.11**](#whats-new-in-3011)
@@ -22,6 +23,9 @@
 * [**Whats new in 2.2**](#whats-new-in-22)
 * [**Whats new in 2.1**](#whats-new-in-21)
 * [**Whats new in 2.0**](#whats-new-in-20)
+
+## Whats new in 3.0.15
+* Cached characteristics were never stored when not updated by other than polling.
 
 ## Whats new in 3.0.14
 * Remove unwanted log.
