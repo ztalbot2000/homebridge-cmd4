@@ -469,6 +469,27 @@ class Cmd4Accessory
 
    }
 
+   // ***********************************************
+   //
+   // setCachedValue:
+   //   This methos will update the cached value of a
+   //   characteristic of a accessory.
+   //
+   // ***********************************************
+   setCachedValue( accTypeEnumIndex, value, callback )
+   {
+      let self = this;
+
+      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+
+      self.log.debug( `setCachedvalue accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } value: ${ value }` );
+
+      // Store history using fakegato if set up
+      self.updateAccessoryAttribute( accTypeEnumIndex, value );
+
+      callback( null );
+   }
+
 
    // ***********************************************
    //
@@ -873,16 +894,33 @@ class Cmd4Accessory
                 // Add Write services for characterisitcs, if possible
                 if ( perms.indexOf( this.api.hap.Characteristic.Perms.WRITE ) != -1 )
                 {
-                   // setValue has parameters:
-                   // accTypeEnumIndex, value, callback
-                   // The first bound value though is "this"
-                   let boundSetValue = accessory.setValue.bind( this, accTypeEnumIndex );
-                   accessory.service.getCharacteristic(
-                      CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
-                      .characteristic ).on( "set", ( value,callback ) => {
-                          boundSetValue( value, callback );
+                   // Similiarly to getCached, setCached is the same.
+                   if ( accessory.fetch == constants.FETCH_CACHED ||
+                       accessory.fetch == constants.FETCH_POLLED && ! accessory.listOfPollingCharacteristics[ accTypeEnumIndex ] )
+                   {
+                      // setCachedValue has parameters:
+                      // accTypeEnumIndex, value, callback
+                      // The first bound value though is "this"
+                      let boundSetCachedValue = accessory.setCachedValue.bind( this, accTypeEnumIndex );
+                      accessory.service.getCharacteristic(
+                         CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
+                         .characteristic ).on( "set", ( value,callback ) => {
+                             boundSetCachedValue( value, callback );
 
-                   });
+                      });
+
+                   } else {
+                      // setValue has parameters:
+                      // accTypeEnumIndex, value, callback
+                      // The first bound value though is "this"
+                      let boundSetValue = accessory.setValue.bind( this, accTypeEnumIndex );
+                      accessory.service.getCharacteristic(
+                         CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
+                         .characteristic ).on( "set", ( value,callback ) => {
+                             boundSetValue( value, callback );
+
+                      });
+                   }
                 }
              }
           }
