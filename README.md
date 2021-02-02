@@ -86,7 +86,7 @@ See [homebridge](homebridge) for complete details.<BR>
 
 
 ### Step 4. Restart homebridge
-See [homebridge](homebridge) for complete details.<BR>
+See [homebridge](https://github.com/homebridge/homebridge) for complete details.<BR>
 
 
 ### Step 5.  Try Homekit
