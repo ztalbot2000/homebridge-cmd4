@@ -201,7 +201,7 @@ See [LICENSE](LICENSE)
 Link References (Not Local)
 -->
 
-[homebridge]:https://github.com/nfarina/homebridge
+[homebridge]:https://github.com/homebridge/homebridge
 [developers.homebridge.io]:https://developers.homebridge.io/#/
 [homekit_screenshot]:https://github.com/ztalbot2000/homebridge-cmd4/raw/master/screenshots/Homekit_screenshot.png
 [eve_screenshot]:https://github.com/ztalbot2000/homebridge-cmd4/raw/master/screenshots/Eve_screenshot.png
