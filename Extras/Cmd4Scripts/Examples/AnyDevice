@@ -1,0 +1,451 @@
+#!node
+
+/*
+
+   AnyDevice
+   =========
+
+   Description:
+   ============
+   This script is used to fake any Cmd4 devices Get/Set requests.
+   Most characteristics just return 0.
+
+   Parameters:
+   ===========
+      Get < any accessory name > < characteristic >
+      Set < any accessory name > < characteristic > < value >
+
+   Notes:
+   =====
+   1) These paramaters match the those of the Cmd4 plugin.
+
+   How it works:
+   ============
+   A characteristic value is stored in
+   $HOME/.homebridge/Cmd4Scripts/Cmd4States in a file named
+   "Status_ + <device> _ <Characteristic>" and is returned or
+   written to based on the <Get|Set> option.
+
+   Example:
+   =======
+      ./AnyDevice Set My_Door MotionDetected 0
+
+   Files Created:
+   =============
+   ${ HOME }/.homebridge/Cmd4Scripts/Cmd4States/Status_My_Door
+   with the contents of "0", the Characteristic value of the
+   device sent.
+
+   Environmental Variables Used:
+   ============================
+   $HOME - Used to get the path to .homebridge
+
+*/
+
+
+
+'use strict';
+
+// FileSystem requirements.
+var fs = require( 'fs' );
+var path = require( 'path' );
+var os = require( 'os' );
+
+// The files created within Cmd4StatesPath contain just a
+// value of the accessories last state, so they are very
+// small in size.
+var Cmd4StatesPath =  path.join( os.homedir( ), ".homebridge/Cmd4Scripts/Cmd4States" );
+
+let length = process.argv.length;
+let device;
+let io;
+let characteristic;
+let option = "";
+
+function showHelp( )
+{
+   console.log( `Usage:
+      AnyDevice < Get > < AccessoryName > < Characteristic >
+      AnyDevice < Set > < AccessoryName > < Characteristic > < Value >
+`);
+}
+
+if ( length <= 4 )
+{
+   showHelp( );
+   process.exit( 1);
+}
+
+io = process.argv[ 2 ];
+device = process.argv[ 3 ];
+characteristic = process.argv[ 4 ];
+if ( io == "Set" )
+{
+   if ( length > 5 )
+   {
+      option = process.argv[ 5 ];
+   } else
+   {
+      showHelp( );
+      process.exit( 1 );
+   }
+}
+
+// Placing the states in a subdirectory makes things look cleaner.
+// Some platforms require an exception handler
+const mkdirSync = function ( dirPath )
+{
+    try {
+        fs.mkdirSync( dirPath )
+    } catch ( err ) {
+        if ( err.code !== 'EEXIST' )
+        {
+            console.log( "mkdir failed: " + dirPath );
+            throw err;
+        } else {
+            // directory already exists - OK
+        }
+    }
+}
+
+mkdirSync( Cmd4StatesPath );
+
+
+// Such a simple way to store state information that is small and fast!
+// Put exception handling here too. Just in case!
+function writeData( a, b, c )
+{
+   var fn = Cmd4StatesPath + "/Status_" + a  + "_" + b;
+
+   try {
+       fs.writeFileSync( fn,c );
+   } catch ( err )
+   {
+      if ( err.code !== 'EEXIST' )
+      {
+         console.log( "write data failed: " + fn + " data:" + c );
+         throw err;
+      } else
+      {
+         // file already exists - OK
+      }
+   }
+}
+
+// Read the state information.  If there is none, just return what
+// was expected.
+// Put exception handling here too. Just in case!
+function readData( a,b )
+{
+   var fn = Cmd4StatesPath + "/Status_" + a  + "_" + b;
+   c = "";
+
+   try {
+      c = String( fs.readFileSync( fn, 'utf8' ) );
+   } catch ( err )
+   {
+      if ( err.code === 'ENOENT' )
+      {
+         // This is OK. just return what was expected.
+         return c;
+      } else
+      {
+         if ( err.code !== 'EEXIST' )
+         {
+            console.log( "read data failed: " + fn );
+            throw err;
+         } else
+         {
+            // file already exists - OK
+         }
+      }
+   }
+
+   return c;
+}
+
+let c = "";
+
+switch( io )
+{
+   case "Get":
+   {
+      c = readData( device, characteristic );
+
+      switch( characteristic )
+      {
+         // Characteristics who should get a 1 return
+         case "AccessoryFlags":
+         case "AirQuality":
+         case "DayoftheWeek":
+         case "OpticalZoom":
+         case "Reachable":
+         {
+             if ( c == "" ) console.log( 1 ); else console.log( c );
+
+             break;
+         }
+         case "AccessoryIdentifier":
+         {
+             if ( c == "" ) console.log( "TLB" ); else console.log( c );
+
+             break;
+         }
+         // Characteristics who should get a larger value return
+         case "AirParticulateDensity":
+         case "BatteryLevel":
+         case "Brightness":
+         case "CoolingThresholdTemperature":
+         case "ColorTemperature":
+         case "CurrentAmbientLightLevel":
+         case "CurrentRelativeHumidity":
+         case "CurrentTemperature":
+         case "FilterLifeLevel":
+         case "HeartBeat":
+         case "HeatingThresholdTemperature":
+         case "Hue":
+         case "LockManagementAutoSecurityTimeout":
+         case "NitrogenDioxideDensity":
+         case "OzoneDensity":
+         case "PM10Density":
+         case "PM2_5Density":
+         case "SulphurDioxideDensity":
+         case "VOCDensity":
+         {
+             // Make things a little different between devices
+             if ( c == "" ) console.log( Math.floor(Math.random() * 60) + 20 ); else console.log( c );
+
+             break;
+         }
+         case "CurrentTime":
+         {
+             if ( c == "" ) console.log( "11:15" ); else console.log( c );
+
+             break;
+         }
+         case "FirmwareRevision":
+         case "Version":
+         case "HardwareRevision":
+         {
+             if ( c == "" ) console.log( "100.1.1" ); else console.log( c );
+
+             break;
+         }
+         case "Manufacturer":
+         case "Model":
+         case "SerialNumber":
+         case "Name":
+         case "ConfiguredName":
+         {
+             if ( c == "" ) console.log( device ); else console.log( c );
+
+             break;
+         }
+         default:
+             if ( c == "" ) console.log( 0 ); else console.log( c );
+             process.exit( 0 );
+      }
+
+      break;
+
+   } // End of Switch for "Get"
+   case "Set":
+   {
+      switch( characteristic )
+      {
+         case "Active":
+         case "On":
+         {
+            writeData( device, characteristic, option );
+
+            switch( option )
+            {
+               case 0:
+               case false:
+               case "INACTIVE":
+                  writeData( device, "RotationSpeed", 0 );
+
+                  // Set to INACTIVE
+                  writeData( device, "CurrentAirPurifierState", 0 );
+
+                  break;
+               case 1:
+               case true:
+               case "ACTIVE":
+                  writeData( device, "RotationSpeed", 6 );
+
+                  // Set to IDLE
+                  writeData( device, "CurrentAirPurifierState", 1 );
+
+                 break;
+             }
+
+            break;
+         }
+         case "SecuritySystemTargetState":
+         {
+            writeData( device, characteristic, option );
+
+            // Set to done
+            writeData( device,"SecuritySystemAlarmState", option );
+
+            break;
+         }
+         case "TargetAirPurifierState":
+         {
+            writeData( device, characteristic, option );
+
+            // Set to done
+            writeData( device,"CurrentAirPurifierState", option );
+
+            break;
+         }
+         case "TargetAirQuality":
+         {
+            writeData( device, characteristic, option );
+
+            // Set to done
+            writeData( device, "AirQuality", option );
+
+            break;
+         }
+         case "TargetDoorState":
+         {
+            writeData( device, characteristic, option );
+
+            // Set to Done
+            writeData( device, "CurrentDoorState", option );
+
+            break;
+         }
+         case "TargetFanState":
+         {
+            writeData( device, characteristic, option );
+
+            // Fake it Done
+            writeData( device, "CurrentFanState", option );
+
+            break;
+         }
+         case "TargetHeaterCoolerState":
+         {
+            writeData( device, characteristic, option );
+
+            // Fake it Done
+            writeData( device, "CurrentHeaterCoolerState", option );
+
+            break;
+         }
+         case "TargetHeatingCoolingState":
+         {
+            writeData( device, characteristic, option );
+
+            // Fake it Done
+            writeData( device, "CurrentHeatingCoolingState", option );
+
+            break;
+         }
+         case "TargetHorizontalTiltAngle":
+         {
+            writeData( device, characteristic, option );
+
+            // Set to done
+            writeData( device,"CurrentHorizontalTiltAngle", option );
+
+            break;
+         }
+         case "TargetHumidifierDehumidifierState":
+         {
+            writeData( device, characteristic, option );
+
+            // Set to done
+            writeData( device,"CurrentHumidifierDehumidifierState", option );
+
+            break;
+         }
+         case "TargetMediaState":
+         {
+            writeData( device, characteristic, option );
+
+            // Set to done
+            writeData( device,"CurrentMediaState", option );
+
+            break;
+         }
+         case "TargetPosition":
+         {
+            writeData( device, characteristic, option );
+
+            // Set to done
+            writeData( device,"CurrentPosition", option );
+
+            break;
+         }
+         case "TargetRelativeHumidity":
+         {
+            writeData( device, characteristic, option );
+
+            // Set to done
+            writeData( device, "CurrentRelativeHumidity", option );
+
+            break;
+         }
+         case "TargetSlatState":
+         {
+            writeData( device, characteristic, option );
+
+            // Set to done
+            writeData( device, "CurrentSlatState", option );
+
+            break;
+         }
+         case "TargetTemperature":
+         {
+            writeData( device, characteristic, option );
+
+            // Fake it
+            writeData( device, "CurrentTemperature", option );
+
+            break;
+         }
+         case "TargetTiltAngle":
+         {
+            writeData( device, characteristic, option );
+
+            // Set to done
+            writeData( device,"CurrentTiltAngle", option );
+
+            break;
+         }
+         case "TargetVerticalTiltAngle":
+         {
+            writeData( device, characteristic, option );
+
+            // Set to done
+            writeData( device,"CurrentVerticalTiltAngle", option );
+
+            break;
+         }
+         case "TargetVisibilityState":
+         {
+            writeData( device, characteristic, option );
+
+            // Set to done
+            writeData( device,"CurrentVisibilityState", option );
+
+            break;
+         }
+         default:
+            writeData( device, characteristic, option );
+      }
+
+      break;
+   } // End of Switch Device for "Set"
+   default:
+      console.error( "Unknown IO" + io );
+      process.exit( -1 );
+}
+
+process.exit( 0 );
+
+
