@@ -20,13 +20,13 @@
 &nbsp;&nbsp;&nbsp; This document will help you understand what is needed to integrate your own scripts into Cmd4.
 
 ## Where to begin
-&nbsp;&nbsp;&nbsp; Cmd4 comes with a fully populated and documented [**config.json**](https://github.com/ztalbot2000/homebridge-cmd4/raw/master/Extras/config.json) file, this Developers Guide, an [Advanced](https://ztalbot2000.github.io/homebridge-cmd4/AdvancedTroubleShooting.md) troubleshoting guide for you the script writer and finally some auto generated device and characteristic description documentation [https://ztalbot2000.github.io/homebridge-cmd4](https://ztalbot2000.github.io/homebridge-cmd4/#).<BR>
+&nbsp;&nbsp;&nbsp; Cmd4 comes with a fully populated and documented [**config.json**](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/Extras/config.json) file, this Developers Guide, an [Advanced](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/AdvancedTroubleShooting.md) troubleshoting guide for you the script writer and finally some auto generated device and characteristic description documentation [https://ztalbot2000.github.io/homebridge-cmd4](https://ztalbot2000.github.io/homebridge-cmd4/#).<BR>
 
 &nbsp;&nbsp;&nbsp; Next you should look at scripts that might already exist. Within the Cmd4 directory structure there is a path of "Extras/Cmd4Scripts/ExampleScripts" that may already exist for you as a starting point.<BR>
-* [**basic_ping.sh**](https://github.com/ztalbot2000/homebridge-cmd4/raw/master/Extras/Cmd4Scripts/Examples/basic_ping.sh)
-* [**advanced_ping.sh**](https://github.com/ztalbot2000/homebridge-cmd4/raw/master/Extras/Cmd4Scripts/Examples/advanced_ping.sh)
-* [**wakeonlan.sh**](https://github.com/ztalbot2000/homebridge-cmd4/raw/master/Extras/Cmd4Scripts/Examples/wakeonlan.sh)
-* [**cmd4-E-Zone-MyAir**](https://github.com/mitch7391/cmd4-E-Zone-MyAir/tree/master/One%20Constant%20Zone)
+* [**basic_ping.sh**](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/Extras/Cmd4Scripts/Examples/basic_ping.sh)
+* [**advanced_ping.sh**](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/Extras/Cmd4Scripts/Examples/advanced_ping.sh)
+* [**wakeonlan.sh**](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/Extras/Cmd4Scripts/Examples/wakeonlan.sh)
+* [**cmd4-E-Zone-MyAir**](https://github.com/mitch7391/cmd4-E-Zone-MyAir/blob/master/Temperature%20Sensors/One%20Constant%20Zone/ezone.sh)
 
 ## Homebridge API
 &nbsp;&nbsp;&nbsp; Cmd4 is not possible without Homebridge. Prior to Cmd4 Version 3, Cmd4 just created Standard Plugin Accessories. With Version 3 of Cmd4, Cmd4 follows the Hombridge API as defined on [Homebridge API](https://developers.homebridge.io/#/) to be followed exactly. Both Platform and Accessory Plugins can be created. In fact the examples can be recreated exactly.<BR>
