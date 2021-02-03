@@ -105,7 +105,7 @@ To:<BR>
 * Added eslint and resolved all recommended lint errors.
 
 # Important
-While this version appears backward compatible, there is a difference in that the Accessories are created as Platform Accessories as compared to Standard Accessories. The [Homebridge API](https://developers.homebridge.io/#/) documentation details the difference as does the new [Cmd4 Developers Guide](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/DevelopersGuide.md).
+While this version appears backward compatible, there is a difference in that the Accessories are created as Platform Accessories as compared to Standard Accessories. The [Homebridge API](https://developers.homebridge.io/#/) documentation details the difference as does the new [Cmd4 Developers Guide](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/Developers.md).
 <BR><BR>
 ## Whats new in 2.4.2
 * Bug fix for negative temperature values
