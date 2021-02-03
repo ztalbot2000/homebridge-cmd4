@@ -129,7 +129,7 @@ The command may not exist, but also the timeout value in your config.json for th
 
 
 ## License
-See [LICENSE](LICENSE)
+See [LICENSE](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/LICENSE)
 
 
 
