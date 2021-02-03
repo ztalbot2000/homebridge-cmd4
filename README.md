@@ -17,7 +17,7 @@
    * [***Removing Cached Information***](#removing-cached-information)
    * [***Debug Steps***](#debug-steps)
 * [**Advanced Troubleshooting For Developers**](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/AdvancedTroubleShooting.md)
-* [**Developers Guide**](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/DevelopersGuide.md)
+* [**Developers Guide**](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/Developers.md)
 * [**Rationale**](#rationale)
 * [**Todo**](#todo)
 * [**Contributing**](#contributing)
