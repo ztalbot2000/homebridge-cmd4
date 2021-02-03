@@ -307,7 +307,7 @@ The value "0" should be used for any characteristics value which is not possible
 Note: There is one bug where the testcases do not run correctly every second attempt.  It has something to do with synchronous tests for Get/Set.  Please ignore it at this time.  Just run it again.
 
 ## License
-See [LICENSE](LICENSE)
+See [LICENSE](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/LICENSE)
 
 
 
