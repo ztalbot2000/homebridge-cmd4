@@ -3,7 +3,7 @@ name: Bug Report
 about: Raise a bug related report for cmd4.
 title: "[Bug]"
 labels: bug
-assignees: ''
+assignees: ztalbot2000
 
 ---
 
