@@ -1060,6 +1060,9 @@ function addCmd4AccessoryDirectivePages_WithinMain( )
    wfs( `      <LI> { "${constants.FETCH}": "<a name="${ constants.FETCH_POLLED }">${ constants.FETCH_POLLED }</a>" } - Polled characteristics act like before  (Always). Non polled characteristic values are fetched from cache.\n` );
    wfs( `  </UL>\n` );
    wfs( `</TR>\n` );
+   wfs( `<TR ALIGN="left"><TD COLSPAN=4>\n` );
+      wfs( `<img src="../images/fetchFlowDiagram.png" alt="fetchFlowDiagram.png">\n` );
+   wfs( `</TR>\n` );
 
    // stateChangeResponseTime
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATECHANGERESPONSETIME }">${ constants.STATECHANGERESPONSETIME }</a><TD> < seconds > <TD> 60 <TD> How long to wait between a Set and Get command.</TR>\n` );
