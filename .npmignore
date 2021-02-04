@@ -1,5 +1,6 @@
 .eslintrc.json
 .gitignore
+.github
 .DS_Store
 *.swp
 jsmin
