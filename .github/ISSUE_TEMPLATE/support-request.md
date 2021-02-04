@@ -3,7 +3,7 @@ name: Support Request
 about: Stuck on one of the installation steps or having trouble with your script?
 title: "[Support]"
 labels: help wanted
-assignees: ''
+assignees: ztalbot2000
 
 ---
 

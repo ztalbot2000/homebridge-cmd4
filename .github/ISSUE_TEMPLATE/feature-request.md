@@ -3,7 +3,7 @@ name: Feature Request
 about: Suggest an idea or improvement for cmd4.
 title: "[Feature Request]"
 labels: enhancement
-assignees: ''
+assignees: ztalbot2000
 
 ---
 
