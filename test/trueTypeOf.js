@@ -49,6 +49,16 @@ describe( "Testing trueTypeOf", ( ) =>
       assert.equal( result, expectedResult, "trueTypeOf( " + data + " ) returned: " + result  + " expected: " +  expectedResult );
    });
 
+   it( "trueTypeOf should correctly identify a polling config", ( ) =>
+   {
+      let data = [ { "characteristic": "active", "timeout": 5, "interval": 3},
+                   { "characteristic": "On", "timeout": 8, "interval": 4}
+                 ];
+      let expectedResult = Array;
+      let result = trueTypeOf( data );
+      assert.equal( result, expectedResult, "trueTypeOf( " + data + " ) returned: " + result  + " expected: " +  expectedResult );
+   });
+
    it( "trueTypeOf should correctly identify an empty object ", ( ) =>
    {
       let data = undefined
