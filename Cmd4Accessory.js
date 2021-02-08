@@ -484,8 +484,9 @@ class Cmd4Accessory
 
       self.log.debug( `setCachedvalue accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } value: ${ value }` );
 
-      // Store history using fakegato if set up
-      self.updateAccessoryAttribute( accTypeEnumIndex, value );
+      // Save the cached value.
+      // Fakegato does not need to be updated as that is done on a "Get".
+      self.setStoredValueForIndex( accTypeEnumIndex, value );
 
       callback( null );
    }
@@ -556,13 +557,29 @@ class Cmd4Accessory
 
          if ( verifyCharacteristic != null )
          {
-               setTimeout( ( ) => {
-                     self.service.getCharacteristic( verifyCharacteristic ).getValue( );
-                     callback( null );
-                  }, self.stateChangeResponseTime );
-                  return;
-          }
-          callback( null );
+            setTimeout( ( ) => {
+               self.service.getCharacteristic( verifyCharacteristic ).getValue( );
+               callback( null );
+            }, self.stateChangeResponseTime );
+
+            return;
+         }
+
+         // The "Set" of the characteristic value was successful.
+         // In the case where the "Get" is a long time off, then the
+         // internal state value is incorrect.  Does it matter since
+         // the "Get" that would occur SHOULD be to the device and
+         // not for the cached value?
+         // I say SHOULD as the "Set" was to the device then so
+         // should the next "Get" be as well.
+         // The better thing to do is just set the internal state so that
+         // trying to determine the above is not a possability.
+         // That being said, the possability cannot happen when fetch is
+         // "Cached" or "Always", so do not change their behaviour.
+         if ( self.fetch == constants.FETCH_POLLED )
+            self.setStoredValueForIndex( accTypeEnumIndex, value );
+
+         callback( null );
 
       });
    }
