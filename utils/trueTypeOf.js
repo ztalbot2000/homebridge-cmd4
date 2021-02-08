@@ -17,8 +17,6 @@ function trueTypeOf( m )
 
    switch( typeof m )
    {
-      case Array:
-         return Array;
       case "boolean":
          return Boolean;
       case "number":

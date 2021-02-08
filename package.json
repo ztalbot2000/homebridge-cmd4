@@ -1,99 +1,105 @@
 {
-  "_from": "homebridge-cmd4@3.0.14",
-  "_id": "homebridge-cmd4@3.0.15",
-  "_inBundle": false,
-  "_integrity": "sha512-Q39XXNNaxpBENc4AXvqoWoW+5OVZE24OLYLm+4RqCxJmyQDAGLNsokL+dh2JU++YaZRdycASfnG/8sylpocGAg==",
-  "_location": "/homebridge-cmd4",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "version",
-    "registry": true,
-    "raw": "homebridge-cmd4@3.0.15",
-    "name": "homebridge-cmd4",
-    "escapedName": "homebridge-cmd4",
-    "rawSpec": "3.0.15",
-    "saveSpec": null,
-    "fetchSpec": "3.0.15"
-  },
-  "_requiredBy": [
-    "#USER",
-    "/"
-  ],
-  "_resolved": "https://registry.npmjs.org/homebridge-cmd4/-/homebridge-cmd4-3.0.15.tgz",
-  "_shasum": "8329f6094809108460224f10a094f94da979d32e",
-  "_spec": "homebridge-cmd4@3.0.15",
-  "_where": "/private/var/root",
-  "author": {
-    "name": "John Talbot"
-  },
-  "bugs": {
-    "url": "https://github.com/ztalbot2000/homebridge-cmd4/issues",
-    "email": "info@BeNiceGames.com"
-  },
-  "dependencies": {
-    "chalk": "^4.1.0",
-    "command-exists": ">=1.2.9",
-    "fakegato-history": ">=0.6.1",
-    "github-version-checker": ">=2.2.0",
-    "latest-version": "^5.1.0",
-    "moment": "*",
-    "system-sleep": "^1.3.6"
-  },
-  "deprecated": false,
-  "description": "Exec Plugin for Homebridge supporting all accessorys and characteristics",
-  "devDependencies": {
-    "chai": "^4.2.0",
-    "eslint": "^7.17.0",
-    "hap-nodejs": "^0.8.5",
-    "homebridge": "^1.1.7",
-    "mocha": "^8.0.1",
-    "sinon": "^9.2.4"
-  },
-  "directories": {
-    "test": "test",
-    "lib": "lib",
-    "utils": "utils",
-    "docs": "docs"
-  },
-  "engines": {
-    "homebridge": ">=1.1.7",
-    "node": ">=10.17.0"
-  },
-  "homepage": "https://github.com/ztalbot2000/homebridge-cmd4#readme",
-  "changelog": "https://github.com/ztalbot2000/homebridge-cmd4/blob/master/ChangeLog.md",
-  "keywords": [
-    "homebridge-plugin",
-    "homebridge",
-    "exec",
-    "command",
-    "switch",
-    "light",
-    "door",
-    "thermostat",
-    "security",
-    "temperature",
-    "virtual",
-    "Eve",
-    "Homekit",
-    "siri",
-    "home",
-    "Eve"
-  ],
-  "license": "MIT",
-  "name": "homebridge-cmd4",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/ztalbot2000/homebridgeCmd4.git"
-  },
-  "scripts": {
-    "debug": "DEBUG=* homebridge --debug --plugin-path .",
-    "postversion": "git push && git push --tags",
-    "pretest": "printf ' test is only done in a development environment\n';sleep 2 ",
-    "test": "node_modules/.bin/mocha --file test/mocha-setup --ignore test/Cmd4Accessory.js",
-    "Note": "printf 'testing Cmd4Accessory spawns processes, so its ommitted from blanket testing'",
-    "testCmd4Accessory.js": "node_modules/.bin/mocha --file test/mocha-setup test/Cmd4Accessory.js",
-    "lint": "eslint --ext .js *.js utils/*.js lib/*.js",
-    "postinstall": "node postinstall.js"
-  },
-  "version": "3.0.15"
+   "name": "homebridge-cmd4",
+   "description": "Exec Plugin for Homebridge supporting all accessorys and characteristics",
+   "version": "3.0.15",
+   "license": "MIT",
+   "author": {
+      "name": "John Talbot"
+   },
+   "repository": {
+      "type": "git",
+      "url": "git://github.com/ztalbot2000/homebridge-cmd4.git"
+   },
+   "homepage": "https://github.com/ztalbot2000/homebridge-cmd4#readme",
+   "changelog": "https://github.com/ztalbot2000/homebridge-cmd4/blob/master/ChangeLog.md",
+   "bugs": {
+      "url": "https://github.com/ztalbot2000/homebridge-cmd4/issues",
+      "email": "ztalbot2000@gmail.com"
+   },
+   "dependencies": {
+      "chalk": "^4.1.0",
+      "command-exists": ">=1.2.9",
+      "fakegato-history": ">=0.6.1",
+      "github-version-checker": ">=2.2.0",
+      "latest-version": "^5.1.0",
+      "moment": "*"
+   },
+   "devDependencies": {
+      "@commitlint/cli": "^11.0.0",
+      "@commitlint/config-conventional": "^11.0.0",
+      "chai": "^4.2.0",
+      "commitlint-plugin-function-rules": "^1.1.20",
+      "eslint": "^7.17.0",
+      "generate-changelog": "^1.8.0",
+      "hap-nodejs": "^0.8.5",
+      "homebridge": "^1.2.5",
+      "husky": "^4.3.8",
+      "mocha": "^8.0.1",
+      "sinon": "^9.2.4"
+   },
+   "directories": {
+      "test": "test",
+      "lib": "lib",
+      "utils": "utils",
+      "docs": "docs"
+   },
+   "engines": {
+      "homebridge": ">=1.2.5",
+      "node": ">=10.17.0"
+   },
+   "keywords": [
+      "homebridge-plugin",
+      "homebridge",
+      "exec",
+      "command",
+      "switch",
+      "light",
+      "door",
+      "thermostat",
+      "security",
+      "temperature",
+      "virtual",
+      "Eve",
+      "Homekit",
+      "siri",
+      "home",
+      "Eve"
+   ],
+   "husky": {
+      "hooks": {
+         "pre-commit": "npm run lint",
+         "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+      }
+   },
+   "scripts": {
+      "debug": "DEBUG=* homebridge --debug --plugin-path .",
+      "pretest": "printf ' test is only done in a development environment\n';sleep 2 ",
+      "test": "node_modules/.bin/mocha --file test/mocha-setup --ignore test/Cmd4Accessory.js",
+      "_Note": "                                                              ",
+      "testCmd4Accessory.js": "node_modules/.bin/mocha --file test/mocha-setup test/Cmd4Accessory.js",
+      "lint": "eslint --ext .js *.js utils/*.js lib/*.js",
+      "postinstall": "node postinstall.js",
+      "_Note01": "Auto change the version based on the commit history.        ",
+      "_Note02": "Where:                                                      ",
+      "_Note03": "To trigger a version update                                 ",
+      "_Note04": "    npm run release                                         ",
+      "_Note05": "                                                            ",
+      "_Note06": "To trigger a patch update (1.0.0 → 1.0.1)                   ",
+      "_Note07": "    git commit -m 'fix: …'                                  ",
+      "_Note08": "To trigger a minor update (1.0.0 → 1.1.0)                   ",
+      "_Note09": "    git commit -m 'feat: …'                                 ",
+      "_Note10": "To trigger a major update (1.0.0 → 2.0.0)                   ",
+      "_Note11": "    A BREAKING CHANGE: in the commit body                   ",
+      "_Note12": "                                                            ",
+      "_Note13": "As a summary, generate-changelog will do                    ",
+      "_Note14": "   * Bumps the version in package.json                      ",
+      "_Note15": "   * Updates CHANGELOG.md                                   ",
+      "_Note16": "                                                            ",
+      "release": "tools/generateChangeLog",
+      "_Note17": "                                                            ",
+      "_Note18": "Overide default behaviour with:                             ",
+      "release:patch": "tools/generateChangeLog --type patch",
+      "release:minor": "tools/generateChangeLog --type minor",
+      "release:major": "tools/generateChangeLog --type major"
+   }
 }

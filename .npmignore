@@ -1,10 +1,13 @@
 .eslintrc.json
 .gitignore
 .github
+.huskyrc
 .DS_Store
+*_save*
+*_bak*
 *.swp
+commitlint.config.js
 jsmin
-.eslintrc.json
 utils/indexOfEnumLintTest.js
 screenshots
 test

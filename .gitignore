@@ -1,6 +1,8 @@
 .DS_Store
 *.swp
 *.save*
+*_save*
+*_bak*
 jsmin
 node_modules
 package-lock.json
