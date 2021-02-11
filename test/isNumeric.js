@@ -49,6 +49,24 @@ describe( "Testing isNumeric", ( ) =>
       assert.equal( result, expectedResult, "isNumeric( " + data + " ) returned: " + result  + " expected: " +  expectedResult );
    });
 
+   it( "isNumeric should correctly identify a 0", ( ) =>
+   {
+      let data = 0;
+      let expectedResult = true;
+      let result = isNumeric( data );
+      assert.equal( result, expectedResult, "isNumeric( " + data + " ) returned: " + result  + " expected: " +  expectedResult );
+   });
+
+   it( `isNumeric should correctly identify a "0"`, ( ) =>
+   {
+      let data = "0";
+      let expectedResult = true;
+      let result = isNumeric( data );
+      assert.equal( result, expectedResult, "isNumeric( " + data + " ) returned: " + result  + " expected: " +  expectedResult );
+   });
+
+
+
    it( "isNumeric should correctly fail a character string", ( ) =>
    {
       let data = "One";
@@ -57,9 +75,16 @@ describe( "Testing isNumeric", ( ) =>
       assert.equal( result, expectedResult, "isNumeric( " + data + " ) returned: " + result  + " expected: " +  expectedResult );
    });
 
-   it( "isNumeric should correctly fail a undefined", ( ) =>
+   it( "isNumeric should correctly fail an undefined", ( ) =>
    {
       let data = undefined;
+      let expectedResult = false;
+      let result = isNumeric( data );
+      assert.equal( result, expectedResult, "isNumeric( " + data + " ) returned: " + result  + " expected: " +  expectedResult );
+   });
+   it( "isNumeric should correctly fail a null", ( ) =>
+   {
+      let data = null;
       let expectedResult = false;
       let result = isNumeric( data );
       assert.equal( result, expectedResult, "isNumeric( " + data + " ) returned: " + result  + " expected: " +  expectedResult );

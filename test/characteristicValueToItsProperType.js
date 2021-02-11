@@ -107,6 +107,47 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
 
+   it('characteristicValueToItsProperType of TargetTemperature of Float "0.0" should be 0.0', ( ) =>
+   {
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetTemperature;
+      let displayName = "testDevice";
+      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+      let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
+      let value = "0.0";
+      let expectedResult = 0.0;
+      let expectedResultType = "number";  // There is no float type
+
+
+      let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
+
+      assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
+
+      let resultType = typeof result;
+
+      assert.equal( resultType, expectedResultType, "configHasCharacteristicProps of valid data with full properties returned incorrect result. Expected: : " + expectedResultType + " received: " + resultType );
+   });
+
+   it('characteristicValueToItsProperType of TargetTemperature of Float "0" should be float', ( ) =>
+   {
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetTemperature;
+      let displayName = "testDevice";
+      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+      let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
+      let value = "0";
+      let expectedResult = 0;
+      let expectedResultType = "number";  // There is no float type
+
+
+      let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
+
+      assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
+
+      let resultType = typeof result;
+
+      assert.equal( resultType, expectedResultType, "configHasCharacteristicProps of valid data with full properties returned incorrect result. Expected: : " + expectedResultType + " received: " + resultType );
+   });
+
+
    it('characteristicValueToItsProperType of Name of string1 should be String.', ( ) =>
    {
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Name;
