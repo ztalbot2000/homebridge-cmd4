@@ -104,6 +104,7 @@ class Cmd4Accessory
       this.stateChangeResponseTime = ( parentInfo && parentInfo.stateChangeResponseTime ) ? parentInfo.stateChangeResponseTime : constants.DEFAULT_INTERVAL;
       this.interval = ( parentInfo && parentInfo.interval ) ? parentInfo.interval : constants.DEFAULT_INTERVAL;
       this.timeout = ( parentInfo && parentInfo.timeout ) ? parentInfo.timeout : constants.DEFAULT_TIMEOUT;
+      this.statusMsg = ( parentInfo && parentInfo.statusMsg ) ? parentInfo.statusMsg : constants.DEFAULT_STATUSMSG;
 
       // undefined is acceptable.
       this.state_cmd = parentInfo && parentInfo.state_cmd;
@@ -465,8 +466,6 @@ class Cmd4Accessory
       // Move the information service to the top of the list
       accessory.services.unshift( accessory.informationService );
 
-      // accessory.log.info( chalk.red("ZZZZ %s.services.length %s", accessory.displayName, accessory.services.length ) );
-
    }
 
    // ***********************************************
@@ -482,7 +481,11 @@ class Cmd4Accessory
 
       let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
 
-      self.log.debug( `setCachedvalue accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } value: ${ value }` );
+      if ( self.statusMsg == true )
+         self.log( chalk.blue( `Setting (Cached) ${ self.displayName } ${ characteristicString }` ) + ` ${ value }` );
+      else
+         self.log.debug( `setCachedvalue accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } value: ${ value }` );
+
 
       // Save the cached value.
       // Fakegato does not need to be updated as that is done on a "Get".
@@ -538,7 +541,10 @@ class Cmd4Accessory
          cmd = self.state_cmd_prefix + self.state_cmd + " Set '" + self.displayName + "' '" + characteristicString  + "' '" + nonConstant  + "'" + self.state_cmd_suffix;
       }
 
-      self.log.debug( `setvalue accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } cmd: ${ cmd }` );
+      if ( self.statusMsg == true )
+         self.log( chalk.blue( `Setting ${ self.displayName } ${ characteristicString }` ) + ` ${ value }` );
+      else
+         self.log.debug( `setvalue accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } cmd: ${ cmd }` );
 
 
       // Execute command to Set a characteristic value for an accessory
@@ -694,6 +700,12 @@ class Cmd4Accessory
             } else if ( words.length <= 0 )
             {
                self.log.error( `getValue ${ characteristicString } function for: ${ self.displayName } returned no value` );
+
+               callback( -1, 0 );
+
+            } else if ( words.length == 1 && words[0] == "null" )
+            {
+               self.log.error( `getValue ${ characteristicString } function for: ${ self.displayName } returned the string "null"` );
 
                callback( -1, 0 );
 
@@ -1634,10 +1646,17 @@ class Cmd4Accessory
                // Define if we should ouput constant strings
                // instead of values
                if ( config.outputConstants === true )
-
                   this.outputConstants = value;
                 else
                   this.outputConstants = false;
+
+               break;
+            case constants.STATUSMSG:
+               // During state change, display a message or not
+               if ( config.statusMsg === true )
+                  this.statusMsg = value;
+                else
+                  this.statusMsg = false;
 
                break;
             case constants.TIMEOUT:

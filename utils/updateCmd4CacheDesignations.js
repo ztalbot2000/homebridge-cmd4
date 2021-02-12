@@ -52,6 +52,13 @@ function updateCmd4CacheDesignations( api, log, existingAccessory, accessory, ex
    } else
       existingAccessory.outputConstants = accessory.outputConstants;
 
+   if ( accessory.statusMsg === undefined )
+   {
+      existingAccessory.statusMsg = undefined;
+      delete( existingAccessory.statusMsg );
+   } else
+      existingAccessory.statusMsg = accessory.statusMsg;
+
    if ( accessory.stateChangeResponseTime === undefined )
    {
       existingAccessory.stateChangeResponseTime = undefined;

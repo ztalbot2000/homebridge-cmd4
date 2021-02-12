@@ -14,6 +14,8 @@ exports.FAST_STATE_CHANGE_RESPONSE_TIME      = 1000;   // 1 second
 exports.DEFAULT_TIMEOUT          = 60000; // 1 minute
 exports.DEFAULT_INTERVAL         = 60000; // 1 minute
 
+exports.DEFAULT_STATUSMSG        = true;
+
 // Fakegato Constants
 exports.FAKEGATO_TYPE_ENERGY     = "energy";
 exports.FAKEGATO_TYPE_ROOM       = "room";
@@ -56,6 +58,8 @@ exports.GOOGLE_DRIVE             = "googleDrive";
 // Config Constnts
 exports.OUTPUTCONSTANTS          = "OutputConstants";
 exports.RESTART_RECOVER_l        = "restartRecover";
+exports.STATUSMSG                = "StatusMsg";
+exports.STATUSMSG_l              = "statusMsg";
 
 // Platform Config Constnts
 exports.TYPE                     = "Type";

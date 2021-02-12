@@ -84,6 +84,12 @@ class Cmd4Platform
       else
          this.outputConstants = false;
 
+      // Direct if the status state change message should be displayed
+      // or not.  Default is true.
+      this.statusMsg = constants.DEFAULT_STATUSMSG;
+      if ( this.config.statusMsg == false )
+         this.statusMsg = false;
+
       // didFinishLaunching is only called after the
       // registerPlatform completes.
       api.on( "didFinishLaunching", ( ) =>

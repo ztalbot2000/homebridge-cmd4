@@ -635,7 +635,8 @@ function addSideNavCmd4DirectivesLinks_WithinSideNav( )
 
    wf( "+", `<div class="panel">\n` );
       wfs( `<a href="#${ constants.OUTPUTCONSTANTS }_D" onclick="toggleVisibility( 'Directives');">${ constants.OUTPUTCONSTANTS }</a>\n` );
-      wfs( `<a href="#${ constants.RESTART_RECOVER_L }_D" onclick="toggleVisibility( 'Directives');">${ constants.RESTART_RECOVER_l }</a>\n` );
+      wfs( `<a href="#${ constants.RESTART_RECOVER_l }_D" onclick="toggleVisibility( 'Directives');">${ constants.RESTART_RECOVER_l }</a>\n` );
+      wfs( `<a href="#${ constants.STATUSMSG }_D" onclick="toggleVisibility( 'Directives');">${ constants.STATUSMSG_l }</a>\n` );
    endDiv( "panel" );
 
 }
@@ -659,8 +660,8 @@ function addSideNavCmd4AccessoryDirectivesLinks_WithinSideNav( )
       wfs( `<a href="#${ constants.INTERVAL }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.INTERVAL }</a>\n` );
       wfs( `<a href="#${ constants.STATECHANGERESPONSETIME }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.STATECHANGERESPONSETIME }</a>\n` );
       wfs( `<a href="#${ constants.LINKEDTYPES }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.LINKEDTYPES }</a>\n` );
-      wfs( `<a href="#${ constants.OUTPUTCONSTANTS }">${ constants.OUTPUTCONSTANTS }</a>\n` );
       wfs( `<a href="#${ constants.OUTPUTCONSTANTS }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.OUTPUTCONSTANTS }</a>\n` );
+      wfs( `<a href="#${ constants.STATUSMSG_l }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.STATUSMSG_l }</a>\n` );
    endDiv( "panel" );
 
 }
@@ -1016,10 +1017,12 @@ function addCmd4DirectivePages_WithinMain( )
    wfs( `<TR ALIGN="left"><TH>Cmd4Directive<TH>Type<TH PADDING="50px">Default<TH>Description</TR>\n` );
 
    // outputConstants
-   wfs( `<TR ALIGN="left"><TD><a name="${ constants.OUTPUTCONSTANTS }_D">${ constants.OUTPUTCONSTANTS }</a><TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1 </TR>\n` );
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.OUTPUTCONSTANTS }_D">${ constants.OUTPUTCONSTANTS }</a><TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1 for all Accessories</TR>\n` );
 
    // restartRecover
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.RESTART_RECOVER_l }_D"> ${ constants.RESTART_RECOVER_l }</a><TD> < Bool > <TD> true <TD> If Cmd4 will use previous cached state information </TR>\n` );
+
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATUSMSG }_D"> ${ constants.STATUSMSG_l }</a><TD> < Bool > <TD> ${ constants.DEFAULT_STATUSMSG } <TD> Cmd4 will log a Set Status Message for all Accessories.</TR>\n` );
 
    wf( "-", `</TABLE>\n` );
    endDiv( "main" );
@@ -1042,6 +1045,9 @@ function addCmd4AccessoryDirectivePages_WithinMain( )
 
    // outputConstants
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.OUTPUTCONSTANTS }">${ constants.OUTPUTCONSTANTS }</a><TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1 </TR>\n` );
+
+   // statusMsg
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATUSMSG_l }">${ constants.STATUSMSG_l }</a><TD>  < Bool >  <TD>  ${ constants.DEFAULT_STATUSMSG } <TD> Cmd4 will log a Set Status Message</TR>\n` );
 
    // publishExternally
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.PUBLISHEXTERNALLY }">${ constants.PUBLISHEXTERNALLY }</a><TD>  < Bool >  <TD>    false     <TD> Tell Homebridge to publish the device as its own bridge. </TR>\n` );

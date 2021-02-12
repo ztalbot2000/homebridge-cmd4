@@ -1,9 +1,25 @@
+# Mac
 .DS_Store
+
+# Text editors
 *.swp
+
+# My favorite temp backup
 *.save*
 *_save*
 *_bak*
+
+# Compiled Executables
 jsmin
+
+# node
 node_modules
+npm-debug.log
+.node-version
+
+
+# Not a fan
 package-lock.json
+
+# work in progress folder
 local
