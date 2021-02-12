@@ -19,8 +19,11 @@ const log = logger_1.Logger.internal;
 
 
 // Init the library for all to use
-let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
-let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, _api.hap.Service, _api.hap.Characteristic, _api.hap.Categories );
+let Characteristic = _api.hap.Characteristic;
+let Service = _api.hap.Service;
+let Categories = _api.hap.Categories;
+let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( Characteristic );
+let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, Service, Characteristic, Categories );
 
 
 let getSetValueScript="./test/echoScripts/testGetSetValues.js";
@@ -128,7 +131,7 @@ describe( "Testing Cmd4Accessory", function( )
    });
    */
 
-   it( "setValue Active should send 1 to script for Active request", function ( done )
+   it( "setValue 1 should send 1 to script for ClosedCaption non constant request", function ( done )
    {
       // A config file to play with.
       let TVConfig =
@@ -151,16 +154,18 @@ describe( "Testing Cmd4Accessory", function( )
           remoteKey:                "SELECT"
       };
 
-      let acc = CMD4_ACC_TYPE_ENUM.Active;
+      // Note: We need a characteristic that does not have a verify characteristic
+      // because the getSetValueScript can't seem to handle it. At least not yet.
+      let acc = CMD4_ACC_TYPE_ENUM.ClosedCaptions;
       let DEVICE = TVConfig.displayName;
       let CHARACTERISTIC = CMD4_ACC_TYPE_ENUM.properties[ acc ].type;
-      let fn = `/tmp/fn`;
+      let fn = `/tmp/fn1`;
       TVConfig.state_cmd_suffix = fn;
+      TVConfig.state_cmd = `node ${ process.cwd( ) }/${ getSetValueScript }`;
 
-      TVConfig.state_cmd = `node ${process.cwd()}/${ getSetValueScript }`;
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, null );
 
-      let value = cmd4Accessory.getStoredValueForIndex( acc );
+      let value = Characteristic.ClosedCaptions.ENABLED;
 
       cmd4Accessory.setValue( acc, value,  function( )
       {
@@ -175,7 +180,7 @@ describe( "Testing Cmd4Accessory", function( )
       });
    });
 
-   it( "setValue Active should send ACTIVE to script for constant request", function ( done )
+   it( `setValue 1, aka ENABLED should send "ENABLED" to script for constant request`, function ( done )
    {
       // A config file to play with.
       let TVConfig =
@@ -185,7 +190,7 @@ describe( "Testing Cmd4Accessory", function( )
           outputConstants:          true,
           displayName:              "My_Television",
           category:                 "TELEVISION",
-          publishExternally:        true,
+          publishExternally:        false,
           active:                   "ACTIVE",
           activeIdentifier:          1234,
           mute:                     true,
@@ -199,21 +204,22 @@ describe( "Testing Cmd4Accessory", function( )
           remoteKey:                "SELECT"
       };
 
-      let acc = CMD4_ACC_TYPE_ENUM.Active;
+      // Note: We need a characteristic that does not have a verify characteristic
+      // because the getSetValueScript can't seem to handle it. At least not yet.
+      let acc = CMD4_ACC_TYPE_ENUM.ClosedCaptions;
       let DEVICE = TVConfig.displayName;
       let CHARACTERISTIC = CMD4_ACC_TYPE_ENUM.properties[ acc ].type;
       let fn = `/tmp/fn2`;
       TVConfig.state_cmd_suffix = fn;
 
-      TVConfig.state_cmd = `node ${process.cwd()}/${ getSetValueScript }`;
+      TVConfig.state_cmd = `node ${ process.cwd( ) }/${ getSetValueScript }`;
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, null );
 
-      let value = cmd4Accessory.getStoredValueForIndex( acc );
-      console.log("Stored value is %s", value );
+      let value = Characteristic.ClosedCaptions.ENABLED;
 
       cmd4Accessory.setValue( acc, value,  function( )
       {
-         let expectedResult = "ACTIVE";
+         let expectedResult = "ENABLED";
          let newfn = `${ fn }_${ DEVICE }_${ CHARACTERISTIC }`;
          let INPUTS=require( `${ newfn }` );
          let sentResult = INPUTS.VALUE;
@@ -253,7 +259,7 @@ describe( "Testing Cmd4Accessory", function( )
       let fn = `/tmp/fn3`;
       TVConfig.state_cmd_suffix = fn;
 
-      TVConfig.state_cmd = `node ${process.cwd()}/${ getSetValueScript }`;
+      TVConfig.state_cmd = `node ${ process.cwd( ) }/${ getSetValueScript }`;
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, null );
 
       let value = true;

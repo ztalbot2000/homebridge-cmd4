@@ -482,7 +482,7 @@ class Cmd4Accessory
       let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
 
       if ( self.statusMsg == true )
-         self.log( chalk.blue( `Setting (Cached) ${ self.displayName } ${ characteristicString }` ) + ` ${ value }` );
+         self.log.info( chalk.blue( `Setting (Cached) ${ self.displayName } ${ characteristicString }` ) + ` ${ value }` );
       else
          self.log.debug( `setCachedvalue accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } value: ${ value }` );
 
@@ -542,7 +542,7 @@ class Cmd4Accessory
       }
 
       if ( self.statusMsg == true )
-         self.log( chalk.blue( `Setting ${ self.displayName } ${ characteristicString }` ) + ` ${ value }` );
+         self.log.info( chalk.blue( `Setting ${ self.displayName } ${ characteristicString }` ) + ` ${ value }` );
       else
          self.log.debug( `setvalue accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } cmd: ${ cmd }` );
 

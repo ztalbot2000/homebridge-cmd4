@@ -131,12 +131,12 @@ describe( "Testing transposeConstantToValidValue", ( ) =>
       expect( result ).to.equal( expectedResult, "transposeConstantToValidValue from " + constantToBeChecked + " returned " + result + " instead of " + expectedResult + " for " + CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type );
    });
 
-   it( "transposeConstantToValidValue should return correct constant false ", ( ) =>
+   it( `transposeConstantToValidValue should return correct value 1 for constant "TRUE" `, ( ) =>
    {
       // has { "FALSE" & "TRUE"} for validValues
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AdministratorOnlyAccess;
       let constantToBeChecked = "TRUE";
-      let expectedResult = true;
+      let expectedResult = 1;
 
       let result = transposeConstantToValidValue( log, CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, constantToBeChecked );
 
@@ -183,11 +183,11 @@ describe( "Testing transposeValueToValidConstant", ( ) =>
       expect( result ).to.equal( expectedResult, "transposeValueToValidConstant from " + valueToBeChecked + " returned " + result + " instead of " + expectedResult + " for " + CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type );
    });
 
-   it( "transposeValueToValidConstant should return correct constant false ", ( ) =>
+   it( "transposeValueToValidConstant should return correct constant for value 1", ( ) =>
    {
       // has { "FALSE" & "TRUE"} for validValues
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AdministratorOnlyAccess;
-      let valueToBeChecked = true;
+      let valueToBeChecked = 1;
       let expectedResult = "TRUE";
 
       let result = transposeValueToValidConstant( log, CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, valueToBeChecked );
