@@ -1,4 +1,4 @@
-#!node
+#!/usr/local/bin/node
 
 'use strict';
 
@@ -7,7 +7,8 @@ let fs = require( "fs" );
 let readline = require( "readline" );
 
 // Command line parser
-const { program } = require( "commander" );
+const { Command } = require( "commander" );
+const program = new Command;
 
 // Tool to get changelog information
 let Changelog = require( 'generate-changelog' );

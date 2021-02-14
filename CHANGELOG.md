@@ -1,6 +1,7 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
 
 ## ChangeLog
+* [**Whats new in 3.1.0**](#whats-new-in-310)
 * [**Whats new in 3.0.15**](#whats-new-in-3015)
 * [**Whats new in 3.0.14**](#whats-new-in-3014)
 * [**Whats new in 3.0.12**](#whats-new-in-3012)
@@ -23,6 +24,49 @@
 * [**Whats new in 2.2**](#whats-new-in-22)
 * [**Whats new in 2.1**](#whats-new-in-21)
 * [**Whats new in 2.0**](#whats-new-in-20)
+
+## Whats new in 3.1.0
+### 3.1.0 (2021-02-14)
+
+##### Features
+* For #88 Log a Status change message and have it be optional statusMsg ([019c6d2](https://github.com/ztalbot2000/homebridge-cmd4/commit/ef9f57fc646eeab5a15e404f445545a2a2528391))
+
+##### Build System / Dependencies
+
+*  Remove images destined for github pages from npm distribution ([7a11296b](https://github.com/ztalbot2000/homebridge-cmd4/commit/7a11296b783e3d51237f9109b62696f684f0d902))
+*  Remove images destined for github pages from npm distribution ([7a11296b](https://github.com/ztalbot2000/homebridge-cmd4/commit/7a11296b783e3d51237f9109b62696f684f0d902))
+*  Add commit message rules and up version generator ([d6dfcb19](https://github.com/ztalbot2000/homebridge-cmd4/commit/d6dfcb19bd98e782ac103dcecd5b0e0dcce37a07))
+*  npm shoud ignore .github templates etc ... ([a457e0bc](https://github.com/ztalbot2000/homebridge-cmd4/commit/a457e0bc92b59e983ba33e8d11fb07207084d480))
+
+##### Chores
+
+*  Already merged. Try to fix Git tree ([33694479](https://github.com/ztalbot2000/homebridge-cmd4/commit/3369447934e2f328f2a69d37cf61ceedc97f6f63))
+
+##### Bug Fixes
+
+*  Store value to cache after successful set to device when fetch="Polled" ([18a4f569](https://github.com/ztalbot2000/homebridge-cmd4/commit/18a4f5691fe67abc3c64d152822134b77b09aaa4))
+*  Cached characteristics were never stored if changed by other than polling ([fd3b4cc8](https://github.com/ztalbot2000/homebridge-cmd4/commit/fd3b4cc894598bf424371de03656054d713f3663))
+
+##### Other Changes
+
+* < true/false > ([ef9f57fc](https://github.com/ztalbot2000/homebridge-cmd4/commit/ef9f57fc646eeab5a15e404f445545a2a2528391))
+*  Update issue templates ([5eb330ad](https://github.com/ztalbot2000/homebridge-cmd4/commit/5eb330ad18a58f8c5f1a456ed261bb6c963c8217))
+*  Update issue templates ([f19bec63](https://github.com/ztalbot2000/homebridge-cmd4/commit/f19bec6322f77026c0da707a5b283fbe956beb6f))
+*  Rename Changelog.md to CHANGELOG.md for naming conventions and future use of standard-version ([c9a4b746](https://github.com/ztalbot2000/homebridge-cmd4/commit/c9a4b746aea2c9b003b4219ab4d042cc7b3eadbe))
+*  Add in Fetch Diagram ([7bd8b46e](https://github.com/ztalbot2000/homebridge-cmd4/commit/7bd8b46eecb62c232137dfba6c1356d7c619bf01))
+*  Fixed broken link to Developers Guide. ([a55e6235](https://github.com/ztalbot2000/homebridge-cmd4/commit/a55e6235c036992c2dd6fb6879f82635fe5a3d03))
+*  Fix broken link to LICENSE. ([9b702d0a](https://github.com/ztalbot2000/homebridge-cmd4/commit/9b702d0a704d19c4aae764003e527d47013663df))
+*  Fix links to 'raw' text versions of links. ([33e558b4](https://github.com/ztalbot2000/homebridge-cmd4/commit/33e558b41726dc5fb518933dd993387e0fe17e59))
+*  Fix broken link to LICENSE. ([82ab2aba](https://github.com/ztalbot2000/homebridge-cmd4/commit/82ab2aba3fb16cc6992fbc2c0fc1a0a0dec3cae6))
+*  Fixed broken link to Developers Guide ([f46b2b78](https://github.com/ztalbot2000/homebridge-cmd4/commit/f46b2b7873bbd89c7780c58b2916fc28b41e4873))
+*  Create issue templates. ([5059486f](https://github.com/ztalbot2000/homebridge-cmd4/commit/5059486fc65ef39e8aa7aed02c093f6fd95e0537))
+
+##### Tests
+
+*  fix tests that sometimes failed ([cd005d9b](https://github.com/ztalbot2000/homebridge-cmd4/commit/cd005d9b344aee92a03127c19947f4ba47f11eeb))
+*  Check if 0, "0" or "0.0" is handled correctly and it is ([019c6d26](https://github.com/ztalbot2000/homebridge-cmd4/commit/019c6d267fbe73a36099806eb79d4902e6698907))
+*  Add test for same config as polling ([4eb8c09a](https://github.com/ztalbot2000/homebridge-cmd4/commit/4eb8c09aed103edbf5d05d78269fc0835f198477))
+
 
 ## Whats new in 3.0.15
 * Cached characteristics were never stored when not updated by other than polling.
