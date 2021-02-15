@@ -668,72 +668,112 @@ class Cmd4Accessory
             self.log.error( stderr );
             callback( error, 0 );
 
-         } else
-         {
-            //let words = stdout.match(/\S+/gi);
-            // Handle quotes words. Removes quotes
-            // Handles escaped quotes.
-            // Taken from: https://stackoverflow.com/questions/2817646/javascript-split-string-on-space-or-on-quotes-to-array
-            let words = stdout.match(/\\?.|^$/g).reduce( ( p, c ) =>
-                        {
-                           if ( c === '"' )
-                           {
-                               p.quote ^= 1;
-                           }else if ( ! p.quote && c === ' ' )
-                           {
-                               p.a.push( '' );
-                           }else
-                           {
-                               p.a[ p.a.length-1 ] += c.replace( /\\(.)/,"$1" );
-                           }
-                           return  p;
-                        }, { a: [''] } ).a
-
-            // I'd rather trap here
-            if ( words == undefined )
-            {
-               self.log.error( `Nothing retured from stdout for ${ characteristicString } ${ self.displayName }` );
-               self.log.error( stderr );
-               self.log.error( error );
-               self.log.error( stdout );
-               callback( -1, 0 );
-            } else if ( words.length <= 0 )
-            {
-               self.log.error( `getValue ${ characteristicString } function for: ${ self.displayName } returned no value` );
-
-               callback( -1, 0 );
-
-            } else if ( words.length == 1 && words[0] == "null" )
-            {
-               self.log.error( `getValue ${ characteristicString } function for: ${ self.displayName } returned the string "null"` );
-
-               callback( -1, 0 );
-
-            } else
-            {
-               if ( words.length >= 2 )
-               {
-                  self.log.warn( `Warning, Retrieving ${ characteristicString }, expected only one word value for: ${ self.displayName } of: ${ stdout }` );
-               }
-
-               self.log.debug( `getValue ${ characteristicString } function for: ${ self.displayName } returned: ${ words[ 0 ] }` );
-
-
-               // Even if outputConsts is not set, just in case, transpose
-               // it anyway.
-               words[ 0 ] = transposeConstantToValidValue( self.log, CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, words[ 0 ] )
-
-               // Return the appropriate type, by seeing what it is
-               // defined as in Homebridge,
-               words[ 0 ] = characteristicValueToItsProperType( self.log, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format, self.displayName, self.api.hap.Characteristic, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, words[ 0 ], self.allowTLV8 );
-
-               // Store history using fakegato if set up
-               self.updateAccessoryAttribute( accTypeEnumIndex, words[ 0 ] );
-
-               callback( null, words[ 0 ] );
-
-            }
+            return;
          }
+
+         let reply = stdout;
+
+         // I'd rather trap here than have an error generated
+         // on no reply.
+         if ( reply == undefined )
+         {
+            self.log.error( `undefined returned from stdout for ${ characteristicString } ${ self.displayName }` );
+            self.log.error( stderr );
+            self.log.error( error );
+            self.log.error( reply );
+            callback( -1, 0 );
+            return;
+         }
+
+         if ( reply == null )
+         {
+            self.log.error( `null returned from stdout for ${ characteristicString } ${ self.displayName }` );
+            self.log.error( stderr );
+            self.log.error( error );
+            self.log.error( reply );
+            callback( -1, 0 );
+            return;
+         }
+
+         // Coerce to string for manipulation
+         reply += '';
+
+         // Remove leading and trailing spaces, carriage returns ...
+         let trimmedReply = reply.trim();
+
+         // Theoretically not needed as this is caught below, but I wanted
+         // to catch this before much string manipulation was done.
+         if ( trimmedReply.toUpperCase() == "NULL" )
+         {
+            self.log.error( `"${ reply }" returned from stdout for ${ characteristicString } ${ self.displayName }` );
+            self.log.error( stderr );
+            self.log.error( error );
+            self.log.error( reply );
+            callback( -1, 0 );
+            return;
+         }
+
+
+         // Handle quotes words. Removes quotes
+         // Handles escaped quotes.
+         // Taken from: https://stackoverflow.com/questions/2817646/javascript-split-string-on-space-or-on-quotes-to-array
+         let words = trimmedReply.match(/\\?.|^$/g).reduce( ( p, c ) =>
+                     {
+                        if ( c === '"' )
+                        {
+                            p.quote ^= 1;
+                        }else if ( ! p.quote && c === ' ' )
+                        {
+                            p.a.push( '' );
+                        }else
+                        {
+                            p.a[ p.a.length-1 ] += c.replace( /\\(.)/,"$1" );
+                        }
+                        return  p;
+                     }, { a: [''] } ).a
+
+         if ( words.length <= 0 )
+         {
+            self.log.error( `getValue ${ characteristicString } function for: ${ self.displayName } returned no value` );
+
+            callback( -1, 0 );
+
+            return;
+         }
+
+         // The above "null" checked could possibly have quotes around it.
+         // Now that the quotes are removed, I must check again.  The
+         // things I must do for bad data ....
+         if ( words.length == 1 && words[0].toUpperCase() == "NULL" )
+         {
+            self.log.error( `getValue ${ characteristicString } function for: ${ self.displayName } returned the string "${ reply }"` );
+
+            callback( -1, 0 );
+
+            return;
+         }
+
+         if ( words.length >= 2 )
+         {
+            self.log.warn( `Warning, Retrieving ${ characteristicString }, expected only one word value for: ${ self.displayName } of: ${ reply }` );
+         }
+
+         self.log.debug( `getValue ${ characteristicString } function for: ${ self.displayName } returned: ${ words[ 0 ] }` );
+
+
+         // Even if outputConsts is not set, just in case, transpose
+         // it anyway.
+         words[ 0 ] = transposeConstantToValidValue( self.log, CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, words[ 0 ] )
+
+         // Return the appropriate type, by seeing what it is
+         // defined as in Homebridge,
+         words[ 0 ] = characteristicValueToItsProperType( self.log, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format, self.displayName, self.api.hap.Characteristic, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, words[ 0 ], self.allowTLV8 );
+
+         // Store history using fakegato if set up
+         self.updateAccessoryAttribute( accTypeEnumIndex, words[ 0 ] );
+
+         callback( null, words[ 0 ] );
+
       });
    }
 
