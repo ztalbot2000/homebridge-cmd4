@@ -1,0 +1,5 @@
+#!/bin/bash
+
+echo \"NULL\";
+
+exit 0;

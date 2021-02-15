@@ -360,6 +360,79 @@ describe( "Testing Cmd4Accessory", function( )
          done();
       });
    });
+   it( "getValue of empty response should fail correctly", function ( done )
+   {
+      TVConfig.state_cmd = "./test/echoScripts/echo_nothing";
+      // logger_1.setDebugEnabled();
+      const log = logger_1.Logger.internal;
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, null );
 
+      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
+      {
 
+         assert.notEqual(rc, 0, " getValue expected: not zero received: " + rc );
+
+         done();
+      });
+   });
+   it( "getValue of null response should fail correctly", function ( done )
+   {
+      TVConfig.state_cmd = "./test/echoScripts/echo_null";
+      // logger_1.setDebugEnabled();
+      const log = logger_1.Logger.internal;
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, null );
+
+      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
+      {
+
+         assert.notEqual(rc, 0, " getValue expected: not zero received: " + rc );
+
+         done();
+      });
+   });
+   it( "getValue of rc=1 response should fail correctly", function ( done )
+   {
+      TVConfig.state_cmd = "./test/echoScripts/echo_true_withRcOf1";
+      // logger_1.setDebugEnabled();
+      const log = logger_1.Logger.internal;
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, null );
+
+      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
+      {
+
+         assert.notEqual(rc, 0, " getValue expected: not zero received: " + rc );
+
+         done();
+      });
+   });
+   it( "getValue of quoted Null should fail correctly", function ( done )
+   {
+      TVConfig.state_cmd = "./test/echoScripts/echo_quotedNULL";
+      // logger_1.setDebugEnabled();
+      const log = logger_1.Logger.internal;
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, null );
+
+      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
+      {
+
+         assert.notEqual(rc, 0, " getValue expected: not zero received: " + rc );
+
+         done();
+      });
+   });
+   it( "getValue of quoted Nothing should fail correctly", function ( done )
+   {
+      TVConfig.state_cmd = "./test/echoScripts/echo_quotedNothing";
+      // logger_1.setDebugEnabled();
+      const log = logger_1.Logger.internal;
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, null );
+
+      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
+      {
+
+         assert.notEqual(rc, 0, " getValue expected: not zero received: " + rc );
+
+         done();
+      });
+   });
 });

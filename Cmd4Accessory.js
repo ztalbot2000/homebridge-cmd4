@@ -552,8 +552,7 @@ class Cmd4Accessory
       {
          if ( error ) {
             self.log.error( chalk.red( `setGeneric ${ characteristicString } function failed for ${ self.displayName } Error: ${ error.message }` ) );
-            self.log.error( stdout );
-            self.log.error( stderr );
+            self.log.error(stderr);
             callback( error );
 
             return;
@@ -655,17 +654,15 @@ class Cmd4Accessory
 
       let cmd = this.state_cmd_prefix + this.state_cmd + " Get '" + this.displayName + "' '" + characteristicString  + "'" + this.state_cmd_suffix;
 
-      self.log.debug( `getvalue accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } cmd: ${ cmd }` );
+      self.log.debug( `getValue: accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } cmd: ${ cmd }` );
 
       // Execute command to Get a characteristics value for an accessory
       exec( cmd, { timeout:self.timeout }, function ( error, stdout, stderr )
       {
          if ( error )
          {
-            self.log.error( `getGeneric ${ characteristicString } function for: ${ self.displayName } cmd: ${ cmd } failed.` );
-            self.log.error( error );
-            self.log.error( stdout );
-            self.log.error( stderr );
+            self.log.error( `getValue: ${ characteristicString } function for ${ self.displayName } cmd: ${ cmd } failed.` );
+            self.log.error(stderr);
             callback( error, 0 );
 
             return;
@@ -677,20 +674,14 @@ class Cmd4Accessory
          // on no reply.
          if ( reply == undefined )
          {
-            self.log.error( `undefined returned from stdout for ${ characteristicString } ${ self.displayName }` );
-            self.log.error( stderr );
-            self.log.error( error );
-            self.log.error( reply );
+            self.log.error( `getValue: undefined returned from stdout for ${ characteristicString } ${ self.displayName }` );
             callback( -1, 0 );
             return;
          }
 
          if ( reply == null )
          {
-            self.log.error( `null returned from stdout for ${ characteristicString } ${ self.displayName }` );
-            self.log.error( stderr );
-            self.log.error( error );
-            self.log.error( reply );
+            self.log.error( `getValue: null returned from stdout for ${ characteristicString } ${ self.displayName }` );
             callback( -1, 0 );
             return;
          }
@@ -705,10 +696,7 @@ class Cmd4Accessory
          // to catch this before much string manipulation was done.
          if ( trimmedReply.toUpperCase() == "NULL" )
          {
-            self.log.error( `"${ reply }" returned from stdout for ${ characteristicString } ${ self.displayName }` );
-            self.log.error( stderr );
-            self.log.error( error );
-            self.log.error( reply );
+            self.log.error( `getValue: "${ trimmedReply }" returned from stdout for ${ characteristicString } ${ self.displayName }` );
             callback( -1, 0 );
             return;
          }
@@ -734,7 +722,7 @@ class Cmd4Accessory
 
          if ( words.length <= 0 )
          {
-            self.log.error( `getValue ${ characteristicString } function for: ${ self.displayName } returned no value` );
+            self.log.error( `getValue: ${ characteristicString } function for ${ self.displayName } returned no value` );
 
             callback( -1, 0 );
 
@@ -744,9 +732,22 @@ class Cmd4Accessory
          // The above "null" checked could possibly have quotes around it.
          // Now that the quotes are removed, I must check again.  The
          // things I must do for bad data ....
-         if ( words.length == 1 && words[0].toUpperCase() == "NULL" )
+         if ( words.length == 1 && words[ 0 ].toUpperCase() == "NULL" )
          {
-            self.log.error( `getValue ${ characteristicString } function for: ${ self.displayName } returned the string "${ reply }"` );
+            self.log.error( `getValue: ${ characteristicString } function for ${ self.displayName } returned the string "${ trimmedReply }"` );
+
+            callback( -1, 0 );
+
+            return;
+         }
+
+         // Sadly, found by test case. A quoted empty string could still
+         // be an issue, so remove spaces here too.
+         words[ 0 ] = words[ 0 ].trim( );
+
+         if ( words[ 0 ].length == 0 )
+         {
+            self.log.error( `getValue: ${ characteristicString } function for: ${ self.displayName } returned an empty string "${ trimmedReply }"` );
 
             callback( -1, 0 );
 
@@ -755,10 +756,10 @@ class Cmd4Accessory
 
          if ( words.length >= 2 )
          {
-            self.log.warn( `Warning, Retrieving ${ characteristicString }, expected only one word value for: ${ self.displayName } of: ${ reply }` );
+            self.log.warn( `getValue: Warning, Retrieving ${ characteristicString }, expected only one word value for: ${ self.displayName } of: ${ trimmedReply }` );
          }
 
-         self.log.debug( `getValue ${ characteristicString } function for: ${ self.displayName } returned: ${ words[ 0 ] }` );
+         self.log.debug( `getValue: ${ characteristicString } function for: ${ self.displayName } returned: ${ words[ 0 ] }` );
 
 
          // Even if outputConsts is not set, just in case, transpose
