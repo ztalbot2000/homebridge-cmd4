@@ -1,6 +1,7 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
 
 ## ChangeLog
+* [**Whats new in 3.1.1**](#whats-new-in-311)
 * [**Whats new in 3.1.0**](#whats-new-in-310)
 * [**Whats new in 3.0.15**](#whats-new-in-3015)
 * [**Whats new in 3.0.14**](#whats-new-in-3014)
@@ -24,6 +25,14 @@
 * [**Whats new in 2.2**](#whats-new-in-22)
 * [**Whats new in 2.1**](#whats-new-in-21)
 * [**Whats new in 2.0**](#whats-new-in-20)
+
+## Whats new in 3.1.1
+#### 3.1.1 (2021-02-15)
+
+##### Bug Fixes
+
+*  For [#89](https://github.com/ztalbot2000/homebridge-cmd4/pull/89).  No returned getValue results in "Cannot read property reduce of null" ([3d080d3d](https://github.com/ztalbot2000/homebridge-cmd4/commit/3d080d3dc85754ff9eac030507b5322f5faad5e9))
+
 
 ## Whats new in 3.1.0
 ### 3.1.0 (2021-02-14)
