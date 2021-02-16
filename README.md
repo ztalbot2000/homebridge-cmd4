@@ -8,7 +8,7 @@
 * [**About the Cmd4 Plugin**](#about-the-cmd4-plugin)
 * [**How the Cmd4 Plugin Works**](#how-the-cmd4-plugin-works)
 * [**Features**](#features)
-* [**ChangeLog**](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/ChangeLog.md)
+* [**ChangeLog**](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/CHANGELOG.md)
 * [**Screenshots**](#screenshots)
 * [**Installation Details**](#installation-details)
 * [**Basic Troubleshooting**](#basic-troubleshooting)
