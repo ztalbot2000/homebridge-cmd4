@@ -491,6 +491,20 @@ class Cmd4Accessory
       // Fakegato does not need to be updated as that is done on a "Get".
       self.setStoredValueForIndex( accTypeEnumIndex, value );
 
+      let verifyCharacteristic = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex].verifyCharacteristic;
+
+      // We are currently tring to set a cached characteristics value.
+      // There is no way for its verify characteristic to be set, Especially
+      // if it is not Polled. In that case set the verify characteristic
+      // yourself.
+      // Theoretically characteristics that have verify characteristics
+      // should have the same fetch type to work properly.
+      if ( verifyCharacteristic != null &&
+           ! self.listOfPollingCharacteristics[ verifyCharacteristic ] )
+      {
+         self.setStoredValueForIndex( verifyCharacteristic, value );
+      }
+
       callback( null );
    }
 
