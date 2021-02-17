@@ -1,6 +1,7 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
 
 ## ChangeLog
+* [**Whats new in 3.1.3**](#whats-new-in-313)
 * [**Whats new in 3.1.2**](#whats-new-in-312)
 * [**Whats new in 3.1.1**](#whats-new-in-311)
 * [**Whats new in 3.1.0**](#whats-new-in-310)
@@ -26,6 +27,28 @@
 * [**Whats new in 2.2**](#whats-new-in-22)
 * [**Whats new in 2.1**](#whats-new-in-21)
 * [**Whats new in 2.0**](#whats-new-in-20)
+
+## Whats new in 3.1.3
+#### 3.1.3 (2021-02-17)
+
+##### Chores
+
+*  Path for my m1mini changed ([81d5d7d0](https://github.com/ztalbot2000/homebridge-cmd4/commit/81d5d7d0da1c03eb5da03b3e086f6a4170034dd5))
+
+##### Documentation Changes
+
+*  Correct link for case change ([249c31f1](https://github.com/ztalbot2000/homebridge-cmd4/commit/249c31f188b55755644031c6d61d5aa79e149108))
+
+##### Bug Fixes
+
+*  Setting cached values should set their corresponding cached verify characteristic ([b8b34098](https://github.com/ztalbot2000/homebridge-cmd4/commit/b8b340986029ff11f3523c6b8b29fd1e8859b73c))
+*  Any stderr messages should be logged ([b6289133](https://github.com/ztalbot2000/homebridge-cmd4/commit/b6289133d4ceb6fd3f6c1744670df66741cf4ea2))
+
+##### Tests
+
+*  Check cached values should set their corresponding cached verify characteristic ([a9b380a5](https://github.com/ztalbot2000/homebridge-cmd4/commit/a9b380a582819c59df30d7ec0f57c7669c99844a))
+*  Check for stderr messages being logged ([442e6beb](https://github.com/ztalbot2000/homebridge-cmd4/commit/442e6beb463f56f11107518a779bf48e83c8bc64))
+
 
 ## Whats new in 3.1.2
 #### 3.1.2 (2021-02-15)
