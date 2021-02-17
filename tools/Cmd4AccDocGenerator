@@ -1,4 +1,4 @@
-#!/opt/homebrew/bin/node
+#!/usr/local/bin/node
 
 // Note:
 // Must read https://docs.github.com/en/rest/reference/markdown#render-an-arbitrary-markdown-document
@@ -1189,6 +1189,6 @@ if ( divLevel == 0)
    console.log( "Yahoo !  All lined up. " );
    return 0;
 } else {
-   console.log( "Booo ... alignment failed: %s", divLevel );
+   console.log( "Booo ... alignment failed: %s", ['','+'][Number(divLevel > 0)] + divLevel );
 }
 return divLevel;
