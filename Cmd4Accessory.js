@@ -550,9 +550,12 @@ class Cmd4Accessory
       // Execute command to Set a characteristic value for an accessory
       exec( cmd, { timeout: self.timeout }, function ( error, stdout, stderr )
       {
-         if ( error ) {
-            self.log.error( chalk.red( `setGeneric ${ characteristicString } function failed for ${ self.displayName } Error: ${ error.message }` ) );
-            self.log.error(stderr);
+         if ( stderr )
+            self.log.error( `setValue: ${ characteristicString } function for ${ self.displayName } streamed to stderr: ${ stderr }.` );
+
+         if ( error )
+         {
+            self.log.error( chalk.red( `setValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  Error: ${ error.message }` ) );
             callback( error );
 
             return;
@@ -659,10 +662,12 @@ class Cmd4Accessory
       // Execute command to Get a characteristics value for an accessory
       exec( cmd, { timeout:self.timeout }, function ( error, stdout, stderr )
       {
+         if ( stderr )
+            self.log.error( `getValue: ${ characteristicString } function for ${ self.displayName } streamed to stderr: ${ stderr }.` );
+
          if ( error )
          {
-            self.log.error( `getValue: ${ characteristicString } function for ${ self.displayName } cmd: ${ cmd } failed.` );
-            self.log.error(stderr);
+            self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  Error: ${ error.message }` ) );
             callback( error, 0 );
 
             return;
