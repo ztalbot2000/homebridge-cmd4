@@ -15,3 +15,92 @@ global.CMD4_ACC_TYPE_ENUM = ACC_DATA.CMD4_ACC_TYPE_ENUM;
 global.DEVICE_DATA = require('../lib/CMD4_DEVICE_TYPE_ENUM');
 global.CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.CMD4_DEVICE_TYPE_ENUM;
 
+
+
+// Logging capture utility
+// Usage:
+//
+// 1. Call captureConsole so it has a
+//    reference to console.
+//       hook = captureConsole( );
+//
+// 2. Start capturing stderr and stdout:
+//       hook.start( );
+//
+// 3. If you want to see what is going to the
+//    console as well
+//       hook.setQuiet( false );
+//
+// 4. Inspect the log at any time with:
+//       x = hook.capturedErr( );   <= Stderr
+//       x = hook.capturedLog( );
+//
+// 5. Put things back to normal with:
+//       hook.stop( );
+//
+// 6. Reset contents of saved buffers with:
+//       hook.reset( );
+//
+global.captureConsole = function( )
+{
+   var oldError = console.error;
+   var oldWarn = console.warn;
+   var oldLog = console.log;
+   var errLogBuf = '';
+   var warnLogBuf = '';
+   var logBuf = '';
+   let quiet = true;
+   return {
+      start: function start( )
+      {
+         console.error = function( chunk, encoding )
+         {
+            errLogBuf += chunk.toString(); // chunk is a String or Buffer
+
+            if ( quiet == false )
+               oldError.apply( chunk, arguments );
+         };
+         console.warn = function( chunk, encoding )
+         {
+            warnLogBuf += chunk.toString(); // chunk is a String or Buffer
+
+            if ( quiet == false )
+               oldWarn.apply( chunk, arguments );
+         };
+         console.log = function( chunk, encoding )
+         {
+            logBuf += chunk.toString(); // chunk is a String or Buffer
+
+            if ( quiet == false )
+               oldError.apply( chunk, arguments );
+         };
+      },
+      stop: function stop( )
+      {
+         console.error = oldError;
+         console.log = oldLog;
+      },
+      setQuiet: function setQuiet( q = false )
+      {
+         quiet = q;
+      },
+      reset: function reset( )
+      {
+         errLogBuf = "";
+         logBuf = "";
+      },
+      capturedErr: function( )
+      {
+        return errLogBuf;
+      },
+      capturedWarn: function( )
+      {
+        return warnLogBuf;
+      },
+      capturedLog: function( )
+      {
+        return logBuf;
+      }
+   };
+}
+
