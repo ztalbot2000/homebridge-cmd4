@@ -276,4 +276,45 @@ describe( "Testing Cmd4Accessory", function( )
          done();
       });
    });
+   it( "setValue of cached characteristic, should set verify characteristic", function ( done )
+   {
+      // A config file to play with.
+      let ThermostatConfig =
+      {
+         "type":                     "Thermostat",
+         "name":                     "Thermostat",
+         "fetch":                    "Polled",
+         "displayName":              "Thermostat",
+         "temperatureDisplayUnits":  "CELSIUS",
+         "active":                   "Inactive",
+         "currentTemperature":        20.0,
+         "targetTemperature":         20.0,
+         "currentHeatingCoolingState":  0,
+         "targetHeatingCoolingState":  0,
+         "name":                     "My_Thermostat",
+         "stateChangeResponseTime":   3
+      };
+
+      let acc = CMD4_ACC_TYPE_ENUM.TargetTemperature;
+      let DEVICE = ThermostatConfig.displayName;
+      let CHARACTERISTIC = CMD4_ACC_TYPE_ENUM.properties[ acc ].type;
+
+      let cmd4Accessory = new Cmd4Accessory( log, ThermostatConfig, _api, null );
+
+      let value = 12.3;
+
+      cmd4Accessory.setCachedValue( acc, value,  function( )
+      {
+         let expectedResult = value;
+         let result = cmd4Accessory.getStoredValueForIndex( acc );
+
+         assert.equal(result, expectedResult, " setValue expected: " + expectedResult + " to be stored.  found: " + result );
+
+         let verifyCharacteristic = CMD4_ACC_TYPE_ENUM.properties[ acc ].verifyCharacteristic;
+         result = cmd4Accessory.getStoredValueForIndex( verifyCharacteristic );
+         assert.equal(result, expectedResult, " setValue verifyCharacteristic expected: " + expectedResult + " to be stored.  found: " + result );
+
+         done();
+      });
+   });
 });
