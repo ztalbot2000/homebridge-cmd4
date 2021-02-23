@@ -83,7 +83,7 @@ function testAccessoryConfig ( accessoryConfig )
 
                break;
             case constants.MODEL:
-               testName( value );
+               testModel( value );
 
                break;
             case constants.MANUFACTURER:
@@ -199,16 +199,7 @@ function processConstantsConfig( config )
       // I assume only 1, but you know about assuming ...
       for ( let key in config )
       {
-         let keyToAdd = key ;
-         let valueToAdd = config[ key ] ;
-
          testConstantKey( key );
-
-         // remove any leading and trailing single quotes
-         // so that using it for replacement will be easier.
-         //valueToAdd.replace( /^'/, "" )
-         //valueToAdd.replace( /'$/, "" )
-
       }
       return;
    }
@@ -233,7 +224,7 @@ function processVariablesConfig( config )
    if ( Array.isArray( config ))
    {
       for ( let i = 0; i < config.length; i++ ) {
-         processVariables( config[ i ] );
+         processVariablesConfig( config[ i ] );
       }
       return;
    }
@@ -242,7 +233,6 @@ function processVariablesConfig( config )
       // I assume only 1, but you know about assuming ...
       for ( let key in config )
       {
-         let keyToAdd = key ;
          let valueToAdd = config[ key ] ;
 
          testVariableKey( key );
@@ -428,12 +418,14 @@ function testPollingConfig( pollingConfig )
 
                         break;
                      case "Characteristic":
+                     {
                         let value = pollingConfig[cindex].characteristic ||
                                     pollingConfig[cindex].Characteristic;
                         // console.log("2 Testing %s", value);
                         testCharacteristicString( value );
 
                         break;
+                     }
                      default:
                      {
                         let value = pollingConfig[cindex][pollingKey];

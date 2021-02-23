@@ -3,17 +3,15 @@
 // ***************** TEST LOADING **********************
 
 
-let { indexOfEnum,  Cmd4Accessory } = require( "../Cmd4Accessory" );
+let { Cmd4Accessory } = require( "../Cmd4Accessory" );
 
 
 var HomebridgeAPI = require( "../node_modules/homebridge/lib/api" ).HomebridgeAPI;
 var _api = new HomebridgeAPI(); // object we feed to Plugins
 
 
-// Need homebridge logging for Cmd4Accessory
 var logger_1 = require("../node_modules/homebridge/lib/logger");
 Object.defineProperty(exports, "LogLevel", { enumerable: true, get: function () { return logger_1.LogLevel; } });
-// logger_1.setDebugEnabled();
 const log = logger_1.Logger.internal;
 
 
@@ -55,13 +53,16 @@ describe( "Testing Cmd4Accessory", function( )
       expect( Cmd4Accessory ).not.to.be.a( "null", "Cmd4Accessory was null" );
    });
 
-   it( "Test init Cmd4Accessory", function( )
+   it( "Test init Cmd4Accessory", function( done )
    {
       // A config file to play with.
+      // Setting fetch to Cached or Polled with no polled characteristics
+      // makes polling not run and thus not having outstanding processes.
       let TVConfig =
       {
           name:                     "My_Television",
           type:                     "Television",
+          fetch:                    "Cached",
           displayName:              "My_Television",
           category:                 "TELEVISION",
           publishExternally:        true,
@@ -77,20 +78,31 @@ describe( "Testing Cmd4Accessory", function( )
           pictureMode:              "STANDARD",
           remoteKey:                "SELECT"
       };
+      let STORED_DATA_ARRAY = [ ];
 
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, null );
+      hook.start();
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
+      hook.stop();
 
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "Cmd4Accessory is not an instance of Cmd4Accessory" );
+
+      // Clear the hook buffer for next time.
+      hook.reset();
+
+      done( );
    });
 
-   it( "Test Cmd4Accessory.setValue", function( )
+   it( "Test Cmd4Accessory.setValue", function( done )
    {
       // A config file to play with.
+      // Setting fetch to Cached or Polled with no polled characteristics
+      // makes polling not run and thus not having outstanding processes.
       let TVConfig =
       {
           name:                     "My_Television",
           type:                     "Television",
           displayName:              "My_Television",
+          fetch:                    "Polled",
           category:                 "TELEVISION",
           publishExternally:        true,
           active:                   "ACTIVE",
@@ -106,17 +118,30 @@ describe( "Testing Cmd4Accessory", function( )
           remoteKey:                "SELECT"
       };
 
-      TVConfig.state_cmd = "./echoScripts/echo_ACTIVE";
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, null );
+      TVConfig.state_cmd = "./test/echoScripts/echo_ACTIVE";
+      let STORED_DATA_ARRAY = [ ];
+
+      hook.start();
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
+      hook.stop();
 
       assert.isFunction( cmd4Accessory.setValue, "Cmd4Accessory.setValue is not a function" );
+
+      // Clear the hook buffer for next time.
+      hook.reset();
+
+      done();
    });
 
    /*
    it( "Test Cmd4Accessory.setValue", function ( done )
    {
       TVConfig.state_cmd = "./test/echoScripts/echo_ACTIVE";
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, null );
+      let STORED_DATA_ARRAY = [ ];
+
+      hook.start();
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
+      hook.stop();
 
       var clock = sinon.useFakeTimers();
       var callback = sinon.fake();
@@ -127,6 +152,9 @@ describe( "Testing Cmd4Accessory", function( )
 
       assert(callback.notCalled, " setValue callback should only be updated once. Expected: 1 to equal: " + callback.callCount);
 
+      // Clear the hook buffer for next time.
+      hook.reset();
+
       done();
    });
    */
@@ -134,10 +162,13 @@ describe( "Testing Cmd4Accessory", function( )
    it( "setValue 1 should send 1 to script for ClosedCaption non constant request", function ( done )
    {
       // A config file to play with.
+      // Setting fetch to Cached or Polled with no polled characteristics
+      // makes polling not run and thus not having outstanding processes.
       let TVConfig =
       {
           name:                     "My_Television",
           type:                     "Television",
+          fetch:                    "Polled",
           displayName:              "My_Television",
           category:                 "TELEVISION",
           publishExternally:        true,
@@ -162,19 +193,25 @@ describe( "Testing Cmd4Accessory", function( )
       let fn = `/tmp/fn1`;
       TVConfig.state_cmd_suffix = fn;
       TVConfig.state_cmd = `node ${ process.cwd( ) }/${ getSetValueScript }`;
+      let STORED_DATA_ARRAY = [ ];
 
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, null );
+      hook.start();
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
 
       let value = Characteristic.ClosedCaptions.ENABLED;
 
       cmd4Accessory.setValue( acc, value,  function( )
       {
+         hook.stop();
          let expectedResult =`${value}`;
          let newfn = `${ fn }_${ DEVICE }_${ CHARACTERISTIC }`;
          let INPUTS=require( `${ newfn }` );
          let sentResult = INPUTS.VALUE;
 
          assert.equal(sentResult, expectedResult, " setValue expected: " + expectedResult + " received: " + sentResult );
+
+         // Clear the hook buffer for next time.
+         hook.reset();
 
          done();
       });
@@ -183,10 +220,13 @@ describe( "Testing Cmd4Accessory", function( )
    it( `setValue 1, aka ENABLED should send "ENABLED" to script for constant request`, function ( done )
    {
       // A config file to play with.
+      // Setting fetch to Cached or Polled with no polled characteristics
+      // makes polling not run and thus not having outstanding processes.
       let TVConfig =
       {
           name:                     "My_Television",
           type:                     "Television",
+          fetch:                    "Polled",
           outputConstants:          true,
           displayName:              "My_Television",
           category:                 "TELEVISION",
@@ -213,18 +253,26 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd_suffix = fn;
 
       TVConfig.state_cmd = `node ${ process.cwd( ) }/${ getSetValueScript }`;
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, null );
+      let STORED_DATA_ARRAY = [ ];
+
+      hook.start();
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
 
       let value = Characteristic.ClosedCaptions.ENABLED;
 
       cmd4Accessory.setValue( acc, value,  function( )
       {
+         hook.stop();
+
          let expectedResult = "ENABLED";
          let newfn = `${ fn }_${ DEVICE }_${ CHARACTERISTIC }`;
          let INPUTS=require( `${ newfn }` );
          let sentResult = INPUTS.VALUE;
 
          assert.equal(sentResult, expectedResult, " setValue expected: " + expectedResult + " received: " + sentResult );
+
+         // Clear the hook buffer for next time.
+         hook.reset();
 
          done();
       });
@@ -233,10 +281,13 @@ describe( "Testing Cmd4Accessory", function( )
    it( "setValue true should send 0 to script for Mute request", function ( done )
    {
       // A config file to play with.
+      // Setting fetch to Cached or Polled with no polled characteristics
+      // makes polling not run and thus not having outstanding processes.
       let TVConfig =
       {
           name:                     "My_Television",
           type:                     "Television",
+          fetch:                    "Polled",
           displayName:              "My_Television",
           active:                   true,
           category:                 "TELEVISION",
@@ -260,18 +311,26 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd_suffix = fn;
 
       TVConfig.state_cmd = `node ${ process.cwd( ) }/${ getSetValueScript }`;
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, null );
+      let STORED_DATA_ARRAY = [ ];
+
+      hook.start();
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
 
       let value = true;
 
       cmd4Accessory.setValue( acc, value,  function( )
       {
+         hook.stop();
+
          let expectedResult = 1;
          let newfn = `${ fn }_${ DEVICE }_${ CHARACTERISTIC }`;
          let INPUTS=require( `${ newfn }` );
          let sentResult = INPUTS.VALUE;
 
          assert.equal(sentResult, expectedResult, " setValue expected: " + expectedResult + " received: " + sentResult );
+
+         // Clear the hook buffer for next time.
+         hook.reset();
 
          done();
       });
@@ -283,7 +342,7 @@ describe( "Testing Cmd4Accessory", function( )
       {
          "type":                     "Thermostat",
          "name":                     "Thermostat",
-         "fetch":                    "Polled",
+         "fetch":                    "Cached",
          "displayName":              "Thermostat",
          "temperatureDisplayUnits":  "CELSIUS",
          "active":                   "Inactive",
@@ -291,20 +350,23 @@ describe( "Testing Cmd4Accessory", function( )
          "targetTemperature":         20.0,
          "currentHeatingCoolingState":  0,
          "targetHeatingCoolingState":  0,
-         "name":                     "My_Thermostat",
          "stateChangeResponseTime":   3
       };
 
       let acc = CMD4_ACC_TYPE_ENUM.TargetTemperature;
-      let DEVICE = ThermostatConfig.displayName;
-      let CHARACTERISTIC = CMD4_ACC_TYPE_ENUM.properties[ acc ].type;
+      //let DEVICE = ThermostatConfig.displayName;
+      //let CHARACTERISTIC = CMD4_ACC_TYPE_ENUM.properties[ acc ].type;
+      let STORED_DATA_ARRAY = [ ];
 
-      let cmd4Accessory = new Cmd4Accessory( log, ThermostatConfig, _api, null );
+      hook.start();
+      let cmd4Accessory = new Cmd4Accessory( log, ThermostatConfig, _api, STORED_DATA_ARRAY, null );
 
       let value = 12.3;
 
       cmd4Accessory.setCachedValue( acc, value,  function( )
       {
+         hook.stop();
+
          let expectedResult = value;
          let result = cmd4Accessory.getStoredValueForIndex( acc );
 
@@ -313,6 +375,9 @@ describe( "Testing Cmd4Accessory", function( )
          let verifyCharacteristic = CMD4_ACC_TYPE_ENUM.properties[ acc ].verifyCharacteristic;
          result = cmd4Accessory.getStoredValueForIndex( verifyCharacteristic );
          assert.equal(result, expectedResult, " setValue verifyCharacteristic expected: " + expectedResult + " to be stored.  found: " + result );
+
+         // Clear the hook buffer for next time.
+         hook.reset();
 
          done();
       });

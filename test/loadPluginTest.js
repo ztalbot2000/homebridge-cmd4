@@ -7,10 +7,6 @@ var pluginModule = require( "../index" );
 var CMD4_ACC_TYPE_ENUM = pluginModule.ACC_DATA.CMD4_ACC_TYPE_ENUM;
 var CMD4_DEVICE_TYPE_ENUM = pluginModule.DEVICE_DATA.CMD4_DEVICE_TYPE_ENUM;
 
-function getKeyByValue( object, value) {
-  return Object.keys( object ).find( key => object[key] === value );
-}
-
 // While the above method is better, It doesn't check that
 // the key values are sequential.
 // You cannot break out of forEach ....
@@ -21,7 +17,7 @@ function getIndexOfValue( obj, value )
    Object.keys( obj ).forEach( function( key )
    {
       // console.log( "Checking: " + key + " count: " + count + " obj[key]: " + obj[key] + " for: " + value + " t1: " + typeof obj[key] + " t2: " + typeof value );
-      if ( obj[key] == value && value == count ) { found = value };
+      if ( obj[key] == value && value == count ) { found = value }
       count+=1;
    });
    return found;

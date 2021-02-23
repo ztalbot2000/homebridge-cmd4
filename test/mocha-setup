@@ -33,7 +33,9 @@ global.CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.CMD4_DEVICE_TYPE_ENUM;
 //
 // 4. Inspect the log at any time with:
 //       x = hook.capturedErr( );   <= Stderr
+//       x = hook.capturedWarn( );
 //       x = hook.capturedLog( );
+//     Note: console.log.info goes to console.log
 //
 // 5. Put things back to normal with:
 //       hook.stop( );
@@ -91,16 +93,26 @@ global.captureConsole = function( )
       },
       capturedErr: function( )
       {
-        return errLogBuf;
+         return errLogBuf;
       },
       capturedWarn: function( )
       {
-        return warnLogBuf;
+         return warnLogBuf;
       },
       capturedLog: function( )
       {
-        return logBuf;
+         return logBuf;
       }
    };
+}
+
+global.hook = captureConsole();
+
+
+const moment = require( "moment" );
+global.sleep = function( secondsToSleep = 1 )
+{
+    let sleepUntill = moment( ).add(secondsToSleep, 'seconds');
+    while( moment ().isBefore( sleepUntill ) ) { /* block the process */ }
 }
 

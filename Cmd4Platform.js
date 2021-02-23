@@ -7,12 +7,6 @@ let getAccessoryUUID = require( "./utils/getAccessoryUUID" );
 
 let createAccessorysInformationService = require( "./utils/createAccessorysInformationService" );
 
-// Cmd4 designations, like polling were always cached as part of Version 3.0.0 - 3.0.3
-// This is confusing but required as Cmd4 has so many possible options that handling
-// each individually would be impossible.  Instead do not cache the Cmd4 Designations.
-// Do a cross intersection merge of the Cmd4 designations.
-let updateCmd4CacheDesignations = require( "./utils/updateCmd4CacheDesignations" );
-
 // Pretty Colors
 var chalk = require( "chalk" );
 
@@ -51,7 +45,9 @@ class Cmd4Platform
 
       this.CMD4 = constants.PLATFORM;
       this.LEVEL = -1;
-      this.COLLECTION = [ ];
+      this.toBeRestoredPlatforms = [ ];
+      this.createdCmd4Accessories = [ ];
+      this.createdCmd4Platforms = [ ];
 
       this.services = [ ];
 
@@ -78,6 +74,14 @@ class Cmd4Platform
       // Define platform config keyPath for fakegato-history
       this.keyPath = this.config.keyPath;
 
+      // Define what type of fetch to use, or default: ALWAYS.
+      if ( this.config.fetch && ( this.config.fetch == constants.FETCH_ALWAYS ||
+                                  this.config.fetch == constants.FETCH_CACHED ||
+                                  this.config.fetch == constants.FETCH_POLLED ) )
+         this.fetch = this.config.fetch;
+      else
+         this.fetch = constants.FETCH_ALWAYS;
+
       // Direct if constants should be sent or their value.
       if ( this.config.outputConstants == true )
          this.outputConstants = true;
@@ -96,17 +100,17 @@ class Cmd4Platform
       {
          this.log.info( chalk.blue( "Cmd4Platform didFinishLaunching" ) );
 
-         if ( this.restartRecover == false && this.COLLECTION.length > 0  )
+         if ( this.restartRecover == false && this.toBeRestoredPlatforms.length > 0  )
          {
             this.log.info( chalk.yellow( `Removing ` ) + chalk.red( `*ALL* ` ) + chalk.yellow( `cached accessories as: ${ constants.RESTART_RECOVER_l } is set to false` ) );
-            this.api.unregisterPlatformAccessories(  settings.PLUGIN_NAME, settings.PLATFORM_NAME, this.COLLECTION );
-            this.COLLECTION = [ ];
+            this.api.unregisterPlatformAccessories(  settings.PLUGIN_NAME, settings.PLATFORM_NAME, this.toBeRestoredPlatforms );
+            this.toBeRestoredPlatforms = [ ];
          }
 
          this.discoverDevices( );
 
          // Any accessory not reachable must have been removed, find them
-         for ( let accessory in this.COLLECTION )
+         for ( let accessory in this.toBeRestoredPlatforms )
          {
             if ( accessory.reachable == false )
             {
@@ -133,8 +137,11 @@ class Cmd4Platform
    // as we regenerate everything.
    configureAccessory( platformAccessory )
    {
-      this.log.debug( `Found cached accessory: ${ platformAccessory.displayName }` );
-      this.COLLECTION.push( platformAccessory );
+      if ( platformAccessory )
+      {
+         this.log.debug( `Found cached accessory: ${ platformAccessory.displayName }` );
+         this.toBeRestoredPlatforms.push( platformAccessory );
+      }
    }
 
    removeAccessory( platformAccessory )
@@ -175,7 +182,7 @@ class Cmd4Platform
       let log=this.log;
       let accessory;
 
-      // loop over the discovered devices and register each one if it has not
+      // loop over the config.json devices and register each one if it has not
       // already been registered.
       this.config.accessories && this.config.accessories.forEach( ( device ) =>
       {
@@ -193,13 +200,11 @@ class Cmd4Platform
          // See if an accessory with the same uuid has already been registered and
          // restored from the cached devices we stored in the `configureAccessory`
          // method above
-         const existingAccessory = this.COLLECTION.find(accessory => accessory.UUID === uuid);
+         const existingAccessory = this.toBeRestoredPlatforms.find(accessory => accessory.UUID === uuid);
 
          if (existingAccessory)
          {
             log.info('Restoring existing accessory from cache:', existingAccessory.displayName);
-
-            updateCmd4CacheDesignations( this.api, log, existingAccessory.context.device, device );
 
             // if you need to update the accessory.context then you should run
             // `api.updatePlatformAccessories`. eg.:
@@ -215,18 +220,45 @@ class Cmd4Platform
             platform = existingAccessory;
             platform.Service = this.Service;
 
-            // Platform Step 2. const tvService = this.tvAccessory.addService( this.Service.Television );
-            //
-            //log.debug("SavedContext=%s", existingAccessory.context.device );
+            // This is how we keep the device status information over restart.
+            // Within STORED_DATA_ARRAY is a list of UUID identified objects
+            // of storedValuesPerCharacteristic. 
+            // If the accessory has linked accessories or standalone accessories,
+            // there infomation gets put in this as well.  I'm pretty sure
+            // that previosly these states were lost.
+
+            // Init the STORED_DATA_ARRAY to empty [].  If there was never any
+            // type to use, this is okay to.
+            let STORED_DATA_ARRAY = [ ];
+
+            // If the saved context has our STORED_DATA_ARRAY, then use it.
+            if ( existingAccessory.context.STORED_DATA_ARRAY )
+            {
+               this.log.debug(`Cmd4Platform: Using context.STORED_DATA_ARRAY` );
+               STORED_DATA_ARRAY = existingAccessory.context.STORED_DATA_ARRAY;
+            } else if ( existingAccessory.context.device.storedValuesPerCharacteristic )
+            {
+               // If we have an old version of the stored status, convert it to our new format.
+               this.log.debug(`Cmd4Platform: Creating STORED_DATA_ARRAY with existing storedValuesPerCharacteristic` );
+               STORED_DATA_ARRAY = [ {[constants.UUID]: existingAccessory.uuid,
+                                      [constants.storedValuesPerCharacteristic]: existingAccessory.context.device.storedValuesPerCharacteristic}
+                      ];
+               // Get rid of old persistance data
+               existingAccessory.context.device = undefined;
+               delete( existingAccessory.context.device );
+            }
 
             let that = this;
-            accessory = new Cmd4Accessory( that.log, existingAccessory.context.device, this.api, this );
+            accessory = new Cmd4Accessory( that.log, device, this.api, STORED_DATA_ARRAY, this );
             accessory.platform = platform;
+
+            // Put the accessory into its correct collection array.
+            this.createdCmd4Accessories.push( accessory );
 
             // Store a copy of the device object in the `accessory.context`
             // the `context` property can be used to store any data about the
             // accessory you may need
-            accessory.platform.context.device = accessory.config;
+            accessory.platform.context.STORED_DATA_ARRAY = accessory.STORED_DATA_ARRAY;
 
 
             // Get the properties for this accessories device type
@@ -281,13 +313,13 @@ class Cmd4Platform
 
             platform.Service = this.Service;
 
-            log( chalk.magenta( `Configuring platformAccessory: ` ) + `${ device.displayName }` );
+            log.info( chalk.magenta( `Configuring platformAccessory: ` ) + `${ device.displayName }` );
             let that = this;
-            accessory = new Cmd4Accessory( that.log, device, this.api, this );
+            accessory = new Cmd4Accessory( that.log, device, this.api, [], this );
             accessory.platform = platform
 
             // Put the accessory into its correct collection array.
-            this.COLLECTION.push( accessory );
+            this.createdCmd4Accessories.push( accessory );
 
             log.debug( `Created platformAccessory: ${ accessory.displayName }` );
 
@@ -299,7 +331,7 @@ class Cmd4Platform
             // Store a copy of the device object in the `accessory.context`
             // the `context` property can be used to store any data about the
             // accessory you may need
-            accessory.platform.context.device = accessory.config;
+            accessory.platform.context.STORED_DATA_ARRAY = accessory.STORED_DATA_ARRAY;
 
             // Get the properties for this accessories device type
             let devProperties = CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ];
@@ -325,6 +357,9 @@ class Cmd4Platform
                this.api.registerPlatformAccessories( settings.PLUGIN_NAME, settings.PLATFORM_NAME, [ platform ] );
             }
          }
+
+         // For Unit testing only
+         this.createdCmd4Platforms.push( platform );
 
          // Let the polling begin
          accessory.startPollingForAccessoryAndItsChildren( accessory );
@@ -380,13 +415,13 @@ class Cmd4Platform
          if ( fromExisting == true )
          {
             this.log.debug( `Platform (AddedAccessory-existing) Step 3, ${ addedAccessory.displayName }.service = accessory.platform.getService( Service.${ devProperties.deviceName }` );
-            addedAccessory.service = addedAccessory.platform.getService( devProperties.service );
+            addedAccessory.service = addedAccessory.platform.getService( devProperties.service, addedAccessory.displayName, addedAccessory.name );
          } else
          {
 
             this.log.debug( `Platform (AddedAccessory-new) Step 3, ${ addedAccessory.displayName }.service = PlatformAccessory: ${ cmd4PlatformAccessory.displayName } addService( Service:${ devProperties.deviceName } )` );
 
-            addedAccessory.service = cmd4PlatformAccessory.platform.addService( devProperties.service );
+            addedAccessory.service = cmd4PlatformAccessory.platform.addService( devProperties.service, addedAccessory.displayName, addedAccessory.name );
          }
 
          addedAccessory.addAllServiceCharacteristicsForAccessory( addedAccessory );
@@ -420,7 +455,7 @@ class Cmd4Platform
          {
             this.log.debug( `Platform (LinkedAccessory-existing) Step 4. ${ linkedAccessory.displayName }.service = ${ cmd4PlatformAccessory.displayName }.addService:( ${ devProperties.deviceName }.service, ${linkedAccessory.displayName }, ${linkedAccessory.name } )` );
 
-            linkedAccessory.service = linkedAccessory.platform.getService( devProperties.service );
+            linkedAccessory.service = linkedAccessory.platform.getService( devProperties.service, linkedAccessory.displayName, linkedAccessory.name );
          } else
          {
             this.log.debug( `Platform (LinkedAccessory-new) Step 4. ${ linkedAccessory.displayName }.service = ${ cmd4PlatformAccessory.displayName }.addService:( ${ devProperties.deviceName }.service, ${linkedAccessory.displayName }, ${linkedAccessory.name } )` );

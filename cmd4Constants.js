@@ -94,3 +94,7 @@ exports.LINKEDTYPES              = "LinkedTypes";
 exports.ACCESSORIES              = "Accessories";
 exports.URL                      = "Url";
 exports.ALLOWTLV8                = "AllowTLV8";
+
+// internal strings
+exports.storedValuesPerCharacteristic = "storedValuesPerCharacteristic";
+

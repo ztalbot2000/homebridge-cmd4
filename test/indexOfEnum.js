@@ -45,7 +45,6 @@ describe( "Test indexOfEnum", ( ) =>
 {
    it( "indexOfEnum should be identify a deviceName ", ( ) =>
    {
-      let i=0;
       let j = CMD4_DEVICE_TYPE_ENUM.WiFiSatellite;
       let name = CMD4_DEVICE_TYPE_ENUM.properties[ j ].deviceName;
       let ucKeyIndex = CMD4_DEVICE_TYPE_ENUM.properties.indexOfEnum( i => i.deviceName === name );
@@ -54,7 +53,6 @@ describe( "Test indexOfEnum", ( ) =>
 
    it( "indexOfEnum should identify a Characteristic Name ", ( ) =>
    {
-      let i=0;
       let j = CMD4_ACC_TYPE_ENUM.BatteryLevel;
       let type = CMD4_ACC_TYPE_ENUM.properties[ j ].type;
       let ucKeyIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === type);
@@ -62,7 +60,6 @@ describe( "Test indexOfEnum", ( ) =>
    });
    it( "indexOfEnum should identify a Characteristic Name ", ( ) =>
    {
-      let i=0;
       let j = CMD4_ACC_TYPE_ENUM.CurrentRelativeHumidity;
       //let j = CMD4_ACC_TYPE_ENUM.CurrentHumidifierDehumidifierState;
       //let j = CMD4_ACC_TYPE_ENUM.blast;
@@ -77,7 +74,6 @@ describe( "Test indexOfEnum", ( ) =>
       {
          it( "indexOfEnum should be identify a Characteristic Type ", ( ) =>
          {
-             let i;
              let type = CMD4_ACC_TYPE_ENUM.properties[ index ].type;
              let ucKeyIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === type);
              assert.equal( index, ucKeyIndex, "index of enum should identify the characteristic " + type + "(" + index + "). Found: " + ucKeyIndex );

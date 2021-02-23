@@ -74,7 +74,7 @@ describe( "Testing extractKeyValue", ( ) =>
       let keys = Object.keys( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].validValues );
       let keyCount = keys.length;
       let expectedKey =  keys[keyCount -1 ];
-      let value = keyCount -1;;
+      let value = keyCount -1;
       let result = extractKeyValue( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].validValues, value );
       expect( result ).to.equal( expectedKey, "Test 3 extractKeyValue( " + value + " ) returned:" + result  + " expected:" +  expectedKey );
    });

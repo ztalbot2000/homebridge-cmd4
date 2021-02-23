@@ -7,7 +7,6 @@
 var HomebridgeAPI = require( "../node_modules/homebridge/lib/api" ).HomebridgeAPI;
 var _api = new HomebridgeAPI(); // object we feed to Plugins
 var pluginModule = require( "../index" );
-var cmd4 = pluginModule.default(_api);
 
 
 describe('Testing load of index.js', ( ) =>

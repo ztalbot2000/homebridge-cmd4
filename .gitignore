@@ -5,6 +5,7 @@
 *.swp
 
 # My favorite temp backup
+*.[0-9]
 *.save*
 *_save*
 *_bak*
@@ -17,6 +18,7 @@ node_modules
 npm-debug.log
 .node-version
 
+test/tmp/*
 
 # Not a fan
 package-lock.json

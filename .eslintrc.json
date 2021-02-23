@@ -3,7 +3,21 @@
         "browser": false,
         "commonjs": false,
         "node": true,
+        "mocha": true,
         "es2021": true
+    },
+    "globals": {
+       "assert" : "writeable",
+       "expect" : "writeable",
+       "sinon" : "writeable",
+       "DEVICE_EOL" : "readonly",
+       "ACC_EOL" : "readonly",
+       "DEVICE_DATA" : "readonly",
+       "ACC_DATA" : "readonly",
+       "CMD4_DEVICE_TYPE_ENUM" : "readonly",
+       "CMD4_ACC_TYPE_ENUM" : "readonly",
+       "fs" : "writeable",
+       "hook" : "writeable"
     },
     "extends": "eslint:recommended",
     "parserOptions": {

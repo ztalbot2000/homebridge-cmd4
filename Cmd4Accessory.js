@@ -14,6 +14,7 @@ let getAccessoryUUID = require( "./utils/getAccessoryUUID" );
 let createAccessorysInformationService = require( "./utils/createAccessorysInformationService" );
 
 let ucFirst = require( "./utils/ucFirst" );
+let lcFirst = require( "./utils/lcFirst" );
 let trueTypeOf = require( "./utils/trueTypeOf" );
 
 // The sObject.defineProperty is to resolve a lint issue.
@@ -65,7 +66,7 @@ let numberOfTVsPerBridge = 0;
 //
 class Cmd4Accessory
 {
-   constructor( log, config, api, parentInfo )
+   constructor( log, config, api, STORED_DATA_ARRAY, parentInfo )
    {
       this.log = log;
       this.config = config;
@@ -76,7 +77,7 @@ class Cmd4Accessory
       // LEVEL is a number, possibly 0 which must be handled more precisely.
       this.CMD4 = ( parentInfo && parentInfo.CMD4 ) ? parentInfo.CMD4 : constants.STANDALONE;
       this.LEVEL = ( parentInfo && parentInfo.LEVEL !== undefined ) ? parentInfo.LEVEL + 1 : 0;
-      this.COLLECTION = ( parentInfo && parentInfo.COLLECTION ) ? parentInfo.COLLECTION : [ ];
+      this.createdCmd4Accessories = ( parentInfo && parentInfo.createdCmd4Accessories ) ? parentInfo.createdCmd4Accessories : [ ];
 
       // this.log.debug( `CMD4=${ this.CMD4 } LEVEL=${ this.LEVEL }` );
 
@@ -106,36 +107,65 @@ class Cmd4Accessory
       this.timeout = ( parentInfo && parentInfo.timeout ) ? parentInfo.timeout : constants.DEFAULT_TIMEOUT;
       this.statusMsg = ( parentInfo && parentInfo.statusMsg ) ? parentInfo.statusMsg : constants.DEFAULT_STATUSMSG;
 
-      // undefined is acceptable.
+      // undefined is acceptable.  It can be overwritten by parseConfig
       this.state_cmd = parentInfo && parentInfo.state_cmd;
       this.state_cmd_prefix = parentInfo && parentInfo.state_cmd_prefix;
       this.state_cmd_suffix = parentInfo && parentInfo.state_cmd_suffix;
+
+      // Define fetch up front.  It can be overwritten by parseConfig.
+      this.fetch = ( parentInfo && parentInfo.fetch ) ? parentInfo.fetch : constants.FETCH_ALWAYS;
 
       // TLV8 causes a lot of issues if defined and trying to parse.
       // Omit them by default.
       this.allowTLV8 = ( parentInfo && parentInfo.allowTLV8 ) ? parentInfo.TLV8 : false;
 
-      // Instead of local variables for every characteristic, create an array to
-      // hold values for  all characteristics based on the size of all possible
-      // characteristics.  Placing them in .config will make them be cached over
-      // restarts.
-      this.config.storedValuesPerCharacteristic = config.storedValuesPerCharacteristic ||
-             new Array( CMD4_ACC_TYPE_ENUM.EOL ).fill( null );
+      // In case it is not passed in.
+      if ( STORED_DATA_ARRAY == undefined || STORED_DATA_ARRAY == null )
+         this.STORED_DATA_ARRAY = [ ];
+      else
+         this.STORED_DATA_ARRAY = STORED_DATA_ARRAY;
+
+      let parseConfigShouldUseCharacteristicValues = true;
+      if ( ! Array.isArray( this.STORED_DATA_ARRAY ) )
+      {
+         this.log.warn("STORED_DATA_ARRAY passed in is not an array and should be reported.");
+         this.STORED_DATA_ARRAY = [ ];
+      }
+
+      // generate a unique id for the accessory this should be generated from
+      // something globally unique, but constant, for example, the device serial
+      // number or MAC address.
+      let uuid = getAccessoryUUID( config, this.api.hap.uuid );
+
+      let existingData = this.STORED_DATA_ARRAY.find( data => data[constants.UUID] === uuid );
+      if ( existingData )
+      {
+         this.log.debug(`Cmd4Accessory: found existingData for ${ this.displayName }` );
+         this.storedValuesPerCharacteristic = existingData.storedValuesPerCharacteristic;
+
+         // Do not read stored values from config.json
+         parseConfigShouldUseCharacteristicValues = false;
+      } else
+      {
+         this.log.debug(`Cmd4Accessory: creating new storedValuesPerCharacteristic for ${ this.displayName }` );
+         // Instead of local variables for every characteristic, create an array to
+         // hold values for  all characteristics based on the size of all possible
+         // characteristics.  Placing them in .config will make them be cached over
+         // restarts.
+         this.storedValuesPerCharacteristic = new Array( CMD4_ACC_TYPE_ENUM.EOL ).fill( null );
+
+         this.STORED_DATA_ARRAY.push( { [constants.UUID]: uuid,
+                                        [constants.storedValuesPerCharacteristic]: this.storedValuesPerCharacteristic
+                                      }
+                                    );
+      }
 
       // Direct if polling should be set or false.
-      if ( this.config.polling == true )
-         this.polling = true;
-      else
-         this.polling = false;
+      // You cannot copy polling from the parent because you would be copying the array
+      // of polled characteristics that the child does not have, or turning on polling
+      // for linked accessories too.
+      this.polling = false;
 
-      // The default fetch is immediate (Always).
-      if ( this.config.fetch == constants.FETCH_AWAYS  ||
-           this.config.fetch == constants.FETCH_CACHED ||
-           this.config.fetch == constants.FETCH_POLLED
-         )
-         this.fetch = this.config.fetch
-      else
-         this.fetch = constants.FETCH_ALWAYS;
 
       // Init the Global Fakegato service once !
       if ( FakeGatoHistoryService == null )
@@ -154,7 +184,7 @@ class Cmd4Accessory
          this.outputConstants = false;
 
       // Get the supplied values from the accessory config.
-      this.parseConfig( this.config );
+      this.parseConfig( this.config, parseConfigShouldUseCharacteristicValues  );
 
       // Add any required characteristics of a device that are missing from
       // a users config.json file.
@@ -203,17 +233,16 @@ class Cmd4Accessory
       // Create all the services for the accessory, including fakegato and polling
       // Only true Standalone accessories can have their services created and
       // polling started. Otherwise the platform will have to do this.
-      if ( this.CMD4 == constants.STANDALONE  && this.LEVEL == 0 )
+      if ( this.CMD4 == constants.STANDALONE && this.LEVEL == 0 )
       {
          log.debug( `Creating Standalone service for: ${ this.displayName }` );
          this.createServicesForStandaloneAccessoryAndItsChildren( this )
 
          log.debug( `Creating polling for Standalone accessory: ${ this.displayName }` );
-         //this.setupPollingOfAccessoryAndItsChildren( this );
          this.startPollingForAccessoryAndItsChildren( this );
       }
 
-   } // Cmd4Accessory ( log, config, api, parentInfo )
+   } // Cmd4Accessory ( log, config, api, STORED_DATA_ARRAY, parentInfo )
 
    identify( callback )
    {
@@ -240,7 +269,7 @@ class Cmd4Accessory
          process.exit( 200 );
       }
 
-      this.config.storedValuesPerCharacteristic[ accTypeEnumIndex ] = value;
+      this.storedValuesPerCharacteristic[ accTypeEnumIndex ] = value;
    }
 
    getStoredValueForIndex( accTypeEnumIndex )
@@ -251,7 +280,7 @@ class Cmd4Accessory
          this.log.error( `Check your config.json file for this error` );
          process.exit( 205 );
       }
-      return this.config.storedValuesPerCharacteristic[ accTypeEnumIndex ];
+      return this.storedValuesPerCharacteristic[ accTypeEnumIndex ];
    }
 
    // Unlike get/set, testStoredValueForIndex does not call process.exit,
@@ -262,7 +291,7 @@ class Cmd4Accessory
       if ( accTypeEnumIndex < 0 || accTypeEnumIndex > CMD4_ACC_TYPE_ENUM.EOL )
          return undefined;
 
-      return this.config.storedValuesPerCharacteristic[ accTypeEnumIndex ];
+      return this.storedValuesPerCharacteristic[ accTypeEnumIndex ];
    }
 
    // Any required characteristic of an accessory that is not in the accessories
@@ -321,7 +350,7 @@ class Cmd4Accessory
       if ( trueTypeOf( pollingConfig ) != Array )
          return;
 
-      this.log.debug( `Checking for polling of unset characteristics.` );
+      this.log.debug( `Checking ${ this.displayName } for polling of unset characteristics.` );
 
       pollingConfig.forEach( ( jsonPollingConfig ) =>
       {
@@ -879,7 +908,7 @@ class Cmd4Accessory
        accessory.log.debug( `Adding All Service Characteristics for: ${ accessory.displayName }` );
 
        let perms = "";
-       let len = this.config.storedValuesPerCharacteristic.length;
+       let len = this.storedValuesPerCharacteristic.length;
 
        // Check every possible characteristic
        for ( let accTypeEnumIndex = 0; accTypeEnumIndex < len; accTypeEnumIndex++ )
@@ -887,7 +916,7 @@ class Cmd4Accessory
 
           // If there is a stored value for this characteristic ( defined by the config file )
           // Then we need to add the characteristic too
-          if ( accessory.config.storedValuesPerCharacteristic[ accTypeEnumIndex ] != undefined )
+          if ( accessory.storedValuesPerCharacteristic[ accTypeEnumIndex ] != undefined )
           {
              accessory.log.debug( "Found characteristic:%s value:%s for:%s",
                   CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type,
@@ -1418,7 +1447,7 @@ class Cmd4Accessory
       return true;
    }
 
-   parseKeyForCharacteristics( key, value )
+   parseKeyForCharacteristics( key, value, parseConfigShouldUseCharacteristicValues )
    {
       // fix the their scripts, fix it here.
       let ucKey = ucFirst( key );
@@ -1430,6 +1459,10 @@ class Cmd4Accessory
          this.log.error( `OOPS: "${ key }" not found for parsing key for Characteristics. There something wrong with your config.json file?` );
          process.exit( 235 );
       }
+
+      // Do not update the stored values as it is being restored from cache
+      if ( parseConfigShouldUseCharacteristicValues == false )
+         return;
 
       if ( Object.keys( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].validValues ).length > 0 )
       {
@@ -1576,18 +1609,18 @@ class Cmd4Accessory
 
       if ( Array.isArray ( config ) )
       {
-         let accessories = config.map( ( accessoryConfig ) => { return new Cmd4Accessory( that.log, accessoryConfig, this.api, parentInfo ) } );
+         let accessories = config.map( ( accessoryConfig ) => { return new Cmd4Accessory( that.log, accessoryConfig, this.api, this.STORED_DATA_ARRAY, this ) } );
 
          // Put the accessories into their correct collection array.
-         parentInfo.COLLECTION.push( ...accessories );
+         parentInfo.createdCmd4Accessories.push( ...accessories );
 
          return accessories;
       }
 
-      let accessory = new Cmd4Accessory( that.log, config, this.api, parentInfo );
+      let accessory = new Cmd4Accessory( that.log, config, this.api, this.STORED_DATA_ARRAY, this );
 
       // Put the accessory into its correct collection array.
-      parentInfo.COLLECTION.push( accessory );
+      parentInfo.createdCmd4Accessories.push( accessory );
 
       return [ accessory ];
    }
@@ -1621,7 +1654,7 @@ class Cmd4Accessory
       return finalAns;
    }
 
-   parseConfig( config )
+   parseConfig( config, parseConfigShouldUseCharacteristicValues  )
    {
       for ( let key in config )
       {
@@ -1683,7 +1716,7 @@ class Cmd4Accessory
                this.name = value;
 
                // Name is also a characteristic, which must be added.
-               this.parseKeyForCharacteristics( key, value );
+               this.parseKeyForCharacteristics( key, value, parseConfigShouldUseCharacteristicValues );
 
                break;
             case constants.MODEL:
@@ -1825,14 +1858,12 @@ class Cmd4Accessory
             case constants.ALLOWTLV8:
                this.allowTLV8 = value;
                break;
-            case "StoredValuesPerCharacteristic":
-               // Keep previous characteristic status.
-               // Hmm, what happens when we increase the size ....
-               this.config.storedValuesPerCharacteristic = value;
+            case constants.StoredValuesPerCharacteristic:
+               // handled elsewhere
                break;
             default:
             {
-               this.parseKeyForCharacteristics( key, value );
+               this.parseKeyForCharacteristics( key, value, parseConfigShouldUseCharacteristicValues );
             }
 
          }
@@ -1878,6 +1909,13 @@ class Cmd4Accessory
       else
          this.state_cmd_suffix = "";
 
+      // Check that fetch can be done in current environment..
+      if ( this.fetch != constants.FETCH_CACHED && ! this.validateStateCmd( this.state_cmd ) )
+      {
+         this.log.error(chalk.red(`Fetch is: ${ this.fetch } but there is no valid state_cmd to use.` ) );
+         process.exit( 265 );
+      }
+
       if ( this.typeIndex == CMD4_DEVICE_TYPE_ENUM.Television )
       {
           if ( this.CMD4 == constants.PLATFORM &&  ( ! this.publishExternally || ! this.category ) ||
@@ -1905,7 +1943,7 @@ class Cmd4Accessory
             return;
          case String:
             this.log.error( `Unknown type for Polling ${ pollingType }` );
-            process.exit( 265 );
+            process.exit( 266 );
             return;
          case Array:
             break;
@@ -1917,8 +1955,31 @@ class Cmd4Accessory
             return;
          default:
             this.log.error( `Do not know how to handle polling type of: ${ pollingType }` );
-            process.exit( 266 );
+            process.exit( 267 );
             return;
+      }
+
+      // We need to check for removed characteristics in the config
+      let len = this.storedValuesPerCharacteristic.length;
+      for ( let accTypeEnumIndex = 0; accTypeEnumIndex < len; accTypeEnumIndex ++ )
+      {
+         // There was a previously stored characteristic, if it was not initialized
+         if ( this.storedValuesPerCharacteristic[ accTypeEnumIndex] != null )
+         {
+            // concert the accTypeEnumIndex to its characteristic string
+            let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+            let ucCharacteristicString = ucFirst( characteristicString );
+            let lcCharacteristicString = lcFirst( characteristicString );
+            if ( config[ characteristicString ] != undefined ||
+                 config[ lcCharacteristicString  ] != undefined ||
+                 config[ ucCharacteristicString  ] != undefined )
+            {
+               continue;
+            } else {
+                this.log.warn(`Removing previously configured characteristic: ${ characteristicString }`);
+                this.storedValuesPerCharacteristic[ accTypeEnumIndex ] = null;
+            }
+         }
       }
    }
 
@@ -1933,8 +1994,11 @@ class Cmd4Accessory
       {
          accessory.linkedAccessories.forEach( ( linkedAccessory ) =>
          {
-            log.debug( `Setting up polling ( ${ accessory.displayName } ) linked accessory: ${ linkedAccessory.displayName }` );
-            linkedAccessory.determineCharacteristicsToPollOfAccessoryAndItsChildren( linkedAccessory );
+            if ( linkedAccessory.polling != false )
+            {
+               log.debug( `Setting up polling ( ${ accessory.displayName } ) linked accessory: ${ linkedAccessory.displayName }` );
+               linkedAccessory.determineCharacteristicsToPollOfAccessoryAndItsChildren( linkedAccessory );
+            }
          });
       }
 
@@ -1943,8 +2007,11 @@ class Cmd4Accessory
       {
          accessory.accessories.forEach( ( addedAccessory ) =>
          {
-            log.debug( `Setting up polling ( ${ accessory.displayName } ) added accessory: ${ addedAccessory.displayName }` );
-            addedAccessory.determineCharacteristicsToPollOfAccessoryAndItsChildren( addedAccessory );
+            if ( addedAccessory.polling != false )
+            {
+               log.debug( `Setting up polling ( ${ accessory.displayName } ) added accessory: ${ addedAccessory.displayName }` );
+               addedAccessory.determineCharacteristicsToPollOfAccessoryAndItsChildren( addedAccessory );
+            }
          });
       }
 
@@ -2067,18 +2134,21 @@ class Cmd4Accessory
             // Here we use the defaultPollingCharacteristics to set what characteristics
             // will be polled if accessory polling was defined in the config.json file.
 
-            log.debug( `State polling for: ${ accessory.displayName }` );
-
-
-            // Make sure the defined characteristics will be polled
-            let pollingCharacteristicsArray = CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ].defaultPollingCharacteristics;
-
-            // There could be none.
-            for ( let index = 0; index < pollingCharacteristicsArray.length; index++ )
+            if ( accessory.polling == true )
             {
-                let accTypeEnumIndex = pollingCharacteristicsArray[ index ];
+               log.debug( `State polling for: ${ accessory.displayName }` );
 
-                this.listOfPollingCharacteristics[ accTypeEnumIndex ] = {"timeout": accessory.timeout, "interval": accessory.interval};
+
+               // Make sure the defined characteristics will be polled
+               let pollingCharacteristicsArray = CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ].defaultPollingCharacteristics;
+
+               // There could be none.
+               for ( let index = 0; index < pollingCharacteristicsArray.length; index++ )
+               {
+                   let accTypeEnumIndex = pollingCharacteristicsArray[ index ];
+
+                   this.listOfPollingCharacteristics[ accTypeEnumIndex ] = {"timeout": accessory.timeout, "interval": accessory.interval};
+               }
             }
 
             break;
@@ -2102,6 +2172,8 @@ class Cmd4Accessory
          if ( msgDisplayed == false )
          {
             accessory.log.debug( `Starting polling for: ${ accessory.displayName }.` );
+            // let cs=CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].type;
+            // accessory.log.debug( `Starting polling for: ${ accessory.displayName } ${ cs }.` );
             msgDisplayed = true;
          }
          let timeout = accessory.listOfPollingCharacteristics[ accTypeEnumIndex ].timeout;
@@ -2172,7 +2244,7 @@ function checkAccessoryForDuplicateUUID( accessory, UUID )
    // check for UUID+subtype conflict
    accessory.log.debug( `Checking ${ accessory.name } for Duplicate UUID: ${ accessory.UUID }` );
 
-   for ( let existingAccessory in accessory.COLLECTION )
+   for ( let existingAccessory in accessory.createdCmd4Accessories )
    {
       if ( UUID == existingAccessory.UUID )
       {

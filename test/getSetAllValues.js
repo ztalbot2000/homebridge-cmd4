@@ -50,7 +50,7 @@ function removeStateFileThatShouldAlreadyBeRemoved( characteristicString )
                assert.isNull( err, 'file not removed err: ' + err + " result: " + result );
          });
       });
-   };
+   }
 }
 
 
@@ -101,9 +101,6 @@ describe( "Testing homebridge API", ( ) =>
 describe( "Initializing our plugin module", ( ) =>
 {});
 var cmd4 = pluginModule.default( _api );
-
-let CMD4_ACC_TYPE_ENUM = cmd4.CMD4_ACC_TYPE_ENUM;
-let CMD4_DEVICE_TYPE_ENUM = cmd4.CMD4_DEVICE_TYPE_ENUM;
 
 
 
