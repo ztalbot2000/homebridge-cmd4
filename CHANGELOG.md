@@ -1,6 +1,7 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
 
 ## ChangeLog
+* [**Whats new in 3.2.0**](#whats-new-in-320)
 * [**Whats new in 3.1.3**](#whats-new-in-313)
 * [**Whats new in 3.1.2**](#whats-new-in-312)
 * [**Whats new in 3.1.1**](#whats-new-in-311)
@@ -27,6 +28,14 @@
 * [**Whats new in 2.2**](#whats-new-in-22)
 * [**Whats new in 2.1**](#whats-new-in-21)
 * [**Whats new in 2.0**](#whats-new-in-20)
+
+## Whats new in 3.2.0
+### 3.2.0 (2021-02-23)
+
+##### Bug Fixes
+
+*  cached data over restarts ([020797fe](https://github.com/ztalbot2000/homebridge-cmd4/commit/020797fe70cd82afaca5a0c5d713cdab1ca5b32a))
+
 
 ## Whats new in 3.1.3
 #### 3.1.3 (2021-02-17)
