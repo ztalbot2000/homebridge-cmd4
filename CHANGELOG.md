@@ -1,6 +1,7 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
 
 ## ChangeLog
+* <a href="#Whats-new-in-3-2-1">**Whats new in 3.2.1**</a>
 * <a href="#Whats-new-in-3-2-0">**Whats new in 3.2.0**</a>
 * <a href="#Whats-new-in-3-1-3">**Whats new in 3.1.3**</a>
 * <a href="#Whats-new-in-3-1-2">**Whats new in 3.1.2**</a>
@@ -28,6 +29,23 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-3-2-1">## Whats new in 3.2.1</a>
+#### 3.2.1 (2021-02-24)
+
+##### Bug Fixes
+
+*  resolve setting Target characteristics that do not set thier Current characteristic counterpart ([278ffcc7](https://github.com/ztalbot2000/homebridge-cmd4/commit/278ffcc7f34fbd7b648971044a05dbad01189b36))
+*  [#90](https://github.com/ztalbot2000/homebridge-cmd4/pull/90) For Config-UI-X not displaying markdown properly. change to HTML anchors with base URL ([0b8cfef0](https://github.com/ztalbot2000/homebridge-cmd4/commit/0b8cfef05f0d2be0b2baaaad1aa106043dd6d0f3))
+
+##### Code Style Changes
+
+*  lint auto doc generator ([bd259c6f](https://github.com/ztalbot2000/homebridge-cmd4/commit/bd259c6f36231860b2ecebe52f780aeaed9d9cd0))
+
+##### Tests
+
+*  add markdown checker ([0dd19ca7](https://github.com/ztalbot2000/homebridge-cmd4/commit/0dd19ca7f5588390ec5a904a75199b4817f1353e))
+
 
 <a name="Whats-new-in-3-2-0">## Whats new in 3.2.0</a>
 ### 3.2.0 (2021-02-23)
