@@ -124,6 +124,7 @@ function updateChangeLog( changelog, newVersionString, options )
    let indexBeingWritten = false;
    let newBodyEntryToBeWritten = false;
    let changeLogTagFound = false;
+   let dashedVersionString = newVersionString.replace( /\./g, "-" );
 
    // Open the new CHANGELOG for writing
    let newChangeLog_fid = fs.createWriteStream( CHANGELOG_NEW,
@@ -150,8 +151,8 @@ function updateChangeLog( changelog, newVersionString, options )
       if ( newIndexEntryToBeWritten  == true )
       {
          // Write the new index line
-         let unDottedVersion = newVersionString.replace( /\./g, "" );
-         newChangeLog_fid.write( `* [**Whats new in ${ newVersionString }**](#whats-new-in-${ unDottedVersion })\n` );
+
+         newChangeLog_fid.write( `* <a href="#Whats-new-in-${ dashedVersionString }">**Whats new in ${ newVersionString }**</a>\n` );
 
          // The new Index line has been written
          newIndexEntryToBeWritten = false;
@@ -163,7 +164,7 @@ function updateChangeLog( changelog, newVersionString, options )
       if ( newBodyEntryToBeWritten == true )
       {
          //Write the new Changelog
-         newChangeLog_fid.write( `## Whats new in ${ newVersionString }\n` );
+         newChangeLog_fid.write( `<a name="Whats-new-in-${ dashedVersionString }">## Whats new in ${ newVersionString }</a>\n` );
          newChangeLog_fid.write( `${ changelog }\n` );
 
          newBodyEntryToBeWritten = false;

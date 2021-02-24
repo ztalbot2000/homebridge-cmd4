@@ -66,7 +66,7 @@
 <BR><BR>
 ## Installation Details
 ### Step 1.  Install Homebridge
-See [homebridge](homebridge) for complete details.<BR>
+See [homebridge](https://github.com/homebridge/homebridge) for complete details.<BR>
 
 
 ### Step 2.  Install Cmd4 Plugin
