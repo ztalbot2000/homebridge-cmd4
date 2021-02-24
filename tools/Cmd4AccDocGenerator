@@ -74,9 +74,7 @@ const constants = require( "../cmd4Constants" );
 //const settings = require( "../cmd4Settings" );
 
 // For changing validValue Constants to Values and back again
-var { transposeConstantToValidValue,
-      transposeValueToValidConstant
-    } = require( "../utils/transposeCMD4Props" );
+var { transposeValueToValidConstant } = require( "../utils/transposeCMD4Props" );
 
 // Required to initialize CMD4 Accessory & Device lookup tables.
 let HomebridgeAPI = require( "../node_modules/homebridge/lib/api" ).HomebridgeAPI;
@@ -716,6 +714,7 @@ function addSingleDeviceContent(device_type_enum, deviceName )
    let requiredCharacteristics = definition.requiredCharacteristics;
    let optionalCharacteristics = definition.optionalCharacteristics;
    let defaultPollingCharacteristics = definition.defaultPollingCharacteristics;
+   let commaNeeded = true;
 
    // Start deviceName Div
    // The <div id> is used to show/hide the section.
@@ -943,23 +942,18 @@ function addSingleCharacteristicContent( acc_type_enum, characteristic )
          {
             case "pr":
                output = output + comma + "Paired Read";
-               commaNeeded = true;
                break;
             case "pw":
                output = output + comma + "Paired Write";
-               commaNeeded = true;
                break;
             case "ev":
                output = output + comma + "Events";
-               commaNeeded = true;
                break;
             case "tw":
                output = output + comma + "Timed Write";
-               commaNeeded = true;
                break;
             case "wr":
                output = output + comma + "Write Response";
-               commaNeeded = true;
                break;
             default:
                console.log( "Unknown perm: %s", perm );
