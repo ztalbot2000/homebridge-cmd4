@@ -16,7 +16,6 @@ const node_persist_1 = __importDefault(require("node-persist"));
 // For serializing/deserializing arrays of accessories
 const platformAccessory_1 = require("../node_modules/homebridge/lib/platformAccessory")
 
-const os = require( "os" );
 const path = require( "path" );
 const TEST_BASE_DIR = path.join(__dirname, "tmp");
 
@@ -167,28 +166,10 @@ let TVConfig =
            "targetMediaState":          "STOP",
            "pictureMode":               "STANDARD",
            "remoteKey":                 "SELECT"
-        }
-    ]
- };
+      }
+   ]
+};
 
-
-beforeEach( function( ) {
-   const homebridgeDir = path.join( os.homedir( ), ".homebridge" );
-   const persistDir = path.join( homebridgeDir, "persist" );
-   const accessoriesDir = path.join( homebridgeDir, "accessories" );
-   if ( fs.existsSync( persistDir ) )
-   {
-      //console.log("removing %s", persistDir );
-      //fs.rmdirSync( persistDir, { recursive: true } );
-   }
-   if ( fs.existsSync( accessoriesDir ) )
-   {
-      //console.log("removing %s", accessoriesDir );
-      //fs.rmdirSync( accessoriesDir, { recursive: true } );
-   }
-});
-afterEach( function( ) {
-});
 
 // ******** QUICK TEST CMD4_ACC_TYPE_ENUM *************
 describe( "Quick Test load of CMD4_ACC_TYPE_ENUM", ( ) =>
@@ -295,10 +276,9 @@ describe( "Testing Cmd4Platform", function( )
       hook.stop();
 
       let logMsg= hook.capturedLog();
-      let expectedResult = `Cmd4Platform didFinishLaunching`;
+      let expectedOutput = `Cmd4Platform didFinishLaunching`;
 
-
-      assert.match(logMsg, RegExp( expectedResult ), `didFinishLaunching not called result: ${ logMsg }` );
+      assert.include( logMsg, expectedOutput, `didFinishLaunching not called result: ${ logMsg }` );
 
       // Clear the hook buffer for next time.
       hook.reset();
@@ -336,10 +316,10 @@ describe( "Testing Cmd4Platform", function( )
       apiInstance.emit("didFinishLaunching");
       hook.stop();
 
-      let logMsg= hook.capturedLog();
-      let expectedResult = `Cmd4Platform didFinishLaunching`;
+      let logMsg = hook.capturedLog();
+      let expectedOutput = `Cmd4Platform didFinishLaunching`;
 
-      assert.match(logMsg, RegExp( expectedResult ), `didFinishLaunching not called result: ${ logMsg }` );
+      assert.include( logMsg, expectedOutput, `didFinishLaunching not called result: ${ logMsg }` );
 
 
       assert.equal(cmd4Platform.createdCmd4Platforms.length, 1, `Incorrect number of Cmd4Accessories created. result: ${ cmd4Platform.createdCmd4Platforms.length }` );
@@ -362,10 +342,10 @@ describe( "Testing Cmd4Platform", function( )
       apiInstance.emit("didFinishLaunching");
       hook.stop();
 
-      let logMsg= hook.capturedLog();
-      let expectedResult = `Cmd4Platform didFinishLaunching`;
+      let logMsg = hook.capturedLog();
+      let expectedOutput = `Cmd4Platform didFinishLaunching`;
 
-      assert.match(logMsg, RegExp( expectedResult ), `didFinishLaunching not called result: ${ logMsg }` );
+      assert.include( logMsg, expectedOutput, `didFinishLaunching not called result: ${ logMsg }` );
 
       assert.equal(cmd4Platform.createdCmd4Platforms.length, 1, `Incorrect number of Cmd4Platforms created. result: ${ cmd4Platform.createdCmd4Platforms.length }` );
       assert.equal(cmd4Platform.createdCmd4Accessories.length, 5, `Incorrect number of Cmd4Accessories created. result: ${ cmd4Platform.createdCmd4Accessories.length }` );
@@ -389,13 +369,13 @@ describe( "Testing Cmd4Platform", function( )
          hook.stop();
          assert.equal( rc, null, `setCachedValue expected: zero received: ${ rc }` );
 
-         let expectedResult = newValue;
+         let expectedOutput = "\u001b[39m\u001b[34mSetting (Cached) Example TV ConfiguredName\u001b[39m NEW_TV";
          logMsg = hook.capturedLog( );
-         assert.match( logMsg, RegExp( expectedResult ), " setCachedValue expected" + expectedResult + " received: " + logMsg );
 
-
+         assert.include( logMsg, expectedOutput, `setCachedValue output failed: ${ expectedOutput } received: ${logMsg}` );
 
          let result = cmd4Accessory.getStoredValueForIndex( acc );
+         let expectedResult = newValue;
          assert.equal( result, expectedResult, " setCachedValue expected: " + expectedResult + " found: " + result );
 
          // Clear the hook buffer for next time.

@@ -520,18 +520,35 @@ class Cmd4Accessory
       // Fakegato does not need to be updated as that is done on a "Get".
       self.setStoredValueForIndex( accTypeEnumIndex, value );
 
-      let verifyCharacteristic = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex].verifyCharacteristic;
+      let relatedCurrentAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].relatedCurrentAccTypeEnumIndex;
 
-      // We are currently tring to set a cached characteristics value.
-      // There is no way for its verify characteristic to be set, Especially
-      // if it is not Polled. In that case set the verify characteristic
-      // yourself.
-      // Theoretically characteristics that have verify characteristics
-      // should have the same fetch type to work properly.
-      if ( verifyCharacteristic != null &&
-           ! self.listOfPollingCharacteristics[ verifyCharacteristic ] )
+      // We are currently tring to set a cached characteristics 
+      // like "Target*".
+      // There is no way for its relatedCurrentAccTypeEnumIndex characteristic like "Current*"
+      // to be set if cached or Polled (with the exception below).
+
+      if ( relatedCurrentAccTypeEnumIndex != null )
       {
-         self.setStoredValueForIndex( verifyCharacteristic, value );
+         // We are in a "Set" but this applies to the "Get" for why we would need to
+         // set the relatedCurrentAccTypeEnumIndex Characteristic as well.
+
+         // "Get" can't be in cached if fetch:Always
+         // "Get" must be cached if fetch:Cached
+         //
+         // For fetch:Polled
+         // "Get Current" updates value when polled by calling getValue
+         // "Get Current" ( From HomeKit) calls getCachedValue.
+         // So we do not want to update the "Current*" value if it is being
+         // polled to get the real value.
+         if ( self.fetch == constants.FETCH_CACHED ||
+               ( self.fetch == constants.FETCH_POLLED &&
+                 self.listOfPollingCharacteristics[ relatedCurrentAccTypeEnumIndex ] )
+            )
+         {
+            let relatedCharacteristicString = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].type;
+            self.log.info( chalk.blue( `Also Setting (Cached) ${ self.displayName } ${ relatedCharacteristicString }` ) + ` ${ value }` );
+            self.setStoredValueForIndex( relatedCurrentAccTypeEnumIndex, value );
+         }
       }
 
       callback( null );
@@ -604,12 +621,13 @@ class Cmd4Accessory
             return;
          }
 
-         let verifyCharacteristic = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex].verifyCharacteristic;
+         let relatedCurrentAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].relatedCurrentAccTypeEnumIndex;
 
-         if ( verifyCharacteristic != null )
+         if ( relatedCurrentAccTypeEnumIndex != null )
          {
+            let relatedCharacteristic = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].characteristic;
             setTimeout( ( ) => {
-               self.service.getCharacteristic( verifyCharacteristic ).getValue( );
+               self.service.getCharacteristic( relatedCharacteristic ).getValue( );
                callback( null );
             }, self.stateChangeResponseTime );
 
@@ -2157,6 +2175,29 @@ class Cmd4Accessory
          {
             log.error( chalk.red( `Error` ) + `: Something wrong with value of polling: ${ accessory.polling }\n       Check your config.json for errors.` );
             process.exit( 262 );
+         }
+      }
+
+      // This does not apply to fetch:Cached as nothing would be polled.
+      if ( this.fetch != constants.FETCH_CACHED )
+      {
+         // Over what has asked to be polled
+         for( let accTypeEnumIndex in this.listOfPollingCharacteristics )
+         {
+            // Look to see if currently polled characteristics are like "Current*" and have
+            // a related characteristic like "Target*"
+            let relatedTargetAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].relatedTargetAccTypeEnumIndex;
+
+            if ( relatedTargetAccTypeEnumIndex != null )
+            {
+               // Check that the characteristic like "Target*" is also requested to be polled
+               if ( ! this.listOfPollingCharacteristics[ relatedTargetAccTypeEnumIndex ] )
+               {
+                  let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+                  let relatedCharacteristicString = CMD4_ACC_TYPE_ENUM.properties[ relatedTargetAccTypeEnumIndex ].type;
+                  this.log.warn( `Warning, With fetch set to "${ this.fetch }" and polling for "${ characteristicString }" requested, you also must do polling of "${ relatedCharacteristicString }" or things will not function properly` );
+               }
+            }
          }
       }
    }

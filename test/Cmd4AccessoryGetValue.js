@@ -7,12 +7,12 @@ let { Cmd4Accessory } = require( "../Cmd4Accessory" );
 
 
 var HomebridgeAPI = require( "../node_modules/homebridge/lib/api" ).HomebridgeAPI;
-var _api = new HomebridgeAPI(); // object we feed to Plugins
+var _api = new HomebridgeAPI( ); // object we feed to Plugins
 
 
 var logger_1 = require("../node_modules/homebridge/lib/logger");
 const log = logger_1.Logger.internal;
-Object.defineProperty(exports, "LogLevel", { enumerable: true, get: function () { return logger_1.LogLevel; } });
+Object.defineProperty(exports, "LogLevel", { enumerable: true, get: function ( ) { return logger_1.LogLevel; } });
 
 
 // Init the library for all to use
@@ -73,13 +73,13 @@ describe( "Testing Cmd4Accessory", function( )
    {
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
 
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "Cmd4Accessory is not an instance of Cmd4Accessory" );
 
       // Clear the hook buffer for next time.
-      hook.reset();
+      hook.reset( );
    });
 
    it( "Test Cmd4Accessory.getValue", function( )
@@ -87,14 +87,14 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./echoScripts/echo_ACTIVE";
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
       hook.stop( );
 
       assert.isFunction( cmd4Accessory.getValue, "Cmd4Accessory.getValue is not a function" );
 
       // Clear the hook buffer for next time.
-      hook.reset();
+      hook.reset( );
    });
 
    it( "Test Cmd4Accessory.getValue", function ( done )
@@ -102,23 +102,23 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_ACTIVE";
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
 
-      var clock = sinon.useFakeTimers();
-      var callback = sinon.fake();
+      var clock = sinon.useFakeTimers( );
+      var callback = sinon.fake( );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, callback );
       hook.stop( );
 
       clock.tick(99);
 
-      assert(callback.notCalled, " getValue callback should only be updated once. Expected: 1 to equal: " + callback.callCount);
+      assert( callback.notCalled, " getValue callback should only be updated once. Expected: 1 to equal: " + callback.callCount);
 
       // Clear the hook buffer for next time.
-      hook.reset();
+      hook.reset( );
 
-      done();
+      done( );
    });
 
    it( "getValue Active should inject 1 to Hombridge for ACTIVE response", function ( done )
@@ -126,21 +126,21 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_ACTIVE";
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, function( rc, result )
       {
-         hook.stop();
+         hook.stop( );
 
          let expectedResult = 1;
 
-         assert.equal(result, expectedResult, " getValue expected" + expectedResult + " received: " + result );
+         assert.equal( result, expectedResult, ` getValue expected ${ expectedResult } received: ${ result }` );
 
          // Clear the hook buffer for next time.
-         hook.reset();
+         hook.reset( );
 
-         done();
+         done( );
       });
    });
 
@@ -149,21 +149,21 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_INACTIVE";
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, function( rc, result )
       {
-         hook.stop();
+         hook.stop( );
 
          let expectedResult = 0;
 
-         assert.equal(result, expectedResult, " getValue expected" + expectedResult + " received: " + result );
+         assert.equal( result, expectedResult, " getValue expected" + expectedResult + " received: " + result );
 
          // Clear the hook buffer for next time.
-         hook.reset();
+         hook.reset( );
 
-         done();
+         done( );
       });
    });
 
@@ -172,21 +172,21 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_0";
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, function( rc, result )
       {
-         hook.stop();
+         hook.stop( );
 
          let expectedResult = 0;
 
-         assert.equal(result, expectedResult, " getValue expected" + expectedResult + " received: " + result );
+         assert.equal( result, expectedResult, ` getValue expected ${ expectedResult } received: ${ result }` );
 
          // Clear the hook buffer for next time.
-         hook.reset();
+         hook.reset( );
 
-         done();
+         done( );
       });
    });
 
@@ -195,21 +195,21 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_1";
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, function( rc, result )
       {
-         hook.stop();
+         hook.stop( );
 
          let expectedResult = 1;
 
-         assert.equal(result, expectedResult, " getValue expected" + expectedResult + " received: " + result );
+         assert.equal( result, expectedResult, ` getValue expected ${ expectedResult } received: ${ result }` );
 
          // Clear the hook buffer for next time.
-         hook.reset();
+         hook.reset( );
 
-         done();
+         done( );
       });
    });
 
@@ -218,21 +218,21 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_quoted0";
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, function( rc, result )
       {
-         hook.stop();
+         hook.stop( );
 
          let expectedResult = 0;
 
-         assert.equal(result, expectedResult, " getValue expected" + expectedResult + " received: " + result );
+         assert.equal( result, expectedResult, ` getValue expected ${ expectedResult } received: ${ result }` );
 
          // Clear the hook buffer for next time.
-         hook.reset();
+         hook.reset( );
 
-         done();
+         done( );
       });
    });
 
@@ -241,21 +241,21 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_quoted1";
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, function( rc, result )
       {
-         hook.stop();
+         hook.stop( );
 
          let expectedResult = 1;
 
-         assert.equal(result, expectedResult, " getValue expected" + expectedResult + " received: " + result );
+         assert.equal( result, expectedResult, ` getValue expected ${ expectedResult } received: ${ result }` );
 
          // Clear the hook buffer for next time.
-         hook.reset();
+         hook.reset( );
 
-         done();
+         done( );
       });
    });
 
@@ -264,21 +264,21 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_false";
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
       {
-         hook.stop();
+         hook.stop( );
 
          let expectedResult = false;
 
-         assert.equal(result, expectedResult, " getValue expected" + expectedResult + " received: " + result );
+         assert.equal( result, expectedResult, ` getValue expected ${ expectedResult } received: ${ result }` );
 
          // Clear the hook buffer for next time.
-         hook.reset();
+         hook.reset( );
 
-         done();
+         done( );
       });
    });
 
@@ -287,21 +287,21 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_true";
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
       {
-         hook.stop();
+         hook.stop( );
 
          let expectedResult = true;
 
-         assert.equal(result, expectedResult, " getValue expected" + expectedResult + " received: " + result );
+         assert.equal( result, expectedResult, ` getValue expected ${ expectedResult } received: ${ result }` );
 
          // Clear the hook buffer for next time.
-         hook.reset();
+         hook.reset( );
 
-         done();
+         done( );
       });
    });
 
@@ -310,21 +310,21 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_0";
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
       {
-         hook.stop();
+         hook.stop( );
 
          let expectedResult = false;
 
-         assert.equal(result, expectedResult, " getValue expected" + expectedResult + " received: " + result );
+         assert.equal( result, expectedResult, ` getValue expected ${ expectedResult } received: ${ result }` );
 
          // Clear the hook buffer for next time.
-         hook.reset();
+         hook.reset( );
 
-         done();
+         done( );
       });
    });
 
@@ -333,21 +333,21 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_1";
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
       {
-         hook.stop();
+         hook.stop( );
 
          let expectedResult = true;
 
-         assert.equal(result, expectedResult, " getValue expected" + expectedResult + " received: " + result );
+         assert.equal( result, expectedResult, ` getValue expected ${ expectedResult } received: ${ result }` );
 
          // Clear the hook buffer for next time.
-         hook.reset();
+         hook.reset( );
 
-         done();
+         done( );
       });
    });
 
@@ -356,21 +356,21 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_quotedFALSE";
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
       {
-         hook.stop();
+         hook.stop( );
 
          let expectedResult = false;
 
-         assert.equal(result, expectedResult, " getValue expected" + expectedResult + " received: " + result );
+         assert.equal( result, expectedResult, ` getValue expected ${ expectedResult } received: ${ result }` );
 
          // Clear the hook buffer for next time.
-         hook.reset();
+         hook.reset( );
 
-         done();
+         done( );
       });
    });
 
@@ -379,21 +379,21 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_quotedTRUE";
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
       {
-         hook.stop();
+         hook.stop( );
 
          let expectedResult = true;
 
-         assert.equal(result, expectedResult, " getValue expected" + expectedResult + " received: " + result );
+         assert.equal( result, expectedResult, ` getValue expected ${ expectedResult } received: ${ result }` );
 
          // Clear the hook buffer for next time.
-         hook.reset();
+         hook.reset( );
 
-         done();
+         done( );
       });
    });
 
@@ -402,21 +402,21 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_DISABLED";
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.ClosedCaptions, function( rc, result )
       {
-         hook.stop();
+         hook.stop( );
 
          let expectedResult = 0;
 
-         assert.equal(result, expectedResult, " getValue expected" + expectedResult + " received: " + result );
+         assert.equal( result, expectedResult, ` getValue expected ${ expectedResult } received: ${ result }` );
 
          // Clear the hook buffer for next time.
-         hook.reset();
+         hook.reset( );
 
-         done();
+         done( );
       });
    });
 
@@ -425,21 +425,21 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_ENABLED";
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.ClosedCaptions, function( rc, result )
       {
-         hook.stop();
+         hook.stop( );
 
          let expectedResult = 1;
 
-         assert.equal(result, expectedResult, " getValue expected" + expectedResult + " received: " + result );
+         assert.equal( result, expectedResult, ` getValue expected ${ expectedResult } received: ${ result }` );
 
          // Clear the hook buffer for next time.
-         hook.reset();
+         hook.reset( );
 
-         done();
+         done( );
       });
    });
    it( "getValue of empty response should fail correctly", function ( done )
@@ -447,26 +447,26 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_nothing";
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
       {
-         hook.stop();
+         hook.stop( );
 
-         let errMsg= hook.capturedErr();
-         let expectedResult = `getValue: Mute function for: My_Television returned an empty string ""`;
+         let errMsg= hook.capturedErr( );
+         let expectedOutput = `getValue: Mute function for: My_Television returned an empty string ""`;
 
-         assert.notEqual(rc, 0, " getValue expected: not zero received: " + rc );
+         assert.notEqual( rc, 0, ` getValue expected: not zero received: ${ rc }` );
 
-         assert.match(errMsg, RegExp( expectedResult ), " getValue expected" + expectedResult + " received: " + errMsg );
+         assert.include( errMsg, expectedOutput, ` getValue output expected: ${ expectedOutput } received: ${ errMsg }` );
 
-         assert.equal( result, 0, " getValue result expected" + 0, + " received: " + result );
+         assert.equal( result, 0, ` getValue result expected: 0 received: ${ result }` );
 
          // Clear the hook buffer for next time.
-         hook.reset();
+         hook.reset( );
 
-         done();
+         done( );
       });
    });
 
@@ -475,26 +475,26 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_null";
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
       {
-         hook.stop();
+         hook.stop( );
 
-         let errMsg= hook.capturedErr();
-         let expectedResult = `getValue: "null" returned from stdout for Mute My_Television`;
+         let errMsg = hook.capturedErr( );
+         let expectedOutput = `getValue: "null" returned from stdout for Mute My_Television`;
 
-         assert.notEqual(rc, 0, " getValue expected: not zero received: " + rc );
+         assert.notEqual( rc, 0, ` getValue expected: not zero received: ${ rc }` );
 
-         assert.match(errMsg, RegExp( expectedResult ), " getValue expected" + expectedResult + " received: " + errMsg );
+         assert.include( errMsg, expectedOutput, ` getValue output expected: ${ expectedOutput } received: ${ errMsg }` );
 
-         assert.equal( result, 0, " getValue result expected" + 0, + " received: " + result );
+         assert.equal( result, 0, ` getValue result expected: 0 received: ${ result }` );
 
          // Clear the hook buffer for next time.
-         hook.reset();
+         hook.reset( );
 
-         done();
+         done( );
       });
    });
 
@@ -503,26 +503,26 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_true_withRcOf1";
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
       {
-         hook.stop();
+         hook.stop( );
 
-         let errMsg= hook.capturedErr();
-         let expectedResult = `getValue Mute function failed for My_Television cmd: ./test/echoScripts/echo_true_withRcOf1 Get 'My_Television' 'Mute' Failed.  Error: Command failed: ./test/echoScripts/echo_true_withRcOf1 Get 'My_Television' 'Mute'`;
+         let errMsg = hook.capturedErr( );
+         let expectedOutput = `getValue Mute function failed for My_Television cmd: ./test/echoScripts/echo_true_withRcOf1 Get 'My_Television' 'Mute' Failed.  Error: Command failed: ./test/echoScripts/echo_true_withRcOf1 Get 'My_Television' 'Mute'`;
 
-         assert.notEqual(rc, 0, " getValue expected: not zero received: " + rc );
+         assert.notEqual( rc, 0, ` getValue expected: not zero received: ${ rc }` );
 
-         assert.match(errMsg, RegExp( expectedResult ), " getValue expected" + expectedResult + " received: " + errMsg );
+         assert.include( errMsg, expectedOutput, ` getValue output expected: ${ expectedOutput } received: ${ errMsg }` );
 
-         assert.equal( result, 0, " getValue result expected" + 0, + " received: " + result );
+         assert.equal( result, 0, ` getValue result expected: 0 received: ${ result }` );
 
          // Clear the hook buffer for next time.
-         hook.reset();
+         hook.reset( );
 
-         done();
+         done( );
       });
    });
 
@@ -531,26 +531,26 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_quotedNULL";
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
       {
-         hook.stop();
+         hook.stop( );
 
-         let errMsg= hook.capturedErr();
-         let expectedResult = `getValue: Mute function for My_Television returned the string ""NULL""`;
+         let errMsg = hook.capturedErr( );
+         let expectedOutput = `getValue: Mute function for My_Television returned the string ""NULL""`;
 
-         assert.notEqual(rc, 0, " getValue expected: not zero received: " + rc );
+         assert.notEqual( rc, 0, ` getValue expected: not zero received: ${ rc }` );
 
-         assert.match(errMsg, RegExp( expectedResult ), " getValue expected" + expectedResult + " received: " + errMsg );
+         assert.include( errMsg, expectedOutput, ` getValue output expected: ${ expectedOutput } received: ${ errMsg }` );
 
-         assert.equal( result, 0, " getValue result expected" + 0, + " received: " + result );
+         assert.equal( result, 0, ` getValue result expected: 0 received: ${ result }` );
 
          // Clear the hook buffer for next time.
-         hook.reset();
+         hook.reset( );
 
-         done();
+         done( );
       });
    });
 
@@ -559,26 +559,26 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_quotedNothing";
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
       {
-         hook.stop();
+         hook.stop( );
 
-         let errMsg= hook.capturedErr();
-         let expectedResult = `getValue: Mute function for: My_Television returned an empty string "" ""`;
+         let errMsg = hook.capturedErr( );
+         let expectedOutput = `getValue: Mute function for: My_Television returned an empty string "" ""`;
 
-         assert.notEqual(rc, 0, " getValue expected: not zero received: " + rc );
+         assert.notEqual( rc, 0, ` getValue expected: not zero received: ${ rc }` );
 
-         assert.match(errMsg, RegExp( expectedResult ), " getValue expected" + expectedResult + " received: " + errMsg );
+         assert.include( errMsg, expectedOutput, ` getValue output expected: ${ expectedOutput } received: ${ errMsg }` );
 
-         assert.equal( result, 0, " getValue result expected" + 0, + " received: " + result );
+         assert.equal( result, 0, ` getValue result expected: 0 received: ${ result }` );
 
          // Clear the hook buffer for next time.
-         hook.reset();
+         hook.reset( );
 
-         done();
+         done( );
       });
    });
 
@@ -587,24 +587,24 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_errorToStderr";
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
       {
-         hook.stop();
+         hook.stop( );
 
-         let errMsg= hook.capturedErr();
-         let expectedResult = "This message goes to stderr";
+         let errMsg = hook.capturedErr( );
+         let expectedOutput = "This message goes to stderr";
 
-         assert.match(errMsg, RegExp( expectedResult ), " getValue expected" + expectedResult + " received: " + errMsg );
+         assert.include( errMsg, expectedOutput, ` getValue output expected: ${ expectedOutput } received: ${ errMsg }` );
 
-         assert.equal( result, 0, " getValue result expected" + 0, + " received: " + result );
+         assert.equal( result, 0, ` getValue result expected: 0 received: ${ result }` );
 
          // Clear the hook buffer for next time.
-         hook.reset();
+         hook.reset( );
 
-         done();
+         done( );
       });
    });
 });

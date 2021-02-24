@@ -146,25 +146,57 @@ describe( "Testing INITIALIZED CMD4_ACC_TYPE_ENUM", ( ) =>
              assert.isNotNull(service, 'Service is null at accTypeEnumIndex: ' + accTypeEnumIndex );
           });
 
-          describe('Testing CMD4_ACC_TYPE_ENUM.properties[' + accTypeEnumIndex + ']:' + accProperties.type, ( ) =>
+          describe(`Testing CMD4_ACC_TYPE_ENUM.properties[ ${ accTypeEnumIndex } ]: ${ accProperties.type }`, ( ) =>
           {
              var characteristic = CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].characteristic;
-             var verifyCharacteristic = CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].verifyCharacteristic;
+             var characteristicString = CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].type;
 
-             it('CMD4_ACC_TYPE_ENUM.properties[' + accTypeEnumIndex + '].verifyCharacteristic', ( ) =>
+             // Check relatedCurrentAccTypeEnumIndex property
+             it(`CMD4_ACC_TYPE_ENUM.properties[ ${ accTypeEnumIndex } ].relatedCurrentAccTypeEnumIndex`, ( ) =>
              {
-                assert.isDefined(verifyCharacteristic, 'verifyCharacteristic is not defined' );
+                assert.isDefined( CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].relatedCurrentAccTypeEnumIndex, 'relatedCurrentAccTypeEnumIndex is not defined' );
+
+                let relatedCurrentAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].relatedCurrentAccTypeEnumIndex;
+
+                if ( relatedCurrentAccTypeEnumIndex != null )
+                {
+                   assert.isNumber( relatedCurrentAccTypeEnumIndex, `${ characteristicString } relatedCurrentAccTypeEnumIndex is not a number: ${ typeof relatedCurrentAccTypeEnumIndex }` );
+                   assert.isAbove( relatedCurrentAccTypeEnumIndex, 0, `${ characteristicString } relatedCurrentAccTypeEnumIndex < 0: ${ relatedCurrentAccTypeEnumIndex }` );
+                   assert.isBelow( relatedCurrentAccTypeEnumIndex, ACC_EOL, `${ characteristicString } relatedCurrentAccTypeEnumIndex is < ACC_EOL: ${ relatedCurrentAccTypeEnumIndex }` );
+
+                   // Make sure they point to each other.
+                   assert.equal( accTypeEnumIndex, CMD4_ACC_TYPE_ENUM.properties[relatedCurrentAccTypeEnumIndex].relatedTargetAccTypeEnumIndex, `${ characteristicString } relatedCurrentAccTypeEnumIndex (${ relatedCurrentAccTypeEnumIndex }) not matching releatedTargetAccTypeEnumIndex` );
+                }
              });
 
-             service.addCharacteristic(characteristic );
+             // Check relatedTargetAccTypeEnumIndex property
+             it(`CMD4_ACC_TYPE_ENUM.properties[ ${ accTypeEnumIndex } ].relatedTargetAccTypeEnumIndex`, ( ) =>
+             {
+                assert.isDefined( CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].relatedTargetAccTypeEnumIndex, 'relatedTargetAccTypeEnumIndex is not defined' );
+
+                let relatedTargetAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].relatedTargetAccTypeEnumIndex;
+
+                if ( relatedTargetAccTypeEnumIndex != null )
+                {
+                   assert.isNumber( relatedTargetAccTypeEnumIndex, `${ characteristicString } relatedTargetAccTypeEnumIndex is not a number: ${ typeof relatedTargetAccTypeEnumIndex }` );
+                   assert.isAbove( relatedTargetAccTypeEnumIndex, 0, `${ characteristicString } relatedTargetAccTypeEnumIndex < 0: ${ relatedTargetAccTypeEnumIndex }` );
+                   assert.isBelow( relatedTargetAccTypeEnumIndex, ACC_EOL, `${ characteristicString } relatedTargetAccTypeEnumIndex is < ACC_EOL: ${ relatedTargetAccTypeEnumIndex }` );
+
+                   // Make sure they point to each other.
+                   assert.equal( accTypeEnumIndex, CMD4_ACC_TYPE_ENUM.properties[relatedTargetAccTypeEnumIndex].relatedCurrentAccTypeEnumIndex, `${ characteristicString } relatedTargetAccTypeEnumIndex (${ relatedTargetAccTypeEnumIndex }) not matching relatedCurrentAccTypeEnumIndex` );
+                }
+             });
+
+             // We need to add the characteristic to the service so we can get its Hap properties
+             service.addCharacteristic( characteristic );
 
              let hapProps = service.getCharacteristic(characteristic ).props;
-             service.removeCharacteristic(characteristic );
+             service.removeCharacteristic( characteristic );
 
              it('props for HomeBridge Characteristic:' + accProperties.type,
              ( ) =>
              {
-                assert.isNotNull(hapProps, 'perms for Characteristic type:' + accProperties.type + ' is null' );
+                assert.isNotNull( hapProps, 'perms for Characteristic type:' + accProperties.type + ' is null' );
              });
 
              let hapFormat = hapProps.format;

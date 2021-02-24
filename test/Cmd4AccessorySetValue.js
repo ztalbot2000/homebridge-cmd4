@@ -7,11 +7,11 @@ let { Cmd4Accessory } = require( "../Cmd4Accessory" );
 
 
 var HomebridgeAPI = require( "../node_modules/homebridge/lib/api" ).HomebridgeAPI;
-var _api = new HomebridgeAPI(); // object we feed to Plugins
+var _api = new HomebridgeAPI( ); // object we feed to Plugins
 
 
 var logger_1 = require("../node_modules/homebridge/lib/logger");
-Object.defineProperty(exports, "LogLevel", { enumerable: true, get: function () { return logger_1.LogLevel; } });
+Object.defineProperty(exports, "LogLevel", { enumerable: true, get: function ( ) { return logger_1.LogLevel; } });
 const log = logger_1.Logger.internal;
 
 
@@ -80,14 +80,14 @@ describe( "Testing Cmd4Accessory", function( )
       };
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
-      hook.stop();
+      hook.stop( );
 
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "Cmd4Accessory is not an instance of Cmd4Accessory" );
 
       // Clear the hook buffer for next time.
-      hook.reset();
+      hook.reset( );
 
       done( );
    });
@@ -121,16 +121,16 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_ACTIVE";
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
-      hook.stop();
+      hook.stop( );
 
       assert.isFunction( cmd4Accessory.setValue, "Cmd4Accessory.setValue is not a function" );
 
       // Clear the hook buffer for next time.
-      hook.reset();
+      hook.reset( );
 
-      done();
+      done( );
    });
 
    /*
@@ -139,12 +139,12 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_ACTIVE";
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
-      hook.stop();
+      hook.stop( );
 
-      var clock = sinon.useFakeTimers();
-      var callback = sinon.fake();
+      var clock = sinon.useFakeTimers( );
+      var callback = sinon.fake( );
 
       cmd4Accessory.setValue( CMD4_ACC_TYPE_ENUM.Active, callback );
 
@@ -153,9 +153,9 @@ describe( "Testing Cmd4Accessory", function( )
       assert(callback.notCalled, " setValue callback should only be updated once. Expected: 1 to equal: " + callback.callCount);
 
       // Clear the hook buffer for next time.
-      hook.reset();
+      hook.reset( );
 
-      done();
+      done( );
    });
    */
 
@@ -195,25 +195,29 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = `node ${ process.cwd( ) }/${ getSetValueScript }`;
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
 
       let value = Characteristic.ClosedCaptions.ENABLED;
 
       cmd4Accessory.setValue( acc, value,  function( )
       {
-         hook.stop();
+         hook.stop( );
          let expectedResult =`${value}`;
+         let expectedOutput = "\u001b[39m\u001b[34mSetting My_Television ClosedCaptions\u001b[39m 1";
+
          let newfn = `${ fn }_${ DEVICE }_${ CHARACTERISTIC }`;
          let INPUTS=require( `${ newfn }` );
          let sentResult = INPUTS.VALUE;
 
-         assert.equal(sentResult, expectedResult, " setValue expected: " + expectedResult + " received: " + sentResult );
+         assert.include( hook.capturedLog( ), expectedOutput, ` setValue output expected: ${ expectedOutput } received: ${ hook.capturedLog() }` );
+
+         assert.equal( sentResult, expectedResult, " setValue expected: " + expectedResult + " received: " + sentResult );
 
          // Clear the hook buffer for next time.
-         hook.reset();
+         hook.reset( );
 
-         done();
+         done( );
       });
    });
 
@@ -255,26 +259,29 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = `node ${ process.cwd( ) }/${ getSetValueScript }`;
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
 
       let value = Characteristic.ClosedCaptions.ENABLED;
 
       cmd4Accessory.setValue( acc, value,  function( )
       {
-         hook.stop();
+         hook.stop( );
 
          let expectedResult = "ENABLED";
+         let expectedOutput = "\u001b[39m\u001b[34mSetting My_Television ClosedCaptions\u001b[39m 1";
          let newfn = `${ fn }_${ DEVICE }_${ CHARACTERISTIC }`;
          let INPUTS=require( `${ newfn }` );
          let sentResult = INPUTS.VALUE;
 
-         assert.equal(sentResult, expectedResult, " setValue expected: " + expectedResult + " received: " + sentResult );
+         assert.include( hook.capturedLog( ), expectedOutput, ` setValue output expected: ${ expectedOutput } received: ${ hook.capturedLog() }` );
+
+         assert.equal( sentResult, expectedResult, " setValue expected: " + expectedResult + " received: " + sentResult );
 
          // Clear the hook buffer for next time.
-         hook.reset();
+         hook.reset( );
 
-         done();
+         done( );
       });
    });
 
@@ -313,29 +320,32 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = `node ${ process.cwd( ) }/${ getSetValueScript }`;
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
 
       let value = true;
 
       cmd4Accessory.setValue( acc, value,  function( )
       {
-         hook.stop();
+         hook.stop( );
 
          let expectedResult = 1;
+         let expectedOutput = "\u001b[39m\u001b[34mSetting My_Television Mute\u001b[39m true";
          let newfn = `${ fn }_${ DEVICE }_${ CHARACTERISTIC }`;
          let INPUTS=require( `${ newfn }` );
          let sentResult = INPUTS.VALUE;
 
-         assert.equal(sentResult, expectedResult, " setValue expected: " + expectedResult + " received: " + sentResult );
+         assert.include( hook.capturedLog( ), expectedOutput, ` setValue output expected: ${ expectedOutput } received: ${ hook.capturedLog() }` );
+
+         assert.equal( sentResult, expectedResult, " setValue expected: " + expectedResult + " received: " + sentResult );
 
          // Clear the hook buffer for next time.
-         hook.reset();
+         hook.reset( );
 
-         done();
+         done( );
       });
    });
-   it( "setValue of cached characteristic, should set verify characteristic", function ( done )
+   it( `setValue of cached characteristic, should set "Current*" characteristic`, function ( done )
    {
       // A config file to play with.
       let ThermostatConfig =
@@ -358,28 +368,32 @@ describe( "Testing Cmd4Accessory", function( )
       //let CHARACTERISTIC = CMD4_ACC_TYPE_ENUM.properties[ acc ].type;
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, ThermostatConfig, _api, STORED_DATA_ARRAY, null );
 
       let value = 12.3;
 
       cmd4Accessory.setCachedValue( acc, value,  function( )
       {
-         hook.stop();
+         hook.stop( );
 
          let expectedResult = value;
+         let expectedOutput = "\u001b[39m\u001b[34mSetting (Cached) Thermostat TargetTemperature\u001b[39m 12.3"
          let result = cmd4Accessory.getStoredValueForIndex( acc );
+
+         assert.include( hook.capturedLog( ), expectedOutput, ` setCachedValue output expected: ${ expectedOutput } received: ${ hook.capturedLog() }` );
 
          assert.equal(result, expectedResult, " setValue expected: " + expectedResult + " to be stored.  found: " + result );
 
-         let verifyCharacteristic = CMD4_ACC_TYPE_ENUM.properties[ acc ].verifyCharacteristic;
-         result = cmd4Accessory.getStoredValueForIndex( verifyCharacteristic );
-         assert.equal(result, expectedResult, " setValue verifyCharacteristic expected: " + expectedResult + " to be stored.  found: " + result );
+         let relatedCurrentAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ acc ].relatedCurrentAccTypeEnumIndex;
+
+         result = cmd4Accessory.getStoredValueForIndex( relatedCurrentAccTypeEnumIndex );
+         assert.equal(result, expectedResult, " setValue relatedCurrentAccTypeEnumIndex expected: " + expectedResult + " to be stored.  found: " + result );
 
          // Clear the hook buffer for next time.
-         hook.reset();
+         hook.reset( );
 
-         done();
+         done( );
       });
    });
 });
