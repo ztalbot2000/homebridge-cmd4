@@ -163,7 +163,7 @@ Note: As of version 3.0.4, Cmd4 directives like polling, state_cmd, etc will try
 * Star it on GitHub - if you use it and like it please at least star it :)
 * [Promote](#promotion)
 * Open [issues/tickets](https://github.com/ztalbot2000/homebridge-cmd4/issues)
-* Submit fixes and/or improvements with [Pull Requests](#source-code)
+* Submit fixes and/or improvements with [Pull Requests](https://github.com/ztalbot2000/homebridge-cmd4/pulls)
 
 
 
