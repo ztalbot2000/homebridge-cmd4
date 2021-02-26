@@ -2,6 +2,7 @@
 <base _target="_self">
 
 ## ChangeLog
+* <a href="#Whats-new-in-3-2-2">**Whats new in 3.2.2**</a>
 * <a href="#Whats-new-in-3-2-1">**Whats new in 3.2.1**</a>
 * <a href="#Whats-new-in-3-2-0">**Whats new in 3.2.0**</a>
 * <a href="#Whats-new-in-3-1-3">**Whats new in 3.1.3**</a>
@@ -30,6 +31,15 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-3-2-2">## Whats new in 3.2.2</a>
+#### 3.2.2 (2021-02-26)
+
+##### Bug Fixes
+
+*  For [#95](https://github.com/ztalbot2000/homebridge-cmd4/pull/95) correct link to pull requests ([6547ff8b](https://github.com/ztalbot2000/homebridge-cmd4/commit/6547ff8be33cb40041d03bd40f523bdc69f7d549))
+*  [#94](https://github.com/ztalbot2000/homebridge-cmd4/pull/94) Changes affect unit testing and Auto generated docs ([876f9889](https://github.com/ztalbot2000/homebridge-cmd4/commit/876f9889c7c46575d0d207a384469389aacc6cbe))
+
 
 <a name="Whats-new-in-3-2-1">## Whats new in 3.2.1</a>
 #### 3.2.1 (2021-02-24)
