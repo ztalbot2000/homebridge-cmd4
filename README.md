@@ -1,4 +1,5 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
+<base _target="_self">
 
 <BR><BR>
 ## &nbsp;&nbsp;&nbsp; **Cmd4** is a plugin for [Homebridge] that lets you see what Homebridge and Homekit are all about, without actually owning a single accessory!  For the more advanced user, Cmd4 brings CLI support for all device types (Accessories) and characteristics.
@@ -12,7 +13,6 @@
 * [**Screenshots**](#screenshots)
 * [**Installation Details**](#installation-details)
 * [**Basic Troubleshooting**](#basic-troubleshooting)
-   * [***Cannot add a Service with the same UUID***](#error-cannot-add-a-service-with-the-same-uuid)
    * [***Error: Command failed***](#error-command-failed)
    * [***Removing Cached Information***](#removing-cached-information)
    * [***Debug Steps***](#debug-steps)
@@ -96,10 +96,6 @@ See [homebridge](https://github.com/homebridge/homebridge) for complete details.
 
 <BR><BR>
 ## Basic Troubleshooting
-### Error: Cannot add a Service with the same UUID
-&nbsp;&nbsp;&nbsp; All devices of the same type must have a unique UUID. However this error can occur over restarts when Cmd4 tries to use previous stored configurations that are Cmd4 tries to use.  The "restartRecover" directive is new since Cmd4 version 3.
-
-
 
 ### Error: Command failed
 &nbsp;&nbsp;&nbsp; This error is indicative to many situations. The most common is that the command took to long to run.

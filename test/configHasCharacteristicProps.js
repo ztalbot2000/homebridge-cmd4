@@ -4,7 +4,6 @@
 // ***************** TEST LOADING **********************
 
 
-let HomebridgeAPI = require( "../node_modules/homebridge/lib/api" ).HomebridgeAPI;
 let _api = new HomebridgeAPI(); // object we feed to Plugins
 let pluginModule = require( "../index" );
 let cmd4 = pluginModule.default(_api);

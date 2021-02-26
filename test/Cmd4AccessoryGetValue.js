@@ -6,11 +6,9 @@
 let { Cmd4Accessory } = require( "../Cmd4Accessory" );
 
 
-var HomebridgeAPI = require( "../node_modules/homebridge/lib/api" ).HomebridgeAPI;
 var _api = new HomebridgeAPI( ); // object we feed to Plugins
 
 
-var logger_1 = require("../node_modules/homebridge/lib/logger");
 const log = logger_1.Logger.internal;
 Object.defineProperty(exports, "LogLevel", { enumerable: true, get: function ( ) { return logger_1.LogLevel; } });
 

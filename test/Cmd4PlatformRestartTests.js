@@ -5,7 +5,6 @@ const settings = require( "../cmd4Settings" );
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var logger_1 = require("../node_modules/homebridge/lib/logger");
 // logger_1.setDebugEnabled( );
 Object.defineProperty(exports, "LogLevel", { enumerable: true, get: function () { return logger_1.LogLevel; } });
 const log = logger_1.Logger.internal;
@@ -13,8 +12,6 @@ const log = logger_1.Logger.internal;
 
 // For caching/uncaching accessories to disk, like homebridge does.
 const node_persist_1 = __importDefault(require("node-persist"));
-// For serializing/deserializing arrays of accessories
-const platformAccessory_1 = require("../node_modules/homebridge/lib/platformAccessory")
 
 const path = require( "path" );
 const TEST_BASE_DIR = path.join(__dirname, "tmp");
@@ -74,7 +71,6 @@ function saveCachedPlatformAccessoriesOnDisk( cachedPlatformAccessories, accesso
 
 
 
-var HomebridgeAPI = require( "../node_modules/homebridge/lib/api" ).HomebridgeAPI;
 var _api = new HomebridgeAPI(); // object we feed to Plugins
 
 // The Library files that know all.

@@ -18,7 +18,7 @@
    },
    "dependencies": {
       "chalk": "^4.1.0",
-      "command-exists": ">=1.2.9",
+      "command-exists": "^1.2.9",
       "fakegato-history": ">=0.6.1",
       "github-version-checker": ">=2.2.0",
       "latest-version": "^5.1.0",
@@ -32,12 +32,12 @@
       "commitlint-plugin-function-rules": "^1.1.20",
       "eslint": "^7.17.0",
       "generate-changelog": "^1.8.0",
-      "hap-nodejs": "^0.8.5",
-      "homebridge": "^1.2.5",
       "husky": "^4.3.8",
       "markdown-link-check": "^3.8.6",
       "mocha": "^8.0.1",
-      "sinon": "^9.2.4"
+      "node-persist": "^0.0.11",
+      "sinon": "^9.2.4",
+      "which": "^2.0.2"
    },
    "directories": {
       "test": "test",
@@ -78,7 +78,9 @@
       "pretest": "printf ' test is only done in a development environment\n';sleep 2 ",
       "testDebug": "node_modules/.bin/mocha --require async-dump.js --file test/mocha-setup --ignore test/Cmd4Accessory.js --ignore test/versionChecker.js",
       "test": "node_modules/.bin/mocha --file test/mocha-setup --ignore test/Cmd4Accessory.js --ignore test/versionChecker.js",
+      "_Note0": "Excluded from commit as may fail for probing GitHub to much",
       "testMarkDown": "markdown-link-check ./README.md && markdown-link-check ./CHANGELOG.md",
+      "commitTests": "npm run test && npm run testMarkDown",
       "_Note": "Excluded only because they sometimes fail, but pass alone.    ",
       "testCmd4Accessory": "node_modules/.bin/mocha --file test/mocha-setup test/Cmd4Accessory.js",
       "testVersionChecker": "node_modules/.bin/mocha --file test/mocha-setup test/versionChecker.js",

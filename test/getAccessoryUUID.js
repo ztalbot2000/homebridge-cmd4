@@ -1,6 +1,5 @@
 "use strict";
 
-var HomebridgeAPI = require( "../node_modules/homebridge/lib/api" ).HomebridgeAPI;
 var _api = new HomebridgeAPI(); // object we feed to Plugins
 var pluginModule = require( "../index" );
 

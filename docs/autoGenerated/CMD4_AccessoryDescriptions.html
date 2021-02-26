@@ -614,7 +614,7 @@ block-warning a {
       <div id="AccessoryRuntimeInformation" class="section">
          <a name="AccessoryRuntimeInformation"></a>
          <header><h1>AccessoryRuntimeInformation</h1></header>
-         <p>UUID:00000203-0000-1000-8000-00000239</p>
+         <p>UUID:00000239-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
             <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
@@ -983,7 +983,7 @@ block-warning a {
             NightVision: < BOOLEAN >,
             Unknown format float,
             Unknown format float,
-            Unknown format float,
+            ImageRotation: < INT >,
             ImageMirroring: < BOOLEAN >,
             Name: "< STRING> ",
             <a href="#State_cmd">State_cmd</a>: < "STRING" >,
@@ -1060,7 +1060,7 @@ block-warning a {
             ManuallyDisabled: < BOOLEAN >,
             NightVision: < BOOLEAN >,
             ThirdPartyCameraActive: < UINT8 >,
-            CameraOperatingModeIndicator: < UINT8 >,
+            CameraOperatingModeIndicator: < BOOLEAN >,
             PeriodicSnapshotsActive: < UINT8 >,
             <a href="#State_cmd">State_cmd</a>: < "STRING" >,
             <a href="#Polling">Polling</a>: < POLLING>
@@ -1203,7 +1203,7 @@ block-warning a {
       <div id="Diagnostics" class="section">
          <a name="Diagnostics"></a>
          <header><h1>Diagnostics</h1></header>
-         <p>UUID:00000203-0000-1000-8000-00000237</p>
+         <p>UUID:00000237-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
             <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
@@ -1878,7 +1878,7 @@ block-warning a {
             Unknown format float,
             Unknown format float,
             Name: "< STRING> ",
-            ColorTemperature: < UINT32 >,
+            ColorTemperature: < INT >,
             <a href="#State_cmd">State_cmd</a>: < "STRING" >,
             <a href="#Polling">Polling</a>: < POLLING>
 
@@ -3180,6 +3180,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000B0-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -3188,8 +3189,6 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "INACTIVE" </TD></tr>
             <tr><TD> 1 </TD><TD> "ACTIVE" </TD></tr>
          </table>
-         <h4>Note:</h4>
-         <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#Active">Active</a></note>
       </DIV>   <!-- Active -->
       <div id="ActiveIdentifier" class="section" >
          <a name="ActiveIdentifier"></a>
@@ -3208,7 +3207,7 @@ block-warning a {
          <h3>Properties</h3>
          <table>
             <tr><TD> Type: </TD><TD> ActivityInterval</TD></tr>
-            <tr><TD> UUID: </TD><TD> 0000021E-0000-1000-8000-0000023B</TD></tr>
+            <tr><TD> UUID: </TD><TD> 0000023B-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint32</TD></tr>
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
@@ -3240,7 +3239,6 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 00000064-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> float</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1000</TD></tr>
-            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
       </DIV>   <!-- AirParticulateDensity -->
@@ -3253,6 +3251,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 00000065-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -3271,6 +3270,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 00000095-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  5</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -3357,7 +3357,7 @@ block-warning a {
          <h3>Properties</h3>
          <table>
             <tr><TD> Type: </TD><TD> CCAEnergyDetectThreshold</TD></tr>
-            <tr><TD> UUID: </TD><TD> 0000021E-0000-1000-8000-00000246</TD></tr>
+            <tr><TD> UUID: </TD><TD> 00000246-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> int</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
@@ -3368,7 +3368,7 @@ block-warning a {
          <h3>Properties</h3>
          <table>
             <tr><TD> Type: </TD><TD> CCASignalDetectThreshold</TD></tr>
-            <tr><TD> UUID: </TD><TD> 0000021E-0000-1000-8000-00000245</TD></tr>
+            <tr><TD> UUID: </TD><TD> 00000245-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> int</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
@@ -3380,7 +3380,7 @@ block-warning a {
          <table>
             <tr><TD> Type: </TD><TD> CameraOperatingModeIndicator</TD></tr>
             <tr><TD> UUID: </TD><TD> 0000021D-0000-1000-8000-0026BB765291</TD></tr>
-            <tr><TD> Format: </TD><TD> uint8</TD></tr>
+            <tr><TD> Format: </TD><TD> bool</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events, Timed Write</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -3399,6 +3399,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 00000092-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -3417,6 +3418,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 00000093-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> float</TD></tr>
             <tr><TD> Max Value: </TD><TD>  100000</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
       </DIV>   <!-- CarbonDioxideLevel -->
@@ -3429,6 +3431,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 00000094-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> float</TD></tr>
             <tr><TD> Max Value: </TD><TD>  100000</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
       </DIV>   <!-- CarbonDioxidePeakLevel -->
@@ -3441,6 +3444,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 00000069-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -3459,6 +3463,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 00000090-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> float</TD></tr>
             <tr><TD> Max Value: </TD><TD>  100</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
       </DIV>   <!-- CarbonMonoxideLevel -->
@@ -3471,6 +3476,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 00000091-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> float</TD></tr>
             <tr><TD> Max Value: </TD><TD>  100</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
       </DIV>   <!-- CarbonMonoxidePeakLevel -->
@@ -3484,7 +3490,6 @@ block-warning a {
             <tr><TD> Format: </TD><TD> uint16</TD></tr>
             <tr><TD> Min Value: </TD><TD>  1</TD></tr>
             <tr><TD> Max Value: </TD><TD>  16</TD></tr>
-            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
       </DIV>   <!-- Category -->
@@ -3494,9 +3499,9 @@ block-warning a {
          <h3>Properties</h3>
          <table>
             <tr><TD> Type: </TD><TD> CharacteristicValueTransitionControl</TD></tr>
-            <tr><TD> UUID: </TD><TD> 0000021E-0000-1000-8000-00000143</TD></tr>
+            <tr><TD> UUID: </TD><TD> 00000143-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
-            <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
+            <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Write Response</TD></tr>
          </table>
       </DIV>   <!-- CharacteristicValueTransitionControl -->
       <div id="ChargingState" class="section" >
@@ -3508,6 +3513,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 0000008F-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  2</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -3527,6 +3533,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000DD-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -3543,7 +3550,7 @@ block-warning a {
          <table>
             <tr><TD> Type: </TD><TD> ColorTemperature</TD></tr>
             <tr><TD> UUID: </TD><TD> 000000CE-0000-1000-8000-0026BB765291</TD></tr>
-            <tr><TD> Format: </TD><TD> uint32</TD></tr>
+            <tr><TD> Format: </TD><TD> int</TD></tr>
             <tr><TD> Min Value: </TD><TD>  140</TD></tr>
             <tr><TD> Max Value: </TD><TD>  500</TD></tr>
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
@@ -3592,6 +3599,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 0000006A-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -3625,6 +3633,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000A9-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  2</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -3658,6 +3667,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 0000000E-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  4</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -3679,6 +3689,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000AF-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  2</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -3698,6 +3709,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000B1-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  3</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -3718,6 +3730,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 0000000F-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  3</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -3753,6 +3766,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000B3-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  3</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -3773,6 +3787,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000E0-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  5</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -3781,7 +3796,6 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "PLAY" </TD></tr>
             <tr><TD> 1 </TD><TD> "PAUSE" </TD></tr>
             <tr><TD> 2 </TD><TD> "STOP" </TD></tr>
-            <tr><TD> 3 </TD><TD> "UNKNOWN3" </TD></tr>
             <tr><TD> 4 </TD><TD> "LOADING" </TD></tr>
             <tr><TD> 5 </TD><TD> "INTERRUPTED" </TD></tr>
          </table>
@@ -3823,6 +3837,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000AA-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  2</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -3842,6 +3857,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 00000011-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> float</TD></tr>
             <tr><TD> Unit: </TD><TD>  celsius</TD></tr>
+            <tr><TD> Min Value: </TD><TD>  -273.15</TD></tr>
             <tr><TD> Max Value: </TD><TD>  100</TD></tr>
             <tr><TD> Min Step: </TD><TD>  0.1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
@@ -3879,7 +3895,7 @@ block-warning a {
          <h3>Properties</h3>
          <table>
             <tr><TD> Type: </TD><TD> CurrentTransport</TD></tr>
-            <tr><TD> UUID: </TD><TD> 0000021E-0000-1000-8000-0000022B</TD></tr>
+            <tr><TD> UUID: </TD><TD> 0000022B-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> bool</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
@@ -3913,7 +3929,8 @@ block-warning a {
             <tr><TD> Type: </TD><TD> CurrentVisibilityState</TD></tr>
             <tr><TD> UUID: </TD><TD> 00000135-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
-            <tr><TD> Max Value: </TD><TD>  3</TD></tr>
+            <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -3921,8 +3938,6 @@ block-warning a {
             <TD> Value </TD><TD> String </TD>
             <tr><TD> 0 </TD><TD> "SHOWN" </TD></tr>
             <tr><TD> 1 </TD><TD> "HIDDEN" </TD></tr>
-            <tr><TD> 2 </TD><TD> "UNKNOWN2" </TD></tr>
-            <tr><TD> 3 </TD><TD> "UNKNOWN3" </TD></tr>
          </table>
       </DIV>   <!-- CurrentVisibilityState -->
       <div id="DataStreamHAPTransport" class="section" >
@@ -3931,7 +3946,7 @@ block-warning a {
          <h3>Properties</h3>
          <table>
             <tr><TD> Type: </TD><TD> DataStreamHAPTransport</TD></tr>
-            <tr><TD> UUID: </TD><TD> 0000021E-0000-1000-8000-00000138</TD></tr>
+            <tr><TD> UUID: </TD><TD> 00000138-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Write Response</TD></tr>
          </table>
@@ -3942,7 +3957,7 @@ block-warning a {
          <h3>Properties</h3>
          <table>
             <tr><TD> Type: </TD><TD> DataStreamHAPTransportInterrupt</TD></tr>
-            <tr><TD> UUID: </TD><TD> 0000021E-0000-1000-8000-00000139</TD></tr>
+            <tr><TD> UUID: </TD><TD> 00000139-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
@@ -3957,7 +3972,6 @@ block-warning a {
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Min Value: </TD><TD>  1</TD></tr>
             <tr><TD> Max Value: </TD><TD>  7</TD></tr>
-            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write</TD></tr>
          </table>
       </DIV>   <!-- DayoftheWeek -->
@@ -3971,7 +3985,6 @@ block-warning a {
             <tr><TD> Format: </TD><TD> float</TD></tr>
             <tr><TD> Unit: </TD><TD>  arcdegrees</TD></tr>
             <tr><TD> Max Value: </TD><TD>  360</TD></tr>
-            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
       </DIV>   <!-- DiagonalFieldOfView -->
@@ -3983,6 +3996,7 @@ block-warning a {
             <tr><TD> Type: </TD><TD> DigitalZoom</TD></tr>
             <tr><TD> UUID: </TD><TD> 0000011D-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> float</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  0.1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
       </DIV>   <!-- DigitalZoom -->
@@ -4025,7 +4039,7 @@ block-warning a {
          <h3>Properties</h3>
          <table>
             <tr><TD> Type: </TD><TD> EventRetransmissionMaximum</TD></tr>
-            <tr><TD> UUID: </TD><TD> 0000021E-0000-1000-8000-0000023D</TD></tr>
+            <tr><TD> UUID: </TD><TD> 0000023D-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
@@ -4038,6 +4052,7 @@ block-warning a {
             <tr><TD> Type: </TD><TD> EventSnapshotsActive</TD></tr>
             <tr><TD> UUID: </TD><TD> 00000223-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
+            <tr><TD> Max Value: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -4053,7 +4068,7 @@ block-warning a {
          <h3>Properties</h3>
          <table>
             <tr><TD> Type: </TD><TD> EventTransmissionCounters</TD></tr>
-            <tr><TD> UUID: </TD><TD> 0000021E-0000-1000-8000-0000023E</TD></tr>
+            <tr><TD> UUID: </TD><TD> 0000023E-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint32</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
@@ -4067,6 +4082,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000AC-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -4085,6 +4101,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000AB-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> float</TD></tr>
             <tr><TD> Max Value: </TD><TD>  100</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
       </DIV>   <!-- FilterLifeLevel -->
@@ -4116,7 +4133,7 @@ block-warning a {
          <h3>Properties</h3>
          <table>
             <tr><TD> Type: </TD><TD> HeartBeat</TD></tr>
-            <tr><TD> UUID: </TD><TD> 0000021E-0000-1000-8000-0000024A</TD></tr>
+            <tr><TD> UUID: </TD><TD> 0000024A-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint32</TD></tr>
             <tr><TD> Perms: </TD><TD>  Events, Paired Read</TD></tr>
          </table>
@@ -4160,7 +4177,8 @@ block-warning a {
             <tr><TD> Type: </TD><TD> HomeKitCameraActive</TD></tr>
             <tr><TD> UUID: </TD><TD> 0000021B-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
-            <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events, Timed Write</TD></tr>
+            <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
          <h3>Constants</h3>
          <table>
@@ -4191,7 +4209,6 @@ block-warning a {
             <tr><TD> Type: </TD><TD> Identifier</TD></tr>
             <tr><TD> UUID: </TD><TD> 000000E6-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint32</TD></tr>
-            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
       </DIV>   <!-- Identifier -->
@@ -4236,10 +4253,10 @@ block-warning a {
          <table>
             <tr><TD> Type: </TD><TD> ImageRotation</TD></tr>
             <tr><TD> UUID: </TD><TD> 0000011E-0000-1000-8000-0026BB765291</TD></tr>
-            <tr><TD> Format: </TD><TD> float</TD></tr>
+            <tr><TD> Format: </TD><TD> int</TD></tr>
             <tr><TD> Unit: </TD><TD>  arcdegrees</TD></tr>
-            <tr><TD> Max Value: </TD><TD>  270</TD></tr>
-            <tr><TD> Min Step: </TD><TD>  90</TD></tr>
+            <tr><TD> Max Value: </TD><TD>  360</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
       </DIV>   <!-- ImageRotation -->
@@ -4252,6 +4269,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000D2-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -4270,6 +4288,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000DC-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  6</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -4281,7 +4300,7 @@ block-warning a {
             <tr><TD> 3 </TD><TD> "TUNER" </TD></tr>
             <tr><TD> 4 </TD><TD> "PLAYBACK" </TD></tr>
             <tr><TD> 5 </TD><TD> "AUDIO_SYSTEM" </TD></tr>
-            <tr><TD> 6 </TD><TD> "UNKNOWN_6" </TD></tr>
+            <tr><TD> undefined </TD><TD> "UNKNOWN_6" </TD></tr>
          </table>
       </DIV>   <!-- InputDeviceType -->
       <div id="InputSourceType" class="section" >
@@ -4293,6 +4312,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000DB-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  10</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -4320,6 +4340,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000D6-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -4338,6 +4359,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 00000070-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -4357,7 +4379,6 @@ block-warning a {
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Min Value: </TD><TD>  1</TD></tr>
             <tr><TD> Max Value: </TD><TD>  4</TD></tr>
-            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
       </DIV>   <!-- LinkQuality -->
@@ -4381,6 +4402,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 0000001D-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  3</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -4400,7 +4422,8 @@ block-warning a {
             <tr><TD> Type: </TD><TD> LockLastKnownAction</TD></tr>
             <tr><TD> UUID: </TD><TD> 0000001C-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
-            <tr><TD> Max Value: </TD><TD>  8</TD></tr>
+            <tr><TD> Max Value: </TD><TD>  10</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -4415,6 +4438,8 @@ block-warning a {
             <tr><TD> 6 </TD><TD> "SECURED_REMOTELY" </TD></tr>
             <tr><TD> 7 </TD><TD> "UNSECURED_REMOTELY" </TD></tr>
             <tr><TD> 8 </TD><TD> "SECURED_BY_AUTO_SECURE_TIMEOUT" </TD></tr>
+            <tr><TD> 9 </TD><TD> "SECURED_PHYSICALLY" </TD></tr>
+            <tr><TD> 10 </TD><TD> "UNSECURED_PHYSICALLY" </TD></tr>
          </table>
       </DIV>   <!-- LockLastKnownAction -->
       <div id="LockManagementAutoSecurityTimeout" class="section" >
@@ -4438,6 +4463,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000A7-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -4456,6 +4482,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 0000001E-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -4464,8 +4491,6 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "UNSECURED" </TD></tr>
             <tr><TD> 1 </TD><TD> "SECURED" </TD></tr>
          </table>
-         <h4>Note:</h4>
-         <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#LockCurrentState">LockCurrentState</a></note>
       </DIV>   <!-- LockTargetState -->
       <div id="Logs" class="section" >
          <a name="Logs"></a>
@@ -4484,7 +4509,7 @@ block-warning a {
          <h3>Properties</h3>
          <table>
             <tr><TD> Type: </TD><TD> MACRetransmissionMaximum</TD></tr>
-            <tr><TD> UUID: </TD><TD> 0000021E-0000-1000-8000-00000247</TD></tr>
+            <tr><TD> UUID: </TD><TD> 00000247-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
@@ -4495,7 +4520,7 @@ block-warning a {
          <h3>Properties</h3>
          <table>
             <tr><TD> Type: </TD><TD> MACTransmissionCounters</TD></tr>
-            <tr><TD> UUID: </TD><TD> 0000021E-0000-1000-8000-00000248</TD></tr>
+            <tr><TD> UUID: </TD><TD> 00000248-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> data</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
@@ -4692,6 +4717,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 00000071-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -4724,7 +4750,7 @@ block-warning a {
          <h3>Properties</h3>
          <table>
             <tr><TD> Type: </TD><TD> OperatingStateResponse</TD></tr>
-            <tr><TD> UUID: </TD><TD> 0000021E-0000-1000-8000-00000232</TD></tr>
+            <tr><TD> UUID: </TD><TD> 00000232-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
@@ -4737,6 +4763,7 @@ block-warning a {
             <tr><TD> Type: </TD><TD> OpticalZoom</TD></tr>
             <tr><TD> UUID: </TD><TD> 0000011C-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> float</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  0.1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
       </DIV>   <!-- OpticalZoom -->
@@ -4877,6 +4904,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000E2-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  13</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -4904,7 +4932,7 @@ block-warning a {
          <h3>Properties</h3>
          <table>
             <tr><TD> Type: </TD><TD> Ping</TD></tr>
-            <tr><TD> UUID: </TD><TD> 0000021E-0000-1000-8000-0000023C</TD></tr>
+            <tr><TD> UUID: </TD><TD> 0000023C-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> data</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
@@ -4918,6 +4946,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 00000072-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  2</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -4937,6 +4966,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000DF-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Write</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -4966,6 +4996,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000D1-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  2</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -4985,6 +5016,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 00000073-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  2</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -5016,7 +5048,7 @@ block-warning a {
             <tr><TD> Type: </TD><TD> Reachable</TD></tr>
             <tr><TD> UUID: </TD><TD> 00000063-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> bool</TD></tr>
-            <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
+            <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write</TD></tr>
          </table>
          <h3>Constants</h3>
          <table>
@@ -5031,7 +5063,7 @@ block-warning a {
          <h3>Properties</h3>
          <table>
             <tr><TD> Type: </TD><TD> ReceivedSignalStrengthIndication</TD></tr>
-            <tr><TD> UUID: </TD><TD> 0000021E-0000-1000-8000-0000023F</TD></tr>
+            <tr><TD> UUID: </TD><TD> 0000023F-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> int</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
@@ -5042,7 +5074,7 @@ block-warning a {
          <h3>Properties</h3>
          <table>
             <tr><TD> Type: </TD><TD> ReceiverSensitivity</TD></tr>
-            <tr><TD> UUID: </TD><TD> 0000021E-0000-1000-8000-00000244</TD></tr>
+            <tr><TD> UUID: </TD><TD> 00000244-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> int</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
@@ -5055,7 +5087,7 @@ block-warning a {
             <tr><TD> Type: </TD><TD> RecordingAudioActive</TD></tr>
             <tr><TD> UUID: </TD><TD> 00000226-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
-            <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
+            <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events, Timed Write</TD></tr>
          </table>
          <h3>Constants</h3>
          <table>
@@ -5127,6 +5159,8 @@ block-warning a {
             <tr><TD> Type: </TD><TD> RelayState</TD></tr>
             <tr><TD> UUID: </TD><TD> 0000005C-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
+            <tr><TD> Max Value: </TD><TD>  5</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
       </DIV>   <!-- RelayState -->
@@ -5152,6 +5186,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000E1-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  16</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Write</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -5199,6 +5234,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 00000028-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> int</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -5276,6 +5312,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 00000066-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  4</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -5297,6 +5334,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 00000067-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  3</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -5307,8 +5345,6 @@ block-warning a {
             <tr><TD> 2 </TD><TD> "NIGHT_ARM" </TD></tr>
             <tr><TD> 3 </TD><TD> "DISARM" </TD></tr>
          </table>
-         <h4>Note:</h4>
-         <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#SecuritySystemCurrentState">SecuritySystemCurrentState</a></note>
       </DIV>   <!-- SecuritySystemTargetState -->
       <div id="SelectedAudioStreamConfiguration" class="section" >
          <a name="SelectedAudioStreamConfiguration"></a>
@@ -5377,6 +5413,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000CD-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -5438,7 +5475,7 @@ block-warning a {
          <h3>Properties</h3>
          <table>
             <tr><TD> Type: </TD><TD> SignalToNoiseRatio</TD></tr>
-            <tr><TD> UUID: </TD><TD> 0000021E-0000-1000-8000-00000241</TD></tr>
+            <tr><TD> UUID: </TD><TD> 00000241-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> int</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
@@ -5468,6 +5505,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000C0-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -5486,6 +5524,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000E8-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -5501,7 +5540,7 @@ block-warning a {
          <h3>Properties</h3>
          <table>
             <tr><TD> Type: </TD><TD> SleepInterval</TD></tr>
-            <tr><TD> UUID: </TD><TD> 0000021E-0000-1000-8000-0000023A</TD></tr>
+            <tr><TD> UUID: </TD><TD> 0000023A-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint32</TD></tr>
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
@@ -5516,6 +5555,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 00000076-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -5562,6 +5602,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 00000077-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -5580,6 +5621,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 00000078-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -5598,6 +5640,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 00000079-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -5616,6 +5659,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 0000007A-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -5699,7 +5743,7 @@ block-warning a {
          <h3>Properties</h3>
          <table>
             <tr><TD> Type: </TD><TD> SupportedCharacteristicValueTransitionConfiguration</TD></tr>
-            <tr><TD> UUID: </TD><TD> 0000021E-0000-1000-8000-00000144</TD></tr>
+            <tr><TD> UUID: </TD><TD> 00000144-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
@@ -5710,7 +5754,7 @@ block-warning a {
          <h3>Properties</h3>
          <table>
             <tr><TD> Type: </TD><TD> SupportedDiagnosticsSnapshot</TD></tr>
-            <tr><TD> UUID: </TD><TD> 0000021E-0000-1000-8000-00000238</TD></tr>
+            <tr><TD> UUID: </TD><TD> 00000238-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
@@ -5779,6 +5823,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000B6-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -5797,6 +5842,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000A8-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -5805,8 +5851,6 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "MANUAL" </TD></tr>
             <tr><TD> 1 </TD><TD> "AUTO" </TD></tr>
          </table>
-         <h4>Note:</h4>
-         <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentAirPurifierState">CurrentAirPurifierState</a></note>
       </DIV>   <!-- TargetAirPurifierState -->
       <div id="TargetAirQuality" class="section" >
          <a name="TargetAirQuality"></a>
@@ -5826,8 +5870,6 @@ block-warning a {
             <tr><TD> 1 </TD><TD> "GOOD" </TD></tr>
             <tr><TD> 2 </TD><TD> "FAIR" </TD></tr>
          </table>
-         <h4>Note:</h4>
-         <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#AirQuality">AirQuality</a></note>
       </DIV>   <!-- TargetAirQuality -->
       <div id="TargetControlList" class="section" >
          <a name="TargetControlList"></a>
@@ -5860,6 +5902,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 00000032-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -5868,8 +5911,6 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "OPEN" </TD></tr>
             <tr><TD> 1 </TD><TD> "CLOSED" </TD></tr>
          </table>
-         <h4>Note:</h4>
-         <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentDoorState">CurrentDoorState</a></note>
       </DIV>   <!-- TargetDoorState -->
       <div id="TargetFanState" class="section" >
          <a name="TargetFanState"></a>
@@ -5880,6 +5921,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000BF-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -5888,8 +5930,6 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "MANUAL" </TD></tr>
             <tr><TD> 1 </TD><TD> "AUTO" </TD></tr>
          </table>
-         <h4>Note:</h4>
-         <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentFanState">CurrentFanState</a></note>
       </DIV>   <!-- TargetFanState -->
       <div id="TargetHeaterCoolerState" class="section" >
          <a name="TargetHeaterCoolerState"></a>
@@ -5900,6 +5940,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000B2-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  2</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -5909,8 +5950,6 @@ block-warning a {
             <tr><TD> 1 </TD><TD> "HEAT" </TD></tr>
             <tr><TD> 2 </TD><TD> "COOL" </TD></tr>
          </table>
-         <h4>Note:</h4>
-         <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentHeaterCoolerState">CurrentHeaterCoolerState</a></note>
       </DIV>   <!-- TargetHeaterCoolerState -->
       <div id="TargetHeatingCoolingState" class="section" >
          <a name="TargetHeatingCoolingState"></a>
@@ -5921,6 +5960,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 00000033-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  3</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -5931,8 +5971,6 @@ block-warning a {
             <tr><TD> 2 </TD><TD> "COOL" </TD></tr>
             <tr><TD> 3 </TD><TD> "AUTO" </TD></tr>
          </table>
-         <h4>Note:</h4>
-         <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentHeatingCoolingState">CurrentHeatingCoolingState</a></note>
       </DIV>   <!-- TargetHeatingCoolingState -->
       <div id="TargetHorizontalTiltAngle" class="section" >
          <a name="TargetHorizontalTiltAngle"></a>
@@ -5948,8 +5986,6 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-         <h4>Note:</h4>
-         <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentHorizontalTiltAngle">CurrentHorizontalTiltAngle</a></note>
       </DIV>   <!-- TargetHorizontalTiltAngle -->
       <div id="TargetHumidifierDehumidifierState" class="section" >
          <a name="TargetHumidifierDehumidifierState"></a>
@@ -5960,6 +5996,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000B4-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  2</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -5969,8 +6006,6 @@ block-warning a {
             <tr><TD> 1 </TD><TD> "HUMIDIFIER" </TD></tr>
             <tr><TD> 2 </TD><TD> "DEHUMIDIFIER" </TD></tr>
          </table>
-         <h4>Note:</h4>
-         <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentHumidifierDehumidifierState">CurrentHumidifierDehumidifierState</a></note>
       </DIV>   <!-- TargetHumidifierDehumidifierState -->
       <div id="TargetMediaState" class="section" >
          <a name="TargetMediaState"></a>
@@ -5981,6 +6016,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 00000137-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  2</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -5989,10 +6025,7 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "PLAY" </TD></tr>
             <tr><TD> 1 </TD><TD> "PAUSE" </TD></tr>
             <tr><TD> 2 </TD><TD> "STOP" </TD></tr>
-            <tr><TD> 3 </TD><TD> "UNKNOWN3" </TD></tr>
          </table>
-         <h4>Note:</h4>
-         <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentMediaState">CurrentMediaState</a></note>
       </DIV>   <!-- TargetMediaState -->
       <div id="TargetPosition" class="section" >
          <a name="TargetPosition"></a>
@@ -6007,8 +6040,6 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-         <h4>Note:</h4>
-         <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentPosition">CurrentPosition</a></note>
       </DIV>   <!-- TargetPosition -->
       <div id="TargetRelativeHumidity" class="section" >
          <a name="TargetRelativeHumidity"></a>
@@ -6023,8 +6054,6 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-         <h4>Note:</h4>
-         <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentRelativeHumidity">CurrentRelativeHumidity</a></note>
       </DIV>   <!-- TargetRelativeHumidity -->
       <div id="TargetSlatState" class="section" >
          <a name="TargetSlatState"></a>
@@ -6043,8 +6072,6 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "MANUAL" </TD></tr>
             <tr><TD> 1 </TD><TD> "AUTO" </TD></tr>
          </table>
-         <h4>Note:</h4>
-         <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentSlatState">CurrentSlatState</a></note>
       </DIV>   <!-- TargetSlatState -->
       <div id="TargetTemperature" class="section" >
          <a name="TargetTemperature"></a>
@@ -6060,8 +6087,6 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  0.1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-         <h4>Note:</h4>
-         <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentTemperature">CurrentTemperature</a></note>
       </DIV>   <!-- TargetTemperature -->
       <div id="TargetTiltAngle" class="section" >
          <a name="TargetTiltAngle"></a>
@@ -6077,8 +6102,6 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-         <h4>Note:</h4>
-         <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentTiltAngle">CurrentTiltAngle</a></note>
       </DIV>   <!-- TargetTiltAngle -->
       <div id="TargetVerticalTiltAngle" class="section" >
          <a name="TargetVerticalTiltAngle"></a>
@@ -6094,8 +6117,6 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
-         <h4>Note:</h4>
-         <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentVerticalTiltAngle">CurrentVerticalTiltAngle</a></note>
       </DIV>   <!-- TargetVerticalTiltAngle -->
       <div id="TargetVisibilityState" class="section" >
          <a name="TargetVisibilityState"></a>
@@ -6106,6 +6127,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 00000134-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -6114,8 +6136,6 @@ block-warning a {
             <tr><TD> 0 </TD><TD> "SHOWN" </TD></tr>
             <tr><TD> 1 </TD><TD> "HIDDEN" </TD></tr>
          </table>
-         <h4>Note:</h4>
-         <note>Setting this characteristic will automstically trigger a "Get" of the characteristic: <a href="#CurrentVisibilityState">CurrentVisibilityState</a></note>
       </DIV>   <!-- TargetVisibilityState -->
       <div id="TemperatureDisplayUnits" class="section" >
          <a name="TemperatureDisplayUnits"></a>
@@ -6126,6 +6146,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 00000036-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -6160,7 +6181,7 @@ block-warning a {
             <tr><TD> Type: </TD><TD> TimeUpdate</TD></tr>
             <tr><TD> UUID: </TD><TD> 0000009A-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> bool</TD></tr>
-            <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
+            <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write</TD></tr>
          </table>
          <h3>Constants</h3>
          <table>
@@ -6175,7 +6196,7 @@ block-warning a {
          <h3>Properties</h3>
          <table>
             <tr><TD> Type: </TD><TD> TransmitPower</TD></tr>
-            <tr><TD> UUID: </TD><TD> 0000021E-0000-1000-8000-00000242</TD></tr>
+            <tr><TD> UUID: </TD><TD> 00000242-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> int</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
@@ -6198,7 +6219,7 @@ block-warning a {
          <table>
             <tr><TD> Type: </TD><TD> TunnelConnectionTimeout</TD></tr>
             <tr><TD> UUID: </TD><TD> 00000061-0000-1000-8000-0026BB765291</TD></tr>
-            <tr><TD> Format: </TD><TD> uint32</TD></tr>
+            <tr><TD> Format: </TD><TD> int</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Write, Paired Read, Events</TD></tr>
          </table>
       </DIV>   <!-- TunnelConnectionTimeout -->
@@ -6243,7 +6264,7 @@ block-warning a {
          <table>
             <tr><TD> Type: </TD><TD> TunneledAccessoryStateNumber</TD></tr>
             <tr><TD> UUID: </TD><TD> 00000058-0000-1000-8000-0026BB765291</TD></tr>
-            <tr><TD> Format: </TD><TD> float</TD></tr>
+            <tr><TD> Format: </TD><TD> int</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
       </DIV>   <!-- TunneledAccessoryStateNumber -->
@@ -6269,6 +6290,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000D5-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  3</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -6288,7 +6310,7 @@ block-warning a {
             <tr><TD> Type: </TD><TD> Version</TD></tr>
             <tr><TD> UUID: </TD><TD> 00000037-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> string</TD></tr>
-            <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
+            <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
       </DIV>   <!-- Version -->
       <div id="VideoAnalysisActive" class="section" >
@@ -6297,7 +6319,7 @@ block-warning a {
          <h3>Properties</h3>
          <table>
             <tr><TD> Type: </TD><TD> VideoAnalysisActive</TD></tr>
-            <tr><TD> UUID: </TD><TD> 0000021E-0000-1000-8000-00000229</TD></tr>
+            <tr><TD> UUID: </TD><TD> 00000229-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
@@ -6325,6 +6347,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000E9-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  3</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -6345,6 +6368,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000EA-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint8</TD></tr>
             <tr><TD> Max Value: </TD><TD>  1</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Write</TD></tr>
          </table>
          <h3>Constants</h3>
@@ -6396,6 +6420,7 @@ block-warning a {
             <tr><TD> UUID: </TD><TD> 000000B5-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> float</TD></tr>
             <tr><TD> Max Value: </TD><TD>  100</TD></tr>
+            <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
       </DIV>   <!-- WaterLevel -->
@@ -6405,7 +6430,7 @@ block-warning a {
          <h3>Properties</h3>
          <table>
             <tr><TD> Type: </TD><TD> WiFiCapabilities</TD></tr>
-            <tr><TD> UUID: </TD><TD> 0000021E-0000-1000-8000-0000022C</TD></tr>
+            <tr><TD> UUID: </TD><TD> 0000022C-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> uint32</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read</TD></tr>
          </table>
@@ -6416,7 +6441,7 @@ block-warning a {
          <h3>Properties</h3>
          <table>
             <tr><TD> Type: </TD><TD> WiFiConfigurationControl</TD></tr>
-            <tr><TD> UUID: </TD><TD> 0000021E-0000-1000-8000-0000022D</TD></tr>
+            <tr><TD> UUID: </TD><TD> 0000022D-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> tlv8</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events, Timed Write, Write Response</TD></tr>
          </table>

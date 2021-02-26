@@ -87,7 +87,6 @@ describe( "Quick Testing CMD4_DEVICE_TYPE_ENUM EOL", ( ) =>
    });
 });
 
-var HomebridgeAPI = require( "../node_modules/homebridge/lib/api" ).HomebridgeAPI;
 var _api = new HomebridgeAPI( ); // object we feed to Plugins
 
 describe( "Testing homebridge API", ( ) =>

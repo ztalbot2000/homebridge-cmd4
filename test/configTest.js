@@ -1,5 +1,7 @@
 'use strict';
 
+var _api = new HomebridgeAPI( ); // object we feed to Plugins
+
 let indexOfEnum = require( "../utils/indexOfEnum" );
 Object.defineProperty(exports, "indexOfEnum", { enumerable: true, get: function () { return indexOfEnum.indexOfEnum; } });
 
@@ -19,8 +21,6 @@ describe( "Testing our config.json", ( ) =>
    });
 
 })
-var HomebridgeAPI = require( "../node_modules/homebridge/lib/api" ).HomebridgeAPI;
-var _api = new HomebridgeAPI( ); // object we feed to Plugins
 
 
 

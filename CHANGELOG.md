@@ -1,4 +1,5 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
+<base _target="_self">
 
 ## ChangeLog
 * <a href="#Whats-new-in-3-2-1">**Whats new in 3.2.1**</a>

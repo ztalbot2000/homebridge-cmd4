@@ -7,7 +7,6 @@ Object.defineProperty(exports, "indexOfEnum", { enumerable: true, get: function 
 
 describe( "Initializing our plugin module", ( ) => {});
 
-let HomebridgeAPI = require( "../node_modules/homebridge/lib/api" ).HomebridgeAPI;
 let _api = new HomebridgeAPI( ); // object we feed to Plugins
 
 // Init the library for all to use

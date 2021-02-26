@@ -1,4 +1,5 @@
 # Homebridges-cmd4 - Cmd4 Developers Guide.
+<base _target="_self">
 
 
 ## Table of Contents
@@ -197,7 +198,7 @@ Notice that there is no Platform definition. Otherwise everything is the same. Y
 
 ## Cmd4 Directives
 
-&nbsp;&nbsp;&nbsp; Homebridge-Cmd4 has many directives, the most important being the "state_cmd". The provided config.min.json file shows many of the directives in action. A complete list of all Cmd4 directives can be found in the auoto generated Cmd4 documentation found at :[https://ztalbot2000.github.io/homebridge-cmd4](https://ztalbot2000.github.io/homebridge-cmd4).
+&nbsp;&nbsp;&nbsp; Homebridge-Cmd4 has many directives, the most important being the "state_cmd". The provided config.min.json file shows many of the directives in action. A complete list of all Cmd4 directives can be found in the auto generated Cmd4 documentation found at :[https://ztalbot2000.github.io/homebridge-cmd4](https://ztalbot2000.github.io/homebridge-cmd4).
 
 ## Cmd4 Devices and Characteristics
 

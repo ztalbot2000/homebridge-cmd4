@@ -3,6 +3,7 @@ module.exports = {
    plugins: ['commitlint-plugin-function-rules'],
    rules: {
       'header-case': [ 0 ],
+      'body-max-line-length': [0],  // level: disabled
       'function-rules/header-case': [
          2, // level: error
          'always',

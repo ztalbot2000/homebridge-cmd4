@@ -1,6 +1,47 @@
-// These instructions taken from: https://airbnb.io/enzyme/docs/guides/jsdom.html
+// Define common functions and values for all unit tests.
 
-global.fs = require('fs')
+const which = require('which');
+const path = require( "path" );
+
+// Get the real path of homebridge instead of a dev dependancy,
+// which caused issues if you forget to update dependancies but
+// upgrade homebridge.
+const homebridgePath = which.sync( 'homebridge', { nothrow: true } )
+
+let apiPath;
+if ( homebridgePath )
+{
+   let dirname = path.dirname( homebridgePath );
+
+   console.log( "Found homebridge in path %s", dirname );
+   apiPath = `${ dirname }/../lib/node_modules/homebridge/lib/api`;
+   global.HomebridgeAPI = require( apiPath ).HomebridgeAPI;
+
+   if ( ! global.HomebridgeAPI )
+   {
+      console.log( "homebridgeAPI not available !!!" );
+      process.exit( 10 );
+   }
+   loggerPath = `${ dirname }/../lib/node_modules/homebridge/lib/logger`;
+   global.logger_1 = require( loggerPath );
+   if ( ! global.logger_1 )
+   {
+      console.log( "logger_1 not available !!!" );
+      process.exit( 10 );
+   }
+
+   // For serializing/deserializing arrays of accessories
+   let platformAccessoryPath = `${ dirname }/../lib/node_modules/homebridge/lib/platformAccessory`;
+   global.platformAccessory_1 = require( platformAccessoryPath );
+
+} else
+{
+   console.log( "homebridge not found !!!" );
+   process.exit( 10 );
+}
+console.log( "Found api in %s", apiPath );
+
+global.fs = require( 'fs' );
 global.assert = require( "chai" ).assert;
 global.expect = require( "chai" ).expect;
 global.sinon  = require( "sinon" );
@@ -9,10 +50,10 @@ global.ACC_EOL = 222;
 global.DEVICE_EOL = 66;
 
 // These would be the uninitialized values, used for unit testing
-global.ACC_DATA = require('../lib/CMD4_ACC_TYPE_ENUM');
+global.ACC_DATA = require( '../lib/CMD4_ACC_TYPE_ENUM' );
 global.CMD4_ACC_TYPE_ENUM = ACC_DATA.CMD4_ACC_TYPE_ENUM;
 
-global.DEVICE_DATA = require('../lib/CMD4_DEVICE_TYPE_ENUM');
+global.DEVICE_DATA = require( '../lib/CMD4_DEVICE_TYPE_ENUM' );
 global.CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.CMD4_DEVICE_TYPE_ENUM;
 
 
@@ -57,7 +98,7 @@ global.captureConsole = function( )
       {
          console.error = function( chunk, encoding )
          {
-            errLogBuf += chunk.toString(); // chunk is a String or Buffer
+            errLogBuf += chunk.toString( ); // chunk is a String or Buffer
 
             if ( quiet == false )
                oldError.apply( chunk, arguments );
@@ -106,13 +147,15 @@ global.captureConsole = function( )
    };
 }
 
-global.hook = captureConsole();
+global.hook = captureConsole( );
 
 
+// A true sleep ( blocking ).
 const moment = require( "moment" );
 global.sleep = function( secondsToSleep = 1 )
 {
-    let sleepUntill = moment( ).add(secondsToSleep, 'seconds');
-    while( moment ().isBefore( sleepUntill ) ) { /* block the process */ }
+   let sleepUntill = moment( ).add( secondsToSleep, 'seconds');
+   while( moment ( ).isBefore( sleepUntill ) ) { /* block the process */ }
 }
 
+sleep( 10 );

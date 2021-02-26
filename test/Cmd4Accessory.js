@@ -1,16 +1,11 @@
 "use strict";
 
+const constants = require( "../cmd4Constants" );
 
-var logger_1 = require("../node_modules/homebridge/lib/logger");
 Object.defineProperty(exports, "LogLevel", { enumerable: true, get: function () { return logger_1.LogLevel; } });
 const log = logger_1.Logger.internal;
 
-var HomebridgeAPI = require( "../node_modules/homebridge/lib/api" ).HomebridgeAPI;
 var _api = new HomebridgeAPI(); // object we feed to Plugins
-
-// The Library files that know all.
-var ACC_DATA = require( "../lib/CMD4_ACC_TYPE_ENUM" );
-var DEVICE_DATA = require( "../lib/CMD4_DEVICE_TYPE_ENUM" );
 
 // Init the library for all to use
 let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
@@ -70,6 +65,7 @@ describe('A simple Cmd4Accessory Test', ( ) =>
 {
    let config={ name: "Test Switch",
                 type: "Switch",
+                fetch: constants.FETCH_CACHED,
                 on:   false
               };
    it( "Test can create an instance of Cmd4Accessory", ( ) =>
@@ -92,6 +88,7 @@ describe('A simple Cmd4Accessory Test Debbuging enabled', ( ) =>
 {
    let config={ name: "Test Switch",
                 type: "Switch",
+                fetch: constants.FETCH_CACHED,
                 on:   false
               };
    it( "Test can create an instance of Cmd4Accessory with Debug Enabled", ( ) =>
@@ -119,6 +116,7 @@ describe('Test Cmd4Accessory variables ', ( ) =>
 {
    let config={ name: "Test Switch",
                 type: "Switch",
+                fetch: constants.FETCH_CACHED,
                 on:   false
               };
    it( "Test typeIndex of a Switch set correctly ", ( ) =>
@@ -173,6 +171,7 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
 {
    let config={ name: "Test Switch",
                 type: "Switch",
+                fetch: constants.FETCH_CACHED,
                 on:   false
               };
    it( "Check that STORED_DATA_ARRAY is created", ( ) =>

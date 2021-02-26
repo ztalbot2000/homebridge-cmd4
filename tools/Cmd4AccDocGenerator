@@ -69,6 +69,49 @@
 //   |                                       |
 //   |_______________________________________|
 
+
+
+const which = require('which');
+const path = require( "path" );
+
+// Get the real path of homebridge instead of a dev dependancy,
+// which caused issues if you forget to update dependancies but
+// upgrade homebridge.
+const homebridgePath = which.sync( 'homebridge', { nothrow: true } )
+
+let apiPath;
+let HomebridgeAPI;
+let logger_1;
+if ( homebridgePath )
+{
+   let dirname = path.dirname( homebridgePath );
+
+   console.log( "Found homebridge in path %s", dirname );
+   apiPath = `${ dirname }/../lib/node_modules/homebridge/lib/api`;
+   HomebridgeAPI = require( apiPath ).HomebridgeAPI;
+
+   if ( ! HomebridgeAPI )
+   {
+      console.log( "homebridgeAPI not available !!!" );
+      process.exit( 10 );
+   }
+
+   let loggerPath = `${ dirname }/../lib/node_modules/homebridge/lib/logger`;
+   logger_1 = require( loggerPath );
+   if ( ! logger_1 )
+   {
+      console.log( "logger_1 not available !!!" );
+      process.exit( 10 );
+   }
+} else
+{
+   console.log( "homebridge not found !!!" );
+   process.exit( 10 );
+}
+console.log( "Found api in %s", apiPath );
+
+
+
 // Cmd4 Constants and Settings
 const constants = require( "../cmd4Constants" );
 //const settings = require( "../cmd4Settings" );
@@ -77,10 +120,8 @@ const constants = require( "../cmd4Constants" );
 var { transposeValueToValidConstant } = require( "../utils/transposeCMD4Props" );
 
 // Required to initialize CMD4 Accessory & Device lookup tables.
-let HomebridgeAPI = require( "../node_modules/homebridge/lib/api" ).HomebridgeAPI;
 let _api = new HomebridgeAPI( ); // object we feed to Plugins
 
-var logger_1 = require("../node_modules/homebridge/lib/logger");
 Object.defineProperty(exports, "LogLevel", { enumerable: true, get: function () { return logger_1.LogLevel; } });
 const log = logger_1.Logger.internal;
 

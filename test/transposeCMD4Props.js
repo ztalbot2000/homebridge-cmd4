@@ -7,7 +7,6 @@ var { transposeConstantToValidValue,
       extractKeyValue } = require( "../utils/transposeCMD4Props" );
 
 // Need homebridge logging for Cmd4Accessory
-var logger_1 = require("../node_modules/homebridge/lib/logger");
 Object.defineProperty(exports, "LogLevel", { enumerable: true, get: function () { return logger_1.LogLevel; } });
 const log = logger_1.Logger.internal;
 
@@ -16,7 +15,6 @@ const log = logger_1.Logger.internal;
 
 describe( "Initializing our CMD4 Libraries ", ( ) => {});
 
-var HomebridgeAPI = require( "../node_modules/homebridge/lib/api" ).HomebridgeAPI;
 var _api = new HomebridgeAPI( ); // object we feed to Plugins
 
  // Init the library for all to use
