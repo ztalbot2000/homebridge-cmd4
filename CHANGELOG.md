@@ -1,5 +1,6 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
 <base _target="_self">
+## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
 * <a href="#Whats-new-in-3-2-2">**Whats new in 3.2.2**</a>
