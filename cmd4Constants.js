@@ -17,13 +17,13 @@ exports.DEFAULT_INTERVAL         = 60000; // 1 minute
 exports.DEFAULT_STATUSMSG        = true;
 
 // Fakegato Constants
-exports.FAKEGATO_TYPE_ENERGY     = "energy";
-exports.FAKEGATO_TYPE_ROOM       = "room";
-exports.FAKEGATO_TYPE_WEATHER    = "weather";
-exports.FAKEGATO_TYPE_DOOR       = "door";
-exports.FAKEGATO_TYPE_MOTION     = "motion";
-exports.FAKEGATO_TYPE_THERMO     = "thermo";
-exports.FAKEGATO_TYPE_AQUA       = "aqua";
+exports.FAKEGATO_TYPE_ENERGY_l   = "energy";
+exports.FAKEGATO_TYPE_ROOM_l     = "room";
+exports.FAKEGATO_TYPE_WEATHER_l  = "weather";
+exports.FAKEGATO_TYPE_DOOR_l     = "door";
+exports.FAKEGATO_TYPE_MOTION_l   = "motion";
+exports.FAKEGATO_TYPE_THERMO_l   = "thermo";
+exports.FAKEGATO_TYPE_AQUA_l     = "aqua";
 exports.EVE                      = "Eve";
 exports.STORAGE                  = "Storage";
 exports.STORAGEPATH              = "StoragePath";
@@ -52,14 +52,16 @@ exports.TIME_l                   = "time";
 exports.PATH_l                   = "path";
 exports.KEYPATH_l                = "keyPath";
 
-exports.FS                       = "fs";
-exports.GOOGLE_DRIVE             = "googleDrive";
+//exports.FS                       = "Fs";
+exports.FS_l                     = "fs";
+//exports.GOOGLE_DRIVE             = "GoogleDrive";
+exports.GOOGLE_DRIVE_l           = "googleDrive";
 
 // Config Constnts
 exports.OUTPUTCONSTANTS          = "OutputConstants";
-exports.RESTART_RECOVER_l        = "restartRecover";
+//exports.RESTART_RECOVER_l        = "restartRecover";
 exports.STATUSMSG                = "StatusMsg";
-exports.STATUSMSG_l              = "statusMsg";
+//exports.STATUSMSG_l              = "statusMsg";
 
 // Platform Config Constnts
 exports.TYPE                     = "Type";

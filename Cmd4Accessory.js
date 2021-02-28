@@ -96,9 +96,9 @@ class Cmd4Accessory
       this.listOfRunningPolls = { };
 
       // DisplayName and/or Name must be defined.
-      // Update config, just in case it is not set there.
-      this.name = this.config.name = this.config.name || getAccessoryName( this.config );
-      this.displayName = this.config.displayName = this.config.displayName || getAccessoryDisplayName( this.config );
+      // No need to update config anymore as it is no longer cached, only the Characteristic values are.
+      this.name = getAccessoryName( this.config );
+      this.displayName = getAccessoryDisplayName( this.config );
 
 
       // Bring the parent config variables forward.
@@ -547,8 +547,8 @@ class Cmd4Accessory
                  isRelatedTargetCharacteristicInSameDevice(
                      self.typeIndex,
                      accTypeEnumIndex,
-                     CMD4_ACC_TYPE_ENUM,
-                     CMD4_DEVICE_TYPE_ENUM
+                     CMD4_DEVICE_TYPE_ENUM,
+                     CMD4_ACC_TYPE_ENUM
                  ) != accTypeEnumIndex )
             )
          {
@@ -634,8 +634,8 @@ class Cmd4Accessory
                  isRelatedTargetCharacteristicInSameDevice(
                      self.typeIndex,
                      accTypeEnumIndex,
-                     CMD4_ACC_TYPE_ENUM,
-                     CMD4_DEVICE_TYPE_ENUM
+                     CMD4_DEVICE_TYPE_ENUM,
+                     CMD4_ACC_TYPE_ENUM
                  ) == relatedCurrentAccTypeEnumIndex )
          {
             let relatedCharacteristic = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].characteristic;
@@ -1095,7 +1095,7 @@ class Cmd4Accessory
 
          switch ( this.eve )
          {
-            case constants.FAKEGATO_TYPE_ENERGY:
+            case constants.FAKEGATO_TYPE_ENERGY_l:
             {
                firstParm   = this.fakegatoConfig[ constants.POWER_l ] || "0";
                ucFirstParm = ucFirst( firstParm )                     || "0";
@@ -1113,7 +1113,7 @@ class Cmd4Accessory
                   });
                break;
             }
-            case constants.FAKEGATO_TYPE_ROOM:
+            case constants.FAKEGATO_TYPE_ROOM_l:
             {
                firstParm       = this.fakegatoConfig[ constants.TEMP_l ]     || "0";
                secondParm      = this.fakegatoConfig[ constants.HUMIDITY_l ] || "0";
@@ -1145,7 +1145,7 @@ class Cmd4Accessory
                   });
                break;
             }
-            case constants.FAKEGATO_TYPE_WEATHER:
+            case constants.FAKEGATO_TYPE_WEATHER_l:
             {
                firstParm       = this.fakegatoConfig[ constants.TEMP_l ]     || "0";
                secondParm      = this.fakegatoConfig[ constants.PRESSURE_l ] || "0";
@@ -1176,7 +1176,7 @@ class Cmd4Accessory
                   });
                break;
             }
-            case constants.FAKEGATO_TYPE_DOOR:
+            case constants.FAKEGATO_TYPE_DOOR_l:
             {
                firstParm   = this.fakegatoConfig[ constants.STATUS_l ] || "0";
                ucFirstParm = ucFirst( firstParm )                      || "0";
@@ -1194,7 +1194,7 @@ class Cmd4Accessory
                   });
                break;
             }
-            case constants.FAKEGATO_TYPE_MOTION:
+            case constants.FAKEGATO_TYPE_MOTION_l:
             {
                firstParm   = this.fakegatoConfig[ constants.STATUS_l ] || "0";
                ucFirstParm = ucFirst( firstParm )                      || "0";
@@ -1213,7 +1213,7 @@ class Cmd4Accessory
                   });
                break;
             }
-            case constants.FAKEGATO_TYPE_THERMO:
+            case constants.FAKEGATO_TYPE_THERMO_l:
             {
                firstParm       = this.fakegatoConfig[ constants.CURRENTTEMP_l ]   || "0";
                secondParm      = this.fakegatoConfig[ constants.SETTEMP_l ]       || "0";
@@ -1244,7 +1244,7 @@ class Cmd4Accessory
                   });
                break;
             }
-            case constants.FAKEGATO_TYPE_AQUA:
+            case constants.FAKEGATO_TYPE_AQUA_l:
             {
                firstParm       = this.fakegatoConfig[ constants.STATUS_l ]      || "0";
                secondParm      = this.fakegatoConfig[ constants.WATERAMOUNT_l ] || "0";
@@ -1288,24 +1288,24 @@ class Cmd4Accessory
                 this.eve = fakegatoConfig[ key ];
                 switch( value )
                 {
-                    case constants.FAKEGATO_TYPE_ENERGY:
-                    case constants.FAKEGATO_TYPE_ROOM:
-                    case constants.FAKEGATO_TYPE_WEATHER:
-                    case constants.FAKEGATO_TYPE_DOOR:
-                    case constants.FAKEGATO_TYPE_MOTION:
-                    case constants.FAKEGATO_TYPE_THERMO:
-                    case constants.FAKEGATO_TYPE_AQUA:
+                    case constants.FAKEGATO_TYPE_ENERGY_l:
+                    case constants.FAKEGATO_TYPE_ROOM_l:
+                    case constants.FAKEGATO_TYPE_WEATHER_l:
+                    case constants.FAKEGATO_TYPE_DOOR_l:
+                    case constants.FAKEGATO_TYPE_MOTION_l:
+                    case constants.FAKEGATO_TYPE_THERMO_l:
+                    case constants.FAKEGATO_TYPE_AQUA_l:
                        break;
                     default:
                        this.log.error( `Invalid fakegato eve type: ${ value }` );
                        this.log.error( "It must be one of ( %s, %s, %s, %s, %s, %s, %s )",
-                          constants.FAKEGATO_TYPE_ENERGY,
-                          constants.FAKEGATO_TYPE_ROOM,
-                          constants.FAKEGATO_TYPE_WEATHER,
-                          constants.FAKEGATO_TYPE_DOOR,
-                          constants.FAKEGATO_TYPE_MOTION,
-                          constants.FAKEGATO_TYPE_THERMO,
-                          constants.FAKEGATO_TYPE_AQUA );
+                          constants.FAKEGATO_TYPE_ENERGY_l,
+                          constants.FAKEGATO_TYPE_ROOM_l,
+                          constants.FAKEGATO_TYPE_WEATHER_l,
+                          constants.FAKEGATO_TYPE_DOOR_l,
+                          constants.FAKEGATO_TYPE_MOTION_l,
+                          constants.FAKEGATO_TYPE_THERMO_l,
+                          constants.FAKEGATO_TYPE_AQUA_l );
                         this.log.error( `Check the Cmd4 README at ` );
                         this.log.error( `https://github.com/simont77/fakegato-history` );
                         process.exit( 225 );
@@ -1367,32 +1367,32 @@ class Cmd4Accessory
       // Optional
       if ( this.storage != undefined )
       {
-         if ( this.storage == constants.FS )
+         if ( this.storage == constants.FS_l )
          {
             this.loggingService = new FakeGatoHistoryService
             (
                this.eve,
                this,
-               { [ constants.STORAGE_l] : constants.FS,
+               { [ constants.STORAGE_l] : constants.FS_l,
                  [ constants.PATH_l ]   : this.storagePath
                }
             );
             this.services.push( this.loggingService );
 
-         } else if ( this.storage == constants.GOOGLEDRIVE )
+         } else if ( this.storage == constants.GOOGLEDRIVE_l )
          {
             this.loggingService = new FakeGatoHistoryService
             (
                this.eve,
                this,
-               { [ constants.STORAGE_l] : constants.GOOGLEDRIVE,
+               { [ constants.STORAGE_l] : constants.GOOGLEDRIVE_l,
                  [ constants.FOLDER_l]  : this.folder,
                  [ constants.KEYPATH_l] : this.keyPath }
             );
             this.services.push( this.loggingService );
          } else
          {
-            this.log.warn( chalk.yellow( "WARNING" ) + `: Cmd4 Unknown accessory config.storage:{ this.storage } Expected:${ constants.FS } or ${ constants.GOOGLEDRIVE } for: ${ this.displayName }` );
+            this.log.warn( chalk.yellow( "WARNING" ) + `: Cmd4 Unknown accessory config.storage:{ this.storage } Expected:${ constants.FS_l } or ${ constants.GOOGLEDRIVE_l } for: ${ this.displayName }` );
          }
       }
 
@@ -1769,7 +1769,7 @@ class Cmd4Accessory
             case constants.OUTPUTCONSTANTS:
                // Define if we should ouput constant strings
                // instead of values
-               if ( config.outputConstants === true )
+               if ( value === true )
                   this.outputConstants = value;
                 else
                   this.outputConstants = false;
@@ -1777,7 +1777,7 @@ class Cmd4Accessory
                break;
             case constants.STATUSMSG:
                // During state change, display a message or not
-               if ( config.statusMsg === true )
+               if ( value === true )
                   this.statusMsg = value;
                 else
                   this.statusMsg = false;
@@ -2210,8 +2210,8 @@ class Cmd4Accessory
                  isRelatedTargetCharacteristicInSameDevice(
                      this.typeIndex,
                      accTypeEnumIndex,
-                     CMD4_ACC_TYPE_ENUM,
-                     CMD4_DEVICE_TYPE_ENUM
+                     CMD4_DEVICE_TYPE_ENUM,
+                     CMD4_ACC_TYPE_ENUM
                  ) == relatedTargetAccTypeEnumIndex )
             {
                // Check that the characteristic like "Target*" is also requested to be polled

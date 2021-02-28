@@ -547,8 +547,8 @@ block-warning a {
       </button>
       <div class="panel">
          <a href="#OutputConstants_D" onclick="toggleVisibility( 'Directives');">OutputConstants</a>
-         <a href="#restartRecover_D" onclick="toggleVisibility( 'Directives');">restartRecover</a>
-         <a href="#StatusMsg_D" onclick="toggleVisibility( 'Directives');">statusMsg</a>
+         <a href="#undefined_D" onclick="toggleVisibility( 'Directives');">undefined</a>
+         <a href="#StatusMsg_D" onclick="toggleVisibility( 'Directives');">StatusMsg</a>
       </DIV>   <!-- panel -->
       <button class="accordion">Accessory Directives
          <i class="fa fa-caret-down"></i>
@@ -565,7 +565,7 @@ block-warning a {
          <a href="#StateChangeResponseTime" onclick="toggleVisibility( 'AccessoryDirectives');">StateChangeResponseTime</a>
          <a href="#LinkedTypes" onclick="toggleVisibility( 'AccessoryDirectives');">LinkedTypes</a>
          <a href="#OutputConstants" onclick="toggleVisibility( 'AccessoryDirectives');">OutputConstants</a>
-         <a href="#statusMsg" onclick="toggleVisibility( 'AccessoryDirectives');">statusMsg</a>
+         <a href="#StatusMsg" onclick="toggleVisibility( 'AccessoryDirectives');">StatusMsg</a>
       </DIV>   <!-- panel -->
       <button class="accordion">Script Templates
          <i class="fa fa-caret-down"></i>
@@ -6471,8 +6471,8 @@ block-warning a {
          <TABLE WIDTH="100%">
             <TR ALIGN="left"><TH>Cmd4Directive<TH>Type<TH PADDING="50px">Default<TH>Description</TR>
             <TR ALIGN="left"><TD><a name="OutputConstants_D">OutputConstants</a><TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1 for all Accessories</TR>
-            <TR ALIGN="left"><TD><a name="restartRecover_D"> restartRecover</a><TD> < Bool > <TD> true <TD> If Cmd4 will use previous cached state information </TR>
-            <TR ALIGN="left"><TD><a name="StatusMsg_D"> statusMsg</a><TD> < Bool > <TD> true <TD> Cmd4 will log a Set Status Message for all Accessories.</TR>
+            <TR ALIGN="left"><TD><a name="undefined_D"> undefined</a><TD> < Bool > <TD> true <TD> If Cmd4 will use previous cached state information </TR>
+            <TR ALIGN="left"><TD><a name="StatusMsg_D"> StatusMsg</a><TD> < Bool > <TD> true <TD> Cmd4 will log a Set Status Message for all Accessories.</TR>
          </TABLE>
       </DIV>   <!-- main -->
       <div id="AccessoryDirectives" class="section">
@@ -6481,7 +6481,7 @@ block-warning a {
          <TABLE WIDTH="100%" border: 1px solid black >
             <TR cols="4" ALIGN="left"><TH>Cmd4Directive<TH>Type<TH PADDING="50px">Default<TH>Description</TR>
             <TR ALIGN="left"><TD><a name="OutputConstants">OutputConstants</a><TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1 </TR>
-            <TR ALIGN="left"><TD><a name="statusMsg">statusMsg</a><TD>  < Bool >  <TD>  true <TD> Cmd4 will log a Set Status Message</TR>
+            <TR ALIGN="left"><TD><a name="StatusMsg">StatusMsg</a><TD>  < Bool >  <TD>  true <TD> Cmd4 will log a Set Status Message</TR>
             <TR ALIGN="left"><TD><a name="PublishExternally">PublishExternally</a><TD>  < Bool >  <TD>    false     <TD> Tell Homebridge to publish the device as its own bridge. </TR>
             <TR ALIGN="left"><TD><a name="Fetch">Fetch</a><TD> < "Always" | "Cached" | "Polled" > <TD> "Always" <TD> Tell Homebridge to publish the device as its own bridge.</TR>
             <TR ALIGN="left"><TD COLSPAN=4>

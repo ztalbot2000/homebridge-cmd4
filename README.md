@@ -4,6 +4,7 @@
 <BR><BR>
 ## &nbsp;&nbsp;&nbsp; **Cmd4** is a plugin for [Homebridge] that lets you see what Homebridge and Homekit are all about, without actually owning a single accessory!  For the more advanced user, Cmd4 brings CLI support for all device types (Accessories) and characteristics.
 
+## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 <BR><BR>
 ## Table of Contents
 * [**About the Cmd4 Plugin**](#about-the-cmd4-plugin)

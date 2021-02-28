@@ -4,6 +4,7 @@
 const { getAccessoryName,
         getAccessoryDisplayName } = require( "./utils/getAccessoryNameFunctions" );
 let getAccessoryUUID = require( "./utils/getAccessoryUUID" );
+let ucFirst = require( "./utils/ucFirst" );
 
 let createAccessorysInformationService = require( "./utils/createAccessorysInformationService" );
 
@@ -51,48 +52,13 @@ class Cmd4Platform
 
       this.services = [ ];
 
-      // A way to backout restart recovery.
+      // Defaults before parse
       this.restartRecover = true;
-      if ( this.config[ constants.RESTART_RECOVER_l ] != undefined )
-          this.restartRecover = this.config[ constants.RESTART_RECOVER_l ];
-
-      // Define platform config for fakegato-history
-      if ( this.config.storage != undefined )
-      {
-         if ( this.config.storage == constants.FS || this.config.storage == constants.GOOGLEDRIVE )
-            this.storage = this.config.storage;
-         else
-            this.log.warn( chalk.yellow( `WARNING` ) + `: Cmd4 Unknown platform.config.storage:{ this.storage } Expected:${ constants.FS } or ${ constants.GOOGLEDRIVE } for: ${ this.displayName }` );
-      }
-
-      // Define platform config storagePath for fakegato-history
-      this.storagePath = this.config.storagePath;
-
-      // Define platform config folder for fakegato-history
-      this.folder = this.config.folder;
-
-      // Define platform config keyPath for fakegato-history
-      this.keyPath = this.config.keyPath;
-
-      // Define what type of fetch to use, or default: ALWAYS.
-      if ( this.config.fetch && ( this.config.fetch == constants.FETCH_ALWAYS ||
-                                  this.config.fetch == constants.FETCH_CACHED ||
-                                  this.config.fetch == constants.FETCH_POLLED ) )
-         this.fetch = this.config.fetch;
-      else
-         this.fetch = constants.FETCH_ALWAYS;
-
-      // Direct if constants should be sent or their value.
-      if ( this.config.outputConstants == true )
-         this.outputConstants = true;
-      else
-         this.outputConstants = false;
-
-      // Direct if the status state change message should be displayed
-      // or not.  Default is true.
       this.statusMsg = constants.DEFAULT_STATUSMSG;
-      if ( this.config.statusMsg == false )
-         this.statusMsg = false;
+
+      this.parseConfigForCmd4Directives( this.config );
+
+
 
       // didFinishLaunching is only called after the
       // registerPlatform completes.
@@ -102,7 +68,7 @@ class Cmd4Platform
 
          if ( this.restartRecover == false && this.toBeRestoredPlatforms.length > 0  )
          {
-            this.log.info( chalk.yellow( `Removing ` ) + chalk.red( `*ALL* ` ) + chalk.yellow( `cached accessories as: ${ constants.RESTART_RECOVER_l } is set to false` ) );
+            this.log.info( chalk.yellow( `Removing ` ) + chalk.red( `*ALL* ` ) + chalk.yellow( `cached accessories as: ${ constants.RESTART_RECOVER } is set to false` ) );
             this.api.unregisterPlatformAccessories(  settings.PLUGIN_NAME, settings.PLATFORM_NAME, this.toBeRestoredPlatforms );
             this.toBeRestoredPlatforms = [ ];
          }
@@ -174,6 +140,109 @@ class Cmd4Platform
    //         break;
    //   }
    //}
+
+   // Only parse those CMD4 directives we care about
+   parseConfigForCmd4Directives( config )
+   {
+      for ( let key in config )
+      {
+         let value = config[ key ];
+
+         // I made the stupid mistake of not having all characteristics in the config.json
+         // file not upper case to match that in State.js. So instead of having everyone
+         // fix their scripts, fix it here.
+         let ucKey = ucFirst( key );
+
+         switch ( ucKey )
+         {
+            case constants.TIMEOUT:
+               // Timers are in milliseconds. A low value can result in failure to get/set values
+               this.timeout = parseInt( value, 10 );
+               if ( this.timeout < 500 )
+                  this.log.warn( `Default Timeout is in milliseconds. A value of "${ this.timeout }" seems pretty low.` );
+
+               break;
+            case constants.INTERVAL:
+               // Intervals are in seconds
+               this.interval = parseInt( value, 10 ) * 1000;
+
+               break;
+            case constants.STATECHANGERESPONSETIME:
+               // respnse time is in seconds
+               this.stateChangeResponseTime = value * 1000;
+
+               break;
+            case constants.STATE_CMD_PREFIX:
+               // Not 100% sure why this would be needed, but
+               // added anyway since we have a suffix
+               this.state_cmd_prefix = value;
+
+               break;
+            case constants.STATE_CMD_SUFFIX:
+               // This gets added after any Get/Set <value>
+               this.state_cmd_suffix = value;
+
+               break;
+            case constants.STATE_CMD:
+               // What this plugin is all about
+               this.state_cmd = value;
+
+               break;
+            case constants.OUTPUTCONSTANTS:
+               if ( value === true )
+                  this.outputConstants = true;
+                else
+                  this.outputConstants = false;
+
+               break;
+            case constants.RESTART_RECOVER:
+               this.restartRecover = value;
+
+               break;
+            case constants.STATUSMSG:
+              if ( value === false )
+                 this.statusMsg = false;
+
+               break;
+            case constants.FETCH:
+               switch( value )
+               {
+                  case constants.FETCH_ALWAYS:
+                  case constants.FETCH_CACHED:
+                  case constants.FETCH_POLLED:
+
+                     this.fetch = value;
+
+                     break;
+                  default:
+                     this.log.error( chalk.red( `Invalid value: ${ value } for ${ constants.FETCH }` ) );
+                     this.log.error( `Must be: [ ${ constants.FETCH_ALWAYS } | ${ constants.FETCH_CACHED } | ${ constants.FETCH_POLLED }` );
+                     process.exit( 261 ) ;
+               }
+               break;
+            case constants.STORAGE:
+               if ( value == constants.FS_l || value == constants.GOOGLEDRIVE_l )
+                  this.storage = value;
+               else
+                  this.log.warn( chalk.yellow( `WARNING` ) + `: Cmd4 Unknown platform.config.storage:{ this.storage } Expected:${ constants.FS_l } or ${ constants.GOOGLEDRIVE_l }` );
+
+               break;
+            case constants.STORAGEPATH:
+               this.storagePath = value;
+
+               break;
+            case constants.FOLDERS:
+               this.folders = value;
+
+               break;
+            case constants.KEYPATH:
+               this.keyPath = value;
+
+               break;
+            default:
+         }
+      }
+   }
 
    // These would be platform accessories with/without linked accessories
    discoverDevices( )
