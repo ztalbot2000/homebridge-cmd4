@@ -74,9 +74,9 @@ global.CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.CMD4_DEVICE_TYPE_ENUM;
 //
 // 4. Inspect the log at any time with:
 //       x = hook.capturedErr( );   <= Stderr
-//       x = hook.capturedWarn( );
 //       x = hook.capturedLog( );
-//     Note: console.log.info goes to console.log
+//     Note: logger.log.info goes to console.log
+//     Note: logger.log.warn goes to console.err
 //
 // 5. Put things back to normal with:
 //       hook.stop( );
@@ -87,10 +87,8 @@ global.CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.CMD4_DEVICE_TYPE_ENUM;
 global.captureConsole = function( )
 {
    var oldError = console.error;
-   var oldWarn = console.warn;
    var oldLog = console.log;
    var errLogBuf = '';
-   var warnLogBuf = '';
    var logBuf = '';
    let quiet = true;
    return {
@@ -102,13 +100,6 @@ global.captureConsole = function( )
 
             if ( quiet == false )
                oldError.apply( chunk, arguments );
-         };
-         console.warn = function( chunk, encoding )
-         {
-            warnLogBuf += chunk.toString(); // chunk is a String or Buffer
-
-            if ( quiet == false )
-               oldWarn.apply( chunk, arguments );
          };
          console.log = function( chunk, encoding )
          {
@@ -135,10 +126,6 @@ global.captureConsole = function( )
       capturedErr: function( )
       {
          return errLogBuf;
-      },
-      capturedWarn: function( )
-      {
-         return warnLogBuf;
       },
       capturedLog: function( )
       {

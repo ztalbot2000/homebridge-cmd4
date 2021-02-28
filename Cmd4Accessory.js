@@ -12,6 +12,7 @@ const { getAccessoryName, getAccessoryDisplayName
 let getAccessoryUUID = require( "./utils/getAccessoryUUID" );
 
 let createAccessorysInformationService = require( "./utils/createAccessorysInformationService" );
+let isRelatedTargetCharacteristicInSameDevice = require( "./utils/isRelatedTargetCharacteristicInSameDevice" );
 
 let ucFirst = require( "./utils/ucFirst" );
 let lcFirst = require( "./utils/lcFirst" );
@@ -542,7 +543,13 @@ class Cmd4Accessory
          // polled to get the real value.
          if ( self.fetch == constants.FETCH_CACHED ||
                ( self.fetch == constants.FETCH_POLLED &&
-                 self.listOfPollingCharacteristics[ relatedCurrentAccTypeEnumIndex ] )
+                 self.listOfPollingCharacteristics[ relatedCurrentAccTypeEnumIndex ] &&
+                 isRelatedTargetCharacteristicInSameDevice(
+                     self.typeIndex,
+                     accTypeEnumIndex,
+                     CMD4_ACC_TYPE_ENUM,
+                     CMD4_DEVICE_TYPE_ENUM
+                 ) != accTypeEnumIndex )
             )
          {
             let relatedCharacteristicString = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].type;
@@ -622,8 +629,14 @@ class Cmd4Accessory
          }
 
          let relatedCurrentAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].relatedCurrentAccTypeEnumIndex;
-
-         if ( relatedCurrentAccTypeEnumIndex != null )
+         if ( relatedCurrentAccTypeEnumIndex != null &&
+                 self.listOfPollingCharacteristics[ relatedCurrentAccTypeEnumIndex ] &&
+                 isRelatedTargetCharacteristicInSameDevice(
+                     self.typeIndex,
+                     accTypeEnumIndex,
+                     CMD4_ACC_TYPE_ENUM,
+                     CMD4_DEVICE_TYPE_ENUM
+                 ) == relatedCurrentAccTypeEnumIndex )
          {
             let relatedCharacteristic = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].characteristic;
             setTimeout( ( ) => {
@@ -2186,9 +2199,20 @@ class Cmd4Accessory
          {
             // Look to see if currently polled characteristics are like "Current*" and have
             // a related characteristic like "Target*"
+            // Note: By default it will be put their automatically as this message says
+            //     **** Adding required characteristic TargetTemperature for Thermostat
+            //          Not defining a required characteristic can be problematic
+            //     Except for Optional "Current*" "Target*" characteristics which
+            //     isRelatedTargetCharacteristicInSameDevice does resolve.
             let relatedTargetAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].relatedTargetAccTypeEnumIndex;
 
-            if ( relatedTargetAccTypeEnumIndex != null )
+            if ( relatedTargetAccTypeEnumIndex != null &&
+                 isRelatedTargetCharacteristicInSameDevice(
+                     this.typeIndex,
+                     accTypeEnumIndex,
+                     CMD4_ACC_TYPE_ENUM,
+                     CMD4_DEVICE_TYPE_ENUM
+                 ) == relatedTargetAccTypeEnumIndex )
             {
                // Check that the characteristic like "Target*" is also requested to be polled
                if ( ! this.listOfPollingCharacteristics[ relatedTargetAccTypeEnumIndex ] )
