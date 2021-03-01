@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-3-2-3">**Whats new in 3.2.3**</a>
 * <a href="#Whats-new-in-3-2-2">**Whats new in 3.2.2**</a>
 * <a href="#Whats-new-in-3-2-1">**Whats new in 3.2.1**</a>
 * <a href="#Whats-new-in-3-2-0">**Whats new in 3.2.0**</a>
@@ -32,6 +33,25 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-3-2-3">## Whats new in 3.2.3</a>
+#### 3.2.3 (2021-03-01)
+
+##### Documentation Changes
+
+*  Homebridge-UI-X intercept message ([06858799](https://github.com/ztalbot2000/homebridge-cmd4/commit/06858799144b8066762925ba101f16824ce48749))
+
+##### Bug Fixes
+
+*  resolve warnings for strings that could validly have multiple words ([c6642b6c](https://github.com/ztalbot2000/homebridge-cmd4/commit/c6642b6c519e81d5a3bbadcf503f3c4d1eb33569))
+*  [#97](https://github.com/ztalbot2000/homebridge-cmd4/pull/97) Handle both cases for input in config.json. Default should have been UC ([d105cdfe](https://github.com/ztalbot2000/homebridge-cmd4/commit/d105cdfe5848e533f1a0b8a56075e028161baf76))
+*  For [#96](https://github.com/ztalbot2000/homebridge-cmd4/pull/96) Warning message is for related device characteristics only ([f2c28f1a](https://github.com/ztalbot2000/homebridge-cmd4/commit/f2c28f1a46fad0baf073b47f1ccf4612a85c4eb2))
+
+##### Tests
+
+*  Add full initPlugin test, cannot run with others so commented out ([a6de84ac](https://github.com/ztalbot2000/homebridge-cmd4/commit/a6de84ac6f0bd9c13ccbb9b796e1d4c1a1fc3745))
+*   fix unit test that was incomplete ([8c0e2dd0](https://github.com/ztalbot2000/homebridge-cmd4/commit/8c0e2dd0e5f78ab06c5726b89f326c777022d728))
+
 
 <a name="Whats-new-in-3-2-2">## Whats new in 3.2.2</a>
 #### 3.2.2 (2021-02-26)
