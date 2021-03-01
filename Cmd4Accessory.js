@@ -72,6 +72,8 @@ class Cmd4Accessory
       this.log = log;
       this.config = config;
       this.api = api;
+      // keep a copy because traversing it for format checking can be slow.
+      this.Characteristic=api.hap.Characteristic;
       this.parentInfo = parentInfo;
 
       // Use parent values ( if any ) or these defaults.
@@ -768,40 +770,29 @@ class Cmd4Accessory
          // Coerce to string for manipulation
          reply += '';
 
+         // Remove trailing newline or carriage return, then
          // Remove leading and trailing spaces, carriage returns ...
-         let trimmedReply = reply.trim();
+         let trimmedReply = reply.replace(/\n|\r$/,"").trim( );
 
          // Theoretically not needed as this is caught below, but I wanted
          // to catch this before much string manipulation was done.
-         if ( trimmedReply.toUpperCase() == "NULL" )
+         if ( trimmedReply.toUpperCase( ) == "NULL" )
          {
             self.log.error( `getValue: "${ trimmedReply }" returned from stdout for ${ characteristicString } ${ self.displayName }` );
             callback( -1, 0 );
             return;
          }
 
+         // Handle beginning and ending matched single or double quotes. Previous version too heavy duty.
+         // - Remove matched double quotes at begining and end, then
+         // - Remove matched single quotes at beginning and end, then
+         // - remove leading and trailing spaces.
+         let unQuotedReply = trimmedReply.replace(/^"(.+)"$/,"$1").replace(/^'(.+)'$/,"$1").trim( );
 
-         // Handle quotes words. Removes quotes
-         // Handles escaped quotes.
-         // Taken from: https://stackoverflow.com/questions/2817646/javascript-split-string-on-space-or-on-quotes-to-array
-         let words = trimmedReply.match(/\\?.|^$/g).reduce( ( p, c ) =>
-                     {
-                        if ( c === '"' )
-                        {
-                            p.quote ^= 1;
-                        }else if ( ! p.quote && c === ' ' )
-                        {
-                            p.a.push( '' );
-                        }else
-                        {
-                            p.a[ p.a.length-1 ] += c.replace( /\\(.)/,"$1" );
-                        }
-                        return  p;
-                     }, { a: [''] } ).a
-
-         if ( words.length <= 0 )
+         if ( unQuotedReply == "" )
          {
-            self.log.error( `getValue: ${ characteristicString } function for ${ self.displayName } returned no value` );
+            self.log.error( `getValue: ${ characteristicString } function for: ${ self.displayName } returned an empty string "${ trimmedReply }"` );
+
 
             callback( -1, 0 );
 
@@ -811,7 +802,7 @@ class Cmd4Accessory
          // The above "null" checked could possibly have quotes around it.
          // Now that the quotes are removed, I must check again.  The
          // things I must do for bad data ....
-         if ( words.length == 1 && words[ 0 ].toUpperCase() == "NULL" )
+         if ( unQuotedReply.toUpperCase() == "NULL" )
          {
             self.log.error( `getValue: ${ characteristicString } function for ${ self.displayName } returned the string "${ trimmedReply }"` );
 
@@ -820,39 +811,38 @@ class Cmd4Accessory
             return;
          }
 
-         // Sadly, found by test case. A quoted empty string could still
-         // be an issue, so remove spaces here too.
-         words[ 0 ] = words[ 0 ].trim( );
-
-         if ( words[ 0 ].length == 0 )
-         {
-            self.log.error( `getValue: ${ characteristicString } function for: ${ self.displayName } returned an empty string "${ trimmedReply }"` );
-
-            callback( -1, 0 );
-
-            return;
-         }
-
-         if ( words.length >= 2 )
+         let words = unQuotedReply.split(" ").length;
+         let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
+         // Temp variable is faster than traversing large object
+         let hapFormats = self.Characteristic.Formats;
+         if ( words > 1 &&
+               ( format == hapFormats.INT    ||
+                 format == hapFormats.UINT8  ||
+                 format == hapFormats.UINT16 ||
+                 format == hapFormats.UINT32 ||
+                 format == hapFormats.BOOL   ||
+                 format == hapFormats.FLOAT
+               )
+            )
          {
             self.log.warn( `getValue: Warning, Retrieving ${ characteristicString }, expected only one word value for: ${ self.displayName } of: ${ trimmedReply }` );
          }
 
-         self.log.debug( `getValue: ${ characteristicString } function for: ${ self.displayName } returned: ${ words[ 0 ] }` );
+         self.log.debug( `getValue: ${ characteristicString } function for: ${ self.displayName } returned: ${ unQuotedReply }` );
 
 
          // Even if outputConsts is not set, just in case, transpose
          // it anyway.
-         words[ 0 ] = transposeConstantToValidValue( self.log, CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, words[ 0 ] )
+         unQuotedReply = transposeConstantToValidValue( self.log, CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, unQuotedReply )
 
          // Return the appropriate type, by seeing what it is
          // defined as in Homebridge,
-         words[ 0 ] = characteristicValueToItsProperType( self.log, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format, self.displayName, self.api.hap.Characteristic, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, words[ 0 ], self.allowTLV8 );
+         unQuotedReply = characteristicValueToItsProperType( self.log, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format, self.displayName, self.api.hap.Characteristic, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, unQuotedReply, self.allowTLV8 );
 
          // Store history using fakegato if set up
-         self.updateAccessoryAttribute( accTypeEnumIndex, words[ 0 ] );
+         self.updateAccessoryAttribute( accTypeEnumIndex, unQuotedReply );
 
-         callback( null, words[ 0 ] );
+         callback( null, unQuotedReply );
 
       });
    }
