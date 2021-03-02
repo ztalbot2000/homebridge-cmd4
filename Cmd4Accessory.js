@@ -837,7 +837,7 @@ class Cmd4Accessory
 
          // Return the appropriate type, by seeing what it is
          // defined as in Homebridge,
-         unQuotedReply = characteristicValueToItsProperType( self.log, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format, self.displayName, self.api.hap.Characteristic, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, unQuotedReply, self.allowTLV8 );
+         unQuotedReply = characteristicValueToItsProperType( self.log, format, self.displayName, hapFormats, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, unQuotedReply, self.allowTLV8 );
 
          // Store history using fakegato if set up
          self.updateAccessoryAttribute( accTypeEnumIndex, unQuotedReply );
@@ -1497,7 +1497,7 @@ class Cmd4Accessory
       }
 
       // Return the appropriate type, by seeing what it is defined as in Homebridge,
-      value = characteristicValueToItsProperType( this.log, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format, this.displayName, this.api.hap.Characteristic, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, value, this.allowTLV8 );
+      value = characteristicValueToItsProperType( this.log, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format, this.displayName, this.Characteristic.Formats, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, value, this.allowTLV8 );
 
       this.setStoredValueForIndex( accTypeEnumIndex, value );
    }

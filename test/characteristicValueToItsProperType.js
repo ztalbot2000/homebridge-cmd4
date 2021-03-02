@@ -5,6 +5,7 @@
 
 let _api = new HomebridgeAPI(); // object we feed to Plugins
 let Characteristic = _api.hap.Characteristic; // object we feed to Plugins
+let hapFormats = Characteristic.Formats; // object we feed to Plugins
 let pluginModule = require( "../index" );
 let cmd4 = pluginModule.default(_api);
 let CMD4_ACC_TYPE_ENUM = cmd4.CMD4_ACC_TYPE_ENUM;
@@ -56,7 +57,7 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       let expectedResult = 60;
 
 
-      let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
+      let result = characteristicValueToItsProperType( console, format, displayName, hapFormats, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -71,7 +72,7 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       let expectedResult = 60;
 
 
-      let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
+      let result = characteristicValueToItsProperType( console, format, displayName, hapFormats, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -86,7 +87,7 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       let expectedResult = 60.2;
 
 
-      let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
+      let result = characteristicValueToItsProperType( console, format, displayName, hapFormats, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -101,7 +102,7 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       let expectedResult = 60.2;
 
 
-      let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
+      let result = characteristicValueToItsProperType( console, format, displayName, hapFormats, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -117,7 +118,7 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       let expectedResultType = "number";  // There is no float type
 
 
-      let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
+      let result = characteristicValueToItsProperType( console, format, displayName, hapFormats, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
 
@@ -137,7 +138,7 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       let expectedResultType = "number";  // There is no float type
 
 
-      let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
+      let result = characteristicValueToItsProperType( console, format, displayName, hapFormats, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
 
@@ -156,7 +157,7 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       let value = "Device";
       let expectedResult = "Device";
 
-      let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
+      let result = characteristicValueToItsProperType( console, format, displayName, hapFormats, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -170,7 +171,7 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       let value = 123;
       let expectedResult = "123";
 
-      let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
+      let result = characteristicValueToItsProperType( console, format, displayName, hapFormats, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -184,7 +185,7 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       let value = "FAlse";
       let expectedResult = false;
 
-      let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
+      let result = characteristicValueToItsProperType( console, format, displayName, hapFormats, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -198,7 +199,7 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       let value = "FAlse";
       let expectedResult = false;
 
-      let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
+      let result = characteristicValueToItsProperType( console, format, displayName, hapFormats, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -212,7 +213,7 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       let value = "true";
       let expectedResult = true;
 
-      let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
+      let result = characteristicValueToItsProperType( console, format, displayName, hapFormats, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -226,7 +227,7 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       let value = false;
       let expectedResult = false;
 
-      let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
+      let result = characteristicValueToItsProperType( console, format, displayName, hapFormats, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -240,7 +241,7 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       let value = true;
       let expectedResult = true;
 
-      let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
+      let result = characteristicValueToItsProperType( console, format, displayName, hapFormats, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -254,7 +255,7 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       let value = 0;
       let expectedResult = false;
 
-      let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
+      let result = characteristicValueToItsProperType( console, format, displayName, hapFormats, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -268,7 +269,7 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       let value = 1;
       let expectedResult = true;
 
-      let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
+      let result = characteristicValueToItsProperType( console, format, displayName, hapFormats, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -282,7 +283,7 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       let value = 0;
       let expectedResult = false;
 
-      let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
+      let result = characteristicValueToItsProperType( console, format, displayName, hapFormats, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -296,7 +297,7 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       let value = 1;
       let expectedResult = true;
 
-      let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
+      let result = characteristicValueToItsProperType( console, format, displayName, hapFormats, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -310,7 +311,7 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       let value = 1;
       let expectedResult = true;
 
-      let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
+      let result = characteristicValueToItsProperType( console, format, displayName, hapFormats, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -324,7 +325,7 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       let value = "1";
       let expectedResult = true;
 
-      let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
+      let result = characteristicValueToItsProperType( console, format, displayName, hapFormats, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -337,7 +338,7 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       let value = 0;
       let expectedResult = false;
 
-      let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
+      let result = characteristicValueToItsProperType( console, format, displayName, hapFormats, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -350,7 +351,7 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       let value = "0";
       let expectedResult = false;
 
-      let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
+      let result = characteristicValueToItsProperType( console, format, displayName, hapFormats, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -363,7 +364,7 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       let value = true;
       let expectedResult = true;
 
-      let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
+      let result = characteristicValueToItsProperType( console, format, displayName, hapFormats, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -376,7 +377,7 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       let value = false;
       let expectedResult = false;
 
-      let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
+      let result = characteristicValueToItsProperType( console, format, displayName, hapFormats, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -389,7 +390,7 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       let value = "false";
       let expectedResult = false;
 
-      let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
+      let result = characteristicValueToItsProperType( console, format, displayName, hapFormats, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -402,7 +403,7 @@ describe('Test characteristicValueToItsProperType.', ( ) =>
       let value = "true";
       let expectedResult = true;
 
-      let result = characteristicValueToItsProperType( console, format, displayName, Characteristic, characteristicString, value  );
+      let result = characteristicValueToItsProperType( console, format, displayName, hapFormats, characteristicString, value  );
 
       assert.equal( result, expectedResult, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });

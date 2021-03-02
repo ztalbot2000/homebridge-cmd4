@@ -11,14 +11,14 @@ const chalk = require( "chalk" );
 // @param log - Logging mechanism.
 // @param format - CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
 // @param displayName - config.displayName
-// @param Characteristic - api.hap.Characteristic
+// @param hapFormats - api.hap.Characteristic.Formats
 // @param characteristicString - CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
 // @param value
 // @param allowTLV8 - true/false to omit message.
 //
 // @returns props or undefined
 //
-function characteristicValueToItsProperType( log, requiredFormat, displayName, Characteristic, characteristicString, value, allowTLV8 )
+function characteristicValueToItsProperType( log, requiredFormat, displayName, hapFormats, characteristicString, value, allowTLV8 )
 {
     // if allowTLV8 is defined, use its value otherwise use false.
     let allowTLV8Here = allowTLV8 === false;
@@ -39,7 +39,7 @@ function characteristicValueToItsProperType( log, requiredFormat, displayName, C
     let type = trueTypeOf( value );
 
     switch( requiredFormat ) {
-       case Characteristic.Formats.FLOAT:
+       case hapFormats.FLOAT:
           if ( isNumeric( value ) )
           {
               // Fix support for decimal temperatures
@@ -55,11 +55,11 @@ function characteristicValueToItsProperType( log, requiredFormat, displayName, C
           log( `${ displayName} ` + chalk.red( `Cannot convert value: ${ value } to Float for ${ characteristicString }`  ) );
 
           return value;
-       case Characteristic.Formats.INT:
-       case Characteristic.Formats.UINT8:
-       case Characteristic.Formats.UINT16:
-       case Characteristic.Formats.UINT32:
-       case Characteristic.Formats.UINT64:
+       case hapFormats.INT:
+       case hapFormats.UINT8:
+       case hapFormats.UINT16:
+       case hapFormats.UINT32:
+       case hapFormats.UINT64:
        {
           // Convert it to a Number, no matter what
           let result = Number( value );
@@ -73,7 +73,7 @@ function characteristicValueToItsProperType( log, requiredFormat, displayName, C
           }
           return result;
        }
-       case Characteristic.Formats.STRING:
+       case hapFormats.STRING:
        {
           if ( type == Number )
           {
@@ -91,7 +91,7 @@ function characteristicValueToItsProperType( log, requiredFormat, displayName, C
 
           return value;
        }
-       case Characteristic.Formats.BOOL:
+       case hapFormats.BOOL:
        {
 
           // If the value is a Number, return the conversion
@@ -132,7 +132,7 @@ function characteristicValueToItsProperType( log, requiredFormat, displayName, C
 
           return value;
        }
-       case Characteristic.Formats.ARRAY:
+       case hapFormats.ARRAY:
        {
           // If the value is a Number, return the conversion
           if ( type == Number ||
@@ -151,21 +151,21 @@ function characteristicValueToItsProperType( log, requiredFormat, displayName, C
 
           return value;
        }
-       case Characteristic.Formats.DATA:
+       case hapFormats.DATA:
        {
           // DATA types cannot be converted, so if in debug mode, note it.
           if ( log.debug )
              log.debug( `${ displayName} ` + chalk.yellow( `Do not know how to convert value: ${ value } for ${ characteristicString } to DATA` ) );
           return value;
        }
-       case Characteristic.Formats.TLV8:
+       case hapFormats.TLV8:
        {
           // TLV8 types cannot be converted, so if in debug mode, note it.
           if ( allowTLV8Here && log.debug )
              log.debug( `${ displayName} ` + chalk.yellow( `Do not know how to convert value: ${ value } for ${ characteristicString } to TLV8` ) );
           return value;
        }
-       case Characteristic.Formats.DICTIONARY:
+       case hapFormats.DICTIONARY:
        {
           // DICTIONARY types cannot be converted, so if in debug mode, note it.
           if ( log.debug )
