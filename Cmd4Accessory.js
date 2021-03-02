@@ -601,11 +601,11 @@ class Cmd4Accessory
 
       if ( self.outputConstants == true )
       {
-         let constant = transposeValueToValidConstant( self.log, CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value );
+         let constant = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value );
          cmd = self.state_cmd_prefix + self.state_cmd + " Set '" + self.displayName + "' '" + characteristicString  + "' '" + constant  + "'" + self.state_cmd_suffix;
       } else {
 
-         let nonConstant = transposeConstantToValidValue( self.log, CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value );
+         let nonConstant = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value );
 
          cmd = self.state_cmd_prefix + self.state_cmd + " Set '" + self.displayName + "' '" + characteristicString  + "' '" + nonConstant  + "'" + self.state_cmd_suffix;
       }
@@ -694,7 +694,7 @@ class Cmd4Accessory
       // a Constant to its valid value.
       // I can't see this happening, but who knows between upgrades
       // or restarts.
-      let transposedValue = transposeConstantToValidValue( self.log, CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, storedValue );
+      let transposedValue = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, storedValue );
 
       // Return the appropriate type, by seeing what it is defined as
       // in Homebridge,
@@ -833,7 +833,7 @@ class Cmd4Accessory
 
          // Even if outputConsts is not set, just in case, transpose
          // it anyway.
-         unQuotedReply = transposeConstantToValidValue( self.log, CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, unQuotedReply )
+         unQuotedReply = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, unQuotedReply )
 
          // Return the appropriate type, by seeing what it is
          // defined as in Homebridge,
@@ -1488,7 +1488,7 @@ class Cmd4Accessory
       if ( Object.keys( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].validValues ).length > 0 )
       {
          // Even if outputConsts is not set, just in case, transpose it anyway.
-         let newValue = transposeConstantToValidValue( this.log, CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value ) ;
+         let newValue = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value ) ;
 
          if ( value != newValue )
          {

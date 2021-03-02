@@ -81,7 +81,6 @@ const homebridgePath = which.sync( 'homebridge', { nothrow: true } )
 
 let apiPath;
 let HomebridgeAPI;
-let logger_1;
 if ( homebridgePath )
 {
    let dirname = path.dirname( homebridgePath );
@@ -96,13 +95,6 @@ if ( homebridgePath )
       process.exit( 10 );
    }
 
-   let loggerPath = `${ dirname }/../lib/node_modules/homebridge/lib/logger`;
-   logger_1 = require( loggerPath );
-   if ( ! logger_1 )
-   {
-      console.log( "logger_1 not available !!!" );
-      process.exit( 10 );
-   }
 } else
 {
    console.log( "homebridge not found !!!" );
@@ -121,9 +113,6 @@ var { transposeValueToValidConstant } = require( "../utils/transposeCMD4Props" )
 
 // Required to initialize CMD4 Accessory & Device lookup tables.
 let _api = new HomebridgeAPI( ); // object we feed to Plugins
-
-Object.defineProperty(exports, "LogLevel", { enumerable: true, get: function () { return logger_1.LogLevel; } });
-const log = logger_1.Logger.internal;
 
 
 // These would be the uninitialized values.
@@ -779,7 +768,7 @@ function addSingleDeviceContent(device_type_enum, deviceName )
          let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ characteristic.type ].type;
          let defaultValue = characteristic.defaultValue;
 
-         let constant = transposeValueToValidConstant( log, CMD4_ACC_TYPE_ENUM.properties, characteristic.type, defaultValue );
+         let constant = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, characteristic.type, defaultValue );
 
          if ( constant == defaultValue )
             constant = "n/a";

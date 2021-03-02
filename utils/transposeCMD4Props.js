@@ -18,11 +18,10 @@ var extractKeyValue = function ( obj, value )
 }
 
 // Used to convet ValidValus from a Constant to their corresponding value.
-var transposeConstantToValidValue = function ( log, CMD4_ENUM_properties_obj, accTypeEnumIndex, constantString )
+var transposeConstantToValidValue = function ( CMD4_ENUM_properties_obj, accTypeEnumIndex, constantString )
 {
    if ( Object.keys( CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues ).length < 0 )
    {
-      //log.debug( "transposeConstantToValidValue: No constants to transpose for:%s", constantString );
       // Return the original as it should be used instead of nothing
       return constantString;
    }
@@ -35,21 +34,16 @@ var transposeConstantToValidValue = function ( log, CMD4_ENUM_properties_obj, ac
    {
       let value = CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues[ ucConstantString ];
 
-      //log.debug( "transposeConstantToValidValue: Found value:%s for:%s", value, constantString );
-
       return value;
    }
-   //log.debug( "transposeConstantToValidValue: No value found for constant:%s", constantString );
    return constantString;
 }
 
 // Used to convet ValidValues Value to its corresponding Constant.
-var transposeValueToValidConstant = function ( log, CMD4_ENUM_properties_obj, accTypeEnumIndex, valueString )
+var transposeValueToValidConstant = function ( CMD4_ENUM_properties_obj, accTypeEnumIndex, valueString )
 {
-   //log.debug( "transposeValueToValidConstant: check index:%s", accTypeEnumIndex );
    if ( Object.keys( CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues ).length < 0)
    {
-      //log.debug( "transposeValueToValidConstant: No constants to transpose for:%s", valueString );
       // Return the original as it should be used instead of nothing
       return valueString;
    }
@@ -58,7 +52,6 @@ var transposeValueToValidConstant = function ( log, CMD4_ENUM_properties_obj, ac
 
    if ( constant == undefined )
    {
-      //log.debug( "transposeValueToValidConstant: No constant found for value:%s", valueString );
       return valueString;
    }
    return constant;
