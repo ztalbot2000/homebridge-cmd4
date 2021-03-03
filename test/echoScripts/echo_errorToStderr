@@ -1,5 +1,5 @@
 #!/bin/bash
 
-echo "This message goes to stderr" >&2;
+stdbuf -e0 -i0 echo "This message goes to stderr" >&2;
 
 exit 0;

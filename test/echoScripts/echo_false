@@ -1,5 +1,5 @@
 #!/bin/bash
 
-echo false;
+stdbuf -o0 echo false;
 
 exit 0;

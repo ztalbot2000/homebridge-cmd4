@@ -1,5 +1,5 @@
 #!/bin/bash
 
-echo "DISABLED";
+stdbuf -o0 echo "DISABLED";
 
 exit 0;

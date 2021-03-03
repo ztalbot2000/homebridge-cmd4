@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo null
-echo "This message goes to stderr" >&2;
+stdbuf -o0 echo null
+stdbuf -o0 e0 echo "This message goes to stderr" >&2;
 
 exit 0;

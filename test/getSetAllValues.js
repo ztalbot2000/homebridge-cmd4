@@ -146,7 +146,7 @@ describe( "Testing State.js Get Characteristics default written data ( " + CMD4_
 let dummyData = "X0X0Test";
 let dummyDataR = "\"" + dummyData + "\"";
 
-describe( "Testing State.js Set Characteristics ( " + CMD4_ACC_TYPE_ENUM.EOL + " of them )", ( ) =>
+describe( `Testing State.js Set Characteristics ( ${ CMD4_ACC_TYPE_ENUM.EOL } of them )`, ( ) =>
 {
    for ( let accTypeEnumIndex=0; accTypeEnumIndex < CMD4_ACC_TYPE_ENUM.EOL; accTypeEnumIndex ++ )
    {
@@ -203,7 +203,7 @@ describe( "Testing State.js Get Characteristics written data ( " + cmd4.CMD4_ACC
            data = ps.stdout;
            // fixme ??? assert( data == dummyData, "data returned: '" + data + "'" );
            //  The carriage return is stripped by getValue
-           assert( data == dummyDataR + "\n", "data returned:" + data );
+           assert( data == dummyDataR, "data returned:" + data );
 
            assert( data.length != 0, "data returned: " + data.length );
         }

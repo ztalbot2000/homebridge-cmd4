@@ -1,5 +1,5 @@
 #!/bin/bash
 
-echo "null";
+stdbuf -o0 echo "null";
 
 exit 0;

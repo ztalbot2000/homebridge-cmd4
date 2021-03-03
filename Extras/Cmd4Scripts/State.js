@@ -68,29 +68,29 @@ var io = "";
 var characteristic = "";
 var option = "";
 
-if (length == 2) process.exit(0);
+if ( length == 2 ) process.exit( 0 );
 
-if (length <= 2) {
-    console.log("Usage: " + process.argv[0] + " <Get> <AccessoryName> <Characteristic>");
-    console.log("       " + process.argv[0] + " <Set> <AccessoryName> <Characteristic> <Value>");
+if ( length <= 2 ) {
+    process.stdout.write( `Usage: ${ process.argv[ 0 ] } <Get> <AccessoryName> <Characteristic>` );
+    process.stdout.write( `       ${ process.argv[ 0 ] } <Set> <AccessoryName> <Characteristic> <Value>` );
     process.exit(-1);
 }
 
-if (length >= 2) io = process.argv[2];
-if (length >= 3) device = process.argv[3];
-if (length >= 4) characteristic  = process.argv[4];
-if (length >= 5) option  = process.argv[5];
+if ( length >= 2 ) io = process.argv[ 2 ];
+if ( length >= 3 ) device = process.argv[ 3 ];
+if ( length >= 4 ) characteristic  = process.argv[ 4 ];
+if ( length >= 5 ) option  = process.argv[ 5 ];
 
 // Placing the states in a subdirectory makes things look cleaner.
 // Some platforms require an exception handler
-const mkdirSync = function (dirPath)
+const mkdirSync = function( dirPath )
 {
     try {
-        fs.mkdirSync(dirPath)
-    } catch (err) {
-        if (err.code !== 'EEXIST')
+        fs.mkdirSync( dirPath )
+    } catch ( err ) {
+        if ( err.code !== 'EEXIST' )
         {
-            console.log("mkdir failed: " + dirPath);
+            process.stdout.write( `mkdir failed: ${ dirPath }`);
             throw err;
         } else {
             // directory already exists - OK
@@ -98,21 +98,21 @@ const mkdirSync = function (dirPath)
     }
 }
 
-mkdirSync(Cmd4StatesPath);
+mkdirSync( Cmd4StatesPath );
 
 
 // Such a simple way to store state information that is small and fast!
 // Put exception handling here too. Just in case!
-function writeData(a,b,c)
+function writeData( a, b,c )
 {
    var fn = Cmd4StatesPath + "/Status_" + a  + "_" + b;
 
    try {
-       fs.writeFileSync(fn,c);
+       fs.writeFileSync( fn,c );
    } catch (err) {
-       if (err.code !== 'EEXIST')
+       if ( err.code !== 'EEXIST' )
        {
-          console.log("write data failed: " + fn + " data:" + c);
+          process.stdout.write( `write data failed: ${ fn }  data: ${ c }` );
           throw err;
        } else {
           // file already exists - OK
@@ -123,22 +123,22 @@ function writeData(a,b,c)
 // Read the state information.  If there is none, just return what
 // was expected.
 // Put exception handling here too. Just in case!
-function readData(a,b)
+function readData( a, b )
 {
    var fn = Cmd4StatesPath + "/Status_" + a  + "_" + b;
    c = "";
 
    try {
-      c = String(fs.readFileSync(fn, 'utf8'));
+      c = String( fs.readFileSync( fn, 'utf8' ) );
    } catch (err) {
-      if (err.code === 'ENOENT') {
+      if ( err.code === 'ENOENT' ) {
          // This is OK. just return what was expected.
          return c;
       } else
       {
-         if (err.code !== 'EEXIST')
+         if ( err.code !== 'EEXIST' )
          {
-            console.log("read data failed: " + fn);
+            process.stdout.write( `read data failed: ${ fn }` );
             throw err;
          } else {
             // file already exists - OK
@@ -151,17 +151,17 @@ function readData(a,b)
 
 var c = "";
 
-switch(io)
+switch( io )
 {
    case "Get":
    {
-      switch(characteristic)
+      switch( characteristic )
       {
          case "AccessControlLevel":   // 0
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( `1` ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000E5-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.accessory-properties
@@ -181,9 +181,9 @@ switch(io)
          }
          case "AccessoryFlags":   // 1
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000A6-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.accessory-properties
@@ -199,9 +199,9 @@ switch(io)
          }
          case "AccessoryIdentifier":   // 2
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "TLB" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "TLB" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000057-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.accessoryIdentifier
@@ -215,9 +215,9 @@ switch(io)
          }
          case "Active":   // 3
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000B0-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.active
@@ -237,9 +237,9 @@ switch(io)
          }
          case "ActiveIdentifier":   // 4
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000E7-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.activeIdentifier
@@ -252,9 +252,9 @@ switch(io)
          }
          case "ActivityInterval":   // 5
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000021E-0000-1000-8000-0000023B
             // Type: public.hap.characteristic.activityInterval
@@ -270,9 +270,9 @@ switch(io)
          }
          case "AdministratorOnlyAccess":   // 6
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000001-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.administrator-only-access
@@ -288,9 +288,9 @@ switch(io)
          }
          case "AirParticulateDensity":   // 7
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 30 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "30" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000064-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.air-particulate.density
@@ -309,9 +309,9 @@ switch(io)
          }
          case "AirParticulateSize":   // 8
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000065-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.air-particulate.size
@@ -332,9 +332,9 @@ switch(io)
          }
          case "AirQuality":   // 9
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000095-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.air-quality
@@ -358,9 +358,9 @@ switch(io)
          }
          case "AppMatchingIdentifier":   // 10
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000A4-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.AppMatchingIdentifier
@@ -374,9 +374,9 @@ switch(io)
          }
          case "AudioFeedback":   // 11
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000005-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.audio-feedback
@@ -392,9 +392,9 @@ switch(io)
          }
          case "BatteryLevel":   // 12
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 50 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "50" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000068-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.battery-level
@@ -411,9 +411,9 @@ switch(io)
          }
          case "Brightness":   // 13
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 100 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "100" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000008-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.brightness
@@ -429,9 +429,9 @@ switch(io)
          }
          case "ButtonEvent":   // 14
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000123-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.battery-level
@@ -443,9 +443,9 @@ switch(io)
          }
          case "CCAEnergyDetectThreshold":   // 15
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000021E-0000-1000-8000-00000246
             // Type: public.hap.characteristic.CCASignalDetectThreshold
@@ -458,9 +458,9 @@ switch(io)
          }
          case "CCASignalDetectThreshold":   // 16
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000021E-0000-1000-8000-00000245
             // Type: public.hap.characteristic.CCASignalDetectThreshold
@@ -473,9 +473,9 @@ switch(io)
          }
          case "CameraOperatingModeIndicator":   // 17
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 100 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "100" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000008-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.brightness
@@ -492,9 +492,9 @@ switch(io)
          }
          case "CarbonDioxideDetected":   // 18
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000092-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.carbon-dioxide.detected
@@ -514,9 +514,9 @@ switch(io)
          }
          case "CarbonDioxideLevel":   // 19
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000093-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.carbon-dioxide.level
@@ -531,9 +531,9 @@ switch(io)
          }
          case "CarbonDioxidePeakLevel":   // 20
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000094-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.carbon-dioxide.peak-level
@@ -548,9 +548,9 @@ switch(io)
          }
          case "CarbonMonoxideDetected":   // 21
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000069-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.carbon-monoxide.detected`
@@ -569,9 +569,9 @@ switch(io)
          }
          case "CarbonMonoxideLevel":   // 22
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000090-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.carbon-monoxide.level
@@ -586,9 +586,9 @@ switch(io)
          }
          case "CarbonMonoxidePeakLevel":   // 23
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000091-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.carbon-monoxide.peak-level
@@ -603,9 +603,9 @@ switch(io)
          }
          case "Category":   // 24
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000A3-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.category
@@ -621,9 +621,9 @@ switch(io)
          }
          case "CharacteristicValueTransitionControl":   // 25
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000021E-0000-1000-8000-00000143
             // Type: public.hap.characteristic.CharacteristicValueTransitionControl
@@ -635,9 +635,9 @@ switch(io)
          }
          case "ChargingState":   // 26
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000008F-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.charging-state
@@ -658,9 +658,9 @@ switch(io)
          }
          case "ClosedCaptions":   // 27
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000DD-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.closedCaptions
@@ -680,9 +680,9 @@ switch(io)
          }
          case "ColorTemperature":   // 28
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 50 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "50" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000CE-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.color-temperature
@@ -698,9 +698,9 @@ switch(io)
          }
          case "ConfigureBridgedAccessory":   // 29
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000A0-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.configureBridgedAccessory
@@ -712,9 +712,9 @@ switch(io)
          }
          case "ConfigureBridgedAccessoryStatus":   // 30
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000009D-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.configureBridgedAccessoryStatus
@@ -726,9 +726,9 @@ switch(io)
          }
          case "ConfiguredName":   // 31
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if (c == "") console.log( "\"%s\"", device ); else console.log("\"%s\"", c);
+            if ( c == "" ) process.stdout.write( `"${ device }"` ); else process.stdout.write(`"${ c }"` );
 
             // UUID: 000000E3-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.configuredName
@@ -740,9 +740,9 @@ switch(io)
          }
          case "ContactSensorState":   // 32
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000006A-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.contact-state
@@ -762,9 +762,9 @@ switch(io)
          }
          case "CoolingThresholdTemperature":   // 33
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "32.4" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "32.4" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000000D-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.temperature.cooling-threshold
@@ -781,9 +781,9 @@ switch(io)
          }
          case "CurrentAirPurifierState":   // 34
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 2 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "2" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000A9-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.air-purifier.state.current
@@ -804,9 +804,9 @@ switch(io)
          }
          case "CurrentAmbientLightLevel":   // 35
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000006B-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.light-level.current
@@ -822,9 +822,9 @@ switch(io)
          }
          case "CurrentDoorState":   // 36
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000000E-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.door-state.current
@@ -848,9 +848,9 @@ switch(io)
          }
          case "CurrentFanState":   // 37
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000AF-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.fan.state.current
@@ -871,9 +871,9 @@ switch(io)
          }
          case "CurrentHeaterCoolerState":   // 38
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             process.exit(0);
 
@@ -897,9 +897,9 @@ switch(io)
          }
          case "CurrentHeatingCoolingState":   // 39
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             process.exit(0);
 
@@ -922,9 +922,9 @@ switch(io)
          }
          case "CurrentHorizontalTiltAngle":   // 40
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000006C-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.horizontal-tilt.current
@@ -941,9 +941,9 @@ switch(io)
          }
          case "CurrentHumidifierDehumidifierState":   // 41
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000B3-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.currentHumidifierDehumidifierState
@@ -965,9 +965,9 @@ switch(io)
          }
          case "CurrentMediaState":   // 42
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 2 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "2" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000E0-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.currentMediaState
@@ -991,9 +991,9 @@ switch(io)
          }
          case "CurrentPosition":   // 43
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000006D-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.position.current
@@ -1010,9 +1010,9 @@ switch(io)
          }
          case "CurrentRelativeHumidity":   // 44
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "60.2" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "60.2" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000010-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.relative-humidity.current
@@ -1029,9 +1029,9 @@ switch(io)
          }
          case "CurrentSlatState":   // 45
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000AA-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.slat.state.current
@@ -1052,9 +1052,9 @@ switch(io)
          }
          case "CurrentTemperature":   // 46
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "50.0" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "50.0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000011-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.temperature.current
@@ -1071,9 +1071,9 @@ switch(io)
          }
          case "CurrentTiltAngle":   // 47
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000C1-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.tilt.current
@@ -1090,9 +1090,9 @@ switch(io)
          }
          case "CurrentTime":   // 48
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "11.5" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "11.5" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000009B-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.currentTime
@@ -1104,9 +1104,9 @@ switch(io)
          }
          case "CurrentTransport":   // 49
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000021E-0000-1000-8000-00000245
             // Type: public.hap.characteristic.currentTransport
@@ -1119,9 +1119,9 @@ switch(io)
          }
          case "CurrentVerticalTiltAngle": // 50
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000006E-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.vertical-tilt.current
@@ -1138,9 +1138,9 @@ switch(io)
          }
             case "CurrentVisibilityState":   // 51
             {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000135-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.currentVisibilityState
@@ -1157,9 +1157,9 @@ switch(io)
          }
          case "DataStreamHAPTransport":   // 52
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000021E-0000-1000-8000-00000138
             // Type: public.hap.characteristic.dataStreamHAPTransport
@@ -1172,9 +1172,9 @@ switch(io)
          }
          case "DataStreamHAPTransportInterrupt":   // 53
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000021E-0000-1000-8000-00000139
             // Type: public.hap.characteristic.dataStreamHAPTransportInterrupt
@@ -1187,9 +1187,9 @@ switch(io)
          }
          case "DayoftheWeek":   // 54
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000098-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.zoom-digital
@@ -1205,9 +1205,9 @@ switch(io)
          }
          case "DiagonalFieldOfView":   // 55
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 50 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "50" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000224-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.diagonalFieldOfView
@@ -1224,9 +1224,9 @@ switch(io)
          }
          case "DigitalZoom":   // 56
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000011D-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.zoom-digital
@@ -1243,9 +1243,9 @@ switch(io)
          }
          case "DiscoverBridgedAccessories":   // 57
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000009E-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.discoverBridgedAccessories
@@ -1262,9 +1262,9 @@ switch(io)
          }
          case "DiscoveredBridgedAccessories":   // 58
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000009F-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.discoveredBridgedAccessories
@@ -1279,9 +1279,9 @@ switch(io)
          }
          case "DisplayOrder":   // 59
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000E7-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.displayOrder
@@ -1296,9 +1296,9 @@ switch(io)
          }
          case "EventRetransmissionMaximum":   // 60
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000021E-0000-1000-8000-0000023D
             // Type: public.hap.characteristic.EventRetransmissionMaximum
@@ -1313,9 +1313,9 @@ switch(io)
          }
          case "EventSnapshotsActive":   // 61
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000223-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.eventSnapshotsActive
@@ -1332,9 +1332,9 @@ switch(io)
          }
          case "EventTransmissionCounters":   // 62
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000021E-0000-1000-8000-0000023E
             // Type: public.hap.characteristic.EventTransmissionCounters
@@ -1349,9 +1349,9 @@ switch(io)
          }
          case "FilterChangeIndication":   // 63
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000AC-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.filter.change-indication
@@ -1371,9 +1371,9 @@ switch(io)
          }
          case "FilterLifeLevel":   // 64
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 50 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "50" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000AB-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.filter.life-level
@@ -1389,9 +1389,9 @@ switch(io)
          }
          case "FirmwareRevision":   // 65
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "100.1.1" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "100.1.1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000052-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.firmware.revision
@@ -1420,9 +1420,9 @@ switch(io)
          }
          case "HardwareRevision":   // 66
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "100.1.1" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "100.1.1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000053-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.hardware.revision
@@ -1451,9 +1451,9 @@ switch(io)
          }
          case "HeartBeat":   // 67
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 64 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "64" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000021E-0000-1000-8000-0000024A
             // Type: public.hap.characteristic.heartBeat
@@ -1466,9 +1466,9 @@ switch(io)
          }
          case "HeatingThresholdTemperature":   // 68
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "25.2" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "25.2" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000012-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.temperature.heating-threshold
@@ -1486,9 +1486,9 @@ switch(io)
          }
          case "HoldPosition": // 69
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000006F-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.position.hold
@@ -1500,9 +1500,9 @@ switch(io)
          }
          case "HomeKitCameraActive": // 70
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000006F-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.position.hold
@@ -1519,9 +1519,9 @@ switch(io)
          }
          case "Hue":   // 71
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "50" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "50" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000013-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.hue
@@ -1537,33 +1537,33 @@ switch(io)
          }
          case "Identifier":   // 77
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if (c == ""){
+            if ( c == "" ){
                // Each identifier needs a unique number
                // Match this with what is in the config.json
-               switch(device)
+               switch( device )
                {
                   case "HDMI1":
-                       console.log(0);
+                       process.stdout.write( "0" );
                        break;
                   case "HDMI2":
-                       console.log(1);
+                       process.stdout.write( "1" );
                        break;
                   case "HDMI3":
-                       console.log(2);
+                       process.stdout.write( "2" );
                        break;
                   case "HDMI4":
-                       console.log(3);
+                       process.stdout.write( "3" );
                        break;
                   case "Netflix":
-                       console.log(4);
+                       process.stdout.write( "4" );
                        break;
                   default:
-                       console.log(0);
+                       process.stdout.write( "0" );
                }
             } else {
-                  console.log( "\"%s\"", c );
+                  process.stdout.write( `"${ c }"` );
             }
 
             // UUID: 000000E6-0000-1000-8000-0026BB765291
@@ -1580,9 +1580,9 @@ switch(io)
          }
          case "Identify":   // 73
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000E6-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.identifier
@@ -1595,9 +1595,9 @@ switch(io)
          }
          case "ImageMirroring":   // 74
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000011F-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.image-mirror
@@ -1615,9 +1615,9 @@ switch(io)
          }
          case "ImageRotation":   // 75
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000011E-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.image-rotation
@@ -1635,9 +1635,9 @@ switch(io)
          }
          case "InUse":   // 76
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000D2-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.inUse
@@ -1657,9 +1657,9 @@ switch(io)
          }
          case "InputDeviceType":   // 77
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000DC-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.inputDeviceType
@@ -1684,9 +1684,9 @@ switch(io)
          }
          case "InputSourceType":   // 78
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000DB-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.inputSourceType
@@ -1715,9 +1715,9 @@ switch(io)
          }
          case "IsConfigured":   // 79
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000D6-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.isConfigured
@@ -1737,9 +1737,9 @@ switch(io)
          }
          case "LeakDetected":   // 80
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000070-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.leak-detected
@@ -1759,9 +1759,9 @@ switch(io)
          }
          case "LinkQuality":   // 81
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000009C-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.linkQuality
@@ -1780,9 +1780,9 @@ switch(io)
          }
          case "LockControlPoint":   // 82
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000019-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.lock-management.control-point
@@ -1793,9 +1793,9 @@ switch(io)
          }
          case "LockCurrentState":   // 83
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000001D-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.lock-mechanism.current-state
@@ -1818,9 +1818,9 @@ switch(io)
          }
          case "LockLastKnownAction":   // 84
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // Permissions: Paired Read, Notify
 
@@ -1846,9 +1846,9 @@ switch(io)
          }
          case "LockManagementAutoSecurityTimeout":   // 85
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 26 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "26" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000001A-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.lock-management.auto-secure-timeout
@@ -1860,9 +1860,9 @@ switch(io)
          }
          case "LockPhysicalControls":   // 86
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000A7-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.lock-physical-controls
@@ -1882,9 +1882,9 @@ switch(io)
          }
          case "LockTargetState":   // 87
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000001E-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.lock-mechanism.target-state
@@ -1905,9 +1905,9 @@ switch(io)
          }
          case "Logs":   // 88
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000001F-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.logs
@@ -1919,9 +1919,9 @@ switch(io)
          }
          case "MACRetransmissionMaximum":   // 89
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 100 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "100" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000021E-0000-1000-8000-00000247
             // Type: public.hap.characteristic.MACRetransmissionMaximum
@@ -1934,9 +1934,9 @@ switch(io)
          }
          case "MACTransmissionCounters":   // 90
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 100 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "100" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000021E-0000-1000-8000-00000248
             // Type: public.hap.characteristic.MACTransmissionCounters
@@ -1949,9 +1949,9 @@ switch(io)
          }
          case "ManagedNetworkEnable":   // 91
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000020-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.ManagedNetworkEnable
@@ -1968,9 +1968,9 @@ switch(io)
          }
          case "ManuallyDisabled":   // 92
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000227-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.manuallyDisabled
@@ -1987,9 +1987,9 @@ switch(io)
          }
          case "Manufacturer":   // 93
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "Homebridge" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "Homebridge" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000020-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.manufacturer
@@ -2003,9 +2003,9 @@ switch(io)
          }
          case "Model": // 94
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000E7-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.model
@@ -2019,9 +2019,9 @@ switch(io)
          }
          case "MotionDetected":   // 95
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000022-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.motion-detected
@@ -2033,9 +2033,9 @@ switch(io)
          }
          case "Mute":   // 96
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000011A-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.mute
@@ -2051,9 +2051,9 @@ switch(io)
          }
          case "Name":   // 97
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if (c == "") console.log( "\"%s\"", device ); else console.log("\"%s\"", c);
+            if ( c == "" ) process.stdout.write( `"${ device }"` ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000023-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.name
@@ -2067,9 +2067,9 @@ switch(io)
          }
          case "NetworkAccessViolationControl":   // 98
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000023-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.networkAccessViolationControl
@@ -2082,9 +2082,9 @@ switch(io)
          }
          case "NetworkClientProfileControl":   // 99
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000020C-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.NetworkClientProfileControl
@@ -2097,9 +2097,9 @@ switch(io)
          }
          case "NetworkClientStatusControl":   // 100
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000020D-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.NetworkClientStatusControl
@@ -2112,9 +2112,9 @@ switch(io)
          }
          case "NightVision":   // 101
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 1 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000011B-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.nightVision
@@ -2130,9 +2130,9 @@ switch(io)
          }
          case "NitrogenDioxideDensity":   // 102
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "50.0" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "50.0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000C4-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.density.no2
@@ -2147,9 +2147,9 @@ switch(io)
          }
          case "ObstructionDetected":   // 103
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000024-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.obstruction-detected
@@ -2161,9 +2161,9 @@ switch(io)
          }
          case "OccupancyDetected":   // 104
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000071-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.occupancy-detected
@@ -2183,9 +2183,9 @@ switch(io)
          }
          case "On":   // 105
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000025-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.on
@@ -2197,9 +2197,9 @@ switch(io)
          }
          case "OperatingStateResponse":   // 106
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000021E-0000-1000-8000-00000232
             // Type: public.hap.characteristic.OperatingStateResponse
@@ -2212,9 +2212,9 @@ switch(io)
          }
          case "OpticalZoom":   // 107
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "1.0" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1.0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000011C-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.opticalZoom
@@ -2230,9 +2230,9 @@ switch(io)
          }
          case "OutletInUse":   // 108
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000026-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.outlet-in-use
@@ -2244,9 +2244,9 @@ switch(io)
          }
          case "OzoneDensity":   // 109
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "50.0" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "50.0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000C3-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.density.ozone
@@ -2261,9 +2261,9 @@ switch(io)
          }
          case "PM10Density":   // 110
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "50.0" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "50.0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000C7-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.density.pm10
@@ -2278,9 +2278,9 @@ switch(io)
          }
          case "PM2_5Density":   // 111
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "50.0" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "50.0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000C6-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.density.pm25
@@ -2295,9 +2295,9 @@ switch(io)
          }
          case "PairSetup":   // 112
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000004C-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.pairSetup
@@ -2310,9 +2310,9 @@ switch(io)
          }
          case "PairVerify":   // 113
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000004E-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.pairVerify
@@ -2325,9 +2325,9 @@ switch(io)
          }
          case "PairingFeatures":   // 114
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000004F-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.pairingFeatures
@@ -2340,9 +2340,9 @@ switch(io)
          }
          case "PairingPairings":   // 115
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000050-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.pairingPairings
@@ -2355,9 +2355,9 @@ switch(io)
          }
          case "PasswordSetting":   // 116
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000DA-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.passwordSetting
@@ -2370,9 +2370,9 @@ switch(io)
          }
          case "PeriodicSnapshotsActive":   // 117
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000225-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.periodicSnapshotsActive
@@ -2389,9 +2389,9 @@ switch(io)
          }
          case "PictureMode":   // 118
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000E2-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.pictureMode
@@ -2414,9 +2414,9 @@ switch(io)
          }
          case "Ping":   // 119
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000021E-0000-1000-8000-0000023C
             // Type: public.hap.characteristic.ping
@@ -2428,9 +2428,9 @@ switch(io)
          }
          case "PositionState":   // 120
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "2" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "2" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000072-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.position.state
@@ -2452,9 +2452,9 @@ switch(io)
          }
          case "PowerModeSelection":   // 121
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000DF-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.powerModeSelection
@@ -2471,9 +2471,9 @@ switch(io)
          }
          case "ProductData":   // 122
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000220-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.productData
@@ -2488,9 +2488,9 @@ switch(io)
          }
          case "ProgramMode":   // 123
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000E7-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.programMode
@@ -2507,9 +2507,9 @@ switch(io)
          }
          case "ProgrammableSwitchEvent":   // 124
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000073-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.input-event
@@ -2531,9 +2531,9 @@ switch(io)
          }
          case "ProgrammableSwitchOutputState":   // 125
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000074-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.programmableSwitchOutputState
@@ -2552,9 +2552,9 @@ switch(io)
          }
          case "Reachable":   // 126
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000063-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.reachable
@@ -2569,9 +2569,9 @@ switch(io)
          }
          case "ReceivedSignalStrengthIndication":   // 127
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000021E-0000-1000-8000-0000023F
             // Type: public.hap.characteristic.ReceivedSignalStrengthIndication
@@ -2586,9 +2586,9 @@ switch(io)
          }
          case "ReceiverSensitivity":   // 128
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000021E-0000-1000-8000-00000244
             // Type: public.hap.characteristic.receiverSensitivity
@@ -2603,9 +2603,9 @@ switch(io)
          }
          case "RecordingAudioActive":   // 129
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000226-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.recordingAudioActive
@@ -2622,9 +2622,9 @@ switch(io)
          }
          case "RelativeHumidityDehumidifierThreshold":   // 130
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000C9-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.relativeHumidityDehumidifierThreshold
@@ -2640,9 +2640,9 @@ switch(io)
          }
          case "RelativeHumidityHumidifierThreshold":   // 131
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000CA-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.relativeHumidityHumidifierThreshold
@@ -2660,9 +2660,9 @@ switch(io)
          }
          case "RelayControlPoint":   // 132
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000005E-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.reachable
@@ -2675,9 +2675,9 @@ switch(io)
          }
          case "RelayEnabled":   // 133
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000005B-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.relayEnabled
@@ -2692,9 +2692,9 @@ switch(io)
          }
          case "RelayState":   // 134
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000005C-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.relayState
@@ -2709,9 +2709,9 @@ switch(io)
          }
          case "RemainingDuration":   // 135
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000D4-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.remainingDuration
@@ -2728,9 +2728,9 @@ switch(io)
          }
          case "RemoteKey":   // 136
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000E1-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.remoteKey
@@ -2758,9 +2758,9 @@ switch(io)
          }
          case "ResetFilterIndication":   // 137
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000AD-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.filter.reset-indication
@@ -2775,9 +2775,9 @@ switch(io)
          }
          case "RotationDirection":   // 138
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID:00000028-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.rotation.direction
@@ -2794,9 +2794,9 @@ switch(io)
          }
          case "RotationSpeed":   // 139
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "100" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "100" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000029-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.rotation.speed
@@ -2813,9 +2813,9 @@ switch(io)
          }
          case "RouterStatus":   // 140
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "100" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "100" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000020E-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.routerStatus
@@ -2835,9 +2835,9 @@ switch(io)
          }
          case "Saturation":   // 141
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "50" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "50" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000002F-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.saturation
@@ -2854,9 +2854,9 @@ switch(io)
          }
          case "SecuritySystemAlarmType":   // 142
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000008E-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.security-system.alarm-type
@@ -2876,9 +2876,9 @@ switch(io)
          }
          case "SecuritySystemCurrentState":   // 143
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "3" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "3" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000066-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.security-system-state.current
@@ -2903,9 +2903,9 @@ switch(io)
          }
          case "SecuritySystemTargetState":   // 144
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000067-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.security-system-state.target
@@ -2929,9 +2929,9 @@ switch(io)
          }
          case "SelectedAudioStreamConfiguration":   // 145
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: SelectedAudioStreamConfiguration
             // Type: public.hap.characteristic.SelectedAudioStreamConfiguration
@@ -2944,9 +2944,9 @@ switch(io)
          }
          case "SelectedCameraRecordingConfiguration":   // 146
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000209-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.selectedCameraRecordingConfiguration
@@ -2959,9 +2959,9 @@ switch(io)
          }
          case "SelectedRTPStreamConfiguration":   // 147
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000117-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.selected-rtp-stream-configuration
@@ -2973,9 +2973,9 @@ switch(io)
          }
          case "SerialNumber":   // 148
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "ABC001" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "ABC001" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000030-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.serial-number
@@ -2989,9 +2989,9 @@ switch(io)
          }
          case "ServiceLabelIndex":   // 149
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000CB-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.service-label-index
@@ -3006,9 +3006,9 @@ switch(io)
          }
          case "ServiceLabelNamespace":   // 150
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000CD-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.service-label-namespace
@@ -3029,9 +3029,9 @@ switch(io)
          }
          case "SetDuration":   // 151
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000D3-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.setDuration
@@ -3047,9 +3047,9 @@ switch(io)
          }
          case "SetupDataStreamTransport":   // 152
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: SetupDataStreamTransport
             // Type: public.hap.characteristic.SetupDataStreamTransport
@@ -3064,9 +3064,9 @@ switch(io)
          }
          case "SetupEndpoints":   // 153
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000118-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.setup-endpoints
@@ -3081,9 +3081,9 @@ switch(io)
          }
          case "SetupTransferTransport":   // 154
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000201-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.setupTransferTransport
@@ -3098,9 +3098,9 @@ switch(io)
          }
          case "SignalToNoiseRatio":   // 155
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: SignalToNoiseRatio
             // Type: public.hap.characteristic.SignalToNoiseRatio
@@ -3112,9 +3112,9 @@ switch(io)
          }
          case "SiriInputType":   // 156
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000068-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.SiriInputType
@@ -3132,9 +3132,9 @@ switch(io)
          }
          case "SlatType":   // 157
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000C0-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.type.slat
@@ -3154,9 +3154,9 @@ switch(io)
          }
          case "SleepDiscoveryMode":   // 158
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000E8-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.sleepDiscoveryMode
@@ -3175,9 +3175,9 @@ switch(io)
          }
          case "SleepInterval":   // 159
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000E8-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.sleepInterval
@@ -3194,9 +3194,9 @@ switch(io)
          }
          case "SmokeDetected":   // 160
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000076-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.smoke-detected
@@ -3216,9 +3216,9 @@ switch(io)
          }
          case "SoftwareRevision":   // 161
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "50" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "50" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: SoftwareRevision
             // Type: public.hap.characteristic.SoftwareRevision
@@ -3230,9 +3230,9 @@ switch(io)
          }
          case "StatusActive":   // 162
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000075-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.status-active
@@ -3244,9 +3244,9 @@ switch(io)
          }
          case "StatusFault":   // 163
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000077-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.status-fault
@@ -3264,9 +3264,9 @@ switch(io)
          }
          case "StatusJammed":   // 164
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000078-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.statusJammed
@@ -3283,9 +3283,9 @@ switch(io)
          }
          case "StatusLowBattery": // 165
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000079-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.status-lo-batt
@@ -3305,9 +3305,9 @@ switch(io)
          }
          case "StatusTampered":   // 166
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000007A-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.status-tampered
@@ -3323,9 +3323,9 @@ switch(io)
          }
          case "StreamingStatus":   // 167
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000120-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.streamingStatus
@@ -3341,9 +3341,9 @@ switch(io)
          }
          case "SulphurDioxideDensity":   // 168
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "50.0" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "50.0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000C5-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.density.so2
@@ -3358,9 +3358,9 @@ switch(io)
          }
          case "SupportedAudioRecordingConfiguration":   // 169
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000207-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.SupportedAudioRecordingConfiguration
@@ -3373,9 +3373,9 @@ switch(io)
          }
          case "SupportedAudioStreamConfiguration":   // 170
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000115-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.supportedAudioStreamConfiguration
@@ -3390,9 +3390,9 @@ switch(io)
          }
          case "SupportedCameraRecordingConfiguration":   // 171
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000205-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.SupportedCameraRecordingConfiguration
@@ -3407,9 +3407,9 @@ switch(io)
          }
          case "SupportedDataStreamTransportConfiguration":   // 172
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000130-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.SupportedDataStreamTransportConfiguration
@@ -3424,9 +3424,9 @@ switch(io)
          }
          case "SupportedCharacteristicValueTransitionConfiguration":   // 173
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000021E-0000-1000-8000-00000144
             // Type: public.hap.characteristic.SupportedCharacteristicValueTransitionConfiguration
@@ -3441,9 +3441,9 @@ switch(io)
          }
          case "SupportedDiagnosticsSnapshot":   // 174
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000021E-0000-1000-8000-00000238
             // Type: public.hap.characteristic.SupportedDiagnosticsSnapshot
@@ -3458,9 +3458,9 @@ switch(io)
          }
          case "SupportedRTPConfiguration":   // 175
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000116-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.supportedRTPConfiguration
@@ -3473,9 +3473,9 @@ switch(io)
          }
          case "SupportedRouterConfiguration":   // 176
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000210-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.supportedRouterConfiguration
@@ -3488,9 +3488,9 @@ switch(io)
          }
          case "SupportedTransferTransportConfiguration":   // 177
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000202-0000-1000-8000-0026BB765291'
             // Type: public.hap.characteristic.supportedTransferTransportConfiguration
@@ -3503,9 +3503,9 @@ switch(io)
          }
          case "SupportedVideoRecordingConfiguration":   // 178
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000206-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.SupportedVideoRecordingConfiguration
@@ -3518,9 +3518,9 @@ switch(io)
          }
          case "SupportedVideoStreamConfiguration":   // 179
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000E7-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.supportedVideoStreamConfiguration
@@ -3533,9 +3533,9 @@ switch(io)
          }
          case "SwingMode":   // 180
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "100" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "100" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000B6-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.swing-mode
@@ -3555,9 +3555,9 @@ switch(io)
          }
          case "TargetAirPurifierState":   // 181
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000A8-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.air-purifier.state.target
@@ -3577,9 +3577,9 @@ switch(io)
          }
          case "TargetAirQuality":   // 182
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000AE-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.targetAirQuality
@@ -3599,9 +3599,9 @@ switch(io)
          }
          case "TargetControlList":   // 183
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000124-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.TargetControlList
@@ -3613,9 +3613,9 @@ switch(io)
          }
          case "TargetControlSupportedConfiguration":   // 184
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000123-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.TargetControlSupportedConfiguration
@@ -3627,9 +3627,9 @@ switch(io)
          }
          case "TargetDoorState":   // 185
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000032-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.door-state.target
@@ -3650,9 +3650,9 @@ switch(io)
          }
          case "TargetFanState":   // 186
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000BF-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.fan.state.target
@@ -3672,9 +3672,9 @@ switch(io)
          }
          case "TargetHeaterCoolerState":   // 187
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000B2-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.targetHeaterCoolerState
@@ -3695,9 +3695,9 @@ switch(io)
          }
          case "TargetHeatingCoolingState":   // 188
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000033-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.heating-cooling.target
@@ -3720,9 +3720,9 @@ switch(io)
          }
          case "TargetHorizontalTiltAngle":   // 189
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000007B-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.horizontal-tilt.target
@@ -3739,9 +3739,9 @@ switch(io)
          }
          case "TargetHumidifierDehumidifierState":   // 190
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000B4-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.targetHumidifierDehumidifierState
@@ -3762,9 +3762,9 @@ switch(io)
          }
          case "TargetMediaState":   // 191
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "2" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "2" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000137-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.targetMediaState
@@ -3787,9 +3787,9 @@ switch(io)
          case "TargetPosition":   // 192
          {
 
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID 0000007C-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.position.target
@@ -3806,9 +3806,9 @@ switch(io)
          }
          case "TargetRelativeHumidity":   // 193
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "50.0" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "50.0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000010-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.relative-humidity.current
@@ -3825,9 +3825,9 @@ switch(io)
          }
          case "TargetSlatState":   // 194
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000BE-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.targetSlatState
@@ -3847,9 +3847,9 @@ switch(io)
          }
          case "TargetTemperature":   // 195
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "50.0" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "50.0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000035-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.temperature.target
@@ -3866,9 +3866,9 @@ switch(io)
          }
          case "TargetTiltAngle":   // 196
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000C2-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.tilt.target
@@ -3885,9 +3885,9 @@ switch(io)
          }
          case "TargetVerticalTiltAngle":   // 197
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000007D-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.vertical-tilt.target
@@ -3904,9 +3904,9 @@ switch(io)
          }
          case "TargetVisibilityState":   // 198
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000134-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.targetVisibilityState
@@ -3926,9 +3926,9 @@ switch(io)
          }
          case "TemperatureDisplayUnits":   // 199
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000036-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.temperature.units
@@ -3948,9 +3948,9 @@ switch(io)
          }
          case "ThirdPartyCameraActive":   // 200
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000021C-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.thirdPartyCameraActive
@@ -3967,9 +3967,9 @@ switch(io)
          }
          case "TimeUpdate":   // 201
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000009A-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.timeUpdate
@@ -3984,9 +3984,9 @@ switch(io)
          }
          case "TransmitPower":   // 202
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000021E-0000-1000-8000-00000242
             // Type: public.hap.characteristic.TransmitPower
@@ -4000,9 +4000,9 @@ switch(io)
          }
          case "TransmitPowerMaximum":   // 203
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000021E-0000-1000-8000-00000243
             // Type: public.hap.characteristic.TransmitPowerMaximum
@@ -4016,9 +4016,9 @@ switch(io)
          }
          case "TunnelConnectionTimeout":   // 204
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "5000" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "5000" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000061-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.timeUpdate
@@ -4031,9 +4031,9 @@ switch(io)
          }
          case "TunneledAccessoryAdvertising":   // 205
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000009A-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.timeUpdate
@@ -4048,9 +4048,9 @@ switch(io)
          }
          case "TunneledAccessoryConnected":   // 206
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000059-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.tunneledAccessoryConnected
@@ -4065,9 +4065,9 @@ switch(io)
          }
          case "TunneledAccessoryStateNumber":   // 207
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "0.0" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0.0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000058-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.timeUpdate
@@ -4082,9 +4082,9 @@ switch(io)
          }
          case "VOCDensity":   // 208
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "50.0" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "50.0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000C8-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.density.voc
@@ -4099,9 +4099,9 @@ switch(io)
          }
          case "ValveType":   // 209
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000D5-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.valveType
@@ -4123,9 +4123,9 @@ switch(io)
          }
          case "Version":   // 210
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "LockVersion" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "LockVersion" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000037-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.version
@@ -4139,9 +4139,9 @@ switch(io)
          }
          case "VideoAnalysisActive":   // 211
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "50" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "50" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000021E-0000-1000-8000-00000229
             // Type: public.hap.characteristic.VideoAnalysisActive
@@ -4153,9 +4153,9 @@ switch(io)
          }
          case "Volume":   // 212
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000119-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.volume
@@ -4172,9 +4172,9 @@ switch(io)
          }
          case "VolumeControlType":   // 213
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000E9-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.volumeControlyype
@@ -4196,9 +4196,9 @@ switch(io)
          }
          case "VolumeSelector":   // 214
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "1" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000EA-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.volumeSelector
@@ -4215,9 +4215,9 @@ switch(io)
          }
          case "WANConfigurationList":   // 215
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000211-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.WANConfigurationList
@@ -4232,9 +4232,9 @@ switch(io)
          }
          case "WANStatusList":   // 216
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000212-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.WANStatusList
@@ -4249,9 +4249,9 @@ switch(io)
          }
          case "WakeConfiguration":   // 217
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000EA-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.wakeConfiguration
@@ -4266,9 +4266,9 @@ switch(io)
          }
          case "WaterLevel":  // 218
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000B5-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.waterLevel
@@ -4283,9 +4283,9 @@ switch(io)
          }
          case "WiFiCapabilities":   // 219
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( "50" ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "50" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000021E-0000-1000-8000-0000022C
             // Type: public.hap.characteristic.WiFiCapabilities
@@ -4297,9 +4297,9 @@ switch(io)
          }
          case "WiFiConfigurationControl":   // 220
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 0000021E-0000-1000-8000-0000022D
             // Type: public.hap.characteristic.WiFiCapabilities
@@ -4311,9 +4311,9 @@ switch(io)
          }
          case "WiFiSatelliteStatus":  // 221
          {
-            c = readData(device, characteristic);
+            c = readData( device, characteristic );
 
-            if ( c == "" ) console.log( 0 ); else console.log( "\"%s\"", c );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 000000B5-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.WiFiSatelliteStatus
@@ -4332,8 +4332,8 @@ switch(io)
             break;
          }
             default:
-                console.error("Unknown Characteristic for:"  + io  +  " Device:" + device  +  " Characteristic:" + characteristic);
-                process.exit(-1);
+                process.stderr.write( `Unknown Characteristic for: ${ io } Device: ${ device } Characteristic: ${ characteristic }` );
+                process.exit( -1 );
        }
 
        break;
@@ -4341,582 +4341,582 @@ switch(io)
    } // End of Switch for "Get"
    case "Set":
    {
-      switch(characteristic)
+      switch( characteristic )
       {
          case "AccessControlLevel":   // 0
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "AccessoryFlags":   // 1
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "AccessoryIdentifier":   // 2
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "Active":   // 3
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "ActiveIdentifier":   // 4
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "ActivityInterval":   // 5
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "AdministratorOnlyAccess":   // 6
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "AirParticulateDensity":   // 7
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "AirParticulateSize":   // 8
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "AirQuality":   // 9
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "AppMatchingIdentifier":   // 10
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "AudioFeedback":   // 11
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "BatteryLevel":   // 12
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "Brightness":   // 13
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "ButtonEvent":   // 14
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "CCAEnergyDetectThreshold":   // 15
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "CCASignalDetectThreshold":   // 16
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "CameraOperatingModeIndicator":   // 17
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "CarbonDioxideDetected":   // 18
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "CarbonDioxideLevel":   // 19
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "CarbonDioxidePeakLevel":   // 20
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "CarbonMonoxideDetected":   // 21
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "CarbonMonoxideLevel":   // 22
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "CarbonMonoxidePeakLevel":   // 23
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "Category":   // 24
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "CharacteristicValueTransitionControl":   // 25
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "ChargingState":   // 26
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "ClosedCaptions":   // 27
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "ColorTemperature":   // 28
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "ConfigureBridgedAccessory":   // 29
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "ConfigureBridgedAccessoryStatus":   // 30
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "ConfiguredName":   // 31
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "ContactSensorState":   // 32
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "CoolingThresholdTemperature":   // 33
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "CurrentAirPurifierState":   // 34
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "CurrentAmbientLightLevel":   // 35
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "CurrentDoorState":   // 36
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "CurrentFanState":   //  37
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "CurrentHeaterCoolerState":   // 38
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "CurrentHeatingCoolingState":   // 39
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "CurrentHorizontalTiltAngle":   // 40
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "CurrentHumidifierDehumidifierState":   // 41
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "CurrentMediaState":   // 42
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "CurrentPosition":   // 43
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "CurrentRelativeHumidity":   // 44
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "CurrentSlatState":   // 45
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "CurrentTemperature":   // 46
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "CurrentTiltAngle":   // 47
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "CurrentTime":   // 48
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "CurrentTransport":   // 49
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "CurrentVerticalTiltAngle":   // 50
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "CurrentVisibilityState":   // 51
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "DataStreamHAPTransport":   // 52
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "DataStreamHAPTransportInterrupt":   // 53
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "DayoftheWeek":   // 54
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "DiagonalFieldOfView":   // 55
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "DigitalZoom":   // 56
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "DiscoverBridgedAccessories":   // 57
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "DiscoveredBridgedAccessories":   // 58
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "DisplayOrder":  // 59
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "EventRetransmissionMaximum":  // 60
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "EventSnapshotsActive":  // 61
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "EventTransmissionCounters":  // 62
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "FilterChangeIndication":   // 63
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "FilterLifeLevel":   // 64
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "FirmwareRevision":   // 65
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "HardwareRevision":   // 66
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "HeartBeat":   // 67
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "HeatingThresholdTemperature": // 68
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "HoldPosition":   // 69
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "HomeKitCameraActive":   // 70
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "Hue":   // 71
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "Identifier":   // 72
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "Identify":   // 73
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "ImageMirroring":   // 74
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "ImageRotation":   // 75
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "InUse":   // 76
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "InputDeviceType":   // 77
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "InputSourceType":   // 78
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "IsConfigured":   // 79
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "LeakDetected":   // 80
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "LinkQuality":   // 81
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "LockControlPoint":   // 82
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "LockCurrentState":   // 83
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "LockLastKnownAction":   // 84
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "LockManagementAutoSecurityTimeout":   // 85
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "LockPhysicalControls":   // 86
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "LockTargetState":   // 87
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Fake it Done
             writeData(device, "LockCurrentState", option);
@@ -4925,372 +4925,372 @@ switch(io)
          }
          case "Logs":   // 88
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "MACRetransmissionMaximum":   // 89
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "MACTransmissionCounters":   // 90
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "ManagedNetworkEnable":   // 91
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "ManuallyDisabled":   // 92
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "Manufacturer":   // 93
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "Model":   // 94
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "MotionDetected":   // 95
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "Mute":   // 96
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "Name":   // 97
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "NetworkAccessViolationControl":   // 98
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "NetworkClientProfileControl":   // 99
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "NetworkClientStatusControl":   // 100
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "NightVision":   // 101
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "NitrogenDioxideDensity":   // 102
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "ObstructionDetected":   // 103
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "OccupancyDetected":   // 104
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "On":  // 105
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "OperatingStateResponse":  // 106
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "OpticalZoom":   // 107
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "OutletInUse":   // 108
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "OzoneDensity":   // 109
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "PM10Density":   // 110
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "PM2_5Density":   // 111
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "PairSetup":   // 112
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "PairVerify":   // 113
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "PairingFeatures":   // 114
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "PairingPairings":   // 115
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "PasswordSetting":   // 116
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "PeriodicSnapshotsActive":   // 118
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "PictureMode":   // 118
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "Ping":   // 119
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "PositionState":   // 120
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "PowerModeSelection":   // 121
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "ProductData":   // 122
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "ProgramMode":   // 123
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "ProgrammableSwitchEvent":   // 124
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "ProgrammableSwitchOutputState":   // 125
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "Reachable":   // 126
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "ReceivedSignalStrengthIndication":   // 127
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "ReceiverSensitivity":   // 128
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "RecordingAudioActive":   // 129
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "RelativeHumidityDehumidifierThreshold":   // 130
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "RelativeHumidityHumidifierThreshold":   // 131
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "RelayControlPoint":   // 132
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "RelayEnabled":   // 133
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "RelayState":   // 134
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "RemainingDuration":   // 135
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "RemoteKey":   // 136
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "ResetFilterIndication":   // 137
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "RotationDirection":   // 138
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "RotationSpeed":   // 139
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "RouterStatus":   // 140
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "Saturation":   // 141
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "SecuritySystemAlarmType":   // 142
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "SecuritySystemCurrentState":   // 143
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "SecuritySystemTargetState":   // 144
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Set to done
             writeData(device,"SecuritySystemCurrentState", option);
@@ -5299,248 +5299,248 @@ switch(io)
          }
          case "SelectedAudioStreamConfiguration":   // 145
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "SelectedCameraRecordingConfiguration":   // 146
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "SelectedRTPStreamConfiguration":   // 147
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "SerialNumber":   // 148
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "ServiceLabelIndex":   // 149
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "ServiceLabelNamespace":   // 150
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "SetDuration":   // 151
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "SetupDataStreamTransport":   // 152
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "SetupEndpoints":   // 153
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "SetupTransferTransport":   // 154
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "SignalToNoiseRatio":   // 155
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "SiriInputType":   // 156
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "SlatType":   // 157
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "SleepDiscoveryMode":   // 158
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "SleepInterval":   // 159
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "SmokeDetected":   // 160
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "SoftwareRevision":   // 161
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "StatusActive":   // 162
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "StatusFault":   // 163
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "StatusJammed":   // 164
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "StatusLowBattery":   // 165
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "StatusTampered":   // 166
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "StreamingStatus":   // 167
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "SulphurDioxideDensity":   // 168
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "SupportedAudioRecordingConfiguration":   // 169
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "SupportedAudioStreamConfiguration":   // 170
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "SupportedCameraRecordingConfiguration":   // 171
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "SupportedDataStreamTransportConfiguration":   // 172
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "SupportedCharacteristicValueTransitionConfiguration":   // 173
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "SupportedDiagnosticsSnapshot":   // 174
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "SupportedRTPConfiguration":   // 175
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "SupportedRouterConfiguration":   // 176
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "SupportedTransferTransportConfiguration":   // 177
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "SupportedVideoRecordingConfiguration":   // 178
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "SupportedVideoStreamConfiguration":   // 179
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "SwingMode":   // 180
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "TargetAirPurifierState":   // 181
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Set to done
             writeData(device,"CurrentAirPurifierState", option);
@@ -5549,7 +5549,7 @@ switch(io)
          }
          case "TargetAirQuality":   // 182
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Set to done
             writeData(device, "AirQuality", option);
@@ -5558,20 +5558,20 @@ switch(io)
          }
          case "TargetControlList":   // 183
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "TargetControlSupportedConfiguration":   // 184
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "TargetDoorState":   // 185
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Set to Done
             writeData(device, "CurrentDoorState", option);
@@ -5580,7 +5580,7 @@ switch(io)
          }
          case "TargetFanState":   // 186
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Fake it Done
             writeData(device, "CurrentFanState", option);
@@ -5589,7 +5589,7 @@ switch(io)
          }
          case "TargetHeaterCoolerState":   // 187
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Fake it Done
             writeData(device, "CurrentHeaterCoolerState", option);
@@ -5598,7 +5598,7 @@ switch(io)
          }
          case "TargetHeatingCoolingState":   // 188
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Fake it Done
             writeData(device, "CurrentHeatingCoolingState", option);
@@ -5607,7 +5607,7 @@ switch(io)
          }
          case "TargetHorizontalTiltAngle":   // 189
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Set to done
             writeData(device,"CurrentHorizontalTiltAngle", option);
@@ -5616,7 +5616,7 @@ switch(io)
          }
          case "TargetHumidifierDehumidifierState":   // 190
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Set to done
             writeData(device,"CurrentHumidifierDehumidifierState", option);
@@ -5625,7 +5625,7 @@ switch(io)
          }
          case "TargetMediaState":   // 191
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Set to done
             writeData(device,"CurrentMediaState", option);
@@ -5634,7 +5634,7 @@ switch(io)
          }
          case "TargetPosition":   // 192
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Set to done
             writeData(device,"CurrentPosition", option);
@@ -5643,7 +5643,7 @@ switch(io)
          }
          case "TargetRelativeHumidity":   // 193
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Set to done
             writeData(device, "CurrentRelativeHumidity", option);
@@ -5652,7 +5652,7 @@ switch(io)
          }
          case "TargetSlatState":   // 194
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Set to done
             writeData(device, "CurrentSlatState", option);
@@ -5661,7 +5661,7 @@ switch(io)
          }
          case "TargetTemperature":   // 195
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Fake it
             writeData(device, "CurrentTemperature", option);
@@ -5670,7 +5670,7 @@ switch(io)
          }
          case "TargetTiltAngle":   // 196
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Set to done
             writeData(device,"CurrentTiltAngle", option);
@@ -5679,7 +5679,7 @@ switch(io)
          }
          case "TargetVerticalTiltAngle":   // 197
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Set to done
             writeData(device,"CurrentVerticalTiltAngle", option);
@@ -5688,7 +5688,7 @@ switch(io)
          }
          case "TargetVisibilityState":   // 198
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Set to done
             writeData(device,"CurrentVisibilityState", option);
@@ -5697,173 +5697,173 @@ switch(io)
          }
          case "TemperatureDisplayUnits":   // 199
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "ThirdPartyCameraActive":   // 200
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "TimeUpdate":   // 201
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "TransmitPower":   // 202
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "TransmitPowerMaximum":   // 203
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "TunnelConnectionTimeout":   // 204
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "TunneledAccessoryAdvertising":   // 205
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "TunneledAccessoryConnected":   // 206
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "TunneledAccessoryStateNumber":   // 207
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "VOCDensity":   // 208
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "ValveType":   // 209
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "Version":   // 210
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "VideoAnalysisActive":   // 211
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "Volume":   // 212
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "VolumeControlType":   // 213
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "VolumeSelector":   // 214
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             break;
          }
          case "WANConfigurationList":   // 215
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "WANStatusList":   // 216
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "WakeConfiguration":   // 217
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "WaterLevel":   // 218
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "WiFiCapabilities":   // 219
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "WiFiConfigurationControl":   // 220
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          case "WiFiSatelliteStatus":   // 218
          {
-            writeData(device, characteristic, option);
+            writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
          default:
-            console.error("Unknown Characteristic for:"  + io  +  " Device:" + device  +  " Characteristic:" + characteristic);
-            process.exit(-1);
+            process.stderr.write( `Unknown Characteristic for: ${ io } Device:${ device  } Characteristic:${ characteristic }` );
+            process.exit( -1 );
       }
 
       break;
    } // End of Switch Device for "Set"
    default:
-      console.error("Unknown IO" + io );
-      process.exit(-1);
+      process.stderr.write( `Unknown IO ${ io }` );
+      process.exit( -1 );
 }
 
-//console.log("Say What Device:" + device + " Characteristic:" + characteristic + " Option:" + option);
+//process.stdout.write( `Say What Device: ${ device } Characteristic: ${ characteristic } Option: ${ option }` );
 
-process.exit(0);
+process.exit( 0 );
 
 

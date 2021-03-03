@@ -28,10 +28,6 @@ var { transposeConstantToValidValue,
       transposeValueToValidConstant
     } = require( "./utils/transposeCMD4Props" );
 
-// Correct type of given values to match characteristics format.
-let characteristicValueToItsProperType =
-   require( "./utils/characteristicValueToItsProperType" );
-
 let isJSON = require( "./utils/isJSON" );
 
 // Pretty Colors
@@ -698,13 +694,22 @@ class Cmd4Accessory
 
       // Return the appropriate type, by seeing what it is defined as
       // in Homebridge,
-      let result = characteristicValueToItsProperType( self.log, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format, self.displayName, self.api.hap.Characteristic, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, transposedValue, self.allowTLV8 );
+      //let result = self.characteristicValueToItsProperType( self, accTypeEnumIndex, transposedValue );
+      let properValue = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( transposedValue  );
+      if ( properValue == undefined )
+      {
+         callback( null, null );
 
+         // If the value is not convertable, just return it.
+         self.log.warn( `${ self.displayName} ` + chalk.red( `Cannot convert value: ${ transposedValue } to ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].properties.format } for ${ characteristicString }`  ) );
+
+         return;
+      }
+
+      callback( null, properValue );
 
       // Store history using fakegato if set up
-      self.updateAccessoryAttribute( accTypeEnumIndex, result );
-
-      callback( null, result );
+      self.updateAccessoryAttribute( accTypeEnumIndex, properValue );
    }
 
    // ***********************************************
@@ -837,12 +842,23 @@ class Cmd4Accessory
 
          // Return the appropriate type, by seeing what it is
          // defined as in Homebridge,
-         unQuotedReply = characteristicValueToItsProperType( self.log, format, self.displayName, hapFormats, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, unQuotedReply, self.allowTLV8 );
+         //unQuotedReply = self.characteristicValueToItsProperType( self, accTypeEnumIndex, unQuotedReply );
+         let properValue = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( unQuotedReply );
+         if ( properValue == undefined )
+         {
+            callback( null, null );
+
+            // If the value is not convertable, just return it.
+            self.log.warn( `${ self.displayName} ` + chalk.red( `Cannot convert value: ${ unQuotedReply } to ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].properties.format } for ${ characteristicString }`  ) );
+
+            return;
+         }
+
+
+         callback( null, properValue );
 
          // Store history using fakegato if set up
-         self.updateAccessoryAttribute( accTypeEnumIndex, unQuotedReply );
-
-         callback( null, unQuotedReply );
+         self.updateAccessoryAttribute( accTypeEnumIndex, properValue );
 
       });
    }
@@ -1497,9 +1513,19 @@ class Cmd4Accessory
       }
 
       // Return the appropriate type, by seeing what it is defined as in Homebridge,
-      value = characteristicValueToItsProperType( this.log, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format, this.displayName, this.Characteristic.Formats, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, value, this.allowTLV8 );
+      //value = this.characteristicValueToItsProperType( this, accTypeEnumIndex, value );
+      let properValue = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( value );
+      if ( properValue == undefined )
+      {
+         let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+         // If the value is not convertable, just return it.
+         this.log.warn( `parseKeyForCharacterisitcs: ${ this.displayName} ` + chalk.red( `Cannot convert value: ${ value } to ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format } for ${ characteristicString }`  ) );
 
-      this.setStoredValueForIndex( accTypeEnumIndex, value );
+         return;
+      }
+
+
+      this.setStoredValueForIndex( accTypeEnumIndex, properValue );
    }
 
    processRequires( requires )

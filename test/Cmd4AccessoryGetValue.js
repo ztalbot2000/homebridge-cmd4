@@ -4,6 +4,7 @@
 
 
 let { Cmd4Accessory } = require( "../Cmd4Accessory" );
+const constants = require( "../cmd4Constants" );
 
 
 var _api = new HomebridgeAPI( ); // object we feed to Plugins
@@ -38,6 +39,7 @@ let TVConfig =
     pictureMode:              "STANDARD",
     remoteKey:                "SELECT"
 };
+let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
 
 
 // ******** QUICK TEST CMD4_ACC_TYPE_ENUM *************
@@ -72,7 +74,7 @@ describe( "Testing Cmd4Accessory", function( )
       let STORED_DATA_ARRAY = [ ];
 
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
 
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "Cmd4Accessory is not an instance of Cmd4Accessory" );
 
@@ -86,7 +88,7 @@ describe( "Testing Cmd4Accessory", function( )
       let STORED_DATA_ARRAY = [ ];
 
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
       hook.stop( );
 
       assert.isFunction( cmd4Accessory.getValue, "Cmd4Accessory.getValue is not a function" );
@@ -101,7 +103,7 @@ describe( "Testing Cmd4Accessory", function( )
       let STORED_DATA_ARRAY = [ ];
 
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
 
       var clock = sinon.useFakeTimers( );
       var callback = sinon.fake( );
@@ -125,7 +127,7 @@ describe( "Testing Cmd4Accessory", function( )
       let STORED_DATA_ARRAY = [ ];
 
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, function( rc, result )
       {
@@ -148,7 +150,7 @@ describe( "Testing Cmd4Accessory", function( )
       let STORED_DATA_ARRAY = [ ];
 
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, function( rc, result )
       {
@@ -171,7 +173,7 @@ describe( "Testing Cmd4Accessory", function( )
       let STORED_DATA_ARRAY = [ ];
 
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, function( rc, result )
       {
@@ -194,7 +196,7 @@ describe( "Testing Cmd4Accessory", function( )
       let STORED_DATA_ARRAY = [ ];
 
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, function( rc, result )
       {
@@ -217,7 +219,7 @@ describe( "Testing Cmd4Accessory", function( )
       let STORED_DATA_ARRAY = [ ];
 
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, function( rc, result )
       {
@@ -240,7 +242,7 @@ describe( "Testing Cmd4Accessory", function( )
       let STORED_DATA_ARRAY = [ ];
 
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, function( rc, result )
       {
@@ -263,7 +265,7 @@ describe( "Testing Cmd4Accessory", function( )
       let STORED_DATA_ARRAY = [ ];
 
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
       {
@@ -286,7 +288,7 @@ describe( "Testing Cmd4Accessory", function( )
       let STORED_DATA_ARRAY = [ ];
 
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
       {
@@ -309,7 +311,7 @@ describe( "Testing Cmd4Accessory", function( )
       let STORED_DATA_ARRAY = [ ];
 
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
       {
@@ -332,7 +334,7 @@ describe( "Testing Cmd4Accessory", function( )
       let STORED_DATA_ARRAY = [ ];
 
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
       {
@@ -355,7 +357,7 @@ describe( "Testing Cmd4Accessory", function( )
       let STORED_DATA_ARRAY = [ ];
 
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
       {
@@ -378,7 +380,7 @@ describe( "Testing Cmd4Accessory", function( )
       let STORED_DATA_ARRAY = [ ];
 
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
       {
@@ -401,7 +403,7 @@ describe( "Testing Cmd4Accessory", function( )
       let STORED_DATA_ARRAY = [ ];
 
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.ClosedCaptions, function( rc, result )
       {
@@ -424,7 +426,7 @@ describe( "Testing Cmd4Accessory", function( )
       let STORED_DATA_ARRAY = [ ];
 
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.ClosedCaptions, function( rc, result )
       {
@@ -446,7 +448,7 @@ describe( "Testing Cmd4Accessory", function( )
       let STORED_DATA_ARRAY = [ ];
 
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
       {
@@ -474,7 +476,7 @@ describe( "Testing Cmd4Accessory", function( )
       let STORED_DATA_ARRAY = [ ];
 
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
       {
@@ -502,7 +504,7 @@ describe( "Testing Cmd4Accessory", function( )
       let STORED_DATA_ARRAY = [ ];
 
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
       {
@@ -530,7 +532,7 @@ describe( "Testing Cmd4Accessory", function( )
       let STORED_DATA_ARRAY = [ ];
 
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
       {
@@ -558,7 +560,7 @@ describe( "Testing Cmd4Accessory", function( )
       let STORED_DATA_ARRAY = [ ];
 
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
       {
@@ -586,7 +588,7 @@ describe( "Testing Cmd4Accessory", function( )
       let STORED_DATA_ARRAY = [ ];
 
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
       {
@@ -596,6 +598,66 @@ describe( "Testing Cmd4Accessory", function( )
          let expectedOutput = "This message goes to stderr";
 
          assert.include( errMsg, expectedOutput, ` getValue output expected: ${ expectedOutput } received: ${ errMsg }` );
+
+         assert.equal( result, 0, ` getValue result expected: 0 received: ${ result }` );
+
+         // Clear the hook buffer for next time.
+         hook.reset( );
+
+         done( );
+      });
+   });
+
+   it( "getValue of Nothing to stdout and rc=0 should show error message", function ( done )
+   {
+      TVConfig.state_cmd = "./test/echoScripts/justExitWithRCof0";
+      let STORED_DATA_ARRAY = [ ];
+
+      hook.start( );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
+
+      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
+      {
+         hook.stop( );
+         let logMsg = hook.capturedLog( );
+         let errMsg = hook.capturedErr( );
+         let expectedErrOutput = `31mgetValue: Mute function for: My_Television returned an empty string ""`;
+         // Because we are mucking with a state_cmd that should not exist with fetch:Cached
+         let expectedErrOutput2 = `33mPolling of accessory My_Television ignored as fetch=Cached and polling was not set`;
+
+         assert.equal( logMsg, "", ` getValue output something to stdout: ${ logMsg }` );
+         assert.include( errMsg, expectedErrOutput, ` getValue output expected: ${ expectedErrOutput } received: ${ errMsg }` );
+         assert.include( errMsg, expectedErrOutput2, ` getValue output expected: ${ expectedErrOutput2 } received: ${ errMsg }` );
+
+         assert.equal( result, 0, ` getValue result expected: 0 received: ${ result }` );
+
+         // Clear the hook buffer for next time.
+         hook.reset( );
+
+         done( );
+      });
+   });
+
+   it( "getValue of Nothing to stdout and rc=0 should show error message", function ( done )
+   {
+      TVConfig.state_cmd = "./test/echoScripts/justExitWithRCof1";
+      let STORED_DATA_ARRAY = [ ];
+
+      hook.start( );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
+
+      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
+      {
+         hook.stop( );
+         let logMsg = hook.capturedLog( );
+         let errMsg = hook.capturedErr( );
+         let expectedErrOutput = `31mgetValue Mute function failed for My_Television cmd: ./test/echoScripts/justExitWithRCof1 Get 'My_Television' 'Mute' Failed.`;
+         // Because we are mucking with a state_cmd that should not exist with fetch:Cached
+         let expectedErrOutput2 = `33mPolling of accessory My_Television ignored as fetch=Cached and polling was not set`;
+
+         assert.equal( logMsg, "", ` getValue output something to stdout: ${ logMsg }` );
+         assert.include( errMsg, expectedErrOutput, ` getValue output expected: ${ expectedErrOutput } received: ${ errMsg }` );
+         assert.include( errMsg, expectedErrOutput2, ` getValue output expected: ${ expectedErrOutput2 } received: ${ errMsg }` );
 
          assert.equal( result, 0, ` getValue result expected: 0 received: ${ result }` );
 

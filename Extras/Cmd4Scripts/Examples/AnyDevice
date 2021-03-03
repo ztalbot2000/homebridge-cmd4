@@ -64,7 +64,7 @@ let option = "";
 
 function showHelp( )
 {
-   console.log( `Usage:
+   process.stdout.write( `Usage:
       AnyDevice < Get > < AccessoryName > < Characteristic >
       AnyDevice < Set > < AccessoryName > < Characteristic > < Value >
 `);
@@ -100,7 +100,7 @@ const mkdirSync = function ( dirPath )
     } catch ( err ) {
         if ( err.code !== 'EEXIST' )
         {
-            console.log( "mkdir failed: " + dirPath );
+            process.stdout.write( "mkdir failed: " + dirPath );
             throw err;
         } else {
             // directory already exists - OK
@@ -123,7 +123,7 @@ function writeData( a, b, c )
    {
       if ( err.code !== 'EEXIST' )
       {
-         console.log( "write data failed: " + fn + " data:" + c );
+         process.stdout.write( "write data failed: " + fn + " data:" + c );
          throw err;
       } else
       {
@@ -152,7 +152,7 @@ function readData( a,b )
       {
          if ( err.code !== 'EEXIST' )
          {
-            console.log( "read data failed: " + fn );
+            process.stdout.write( "read data failed: " + fn );
             throw err;
          } else
          {
@@ -181,13 +181,13 @@ switch( io )
          case "OpticalZoom":
          case "Reachable":
          {
-             if ( c == "" ) console.log( 1 ); else console.log( c );
+             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( c );
 
              break;
          }
          case "AccessoryIdentifier":
          {
-             if ( c == "" ) console.log( "TLB" ); else console.log( c );
+             if ( c == "" ) process.stdout.write( "TLB" ); else process.stdout.write( c );
 
              break;
          }
@@ -213,13 +213,13 @@ switch( io )
          case "VOCDensity":
          {
              // Make things a little different between devices
-             if ( c == "" ) console.log( Math.floor(Math.random() * 60) + 20 ); else console.log( c );
+             if ( c == "" ) process.stdout.write( Math.floor(Math.random() * 60) + 20 ); else process.stdout.write( c );
 
              break;
          }
          case "CurrentTime":
          {
-             if ( c == "" ) console.log( "11:15" ); else console.log( c );
+             if ( c == "" ) process.stdout.write( "11:15" ); else process.stdout.write( c );
 
              break;
          }
@@ -227,7 +227,7 @@ switch( io )
          case "Version":
          case "HardwareRevision":
          {
-             if ( c == "" ) console.log( "100.1.1" ); else console.log( c );
+             if ( c == "" ) process.stdout.write( "100.1.1" ); else process.stdout.write( c );
 
              break;
          }
@@ -237,12 +237,12 @@ switch( io )
          case "Name":
          case "ConfiguredName":
          {
-             if ( c == "" ) console.log( device ); else console.log( c );
+             if ( c == "" ) process.stdout.write( device ); else process.stdout.write( c );
 
              break;
          }
          default:
-             if ( c == "" ) console.log( 0 ); else console.log( c );
+             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( c );
              process.exit( 0 );
       }
 

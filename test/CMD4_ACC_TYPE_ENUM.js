@@ -296,4 +296,307 @@ describe( "Testing INITIALIZED CMD4_ACC_TYPE_ENUM", ( ) =>
        }
    });
 });
+describe( `Testing CMD4_ACC_TYPE_ENUM stringConversionFunction`, ( ) =>
+{
+   // Init the library for all to use
+   let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
+
+   describe( `Testing CMD4_ACC_TYPE_ENUM.properties[].stringConversionFunction`, ( ) =>
+   {
+      it( 'CMD4_ACC_TYPE_ENUM[ 0 - ${ ACC_EOL } ].stringConversionFunction should be a function', ( ) =>
+      {
+         for ( let index = 0; index < CMD4_ACC_TYPE_ENUM.EOL; index ++ )
+         {
+            assert.isFunction( CMD4_ACC_TYPE_ENUM.properties[ index ].stringConversionFunction, `Missing conversion function at index: ${ index }` );
+         }
+      });
+   });
+
+   it(`stringConversionFunction of AirParticulateSize of UINT8 Number should be Number.`, ( ) =>
+   {
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AirParticulateSize;
+      let value = 60;
+      let expectedResult = 60;
+
+
+      let result = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( value  );
+
+      assert.equal( result, expectedResult, `stringConversionFunction of valid data with full properties returned incorrect result: ${ result }` );
+   });
+
+   it(`stringConversionFunction of AirParticulateSize of UINT8 String should be Number.`, ( ) =>
+   {
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AirParticulateSize;
+      let value = "60";
+      let expectedResult = 60;
+
+
+      let result = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( value  );
+
+      assert.equal( result, expectedResult, `stringConversionFunction of valid data with full properties returned incorrect result: ${ result }` );
+   });
+
+   it(`stringConversionFunction of TargetTemperature of Float should be Float.`, ( ) =>
+   {
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetTemperature;
+      let value = 60.2;
+      let expectedResult = 60.2;
+
+
+      let result = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( value  );
+
+      assert.equal( result, expectedResult, `stringConversionFunction of valid data with full properties returned incorrect result: ${ result }` );
+   });
+
+   it(`stringConversionFunction of TargetTemperature of Float String should be Float.`, ( ) =>
+   {
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetTemperature;
+      let value = "60.2";
+      let expectedResult = 60.2;
+
+
+      let result = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( value  );
+
+      assert.equal( result, expectedResult, `stringConversionFunction of valid data with full properties returned incorrect result: ${ result }` );
+   });
+
+   it(`stringConversionFunction of TargetTemperature of Float "0.0" should be 0.0`, ( ) =>
+   {
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetTemperature;
+      let value = "0.0";
+      let expectedResult = 0.0;
+      let expectedResultType = "number";  // There is no float type
+
+
+      let result = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( value  );
+
+      assert.equal( result, expectedResult, `stringConversionFunction of valid data with full properties returned incorrect result: ${ result }` );
+
+      let resultType = typeof result;
+
+      assert.equal( resultType, expectedResultType, `stringConversionFunction of valid data with full properties returned incorrect result. Expected: ${ expectedResultType } received: ${ result }` );
+   });
+
+   it(`stringConversionFunction of TargetTemperature of Float "0" should be float`, ( ) =>
+   {
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetTemperature;
+      let value = "0";
+      let expectedResult = 0;
+      let expectedResultType = "number";  // There is no float type
+
+
+      let result = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( value  );
+
+      assert.equal( result, expectedResult, `stringConversionFunction of valid data with full properties returned incorrect result: ${ result }` );
+
+      let resultType = typeof result;
+
+      assert.equal( resultType, expectedResultType, `stringConversionFunction of valid data with full properties returned incorrect result. Expected: ${ expectedResultType } received: ${ result }` );
+   });
+
+
+   it(`stringConversionFunction of Name of string1 should be String.`, ( ) =>
+   {
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Name;
+      let value = "Device";
+      let expectedResult = "Device";
+
+      let result = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( value  );
+
+      assert.equal( result, expectedResult, `stringConversionFunction of valid data with full properties returned incorrect result: ${ result }` );
+   });
+
+   it(`stringConversionFunction of Name of number should be String.`, ( ) =>
+   {
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Name;
+      let value = 123;
+      let expectedResult = "123";
+
+      let result = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( value  );
+
+      assert.equal( result, expectedResult, `stringConversionFunction of valid data with full properties returned incorrect result: ${ result }` );
+   });
+
+   it(`stringConversionFunction of Mute of FAlse should be false.`, ( ) =>
+   {
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
+      let value = "FAlse";
+      let expectedResult = false;
+
+      let result = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( value  );
+
+      assert.equal( result, expectedResult, `stringConversionFunction of valid data with full properties returned incorrect result: ${ result }` );
+   });
+
+   it(`stringConversionFunction of Mute of "FAlse" should be false.`, ( ) =>
+   {
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
+      let value = "FAlse";
+      let expectedResult = false;
+
+      let result = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( value  );
+
+      assert.equal( result, expectedResult, `stringConversionFunction of valid data with full properties returned incorrect result: ${ result }` );
+   });
+
+   it(`stringConversionFunction of Mute of "True" should be true.`, ( ) =>
+   {
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
+      let value = "true";
+      let expectedResult = true;
+
+      let result = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( value  );
+
+      assert.equal( result, expectedResult, `stringConversionFunction of valid data with full properties returned incorrect result: ${ result }` );
+   });
+
+   it(`stringConversionFunction of Mute of false should be false.`, ( ) =>
+   {
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
+      let value = false;
+      let expectedResult = false;
+
+      let result = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( value  );
+
+      assert.equal( result, expectedResult, `stringConversionFunction of valid data with full properties returned incorrect result: ${ result }` );
+   });
+
+   it(`stringConversionFunction of Mute of true should be true.`, ( ) =>
+   {
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
+      let value = true;
+      let expectedResult = true;
+
+      let result = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( value  );
+
+      assert.equal( result, expectedResult, `stringConversionFunction of valid data with full properties returned incorrect result: ${ result }` );
+   });
+
+   it(`stringConversionFunction of Mute of 0 should be false.`, ( ) =>
+   {
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
+      let value = 0;
+      let expectedResult = false;
+
+      let result = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( value  );
+
+      assert.equal( result, expectedResult, `stringConversionFunction of valid data with full properties returned incorrect result: ${ result }` );
+   });
+
+   it(`stringConversionFunction of Mute of 1 should be true (On).`, ( ) =>
+   {
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
+      let value = 1;
+      let expectedResult = true;
+
+      let result = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( value  );
+
+      assert.equal( result, expectedResult, `stringConversionFunction of valid data with full properties returned incorrect result: ${ result }` );
+   });
+
+   it(`stringConversionFunction of BOOL of 0 should be false (Off) .`, ( ) =>
+   {
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.On;
+      let value = 0;
+      let expectedResult = false;
+
+      let result = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( value  );
+
+      assert.equal( result, expectedResult, `stringConversionFunction of valid data with full properties returned incorrect result: ${ result }` );
+   });
+
+   it(`stringConversionFunction of BOOL of 1 should be True (On).`, ( ) =>
+   {
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.On;
+      let value = 1;
+      let expectedResult = true;
+
+      let result = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( value  );
+
+      assert.equal( result, expectedResult, `stringConversionFunction of valid data with full properties returned incorrect result: ${ result }` );
+   });
+
+   it(`stringConversionFunction of Mute of 1 should be true .`, ( ) =>
+   {
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
+      let value = 1;
+      let expectedResult = true;
+
+      let result = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( value  );
+
+      assert.equal( result, expectedResult, `stringConversionFunction of valid data with full properties returned incorrect result: ${ result }` );
+   });
+
+   it(`stringConversionFunction of Mute of "1" should be True (On).`, ( ) =>
+   {
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
+      let value = "1";
+      let expectedResult = true;
+
+      let result = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( value  );
+
+      assert.equal( result, expectedResult, `stringConversionFunction of valid data with full properties returned incorrect result: ${ result }` );
+   });
+   it(`stringConversionFunction of Mute of 0 should be false (off).`, ( ) =>
+   {
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
+      let value = 0;
+      let expectedResult = false;
+
+      let result = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( value  );
+
+      assert.equal( result, expectedResult, `stringConversionFunction of valid data with full properties returned incorrect result: ${ result }` );
+   });
+   it(`stringConversionFunction of Mute of "0" should be false.`, ( ) =>
+   {
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
+      let value = "0";
+      let expectedResult = false;
+
+      let result = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( value  );
+
+      assert.equal( result, expectedResult, `stringConversionFunction of valid data with full properties returned incorrect result: ${ result }` );
+   });
+   it(`stringConversionFunction of Mute of true should be true.`, ( ) =>
+   {
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
+      let value = true;
+      let expectedResult = true;
+
+      let result = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( value  );
+
+      assert.equal( result, expectedResult, `stringConversionFunction of valid data with full properties returned incorrect result: ${ result }` );
+   });
+   it(`stringConversionFunction of Mute of false should be false.`, ( ) =>
+   {
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
+      let value = false;
+      let expectedResult = false;
+
+      let result = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( value  );
+
+      assert.equal( result, expectedResult, `stringConversionFunction of valid data with full properties returned incorrect result: ${ result }` );
+   });
+   it(`stringConversionFunction of Mute of "false" should be false.`, ( ) =>
+   {
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
+      let value = "false";
+      let expectedResult = false;
+
+      let result = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( value  );
+
+      assert.equal( result, expectedResult, `stringConversionFunction of valid data with full properties returned incorrect result: ${ result }` );
+   });
+   it(`stringConversionFunction of Mute of "true" should be true.`, ( ) =>
+   {
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Mute;
+      let value = "true";
+      let expectedResult = true;
+
+      let result = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( value  );
+
+      assert.equal( result, expectedResult, `stringConversionFunction of valid data with full properties returned incorrect result: ${ result }` );
+   });
+});
+
 
