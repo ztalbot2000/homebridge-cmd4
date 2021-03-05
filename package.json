@@ -19,6 +19,7 @@
    "dependencies": {
       "chalk": "^4.1.0",
       "command-exists": "^1.2.9",
+      "cross-spawn": "^7.0.3",
       "fakegato-history": ">=0.6.1",
       "github-version-checker": ">=2.2.0",
       "latest-version": "^5.1.0",

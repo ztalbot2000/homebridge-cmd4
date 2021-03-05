@@ -145,4 +145,5 @@ global.sleep = function( secondsToSleep = 1 )
    while( moment ( ).isBefore( sleepUntill ) ) { /* block the process */ }
 }
 
-sleep( 10 );
+// How it's used
+// sleep( 10 );

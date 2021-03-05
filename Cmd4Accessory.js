@@ -2,6 +2,8 @@
 
 // 3rd Party includes
 const exec = require( "child_process" ).exec;
+//const spawn = require( "child_process" ).spawn;
+const spawn = require( "cross-spawn" );
 const moment = require( "moment" );
 const fs = require( "fs" );
 const commandExistsSync = require( "command-exists" ).sync;
@@ -680,8 +682,9 @@ class Cmd4Accessory
       let storedValue = self.getStoredValueForIndex( accTypeEnumIndex );
       if ( storedValue == null || storedValue == undefined )
       {
-         self.log.debug( `getCachedValue ${ characteristicString } for: ${ self.displayName } has no cached value` );
-         callback( null, null );
+         self.log.warn( `getCachedValue ${ characteristicString } for: ${ self.displayName } has no cached value` );
+
+         callback( 10, null );
       }
 
       self.log.debug( `getCachedValue ${ characteristicString } for: ${ self.displayName } returned (CACHED) value: ${ storedValue }` );
@@ -698,15 +701,15 @@ class Cmd4Accessory
       let properValue = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( transposedValue  );
       if ( properValue == undefined )
       {
-         callback( null, null );
-
          // If the value is not convertable, just return it.
          self.log.warn( `${ self.displayName} ` + chalk.red( `Cannot convert value: ${ transposedValue } to ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].properties.format } for ${ characteristicString }`  ) );
+
+         callback( 20, null );
 
          return;
       }
 
-      callback( null, properValue );
+      callback( 0, properValue );
 
       // Store history using fakegato if set up
       self.updateAccessoryAttribute( accTypeEnumIndex, properValue );
@@ -741,34 +744,45 @@ class Cmd4Accessory
       self.log.debug( `getValue: accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } cmd: ${ cmd }` );
 
       // Execute command to Get a characteristics value for an accessory
-      exec( cmd, { timeout:self.timeout }, function ( error, stdout, stderr )
+      // exec( cmd, { timeout:self.timeout }, function ( error, stdout, stderr )
+      let child = spawn( cmd, { shell:true });
+
+      const timer = setTimeout(() =>
       {
-         if ( stderr )
-            self.log.error( `getValue: ${ characteristicString } function for ${ self.displayName } streamed to stderr: ${ stderr }.` );
+         child.kill( 'SIGINT' );
+         self.log.error( chalk.red( `getValue ${ characteristicString } function timed out ${ self.timeout }ms for ${ self.displayName } cmd: ${ cmd } Failed.` ) );
 
-         if ( error )
+         // Do not call the callback or too many will be called.
+         // Prefer homebridge complain about slow response.
+
+      }, self.timeout );
+
+      child.stderr.on('data', ( data ) =>
+      {
+         self.log.error( `getValue: ${ characteristicString } function for ${ self.displayName } streamed to stderr: ${ data }.` );
+      });
+
+      child.on('close', ( code ) =>
+      {
+         if ( code != 0 )
          {
-            self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  Error: ${ error.message }` ) );
-            callback( error, 0 );
-
-            return;
+            self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  Error: ${ code }` ) );
          }
 
-         let reply = stdout;
+         clearTimeout( timer );
+      });
 
-         // I'd rather trap here than have an error generated
-         // on no reply.
-         if ( reply == undefined )
-         {
-            self.log.error( `getValue: undefined returned from stdout for ${ characteristicString } ${ self.displayName }` );
-            callback( -1, 0 );
-            return;
-         }
+      child.on('error', ( error ) =>
+      {
+            self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  generated Error: ${ error }` ) );
+      });
 
+      child.stdout.on('data', ( reply ) =>
+      {
          if ( reply == null )
          {
             self.log.error( `getValue: null returned from stdout for ${ characteristicString } ${ self.displayName }` );
-            callback( -1, 0 );
+            callback( 15, null );
             return;
          }
 
@@ -784,7 +798,7 @@ class Cmd4Accessory
          if ( trimmedReply.toUpperCase( ) == "NULL" )
          {
             self.log.error( `getValue: "${ trimmedReply }" returned from stdout for ${ characteristicString } ${ self.displayName }` );
-            callback( -1, 0 );
+            callback( 30, null );
             return;
          }
 
@@ -798,8 +812,7 @@ class Cmd4Accessory
          {
             self.log.error( `getValue: ${ characteristicString } function for: ${ self.displayName } returned an empty string "${ trimmedReply }"` );
 
-
-            callback( -1, 0 );
+            callback( 45, null );
 
             return;
          }
@@ -811,7 +824,7 @@ class Cmd4Accessory
          {
             self.log.error( `getValue: ${ characteristicString } function for ${ self.displayName } returned the string "${ trimmedReply }"` );
 
-            callback( -1, 0 );
+            callback( 60, null );
 
             return;
          }
@@ -846,7 +859,7 @@ class Cmd4Accessory
          let properValue = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( unQuotedReply );
          if ( properValue == undefined )
          {
-            callback( null, null );
+            callback( 75, null );
 
             // If the value is not convertable, just return it.
             self.log.warn( `${ self.displayName} ` + chalk.red( `Cannot convert value: ${ unQuotedReply } to ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].properties.format } for ${ characteristicString }`  ) );
@@ -855,7 +868,7 @@ class Cmd4Accessory
          }
 
 
-         callback( null, properValue );
+         callback( 0, properValue );
 
          // Store history using fakegato if set up
          self.updateAccessoryAttribute( accTypeEnumIndex, properValue );

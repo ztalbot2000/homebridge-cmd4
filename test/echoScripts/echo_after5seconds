@@ -1,0 +1,6 @@
+#!/bin/bash
+
+sleep 5;
+stdbuf -o0 echo false;
+
+exit 0;
