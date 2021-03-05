@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-3-2-5-beta2">**Whats new in 3.2.5-beta2**</a>
 * <a href="#Whats-new-in-3-2-5-beta1">**Whats new in 3.2.5-beta1**</a>
 * <a href="#Whats-new-in-3-2-3">**Whats new in 3.2.3**</a>
 * <a href="#Whats-new-in-3-2-2">**Whats new in 3.2.2**</a>
@@ -34,6 +35,14 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-3-2-6">## Whats new in 3.2.5-beta2</a>
+#### 3.2.5-beta2 (2021-03-05)
+
+##### Bug Fixes
+
+*  use cross spawn instead of exec ([ab51b8dd](https://github.com/ztalbot2000/homebridge-cmd4/commit/ab51b8dd9b9a543d222d22f54348b06ff901d011))
+
 
 <a name="Whats-new-in-3-2-5-beta1">## Whats new in 3.2.5-beta1</a>
 #### 3.2.5-beta1 (2021-03-03)
