@@ -565,10 +565,12 @@ class Cmd4Accessory
    // ***********************************************
    //
    // setValue: Method to call an external script
-   //           to set a value.
+   //           that sets an accessories status
+   //           for a given characteristic.
+   //
    //
    //   The script will be passed:
-   //      Set <Device Name> <accTypeEnumIndex> <Value>
+   //      Set < Device Name > < accTypeEnumIndex > < Value >
    //
    //
    //      Where:
@@ -584,8 +586,8 @@ class Cmd4Accessory
    //  Notes:
    //    ( 1 ) In the special TARGET set characteristics, getValue
    //        is called to update HomeKit.
-   //          Example: Set My_Door <TargetDoorState> 1
-   //            calls: Get My_Door <CurrentDoorState>
+   //          Example: Set My_Door < TargetDoorState > 1
+   //            calls: Get My_Door < CurrentDoorState >
    //
    //       - Where he value in <> is an one of CMD4_ACC_TYPE_ENUM
    // ***********************************************
@@ -669,8 +671,8 @@ class Cmd4Accessory
    // ***********************************************
    //
    // GetCachedValue:
-   //   This methos will return the cached value of a
-   //   characteristic of a accessory.
+   //   This methos will return an accessories cached
+   //   characteristic value.
    //
    // ***********************************************
    getCachedValue( accTypeEnumIndex, callback )
@@ -718,9 +720,8 @@ class Cmd4Accessory
    // ***********************************************
    //
    // GetValue: Method to call an external script
-   //           that returns a single word that
-   //           returns either a string or numerical
-   //           value.
+   //           that returns an accessories status
+   //           for a given characteristic.
    //
    //   The script will be passed:
    //      Get <Device Name> <accTypeEnumIndex>
@@ -733,7 +734,7 @@ class Cmd4Accessory
    //           the CMD4_ACC_TYPE_ENUM.
    //
    // ***********************************************
-   getValue( accTypeEnumIndex, callback )
+   getValue( accTypeEnumIndex, callback  )
    {
       let self = this;
 
@@ -2257,45 +2258,66 @@ class Cmd4Accessory
 
    startPollingForAccessoryAndItsChildren( accessory )
    {
-      let that = accessory;
-
-      let msgDisplayed = false;
-
-      for( let accTypeEnumIndex in accessory.listOfPollingCharacteristics )
+      let startDelay = 3500;
+      let staggeredDelays = [ 0 ];
+      if ( accessory.fetch == constants.FETCH_ALWAYS )
       {
-         if ( msgDisplayed == false )
+         startDelay = 5000;
+         staggeredDelays = [ 0, 333, 572, 879 ];
+      }
+
+      let staggeredDelayIndex = 0;
+
+      // Delay the initial poll because a large anount of accessories, hammer the system.
+      setTimeout( ( ) =>
+      {
+         if ( staggeredDelayIndex++ > staggeredDelays.length )
+            staggeredDelayIndex = 0;
+
+         let that = accessory;
+
+         let msgDisplayed = false;
+
+         for( let accTypeEnumIndex in accessory.listOfPollingCharacteristics )
          {
-            accessory.log.debug( `Starting polling for: ${ accessory.displayName }.` );
-            // let cs=CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].type;
-            // accessory.log.debug( `Starting polling for: ${ accessory.displayName } ${ cs }.` );
-            msgDisplayed = true;
+            setTimeout( ( ) =>
+            {
+               if ( msgDisplayed == false )
+               {
+                  accessory.log.debug( `Starting polling for: ${ accessory.displayName }.` );
+                  // let cs=CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].type;
+                  // accessory.log.debug( `Starting polling for: ${ accessory.displayName } ${ cs }.` );
+                  msgDisplayed = true;
+               }
+               let timeout = accessory.listOfPollingCharacteristics[ accTypeEnumIndex ].timeout;
+               let interval = accessory.listOfPollingCharacteristics[ accTypeEnumIndex ].interval;
+               that.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] =
+                           setTimeout( that.characteristicPolling.bind(
+                           that, accessory, accTypeEnumIndex, timeout, interval ), interval );
+
+            }, staggeredDelays[ staggeredDelayIndex ] );
          }
-         let timeout = accessory.listOfPollingCharacteristics[ accTypeEnumIndex ].timeout;
-         let interval = accessory.listOfPollingCharacteristics[ accTypeEnumIndex ].interval;
-         that.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] =
-                     setTimeout( that.characteristicPolling.bind(
-                     that, accessory, accTypeEnumIndex, timeout, interval ), interval );
-      }
 
-      // accessory.log.debug( "CMD4=%s LEVEL=%s for %s", accessory.CMD4, accessory.LEVEL, accessory.displayName );
-      // The linked accessory children are at different levels of recursion, so only
-      // allow what is posssible.
-      if ( accessory.linkedAccessories && accessory.LEVEL == 0 )
-      {
-         accessory.linkedAccessories.forEach( ( linkedAccessory ) =>
+         // accessory.log.debug( "CMD4=%s LEVEL=%s for %s", accessory.CMD4, accessory.LEVEL, accessory.displayName );
+         // The linked accessory children are at different levels of recursion, so only
+         // allow what is posssible.
+         if ( accessory.linkedAccessories && accessory.LEVEL == 0 )
          {
-            linkedAccessory.startPollingForAccessoryAndItsChildren( linkedAccessory );
-         });
-      }
+            accessory.linkedAccessories.forEach( ( linkedAccessory ) =>
+            {
+               linkedAccessory.startPollingForAccessoryAndItsChildren( linkedAccessory );
+            });
+         }
 
-      // The Television Speaker Platform Example
-      if ( accessory.accessories && accessory.CMD4 == constants.PLATFORM && accessory.LEVEL == 0 )
-      {
-         accessory.accessories.forEach( ( addedAccessory ) =>
+         // The Television Speaker Platform Example
+         if ( accessory.accessories && accessory.CMD4 == constants.PLATFORM && accessory.LEVEL == 0 )
          {
-            addedAccessory.startPollingForAccessoryAndItsChildren( addedAccessory );
-         });
-      }
+            accessory.accessories.forEach( ( addedAccessory ) =>
+            {
+               addedAccessory.startPollingForAccessoryAndItsChildren( addedAccessory );
+            });
+         }
+     }, startDelay );
    }
 
    // This is the self-reaccurring routine to poll a characteristic
@@ -2315,8 +2337,9 @@ class Cmd4Accessory
       }
 
       // Clear polling
-      if ( this.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] == undefined )
-         clearTimeout( this.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] );
+      if ( this.listOfRunningPolls &&
+           this.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] == undefined )
+              clearTimeout( this.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] );
 
       // i.e. Characteristic.On
       // i.e.  Characteristic.RotationDirection
@@ -2326,9 +2349,12 @@ class Cmd4Accessory
       ).getValue( );
 
 
-       this.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] =
-          setTimeout( this.characteristicPolling.bind(
-             this, accessory, accTypeEnumIndex, timeout, interval ), interval );
+      // Add the check of this.listOfRunningPolls so that in Unit Testing, we can delete polling 
+      // if we want to.
+      if ( this.listOfRunningPolls )
+         this.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] =
+            setTimeout( this.characteristicPolling.bind(
+               this, accessory, accTypeEnumIndex, timeout, interval ), interval );
    }
 }
 

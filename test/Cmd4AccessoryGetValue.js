@@ -620,6 +620,7 @@ describe( "Testing Cmd4Accessory", function( )
 
    // timeout and cant capture timeout message
    it.skip( "getValue of Nothing to stdout and rc=0 should show error message", function ( done )
+      // Cannot capture rc=1 with valid response in this implementation os spawn
    {
       TVConfig.state_cmd = "./test/echoScripts/justExitWithRCof0";
       let STORED_DATA_ARRAY = [ ];
