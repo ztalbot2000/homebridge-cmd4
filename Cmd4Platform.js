@@ -273,6 +273,14 @@ class Cmd4Platform
 
          if (existingAccessory)
          {
+            let duplicatePlatformAccessory = this.createdCmd4Platforms.find(accessory => accessory.UUID === existingAccessory.UUID);
+            if ( duplicatePlatformAccessory )
+            {
+               this.log( chalk.red( `Error duplicate platform accessory: ${ duplicatePlatformAccessory.name } uuid:${ duplicatePlatformAccessory.UUID }` ) );
+               // Next in for.Each object iteration
+               return;
+            }
+
             log.info('Restoring existing accessory from cache:', existingAccessory.displayName);
 
             // if you need to update the accessory.context then you should run
@@ -308,7 +316,7 @@ class Cmd4Platform
             } else if ( existingAccessory.context.device.storedValuesPerCharacteristic )
             {
                // If we have an old version of the stored status, convert it to our new format.
-               this.log.debug(`Cmd4Platform: Creating STORED_DATA_ARRAY with existing storedValuesPerCharacteristic` );
+               this.log.debug(`Cmd4Platform: Creating STORED_DATA_ARRAY with existing storedValuesPerCharacteristic uuid:${ existingAccessory.uuid }` );
                STORED_DATA_ARRAY = [ {[constants.UUID]: existingAccessory.uuid,
                                       [constants.storedValuesPerCharacteristic]: existingAccessory.context.device.storedValuesPerCharacteristic}
                       ];
@@ -333,7 +341,7 @@ class Cmd4Platform
             // Get the properties for this accessories device type
             let devProperties = CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ];
 
-            log.debug( `Step 2. ${ accessory.displayName }.service = platform.getService( Service.${ devProperties.deviceName }` );
+            log.debug( `Step 2. ${ accessory.displayName }.service = platform.getService( Service.${ devProperties.deviceName })` );
             accessory.service = platform.getService( devProperties.service );
 
             // Determine which characteristics, if any, will be polled. This
@@ -346,7 +354,8 @@ class Cmd4Platform
             // config.json file
             accessory.addAllServiceCharacteristicsForAccessory( accessory );
 
-            // Create all the services for the accessory, including fakegato and polling
+            // Create all the services for the accessory, including fakegato
+            // true = from existing.
             this.createServicesForAccessoriesChildren( accessory, true )
 
 
@@ -360,7 +369,7 @@ class Cmd4Platform
             // Create the new PlatformAccessory
             if ( device.category == undefined )
             {
-               log.debug( `Step 1. platformAccessory = new platformAccessory( ${ displayName }, uuid )` );
+               log.debug( `Step 1. platformAccessory = new platformAccessory( ${ displayName }, ${ uuid } )` );
                platform = new this.api.platformAccessory( displayName, uuid );
 
             } else
@@ -375,7 +384,7 @@ class Cmd4Platform
                   process.exit( 666 );
                }
 
-               log.debug( `Step 1. platformAccessory = new platformAccessory( ${ displayName }, uuid, ${ category } )` );
+               log.debug( `Step 1. platformAccessory = new platformAccessory( ${ displayName }, ${ uuid }, ${ category } )` );
 
                platform = new this.api.platformAccessory( displayName, uuid, category );
             }
@@ -407,10 +416,11 @@ class Cmd4Platform
 
             // MOVE OUSTSIDE
             // Platform Step 2. const tvService = this.tvAccessory.addService( this.Service.Television );
-            this.log.debug( `Step 2. ${ accessory.displayName }.service = platform.addService( this.Service.${ devProperties.deviceName }` );
+            this.log.debug( `Step 2. ${ accessory.displayName }.service = platform.addService( this.Service.${ devProperties.deviceName })` );
             accessory.service = platform.addService( devProperties.service );
 
-            // Create all the services for the accessory, including fakegato and polling
+            // Create all the services for the accessory, including fakegato
+            // false = not from existing.
             this.createServicesForAccessoriesChildren( accessory, false )
 
             // Step 6. this.api.publishExternalAccessories( PLUGIN_NAME, [ this.tvAccessory ] );
@@ -431,6 +441,7 @@ class Cmd4Platform
          this.createdCmd4Platforms.push( platform );
 
          // Let the polling begin
+         this.log.info( chalk.green( `polling for master: ${ accessory.name } started` ));
          accessory.startPollingForAccessoryAndItsChildren( accessory );
       });
    }

@@ -94,6 +94,8 @@ class Cmd4Accessory
       // Instead of polling per accessory, allow the config file to be polled per characteristic.
       this.listOfPollingCharacteristics = { };
       this.listOfRunningPolls = { };
+      this.pollingStarted = false;
+      this.ServiceCreated = false;
 
       // DisplayName and/or Name must be defined.
       // No need to update config anymore as it is no longer cached, only the Characteristic values are.
@@ -437,7 +439,17 @@ class Cmd4Accessory
 
    createServicesForStandaloneAccessoryAndItsChildren( accessory )
    {
-      accessory.log.debug( chalk.blue( `createServicesForStandaloneAccessoryAndItsChildren` ) );
+      accessory.log.debug( chalk.blue( `createServicesFor${ this.CMD4 }AccessoryAndItsChildren` ) );
+      if ( accessory.ServiceCreated == true )
+      {
+         accessory.log.debug( chalk.red( `SERVICES ALREADY CREATED FOR ${ this.displayName } ${ this.CMD4 } ${ this.LEVEL }` ) );
+         return;
+      } else {
+         accessory.ServiceCreated = true;
+      }
+
+
+
       let properties = CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ];
 
       //
@@ -643,10 +655,8 @@ class Cmd4Accessory
             let relatedCharacteristic = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].characteristic;
             setTimeout( ( ) => {
                self.service.getCharacteristic( relatedCharacteristic ).getValue( );
-               callback( null );
             }, self.stateChangeResponseTime );
 
-            return;
          }
 
          // The "Set" of the characteristic value was successful.
@@ -663,7 +673,7 @@ class Cmd4Accessory
          if ( self.fetch == constants.FETCH_POLLED )
             self.setStoredValueForIndex( accTypeEnumIndex, value );
 
-         callback( null );
+         callback( 0 );
 
       });
    }
@@ -964,7 +974,6 @@ class Cmd4Accessory
        // Check every possible characteristic
        for ( let accTypeEnumIndex = 0; accTypeEnumIndex < len; accTypeEnumIndex++ )
        {
-
           // If there is a stored value for this characteristic ( defined by the config file )
           // Then we need to add the characteristic too
           if ( accessory.storedValuesPerCharacteristic[ accTypeEnumIndex ] != undefined )
@@ -2258,12 +2267,25 @@ class Cmd4Accessory
 
    startPollingForAccessoryAndItsChildren( accessory )
    {
+      // Create all the services for the accessory, including fakegato and polling
+      // Only true Standalone accessories can have their services created and
+      // polling started. Otherwise the platform will have to do this.
+      accessory.log.debug( chalk.green( `Creating polling for ${ this.CMD4 } accessory: ${ this.name }  ${ this.CMD4 } ${ this.LEVEL }` ));
+
+      if ( accessory.pollingStarted == true )
+      {
+         accessory.log.debug( chalk.red( `POLLING ALREADY RUNNING FOR ${ this.displayName } ${ this.CMD4 } ${ this.LEVEL }` ) );
+         return;
+      } else {
+         accessory.pollingStarted = true;
+      }
+
       let startDelay = 3500;
       let staggeredDelays = [ 0 ];
       if ( accessory.fetch == constants.FETCH_ALWAYS )
       {
          startDelay = 5000;
-         staggeredDelays = [ 0, 333, 572, 879 ];
+         staggeredDelays = [ 0, 672, 1332, 1879 ];
       }
 
       let staggeredDelayIndex = 0;
@@ -2271,24 +2293,19 @@ class Cmd4Accessory
       // Delay the initial poll because a large anount of accessories, hammer the system.
       setTimeout( ( ) =>
       {
-         if ( staggeredDelayIndex++ > staggeredDelays.length )
-            staggeredDelayIndex = 0;
-
          let that = accessory;
 
-         let msgDisplayed = false;
 
          for( let accTypeEnumIndex in accessory.listOfPollingCharacteristics )
          {
+            if ( staggeredDelayIndex++ > staggeredDelays.length )
+               staggeredDelayIndex = 0;
+
             setTimeout( ( ) =>
             {
-               if ( msgDisplayed == false )
-               {
-                  accessory.log.debug( `Starting polling for: ${ accessory.displayName }.` );
-                  // let cs=CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex].type;
-                  // accessory.log.debug( `Starting polling for: ${ accessory.displayName } ${ cs }.` );
-                  msgDisplayed = true;
-               }
+               let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+               accessory.log.debug( `Starting polling for: ${ accessory.displayName } ${ characteristicString }` );
+
                let timeout = accessory.listOfPollingCharacteristics[ accTypeEnumIndex ].timeout;
                let interval = accessory.listOfPollingCharacteristics[ accTypeEnumIndex ].interval;
                that.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] =
