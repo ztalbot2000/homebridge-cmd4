@@ -152,13 +152,13 @@
                                            "OFF",
                "TargetHeatingCoolingState":
                                            "OFF",
-               "CurrentTemperature":        50.0,
-               "TargetTemperature":         37.0,
+               "CurrentTemperature":        22.2,
+               "TargetTemperature":         22.2,
                "TemperatureDisplayUnits":  "CELSIUS",
                "CurrentRelativeHumidity":   60,
                "TargetRelativeHumidity":    60,
                "CoolingThresholdTemperature":
-                                            32.4,
+                                            22.2,
                "HeatingThresholdTemperature":
                                             25.2,
                "Name":                     "My_Thermostat",
@@ -356,8 +356,8 @@
             },
             {
                "Type":                     "TemperatureSensor",
-               "DisplayName":                     "My_TemperatureSensor",
-               "CurrentTemperature":        50.0,
+               "DisplayName":              "My_TemperatureSensor",
+               "CurrentTemperature":        22.2,
                "CurrentRelativeHumidity":   20,
                "StatusActive":             "TRUE",
                "StatusFault":              "NO_FAULT",
@@ -718,7 +718,7 @@
                "Name":                     "My_HeaterCooler",
                "SwingMode":                "SWING_ENABLED",
                "CoolingThresholdTemperature":
-                                            32.4,
+                                            22.2,
                "HeatingThresholdTemperature":
                                             25.2,
                "TemperatureDisplayUnits":  "CELSIUS",

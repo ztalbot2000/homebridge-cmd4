@@ -1953,7 +1953,6 @@ class Cmd4Accessory
             {
                this.parseKeyForCharacteristics( key, value, parseConfigShouldUseCharacteristicValues );
             }
-
          }
       }
 

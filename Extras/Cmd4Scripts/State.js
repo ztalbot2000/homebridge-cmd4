@@ -1054,7 +1054,7 @@ switch( io )
          {
             c = readData( device, characteristic );
 
-            if ( c == "" ) process.stdout.write( "50.0" ); else process.stdout.write( `"${ c }"` );
+            if ( c == "" ) process.stdout.write( "22.2" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000011-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.temperature.current
@@ -3849,7 +3849,7 @@ switch( io )
          {
             c = readData( device, characteristic );
 
-            if ( c == "" ) process.stdout.write( "50.0" ); else process.stdout.write( `"${ c }"` );
+            if ( c == "" ) process.stdout.write( "22.2" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000035-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.temperature.target
