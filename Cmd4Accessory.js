@@ -456,7 +456,7 @@ class Cmd4Accessory
       // Standalone Accessory
       //
       // Create the accessory's service
-      accessory.service = new properties.service( accessory.displayName, accessory.name )
+      accessory.service = new properties.service( accessory.name, accessory.subType )
 
       accessory.log.debug( `Creating information service for standalone accessory: ${ accessory.displayName }` );
 
@@ -473,8 +473,8 @@ class Cmd4Accessory
 
             // Standalone Step 4.
             //    const hdmi1InputService = this.tvAccessory.addService( this.Service.InputSource, `hdmi1', 'HDMI 1' );
-            accessory.log.debug( `Standalone Step 4. linkedAccessory( ${ accessory.displayName } ).service = new Service( ${ linkedAccessory.displayName }, ${ linkedAccessory.name } )` );
-            linkedAccessory.service = new properties.service( linkedAccessory.displayName, linkedAccessory.name )
+            accessory.log.debug( `Standalone Step 4. linkedAccessory( ${ accessory.displayName } ).service = new Service( ${ linkedAccessory.name }, ${ linkedAccessory.subType } )` );
+            linkedAccessory.service = new properties.service( linkedAccessory.name, linkedAccessory.subType )
             accessory.services.push( linkedAccessory.service );
 
             // Hmmm Double Check this !!
@@ -482,7 +482,7 @@ class Cmd4Accessory
             //linkedAccessory.log.debug( "Creating information service for linkedAccessory:%s", linkedAccessory.displayName );
             //createAccessorysInformationService( linkedAccessory );
 
-            accessory.log.debug( `Standalone Step 5. ${ accessory.displayName }.service.addLinkedService( ${ linkedAccessory.displayName }` );
+            accessory.log.debug( `Standalone Step 5. ${ accessory.displayName }.service.addLinkedService( ${ linkedAccessory.displayName }.service` );
             // Standalone Step 5.
             //    tvService.addLinkedService( hdmi1InputService ); // link to tv service
             accessory.service.addLinkedService( linkedAccessory.service );
@@ -609,23 +609,26 @@ class Cmd4Accessory
 
       let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
 
-      let cmd;
-
+      var transposed = { "value": value, "rc": true, "msg": "" };
       if ( self.outputConstants == true )
       {
-         let constant = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value );
-         cmd = self.state_cmd_prefix + self.state_cmd + " Set '" + self.displayName + "' '" + characteristicString  + "' '" + constant  + "'" + self.state_cmd_suffix;
+         transposed = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value );
+
       } else {
 
-         let nonConstant = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value );
-
-         cmd = self.state_cmd_prefix + self.state_cmd + " Set '" + self.displayName + "' '" + characteristicString  + "' '" + nonConstant  + "'" + self.state_cmd_suffix;
+         transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value );
       }
+      if ( transposed.rc == false )
+         self.log.warn( `${ self.displayName }: ${ transposed.msg }`);
+
+      let valueToSend = transposed.value;
+
+      let cmd = self.state_cmd_prefix + self.state_cmd + " Set '" + self.displayName + "' '" + characteristicString  + "' '" + valueToSend  + "'" + self.state_cmd_suffix;
 
       if ( self.statusMsg == true )
-         self.log.info( chalk.blue( `Setting ${ self.displayName } ${ characteristicString }` ) + ` ${ value }` );
-      else
-         self.log.debug( `setvalue accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } cmd: ${ cmd }` );
+         self.log.info( chalk.blue( `Setting ${ self.displayName } ${ characteristicString }` ) + ` ${ valueToSend }` );
+
+      self.log.debug( `setvalue accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } cmd: ${ cmd }` );
 
 
       // Execute command to Set a characteristic value for an accessory
@@ -705,7 +708,12 @@ class Cmd4Accessory
       // a Constant to its valid value.
       // I can't see this happening, but who knows between upgrades
       // or restarts.
-      let transposedValue = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, storedValue );
+      var transposed = { "value": storedValue, "rc": true, "msg": "" };
+      transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, storedValue );
+      if ( transposed.rc == false )
+         self.log.warn( `${ self.displayName }: ${ transposed.msg }`);
+
+      let transposedValue = transposed.value;
 
       // Return the appropriate type, by seeing what it is defined as
       // in Homebridge,
@@ -862,7 +870,12 @@ class Cmd4Accessory
 
          // Even if outputConsts is not set, just in case, transpose
          // it anyway.
-         unQuotedReply = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, unQuotedReply )
+         var transposed = { "value": unQuotedReply, "rc": true, "msg": "" };
+         transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, unQuotedReply )
+         if ( transposed.rc == false )
+            self.log.warn( `${ self.displayName }: ${ transposed.msg }`);
+
+         unQuotedReply = transposed.value;
 
          // Return the appropriate type, by seeing what it is
          // defined as in Homebridge,
@@ -1082,7 +1095,7 @@ class Cmd4Accessory
                       let boundSetCachedValue = accessory.setCachedValue.bind( this, accTypeEnumIndex );
                       accessory.service.getCharacteristic(
                          CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
-                         .characteristic ).on( "set", ( value,callback ) => {
+                         .characteristic ).on( "set", ( value, callback ) => {
                              boundSetCachedValue( value, callback );
 
                       });
@@ -1094,7 +1107,7 @@ class Cmd4Accessory
                       let boundSetValue = accessory.setValue.bind( this, accTypeEnumIndex );
                       accessory.service.getCharacteristic(
                          CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
-                         .characteristic ).on( "set", ( value,callback ) => {
+                         .characteristic ).on( "set", ( value, callback ) => {
                              boundSetValue( value, callback );
 
                       });
@@ -1527,12 +1540,13 @@ class Cmd4Accessory
       if ( Object.keys( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].validValues ).length > 0 )
       {
          // Even if outputConsts is not set, just in case, transpose it anyway.
-         let newValue = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value ) ;
+         var transposed = { "value": value, "rc": true, "msg": "" };
+         transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value ) ;
 
-         if ( value != newValue )
-         {
-            value = newValue;
-         }
+         if ( transposed.rc == false )
+            this.log.warn( `${ this.displayName }: ${ transposed.msg }`);
+
+         value = transposed.value;
       }
 
       // Return the appropriate type, by seeing what it is defined as in Homebridge,
@@ -1739,6 +1753,10 @@ class Cmd4Accessory
          {
             case constants.TYPE:
                this.type = value;
+
+               break;
+            case constants.SUBTYPE:
+               this.subType = value;
 
                break;
             case constants.DISPLAYNAME:
@@ -1952,6 +1970,10 @@ class Cmd4Accessory
           this.log.error( chalk.red( `Error` ) + `: Unknown device type: ${ this.type } for: ${ this.displayName }` );
          process.exit( 263 );
       }
+
+      // Create a subType to delimit services with multiple accessories of
+      // the same type and possibly the same accessory.name.
+      this.subType = this.subType || this.displayName;
 
       // UUID must be defined or created.
       this.UUID = this.UUID || getAccessoryUUID( config, this.api.hap.uuid );
@@ -2270,8 +2292,6 @@ class Cmd4Accessory
       // Create all the services for the accessory, including fakegato and polling
       // Only true Standalone accessories can have their services created and
       // polling started. Otherwise the platform will have to do this.
-      accessory.log.debug( chalk.green( `Creating polling for ${ this.CMD4 } accessory: ${ this.name }  ${ this.CMD4 } ${ this.LEVEL }` ));
-
       if ( accessory.pollingStarted == true )
       {
          accessory.log.debug( chalk.red( `POLLING ALREADY RUNNING FOR ${ this.displayName } ${ this.CMD4 } ${ this.LEVEL }` ) );

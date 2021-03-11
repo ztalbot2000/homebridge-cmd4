@@ -264,7 +264,7 @@ describe( "Testing Cmd4Accessory", function( )
          let errLines = (capturedErr.split(/\r\n|\r|\n/)).length;
 
          let expectedResult = "ENABLED";
-         let expectedOutput = `\u001b[39m\u001b[34mSetting My_Television ClosedCaptions\u001b[39m 1`;
+         let expectedOutput = `\u001b[39m\u001b[34mSetting My_Television ClosedCaptions\u001b[39m ENABLED`;
 
          let newfn = `${ fn }_${ DEVICE }_${ CHARACTERISTIC }`;
          let INPUTS=require( `${ newfn }` );
@@ -393,7 +393,7 @@ describe( "Testing Cmd4Accessory", function( )
          let errLines = (capturedErr.split(/\r\n|\r|\n/)).length;
 
          let expectedResult = 1;
-         let expectedOutput = `\u001b[39m\u001b[34mSetting My_Television Mute\u001b[39m true`;
+         let expectedOutput = `\u001b[39m\u001b[34mSetting My_Television Mute\u001b[39m 1`;
 
          let newfn = `${ fn }_${ DEVICE }_${ CHARACTERISTIC }`;
          let INPUTS=require( `${ newfn }` );

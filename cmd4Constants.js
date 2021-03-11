@@ -65,6 +65,7 @@ exports.STATUSMSG                = "StatusMsg";
 
 // Platform Config Constnts
 exports.TYPE                     = "Type";
+exports.SUBTYPE                  = "SubType";
 exports.DISPLAYNAME              = "DisplayName";
 exports.UUID                     = "UUID";
 exports.ACCESSORY                = "Accessory";

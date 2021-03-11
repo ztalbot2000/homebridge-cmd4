@@ -341,8 +341,8 @@ class Cmd4Platform
             // Get the properties for this accessories device type
             let devProperties = CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ];
 
-            log.debug( `Step 2. ${ accessory.displayName }.service = platform.getService( Service.${ devProperties.deviceName })` );
-            accessory.service = platform.getService( devProperties.service );
+            log.debug( `Step 2. ${ accessory.displayName }.service = platform.getService( Service.${ devProperties.deviceName }, ${ accessory.subType })` );
+            accessory.service = platform.getService( devProperties.service, accessory.name, accessory.subType );
 
             // Determine which characteristics, if any, will be polled. This
             // information is also used to define which service.getValue is
@@ -416,8 +416,8 @@ class Cmd4Platform
 
             // MOVE OUSTSIDE
             // Platform Step 2. const tvService = this.tvAccessory.addService( this.Service.Television );
-            this.log.debug( `Step 2. ${ accessory.displayName }.service = platform.addService( this.Service.${ devProperties.deviceName })` );
-            accessory.service = platform.addService( devProperties.service );
+            this.log.debug( `Step 2. ${ accessory.displayName }.service = platform.addService( this.Service.${ devProperties.deviceName }, ${ accessory.name }, ${ accessory.subType })` );
+            accessory.service = platform.addService( new devProperties.service( accessory.name, accessory.subType )  );
 
             // Create all the services for the accessory, including fakegato
             // false = not from existing.
@@ -426,7 +426,7 @@ class Cmd4Platform
             // Step 6. this.api.publishExternalAccessories( PLUGIN_NAME, [ this.tvAccessory ] );
             if ( accessory.publishExternally )
             {
-               log.debug( `Step 6. publishExternalAccessories: [ ${ accessory.displayName } ]` );
+               log.debug( `Step 6. publishExternalAccessories( ${ settings.PLUGIN_NAME }, [ ${accessory.displayName } ] )` );
 
                this.api.publishExternalAccessories( settings.PLUGIN_NAME, [ platform ] );
 
@@ -441,7 +441,7 @@ class Cmd4Platform
          this.createdCmd4Platforms.push( platform );
 
          // Let the polling begin
-         this.log.info( chalk.green( `polling for master: ${ accessory.name } started` ));
+         this.log.info( chalk.green( `Polling for ${ accessory.name } started` ));
          accessory.startPollingForAccessoryAndItsChildren( accessory );
       });
    }
@@ -494,14 +494,14 @@ class Cmd4Platform
          // Existing Accessories would have existing services
          if ( fromExisting == true )
          {
-            this.log.debug( `Platform (AddedAccessory-existing) Step 3, ${ addedAccessory.displayName }.service = accessory.platform.getService( Service.${ devProperties.deviceName }` );
-            addedAccessory.service = addedAccessory.platform.getService( devProperties.service, addedAccessory.displayName, addedAccessory.name );
+            this.log.debug( `Platform (AddedAccessory-existing) Step 3, ${ addedAccessory.displayName }.service = accessory.platform.getService( Service.${ devProperties.deviceName }, ${ addedAccessory.name }, ${ addedAccessory.subType }` );
+            addedAccessory.service = addedAccessory.platform.getService( devProperties.service, addedAccessory.name, addedAccessory.subType );
          } else
          {
 
-            this.log.debug( `Platform (AddedAccessory-new) Step 3, ${ addedAccessory.displayName }.service = PlatformAccessory: ${ cmd4PlatformAccessory.displayName } addService( Service:${ devProperties.deviceName } )` );
+            this.log.debug( `Platform (AddedAccessory-new) Step 3, ${ addedAccessory.displayName }.service = PlatformAccessory: ${ cmd4PlatformAccessory.displayName } addService( Service:${ devProperties.deviceName}, ${ addedAccessory.name }, ${ addedAccessory.subType } )` );
 
-            addedAccessory.service = cmd4PlatformAccessory.platform.addService( devProperties.service, addedAccessory.displayName, addedAccessory.name );
+            addedAccessory.service = cmd4PlatformAccessory.platform.addService( new devProperties.service( addedAccessory.name, addedAccessory.subType ) );
          }
 
          addedAccessory.addAllServiceCharacteristicsForAccessory( addedAccessory );
@@ -533,14 +533,14 @@ class Cmd4Platform
          // Existing Accessories would have existing services
          if ( fromExisting == true )
          {
-            this.log.debug( `Platform (LinkedAccessory-existing) Step 4. ${ linkedAccessory.displayName }.service = ${ cmd4PlatformAccessory.displayName }.addService:( ${ devProperties.deviceName }.service, ${linkedAccessory.displayName }, ${linkedAccessory.name } )` );
+            this.log.debug( `Platform (LinkedAccessory-existing) Step 4. ${ linkedAccessory.displayName }.service = ${ cmd4PlatformAccessory.displayName }.getService:( ${ devProperties.deviceName }.service, ${linkedAccessory.name }, ${linkedAccessory.subType } )` );
 
-            linkedAccessory.service = linkedAccessory.platform.getService( devProperties.service, linkedAccessory.displayName, linkedAccessory.name );
+            linkedAccessory.service = linkedAccessory.platform.getService( devProperties.service, linkedAccessory.name, linkedAccessory.subType );
          } else
          {
-            this.log.debug( `Platform (LinkedAccessory-new) Step 4. ${ linkedAccessory.displayName }.service = ${ cmd4PlatformAccessory.displayName }.addService:( ${ devProperties.deviceName }.service, ${linkedAccessory.displayName }, ${linkedAccessory.name } )` );
+            this.log.debug( `Platform (LinkedAccessory-new) Step 4. ${ linkedAccessory.displayName }.service = ${ cmd4PlatformAccessory.displayName }.addService:( ${ devProperties.deviceName }.service, ${linkedAccessory.name }, ${linkedAccessory.subType } )` );
 
-            linkedAccessory.service = cmd4PlatformAccessory.platform.addService( devProperties.service, linkedAccessory.displayName, linkedAccessory.name );
+            linkedAccessory.service = cmd4PlatformAccessory.platform.addService( new devProperties.service( linkedAccessory.name, linkedAccessory.subType ) );
          }
 
          linkedAccessory.addAllServiceCharacteristicsForAccessory( linkedAccessory );
