@@ -2378,11 +2378,24 @@ class Cmd4Accessory
               clearTimeout( this.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] );
 
       // i.e. Characteristic.On
-      // i.e.  Characteristic.RotationDirection
-      // For fetch since polling, always use getValue
-      self.service.getCharacteristic(
-         CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic
-      ).getValue( );
+      //      Characteristic.RotationDirection
+
+      accessory.getValue( accTypeEnumIndex, function ( error, properValue) {
+      {
+         if ( error == 0 )
+         {
+            let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+
+            if ( accessory.statusMsg == true )
+               self.log.info( chalk.blue( `characteristicPolling Updating ${ accessory.displayName } ${ characteristicString }` ) + ` ${ properValue }` );
+            else
+               accessory.log.debug( chalk.blue( `characteristicPolling Updating ${ accessory.displayName } ${ characteristicString }` ) + ` ${ properValue }` );
+
+            accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic ).updateValue( properValue );
+         }
+
+      }});
+
 
 
       // Add the check of this.listOfRunningPolls so that in Unit Testing, we can delete polling 
