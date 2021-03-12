@@ -14,7 +14,8 @@ exports.FAST_STATE_CHANGE_RESPONSE_TIME      = 1000;   // 1 second
 exports.DEFAULT_TIMEOUT          = 60000; // 1 minute
 exports.DEFAULT_INTERVAL         = 60000; // 1 minute
 
-exports.DEFAULT_STATUSMSG        = true;
+// Not a Bool, otherwise conditional check fails
+exports.DEFAULT_STATUSMSG        = "TRUE";
 
 // Fakegato Constants
 exports.FAKEGATO_TYPE_ENERGY_l   = "energy";

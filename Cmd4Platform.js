@@ -201,7 +201,7 @@ class Cmd4Platform
                break;
             case constants.STATUSMSG:
               if ( value === false )
-                 this.statusMsg = false;
+                 this.statusMsg = "FALSE";
 
                break;
             case constants.FETCH:

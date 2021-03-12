@@ -523,7 +523,7 @@ class Cmd4Accessory
 
       let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
 
-      if ( self.statusMsg == true )
+      if ( self.statusMsg == "TRUE" )
          self.log.info( chalk.blue( `Setting (Cached) ${ self.displayName } ${ characteristicString }` ) + ` ${ value }` );
       else
          self.log.debug( `setCachedvalue accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } value: ${ value }` );
@@ -625,7 +625,7 @@ class Cmd4Accessory
 
       let cmd = self.state_cmd_prefix + self.state_cmd + " Set '" + self.displayName + "' '" + characteristicString  + "' '" + valueToSend  + "'" + self.state_cmd_suffix;
 
-      if ( self.statusMsg == true )
+      if ( self.statusMsg == "TRUE" )
          self.log.info( chalk.blue( `Setting ${ self.displayName } ${ characteristicString }` ) + ` ${ valueToSend }` );
 
       self.log.debug( `setvalue accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } cmd: ${ cmd }` );
@@ -1835,9 +1835,9 @@ class Cmd4Accessory
             case constants.STATUSMSG:
                // During state change, display a message or not
                if ( value === true )
-                  this.statusMsg = value;
+                  this.statusMsg = "TRUE";
                 else
-                  this.statusMsg = false;
+                  this.statusMsg = "FALSE";
 
                break;
             case constants.TIMEOUT:
@@ -2386,10 +2386,7 @@ class Cmd4Accessory
          {
             let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
 
-            if ( accessory.statusMsg == true )
-               self.log.info( chalk.blue( `characteristicPolling Updating ${ accessory.displayName } ${ characteristicString }` ) + ` ${ properValue }` );
-            else
-               accessory.log.debug( chalk.blue( `characteristicPolling Updating ${ accessory.displayName } ${ characteristicString }` ) + ` ${ properValue }` );
+            accessory.log.debug( chalk.blue( `characteristicPolling Updating ${ accessory.displayName } ${ characteristicString }` ) + ` ${ properValue }` );
 
             accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic ).updateValue( properValue );
          }
