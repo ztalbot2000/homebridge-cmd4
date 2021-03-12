@@ -76,14 +76,11 @@ class Cmd4Platform
          this.discoverDevices( );
 
          // Any accessory not reachable must have been removed, find them
-         for ( let accessory in this.toBeRestoredPlatforms )
+         this.toBeRestoredPlatforms.forEach( ( accessory ) =>
          {
-            if ( accessory.reachable == false )
-            {
-               this.log.debug( `Accessory ${ accessory.name } needs to be removed.` );
-               //this.removeAccessory( accessory );
-            }
-         }
+            if ( ! accessory.reachable )
+               this.removeAccessory( accessory );
+         });
 
       });
    }
@@ -115,18 +112,10 @@ class Cmd4Platform
       if ( ! platformAccessory )
          return;
 
-      let name=platformAccessory.displayName || platformAccessory.name;
-      this.log.debug( `Removing Platform Accessory: ${ name }` );
+      this.log.info( `Accessory ${ platformAccessory.displayName } will be removed.` );
 
-      let idx = this.COLLECTION.indexOf( platformAccessory );
-      if  ( idx != -1 )
-      {
-         this.COLLECTION = this.COLLECTION.splice( idx, 1 );
+      this.api.unregisterPlatformAccessories(  settings.PLUGIN_NAME, settings.PLATFORM_NAME, [ platformAccessory ] );
 
-         this.api.unregisterPlatformAccessories(  settings.PLUGIN_NAME, settings.PLATFORM_NAME, [ platformAccessory ] );
-
-         this.log.debug( `Removed Platform Accessory: ${ name }` );
-      }
    }
 
    // Hmmmm does not happen
@@ -401,11 +390,6 @@ class Cmd4Platform
 
             log.debug( `Created platformAccessory: ${ accessory.displayName }` );
 
-
-            //platform.reachable = true;
-            //platform.updateReachability(true);
-
-
             // Store a copy of the device object in the `accessory.context`
             // the `context` property can be used to store any data about the
             // accessory you may need
@@ -436,6 +420,11 @@ class Cmd4Platform
                this.api.registerPlatformAccessories( settings.PLUGIN_NAME, settings.PLATFORM_NAME, [ platform ] );
             }
          }
+
+
+         // Just a flag to say we have processed this existing platform accessory.
+         platform.updateReachability( true );
+
 
          // For Unit testing only
          this.createdCmd4Platforms.push( platform );
