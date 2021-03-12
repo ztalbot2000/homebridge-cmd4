@@ -678,6 +678,7 @@ function addSideNavCmd4AccessoryDirectivesLinks_WithinSideNav( )
 
 
    wf( "+", `<div class="panel">\n` );
+      wfs( `<a href="#${ constants.SUBTYPE }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.SUBTYPE }</a>\n` );
       wfs( `<a href="#${ constants.FETCH }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.FETCH }</a>\n` );
       wfs( `<a href="#${ constants.FAKEGATO }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.FAKEGATO }</a>\n` );
       wfs( `<a href="#${ constants.PUBLISHEXTERNALLY }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.PUBLISHEXTERNALLY }</a>\n` );
@@ -768,9 +769,12 @@ function addSingleDeviceContent(device_type_enum, deviceName )
          let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ characteristic.type ].type;
          let defaultValue = characteristic.defaultValue;
 
-         let constant = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, characteristic.type, defaultValue );
+         let constant = "";
+         let transposed = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, characteristic.type, defaultValue );
+         if ( transposed.rc == true )
+            constant = transposed.value;
 
-         if ( constant == defaultValue )
+         if ( transposed.value == defaultValue )
             constant = "n/a";
 
          wfs( `<tr><Td><UL><LI><a href="#${ characteristicString }">${ characteristicString }</a></UL></TD><TD> ${ defaultValue } </TD><TD> ${ constant } </TD>\n` );
@@ -1046,7 +1050,8 @@ function addCmd4DirectivePages_WithinMain( )
    // restartRecover
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.RESTART_RECOVER }_D"> ${ constants.RESTART_RECOVER }</a><TD> < Bool > <TD> true <TD> If Cmd4 will use previous cached state information </TR>\n` );
 
-   wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATUSMSG }_D"> ${ constants.STATUSMSG }</a><TD> < Bool > <TD> ${ constants.DEFAULT_STATUSMSG } <TD> Cmd4 will log a Set Status Message for all Accessories.</TR>\n` );
+  let  defaultStatusMsg_l = constants.DEFAULT_STATUSMSG.toLowerCase();
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATUSMSG }_D"> ${ constants.STATUSMSG }</a><TD> < Bool > <TD> ${ defaultStatusMsg_l } <TD> Cmd4 will log a Set Status Message for all Accessories.</TR>\n` );
 
    wf( "-", `</TABLE>\n` );
    endDiv( "main" );
@@ -1067,11 +1072,15 @@ function addCmd4AccessoryDirectivePages_WithinMain( )
    wf( "+", `<TABLE WIDTH="100%" border: 1px solid black >\n` );
    wfs( `<TR cols="4" ALIGN="left"><TH>Cmd4Directive<TH>Type<TH PADDING="50px">Default<TH>Description</TR>\n` );
 
+   // subType
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.SUBTYPE }">${ constants.SUBTYPE }</a><TD> < unique string > <TD> accessory.name <TD> Used to distinguish accessories that have same Type and Name.</TR>\n` );
+
    // outputConstants
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.OUTPUTCONSTANTS }">${ constants.OUTPUTCONSTANTS }</a><TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1 </TR>\n` );
 
    // statusMsg
-   wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATUSMSG }">${ constants.STATUSMSG }</a><TD>  < Bool >  <TD>  ${ constants.DEFAULT_STATUSMSG } <TD> Cmd4 will log a Set Status Message</TR>\n` );
+   let defaultStatusMsg_l = constants.DEFAULT_STATUSMSG.toLowerCase();
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATUSMSG }">${ constants.STATUSMSG }</a><TD>  < Bool >  <TD>  ${ defaultStatusMsg_l } <TD>Cmd4 will log a Set Status Message</TR>\n` );
 
    // publishExternally
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.PUBLISHEXTERNALLY }">${ constants.PUBLISHEXTERNALLY }</a><TD>  < Bool >  <TD>    false     <TD> Tell Homebridge to publish the device as its own bridge. </TR>\n` );
@@ -1123,7 +1132,7 @@ function addCmd4AccessoryDirectivePages_WithinMain( )
    wfs( `<TR ALIGN="Left"><TD><TD COLSPAN=3>"${ constants.PROPS }" : { "CurrentTemperature": { "maxValue":100, "minValue": -100, "minStep": 0.1}}</TR>\n` );
 
    // category
-   wfs( `<TR ALIGN="left"><TD><a name="${ constants.CATEGORY }">${ constants.CATEGORY }</a><TD> < CATEGORY > <TD> undefined <TD> See <a href="https://developers.homebridge.io/#/categories">Homebridge Categories</a> for a complete list of possible categories.  </TR>\n` );
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.CATEGORY }">${ constants.CATEGORY }</a><TD> < CATEGORY > <TD> <TD> See <a href="https://developers.homebridge.io/#/categories">Homebridge Categories</a> for a complete list of possible categories.  </TR>\n` );
 
    // fakegato
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.FAKEGATO }">${ constants.FAKEGATO }</a><TD>  < JSON >  <TD> <TD> See the section, <a href="https://github.com/ztalbot2000/homebridge-cmd4/README.md#fakegatotag"> "Adding in Fakegato history"</a> below.</TR>\n` );

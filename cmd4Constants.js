@@ -60,7 +60,7 @@ exports.GOOGLE_DRIVE_l           = "googleDrive";
 
 // Config Constnts
 exports.OUTPUTCONSTANTS          = "OutputConstants";
-//exports.RESTART_RECOVER_l        = "restartRecover";
+exports.RESTART_RECOVER          = "RestartRecover";
 exports.STATUSMSG                = "StatusMsg";
 //exports.STATUSMSG_l              = "statusMsg";
 
