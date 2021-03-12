@@ -14,9 +14,12 @@ const program = new Command;
 let Changelog = require( 'generate-changelog' );
 
 let CHANGELOG = "CHANGELOG";
+let RUNNING_CHANGELOG = "RUNNING_CHANGELOG";
 // Wondering why ${ fn }_SAVE.ext instead of ${ fn }.SAVE ?
 // Between git and npm you cannot ignore special files if you
 // stick an extension on them. So put the extension in the file name itself.
+let RUNNING_CHANGELOG_NEW = `${ RUNNING_CHANGELOG }_new.md`;
+let RUNNING_CHANGELOG_BAK = `${ RUNNING_CHANGELOG }_bak.md`;
 let CHANGELOG_NEW = `${ CHANGELOG }_new.md`;
 let CHANGELOG_BAK = `${ CHANGELOG }_bak.md`;
 
@@ -33,7 +36,8 @@ const pkg = require( `../${ PACKAGE }.json` );
 program
   .description( 'Generate an indexed changelog from git commits.' )
   .option( '-t, --type <type>', 'flavour of changelog < patch | minor | major >' )
-  .option( '-d, --dryRun', 'Do not overwrite existing CHANGELOG.md>' );
+  .option( '-d, --dryRun', 'Do not overwrite existing CHANGELOG.md>' )
+  .option( '-r, --cleanup', 'After completion, remove created backup files.' );
 
 // Parse the arguments passed into this program.
 program.parse( process.argv );
@@ -44,7 +48,7 @@ let options = program.opts( );
 if ( options.dryRun === undefined )
 {
    options.dryRun = false;
-   console.log( `Option dryRun Not specified. Backup files will be created.` );
+   console.log( `Option "dryRun" Not specified. Backup files will be created.` );
 } else
 {
    options.dryRun = true;
@@ -69,6 +73,16 @@ if ( options.type === undefined )
    }
    console.log( `Using options.type: ${ options.type }` );
 }
+if ( options.cleanup === undefined )
+{
+   options.cleanup = false;
+   console.log( `Option "cleanup" after completion Not specified. Backup files will not be removed.` );
+} else
+{
+   options.cleanup = true;
+   console.log( `Option "cleanup" specified. Created backup files will be removed after completion` );
+}
+
 
 // Check for any leftover arguments passed in.
 if ( program.args.length >= 1 )
@@ -86,7 +100,7 @@ if ( pkg.version === undefined )
 }
 
 
-function overwriteFileWithBackup( origFile, newFile, backupFile )
+function overwriteFileWithBackup( origFile, newFile, backupFile, cleanup )
 {
    if ( fs.existsSync( backupFile ) )
    {
@@ -99,7 +113,7 @@ function overwriteFileWithBackup( origFile, newFile, backupFile )
    {
       if ( err )
       {
-         console.log( `Could not rename ${ origFile } to ${ backupFile }` );
+         console.log( `Could not rename ${ origFile } to ${ newFile }` );
          process.exit( err );
       }
 
@@ -114,7 +128,21 @@ function overwriteFileWithBackup( origFile, newFile, backupFile )
 
          console.log( `Renamed ${ newFile } to ${ origFile } with backup of ${ backupFile }` );
 
+         if ( cleanup == true )
+         {
+            fs.unlink( backupFile, function ( err )
+            {
+               if ( err )
+               {
+                  console.log( `Could not unlink ${ backupFile }` );
+                  process.exit( err );
+               }
+               console.log( `Removed ${ backupFile }` );
+            });
+         }
+
       });
+
    });
 }
 
@@ -126,19 +154,30 @@ function updateChangeLog( changelog, newVersionString, options )
    let changeLogTagFound = false;
    let dashedVersionString = newVersionString.replace( /\./g, "-" );
 
+   // Open the new RUNNING_CHANGELOG for writing
+   let newRunningChangeLog_fid = fs.createWriteStream( RUNNING_CHANGELOG_NEW,
+      { flags: "w" // Open for write
+      }
+   );
+
+   newRunningChangeLog_fid.on( "error", ( ) =>
+   {
+      console.log( `error fs.creatingWriteStream: ${ RUNNING_CHANGELOG_NEW }` );
+      process.exit( 666 );
+   });
+
    // Open the new CHANGELOG for writing
    let newChangeLog_fid = fs.createWriteStream( CHANGELOG_NEW,
       { flags: "w" // Open for write
       }
    );
-
    newChangeLog_fid.on( "error", ( ) =>
    {
       console.log( `error fs.creatingWriteStream: ${ CHANGELOG_NEW }` );
       process.exit( 666 );
    });
 
-   const fileStream = fs.createReadStream( `${ CHANGELOG }.md` );
+   const fileStream = fs.createReadStream( `${ RUNNING_CHANGELOG }.md` );
 
    let rd = readline.createInterface(
    {
@@ -150,9 +189,11 @@ function updateChangeLog( changelog, newVersionString, options )
    {
       if ( newIndexEntryToBeWritten  == true )
       {
-         // Write the new index line
+         // Write the new index line to the running CHANGELOG
+         newRunningChangeLog_fid.write( `* <a href="#Whats-new-in-${ dashedVersionString }">**Whats new in ${ newVersionString }**</a>\n` );
 
-         newChangeLog_fid.write( `* <a href="#Whats-new-in-${ dashedVersionString }">**Whats new in ${ newVersionString }**</a>\n` );
+         // Write a header to the CHANGELOG
+         newChangeLog_fid.write( `# Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!\n` );
 
          // The new Index line has been written
          newIndexEntryToBeWritten = false;
@@ -164,9 +205,10 @@ function updateChangeLog( changelog, newVersionString, options )
       if ( newBodyEntryToBeWritten == true )
       {
          //Write the new Changelog
-         newChangeLog_fid.write( `<a name="Whats-new-in-${ dashedVersionString }">## Whats new in ${ newVersionString }</a>\n` );
-         newChangeLog_fid.write( `${ changelog }\n` );
+         newRunningChangeLog_fid.write( `<a name="Whats-new-in-${ dashedVersionString }">## Whats new in ${ newVersionString }</a>\n` );
+         newRunningChangeLog_fid.write( `${ changelog }\n` );
 
+         newChangeLog_fid.write( `${ changelog }\n` );
          newBodyEntryToBeWritten = false;
       }
 
@@ -184,7 +226,30 @@ function updateChangeLog( changelog, newVersionString, options )
       }
 
       // Write the line
-      newChangeLog_fid.write( `${ line }\n` );
+      newRunningChangeLog_fid.write( `${ line }\n` );
+   });
+
+   newRunningChangeLog_fid.on( "close", function( )
+   {
+      if ( options.dryRun == true )
+      {
+         console.log( `New ${ RUNNING_CHANGELOG }.md is ${ RUNNING_CHANGELOG_NEW }` );
+         console.log( `Original left unchanged.` );
+         return;
+      }
+
+      overwriteFileWithBackup( `${ RUNNING_CHANGELOG }.md`, RUNNING_CHANGELOG_NEW, RUNNING_CHANGELOG_BAK, options.cleanup, function ( )
+      {
+         console.log( `Successfully created ${ RUNNING_CHANGELOG }` );
+
+         console.log( `You may now wish to run:` );
+         console.log( `git tag -a v${ newVersionString }` );
+         console.log( `and` );
+         console.log( `git push -f ${ pkg.repository.url } master` );
+         console.log( `or` );
+         console.log( `git push origin master` );
+
+      });
    });
 
    newChangeLog_fid.on( "close", function( )
@@ -196,19 +261,18 @@ function updateChangeLog( changelog, newVersionString, options )
          return;
       }
 
-      overwriteFileWithBackup( `${ CHANGELOG }.md`, CHANGELOG_NEW, CHANGELOG_BAK, function ( )
+      overwriteFileWithBackup( `${ CHANGELOG }.md`, CHANGELOG_NEW, CHANGELOG_BAK, options.cleanup, function ( )
       {
-         console.log( `You may now wish to run:` );
-         console.log( `git tag -a v${ newVersionString }` );
-         console.log( `and` );
-         console.log( `git push -f ${ pkg.repository.url } master` );
-         console.log( `or` );
-         console.log( `git push origin master` );
+         console.log( `Successfully created ${ CHANGELOG }` );
+
       });
    });
 
    rd.on( "close", function( )
    {
+      // Close the CHANGELOG files
+      newRunningChangeLog_fid.close( );
+
       newChangeLog_fid.close( );
    });
 
@@ -229,9 +293,10 @@ function updatePackageDotJson( currentVersion, newVersionString, options )
          return;
       }
 
-      overwriteFileWithBackup( `${ PACKAGE }.json`, PACKAGE_NEW, PACKAGE_BAK, function ( )
+      overwriteFileWithBackup( `${ PACKAGE }.json`, PACKAGE_NEW, PACKAGE_BAK, options.cleanup, function ( )
       {
          console.log( `Successfully created ${ PACKAGE_NEW }` );
+
       });
    });
 }

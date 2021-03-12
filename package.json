@@ -106,8 +106,8 @@
       "release": "tools/generateChangeLog",
       "_Note17": "                                                            ",
       "_Note18": "Overide default behaviour with:                             ",
-      "release:patch": "tools/generateChangeLog --type patch",
-      "release:minor": "tools/generateChangeLog --type minor",
-      "release:major": "tools/generateChangeLog --type major"
+      "release:patch": "tools/generateChangeLog --type patch --cleanup",
+      "release:minor": "tools/generateChangeLog --type minor --cleanup",
+      "release:major": "tools/generateChangeLog --type major --cleanup"
    }
 }
