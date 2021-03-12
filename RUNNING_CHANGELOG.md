@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-3-2-5-beta6">**Whats new in 3.2.5-beta6**</a>
 * <a href="#Whats-new-in-3-2-5-beta5">**Whats new in 3.2.5-beta5**</a>
 * <a href="#Whats-new-in-3-2-5-beta3">**Whats new in 3.2.5-beta3**</a>
 * <a href="#Whats-new-in-3-2-5-beta2">**Whats new in 3.2.5-beta2**</a>
@@ -37,6 +38,23 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-3-2-5-beta6">## Whats new in 3.2.5-beta6</a>
+#### 3.2.5-beta6 (2021-03-12)
+
+##### Chores
+
+*  Missing file ([b95bb22e](https://github.com/ztalbot2000/homebridge-cmd4/commit/b95bb22e46121e36a4dc9dd741ad9a43e24491b9))
+
+##### New Features
+
+*  Change to RUNNING_CHANGLOG for Homebeidge-UI bug that cannot follow inline URLs ([13e57946](https://github.com/ztalbot2000/homebridge-cmd4/commit/13e57946c187424f8bef4deb8b28860ba3276330))
+
+##### Bug Fixes
+
+*  properly handle removed platform accessories from cache ([2ce2e9a3](https://github.com/ztalbot2000/homebridge-cmd4/commit/2ce2e9a31030e1f931bc28ae2c55eca59d0c8899))
+*  Globally allow statusMsg option to be set ([cc173514](https://github.com/ztalbot2000/homebridge-cmd4/commit/cc17351407005926a9c3b218f889727b1fb852ef))
+
 
 <a name="Whats-new-in-3-2-5-beta5">## Whats new in 3.2.5-beta5</a>
 #### 3.2.5-beta5 (2021-03-11)
