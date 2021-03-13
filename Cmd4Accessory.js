@@ -2110,16 +2110,8 @@ class Cmd4Accessory
       if ( ! accessory.state_cmd )
          return;
 
-      // Polling can only be done if requested,
-      // but fetch would have to equal 0 ( Always );
-      if ( accessory.fetch != constants.FETCH_ALWAYS && ! accessory.polling )
-      {
-         // This message is only valid when ...
-         if ( accessory.fetch == constants.FETCH_CACHED  ||
-              accessory.fetch == constants.FETCH_ALWAYS && accessory.polling )
-            log.warn( `Polling of accessory ${ accessory.displayName } ignored as fetch=${ accessory.fetch } and polling was not set` );
-         return;
-      }
+      // Now that polling calls updateValue and is not dependant on getValue, which was possibly cached,
+      // Any accessories characteristic can be polled, regardless of fetch.
 
       log.debug( `Setting up polling for: ${ accessory.displayName } and any of the children.` );
 
@@ -2251,36 +2243,32 @@ class Cmd4Accessory
          }
       }
 
-      // This does not apply to fetch:Cached as nothing would be polled.
-      if ( this.fetch != constants.FETCH_CACHED )
+      // Over what has asked to be polled
+      for( let accTypeEnumIndex in this.listOfPollingCharacteristics )
       {
-         // Over what has asked to be polled
-         for( let accTypeEnumIndex in this.listOfPollingCharacteristics )
-         {
-            // Look to see if currently polled characteristics are like "Current*" and have
-            // a related characteristic like "Target*"
-            // Note: By default it will be put their automatically as this message says
-            //     **** Adding required characteristic TargetTemperature for Thermostat
-            //          Not defining a required characteristic can be problematic
-            //     Except for Optional "Current*" "Target*" characteristics which
-            //     isRelatedTargetCharacteristicInSameDevice does resolve.
-            let relatedTargetAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].relatedTargetAccTypeEnumIndex;
+         // Look to see if currently polled characteristics are like "Current*" and have
+         // a related characteristic like "Target*"
+         // Note: By default it will be put their automatically as this message says
+         //     **** Adding required characteristic TargetTemperature for Thermostat
+         //          Not defining a required characteristic can be problematic
+         //     Except for Optional "Current*" "Target*" characteristics which
+         //     isRelatedTargetCharacteristicInSameDevice does resolve.
+         let relatedTargetAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].relatedTargetAccTypeEnumIndex;
 
-            if ( relatedTargetAccTypeEnumIndex != null &&
-                 isRelatedTargetCharacteristicInSameDevice(
-                     this.typeIndex,
-                     accTypeEnumIndex,
-                     CMD4_DEVICE_TYPE_ENUM,
-                     CMD4_ACC_TYPE_ENUM
-                 ) == relatedTargetAccTypeEnumIndex )
+         if ( relatedTargetAccTypeEnumIndex != null &&
+              isRelatedTargetCharacteristicInSameDevice(
+                  this.typeIndex,
+                  accTypeEnumIndex,
+                  CMD4_DEVICE_TYPE_ENUM,
+                  CMD4_ACC_TYPE_ENUM
+              ) == relatedTargetAccTypeEnumIndex )
+         {
+            // Check that the characteristic like "Target*" is also requested to be polled
+            if ( ! this.listOfPollingCharacteristics[ relatedTargetAccTypeEnumIndex ] )
             {
-               // Check that the characteristic like "Target*" is also requested to be polled
-               if ( ! this.listOfPollingCharacteristics[ relatedTargetAccTypeEnumIndex ] )
-               {
-                  let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
-                  let relatedCharacteristicString = CMD4_ACC_TYPE_ENUM.properties[ relatedTargetAccTypeEnumIndex ].type;
-                  this.log.warn( `Warning, With fetch set to "${ this.fetch }" and polling for "${ characteristicString }" requested, you also must do polling of "${ relatedCharacteristicString }" or things will not function properly` );
-               }
+               let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+               let relatedCharacteristicString = CMD4_ACC_TYPE_ENUM.properties[ relatedTargetAccTypeEnumIndex ].type;
+               this.log.warn( `Warning, With fetch set to "${ this.fetch }" and polling for "${ characteristicString }" requested, you also must do polling of "${ relatedCharacteristicString }" or things will not function properly` );
             }
          }
       }
@@ -2301,6 +2289,7 @@ class Cmd4Accessory
 
       let startDelay = 3500;
       let staggeredDelays = [ 0 ];
+      // If Everything is being fetched "Always", stagger each poll
       if ( accessory.fetch == constants.FETCH_ALWAYS )
       {
          startDelay = 5000;
