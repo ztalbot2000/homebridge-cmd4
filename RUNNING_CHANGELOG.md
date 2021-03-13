@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-3-3-0">**Whats new in 3.3.0**</a>
 * <a href="#Whats-new-in-3-2-5-beta6">**Whats new in 3.2.5-beta6**</a>
 * <a href="#Whats-new-in-3-2-5-beta5">**Whats new in 3.2.5-beta5**</a>
 * <a href="#Whats-new-in-3-2-5-beta3">**Whats new in 3.2.5-beta3**</a>
@@ -38,6 +39,29 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-3-3-0">## Whats new in 3.3.0</a>
+### 3.3.0 (2021-03-13)
+
+##### Chores
+
+*  packaging for 3.2.5-beta6 ([5ef6d0e8](https://github.com/ztalbot2000/homebridge-cmd4/commit/5ef6d0e8e4d29679e1550b69489aefbdb318d163))
+*  Missing file ([b95bb22e](https://github.com/ztalbot2000/homebridge-cmd4/commit/b95bb22e46121e36a4dc9dd741ad9a43e24491b9))
+
+##### New Features
+
+*  Now that polling uses updateValue, polling can be independent of fetch ([b3ca7f0](https://github.com/ztalbot2000/homebridge-cmd4/commit/b48d88b66ef1a715d347c6a712aee0a927f48741))
+*  Change to RUNNING_CHANGLOG for Homebeidge-UI bug that cannot follow inline URLs ([13e57946](https://github.com/ztalbot2000/homebridge-cmd4/commit/13e57946c187424f8bef4deb8b28860ba3276330))
+
+##### Bug Fixes
+
+*  properly handle removed platform accessories from cache ([2ce2e9a3](https://github.com/ztalbot2000/homebridge-cmd4/commit/2ce2e9a31030e1f931bc28ae2c55eca59d0c8899))
+*  Globally allow statusMsg option to be set ([cc173514](https://github.com/ztalbot2000/homebridge-cmd4/commit/cc17351407005926a9c3b218f889727b1fb852ef))
+
+##### Tests
+
+*  Test all constants, just in case accidentally changed ([b3ca7f07](https://github.com/ztalbot2000/homebridge-cmd4/commit/b3ca7f07a20d25750e10dee5e0b533dd6f7393fb))
+
 
 <a name="Whats-new-in-3-2-5-beta6">## Whats new in 3.2.5-beta6</a>
 #### 3.2.5-beta6 (2021-03-12)
