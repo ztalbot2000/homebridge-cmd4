@@ -40,16 +40,21 @@ function isVersionNewerThanPackagedVersion( version )
    let rc = false;
 
    // Split the version components into their sub components
-   let oldVersionInfo = splitVersion( myPkg.version );
-   let newVersionInfo = splitVersion( version );
+   let installedVersionInfo = splitVersion( myPkg.version );
+   let gitVersionInfo = splitVersion( version );
 
    // Set the return code appropriately
-   if ( newVersionInfo.version > oldVersionInfo.version )
-      rc = true;
-   else if ( newVersionInfo.major > oldVersionInfo.major )
-      rc = true;
-   else if ( newVersionInfo.minor > oldVersionInfo.minor )
-      rc = true;
+   if ( Number( gitVersionInfo.version ) > Number( installedVersionInfo.version ) )
+      return true;
+   if ( Number( gitVersionInfo.version ) < Number( installedVersionInfo.version ) )
+      return false;
+   if ( Number( gitVersionInfo.major ) > Number( installedVersionInfo.major ) )
+      return true;
+   if ( Number( gitVersionInfo.major ) < Number( installedVersionInfo.major ) )
+      return false;
+   if ( Number( gitVersionInfo.minor ) > Number( installedVersionInfo.minor ) )
+      return true;
+
    return rc;
 }
 
