@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-3-3-1">**Whats new in 3.3.1**</a>
 * <a href="#Whats-new-in-3-3-0">**Whats new in 3.3.0**</a>
 * <a href="#Whats-new-in-3-2-5-beta6">**Whats new in 3.2.5-beta6**</a>
 * <a href="#Whats-new-in-3-2-5-beta5">**Whats new in 3.2.5-beta5**</a>
@@ -39,6 +40,14 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-3-3-1">## Whats new in 3.3.1</a>
+#### 3.3.1 (2021-03-15)
+
+##### Bug Fixes
+
+*  Not handling too much data well ([b4fd8a19](https://github.com/ztalbot2000/homebridge-cmd4/commit/b4fd8a1935817c011b34469fd4505c1cd3294c97))
+
 
 <a name="Whats-new-in-3-3-0">## Whats new in 3.3.0</a>
 ### 3.3.0 (2021-03-13)
