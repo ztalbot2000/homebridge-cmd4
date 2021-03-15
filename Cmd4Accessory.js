@@ -762,6 +762,8 @@ class Cmd4Accessory
 
       self.log.debug( `getValue: accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } cmd: ${ cmd }` );
 
+      let replyCount = 0;
+
       // Execute command to Get a characteristics value for an accessory
       // exec( cmd, { timeout:self.timeout }, function ( error, stdout, stderr )
       let child = spawn( cmd, { shell:true });
@@ -798,10 +800,13 @@ class Cmd4Accessory
 
       child.stdout.on('data', ( reply ) =>
       {
+         replyCount++;
+
          if ( reply == null )
          {
             self.log.error( `getValue: null returned from stdout for ${ characteristicString } ${ self.displayName }` );
-            callback( 15, null );
+            // Do not call the callback or continue processing as too many will be called.
+            // Prefer to wait for possibly more data and homebridge complain about a slow response.
             return;
          }
 
@@ -817,7 +822,8 @@ class Cmd4Accessory
          if ( trimmedReply.toUpperCase( ) == "NULL" )
          {
             self.log.error( `getValue: "${ trimmedReply }" returned from stdout for ${ characteristicString } ${ self.displayName }` );
-            callback( 30, null );
+            // Do not call the callback or continue processing as too many will be called.
+            // Prefer to wait for possibly more data and homebridge complain about a slow response.
             return;
          }
 
@@ -831,8 +837,8 @@ class Cmd4Accessory
          {
             self.log.error( `getValue: ${ characteristicString } function for: ${ self.displayName } returned an empty string "${ trimmedReply }"` );
 
-            callback( 45, null );
-
+            // Do not call the callback or continue processing as too many will be called.
+            // Prefer to wait for possibly more data and homebridge complain about a slow response.
             return;
          }
 
@@ -843,10 +849,20 @@ class Cmd4Accessory
          {
             self.log.error( `getValue: ${ characteristicString } function for ${ self.displayName } returned the string "${ trimmedReply }"` );
 
-            callback( 60, null );
-
+            // Do not call the callback or continue processing as too many will be called.
+            // Prefer to wait for possibly more data and homebridge complain about a slow response.
             return;
          }
+
+         if ( replyCount > 1 )
+         {
+            self.log.warn( `${ self.displayName} ` + chalk.red( `Receiving to many lines of data( ${replyCount }): ${ unQuotedReply } for ${ characteristicString }` ) );
+
+            // Do not call the callback or continue processing as too many will be called.
+            // Prefer to wait for possibly more data and homebridge complain about a slow response.
+            return;
+         }
+
 
          let words = unQuotedReply.split(" ").length;
          let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
@@ -883,11 +899,11 @@ class Cmd4Accessory
          let properValue = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( unQuotedReply );
          if ( properValue == undefined )
          {
-            callback( 75, null );
-
             // If the value is not convertable, just return it.
-            self.log.warn( `${ self.displayName} ` + chalk.red( `Cannot convert value: ${ unQuotedReply } to ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].properties.format } for ${ characteristicString }`  ) );
+            self.log.warn( `${ self.displayName} ` + chalk.red( `Cannot convert value: ${ unQuotedReply } to ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format } for ${ characteristicString }`  ) );
 
+            // Do not call the callback or continue processing as too many will be called.
+            // Prefer to wait for possibly more data and homebridge complain about a slow response.
             return;
          }
 

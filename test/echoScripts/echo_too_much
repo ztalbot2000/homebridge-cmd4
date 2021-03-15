@@ -1,0 +1,7 @@
+#!/bin/bash
+
+stdbuf -o0 echo "";
+stdbuf -o0 echo "second extra line";
+stdbuf -o0 echo "third extra line";
+
+exit 0;
