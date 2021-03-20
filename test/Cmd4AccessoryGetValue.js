@@ -75,6 +75,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
+      hook.stop( );
 
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "Cmd4Accessory is not an instance of Cmd4Accessory" );
 
@@ -95,30 +96,6 @@ describe( "Testing Cmd4Accessory", function( )
 
       // Clear the hook buffer for next time.
       hook.reset( );
-   });
-
-   it( "Test Cmd4Accessory.getValue", function ( done )
-   {
-      TVConfig.state_cmd = "./test/echoScripts/echo_ACTIVE";
-      let STORED_DATA_ARRAY = [ ];
-
-      hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
-
-      var clock = sinon.useFakeTimers( );
-      var callback = sinon.fake( );
-
-      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, callback );
-      hook.stop( );
-
-      clock.tick(99);
-
-      assert( callback.notCalled, " getValue callback should only be updated once. Expected: 1 to equal: " + callback.callCount);
-
-      // Clear the hook buffer for next time.
-      hook.reset( );
-
-      done( );
    });
 
    it( "getValue Active should inject 1 to Hombridge for ACTIVE response", function ( done )
@@ -443,246 +420,258 @@ describe( "Testing Cmd4Accessory", function( )
       });
    });
 
-   // Now waits to long
-   it.skip( "getValue of empty response should fail correctly", function ( done )
+   it( "getValue of empty response should fail correctly", function ( done )
    {
-      TVConfig.state_cmd = "./test/echoScripts/echo_nothing";
-      let STORED_DATA_ARRAY = [ ];
 
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
+      cmd4Accessory.state_cmd = "./test/echoScripts/echo_nothing";
+      cmd4Accessory.timeout = 500;
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
+      {
+         assert.notEqual( rc, 0, ` getValue expected: not zero received: ${ rc }` );
+         assert.equal( result, null, ` getValue result expected: null received: ${ result }` );
+      });
+
+      // We have to wait for the failing getValue to timeout to capture the log messages;
+      setTimeout(() =>
       {
          hook.stop( );
 
          let errMsg= hook.capturedErr( );
+         let logMsg= hook.capturedLog( );
+
          let expectedOutput = `getValue: Mute function for: My_Television returned an empty string ""`;
 
-         assert.notEqual( rc, 0, ` getValue expected: not zero received: ${ rc }` );
-
-         assert.include( errMsg, expectedOutput, ` getValue output expected: ${ expectedOutput } received: ${ errMsg }` );
-
-         assert.equal( result, null, ` getValue result expected: null received: ${ result }` );
+         assert.include( errMsg, expectedOutput, ` getValue stdErr output expected: ${ expectedOutput } received: ${ errMsg }` );
+         assert.equal( logMsg, "", ` getValue output expected: "" received: ${ errMsg }` );
 
          // Clear the hook buffer for next time.
          hook.reset( );
 
          done( );
-      });
-   });
 
-   // Now waits to long
-   it.skip( "getValue of null response should fail correctly", function ( done )
+      }, 1000 );
+
+   }).timeout( 2000 );
+
+   it( "getValue of null response should fail correctly", function ( done )
    {
-      TVConfig.state_cmd = "./test/echoScripts/echo_null";
-      let STORED_DATA_ARRAY = [ ];
-
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
+      cmd4Accessory.state_cmd = "./test/echoScripts/echo_null";
+      cmd4Accessory.timeout = 500;
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
+      {
+         assert.notEqual( rc, 0, ` getValue expected: not zero received: ${ rc }` );
+         assert.equal( result, null, ` getValue result expected: null received: ${ result }` );
+      });
+
+      // We have to wait for the failing getValue to timeout to capture the log messages;
+      setTimeout(() =>
       {
          hook.stop( );
 
          let errMsg = hook.capturedErr( );
          let expectedOutput = `getValue: "null" returned from stdout for Mute My_Television`;
 
-         assert.notEqual( rc, 0, ` getValue expected: not zero received: ${ rc }` );
 
          assert.include( errMsg, expectedOutput, ` getValue output expected: ${ expectedOutput } received: ${ errMsg }` );
 
-         assert.equal( result, null, ` getValue result expected: null received: ${ result }` );
 
          // Clear the hook buffer for next time.
          hook.reset( );
-
          done( );
-      });
-   });
 
-   // Cannot capture rc=1 with valid response in this implementation os spawn
-   it.skip( "getValue of rc=1 response should fail correctly", function ( done )
+      }, 1000 );
+   }).timeout( 2000 );
+
+   it( "getValue of echo true rc=1 response pass with error message", function ( done )
    {
-      TVConfig.state_cmd = "./test/echoScripts/echo_true_withRcOf1";
       let STORED_DATA_ARRAY = [ ];
 
       hook.start( );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
+      cmd4Accessory.state_cmd = "./test/echoScripts/echo_true_withRcOf1";
+      cmd4Accessory.timeout = 500;
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
+      {
+         assert.equal( rc, 0, ` getValue expected: zero received: ${ rc }` );
+         assert.equal( result, true, ` getValue result expected: true received: ${ result }` );
+      });
+
+      // We have to wait for the failing getValue to timeout to capture the log messages;
+      setTimeout(() =>
       {
          hook.stop( );
 
          let errMsg = hook.capturedErr( );
          let logMsg = hook.capturedLog( );
-         console.log("errMsg:%s", errMsg);
-         console.log("logMsg:%s", logMsg);
 
+         let expectedOutput = `31mgetValue Mute function failed for My_Television cmd: ./test/echoScripts/echo_true_withRcOf1 Get 'My_Television' 'Mute' Failed.  Error: 1`;
 
-         let expectedOutput = `getValue Mute function failed for My_Television cmd: ./test/echoScripts/echo_true_withRcOf1 Get 'My_Television' 'Mute' Failed.  Error: Command failed: ./test/echoScripts/echo_true_withRcOf1 Get 'My_Television' 'Mute'`;
-
-         //assert.notEqual( rc, 0, ` getValue expected: not zero received: ${ rc }` );
-
-         assert.include( errMsg, expectedOutput, ` getValue output expected: ${ expectedOutput } received: ${ errMsg }` );
-
-         assert.equal( result, 0, ` getValue result expected: 0 received: ${ result }` );
+         assert.include( errMsg, expectedOutput, ` getValue stdErr output expected: ${ expectedOutput } received: ${ errMsg }` );
+         assert.equal( logMsg, "", ` getValue output expected: "" received: ${ errMsg }` );
 
          // Clear the hook buffer for next time.
          hook.reset( );
-
          done( );
-      });
-   });
 
-   // Now waits to long
-   it.skip( "getValue of quoted Null should fail correctly", function ( done )
+      }, 1000 );
+   }).timeout( 2000 );
+
+   it( "getValue of quoted Null should fail correctly", function ( done )
    {
-      TVConfig.state_cmd = "./test/echoScripts/echo_quotedNULL";
-      let STORED_DATA_ARRAY = [ ];
-
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
+      cmd4Accessory.state_cmd = "./test/echoScripts/echo_quotedNULL";
+      cmd4Accessory.timeout = 500;
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
+      {
+         assert.equal( rc, 0, ` getValue expected: zero received: ${ rc }` );
+
+         assert.equal( result, null, ` getValue result expected: null received: ${ result }` );
+
+      });
+
+      // We have to wait for the failing getValue to timeout to capture the log messages;
+      setTimeout(() =>
       {
          hook.stop( );
 
          let errMsg = hook.capturedErr( );
          let expectedOutput = `getValue: Mute function for My_Television returned the string ""NULL""`;
 
-         assert.notEqual( rc, 0, ` getValue expected: not zero received: ${ rc }` );
 
          assert.include( errMsg, expectedOutput, ` getValue output expected: ${ expectedOutput } received: ${ errMsg }` );
 
-         assert.equal( result, null, ` getValue result expected: null received: ${ result }` );
-
          // Clear the hook buffer for next time.
          hook.reset( );
-
          done( );
-      });
-   });
 
-   // Now waits to long
-   it.skip( "getValue of quoted Nothing should fail correctly", function ( done )
+      }, 1000 );
+   }).timeout( 2000 );
+
+   it( "getValue of quoted Nothing should fail correctly", function ( done )
    {
-      TVConfig.state_cmd = "./test/echoScripts/echo_quotedNothing";
-      let STORED_DATA_ARRAY = [ ];
-
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
+      cmd4Accessory.state_cmd = "./test/echoScripts/echo_quotedNothing";
+      cmd4Accessory.timeout = 500;
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
+      {
+         assert.notEqual( rc, 0, ` getValue expected: not zero received: ${ rc }` );
+         assert.equal( result, null, ` getValue result expected: null received: ${ result }` );
+      });
+
+      setTimeout(() =>
       {
          hook.stop( );
 
          let errMsg = hook.capturedErr( );
          let expectedOutput = `getValue: Mute function for: My_Television returned an empty string "" ""`;
 
-         assert.notEqual( rc, 0, ` getValue expected: not zero received: ${ rc }` );
 
          assert.include( errMsg, expectedOutput, ` getValue output expected: ${ expectedOutput } received: ${ errMsg }` );
-
-         assert.equal( result, null, ` getValue result expected: null received: ${ result }` );
-
          // Clear the hook buffer for next time.
          hook.reset( );
-
          done( );
-      });
-   });
 
-   // timeout and cant capture timeout message
-   it.skip( "getValue of Nothing to stdout and something to stderr should show error message", function ( done )
+      }, 1000 );
+   }).timeout( 2000 );
+
+   it( "getValue of Nothing to stdout and something to stderr should show error message", function ( done )
    {
-      TVConfig.state_cmd = "./test/echoScripts/echo_errorToStderr";
-      let STORED_DATA_ARRAY = [ ];
-
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
+      cmd4Accessory.state_cmd = "./test/echoScripts/echo_errorToStderr";
+      cmd4Accessory.timeout = 500;
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
+      {
+         assert.equal( result, 0, ` getValue result expected: 0 received: ${ result }` );
+      });
+
+      setTimeout(() =>
       {
          hook.stop( );
          let logMsg = hook.capturedLog( );
          let errMsg = hook.capturedErr( );
-         console.log("errMsg:%s", errMsg);
-         console.log("logMsg:%s", logMsg);
 
          let expectedOutput = "This message goes to stderr";
+         assert.include( errMsg, expectedOutput, ` getValue stdErr output expected: ${ expectedOutput } received: ${ errMsg }` );
+         assert.equal( logMsg, "", ` getValue output expected: "" received: ${ errMsg }` );
 
-         assert.include( errMsg, expectedOutput, ` getValue output expected: ${ expectedOutput } received: ${ errMsg }` );
-
-         assert.equal( result, 0, ` getValue result expected: 0 received: ${ result }` );
 
          // Clear the hook buffer for next time.
          hook.reset( );
-
          done( );
-      });
-   });
 
-   // timeout and cant capture timeout message
-   it.skip( "getValue of Nothing to stdout and rc=0 should show error message", function ( done )
-      // Cannot capture rc=1 with valid response in this implementation os spawn
+      }, 1000 );
+   }).timeout( 2000 );
+
+   it( "getValue of Nothing to stdout and rc=0 should show error message", function ( done )
    {
-      TVConfig.state_cmd = "./test/echoScripts/justExitWithRCof0";
-      let STORED_DATA_ARRAY = [ ];
-
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
+      cmd4Accessory.state_cmd = "./test/echoScripts/justExitWithRCof0";
+      cmd4Accessory.timeout = 500;
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
+      {
+         assert.equal( result, 0, ` getValue result expected: 0 received: ${ result }` );
+         assert.equal( rc, 0, ` getValue rc expected: 0 received: ${ rc }` );
+      });
+
+      setTimeout(() =>
       {
          hook.stop( );
          let logMsg = hook.capturedLog( );
          let errMsg = hook.capturedErr( );
-         let expectedErrOutput = `31mgetValue: Mute function for: My_Television returned an empty string ""`;
-         // Because we are mucking with a state_cmd that should not exist with fetch:Cached
-         let expectedErrOutput2 = `33mPolling of accessory My_Television ignored as fetch=Cached and polling was not set`;
 
          assert.equal( logMsg, "", ` getValue output something to stdout: ${ logMsg }` );
-         assert.include( errMsg, expectedErrOutput, ` getValue output expected: ${ expectedErrOutput } received: ${ errMsg }` );
-         assert.include( errMsg, expectedErrOutput2, ` getValue output expected: ${ expectedErrOutput2 } received: ${ errMsg }` );
+         assert.equal( errMsg, "", ` getValue output nothing to stderr: ${ errMsg }` );
 
-         assert.equal( result, 0, ` getValue result expected: 0 received: ${ result }` );
 
          // Clear the hook buffer for next time.
          hook.reset( );
-
          done( );
-      });
-   });
 
-   // timeout and cant capture timeout message
-   it.skip( "getValue of Nothing to stdout and rc=0 should show error message", function ( done )
+      }, 1000 );
+   }).timeout( 2000 );
+
+   it( "getValue of Nothing to stdout and rc=1 should show error message", function ( done )
    {
-      TVConfig.state_cmd = "./test/echoScripts/justExitWithRCof1";
-      let STORED_DATA_ARRAY = [ ];
-
       hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
+      cmd4Accessory.state_cmd = "./test/echoScripts/justExitWithRCof1";
+      cmd4Accessory.timeout = 400;
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
+      {
+         assert.equal( result, 0, ` getValue result expected: 0 received: ${ result }` );
+      });
+
+      setTimeout(() =>
       {
          hook.stop( );
          let logMsg = hook.capturedLog( );
          let errMsg = hook.capturedErr( );
          let expectedErrOutput = `31mgetValue Mute function failed for My_Television cmd: ./test/echoScripts/justExitWithRCof1 Get 'My_Television' 'Mute' Failed.`;
-         // Because we are mucking with a state_cmd that should not exist with fetch:Cached
-         let expectedErrOutput2 = `33mPolling of accessory My_Television ignored as fetch=Cached and polling was not set`;
 
          assert.equal( logMsg, "", ` getValue output something to stdout: ${ logMsg }` );
          assert.include( errMsg, expectedErrOutput, ` getValue output expected: ${ expectedErrOutput } received: ${ errMsg }` );
-         assert.include( errMsg, expectedErrOutput2, ` getValue output expected: ${ expectedErrOutput2 } received: ${ errMsg }` );
 
-         assert.equal( result, 0, ` getValue result expected: 0 received: ${ result }` );
 
          // Clear the hook buffer for next time.
          hook.reset( );
-
          done( );
-      });
-   });
+
+      }, 800 );
+   }).timeout( 2000 );
 });

@@ -9,3 +9,9 @@ exports.PLATFORM_NAME = "Cmd4";
 // This *MUST* match the name of your plugin as defined the package.json
 //
 exports.PLUGIN_NAME = "homebridge-cmd4";
+
+// This must be global so that all characteristics are not
+// polled at the same time. Specifically a MyAir that has
+// multiple fans, switches and temperature sensors, all in
+// the same device of which a linkedAccessory is not an option.
+exports.arrayOfPollingCharacteristics = [ ];

@@ -13,12 +13,13 @@ var chalk = require( "chalk" );
 
 // These would already be initialized by index.js
 let CMD4_DEVICE_TYPE_ENUM = require( "./lib/CMD4_DEVICE_TYPE_ENUM" ).CMD4_DEVICE_TYPE_ENUM;
+let CMD4_ACC_TYPE_ENUM = require( "./lib/CMD4_ACC_TYPE_ENUM" ).CMD4_ACC_TYPE_ENUM;
 
 // The Cmd4 Classes
 const Cmd4Accessory = require( "./Cmd4Accessory" ).Cmd4Accessory;
 
-// Settings and constants
-const settings = require( "./cmd4Settings" );
+// Settings, Globals and Constants
+let settings = require( "./cmd4Settings" );
 const constants = require( "./cmd4Constants" );
 
 // Platform definition
@@ -81,6 +82,9 @@ class Cmd4Platform
             if ( ! accessory.reachable )
                this.removeAccessory( accessory );
          });
+
+         // Let the Polling Begin
+         this.startPolling();
 
       });
    }
@@ -253,19 +257,19 @@ class Cmd4Platform
          // generate a unique id for the accessory this should be generated from
          // something globally unique, but constant, for example, the device serial
          // number or MAC address.
-         let uuid = getAccessoryUUID( device, this.api.hap.uuid );
+         let UUID = getAccessoryUUID( device, this.api.hap.uuid );
 
-         // See if an accessory with the same uuid has already been registered and
+         // See if an accessory with the same UUID has already been registered and
          // restored from the cached devices we stored in the `configureAccessory`
          // method above
-         const existingAccessory = this.toBeRestoredPlatforms.find(accessory => accessory.UUID === uuid);
+         const existingAccessory = this.toBeRestoredPlatforms.find(accessory => accessory.UUID === UUID);
 
          if (existingAccessory)
          {
             let duplicatePlatformAccessory = this.createdCmd4Platforms.find(accessory => accessory.UUID === existingAccessory.UUID);
             if ( duplicatePlatformAccessory )
             {
-               this.log( chalk.red( `Error duplicate platform accessory: ${ duplicatePlatformAccessory.name } uuid:${ duplicatePlatformAccessory.UUID }` ) );
+               this.log( chalk.red( `Error duplicate platform accessory: ${ duplicatePlatformAccessory.name } UUID:${ duplicatePlatformAccessory.UUID }` ) );
                // Next in for.Each object iteration
                return;
             }
@@ -305,8 +309,8 @@ class Cmd4Platform
             } else if ( existingAccessory.context.device.storedValuesPerCharacteristic )
             {
                // If we have an old version of the stored status, convert it to our new format.
-               this.log.debug(`Cmd4Platform: Creating STORED_DATA_ARRAY with existing storedValuesPerCharacteristic uuid:${ existingAccessory.uuid }` );
-               STORED_DATA_ARRAY = [ {[constants.UUID]: existingAccessory.uuid,
+               this.log.debug(`Cmd4Platform: Creating STORED_DATA_ARRAY with existing storedValuesPerCharacteristic UUID:${ existingAccessory.UUID }` );
+               STORED_DATA_ARRAY = [ {[constants.UUID]: existingAccessory.UUID,
                                       [constants.storedValuesPerCharacteristic]: existingAccessory.context.device.storedValuesPerCharacteristic}
                       ];
                // Get rid of old persistance data
@@ -358,8 +362,8 @@ class Cmd4Platform
             // Create the new PlatformAccessory
             if ( device.category == undefined )
             {
-               log.debug( `Step 1. platformAccessory = new platformAccessory( ${ displayName }, ${ uuid } )` );
-               platform = new this.api.platformAccessory( displayName, uuid );
+               log.debug( `Step 1. platformAccessory = new platformAccessory( ${ displayName }, ${ UUID } )` );
+               platform = new this.api.platformAccessory( displayName, UUID );
 
             } else
             {
@@ -373,9 +377,9 @@ class Cmd4Platform
                   process.exit( 666 );
                }
 
-               log.debug( `Step 1. platformAccessory = new platformAccessory( ${ displayName }, ${ uuid }, ${ category } )` );
+               log.debug( `Step 1. platformAccessory = new platformAccessory( ${ displayName }, ${ UUID }, ${ category } )` );
 
-               platform = new this.api.platformAccessory( displayName, uuid, category );
+               platform = new this.api.platformAccessory( displayName, UUID, category );
             }
 
             platform.Service = this.Service;
@@ -429,9 +433,6 @@ class Cmd4Platform
          // For Unit testing only
          this.createdCmd4Platforms.push( platform );
 
-         // Let the polling begin
-         this.log.info( chalk.green( `Polling for ${ accessory.name } started` ));
-         accessory.startPollingForAccessoryAndItsChildren( accessory );
       });
    }
 
@@ -556,6 +557,59 @@ class Cmd4Platform
 
       // Setup the fakegato service for the platform accessory istelf.
       cmd4PlatformAccessory.setupAccessoryFakeGatoService( cmd4PlatformAccessory.fakegatoConfig );
+   }
+
+   startPolling( )
+   {
+      let startDelay = 3000;
+      let staggeredDelays = [ 3000, 3000, 3500, 4000 ];
+      let staggeredDelaysLength = staggeredDelays.length;
+      let staggeredDelayIndex = 0;
+      let lastAccessoryUUID = ""
+
+      //Hmm, check for duplicates. None found, Yeah!
+      //let arr = settings.arrayOfPollingCharacteristics;
+      //arr.forEach( ( entry, index ) =>
+      //{
+      //   let UUID = entry.accessory.UUID;
+      //   let accTypeEnumIndex = entry.accTypeEnumIndex;
+      //   console.log( "index:%s %s:%s", index, entry.accessory.displayName, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type );
+      //   let duplicates = arr.filter( ( sentry, sindex ) => sentry.accessory.UUID == UUID && sentry.accTypeEnumIndex == accTypeEnumIndex && index != sindex );
+      //   if ( duplicates.length > 0 )
+      //      console.log( "**** Duplicates of %s:%s=%s", entry.accessory.displayName, accTypeEnumIndex, duplicates );
+      //});
+
+
+      settings.arrayOfPollingCharacteristics.forEach( entry =>
+      {
+         let accessory = entry.accessory;
+         let accTypeEnumIndex = entry.accTypeEnumIndex;
+         let timeout = accessory.timeout;
+         let interval = accessory.interval;
+         let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+
+
+         setTimeout( ( ) =>
+         {
+
+            accessory.log.debug( `Kicking off polling for: ${ accessory.displayName } ${ characteristicString } interval:${ interval }, staggered:${ staggeredDelays[ staggeredDelayIndex ]}` );
+            accessory.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] =
+                        setTimeout( accessory.characteristicPolling.bind(
+                        accessory, accessory, accTypeEnumIndex, timeout, interval ), interval );
+         }, startDelay );
+
+
+         if ( staggeredDelayIndex++ >= staggeredDelaysLength )
+            staggeredDelayIndex = 0;
+
+         if ( lastAccessoryUUID != accessory.UUID )
+            staggeredDelayIndex = 0;
+
+         lastAccessoryUUID = accessory.UUID;
+
+         startDelay += staggeredDelays[ staggeredDelayIndex ];
+
+      });
    }
 }
 

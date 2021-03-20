@@ -8,6 +8,11 @@ const moment = require( "moment" );
 const fs = require( "fs" );
 const commandExistsSync = require( "command-exists" ).sync;
 
+// Settings, Globals and Constants
+let settings = require( "./cmd4Settings" );
+const constants = require( "./cmd4Constants" );
+
+
 // Cmd4 includes seperated out for Unit testing
 const { getAccessoryName, getAccessoryDisplayName
       } = require( "./utils/getAccessoryNameFunctions" );
@@ -38,9 +43,6 @@ var chalk = require( "chalk" );
 // These would already be initialized by index.js
 let CMD4_ACC_TYPE_ENUM = require( "./lib/CMD4_ACC_TYPE_ENUM" ).CMD4_ACC_TYPE_ENUM;
 let CMD4_DEVICE_TYPE_ENUM = require( "./lib/CMD4_DEVICE_TYPE_ENUM" ).CMD4_DEVICE_TYPE_ENUM;
-
-// Constants
-const constants = require( "./cmd4Constants" );
 
 let FakeGatoHistoryService = null;
 
@@ -80,11 +82,10 @@ class Cmd4Accessory
       this.LEVEL = ( parentInfo && parentInfo.LEVEL !== undefined ) ? parentInfo.LEVEL + 1 : 0;
       this.createdCmd4Accessories = ( parentInfo && parentInfo.createdCmd4Accessories ) ? parentInfo.createdCmd4Accessories : [ ];
 
-      // this.log.debug( `CMD4=${ this.CMD4 } LEVEL=${ this.LEVEL }` );
 
       let typeMsg =  [ "", "Linked ", "Added " ][ this.LEVEL ] || "";
 
-      log.debug( chalk.blue ( `Creating ${ typeMsg }${ this.CMD4 } Accessory type for : ${ config.displayName }` ) );
+      log.debug( chalk.blue ( `Creating ${ typeMsg }${ this.CMD4 } Accessory type for : ${ config.displayName } LEVEL: ${ this.LEVEL }` ) );
 
       this.services = [ ];
       this.linkedAccessories = [ ];
@@ -92,7 +93,6 @@ class Cmd4Accessory
       this.listOfConstants = { };
 
       // Instead of polling per accessory, allow the config file to be polled per characteristic.
-      this.listOfPollingCharacteristics = { };
       this.listOfRunningPolls = { };
       this.pollingStarted = false;
       this.ServiceCreated = false;
@@ -138,9 +138,9 @@ class Cmd4Accessory
       // generate a unique id for the accessory this should be generated from
       // something globally unique, but constant, for example, the device serial
       // number or MAC address.
-      let uuid = getAccessoryUUID( config, this.api.hap.uuid );
+      let UUID = getAccessoryUUID( config, this.api.hap.uuid );
 
-      let existingData = this.STORED_DATA_ARRAY.find( data => data[constants.UUID] === uuid );
+      let existingData = this.STORED_DATA_ARRAY.find( data => data[constants.UUID] === UUID );
       if ( existingData )
       {
          this.log.debug(`Cmd4Accessory: found existingData for ${ this.displayName }` );
@@ -157,7 +157,7 @@ class Cmd4Accessory
          // restarts.
          this.storedValuesPerCharacteristic = new Array( CMD4_ACC_TYPE_ENUM.EOL ).fill( null );
 
-         this.STORED_DATA_ARRAY.push( { [constants.UUID]: uuid,
+         this.STORED_DATA_ARRAY.push( { [constants.UUID]: UUID,
                                         [constants.storedValuesPerCharacteristic]: this.storedValuesPerCharacteristic
                                       }
                                     );
@@ -193,7 +193,7 @@ class Cmd4Accessory
       // a users config.json file.
       this.addRequiredCharacteristicStoredValues( );
 
-      // The accessory cannot have the same uuid as any other
+      // The accessory cannot have the same UUID as any other
       checkAccessoryForDuplicateUUID( this, this.UUID );
 
       // The default response time is in seconds
@@ -208,6 +208,7 @@ class Cmd4Accessory
       if ( this.accessoriesConfig && this.CMD4 == constants.PLATFORM && this.LEVEL == 0 )
       {
          log.info( `Creating accessories for: ${ this.displayName }` );
+
          // Let me explain.
          // Level 0 are standalone or platform.
          // Level 1 is linked.
@@ -228,10 +229,42 @@ class Cmd4Accessory
          this.linkedAccessories = this.accessoryTypeConfigToCmd4Accessories( this.linkedAccessoriesConfig, this );
       }
 
-      // Determine which characteristics, if any, will be polled. This
-      // information is also used to define which service.getValue is
-      // used, either immediate, cached or polled.
-      this.determineCharacteristicsToPollOfAccessoryAndItsChildren( this );
+      // This sets up which characteristics, if any, will be polled
+      // This can be done for only LEVEL 0 accessories and itself
+      if ( this.LEVEL == 0 )
+      {
+         // log.debug( "CMD4=%s LEVEL=%s for %s", accessory.CMD4, accessory.LEVEL, accessory.displayName );
+         // The linked accessory children are at different levels of recursion, so only
+         // allow what is posssible.
+         if ( this.linkedAccessories )
+         {
+            this.log.debug( `Setting up which characteristics will be polled for Linked Accessories of ${ this.displayName }` );
+
+            this.linkedAccessories.forEach( ( linkedAccessory ) =>
+            {
+               if ( linkedAccessory.polling != false )
+               {
+                  linkedAccessory.determineCharacteristicsToPollForAccessory( linkedAccessory );
+               }
+            });
+         }
+
+         // The Television Speaker Platform Example
+         if ( this.accessories )
+         {
+            this.log.debug( `Setting up which characteristics will be polled for Added Accessories of ${ this.displayName }` );
+            this.accessories.forEach( ( addedAccessory ) =>
+            {
+               if ( addedAccessory.polling != false )
+               {
+                  addedAccessory.determineCharacteristicsToPollForAccessory( addedAccessory );
+               }
+            });
+         }
+
+         this.log.debug( `Setting up which characteristics will be polled for ${ this.displayName }` );
+         this.determineCharacteristicsToPollForAccessory( this );
+      }
 
       // Create all the services for the accessory, including fakegato and polling
       // Only true Standalone accessories can have their services created and
@@ -240,9 +273,6 @@ class Cmd4Accessory
       {
          log.debug( `Creating Standalone service for: ${ this.displayName }` );
          this.createServicesForStandaloneAccessoryAndItsChildren( this )
-
-         log.debug( `Creating polling for Standalone accessory: ${ this.displayName }` );
-         this.startPollingForAccessoryAndItsChildren( this );
       }
 
    } // Cmd4Accessory ( log, config, api, STORED_DATA_ARRAY, parentInfo )
@@ -555,7 +585,9 @@ class Cmd4Accessory
          // polled to get the real value.
          if ( self.fetch == constants.FETCH_CACHED ||
                ( self.fetch == constants.FETCH_POLLED &&
-                 self.listOfPollingCharacteristics[ relatedCurrentAccTypeEnumIndex ] &&
+                 settings.arrayOfPollingCharacteristics.filter( entry => entry.accessory.UUID == self.UUID &&
+                                                                         entry.accTypeEnumIndex == relatedCurrentAccTypeEnumIndex
+                                                              ).length > 0  &&
                  isRelatedTargetCharacteristicInSameDevice(
                      self.typeIndex,
                      accTypeEnumIndex,
@@ -647,13 +679,16 @@ class Cmd4Accessory
 
          let relatedCurrentAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].relatedCurrentAccTypeEnumIndex;
          if ( relatedCurrentAccTypeEnumIndex != null &&
-                 self.listOfPollingCharacteristics[ relatedCurrentAccTypeEnumIndex ] &&
+                 settings.arrayOfPollingCharacteristics.filter( entry => entry.accessory.UUID == self.UUID &&
+                                                                         entry.accTypeEnumIndex == relatedCurrentAccTypeEnumIndex
+                                                              ).length > 0  &&
                  isRelatedTargetCharacteristicInSameDevice(
                      self.typeIndex,
                      accTypeEnumIndex,
                      CMD4_DEVICE_TYPE_ENUM,
                      CMD4_ACC_TYPE_ENUM
-                 ) == relatedCurrentAccTypeEnumIndex )
+                 ) == relatedCurrentAccTypeEnumIndex
+            )
          {
             let relatedCharacteristic = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].characteristic;
             setTimeout( ( ) => {
@@ -856,7 +891,7 @@ class Cmd4Accessory
 
          if ( replyCount > 1 )
          {
-            self.log.warn( `${ self.displayName} ` + chalk.red( `Receiving to many lines of data( ${replyCount }): ${ unQuotedReply } for ${ characteristicString }` ) );
+            self.log.warn( `${ self.displayName} ` + chalk.red( `Receiving to many lines of data( ${ replyCount } ): ${ unQuotedReply } for ${ characteristicString }` ) );
 
             // Do not call the callback or continue processing as too many will be called.
             // Prefer to wait for possibly more data and homebridge complain about a slow response.
@@ -1057,7 +1092,7 @@ class Cmd4Accessory
                       this.getStoredValueForIndex( accTypeEnumIndex ) );
 
 
-             // Add getValue funtion to service
+             // Add getValue via getCachedValue funtion to service
              if ( accessory.service.getCharacteristic(
                     CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
                     .characteristic ).listeners( "get" ).length == 0 )
@@ -1073,21 +1108,25 @@ class Cmd4Accessory
                   // 2 -> Polled      -   Fetch cached, except for characteristics
                   //                      which are polled are fetched immediately
                   if ( accessory.fetch == constants.FETCH_CACHED ||
-                       accessory.fetch == constants.FETCH_POLLED && ! accessory.listOfPollingCharacteristics[ accTypeEnumIndex ] )
+                       accessory.fetch == constants.FETCH_POLLED &&
+                       settings.arrayOfPollingCharacteristics.filter( entry => entry.accessory.UUID == accessory.UUID &&
+                                                                               entry.accTypeEnumIndex == accTypeEnumIndex
+                                                                    ).length == 0
+                     )
                   {
                      this.log.debug( chalk.yellow( `Adding getCachedValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ` ) );
                      //Get cachedValue
-                      accessory.service.getCharacteristic(
-                         CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
-                         .characteristic )
-                            .on( "get", accessory.getCachedValue.bind( accessory, accTypeEnumIndex ) );
+                     accessory.service.getCharacteristic(
+                        CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
+                        .characteristic )
+                           .on( "get", accessory.getCachedValue.bind( accessory, accTypeEnumIndex ) );
                   } else
                   {
                      this.log.debug( chalk.yellow( `Adding getValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` ) );
-                      accessory.service.getCharacteristic(
-                         CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
-                         .characteristic )
-                            .on( "get", accessory.getValue.bind( accessory, accTypeEnumIndex ) );
+                     accessory.service.getCharacteristic(
+                        CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
+                        .characteristic )
+                           .on( "get", accessory.getValue.bind( accessory, accTypeEnumIndex ) );
                   }
 
                 }
@@ -1103,7 +1142,11 @@ class Cmd4Accessory
                 {
                    // Similiarly to getCached, setCached is the same.
                    if ( accessory.fetch == constants.FETCH_CACHED ||
-                       accessory.fetch == constants.FETCH_POLLED && ! accessory.listOfPollingCharacteristics[ accTypeEnumIndex ] )
+                        accessory.fetch == constants.FETCH_POLLED &&
+                        settings.arrayOfPollingCharacteristics.filter( entry => entry.accessory.UUID == accessory.UUID &&
+                                                                                entry.accTypeEnumIndex == accTypeEnumIndex
+                                                                     ).length == 0
+                      )
                    {
                       // setCachedValue has parameters:
                       // accTypeEnumIndex, value, callback
@@ -1125,7 +1168,6 @@ class Cmd4Accessory
                          CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
                          .characteristic ).on( "set", ( value, callback ) => {
                              boundSetValue( value, callback );
-
                       });
                    }
                 }
@@ -1405,8 +1447,12 @@ class Cmd4Accessory
                       process.exit( 216 );
                    }
 
-                   // Make this an error, so I do not get any more tickets.
-                   if ( this.listOfPollingCharacteristics[ accTypeEnumIndex ] == undefined )
+                   // Make sure the characteristic is being polled so I do not get any more tickets
+                   // as to why the value is not changing.
+                   if ( settings.arrayOfPollingCharacteristics.filter( entry => entry.accessory.UUID == this.UUID &&
+                                                                       entry.accTypeEnumIndex == accTypeEnumIndex
+                                                                     ).length == 0
+                      )
                    {
                        this.log.error( chalk.red( 'Error' ) + `: Characteristic: ${ value } for fakegato` +
                                        ` to log of: ${ key } is not being polled.\n` );
@@ -2090,37 +2136,9 @@ class Cmd4Accessory
       }
    }
 
-   determineCharacteristicsToPollOfAccessoryAndItsChildren( accessory )
+   determineCharacteristicsToPollForAccessory( accessory  )
    {
       let log = accessory.log;
-
-      // log.debug( "CMD4=%s LEVEL=%s for %s", accessory.CMD4, accessory.LEVEL, accessory.displayName );
-      // The linked accessory children are at different levels of recursion, so only
-      // allow what is posssible.
-      if ( accessory.linkedAccessories && accessory.LEVEL == 0 )
-      {
-         accessory.linkedAccessories.forEach( ( linkedAccessory ) =>
-         {
-            if ( linkedAccessory.polling != false )
-            {
-               log.debug( `Setting up polling ( ${ accessory.displayName } ) linked accessory: ${ linkedAccessory.displayName }` );
-               linkedAccessory.determineCharacteristicsToPollOfAccessoryAndItsChildren( linkedAccessory );
-            }
-         });
-      }
-
-      // The Television Speaker Platform Example
-      if ( accessory.accessories && accessory.CMD4 == constants.PLATFORM && accessory.LEVEL == 0 )
-      {
-         accessory.accessories.forEach( ( addedAccessory ) =>
-         {
-            if ( addedAccessory.polling != false )
-            {
-               log.debug( `Setting up polling ( ${ accessory.displayName } ) added accessory: ${ addedAccessory.displayName }` );
-               addedAccessory.determineCharacteristicsToPollOfAccessoryAndItsChildren( addedAccessory );
-            }
-         });
-      }
 
       // Polling cannot be done if there is no state_cmd
       if ( ! accessory.state_cmd )
@@ -2128,8 +2146,6 @@ class Cmd4Accessory
 
       // Now that polling calls updateValue and is not dependant on getValue, which was possibly cached,
       // Any accessories characteristic can be polled, regardless of fetch.
-
-      log.debug( `Setting up polling for: ${ accessory.displayName } and any of the children.` );
 
       let warningDisplayed = false;
       switch ( typeof accessory.polling )
@@ -2221,7 +2237,7 @@ class Cmd4Accessory
 
                log.debug( `Setting up accessory: ${ accessory.displayName } for polling of: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } timeout: ${ timeout } interval: ${ interval }` );
 
-               this.listOfPollingCharacteristics[ accTypeEnumIndex ] = {"timeout": timeout, "interval": interval};
+               settings.arrayOfPollingCharacteristics.push( {"accessory": accessory, "accTypeEnumIndex": accTypeEnumIndex } );
 
             }
             break;
@@ -2237,17 +2253,12 @@ class Cmd4Accessory
             {
                log.debug( `State polling for: ${ accessory.displayName }` );
 
-
                // Make sure the defined characteristics will be polled
-               let pollingCharacteristicsArray = CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ].defaultPollingCharacteristics;
-
-               // There could be none.
-               for ( let index = 0; index < pollingCharacteristicsArray.length; index++ )
+               CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ].defaultPollingCharacteristics.forEach( defaultPollingAccTypeEnumIndex =>
                {
-                   let accTypeEnumIndex = pollingCharacteristicsArray[ index ];
+                   settings.arrayOfPollingCharacteristics.push( {"accessory": accessory, "accTypeEnumIndex": defaultPollingAccTypeEnumIndex } );
+               });
 
-                   this.listOfPollingCharacteristics[ accTypeEnumIndex ] = {"timeout": accessory.timeout, "interval": accessory.interval};
-               }
             }
 
             break;
@@ -2259,8 +2270,9 @@ class Cmd4Accessory
          }
       }
 
-      // Over what has asked to be polled
-      for( let accTypeEnumIndex in this.listOfPollingCharacteristics )
+      // Over what has asked to be polled for this device
+      let accessorysPolledCharacteristics = settings.arrayOfPollingCharacteristics.filter( entry => entry.UUID );
+      for( let entry in accessorysPolledCharacteristics )
       {
          // Look to see if currently polled characteristics are like "Current*" and have
          // a related characteristic like "Target*"
@@ -2269,96 +2281,28 @@ class Cmd4Accessory
          //          Not defining a required characteristic can be problematic
          //     Except for Optional "Current*" "Target*" characteristics which
          //     isRelatedTargetCharacteristicInSameDevice does resolve.
-         let relatedTargetAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].relatedTargetAccTypeEnumIndex;
+         let relatedTargetAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].relatedTargetAccTypeEnumIndex;
 
          if ( relatedTargetAccTypeEnumIndex != null &&
               isRelatedTargetCharacteristicInSameDevice(
                   this.typeIndex,
-                  accTypeEnumIndex,
+                  entry.accTypeEnumIndex,
                   CMD4_DEVICE_TYPE_ENUM,
                   CMD4_ACC_TYPE_ENUM
               ) == relatedTargetAccTypeEnumIndex )
          {
             // Check that the characteristic like "Target*" is also requested to be polled
-            if ( ! this.listOfPollingCharacteristics[ relatedTargetAccTypeEnumIndex ] )
+            if ( accessorysPolledCharacteristics.filter( subEntry => subEntry.accessory.UUID == accessory.UUID &&
+                                                                     subEntry.accTypeEnumIndex == relatedTargetAccTypeEnumIndex
+                              ).length == 0
+               )
             {
-               let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+               let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].type;
                let relatedCharacteristicString = CMD4_ACC_TYPE_ENUM.properties[ relatedTargetAccTypeEnumIndex ].type;
                this.log.warn( `Warning, With fetch set to "${ this.fetch }" and polling for "${ characteristicString }" requested, you also must do polling of "${ relatedCharacteristicString }" or things will not function properly` );
             }
          }
       }
-   }
-
-   startPollingForAccessoryAndItsChildren( accessory )
-   {
-      // Create all the services for the accessory, including fakegato and polling
-      // Only true Standalone accessories can have their services created and
-      // polling started. Otherwise the platform will have to do this.
-      if ( accessory.pollingStarted == true )
-      {
-         accessory.log.debug( chalk.red( `POLLING ALREADY RUNNING FOR ${ this.displayName } ${ this.CMD4 } ${ this.LEVEL }` ) );
-         return;
-      } else {
-         accessory.pollingStarted = true;
-      }
-
-      let startDelay = 3500;
-      let staggeredDelays = [ 0 ];
-      // If Everything is being fetched "Always", stagger each poll
-      if ( accessory.fetch == constants.FETCH_ALWAYS )
-      {
-         startDelay = 5000;
-         staggeredDelays = [ 0, 672, 1332, 1879 ];
-      }
-
-      let staggeredDelayIndex = 0;
-
-      // Delay the initial poll because a large anount of accessories, hammer the system.
-      setTimeout( ( ) =>
-      {
-         let that = accessory;
-
-
-         for( let accTypeEnumIndex in accessory.listOfPollingCharacteristics )
-         {
-            if ( staggeredDelayIndex++ > staggeredDelays.length )
-               staggeredDelayIndex = 0;
-
-            setTimeout( ( ) =>
-            {
-               let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
-               accessory.log.debug( `Starting polling for: ${ accessory.displayName } ${ characteristicString }` );
-
-               let timeout = accessory.listOfPollingCharacteristics[ accTypeEnumIndex ].timeout;
-               let interval = accessory.listOfPollingCharacteristics[ accTypeEnumIndex ].interval;
-               that.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] =
-                           setTimeout( that.characteristicPolling.bind(
-                           that, accessory, accTypeEnumIndex, timeout, interval ), interval );
-
-            }, staggeredDelays[ staggeredDelayIndex ] );
-         }
-
-         // accessory.log.debug( "CMD4=%s LEVEL=%s for %s", accessory.CMD4, accessory.LEVEL, accessory.displayName );
-         // The linked accessory children are at different levels of recursion, so only
-         // allow what is posssible.
-         if ( accessory.linkedAccessories && accessory.LEVEL == 0 )
-         {
-            accessory.linkedAccessories.forEach( ( linkedAccessory ) =>
-            {
-               linkedAccessory.startPollingForAccessoryAndItsChildren( linkedAccessory );
-            });
-         }
-
-         // The Television Speaker Platform Example
-         if ( accessory.accessories && accessory.CMD4 == constants.PLATFORM && accessory.LEVEL == 0 )
-         {
-            accessory.accessories.forEach( ( addedAccessory ) =>
-            {
-               addedAccessory.startPollingForAccessoryAndItsChildren( addedAccessory );
-            });
-         }
-     }, startDelay );
    }
 
    // This is the self-reaccurring routine to poll a characteristic
