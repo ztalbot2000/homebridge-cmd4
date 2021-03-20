@@ -109,6 +109,20 @@ describe( "Testing INITIALIZED CMD4_ACC_TYPE_ENUM", ( ) =>
                            ` Our UUID is not the same at index: ${ accTypeEnumIndex }` );
           });
 
+          it(`Testing CMD4_ACC_TYPE_ENUM.properties[].description is a string `, ( ) =>
+          {
+
+             assert.isString(  CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].description,
+                           ` description is not a string at index: ${ accTypeEnumIndex }` );
+          });
+
+          it(`Testing CMD4_ACC_TYPE_ENUM.properties[].description String length > 10 `, ( ) =>
+          {
+
+             assert.isAtLeast(  CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].description.length, 10,
+                           ` description is is very short at index: ${ accTypeEnumIndex }` );
+          });
+
           // Get the properties for this characteristic type
           let accProperties = CMD4_ACC_TYPE_ENUM.properties[accTypeEnumIndex];
           // Characteristics dont seem to get removed and homebridge put a limit
