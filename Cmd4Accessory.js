@@ -1245,7 +1245,7 @@ class Cmd4Accessory
                this.loggingService.addEntry(
                   { [ constants.TIME_l ]     : moment( ).unix( ),
                     [ constants.TEMP_l ]     : firstParmValue,
-                    [ constants.HUMidity_l ] : secondParmValue,
+                    [ constants.HUMIDITY_l ] : secondParmValue,
                     [ constants.PPM_l ]      : thirdParmValue
                   });
                break;
