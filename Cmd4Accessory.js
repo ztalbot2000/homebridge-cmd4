@@ -677,6 +677,8 @@ class Cmd4Accessory
             return;
          }
 
+         let responded = false;
+
          let relatedCurrentAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].relatedCurrentAccTypeEnumIndex;
          if ( relatedCurrentAccTypeEnumIndex != null &&
                  settings.arrayOfPollingCharacteristics.filter( entry => entry.accessory.UUID == self.UUID &&
@@ -690,11 +692,13 @@ class Cmd4Accessory
                  ) == relatedCurrentAccTypeEnumIndex
             )
          {
+            responded = true;
+
             let relatedCharacteristic = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].characteristic;
             setTimeout( ( ) => {
                self.service.getCharacteristic( relatedCharacteristic ).getValue( );
+               callback( 0 );
             }, self.stateChangeResponseTime );
-
          }
 
          // The "Set" of the characteristic value was successful.
@@ -711,7 +715,8 @@ class Cmd4Accessory
          if ( self.fetch == constants.FETCH_POLLED )
             self.setStoredValueForIndex( accTypeEnumIndex, value );
 
-         callback( 0 );
+         if ( responded == false )
+            callback( 0 );
 
       });
    }

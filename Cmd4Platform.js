@@ -562,7 +562,7 @@ class Cmd4Platform
    startPolling( )
    {
       let startDelay = 3000;
-      let staggeredDelays = [ 3000, 3000, 3500, 4000 ];
+      let staggeredDelays = [ 3000, 6000, 9000, 12000 ];
       let staggeredDelaysLength = staggeredDelays.length;
       let staggeredDelayIndex = 0;
       let lastAccessoryUUID = ""
@@ -592,7 +592,7 @@ class Cmd4Platform
          setTimeout( ( ) =>
          {
 
-            accessory.log.debug( `Kicking off polling for: ${ accessory.displayName } ${ characteristicString } interval:${ interval }, staggered:${ staggeredDelays[ staggeredDelayIndex ]}` );
+            accessory.log.info( `Kicking off polling for: ${ accessory.displayName } ${ characteristicString } interval:${ interval }, staggered:${ staggeredDelays[ staggeredDelayIndex ]}` );
             accessory.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] =
                         setTimeout( accessory.characteristicPolling.bind(
                         accessory, accessory, accTypeEnumIndex, timeout, interval ), interval );
