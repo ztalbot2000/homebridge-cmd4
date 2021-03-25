@@ -679,7 +679,7 @@ function addSideNavCmd4AccessoryDirectivesLinks_WithinSideNav( )
 
    wf( "+", `<div class="panel">\n` );
       wfs( `<a href="#${ constants.SUBTYPE }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.SUBTYPE }</a>\n` );
-      wfs( `<a href="#${ constants.FETCH }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.FETCH }</a>\n` );
+      wfs( `<a href="#${ constants.CMD4_MODE }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.CMD4_MODE }</a>\n` );
       wfs( `<a href="#${ constants.FAKEGATO }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.FAKEGATO }</a>\n` );
       wfs( `<a href="#${ constants.PUBLISHEXTERNALLY }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.PUBLISHEXTERNALLY }</a>\n` );
       wfs( `<a href="#${ constants.STATE_CMD_PREFIX }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.STATE_CMD_PREFIX }</a>\n` );
@@ -1085,22 +1085,24 @@ function addCmd4AccessoryDirectivePages_WithinMain( )
    // publishExternally
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.PUBLISHEXTERNALLY }">${ constants.PUBLISHEXTERNALLY }</a><TD>  < Bool >  <TD>    false     <TD> Tell Homebridge to publish the device as its own bridge. </TR>\n` );
 
-   // fetch
-   wfs( `<TR ALIGN="left"><TD><a name="${ constants.FETCH }">${ constants.FETCH }</a><TD> < "${ constants.FETCH_ALWAYS }" | "${ constants.FETCH_CACHED }" | "${ constants.FETCH_POLLED }" > <TD> "${ constants.FETCH_ALWAYS }" <TD> Tell Homebridge to publish the device as its own bridge.</TR>\n` );
+   // Cmd4_Mode
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.CMD4_MODE }">${ constants.CMD4_MODE }</a><TD> < "${ constants.CMD4_MODE_DEMO }" | "${ constants.CMD4_MODE_ALWAYS }" | "${ constants.CMD4_MODE_POLLED }" | "${ constants.CMD4_MODE_FULLYPOLLED } > <TD> "${ constants.CMD4_MODE_ALWAYS }" <TD> Determines what and when characteristics are updated from the device.</TR>\n` );
 
    wfs( `<TR ALIGN="left"><TD COLSPAN=4>\n` );
    wfs( `   i.e.<BR>\n` );
    wfs( `   <UL>\n` );
-   // fetch Always
-   wfs( `      <LI> { "${constants.FETCH}": "<a name="${ constants.FETCH_ALWAYS }">${ constants.FETCH_ALWAYS }</a>" } - As before Always fetch characteristic value. ( Default )\n` );
-   // fetch Cached
-   wfs( `      <LI> { "${constants.FETCH}": "<a name="${ constants.FETCH_CACHED }">${ constants.FETCH_CACHED }</a>" } - Never fetch characteristic value. Use cached value. The cached value would have to be updated through polling.\n` );
-   // fetch Polled
-   wfs( `      <LI> { "${constants.FETCH}": "<a name="${ constants.FETCH_POLLED }">${ constants.FETCH_POLLED }</a>" } - Polled characteristics act like before  (Always). Non polled characteristic values are fetched from cache.\n` );
+   // CMD4_MODE Always
+   wfs( `      <LI> { "${constants.CMD4_MODE}": "<a name="${ constants.CMD4_MODE_ALWAYS }">${ constants.CMD4_MODE_ALWAYS }</a>" } - All characteristic are sent/retrieved from the device. ( Default )\n` );
+   // CMD4_MODE Polled
+   wfs( `      <LI> { "${constants.CMD4_MODE}": "<a name="${ constants.CMD4_MODE_POLLED }">${ constants.CMD4_MODE_POLLED }</a>" } - Polled characteristics are retrieved from the device. Non polled characteristic values are sent/retrieved from cache.\n` );
+   // CMD4_MODE FullyPolled
+   wfs( `      <LI> { "${constants.CMD4_MODE}": "<a name="${ constants.CMD4_MODE_FULLYPOLLED }">${ constants.CMD4_MODE_FULLYPOLLED }</a>" } - All characteristics are retrieved from cache. Polled characteristics are sent to the device. Expect any characteristic to be updated via configuring polling.\n` );
+   // CMD4_MODE Demo ( Formerly Cached )
+   wfs( `      <LI> { "${constants.CMD4_MODE}": "<a name="${ constants.CMD4_MODE_DEMO }">${ constants.CMD4_MODE_DEMO }</a>" } - All characteristics are sent/retrieved from cache.\n` );
    wfs( `  </UL>\n` );
    wfs( `</TR>\n` );
    wfs( `<TR ALIGN="left"><TD COLSPAN=4>\n` );
-      wfs( `<img src="../images/fetchFlowDiagram.png" alt="fetchFlowDiagram.png">\n` );
+      wfs( `<img src="../images/Cmd4ModeDiagram.png" alt="Cmd4ModeDiagram.png">\n` );
    wfs( `</TR>\n` );
 
    // stateChangeResponseTime

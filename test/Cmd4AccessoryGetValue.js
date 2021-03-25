@@ -24,7 +24,7 @@ let TVConfig =
 {
     name:                     "My_Television",
     type:                     "Television",
-    fetch:                    "Cached",
+    Cmd4_Mode:                "Demo",
     category:                 "TELEVISION",
     publishExternally:        true,
     active:                   "ACTIVE",

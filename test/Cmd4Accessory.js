@@ -63,10 +63,10 @@ describe('Quick Test of Setup', ( ) =>
 // ******** TEST Cmd4Accessory *************
 describe('A simple Cmd4Accessory Test', ( ) =>
 {
-   let config={ name: "Test Switch",
-                type: "Switch",
-                fetch: constants.FETCH_CACHED,
-                on:   false
+   let config={ name:      "Test Switch",
+                type:      "Switch",
+                Cmd4_Mode:  constants.CMD4_MODE_DEMO,
+                on:         false
               };
    it( "Test can create an instance of Cmd4Accessory", ( ) =>
    {
@@ -86,10 +86,10 @@ describe('A simple Cmd4Accessory Test', ( ) =>
 
 describe('A simple Cmd4Accessory Test Debbuging enabled', ( ) =>
 {
-   let config={ name: "Test Switch",
-                type: "Switch",
-                fetch: constants.FETCH_CACHED,
-                on:   false
+   let config={ name:      "Test Switch",
+                type:      "Switch",
+                Cmd4_Mode:  constants.CMD4_MODE_DEMO,
+                on:         false
               };
    it( "Test can create an instance of Cmd4Accessory with Debug Enabled", ( ) =>
    {
@@ -114,10 +114,10 @@ describe('A simple Cmd4Accessory Test Debbuging enabled', ( ) =>
 
 describe('Test Cmd4Accessory variables ', ( ) =>
 {
-   let config={ name: "Test Switch",
-                type: "Switch",
-                fetch: constants.FETCH_CACHED,
-                on:   false
+   let config={ name:      "Test Switch",
+                type:      "Switch",
+                Cmd4_Mode:  constants.CMD4_MODE_DEMO,
+                on:         false
               };
    it( "Test typeIndex of a Switch set correctly ", ( ) =>
    {
@@ -169,10 +169,10 @@ describe('Test Cmd4Accessory variables ', ( ) =>
 
 describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
 {
-   let config={ name: "Test Switch",
-                type: "Switch",
-                fetch: constants.FETCH_CACHED,
-                on:   false
+   let config={ name:      "Test Switch",
+                type:      "Switch",
+                Cmd4_Mode:  constants.CMD4_MODE_DEMO,
+                on:         false
               };
    it( "Check that STORED_DATA_ARRAY is created", ( ) =>
    {

@@ -106,8 +106,9 @@ function testAccessoryConfig ( accessoryConfig )
                testPollingConfig( value );
 
                break;
+            case constants.CMD4_MODE:
             case constants.FETCH:
-               testFetch( value );
+               testCmd4_Mode( value );
               break;
             case constants.INTERVAL:
               testInterval( value );
@@ -312,16 +313,18 @@ function testInterval( interval )
       assert.isNumber( interval, "Invalid interval:" + interval );
    });
 }
-function testFetch( fetch )
+function testCmd4_Mode( cmd4Mode )
 {
-   it( "Fetch:" + fetch + " should be a valid Boolean", ( ) =>
+   it( "Cmd4_Mode:" + cmd4Mode + " should be a valid Boolean", ( ) =>
    {
       let rc = false;
-      let ucFetch = ucFirst( fetch );
-      if ( ucFetch == "Always" ) rc = true;
-      if ( ucFetch == "Cached" ) rc = true;
-      if ( ucFetch == "Polled" ) rc = true;
-      assert.isTrue( rc, "Invalid fetch: %s", fetch );
+      let ucCmd4Mode = ucFirst( cmd4Mode );
+      if ( ucCmd4Mode == "Always" ) rc = true;
+      if ( ucCmd4Mode == "Cached" ) rc = true;
+      if ( ucCmd4Mode == "Demo"   ) rc = true;
+      if ( ucCmd4Mode == "Polled" ) rc = true;
+      if ( ucCmd4Mode == "FullyPolled" ) rc = true;
+      assert.isTrue( rc, "Invalid Cmd4_Mode: %s", cmd4Mode );
    });
 }
 function testTimeout( timeout )

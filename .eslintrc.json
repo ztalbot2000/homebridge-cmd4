@@ -27,5 +27,6 @@
         "ecmaVersion": 12
     },
     "rules": {
+       "no-fallthrough": ["error", { "commentPattern": "break[\\s\\w]*omitted"}]
     }
 }

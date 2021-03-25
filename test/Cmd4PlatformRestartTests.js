@@ -89,7 +89,7 @@ let TVConfig =
    "platform":                      "Cmd4",
    "outputConstants":               false,
    "restartRecover":                true,
-   "fetch":                        "Cached",
+   "Cmd4_Mode":                    "Demo",
    "accessories" :
    [
       {   "type":                   "Television",
@@ -108,9 +108,9 @@ let TVConfig =
              {   "type":               "televisionSpeaker",
                  "displayName":        "My TvSpeaker",
                  "name":               "My TVSpeaker",
-                 "active":             "ENABLED",
+                 "active":             "ACTIVE",
                  "mute":               "FALSE",
-                 "volumeSelector":     10,
+                 "volumeSelector":     1,
                  "volume":             10,
                  "volumeControlType":  "ABSOLUTE"
               }

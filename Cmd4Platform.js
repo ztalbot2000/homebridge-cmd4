@@ -198,18 +198,28 @@ class Cmd4Platform
 
                break;
             case constants.FETCH:
+               this.log.warn( `Warning: ${ constants.FETCH }:${ value } is changing to ${ constants.CMD4_MODE }:${ value } to reflect its affect on both Set and Get.` );
+               this.log.warn( `To remove this message, change to ${ constants.CMD4_MODE }` );
+
+               // break omitted
+            case constants.CMD4_MODE:
                switch( value )
                {
-                  case constants.FETCH_ALWAYS:
-                  case constants.FETCH_CACHED:
-                  case constants.FETCH_POLLED:
+                  case constants.CMD4_MODE_CACHED:
+                     this.log.warn( `Warning: ${ constants.CMD4_MODE_CACHED } is changing to ${ constants.CMD4_MODE_DEMO } as it should only be used for demonstartion with no state_cmd needed.` );
+                     this.log.warn( `To remove this message, change to ${ constants.CMD4_MODE_DEMO }` );
+                     // break omitted
+                  case constants.CMD4_MODE_DEMO:
+                  case constants.CMD4_MODE_ALWAYS:
+                  case constants.CMD4_MODE_POLLED:
+                  case constants.CMD4_MODE_FULLYPOLLED:
 
-                     this.fetch = value;
+                     this.cmd4Mode = value;
 
                      break;
                   default:
-                     this.log.error( chalk.red( `Invalid value: ${ value } for ${ constants.FETCH }` ) );
-                     this.log.error( `Must be: [ ${ constants.FETCH_ALWAYS } | ${ constants.FETCH_CACHED } | ${ constants.FETCH_POLLED }` );
+                     this.log.error( chalk.red( `Invalid value: ${ value } for ${ constants.CMD4_MODE }` ) );
+                     this.log.error( `Must be: [ ${ constants.CMD4_MODE_DEMO } | ${ constants.CMD4_MODE_ALWAYS } | ${ constants.CMD4_MODE_POLLED } | ${ constants.MODE_FULLYPOLLED }` );
                      process.exit( 261 ) ;
                }
                break;

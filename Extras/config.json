@@ -14,7 +14,7 @@
          "allowTLV8":                       false,
          "outputConstants":                 false,
          "restartRecover":                  true,
-         "fetch":                          "Cached",
+         "Cmd4_Mode":                      "Polled",
          "accessories" :
          [
             {
@@ -26,7 +26,7 @@
                "Model":                    "Anything",
                "SerialNumber":             "12345",
                "StateChangeResponseTime":   3,
-               "Fetch":                    "Cached"
+               "Cmd4_Mode":                "Polled"
             },
             {
                "Type":                     "Fan",

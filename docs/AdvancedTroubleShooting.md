@@ -5,6 +5,7 @@
 * [**The #1 Thing to Remember**](#the-1-thing-to-remember)
 * [**The Parameters sent by Cmd4**](#the-parameters-sent-by-cmd4)
 * [**Troubleshooting your own scripts**](#troubleshooting-your-own-scripts)
+* [***Create a middleWare shell script***](#create-a-middleware-shell-script)
 * [**Debug mode is your best friend**](#debug-mode-is-your-best-friend)
 * [**Debugging Fakegato history**](#debugging-fakegato-history)
 * [**Missing icons**](#missing-icons)
@@ -64,6 +65,20 @@ Note: Your script must also exit with a 0 return code.
 ```bash
    *Shell>* DEBUG=* homebridge -D
 ```
+
+### Create a middleWare shell script
+&nbsp;&nbsp;&nbsp; To see when and what both Cmd4 is sending/receiving as well as what your script is sending and receiving, create a middleWare.sh script that is called from the config.json and then calls your script. A script similiar to:<BR>
+
+```
+#!/bin/bash
+echo $( date ) >> /tmp/Cmd4.log
+echo $* >> /tmp/Cmd4.log
+node .homebridge/Cmd4Scripts/State.js $* 2>&1 | tee -a /tmp/Cmd4.log
+```
+
+Running a "tail -f /tmp/Cmd4.log" in a seperate terminal window will show you everything that is going on between the processes.
+<BR>
+
 
 ## Debugging Fakegato history
 See [fakegato-history](https://github.com/simont77/fakegato-history)

@@ -22,13 +22,13 @@ Object.defineProperty(exports, "LogLevel", { enumerable: true, get: function ( )
 // A config file to play with.
 let config =
 {
-   "name":                     "My_Switch",
-   "DisplayName":              "My_Switch",
-   "statusMsg":                true,
-   "type":                     "Switch",
-   "fetch":                    "Polled",
-   "on":                       0,
-   "state_cmd":                "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+   Name:                     "My_Switch",
+   DisplayName:              "My_Switch",
+   StatusMsg:                true,
+   Type:                     "Switch",
+   Cmd4_Mode:                "Polled",
+   On:                       0,
+   State_cmd:                "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
 }
 let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
 

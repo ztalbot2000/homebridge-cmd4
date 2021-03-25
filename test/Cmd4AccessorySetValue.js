@@ -56,27 +56,27 @@ describe( "Testing Cmd4Accessory", function( )
    it( "Test init Cmd4Accessory", function( done )
    {
       // A config file to play with.
-      // Setting fetch to Cached or Polled with no polled characteristics
+      // Setting Cmd4_Mode to Demo or Polled with no polled characteristics
       // makes polling not run and thus not having outstanding processes.
       let TVConfig =
       {
-          name:                     "My_Television",
-          type:                     "Television",
-          fetch:                    "Cached",
-          displayName:              "My_Television",
-          category:                 "TELEVISION",
-          publishExternally:        true,
-          active:                   "ACTIVE",
-          activeIdentifier:          1234,
-          mute:                     true,
-          configuredName:           "My_Television",
-          sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
-          brightness:                8,
-          closedCaptions:           "DISABLED",
-          currentMediaState:        "STOP",
-          targetMediaState:         "STOP",
-          pictureMode:              "STANDARD",
-          remoteKey:                "SELECT"
+          Name:                     "My_Television",
+          Type:                     "Television",
+          Cmd4_Mode:                "Demo",
+          DisplayName:              "My_Television",
+          Category:                 "TELEVISION",
+          PublishExternally:        true,
+          Active:                   "ACTIVE",
+          ActiveIdentifier:          1234,
+          Mute:                     true,
+          ConfiguredName:           "My_Television",
+          SleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
+          Brightness:                8,
+          ClosedCaptions:           "DISABLED",
+          CurrentMediaState:        "STOP",
+          TargetMediaState:         "STOP",
+          PictureMode:              "STANDARD",
+          RemoteKey:                "SELECT"
       };
       let STORED_DATA_ARRAY = [ ];
 
@@ -95,27 +95,27 @@ describe( "Testing Cmd4Accessory", function( )
    it( "Test Cmd4Accessory.setValue", function( done )
    {
       // A config file to play with.
-      // Setting fetch to Cached or Polled with no polled characteristics
+      // Setting Cmd4_Mode to Demo or Polled with no polled characteristics
       // makes polling not run and thus not having outstanding processes.
       let TVConfig =
       {
-          name:                     "My_Television",
-          type:                     "Television",
-          displayName:              "My_Television",
-          fetch:                    "Polled",
-          category:                 "TELEVISION",
-          publishExternally:        true,
-          active:                   "ACTIVE",
-          activeIdentifier:          1234,
-          mute:                     true,
-          configuredName:           "My_Television",
-          sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
-          brightness:                8,
-          closedCaptions:           "DISABLED",
-          currentMediaState:        "STOP",
-          targetMediaState:         "STOP",
-          pictureMode:              "STANDARD",
-          remoteKey:                "SELECT"
+          Name:                     "My_Television",
+          Type:                     "Television",
+          DisplayName:              "My_Television",
+          Cmd4_Mode:                "Polled",
+          Category:                 "TELEVISION",
+          PublishExternally:         true,
+          Active:                   "ACTIVE",
+          ActiveIdentifier:          1234,
+          Mute:                     true,
+          ConfiguredName:           "My_Television",
+          SleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
+          Brightness:                8,
+          ClosedCaptions:           "DISABLED",
+          CurrentMediaState:        "STOP",
+          TargetMediaState:         "STOP",
+          PictureMode:              "STANDARD",
+          RemoteKey:                "SELECT"
       };
 
       TVConfig.state_cmd = "./test/echoScripts/echo_ACTIVE";
@@ -139,37 +139,37 @@ describe( "Testing Cmd4Accessory", function( )
    it( "setValue 1 should send 1 to script for ClosedCaption non constant request", function ( done )
    {
       // A config file to play with.
-      // Setting fetch to Cached or Polled with no polled characteristics
+      // Setting Cmd4_Mode to Cached or Polled with no polled characteristics
       // makes polling not run and thus not having outstanding processes.
       let TVConfig =
       {
-          name:                     "My_Television",
-          type:                     "Television",
-          fetch:                    "Polled",
-          displayName:              "My_Television",
-          category:                 "TELEVISION",
-          publishExternally:        true,
-          active:                   "ACTIVE",
-          activeIdentifier:          1234,
-          mute:                     true,
-          configuredName:           "My_Television",
-          sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
-          brightness:                8,
-          closedCaptions:           "DISABLED",
-          currentMediaState:        "STOP",
-          targetMediaState:         "STOP",
-          pictureMode:              "STANDARD",
-          remoteKey:                "SELECT"
+          Name:                     "My_Television",
+          Type:                     "Television",
+          Cmd4_Mode:                "Polled",
+          DisplayName:              "My_Television",
+          Category:                 "TELEVISION",
+          PublishExternally:        true,
+          Active:                   "ACTIVE",
+          ActiveIdentifier:          1234,
+          Mute:                     true,
+          ConfiguredName:           "My_Television",
+          SleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
+          Brightness:                8,
+          ClosedCaptions:           "DISABLED",
+          CurrentMediaState:        "STOP",
+          TargetMediaState:         "STOP",
+          PictureMode:              "STANDARD",
+          RemoteKey:                "SELECT"
       };
 
       // Note: We need a characteristic that does not have a verify characteristic
       // because the getSetValueScript can't seem to handle it. At least not yet.
       let acc = CMD4_ACC_TYPE_ENUM.ClosedCaptions;
-      let DEVICE = TVConfig.displayName;
+      let DEVICE = TVConfig.DisplayName;
       let CHARACTERISTIC = CMD4_ACC_TYPE_ENUM.properties[ acc ].type;
       let fn = `/tmp/fn1`;
-      TVConfig.state_cmd_suffix = fn;
-      TVConfig.state_cmd = `node ${ process.cwd( ) }/${ getSetValueScript }`;
+      TVConfig.State_cmd_suffix = fn;
+      TVConfig.State_cmd = `node ${ process.cwd( ) }/${ getSetValueScript }`;
       let STORED_DATA_ARRAY = [ ];
 
       hook.start( );
@@ -212,39 +212,39 @@ describe( "Testing Cmd4Accessory", function( )
    it( `setValue 1, aka ENABLED should send "ENABLED" to script for constant request`, function ( done )
    {
       // A config file to play with.
-      // Setting fetch to Cached or Polled with no polled characteristics
+      // Setting Cmd4_Mode to Cached or Polled with no polled characteristics
       // makes polling not run and thus not having outstanding processes.
       let TVConfig =
       {
-          name:                     "My_Television",
-          type:                     "Television",
-          fetch:                    "Polled",
-          outputConstants:          true,
-          displayName:              "My_Television",
-          category:                 "TELEVISION",
-          publishExternally:        true,
-          active:                   "ACTIVE",
-          activeIdentifier:          1234,
-          mute:                     true,
-          configuredName:           "My_Television",
-          sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
-          brightness:                8,
-          closedCaptions:           "DISABLED",
-          currentMediaState:        "STOP",
-          targetMediaState:         "STOP",
-          pictureMode:              "STANDARD",
-          remoteKey:                "SELECT"
+          Name:                     "My_Television",
+          Type:                     "Television",
+          Cmd4_Mode:                "Polled",
+          OutputConstants:          true,
+          DisplayName:              "My_Television",
+          Category:                 "TELEVISION",
+          PublishExternally:        true,
+          Active:                   "ACTIVE",
+          ActiveIdentifier:          1234,
+          Mute:                     true,
+          ConfiguredName:           "My_Television",
+          SleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
+          Brightness:                8,
+          ClosedCaptions:           "DISABLED",
+          CurrentMediaState:        "STOP",
+          TargetMediaState:         "STOP",
+          PictureMode:              "STANDARD",
+          RemoteKey:                "SELECT"
       };
 
       // Note: We need a characteristic that does not have a verify characteristic
       // because the getSetValueScript can't seem to handle it. At least not yet.
       let acc = CMD4_ACC_TYPE_ENUM.ClosedCaptions;
-      let DEVICE = TVConfig.displayName;
+      let DEVICE = TVConfig.DisplayName;
       let CHARACTERISTIC = CMD4_ACC_TYPE_ENUM.properties[ acc ].type;
       let fn = `/tmp/fn2`;
-      TVConfig.state_cmd_suffix = fn;
+      TVConfig.State_cmd_suffix = fn;
 
-      TVConfig.state_cmd = `node ${ process.cwd( ) }/${ getSetValueScript }`;
+      TVConfig.State_cmd = `node ${ process.cwd( ) }/${ getSetValueScript }`;
       let STORED_DATA_ARRAY = [ ];
 
       hook.start( );
@@ -287,36 +287,36 @@ describe( "Testing Cmd4Accessory", function( )
    it( `Cmd4Accessory should generate warning for publishExternally`, function ( done )
    {
       // A config file to play with.
-      // Setting fetch to Cached or Polled with no polled characteristics
+      // Setting Cmd4_Mode to Cached or Polled with no polled characteristics
       // makes polling not run and thus not having outstanding processes.
       let TVConfig =
       {
-          name:                     "My_Television",
-          type:                     "Television",
-          fetch:                    "Polled",
-          outputConstants:          true,
-          displayName:              "My_Television",
-          category:                 "TELEVISION",
-          publishExternally:        true,
-          active:                   "ACTIVE",
-          activeIdentifier:          1234,
-          mute:                     true,
-          configuredName:           "My_Television",
-          sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
-          brightness:                8,
-          closedCaptions:           "DISABLED",
-          currentMediaState:        "STOP",
-          targetMediaState:         "STOP",
-          pictureMode:              "STANDARD",
-          remoteKey:                "SELECT"
+          Name:                     "My_Television",
+          Type:                     "Television",
+          Cmd4_Mode:                "Polled",
+          OutputConstants:          true,
+          DisplayName:              "My_Television",
+          Category:                 "TELEVISION",
+          PublishExternally:        true,
+          Active:                   "ACTIVE",
+          ActiveIdentifier:          1234,
+          Mute:                     true,
+          ConfiguredName:           "My_Television",
+          SleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
+          Brightness:                8,
+          ClosedCaptions:           "DISABLED",
+          CurrentMediaState:        "STOP",
+          TargetMediaState:         "STOP",
+          PictureMode:              "STANDARD",
+          RemoteKey:                "SELECT"
       };
 
       // Note: We need a characteristic that does not have a verify characteristic
       // because the getSetValueScript can't seem to handle it. At least not yet.
       let fn = `/tmp/fn2`;
-      TVConfig.state_cmd_suffix = fn;
+      TVConfig.State_cmd_suffix = fn;
 
-      TVConfig.state_cmd = `node ${ process.cwd( ) }/${ getSetValueScript }`;
+      TVConfig.State_cmd = `node ${ process.cwd( ) }/${ getSetValueScript }`;
       let STORED_DATA_ARRAY = [ ];
 
       hook.start( );
@@ -344,36 +344,36 @@ describe( "Testing Cmd4Accessory", function( )
    it( "setValue true should send 0 to script for Mute request", function ( done )
    {
       // A config file to play with.
-      // Setting fetch to Cached or Polled with no polled characteristics
+      // Setting Cmd4_Mode to Cached or Polled with no polled characteristics
       // makes polling not run and thus not having outstanding processes.
       let TVConfig =
       {
-          name:                     "My_Television",
-          type:                     "Television",
-          fetch:                    "Polled",
-          displayName:              "My_Television",
-          active:                   true,
-          category:                 "TELEVISION",
-          publishExternally:        true,
-          activeIdentifier:          1234,
-          mute:                     1,
-          configuredName:           "My_Television",
-          sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
-          brightness:                8,
-          closedCaptions:           "DISABLED",
-          currentMediaState:        "STOP",
-          targetMediaState:         "STOP",
-          pictureMode:              "STANDARD",
-          remoteKey:                "SELECT"
+          Name:                     "My_Television",
+          Type:                     "Television",
+          Cmd4_Mode:                "Demo",
+          DisplayName:              "My_Television",
+          Active:                   true,
+          Category:                 "TELEVISION",
+          PublishExternally:        true,
+          ActiveIdentifier:          1234,
+          Mute:                     1,
+          ConfiguredName:           "My_Television",
+          SleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
+          Brightness:                8,
+          ClosedCaptions:           "DISABLED",
+          CurrentMediaState:        "STOP",
+          TargetMediaState:         "STOP",
+          PictureMode:              "STANDARD",
+          RemoteKey:                "SELECT"
       };
 
       let acc = CMD4_ACC_TYPE_ENUM.Mute;
-      let DEVICE = TVConfig.displayName;
+      let DEVICE = TVConfig.DisplayName;
       let CHARACTERISTIC = CMD4_ACC_TYPE_ENUM.properties[ acc ].type;
       let fn = `/tmp/fn3`;
-      TVConfig.state_cmd_suffix = fn;
+      TVConfig.State_cmd_suffix = fn;
 
-      TVConfig.state_cmd = `node ${ process.cwd( ) }/${ getSetValueScript }`;
+      TVConfig.State_cmd = `node ${ process.cwd( ) }/${ getSetValueScript }`;
       let STORED_DATA_ARRAY = [ ];
 
       hook.start( );
@@ -418,17 +418,17 @@ describe( "Testing Cmd4Accessory", function( )
       // A config file to play with.
       let ThermostatConfig =
       {
-         "type":                     "Thermostat",
-         "name":                     "Thermostat",
-         "fetch":                    "Cached",
-         "displayName":              "Thermostat",
-         "temperatureDisplayUnits":  "CELSIUS",
-         "active":                   "Inactive",
-         "currentTemperature":        20.0,
-         "targetTemperature":         20.0,
-         "currentHeatingCoolingState":  0,
-         "targetHeatingCoolingState":  0,
-         "stateChangeResponseTime":   3
+         Type:                       "Thermostat",
+         Name:                       "Thermostat",
+         Cmd4_Mode:                  "Demo",
+         DisplayName:                "Thermostat",
+         TemperatureDisplayUnits:    "CELSIUS",
+         Active:                     "INACTIVE",
+         CurrentTemperature:          20.0,
+         TargetTemperature:           20.0,
+         CurrentHeatingCoolingState:  0,
+         TargetHeatingCoolingState:   0,
+         StateChangeResponseTime:     3
       };
 
       let acc = CMD4_ACC_TYPE_ENUM.TargetTemperature;
@@ -477,17 +477,17 @@ describe( "Testing Cmd4Accessory", function( )
       // A config file to play with.
       let ThermostatConfig =
       {
-         "type":                     "Thermostat",
-         "name":                     "Thermostat",
-         "fetch":                    "Cached",
-         "displayName":              "Thermostat",
-         "temperatureDisplayUnits":  "CELSIUS",
-         "active":                   "Inactive",
-         "currentTemperature":        20.0,
-         "targetTemperature":         20.0,
-         "currentHeatingCoolingState":  0,
-         "targetHeatingCoolingState":  0,
-         "stateChangeResponseTime":   3
+         type:                       "Thermostat",
+         Name:                       "Thermostat",
+         Cmd4_Mode:                  "Demo",
+         DisplayName:                "Thermostat",
+         TemperatureDisplayUnits:    "CELSIUS",
+         Active:                     "INACTIVE",
+         CurrentTemperature:          20.0,
+         TargetTemperature:           20.0,
+         CurrentHeatingCoolingState:  0,
+         TargetHeatingCoolingState:   0,
+         StateChangeResponseTime:     3
       };
 
       let acc = CMD4_ACC_TYPE_ENUM.TargetTemperature;
@@ -537,16 +537,16 @@ describe( "Testing Cmd4Accessory", function( )
       // A config file to play with.
       let ThermostatConfig =
       {
-         "type":                     "Thermostat",
-         "name":                     "Thermostat",
-         "fetch":                    "Cached",
-         "displayName":              "Thermostat",
-         "temperatureDisplayUnits":  "CELSIUS",
-         "active":                   "Inactive",
-         "currentTemperature":        20.0,
-         "currentHeatingCoolingState":  0,
-         "targetHeatingCoolingState":  0,
-         "stateChangeResponseTime":   3
+         Type:                        "Thermostat",
+         Name:                        "Thermostat",
+         Cmd4_Mode:                   "Demo",
+         DisplayName:                 "Thermostat",
+         TemperatureDisplayUnits:     "CELSIUS",
+         Active:                      "INACTIVE",
+         CurrentTemperature:           20.0,
+         CurrentHeatingCoolingState:   0,
+         TargetHeatingCoolingState:    0,
+         StateChangeResponseTime:      3
       };
 
       let acc = CMD4_ACC_TYPE_ENUM.TargetTemperature;
@@ -587,17 +587,17 @@ describe( "Testing Cmd4Accessory", function( )
       // A config file to play with.
       let ThermostatConfig =
       {
-         "type":                     "Thermostat",
-         "name":                     "Thermostat",
-         "fetch":                    "Cached",
-         "displayName":              "Thermostat",
-         "temperatureDisplayUnits":  "CELSIUS",
-         "active":                   "Inactive",
-         "currentTemperature":        20.0,
-         "targetTemperature":        20.0,
-         "currentHeatingCoolingState":  0,
-         // "targetHeatingCoolingState":  0,
-         "stateChangeResponseTime":   3
+         Type:                         "Thermostat",
+         Name:                         "Thermostat",
+         Cmd4_Mode:                    "Demo",
+         DisplayName:                  "Thermostat",
+         TemperatureDisplayUnits:      "CELSIUS",
+         Active:                       "INACTIVE",
+         CurrentTemperature:            20.0,
+         TargetTemperature:             20.0,
+         CurrentHeatingCoolingState:    0,
+         // targetHeatingCoolingState:  0,
+         StateChangeResponseTime:       3
       };
 
       let STORED_DATA_ARRAY = [ ];
@@ -630,13 +630,13 @@ describe( "Testing Cmd4Accessory", function( )
       // A config file to play with.
       let TempSensorConfig =
       {
-         "type":                     "TemperatureSensor",
-         "name":                     "TemperatureSensor",
-         "fetch":                    "Cached",
-         "displayName":              "TemperatureSensor",
-         "temperatureDisplayUnits":  "CELSIUS",
-         "active":                   "Inactive",
-         "currentTemperature":        20.0
+         Type:                     "TemperatureSensor",
+         Name:                     "TemperatureSensor",
+         Cmd4_Mode:                "Demo",
+         DisplayName:              "TemperatureSensor",
+         TemperatureDisplayUnits:  "CELSIUS",
+         Active:                   "INACTIVE",
+         CurrentTemperature:        20.0
       };
 
       let acc = CMD4_ACC_TYPE_ENUM.CurrentTemperature;

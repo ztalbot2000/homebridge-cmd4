@@ -65,65 +65,65 @@
               "sleepDiscoveryMode":        "ALWAYS_DISCOVERABLE",
               "accessories":
               [
-                 {  "type":                   "televisionSpeaker",
-                     "displayName":            "My_TelevisionSpeaker",
-                     "name":                   "My_TelevisionSpeaker",
-                     "active":                 "ENABLED",
-                     "volumeSelector":         10,
-                     "volumeControlType":      "ABSOLUTE",
-                     "state_cmd": "node .homebridge/YourScriptHere.js",
-                     "fetch":                  "cached",
-                     "polling": [
-                        {"characteristic": "active",         "interval": 50,  "timeout": 5000},
-                        {"characteristic": "volumeSelector", "interval": 50,  "timeout": 5000}
+                 {   "Type":                   "televisionSpeaker",
+                     "DisplayName":            "My_TelevisionSpeaker",
+                     "Name":                   "My_TelevisionSpeaker",
+                     "Active":                 "ENABLED",
+                     "VolumeSelector":         10,
+                     "VolumeControlType":      "ABSOLUTE",
+                     "State_cmd": "node .homebridge/YourScriptHere.js",
+                     "Cmd4_Mode":              "Polled",
+                     "Polling": [
+                        {"Characteristic": "Active",         "interval": 50,  "timeout": 5000},
+                        {"Characteristic": "VolumeSelector", "interval": 50,  "timeout": 5000}
                      ]
                   }
               ],
-              "linkedTypes":
+              "LinkedTypes":
               [
-                 {"type": "InputSource",
-                  "displayName":            "HDMI1",
-                  "configuredName":         "HDMI 1",
-                  "currentVisibilityState": "SHOWN",
-                  "inputSourceType":        "HDMI",
-                  "isConfigured":           "CONFIGURED",
-                  "identifier":              1,
-                  "targetVisibilityState":    "SHOWN",
-                  "name":                     "HDMI 1"
+                 {"Type":                   "InputSource",
+                  "DisplayName":            "HDMI1",
+                  "ConfiguredName":         "HDMI 1",
+                  "CurrentVisibilityState": "SHOWN",
+                  "InputSourceType":        "HDMI",
+                  "IsConfigured":           "CONFIGURED",
+                  "Identifier":              1,
+                  "TargetVisibilityState":    "SHOWN",
+                  "Name":                     "HDMI 1"
                  },
-                 {"type": "InputSource",
-                  "displayName":             "HDMI 2",
-                   "configuredName":         "HDMI 2",
-                   "currentVisibilityState": "SHOWN",
-                   "inputSourceType":        "HDMI",
-                   "isConfigured":           "CONFIGURED",
-                   "identifier":              2,
-                   "targetVisibilityState":   "SHOWN",
-                   "name":                    "HDMI 2"
+                 {"Type":                    "InputSource",
+                  "DisplayName":             "HDMI 2",
+                   "ConfiguredName":         "HDMI 2",
+                   "CurrentVisibilityState": "SHOWN",
+                   "InputSourceType":        "HDMI",
+                   "IsConfigured":           "CONFIGURED",
+                   "Identifier":              2,
+                   "TargetVisibilityState":   "SHOWN",
+                   "Name":                    "HDMI 2"
                   },
-                  {"type":                    "InputSource",
-                   "displayName":             "Netflix",
-                   "configuredName":          "Netflix",
-                   "currentVisibilityState":  "SHOWN",
-                   "inputSourceType":         "HDMI",
-                   "isConfigured":            "CONFIGURED",
-                   "identifier":               3,
-                   "targetVisibilityState":    "SHOWN",
-                   "name":                     "Netflix"
+                  {"Type":                    "InputSource",
+                   "DisplayName":             "Netflix",
+                   "ConfiguredName":          "Netflix",
+                   "CurrentVisibilityState":  "SHOWN",
+                   "InputSourceType":         "HDMI",
+                   "IsConfigured":            "CONFIGURED",
+                   "Identifier":               3,
+                   "TargetVisibilityState":    "SHOWN",
+                   "Name":                     "Netflix"
                   }
                ],
-               "displayOrder":              0,
-               "currentMediaState":         "STOP",
-               "targetMediaState":          "STOP",
-               "pictureMode":               "STANDARD",
-               "remoteKey":                 "SELECT",
-               "polling": [
-                  {"characteristic": "active",            "interval": 50,  "timeout": 5000},
-                  {"characteristic": "activeIdentifier",  "interval": 50,  "timeout": 5000},
-                  {"characteristic": "currentMediaState", "interval": 540, "timeout": 5000}
+               "DisplayOrder":              0,
+               "CurrentMediaState":         "STOP",
+               "TargetMediaState":          "STOP",
+               "PictureMode":               "STANDARD",
+               "RemoteKey":                 "SELECT",
+               "Polling": [
+                  {"Characteristic": "Active",            "interval": 50,  "timeout": 5000},
+                  {"Characteristic": "ActiveIdentifier",  "interval": 50,  "timeout": 5000},
+                  {"Characteristic": "CurrentMediaState", "interval": 540, "timeout": 5000}
                ],
-               "stateChangeResponseTime":    3,
-               "state_cmd": "node .homebridge/YourScriptHere.js"
+               "StateChangeResponseTime":    3,
+               "State_cmd": "node .homebridge/YourScriptHere.js"
              }
           ]
        }
@@ -137,7 +137,7 @@
 <LI> The first is "category"<BR>
 
 ```json
-   "category": "TELEVISION"
+   "Category": "TELEVISION"
 ```
 
 This is the hint to homekit of which icon to use and for Televisions, a TV icon will not show without it.
@@ -145,7 +145,7 @@ This is the hint to homekit of which icon to use and for Televisions, a TV icon 
 <LI>The second new designation is "publishExternally"<BR>
 
 ```json
-   "publishExternally": true (Default is false)
+   "PublishExternally": true (Default is false)
 ```
 As per the Homebridge API, this allows the Platform Accessory to be published separately from the bridge and is a requirement for multiple TV's.
 <BR><BR>
@@ -173,15 +173,15 @@ See the [Cmd4 Developers Guide](https://github.com/ztalbot2000/homebridge-cmd4/b
     "accessories": [
        {
           "accessory":                "Cmd4",
-          "type":                     "Switch",
-          "outputConstants":          false,
-          "displayName":              "My_Switch",
-          "name":                     "My_Switch",
-          "on":                       "FALSE",
+          "Type":                     "Switch",
+          "OutputConstants":          false,
+          "DisplayName":              "My_Switch",
+          "Name":                     "My_Switch",
+          "On":                       "FALSE",
           "Manufacturer":             "Custom Manufacturer",
           "Model":                    "Custom Model",
-          "stateChangeResponseTime":   3,
-          "state_cmd": "node .homebridge/YourScriptHere.js"
+          "StateChangeResponseTime":   3,
+          "State_cmd": "node .homebridge/YourScriptHere.js"
        }
     ]
 }
@@ -268,9 +268,9 @@ The value "0" should be used for any characteristics value which is not possible
 &nbsp;&nbsp;&nbsp; For history to be collected you will have to enable polling and interval for the accessory, and according to the fakegato-history documents it should be less than 10 minutes (600 seconds). The new polling config section allows for each characteristic to be polled at their individual times.
 
 ```json
-"polling": [{"currentHeatingCoolingState": 0,
+"polling": [{"Characteristic": "CurrentHeatingCoolingState",
              "interval": 540,  "timeout": 4000},
-            {"currentTemperature": 50.0,
+            {"Characteristic": "CurrentTemperature",
              "interval": 60,   "timeout": 4000}
            ],
 ```

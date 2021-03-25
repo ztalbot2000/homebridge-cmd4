@@ -115,8 +115,8 @@ class Cmd4Accessory
       this.state_cmd_prefix = parentInfo && parentInfo.state_cmd_prefix;
       this.state_cmd_suffix = parentInfo && parentInfo.state_cmd_suffix;
 
-      // Define fetch up front.  It can be overwritten by parseConfig.
-      this.fetch = ( parentInfo && parentInfo.fetch ) ? parentInfo.fetch : constants.FETCH_ALWAYS;
+      // Define cmd4Mode up front.  It can be overwritten by parseConfig.
+      this.cmd4Mode = ( parentInfo && parentInfo.cmd4Mode ) ? parentInfo.cmd4Mode : constants.CMD4_MODE_ALWAYS;
 
       // TLV8 causes a lot of issues if defined and trying to parse.
       // Omit them by default.
@@ -575,25 +575,27 @@ class Cmd4Accessory
          // We are in a "Set" but this applies to the "Get" for why we would need to
          // set the relatedCurrentAccTypeEnumIndex Characteristic as well.
 
-         // "Get" can't be in cached if fetch:Always
-         // "Get" must be cached if fetch:Cached
+         // "Get" can't be in cached if cmd4Mode:Always
+         // "Get" must be cached if cmd4Mode:Cached
          //
-         // For fetch:Polled
+         // For cmd4Mode:Polled
          // "Get Current" updates value when polled by calling getValue
          // "Get Current" ( From HomeKit) calls getCachedValue.
          // So we do not want to update the "Current*" value if it is being
          // polled to get the real value.
-         if ( self.fetch == constants.FETCH_CACHED ||
-               ( self.fetch == constants.FETCH_POLLED &&
-                 settings.arrayOfPollingCharacteristics.filter( entry => entry.accessory.UUID == self.UUID &&
-                                                                         entry.accTypeEnumIndex == relatedCurrentAccTypeEnumIndex
-                                                              ).length > 0  &&
-                 isRelatedTargetCharacteristicInSameDevice(
-                     self.typeIndex,
-                     accTypeEnumIndex,
-                     CMD4_DEVICE_TYPE_ENUM,
-                     CMD4_ACC_TYPE_ENUM
-                 ) != accTypeEnumIndex )
+         // - For cmd4Mode:FullyPolled I do not think the current cached value should be updated, Cmd2 does
+         //   not do that...
+         if ( self.cmd4Mode == constants.CMD4_MODE_CACHED || self.cmd4Mode == constants.CMD4_MODE_DEMO ||
+              ( self.cmd4Mode == constants.CMD4_MODE_POLLED &&
+                settings.arrayOfPollingCharacteristics.filter( entry => entry.accessory.UUID == self.UUID &&
+                                                                        entry.accTypeEnumIndex == relatedCurrentAccTypeEnumIndex
+                                                             ).length > 0  &&
+                isRelatedTargetCharacteristicInSameDevice( self.typeIndex,
+                                                           accTypeEnumIndex,
+                                                           CMD4_DEVICE_TYPE_ENUM,
+                                                           CMD4_ACC_TYPE_ENUM
+                                                         ) != accTypeEnumIndex
+              )
             )
          {
             let relatedCharacteristicString = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].type;
@@ -710,9 +712,9 @@ class Cmd4Accessory
          // should the next "Get" be as well.
          // The better thing to do is just set the internal state so that
          // trying to determine the above is not a possability.
-         // That being said, the possability cannot happen when fetch is
+         // That being said, the possability cannot happen when cmd4Mode is
          // "Cached" or "Always", so do not change their behaviour.
-         if ( self.fetch == constants.FETCH_POLLED )
+         if ( self.cmd4Mode == constants.CMD4_MODE_POLLED || constants.CMD4_MODE_FULLYPOLLED )
             self.setStoredValueForIndex( accTypeEnumIndex, value );
 
          if ( responded == false )
@@ -1106,14 +1108,16 @@ class Cmd4Accessory
                 if ( perms.indexOf( this.api.hap.Characteristic.Perms.READ ) != -1 )
                 {
 
-                  // fetch
-                  // Set how getValue works, either immediately, cached or polled.
-                  // 0 -> Immediately -   Fetch immediately everything
-                  // 1 -> cached      -   Fetch omly whats cached
-                  // 2 -> Polled      -   Fetch cached, except for characteristics
-                  //                      which are polled are fetched immediately
-                  if ( accessory.fetch == constants.FETCH_CACHED ||
-                       accessory.fetch == constants.FETCH_POLLED &&
+                  // cmd4Mode - getCachedValue or getValue
+                  // Set how getValue works, either immediately, cached, polled or fully polled.
+                  // 0 -> Always      -   Get everything always from the device
+                  // 1 -> Demo        -   Get only cached
+                  // 2 -> Polled      -   Get cached, except for characteristics
+                  //                      which are polled are retrieved immediately
+                  // 3 -> FullyPolled -   Get only cached like Cmd2. The difference from demo is how set behaves.
+                  if ( accessory.cmd4Mode == constants.CMD4_MODE_CACHED || accessory.cmd4Mode == constants.CMD4_MODE_DEMO ||
+                       accessory.cmd4Mode == constants.CMD4_MODE_FULLYPOLLED ||
+                       accessory.cmd4Mode == constants.CMD4_MODE_POLLED &&
                        settings.arrayOfPollingCharacteristics.filter( entry => entry.accessory.UUID == accessory.UUID &&
                                                                                entry.accTypeEnumIndex == accTypeEnumIndex
                                                                     ).length == 0
@@ -1145,9 +1149,18 @@ class Cmd4Accessory
                 // Add Write services for characterisitcs, if possible
                 if ( perms.indexOf( this.api.hap.Characteristic.Perms.WRITE ) != -1 )
                 {
-                   // Similiarly to getCached, setCached is the same.
-                   if ( accessory.fetch == constants.FETCH_CACHED ||
-                        accessory.fetch == constants.FETCH_POLLED &&
+                   // cmd4Mode - setCachedValue or setValue
+                   // Determine how setValue works, either demo ( all cached ), always, polled or fully polled.
+                   // 0 -> Always      -   set everything always
+                   // 1 -> demo        -   set only cached
+                   // 2 -> Polled      -   set cached, except for characteristics
+                   //                      which are polled are set immediately,
+                   //                      For those that are set cached, related current characteristics are
+                   //                      also set.
+                   // 3 -> FullyPolled -   Same as Polled, except relatedCurrent characteristics are
+                   //                      not set to the same value, like Cmd2
+                   if ( accessory.cmd4Mode == constants.CMD4_MODE_CACHED || accessory.cmd4Mode == constants.CMD4_MODE_DEMO ||
+                        ( accessory.cmd4Mode == constants.CMD4_MODE_POLLED || constants.CMD4_MODE_FULLYPOLLED ) &&
                         settings.arrayOfPollingCharacteristics.filter( entry => entry.accessory.UUID == accessory.UUID &&
                                                                                 entry.accTypeEnumIndex == accTypeEnumIndex
                                                                      ).length == 0
@@ -1557,6 +1570,7 @@ class Cmd4Accessory
             }
          }
          // Purposely fall through to check the command as well
+         // break omitted
          case 1:
          {
             let checkCmd = cmdArray[ 0 ];
@@ -1921,19 +1935,28 @@ class Cmd4Accessory
                this.polling = value;
                break;
             case constants.FETCH:
+               this.log.warn( `Warning: ${ constants.FETCH }:${ value } is changing to ${ constants.CMD4_MODE }:${ value } to reflect its affect on both Set and Get.` );
+               this.log.warn( `To remove this message, change to ${ constants.CMD4_MODE }` );
+               // break omitted
+            case constants.CMD4_MODE:
                switch( value )
                {
-                  case constants.FETCH_ALWAYS:
-                  case constants.FETCH_CACHED:
-                  case constants.FETCH_POLLED:
+                  case constants.CMD4_MODE_CACHED:
+                     this.log.warn( `Warning: ${ constants.CMD4_MODE_CACHED } is changing to ${ constants.CMD4_MODE_DEMO } as it should only be used for demonstartion with no state_cmd needed.` );
+                     this.log.warn( `To remove this message, change to ${ constants.CMD4_MODE_DEMO }` );
+                  // break omitted
+                  case constants.CMD4_MODE_DEMO:
+                  case constants.CMD4_MODE_ALWAYS:
+                  case constants.CMD4_MODE_POLLED:
+                  case constants.CMD4_MODE_FULLYPOLLED:
 
-                     this.fetch = value;
-                     this.log.debug( `Get values set to fetch: ${ value }` );
+                     this.cmd4Mode = value;
+                     this.log.debug( `Cmd4 Get/Set mode set to: ${ value }` );
 
                      break;
                   default:
-                     this.log.error( chalk.red( `Invalid value: ${ value } for ${ constants.FETCH }` ) );
-                     this.log.error( `Must be: [ ${ constants.FETCH_ALWAYS } | ${ constants.FETCH_CACHED } | ${ constants.FETCH_POLLED }` );
+                     this.log.error( chalk.red( `Invalid value: ${ value } for ${ constants.CMD4_MODE }` ) );
+                     this.log.error( `Must be: [ ${ constants.CMD4_MODE_DEMO } | ${ constants.CMD4_MODE_ALWAYS } | ${ constants.CMD4_MODE_POLLED } | ${ constants.CMD4_MODE_FULLYPOLLED }` );
                      process.exit( 261 ) ;
                }
                break;
@@ -2067,10 +2090,10 @@ class Cmd4Accessory
       else
          this.state_cmd_suffix = "";
 
-      // Check that fetch can be done in current environment..
-      if ( this.fetch != constants.FETCH_CACHED && ! this.validateStateCmd( this.state_cmd ) )
+      // Check that retrieving can be done in current environment..
+      if ( this.cmd4Mode != constants.CMD4_MODE_DEMO && this.cmd4Mode != constants.CMD4_MODE_CACHED && ! this.validateStateCmd( this.state_cmd ) )
       {
-         this.log.error(chalk.red(`Fetch is: ${ this.fetch } but there is no valid state_cmd to use.` ) );
+         this.log.error(chalk.red(`${ constants.CMD4_MODE } is: ${ this.cmd4Mode } but there is no valid state_cmd to use.` ) );
          process.exit( 265 );
       }
 
@@ -2150,7 +2173,7 @@ class Cmd4Accessory
          return;
 
       // Now that polling calls updateValue and is not dependant on getValue, which was possibly cached,
-      // Any accessories characteristic can be polled, regardless of fetch.
+      // Any accessories characteristic can be polled, regardless of cmd4Mode.
 
       let warningDisplayed = false;
       switch ( typeof accessory.polling )
@@ -2304,7 +2327,7 @@ class Cmd4Accessory
             {
                let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].type;
                let relatedCharacteristicString = CMD4_ACC_TYPE_ENUM.properties[ relatedTargetAccTypeEnumIndex ].type;
-               this.log.warn( `Warning, With fetch set to "${ this.fetch }" and polling for "${ characteristicString }" requested, you also must do polling of "${ relatedCharacteristicString }" or things will not function properly` );
+               this.log.warn( `Warning, With ${ constants.CMD4_MODE } set to "${ this.cmd4Mode }" and polling for "${ characteristicString }" requested, you also must do polling of "${ relatedCharacteristicString }" or things will not function properly` );
             }
          }
       }

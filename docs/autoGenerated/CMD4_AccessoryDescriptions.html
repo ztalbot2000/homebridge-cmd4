@@ -555,7 +555,7 @@ block-warning a {
       </button>
       <div class="panel">
          <a href="#SubType" onclick="toggleVisibility( 'AccessoryDirectives');">SubType</a>
-         <a href="#Fetch" onclick="toggleVisibility( 'AccessoryDirectives');">Fetch</a>
+         <a href="#Cmd4_Mode" onclick="toggleVisibility( 'AccessoryDirectives');">Cmd4_Mode</a>
          <a href="#Fakegato" onclick="toggleVisibility( 'AccessoryDirectives');">Fakegato</a>
          <a href="#PublishExternally" onclick="toggleVisibility( 'AccessoryDirectives');">PublishExternally</a>
          <a href="#State_cmd_prefix" onclick="toggleVisibility( 'AccessoryDirectives');">State_cmd_prefix</a>
@@ -6485,17 +6485,18 @@ block-warning a {
             <TR ALIGN="left"><TD><a name="OutputConstants">OutputConstants</a><TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1 </TR>
             <TR ALIGN="left"><TD><a name="StatusMsg">StatusMsg</a><TD>  < Bool >  <TD>  true <TD>Cmd4 will log a Set Status Message</TR>
             <TR ALIGN="left"><TD><a name="PublishExternally">PublishExternally</a><TD>  < Bool >  <TD>    false     <TD> Tell Homebridge to publish the device as its own bridge. </TR>
-            <TR ALIGN="left"><TD><a name="Fetch">Fetch</a><TD> < "Always" | "Cached" | "Polled" > <TD> "Always" <TD> Tell Homebridge to publish the device as its own bridge.</TR>
+            <TR ALIGN="left"><TD><a name="Cmd4_Mode">Cmd4_Mode</a><TD> < "Demo" | "Always" | "Polled" | "FullyPolled > <TD> "Always" <TD> Determines what and when characteristics are updated from the device.</TR>
             <TR ALIGN="left"><TD COLSPAN=4>
                i.e.<BR>
                <UL>
-                  <LI> { "Fetch": "<a name="Always">Always</a>" } - As before Always fetch characteristic value. ( Default )
-                  <LI> { "Fetch": "<a name="Cached">Cached</a>" } - Never fetch characteristic value. Use cached value. The cached value would have to be updated through polling.
-                  <LI> { "Fetch": "<a name="Polled">Polled</a>" } - Polled characteristics act like before  (Always). Non polled characteristic values are fetched from cache.
+                  <LI> { "Cmd4_Mode": "<a name="Always">Always</a>" } - All characteristic are sent/retrieved from the device. ( Default )
+                  <LI> { "Cmd4_Mode": "<a name="Polled">Polled</a>" } - Polled characteristics are retrieved from the device. Non polled characteristic values are sent/retrieved from cache.
+                  <LI> { "Cmd4_Mode": "<a name="FullyPolled">FullyPolled</a>" } - All characteristics are retrieved from cache. Polled characteristics are sent to the device. Expect any characteristic to be updated via configuring polling.
+                  <LI> { "Cmd4_Mode": "<a name="Demo">Demo</a>" } - All characteristics are sent/retrieved from cache.
               </UL>
             </TR>
             <TR ALIGN="left"><TD COLSPAN=4>
-            <img src="../images/fetchFlowDiagram.png" alt="fetchFlowDiagram.png">
+            <img src="../images/Cmd4ModeDiagram.png" alt="Cmd4ModeDiagram.png">
             </TR>
             <TR ALIGN="left"><TD><a name="StateChangeResponseTime">StateChangeResponseTime</a><TD> < seconds > <TD> 60 <TD> How long to wait between a Set and Get command.</TR>
             <TR ALIGN="left"><TD><a name="Timeout">Timeout</a><TD> < msec > <TD> <TD> How long before killing the state command.</TR>

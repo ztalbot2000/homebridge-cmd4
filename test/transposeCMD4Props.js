@@ -340,6 +340,18 @@ describe( `Testing all Possible transposeConstantToValidValue`, ( ) =>
       expect( transposed.msg ).to.equal( "Already transposed", `transposeConstantTo from 1 returned incorrect msg` );
    });
 
+   it( `transposeConstantToValidValue for: "ENABLED" should fail as expected`, ( ) =>
+   {
+      // Active allows "ACTIVE" and "INACTIVE", not "ENABLED"
+      let  accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Active;
+      let data = "ENABLED"
+      let transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, data);
+      expect( transposed.value ).to.equal( data, `transposeValueTo from "${ data } " returned incorrect value: ${ transposed }` );
+      expect( transposed.rc ).to.equal( false, `transposeValueTo failed`  );
+      expect( transposed.msg ).to.equal( "Cannot convert ENABLED to a value for Active", `transposeConstantTo from ${ data } returned incorrect msg` );
+   });
+
+
 
 
 });

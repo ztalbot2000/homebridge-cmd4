@@ -18,8 +18,14 @@ var getAccessoryUUID = function ( config, UUIDGen )
    if ( config.name )
       return UUIDGen.generate( config.name );
 
+   if ( config.Name )
+      return UUIDGen.generate( config.Name );
+
    if ( config.displayName )
       return UUIDGen.generate( config.displayName );
+
+   if ( config.DisplayName )
+      return UUIDGen.generate( config.DisplayName );
 
    console.log( "You must either, 'displayName' and or 'name' per accessory." );
    process.exit( 111 );
