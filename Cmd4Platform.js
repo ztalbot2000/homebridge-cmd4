@@ -590,7 +590,7 @@ class Cmd4Platform
       //});
 
 
-      settings.arrayOfPollingCharacteristics.forEach( entry =>
+      settings.arrayOfPollingCharacteristics.forEach( ( entry, entryIndex )  =>
       {
          let accessory = entry.accessory;
          let accTypeEnumIndex = entry.accTypeEnumIndex;
@@ -601,11 +601,17 @@ class Cmd4Platform
 
          setTimeout( ( ) =>
          {
+            if ( entryIndex == 0 )
+               accessory.log.info( `Started staggered kick off of ${ settings.arrayOfPollingCharacteristics.length } polled characteristics` );
 
-            accessory.log.info( `Kicking off polling for: ${ accessory.displayName } ${ characteristicString } interval:${ interval }, staggered:${ staggeredDelays[ staggeredDelayIndex ]}` );
+            accessory.log.debug( `Kicking off polling for: ${ accessory.displayName } ${ characteristicString } interval:${ interval }, staggered:${ staggeredDelays[ staggeredDelayIndex ]}` );
             accessory.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] =
                         setTimeout( accessory.characteristicPolling.bind(
                         accessory, accessory, accTypeEnumIndex, timeout, interval ), interval );
+
+            if ( entryIndex == settings.arrayOfPollingCharacteristics.length -1 )
+               accessory.log.info( `All characteristics are now being polled` );
+
          }, startDelay );
 
 
