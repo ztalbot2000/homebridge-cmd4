@@ -1091,12 +1091,30 @@ class Cmd4Accessory
                 });
              }
 
-             // Read and or write, we need to set the value once.
-             // If the characteristic was optional and read only, this will add
-             // it with the correct value.  You cannot add and set a read characteristic.
-             accessory.service.setCharacteristic(
-                CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic,
-                      this.getStoredValueForIndex( accTypeEnumIndex ) );
+             // Comment before change
+             // "Read and or write, we need to set the value once.
+             //  If the characteristic was optional and read only, this will add
+             //  it with the correct value.  You cannot add and set a read characteristic."
+             //
+
+             // What was happening was at startup all writeable characteristics were calling
+             // setValue and the MyAir was getting hammered.
+
+             // We need to check if the characteristic is readable but not writeable.
+             // Things this will set are like:
+             // - Name
+             // - CurrentTemperature
+             // - CurrentHeatingCoolingState
+             // - StatusFault
+             if ( perms.indexOf( this.api.hap.Characteristic.Perms.READ ) >= 0 &&
+                  perms.indexOf( this.api.hap.Characteristic.Perms.WRITE ) == -1 ||
+                  perms.indexOf( this.api.hap.Characteristic.Perms.PAIRED_READ ) >= 0 &&
+                  perms.indexOf( this.api.hap.Characteristic.Perms.PAIRED_WRITE ) == -1 )
+             {
+                accessory.service.setCharacteristic(
+                   CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic,
+                         this.getStoredValueForIndex( accTypeEnumIndex ) );
+             }
 
 
              // Add getValue via getCachedValue funtion to service
