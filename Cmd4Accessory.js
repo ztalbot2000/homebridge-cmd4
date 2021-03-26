@@ -1133,7 +1133,8 @@ class Cmd4Accessory
                   // 2 -> Polled      -   Get cached, except for characteristics
                   //                      which are polled are retrieved immediately
                   // 3 -> FullyPolled -   Get only cached like Cmd2. The difference from demo is how set behaves.
-                  if ( accessory.cmd4Mode == constants.CMD4_MODE_CACHED || accessory.cmd4Mode == constants.CMD4_MODE_DEMO ||
+                  if ( accessory.cmd4Mode == constants.CMD4_MODE_CACHED ||
+                       accessory.cmd4Mode == constants.CMD4_MODE_DEMO ||
                        accessory.cmd4Mode == constants.CMD4_MODE_FULLYPOLLED ||
                        accessory.cmd4Mode == constants.CMD4_MODE_POLLED &&
                        settings.arrayOfPollingCharacteristics.filter( entry => entry.accessory.UUID == accessory.UUID &&
@@ -1177,13 +1178,17 @@ class Cmd4Accessory
                    //                      also set.
                    // 3 -> FullyPolled -   Same as Polled, except relatedCurrent characteristics are
                    //                      not set to the same value, like Cmd2
-                   if ( accessory.cmd4Mode == constants.CMD4_MODE_CACHED || accessory.cmd4Mode == constants.CMD4_MODE_DEMO ||
-                        ( accessory.cmd4Mode == constants.CMD4_MODE_POLLED || constants.CMD4_MODE_FULLYPOLLED ) &&
+
+                   if ( accessory.cmd4Mode == constants.CMD4_MODE_CACHED ||
+                        accessory.cmd4Mode == constants.CMD4_MODE_DEMO ||
+                        ( accessory.cmd4Mode == constants.CMD4_MODE_POLLED ||
+                          accessory.cmd4Mode == constants.CMD4_MODE_FULLYPOLLED ) &&
                         settings.arrayOfPollingCharacteristics.filter( entry => entry.accessory.UUID == accessory.UUID &&
                                                                                 entry.accTypeEnumIndex == accTypeEnumIndex
                                                                      ).length == 0
                       )
                    {
+                       this.log.debug( chalk.yellow( `Adding setCachedValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ` ) );
                       // setCachedValue has parameters:
                       // accTypeEnumIndex, value, callback
                       // The first bound value though is "this"
@@ -1196,6 +1201,7 @@ class Cmd4Accessory
                       });
 
                    } else {
+                       this.log.debug( chalk.yellow( `Adding setValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ` ) );
                       // setValue has parameters:
                       // accTypeEnumIndex, value, callback
                       // The first bound value though is "this"
