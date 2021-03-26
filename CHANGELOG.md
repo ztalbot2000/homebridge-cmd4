@@ -1,4 +1,11 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
+#### 3.4.1 (2021-03-26)
+
+##### Bug Fixes
+
+*  for bug[#102](https://github.com/ztalbot2000/homebridge-cmd4/pull/102). Fumble fingers causing setCachedValue being called, instead of setValue ([b7ff2f68](https://github.com/ztalbot2000/homebridge-cmd4/commit/b7ff2f68c4d4f0e78c02e478fc43e6e2f81bfe35))
+
+# Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
 ### 3.4.0 (2021-03-25)
 
 ##### Bug Fixes

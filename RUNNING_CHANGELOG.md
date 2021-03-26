@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-3-4-1">**Whats new in 3.4.1**</a>
 * <a href="#Whats-new-in-3-4-0">**Whats new in 3.4.0**</a>
 * <a href="#Whats-new-in-3-3-2">**Whats new in 3.3.2**</a>
 * <a href="#Whats-new-in-3-3-1">**Whats new in 3.3.1**</a>
@@ -42,6 +43,14 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-3-4-1">## Whats new in 3.4.1</a>
+#### 3.4.1 (2021-03-26)
+
+##### Bug Fixes
+
+*  for bug[#102](https://github.com/ztalbot2000/homebridge-cmd4/pull/102). Fumble fingers causing setCachedValue being called, instead of setValue ([b7ff2f68](https://github.com/ztalbot2000/homebridge-cmd4/commit/b7ff2f68c4d4f0e78c02e478fc43e6e2f81bfe35))
+
 
 <a name="Whats-new-in-3-4-0">## Whats new in 3.4.0</a>
 ### 3.4.0 (2021-03-25)
