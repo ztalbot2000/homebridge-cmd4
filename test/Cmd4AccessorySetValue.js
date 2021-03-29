@@ -11,11 +11,6 @@ let constants = require( "../cmd4Constants" );
 var _api = new HomebridgeAPI( ); // object we feed to Plugins
 
 
-Object.defineProperty(exports, "LogLevel", { enumerable: true, get: function ( ) { return logger_1.LogLevel; } });
-const log = logger_1.Logger.internal;
-
-
-
 // Init the library for all to use
 let Characteristic = _api.hap.Characteristic;
 let Service = _api.hap.Service;
@@ -78,60 +73,12 @@ describe( "Testing Cmd4Accessory", function( )
           PictureMode:              "STANDARD",
           RemoteKey:                "SELECT"
       };
-      let STORED_DATA_ARRAY = [ ];
 
-      hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
-      hook.stop( );
-
-      expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "Cmd4Accessory is not an instance of Cmd4Accessory" );
-
-      // Clear the hook buffer for next time.
-      hook.reset( );
-
-      done( );
-   });
-
-   it( "Test Cmd4Accessory.setValue", function( done )
-   {
-      // A config file to play with.
-      // Setting Cmd4_Mode to Demo or Polled with no polled characteristics
-      // makes polling not run and thus not having outstanding processes.
-      let TVConfig =
-      {
-          Name:                     "My_Television",
-          Type:                     "Television",
-          DisplayName:              "My_Television",
-          Cmd4_Mode:                "Polled",
-          Category:                 "TELEVISION",
-          PublishExternally:         true,
-          Active:                   "ACTIVE",
-          ActiveIdentifier:          1234,
-          Mute:                     true,
-          ConfiguredName:           "My_Television",
-          SleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
-          Brightness:                8,
-          ClosedCaptions:           "DISABLED",
-          CurrentMediaState:        "STOP",
-          TargetMediaState:         "STOP",
-          PictureMode:              "STANDARD",
-          RemoteKey:                "SELECT"
-      };
-
-      TVConfig.state_cmd = "./test/echoScripts/echo_ACTIVE";
-      let STORED_DATA_ARRAY = [ ];
-
-      hook.start( );
-
-      // Required to resolve publishExternally Television
-      let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
-      hook.stop( );
+      const log = new Logger( );
+      log.setOutputEnabled( false );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], null );
 
       assert.isFunction( cmd4Accessory.setValue, "Cmd4Accessory.setValue is not a function" );
-
-      // Clear the hook buffer for next time.
-      hook.reset( );
 
       done( );
    });
@@ -170,40 +117,32 @@ describe( "Testing Cmd4Accessory", function( )
       let fn = `/tmp/fn1`;
       TVConfig.State_cmd_suffix = fn;
       TVConfig.State_cmd = `node ${ process.cwd( ) }/${ getSetValueScript }`;
-      let STORED_DATA_ARRAY = [ ];
 
-      hook.start( );
+      const log = new Logger( );
+      log.setOutputEnabled( false );
 
       // Required to resolve publishExternally Television
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       let value = Characteristic.ClosedCaptions.ENABLED;
 
       cmd4Accessory.setValue( acc, value,  function( )
       {
-         hook.stop( );
-         let capturedLog = hook.capturedLog( );
-         let capturedErr = hook.capturedErr( );
-         let logLines = (capturedLog.split(/\r\n|\r|\n/)).length;
-         let errLines = (capturedErr.split(/\r\n|\r|\n/)).length;
-
          let expectedResult =`${value}`;
-         let expectedOutput = `\u001b[39m\u001b[34mSetting My_Television ClosedCaptions\u001b[39m 1`;
+         let expectedOutput = `Setting My_Television ClosedCaptions\u001b[39m 1`;
 
          let newfn = `${ fn }_${ DEVICE }_${ CHARACTERISTIC }`;
          let INPUTS=require( `${ newfn }` );
          let sentResult = INPUTS.VALUE;
 
-         assert.include( hook.capturedLog( ), expectedOutput, ` setValue output expected: ${ expectedOutput } received: ${ hook.capturedLog() }` );
-         assert.equal( 1, logLines, ` setCachedValue logged lines than one: ${ capturedLog }` );
-         assert.equal( "", capturedErr, ` setCachedValue unexpected error output received: ${ capturedErr }` );
-         assert.equal( 1, errLines, ` setCachedValue logged lines than one: ${ capturedErr }` );
+         assert.include( log.logBuf, expectedOutput, ` setValue output expected: ${ expectedOutput } received: ${ log.logBuf }` );
+         assert.equal( 1, log.logLineCount, ` setCachedValue logged lines than one: ${ log.logBuf }` );
+         assert.equal( "", log.errBuf, ` setCachedValue unexpected error output received: ${ log.errBuf }` );
+         assert.equal( 0, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
+
 
          assert.equal( sentResult, expectedResult, " setValue expected: " + expectedResult + " received: " + sentResult );
-
-         // Clear the hook buffer for next time.
-         hook.reset( );
 
          done( );
       });
@@ -245,40 +184,31 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.State_cmd_suffix = fn;
 
       TVConfig.State_cmd = `node ${ process.cwd( ) }/${ getSetValueScript }`;
-      let STORED_DATA_ARRAY = [ ];
 
-      hook.start( );
+      const log = new Logger( );
+      log.setOutputEnabled( false );
 
       // Required to resolve publishExternally Television
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       let value = Characteristic.ClosedCaptions.ENABLED;
 
       cmd4Accessory.setValue( acc, value,  function( )
       {
-         hook.stop( );
-         let capturedLog = hook.capturedLog( );
-         let capturedErr = hook.capturedErr( );
-         let logLines = (capturedLog.split(/\r\n|\r|\n/)).length;
-         let errLines = (capturedErr.split(/\r\n|\r|\n/)).length;
-
          let expectedResult = "ENABLED";
-         let expectedOutput = `\u001b[39m\u001b[34mSetting My_Television ClosedCaptions\u001b[39m ENABLED`;
+         let expectedOutput = `Setting My_Television ClosedCaptions\u001b[39m ENABLED`;
 
          let newfn = `${ fn }_${ DEVICE }_${ CHARACTERISTIC }`;
          let INPUTS=require( `${ newfn }` );
          let sentResult = INPUTS.VALUE;
 
-         assert.include( hook.capturedLog( ), expectedOutput, ` setValue output expected: ${ expectedOutput } received: ${ hook.capturedLog() }` );
-         assert.equal( 1, logLines, ` setValue logged lines than one: ${ capturedLog }` );
-         assert.equal( "", capturedErr, ` setValue unexpected error output received: ${ capturedErr }` );
-         assert.equal( 1, errLines, ` setValue logged Error lines more than one: ${ capturedErr }` );
+         assert.include( log.logBuf, expectedOutput, ` setValue output expected: ${ expectedOutput } received: ${ log.logBuf}` );
+         assert.equal( 1, log.logLineCount, ` setValue logged lines than one: ${ log.logBuf }` );
+         assert.equal( "", log.errBuf, ` setValue unexpected error output received: ${ log.errBuf }` );
+         assert.equal( 0, log.errLineCount, ` setValue logged Error lines more than one: ${ log.errBuf }` );
 
          assert.equal( sentResult, expectedResult, " setValue expected: " + expectedResult + " received: " + sentResult );
-
-         // Clear the hook buffer for next time.
-         hook.reset( );
 
          done( );
       });
@@ -317,26 +247,17 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.State_cmd_suffix = fn;
 
       TVConfig.State_cmd = `node ${ process.cwd( ) }/${ getSetValueScript }`;
-      let STORED_DATA_ARRAY = [ ];
 
-      hook.start( );
+      const log = new Logger( );
+      log.setOutputEnabled( false );
 
-      new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, null );
+      new Cmd4Accessory( log, TVConfig, _api, [ ], null );
 
-      hook.stop( );
-      let capturedLog = hook.capturedLog( );
-      let capturedErr = hook.capturedErr( );
-      let logLines = (capturedLog.split(/\r\n|\r|\n/)).length;
-      let errLines = (capturedErr.split(/\r\n|\r|\n/)).length;
+      let expectedPublishedOutput = `Televisions should be Platform Accessories with "publishExternally": true,`;
 
-      let expectedPublishedOutput = `\u001b[39m\u001b[33mTelevisions should be Platform Accessories with "publishExternally": true,`;
-
-      assert.include( capturedErr, expectedPublishedOutput, ` Cmd4Accessory output expected: ${ expectedPublishedOutput } received: ${ hook.capturedLog() }` );
-      assert.equal( 1, logLines, ` Cmd4Accessory logged lines than one: ${ capturedLog }` );
-      assert.equal( 1, errLines, ` Cmd4Accessory logged Error lines more than one: ${ capturedErr }` );
-
-      // Clear the hook buffer for next time.
-      hook.reset( );
+      assert.include( log.errBuf, expectedPublishedOutput, `Cmd4Accessory output expected: ${ expectedPublishedOutput } received: ${ log.logBuf }` );
+      assert.equal( 0, log.logLineCount, ` Cmd4Accessory logged lines than one: ${ log.logBuf }` );
+      assert.equal( 1, log.errLineCount, ` Cmd4Accessory logged Error lines more than one: ${ log.errBuf }` );
 
       done( );
    });
@@ -374,40 +295,31 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.State_cmd_suffix = fn;
 
       TVConfig.State_cmd = `node ${ process.cwd( ) }/${ getSetValueScript }`;
-      let STORED_DATA_ARRAY = [ ];
 
-      hook.start( );
+      const log = new Logger( );
+      log.setOutputEnabled( false );
 
       // Required to resolve publishExternally Television
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, STORED_DATA_ARRAY, parentInfo );
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       let value = true;
 
       cmd4Accessory.setValue( acc, value,  function( )
       {
-         hook.stop( );
-         let capturedLog = hook.capturedLog( );
-         let capturedErr = hook.capturedErr( );
-         let logLines = (capturedLog.split(/\r\n|\r|\n/)).length;
-         let errLines = (capturedErr.split(/\r\n|\r|\n/)).length;
-
          let expectedResult = 1;
-         let expectedOutput = `\u001b[39m\u001b[34mSetting My_Television Mute\u001b[39m 1`;
+         let expectedOutput = `Setting My_Television Mute\u001b[39m 1`;
 
          let newfn = `${ fn }_${ DEVICE }_${ CHARACTERISTIC }`;
          let INPUTS=require( `${ newfn }` );
          let sentResult = INPUTS.VALUE;
 
-         assert.include( capturedLog, expectedOutput, ` setValue output expected: ${ expectedOutput } received: ${ hook.capturedLog() }` );
-         assert.equal( 1, logLines, ` setValue logged lines than one: ${ capturedLog }` );
-         assert.equal( "", capturedErr, ` setValue unexpected error output received: ${ capturedErr }` );
-         assert.equal( 1, errLines, ` setValue logged Error lines more than one: ${ capturedErr }` );
+         assert.include( log.logBuf, expectedOutput, ` setValue output expected: ${ expectedOutput } received: ${ log.logBuf }` );
+         assert.equal( 1, log.logLineCount, ` setValue logged lines than one: ${ log.logBuf }` );
+         assert.equal( "", log.errBuf, ` setValue unexpected error output received: ${ log.errBuf }` );
+         assert.equal( 0, log.errLineCount, ` setValue logged Error lines more than one: ${ log.errBuf }` );
 
          assert.equal( sentResult, expectedResult, " setValue expected: " + expectedResult + " received: " + sentResult );
-
-         // Clear the hook buffer for next time.
-         hook.reset( );
 
          done( );
       });
@@ -432,31 +344,27 @@ describe( "Testing Cmd4Accessory", function( )
       };
 
       let acc = CMD4_ACC_TYPE_ENUM.TargetTemperature;
-      let STORED_DATA_ARRAY = [ ];
 
-      hook.start( );
+      const log = new Logger( );
+      log.setOutputEnabled( false );
 
-      let cmd4Accessory = new Cmd4Accessory( log, ThermostatConfig, _api, STORED_DATA_ARRAY, null );
+      let cmd4Accessory = new Cmd4Accessory( log, ThermostatConfig, _api, [ ], null );
 
       let value = 12.3;
 
       cmd4Accessory.setCachedValue( acc, value,  function( )
       {
-         hook.stop( );
-         let capturedLog = hook.capturedLog( );
-         let capturedErr = hook.capturedErr( );
-         let logLines = (capturedLog.split(/\r\n|\r|\n/)).length;
-         let errLines = (capturedErr.split(/\r\n|\r|\n/)).length;
-
          let expectedResult = value;
-         let expectedOutput = `\u001b[39m\u001b[34mSetting (Cached) Thermostat TargetTemperature\u001b[39m 12.3`;
+         let expectedOutput = `Setting (Cached) Thermostat TargetTemperature\u001b[39m 12.3`;
+         let alsoExpectedOutput = `Also Setting (Cached) Thermostat CurrentTemperature\u001b[39m 12.3`;
 
          let result = cmd4Accessory.getStoredValueForIndex( acc );
 
-         assert.include( capturedLog, expectedOutput, ` setCachedValue output expected: ${ expectedOutput } received: ${ hook.capturedLog() }` );
-         assert.equal( 1, logLines, ` setCachedValue logged lines than one: ${ capturedLog }` );
-         assert.equal( "", capturedErr, ` setCachedValue unexpected error output received: ${ capturedErr }` );
-         assert.equal( 1, errLines, ` setCachedValue err lines than one: ${ capturedErr }` );
+         assert.include( log.logBuf, expectedOutput, ` setCachedValue output expected: ${ expectedOutput } received: ${ log.logBuf }` );
+         assert.include( log.logBuf, alsoExpectedOutput, ` setCachedValue output expected: ${ expectedOutput } received: ${ log.logBuf }` );
+         assert.equal( 2, log.logLineCount, ` setCachedValue logged lines than one: ${ log.logBuf }` );
+         assert.equal( "", log.errBuf, ` setCachedValue unexpected error output received: ${ log.errBuf }` );
+         assert.equal( 0, log.errLineCount, ` setCachedValue err lines than one: ${ log.errBuf }` );
 
          assert.equal(result, expectedResult, " setValue expected: " + expectedResult + " to be stored.  found: " + result );
 
@@ -464,9 +372,6 @@ describe( "Testing Cmd4Accessory", function( )
 
          result = cmd4Accessory.getStoredValueForIndex( relatedCurrentAccTypeEnumIndex );
          assert.equal(result, expectedResult, " setValue relatedCurrentAccTypeEnumIndex expected: " + expectedResult + " to be stored.  found: " + result );
-
-         // Clear the hook buffer for next time.
-         hook.reset( );
 
          done( );
       });
@@ -491,32 +396,26 @@ describe( "Testing Cmd4Accessory", function( )
       };
 
       let acc = CMD4_ACC_TYPE_ENUM.TargetTemperature;
-      let STORED_DATA_ARRAY = [ ];
 
-      hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, ThermostatConfig, _api, STORED_DATA_ARRAY, null );
+      const log = new Logger( );
+      log.setOutputEnabled( false );
+      let cmd4Accessory = new Cmd4Accessory( log, ThermostatConfig, _api, [ ], null );
 
       let value = 12.3;
 
       cmd4Accessory.setCachedValue( acc, value,  function( )
       {
-         hook.stop( );
-         let capturedLog = hook.capturedLog( );
-         let capturedErr = hook.capturedErr( );
-         let logLines = (capturedLog.split(/\r\n|\r|\n/)).length;
-         let errLines = (capturedErr.split(/\r\n|\r|\n/)).length;
-
-         let alsoExpectedOutput = `\u001b[39m\u001b[34mAlso Setting (Cached) Thermostat CurrentTemperature\u001b[39m 12.3`;
-         let expectedOutput = `\u001b[39m\u001b[34mSetting (Cached) Thermostat TargetTemperature\u001b[39m 12.3`;
+         let alsoExpectedOutput = `Also Setting (Cached) Thermostat CurrentTemperature\u001b[39m 12.3`;
+         let expectedOutput = `Setting (Cached) Thermostat TargetTemperature\u001b[39m 12.3`;
          let expectedResult = value;
 
          let result = cmd4Accessory.getStoredValueForIndex( acc );
 
-         assert.include( capturedLog, expectedOutput, ` setCachedValue output expected: ${ expectedOutput } received: ${ capturedLog }` );
-         assert.include( capturedLog, alsoExpectedOutput, ` setCachedValue output ALSO expected: ${ alsoExpectedOutput } received: ${ capturedLog }` );
-         assert.equal( 1, logLines, ` setCachedValue logged lines than one: ${ capturedLog }` );
-         assert.equal( "", capturedErr, ` setCachedValue unexpected error output received: ${ capturedErr }` );
-         assert.equal( 1, errLines, ` setCachedValue err lines than one: ${ capturedErr }` );
+         assert.include( log.logBuf, expectedOutput, ` setCachedValue output expected: ${ expectedOutput } received: ${ log.logBuf }` );
+         assert.include( log.logBuf, alsoExpectedOutput, ` setCachedValue output ALSO expected: ${ alsoExpectedOutput } received: ${ log.logBuf }` );
+         assert.equal( 2, log.logLineCount, ` setCachedValue logged lines than one: ${ log.logBuf }` );
+         assert.equal( "", log.errBuf, ` setCachedValue unexpected error output received: ${ log.errBuf }` );
+         assert.equal( 0, log.errLineCount, ` setCachedValue err lines than one: ${ log.errBuf }` );
 
          assert.equal(result, expectedResult, " setValue expected: " + expectedResult + " to be stored.  found: " + result );
 
@@ -524,9 +423,6 @@ describe( "Testing Cmd4Accessory", function( )
 
          result = cmd4Accessory.getStoredValueForIndex( relatedCurrentAccTypeEnumIndex );
          assert.equal(result, expectedResult, " setValue relatedCurrentAccTypeEnumIndex expected: " + expectedResult + " to be stored.  found: " + result );
-
-         // Clear the hook buffer for next time.
-         hook.reset( );
 
          done( );
       });
@@ -550,34 +446,24 @@ describe( "Testing Cmd4Accessory", function( )
       };
 
       let acc = CMD4_ACC_TYPE_ENUM.TargetTemperature;
-      let STORED_DATA_ARRAY = [ ];
 
-      hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, ThermostatConfig, _api, STORED_DATA_ARRAY, null );
+      const log = new Logger( );
+      log.setOutputEnabled( false );
+      let cmd4Accessory = new Cmd4Accessory( log, ThermostatConfig, _api, [ ], null );
 
-      hook.stop( );
-      let capturedLog = hook.capturedLog( );
-      let capturedErr = hook.capturedErr( );
-      let logLines = (capturedLog.split(/\r\n|\r|\n/)).length;
-      let errLines = (capturedErr.split(/\r\n|\r|\n/)).length;
-
-      let expectedOutput = "";
       let expectedErrOutput1 = `m**** Adding required characteristic TargetTemperature for Thermostat`;
       let expectedErrOutput2 = `Not defining a required characteristic can be problematic`;
 
-      assert.include( capturedLog, expectedOutput, ` setCachedValue output expected: ${ expectedOutput } received: ${ capturedLog }` );
-      assert.equal( 1, logLines, ` setCachedValue logged lines than one: ${ capturedLog }` );
-      assert.include( capturedErr, expectedErrOutput1, ` setCachedValue output expected: ${ expectedErrOutput1 } received: ${ capturedErr }` );
-      assert.include( capturedErr, expectedErrOutput2, ` setCachedValue output expected: ${ expectedErrOutput2 } received: ${ capturedErr }` );
-      assert.equal( 1, errLines, ` setCachedValue logged lines than one: ${ capturedErr }` );
+      assert.equal( log.logBuf, "", ` setCachedValue output expected nothing to stdout` );
+      assert.equal( 0, log.logLineCount, ` setCachedValue logged lines than one: ${ log.logBuf }` );
+      assert.include( log.errBuf, expectedErrOutput1, ` setCachedValue output expected: ${ expectedErrOutput1 } received: ${ log.errBuf }` );
+      assert.include( log.errBuf, expectedErrOutput2, ` setCachedValue output expected: ${ expectedErrOutput2 } received: ${ log.errBuf }` );
+      assert.equal( 2, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
 
       let defaultValue = CMD4_DEVICE_TYPE_ENUM.properties[ cmd4Accessory.typeIndex ].requiredCharacteristics.find( key => key.type ===  acc ).defaultValue;
 
       let result = cmd4Accessory.getStoredValueForIndex( acc );
       assert.equal(result, defaultValue, ` setValue ${ acc } expected: ${ defaultValue } to be stored.  found: ${ result }` );
-
-      // Clear the hook buffer for next time.
-      hook.reset( );
 
       done( );
    });
@@ -600,26 +486,18 @@ describe( "Testing Cmd4Accessory", function( )
          StateChangeResponseTime:       3
       };
 
-      let STORED_DATA_ARRAY = [ ];
+      const log = new Logger( );
+      log.setOutputEnabled( false );
+      new Cmd4Accessory( log, ThermostatConfig, _api, [ ], null );
 
-      hook.start( );
-      new Cmd4Accessory( log, ThermostatConfig, _api, STORED_DATA_ARRAY, null );
+      let expectedErrOutput = `**** Adding required characteristic TargetHeatingCoolingState for Thermostat`;
+      let expectedErrOutput2= `Not defining a required characteristic can be problematic`;
 
-      hook.stop( );
-      let capturedLog = hook.capturedLog( );
-      let capturedErr = hook.capturedErr( );
-      let logLines = (capturedLog.split(/\r\n|\r|\n/)).length;
-      let errLines = (capturedErr.split(/\r\n|\r|\n/)).length;
-
-      let expectedErrOutput = `3m**** Adding required characteristic TargetHeatingCoolingState for Thermostat`;
-
-      assert.equal( capturedLog, "", ` setCachedValue logged some output. received: ${ hook.capturedLog() }` );
-      assert.equal( 1, logLines, ` setCachedValue logged lines than one: ${ capturedLog }` );
-      assert.include( capturedErr, expectedErrOutput, ` setCachedValue output expected: ${ expectedErrOutput } received: ${ capturedErr }` );
-      assert.equal( 1, errLines, ` setCachedValue logged lines than one: ${ capturedErr }` );
-
-      // Clear the hook buffer for next time.
-      hook.reset( );
+      assert.equal( log.logBuf, "", ` setCachedValue logged some output. received: ${ log.logBuf }` );
+      assert.equal( 0, log.logLineCount, ` setCachedValue logged lines than one: ${ log.logBuf }` );
+      assert.include( log.errBuf, expectedErrOutput, ` setCachedValue output expected: ${ expectedErrOutput } received: ${ log.errBuf }` );
+      assert.include( log.errBuf, expectedErrOutput2, ` setCachedValue output expected: ${ expectedErrOutput } received: ${ log.errBuf }` );
+      assert.equal( 2, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
 
       done( );
    });
@@ -640,31 +518,25 @@ describe( "Testing Cmd4Accessory", function( )
       };
 
       let acc = CMD4_ACC_TYPE_ENUM.CurrentTemperature;
-      let STORED_DATA_ARRAY = [ ];
 
-      hook.start( );
-      let cmd4Accessory = new Cmd4Accessory( log, TempSensorConfig, _api, STORED_DATA_ARRAY, null );
+      const log = new Logger( );
+      log.setOutputEnabled( false );
+      let cmd4Accessory = new Cmd4Accessory( log, TempSensorConfig, _api, [ ], null );
 
       let value = 12.3;
 
       cmd4Accessory.setCachedValue( acc, value,  function( )
       {
-         hook.stop( );
-         let capturedLog = hook.capturedLog( );
-         let capturedErr = hook.capturedErr( );
-         let logLines = (capturedLog.split(/\r\n|\r|\n/)).length;
-         let errLines = (capturedErr.split(/\r\n|\r|\n/)).length;
-
          let expectedResult = value;
-         let expectedOutput = `\u001b[39m\u001b[34mSetting (Cached) TemperatureSensor CurrentTemperature\u001b[39m 12.3`;
+         let expectedOutput = `Setting (Cached) TemperatureSensor CurrentTemperature\u001b[39m 12.3`;
 
          let result = cmd4Accessory.getStoredValueForIndex( acc );
 
 
-         assert.include( capturedLog, expectedOutput, ` setCachedValue output expected: ${ expectedOutput } received: ${ capturedLog }` );
-         assert.equal( 1, logLines, ` setCachedValue logged lines than one: ${ capturedLog }` );
-         assert.equal( "", capturedErr, ` setCachedValue logged an error: ${ capturedErr }` );
-         assert.equal( 1, errLines, ` setCachedValue logged lines than one: ${ capturedErr }` );
+         assert.include( log.logBuf, expectedOutput, ` setCachedValue output expected: ${ expectedOutput } received: ${ log.logBuf }` );
+         assert.equal( 1, log.logLineCount, ` setCachedValue logged lines than one: ${ log.logBuf }` );
+         assert.equal( "", log.errBuf, ` setCachedValue logged an error: ${ log.errBuf }` );
+         assert.equal( 0, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
 
          assert.equal(result, expectedResult, " setValue expected: " + expectedResult + " to be stored.  found: " + result );
 
@@ -672,9 +544,6 @@ describe( "Testing Cmd4Accessory", function( )
 
          result = cmd4Accessory.getStoredValueForIndex( relatedTargetAccTypeEnumIndex );
          assert.isNull(result, ` getValue TargetAccTypeEnumIndex expected null to be stored.  found: ${ result }` );
-
-         // Clear the hook buffer for next time.
-         hook.reset( );
 
          done( );
       });

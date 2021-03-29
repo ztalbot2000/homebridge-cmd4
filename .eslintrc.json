@@ -17,9 +17,8 @@
        "CMD4_DEVICE_TYPE_ENUM" : "readonly",
        "CMD4_ACC_TYPE_ENUM" : "readonly",
        "fs" : "writeable",
-       "hook" : "writeable",
        "HomebridgeAPI" : "writeable",
-       "logger_1" : "writeable",
+       "Logger" : "writeable",
        "platformAccessory_1" : "writeable"
     },
     "extends": "eslint:recommended",

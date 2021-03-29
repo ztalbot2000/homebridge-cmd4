@@ -2,8 +2,6 @@
 
 
 
-
-
 // ***************** TEST LOADING **********************
 
 
@@ -148,8 +146,7 @@ describe( `Testing index.js plugin Initialized variables.`, ( ) =>
       let Cmd4Platform = require( "../Cmd4Platform" ).Cmd4Platform;
 
 
-      Object.defineProperty(exports, "LogLevel", { enumerable: true, get: function () { return logger_1.LogLevel; } });
-      const log = logger_1.Logger.internal;
+      const log = new Logger( );
 
       var apiInstance = new HomebridgeAPI(); // object we feed to Plugins
 
@@ -176,33 +173,20 @@ describe( `Testing index.js plugin Initialized variables.`, ( ) =>
            ]
        }
 
-      hook.start();
       let cmd4Platform = new Cmd4Platform( log, config, apiInstance );
-      hook.stop();
-
-      let logMsg = hook.capturedLog( );
-      let errMsg = hook.capturedErr( );
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
-      assert.equal( logMsg, "", ` cmd4Platform unexpected output received: ${ logMsg }` );
-      assert.equal( errMsg, "", ` cmd4Platform unexpected error output received: ${ errMsg }` );
-      hook.reset( );
+      assert.equal( log.logBuf, "", ` cmd4Platform unexpected output received: ${ log.logBuf }` );
+      assert.equal( log.errBuf, "", ` cmd4Platform unexpected error output received: ${ log.errBuf }` );
+      log.reset( );
 
 
-      hook.start();
       apiInstance.emit("didFinishLaunching");
-      hook.stop();
-
-      logMsg = hook.capturedLog();
-      errMsg = hook.capturedErr();
 
       let expectedOutput = `Cmd4Platform didFinishLaunching`;
-      assert.include( logMsg, expectedOutput, `didFinishLaunching not called result: ${ logMsg }` );
-      assert.equal( errMsg, "", ` cmd4Platform unexpected error output received: ${ errMsg }` );
+      assert.include( log.logBuf, expectedOutput, `didFinishLaunching not called result: ${ log.logBuf }` );
+      assert.equal( log.errBuf, "", ` cmd4Platform unexpected error output received: ${ log.errBuf }` );
 
-
-      // Clear the hook buffer for next time.
-      hook.reset();
    });
    */
 });

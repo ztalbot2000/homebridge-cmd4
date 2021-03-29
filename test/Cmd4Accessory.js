@@ -2,8 +2,6 @@
 
 const constants = require( "../cmd4Constants" );
 
-Object.defineProperty(exports, "LogLevel", { enumerable: true, get: function () { return logger_1.LogLevel; } });
-const log = logger_1.Logger.internal;
 
 var _api = new HomebridgeAPI(); // object we feed to Plugins
 
@@ -70,17 +68,13 @@ describe('A simple Cmd4Accessory Test', ( ) =>
               };
    it( "Test can create an instance of Cmd4Accessory", ( ) =>
    {
-      let STORED_DATA_ARRAY = [ ];
       let parentInfo = undefined;
 
-      hook.start();
-      let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY, parentInfo );
-      hook.stop();
+      const log = new Logger( );
+      let accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
       assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory. Found %s" , accessory );
 
-      // Clear the hook buffer for next time.
-      hook.reset();
    });
 });
 
@@ -93,21 +87,16 @@ describe('A simple Cmd4Accessory Test Debbuging enabled', ( ) =>
               };
    it( "Test can create an instance of Cmd4Accessory with Debug Enabled", ( ) =>
    {
-      let STORED_DATA_ARRAY = [ ];
       let parentInfo = undefined;
 
-      logger_1.setDebugEnabled( );
 
-      hook.start();
-      let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY, parentInfo );
-      hook.stop();
+      const log = new Logger( );
+      log.setDebugEnabled( );
+      let accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
       assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory. Found %s" , accessory );
 
-      logger_1.setDebugEnabled( false );
 
-      // Clear the hook buffer for next time.
-      hook.reset();
    });
 });
 
@@ -122,17 +111,13 @@ describe('Test Cmd4Accessory variables ', ( ) =>
    it( "Test typeIndex of a Switch set correctly ", ( ) =>
    {
       let parentInfo = undefined;
-      let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
-      let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY, parentInfo );
-      hook.stop();
+      const log = new Logger( );
+      let accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
       assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory. Found %s" , accessory );
 
       assert.equal( accessory.typeIndex , CMD4_DEVICE_TYPE_ENUM.Switch, "Expected typeIndex: %s Found: %s" , CMD4_DEVICE_TYPE_ENUM.Switch, accessory.typeIndex );
-      // Clear the hook buffer for next time.
-      hook.reset();
    });
 
    let parentInfo = undefined;
@@ -146,23 +131,18 @@ describe('Test Cmd4Accessory variables ', ( ) =>
 
       it( "Test typeIndex of all possible devices ", ( ) =>
       {
-         let STORED_DATA_ARRAY = [ ];
 
          config.name = "MY_" + CMD4_DEVICE_TYPE_ENUM.properties[index].deviceName;
          config.type = CMD4_DEVICE_TYPE_ENUM.properties[index].deviceName;
 
-         log.info("Testing %s name: %s", index, config.name);
 
-         hook.start();
-         let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY, parentInfo );
-         hook.stop();
+         const log = new Logger( );
+         let accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
          assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory. Found %s" , accessory );
 
          assert.equal( accessory.typeIndex , index, "Expected typeIndex: %s for: %s. Found: %s" , index, config.type, accessory.typeIndex );
 
-         // Clear the hook buffer for next time.
-         hook.reset();
       });
    }
 });
@@ -178,49 +158,39 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
    {
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      const log = new Logger( );
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
-      hook.stop();
 
       assert.isArray( accessory.STORED_DATA_ARRAY, "Expected accessory.STORED_DATA_ARRAY to be an Array. Found %s" , typeof accessory.STORED_DATA_ARRAY );
 
-      // Clear the hook buffer for next time.
-      hook.reset();
    });
    it( "Check that Array STORED_DATA_ARRAY.storedValuesPerCharacteristic is created", ( ) =>
    {
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      const log = new Logger( );
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
-      hook.stop();
 
       assert.isArray( accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic, "Expected accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic to be an Array. Found %s" , typeof accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic );
 
-      // Clear the hook buffer for next time.
-      hook.reset();
    });
 
    it( "Check that storedValuesPerCharacteristic Array size is:  " + ACC_EOL, ( ) =>
    {
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      const log = new Logger( );
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
-      hook.stop();
 
       assert.equal( accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic.length, ACC_EOL, "Expected storedValuesPerCharacteristic to size: %s. Found %s" , ACC_EOL, accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic.length );
 
-      // Clear the hook buffer for next time.
-      hook.reset();
    });
    it( "Check that storedValuesPerCharacteristic is set correctly for a switch", ( ) =>
    {
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      const log = new Logger( );
       new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
-      hook.stop();
 
       let accIndex = CMD4_ACC_TYPE_ENUM.On;
 
@@ -233,16 +203,13 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
             assert.isNull( value, "Expected accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic[%s] is: Null. Found %s" , index, value );
       }
 
-      // Clear the hook buffer for next time.
-      hook.reset();
    });
    it( "Check that setStoredValueForIndex works correctly for a switch", ( ) =>
    {
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      const log = new Logger( );
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
-      hook.stop();
 
       let accIndex = CMD4_ACC_TYPE_ENUM.On;
 
@@ -257,17 +224,14 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
             assert.isNull( value, "Expected accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic[%s] is: Null. Found %s" , index, value );
       }
 
-      // Clear the hook buffer for next time.
-      hook.reset();
    });
 
    it( "Check getStoredValueForIndex works correctly for a switch", ( ) =>
    {
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      const log = new Logger( );
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
-      hook.stop();
 
       let accIndex = CMD4_ACC_TYPE_ENUM.On;
 
@@ -284,16 +248,13 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       let result = accessory.getStoredValueForIndex( CMD4_ACC_TYPE_ENUM.On );
       assert.equal( result, config.On, "Expected getStoredValueForIndex to return: %s. Found %s" , config.On, result );
 
-      // Clear the hook buffer for next time.
-      hook.reset();
    });
    it( "Check testStoredValueForIndex works correctly for a switch", ( ) =>
    {
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      const log = new Logger( );
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
-      hook.stop();
 
       let accIndex = CMD4_ACC_TYPE_ENUM.On;
 
@@ -308,16 +269,13 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
             assert.isNull( value, "Expected accessory.testStoredValueForIndex[%s] is: Null. Found %s" , index, value );
       }
 
-      // Clear the hook buffer for next time.
-      hook.reset();
    });
    it( "Check testStoredValueForIndex limits returns undefined", ( ) =>
    {
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      const log = new Logger( );
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
-      hook.stop();
 
       let index = -1;
 
@@ -328,8 +286,6 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       value = accessory.testStoredValueForIndex( index );
       assert.isUndefined( value, "Expected accessory.testStoredValueForIndex[%s] is: Null. Found %s" , index, value );
 
-      // Clear the hook buffer for next time.
-      hook.reset();
    });
 });
 describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChildren', ( ) =>
@@ -347,15 +303,12 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
    {
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      const log = new Logger( );
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
-      hook.stop();
 
       assert.isArray( accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic, Cmd4Accessory, "Expected accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic to be an Array. Found %s" , typeof accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic );
       done( );
 
-      // Clear the hook buffer for next time.
-      hook.reset();
    });
 
    /*
@@ -363,14 +316,11 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
    {
       let STORED_DATA_ARRAY = [ ];
 
-      hook.start();
+      const log = new Logger( );
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
-      hook.stop();
 
       assert.equal( accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic.length, ACC_EOL, "Expected accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic to size: %s. Found %s" , ACC_EOL, accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic.length );
 
-      // Clear the hook buffer for next time.
-      hook.reset();
    });
    */
 });
