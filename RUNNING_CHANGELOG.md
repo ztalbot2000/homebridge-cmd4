@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-3-4-2">**Whats new in 3.4.2**</a>
 * <a href="#Whats-new-in-3-4-1">**Whats new in 3.4.1**</a>
 * <a href="#Whats-new-in-3-4-0">**Whats new in 3.4.0**</a>
 * <a href="#Whats-new-in-3-3-2">**Whats new in 3.3.2**</a>
@@ -43,6 +44,18 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-3-4-2">## Whats new in 3.4.2</a>
+#### 3.4.2 (2021-04-05)
+
+##### New Features
+
+*  Only add new Cmd4 directives for feature in progress ([438462e0](https://github.com/ztalbot2000/homebridge-cmd4/commit/438462e0148d6b96f7da7d6726242c1f1194eed3))
+
+##### Tests
+
+*  Better technique for capturing logging during Unit Testing ([ee2c7dd3](https://github.com/ztalbot2000/homebridge-cmd4/commit/ee2c7dd3355785af35a8bb6221724cc6f5947cbb))
+
 
 <a name="Whats-new-in-3-4-1">## Whats new in 3.4.1</a>
 #### 3.4.1 (2021-03-26)
