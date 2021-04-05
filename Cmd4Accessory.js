@@ -415,6 +415,12 @@ class Cmd4Accessory
                   this.interval = parseInt( value, 10 ) * 1000;
                   break;
                }
+               case constants.QUEUE:
+               {
+                  this.queue = value;
+
+                  break;
+               }
                case constants.CHARACTERISTIC:
                {
                   //2 checkPollingOfUnsetCharacteristics
@@ -1093,7 +1099,7 @@ class Cmd4Accessory
 
              // Comment before change
              // "Read and or write, we need to set the value once.
-             //  If the characteristic was optional and read only, this will add
+             // If the characteristic was optional and read only, this will add
              //  it with the correct value.  You cannot add and set a read characteristic."
              //
 
@@ -1111,9 +1117,9 @@ class Cmd4Accessory
                   perms.indexOf( this.api.hap.Characteristic.Perms.PAIRED_READ ) >= 0 &&
                   perms.indexOf( this.api.hap.Characteristic.Perms.PAIRED_WRITE ) == -1 )
              {
-                accessory.service.setCharacteristic(
-                   CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic,
-                         this.getStoredValueForIndex( accTypeEnumIndex ) );
+             accessory.service.setCharacteristic(
+                CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic,
+                      this.getStoredValueForIndex( accTypeEnumIndex ) );
              }
 
 
@@ -2196,6 +2202,9 @@ class Cmd4Accessory
       if ( ! accessory.state_cmd )
          return;
 
+      // By default, polled characteristics are not in any queue
+      let queue = constants.DEFAULT_QUEUE;
+
       // Now that polling calls updateValue and is not dependant on getValue, which was possibly cached,
       // Any accessories characteristic can be polled, regardless of cmd4Mode.
 
@@ -2238,6 +2247,9 @@ class Cmd4Accessory
                      case constants.INTERVAL:
                         // Intervals are in seconds
                         interval = parseInt( value, 10 ) * 1000;
+                        break;
+                     case constants.QUEUE:
+                        queue = value;
                         break;
                      case constants.CHARACTERISTIC:
                      {
@@ -2289,7 +2301,7 @@ class Cmd4Accessory
 
                log.debug( `Setting up accessory: ${ accessory.displayName } for polling of: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } timeout: ${ timeout } interval: ${ interval }` );
 
-               settings.arrayOfPollingCharacteristics.push( {"accessory": accessory, "accTypeEnumIndex": accTypeEnumIndex } );
+               settings.arrayOfPollingCharacteristics.push( {"accessory": accessory, "accTypeEnumIndex": accTypeEnumIndex, "interval": interval, "timeout": timeout, "queue": queue } );
 
             }
             break;

@@ -57,6 +57,9 @@ class Cmd4Platform
       this.restartRecover = true;
       this.statusMsg = constants.DEFAULT_STATUSMSG;
 
+      // Every X polls, output the queue ststus information.
+      this.queueStatMsgInterval = constants.DEFAULT_QUEUE_STAT_MSG_INTERVAL;
+
       this.parseConfigForCmd4Directives( this.config );
 
 
@@ -195,6 +198,10 @@ class Cmd4Platform
             case constants.STATUSMSG:
               if ( value === false )
                  this.statusMsg = "FALSE";
+
+               break;
+            case constants.QUEUE_STAT_MSG_INTERVAL:
+               this.queueStatMsgInterval = value;
 
                break;
             case constants.FETCH:

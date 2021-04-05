@@ -17,6 +17,10 @@ exports.DEFAULT_INTERVAL         = 60000; // 1 minute
 // Not a Bool, otherwise conditional check fails
 exports.DEFAULT_STATUSMSG        = "TRUE";
 
+// How many polls before output of group ststus information
+exports.DEFAULT_QUEUE_STAT_MSG_INTERVAL = 1000;
+
+
 // Fakegato Constants
 exports.FAKEGATO_TYPE_ENERGY_l   = "energy";
 exports.FAKEGATO_TYPE_ROOM_l     = "room";
@@ -80,6 +84,9 @@ exports.SERIALNUMBER             = "SerialNumber";
 exports.FIRMWAREREVISION         = "FirmwareRevision";
 exports.CHARACTERISTIC           = "Characteristic";
 exports.TIMEOUT                  = "Timeout";
+exports.QUEUE                    = "Queue";
+exports.DEFAULT_QUEUE            = "No_Queue";
+exports.QUEUE_STAT_MSG_INTERVAL  = "QueueStatMsgInterval";
 exports.POLLING                  = "Polling";
 exports.CMD4_MODE_ALWAYS         = "Always";
 exports.CMD4_MODE_CACHED         = "Cached";  // CACHED becomes DEMO
@@ -101,6 +108,14 @@ exports.LINKEDTYPES              = "LinkedTypes";
 exports.ACCESSORIES              = "Accessories";
 exports.URL                      = "Url";
 exports.ALLOWTLV8                = "AllowTLV8";
+
+exports.ERROR_TIMER_EXPIRED           = -151;
+exports.ERROR_CMD_FAILED_REPLY        = -152;
+exports.ERROR_NULL_REPLY              = -153;
+exports.ERROR_NULL_STRING_REPLY       = -154;
+exports.ERROR_EMPTY_STRING_REPLY      = -155;
+exports.ERROR_2ND_NULL_STRING_REPLY   = -156;
+exports.ERROR_NON_CONVERTABLE_REPLY   = -157;
 
 // internal strings
 exports.storedValuesPerCharacteristic = "storedValuesPerCharacteristic";
