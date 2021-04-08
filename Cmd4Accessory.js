@@ -400,21 +400,8 @@ class Cmd4Accessory
             switch ( ucKey )
             {
                case constants.TIMEOUT:
-               {
-                  // Timers are in milliseconds. A low value can result in failure to get/set values
-                  this.timeout = parseInt( value, 10 );
-                  if ( this.timeout < 500 )
-                  {
-                     this.log.warn( `Timeout for: ${ this.displayName } is in milliseconds. A value of "${ this.timeout }" seems pretty low.` );
-                  }
-                  break;
-               }
                case constants.INTERVAL:
-               {
-                  // Intervals are in seconds
-                  this.interval = parseInt( value, 10 ) * 1000;
-                  break;
-               }
+               // break omitted
                case constants.QUEUE:
                {
                   this.queue = value;
@@ -647,6 +634,8 @@ class Cmd4Accessory
    {
       let self = this;
 
+      let timeout = this.lookupTimeoutForCharacteristic( this, accTypeEnumIndex );
+
       let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
 
       var transposed = { "value": value, "rc": true, "msg": "" };
@@ -672,7 +661,7 @@ class Cmd4Accessory
 
 
       // Execute command to Set a characteristic value for an accessory
-      exec( cmd, { timeout: self.timeout }, function ( error, stdout, stderr )
+      exec( cmd, { timeout: timeout }, function ( error, stdout, stderr )
       {
          if ( stderr )
             self.log.error( `setValue: ${ characteristicString } function for ${ self.displayName } streamed to stderr: ${ stderr }.` );
@@ -804,6 +793,8 @@ class Cmd4Accessory
    {
       let self = this;
 
+      let timeout = this.lookupTimeoutForCharacteristic( this, accTypeEnumIndex );
+
       let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
 
       let cmd = this.state_cmd_prefix + this.state_cmd + " Get '" + this.displayName + "' '" + characteristicString  + "'" + this.state_cmd_suffix;
@@ -813,18 +804,18 @@ class Cmd4Accessory
       let replyCount = 0;
 
       // Execute command to Get a characteristics value for an accessory
-      // exec( cmd, { timeout:self.timeout }, function ( error, stdout, stderr )
+      // exec( cmd, { timeout: timeout }, function ( error, stdout, stderr )
       let child = spawn( cmd, { shell:true });
 
       const timer = setTimeout(() =>
       {
          child.kill( 'SIGINT' );
-         self.log.error( chalk.red( `getValue ${ characteristicString } function timed out ${ self.timeout }ms for ${ self.displayName } cmd: ${ cmd } Failed.` ) );
+         self.log.error( chalk.red( `getValue ${ characteristicString } function timed out ${ timeout }ms for ${ self.displayName } cmd: ${ cmd } Failed.` ) );
 
          // Do not call the callback or too many will be called.
          // Prefer homebridge complain about slow response.
 
-      }, self.timeout );
+      }, timeout );
 
       child.stderr.on('data', ( data ) =>
       {
@@ -2192,6 +2183,32 @@ class Cmd4Accessory
             }
          }
       }
+   }
+
+   // Normally the characteristics timeout is known, However that is not
+   // the case when getValue is called from IOS. That getvalue only knows
+   // the accessories timeout, not the characteristics timeout defined by
+   // polling.
+   lookupTimeoutForCharacteristic( accessory, accTypeEnumIndex )
+   {
+      // Heirarchy is first the default timeout
+      let timeout = constants.DEFAULT_TIMEOUT;
+
+      // Secondly the accessories timeout
+      if ( accessory.timeout )
+         timeout = accessory.timeout;
+
+      // Finally the polled timeout setting
+      let pollingEntrys = settings.arrayOfPollingCharacteristics.filter(
+           entry => entry.accessory.UUID == accessory.UUID &&
+           entry.accTypeEnumIndex == accTypeEnumIndex );
+
+      // There should only be one, if any
+      if ( pollingEntrys.length > 0 )
+         timeout = pollingEntrys[0].timeout;
+
+      return timeout;
+
    }
 
    determineCharacteristicsToPollForAccessory( accessory  )
