@@ -76,6 +76,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       const log = new Logger( );
       log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], null );
 
       assert.isFunction( cmd4Accessory.setValue, "Cmd4Accessory.setValue is not a function" );
@@ -120,6 +121,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       const log = new Logger( );
       log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
 
       // Required to resolve publishExternally Television
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
@@ -187,6 +189,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       const log = new Logger( );
       log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
 
       // Required to resolve publishExternally Television
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
@@ -250,6 +253,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       const log = new Logger( );
       log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
 
       new Cmd4Accessory( log, TVConfig, _api, [ ], null );
 
@@ -298,6 +302,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       const log = new Logger( );
       log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
 
       // Required to resolve publishExternally Television
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
@@ -347,6 +352,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       const log = new Logger( );
       log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
 
       let cmd4Accessory = new Cmd4Accessory( log, ThermostatConfig, _api, [ ], null );
 
@@ -399,6 +405,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       const log = new Logger( );
       log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, ThermostatConfig, _api, [ ], null );
 
       let value = 12.3;
@@ -449,6 +456,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       const log = new Logger( );
       log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, ThermostatConfig, _api, [ ], null );
 
       let expectedErrOutput1 = `m**** Adding required characteristic TargetTemperature for Thermostat`;
@@ -488,6 +496,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       const log = new Logger( );
       log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
       new Cmd4Accessory( log, ThermostatConfig, _api, [ ], null );
 
       let expectedErrOutput = `**** Adding required characteristic TargetHeatingCoolingState for Thermostat`;
@@ -521,6 +530,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       const log = new Logger( );
       log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TempSensorConfig, _api, [ ], null );
 
       let value = 12.3;

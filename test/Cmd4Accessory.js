@@ -71,6 +71,7 @@ describe('A simple Cmd4Accessory Test', ( ) =>
       let parentInfo = undefined;
 
       const log = new Logger( );
+      log.setBufferEnabled( );
       let accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
       assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory. Found %s" , accessory );
@@ -91,6 +92,7 @@ describe('A simple Cmd4Accessory Test Debbuging enabled', ( ) =>
 
 
       const log = new Logger( );
+      log.setBufferEnabled( );
       log.setDebugEnabled( );
       let accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
@@ -113,6 +115,7 @@ describe('Test Cmd4Accessory variables ', ( ) =>
       let parentInfo = undefined;
 
       const log = new Logger( );
+      log.setBufferEnabled( );
       let accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
       assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory. Found %s" , accessory );
@@ -137,6 +140,7 @@ describe('Test Cmd4Accessory variables ', ( ) =>
 
 
          const log = new Logger( );
+         log.setBufferEnabled( );
          let accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
          assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory. Found %s" , accessory );
@@ -159,6 +163,7 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       let STORED_DATA_ARRAY = [ ];
 
       const log = new Logger( );
+      log.setBufferEnabled( );
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       assert.isArray( accessory.STORED_DATA_ARRAY, "Expected accessory.STORED_DATA_ARRAY to be an Array. Found %s" , typeof accessory.STORED_DATA_ARRAY );
@@ -169,6 +174,7 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       let STORED_DATA_ARRAY = [ ];
 
       const log = new Logger( );
+      log.setBufferEnabled( );
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       assert.isArray( accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic, "Expected accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic to be an Array. Found %s" , typeof accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic );
@@ -180,6 +186,7 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       let STORED_DATA_ARRAY = [ ];
 
       const log = new Logger( );
+      log.setBufferEnabled( );
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       assert.equal( accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic.length, ACC_EOL, "Expected storedValuesPerCharacteristic to size: %s. Found %s" , ACC_EOL, accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic.length );
@@ -190,6 +197,7 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       let STORED_DATA_ARRAY = [ ];
 
       const log = new Logger( );
+      log.setBufferEnabled( );
       new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       let accIndex = CMD4_ACC_TYPE_ENUM.On;
@@ -209,6 +217,7 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       let STORED_DATA_ARRAY = [ ];
 
       const log = new Logger( );
+      log.setBufferEnabled( );
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       let accIndex = CMD4_ACC_TYPE_ENUM.On;
@@ -231,6 +240,7 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       let STORED_DATA_ARRAY = [ ];
 
       const log = new Logger( );
+      log.setBufferEnabled( );
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       let accIndex = CMD4_ACC_TYPE_ENUM.On;
@@ -254,6 +264,7 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       let STORED_DATA_ARRAY = [ ];
 
       const log = new Logger( );
+      log.setBufferEnabled( );
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       let accIndex = CMD4_ACC_TYPE_ENUM.On;
@@ -275,6 +286,7 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       let STORED_DATA_ARRAY = [ ];
 
       const log = new Logger( );
+      log.setBufferEnabled( );
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       let index = -1;
@@ -304,6 +316,7 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
       let STORED_DATA_ARRAY = [ ];
 
       const log = new Logger( );
+      log.setBufferEnabled( );
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       assert.isArray( accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic, Cmd4Accessory, "Expected accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic to be an Array. Found %s" , typeof accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic );
@@ -317,6 +330,7 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
       let STORED_DATA_ARRAY = [ ];
 
       const log = new Logger( );
+      log.setBufferEnabled( );
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       assert.equal( accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic.length, ACC_EOL, "Expected accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic to size: %s. Found %s" , ACC_EOL, accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic.length );

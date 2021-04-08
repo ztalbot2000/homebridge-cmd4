@@ -147,6 +147,7 @@ describe( `Testing index.js plugin Initialized variables.`, ( ) =>
 
 
       const log = new Logger( );
+      log.setBufferEnabled( );
 
       var apiInstance = new HomebridgeAPI(); // object we feed to Plugins
 

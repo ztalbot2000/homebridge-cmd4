@@ -7,9 +7,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 
 
-var Logger = require("./utils/bufferedLogger");
 // for some reason inside callback, log is no longer defined
 let glog = new Logger( );
+glog.setBufferEnabled( );
 
 
 // For caching/uncaching accessories to disk, like homebridge does.
@@ -202,6 +202,7 @@ describe( "Testing Cmd4Platform Setup", function( )
    it( "Test init Cmd4Platform", function( )
    {
       const log = new Logger( );
+      log.setBufferEnabled( );
       let cmd4Platform = new Cmd4Platform( log, TVConfig, _api );
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
@@ -267,6 +268,7 @@ describe( "Testing Cmd4Platform", function( )
       let apiInstance = new HomebridgeAPI(); // object we feed to Plugins
 
       const log = new Logger( );
+      log.setBufferEnabled( );
       let cmd4Platform=new Cmd4Platform( log, TVConfig, apiInstance );
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 

@@ -67,6 +67,7 @@ describe( "Testing Cmd4Accessory", function( )
    it( "Test init Cmd4Accessory", function( )
    {
       const log = new Logger( );
+      log.setBufferEnabled( );
       let cmd4Accessory = new Cmd4Accessory( log, thermostatConfig, _api, [ ], parentInfo );
 
       assert.equal( log.logBuf, "", ` cmd4Accessory output expected: "" received: ${ log.logBuf }` );
@@ -78,6 +79,7 @@ describe( "Testing Cmd4Accessory", function( )
    it( "Test Cmd4Accessory.addAllServiceCharacteristicsForAccessory", function( )
    {
       const log = new Logger( );
+      log.setBufferEnabled( );
       let cmd4Accessory = new Cmd4Accessory( log, thermostatConfig, _api, [ ], parentInfo );
 
       assert.equal( log.logBuf, "", ` cmd4Accessory output expected: "" received: ${ log.logBuf }` );
@@ -93,6 +95,7 @@ describe( "Testing Cmd4Accessory", function( )
       thermostatConfig.Polling = [{"characteristic": "currentTemperature", "interval": 60, "timeout":2000}];
 
       const log = new Logger( );
+      log.setBufferEnabled( );
       new Cmd4Accessory( log, thermostatConfig, _api, [ ], parentInfo );
 
       assert.equal( log.logBuf, "", ` cmd4Accessory output expected: "" received: ${ log.logBuf }` );

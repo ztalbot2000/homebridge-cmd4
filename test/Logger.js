@@ -34,10 +34,27 @@ describe( "Quick Test load of CMD4_DEVICE_TYPE_ENUM", ( ) =>
 // ******** TEST logger  *************
 describe('A simple logger Test', ( ) =>
 {
+   it( "Test bufferEnabled is off by default", ( ) =>
+   {
+      const log = new Logger( );
+      log.setOutputEnabled( false );
+
+      let STDOUT_DATA="stdout_data";
+      log.info( STDOUT_DATA );
+
+      // Logger adds a \n so use include
+      assert.equal( log.logBuf , "", `Expected no logs to stdout` );
+      assert.equal( log.logLineCount, 0 , `unexpected number of lines to stdout` );
+      assert.equal( log.errBuf , "", `Expected no logs to stderr` );
+      assert.equal( log.errLineCount, 0 , `unexpected number of lines to stderr` );
+
+   });
+
    it( "Test info log to stdout gets captured and mothing else", ( ) =>
    {
       const log = new Logger( );
       log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
 
       let STDOUT_DATA="stdout_data";
       log.info( STDOUT_DATA );
@@ -54,6 +71,7 @@ describe('A simple logger Test', ( ) =>
    {
       const log = new Logger( );
       log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
 
       let STDERR_DATA="stderr_data";
       log.warn( STDERR_DATA );
@@ -70,6 +88,7 @@ describe('A simple logger Test', ( ) =>
    {
       const log = new Logger( );
       log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
 
       let STDERR_DATA="stderr_data";
       log.error( STDERR_DATA );
@@ -86,6 +105,7 @@ describe('A simple logger Test', ( ) =>
    {
       const log = new Logger( );
       log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
 
       let STDERR_DATA="stderr_data";
       let STDOUT_DATA="stdout_data";
@@ -106,6 +126,7 @@ describe('A simple logger Test', ( ) =>
    {
       const log = new Logger( );
       log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
 
       let config={ name:      "Test Switch",
                    type:      "Switch",
@@ -128,6 +149,7 @@ describe('A simple logger Test', ( ) =>
       let log = new Logger( );
       log.setDebugEnabled();
       log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
 
       let config={ name:      "Test Switch",
                    type:      "Switch",
@@ -148,6 +170,7 @@ describe('A simple logger Test', ( ) =>
    {
       const log = new Logger( );
       log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
 
       let config={ name:      "Test Switch",
                    type:      "Switch",

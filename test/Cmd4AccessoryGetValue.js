@@ -69,6 +69,7 @@ describe( "Testing Cmd4Accessory", function( )
    it( "Test init Cmd4Accessory", function( )
    {
       const log = new Logger( );
+      log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "Cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -80,6 +81,7 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./echoScripts/echo_ACTIVE";
 
       const log = new Logger( );
+      log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       assert.isFunction( cmd4Accessory.getValue, "Cmd4Accessory.getValue is not a function" );
@@ -91,6 +93,7 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_ACTIVE";
 
       const log = new Logger( );
+      log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, function( rc, result )
@@ -108,6 +111,7 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_INACTIVE";
 
       const log = new Logger( );
+      log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, function( rc, result )
@@ -125,6 +129,7 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_0";
 
       const log = new Logger( );
+      log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, function( rc, result )
@@ -142,6 +147,7 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_1";
 
       const log = new Logger( );
+      log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, function( rc, result )
@@ -159,6 +165,7 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_quoted0";
 
       const log = new Logger( );
+      log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, function( rc, result )
@@ -176,6 +183,7 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_quoted1";
 
       const log = new Logger( );
+      log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, function( rc, result )
@@ -193,6 +201,7 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_false";
 
       const log = new Logger( );
+      log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
@@ -210,6 +219,7 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_true";
 
       const log = new Logger( );
+      log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
@@ -227,6 +237,7 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_0";
 
       const log = new Logger( );
+      log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
@@ -244,6 +255,7 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_1";
 
       const log = new Logger( );
+      log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
@@ -261,6 +273,7 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_quotedFALSE";
 
       const log = new Logger( );
+      log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
@@ -278,6 +291,7 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_quotedTRUE";
 
       const log = new Logger( );
+      log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, function( rc, result )
@@ -296,6 +310,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       const log = new Logger( );
       log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.ClosedCaptions, function( rc, result )
@@ -313,6 +328,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       const log = new Logger( );
       log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
       cmd4Accessory.state_cmd = "./test/echoScripts/echo_nothing";
       cmd4Accessory.timeout = 500;
@@ -341,6 +357,7 @@ describe( "Testing Cmd4Accessory", function( )
    {
       const log = new Logger( );
       log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
       cmd4Accessory.state_cmd = "./test/echoScripts/echo_null";
       cmd4Accessory.timeout = 500;
@@ -368,6 +385,7 @@ describe( "Testing Cmd4Accessory", function( )
    {
       const log = new Logger( );
       log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
       cmd4Accessory.state_cmd = "./test/echoScripts/echo_true_withRcOf1";
       cmd4Accessory.timeout = 500;
@@ -395,6 +413,7 @@ describe( "Testing Cmd4Accessory", function( )
    {
       const log = new Logger( );
       log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
       cmd4Accessory.state_cmd = "./test/echoScripts/echo_quotedNULL";
       cmd4Accessory.timeout = 500;
@@ -424,6 +443,7 @@ describe( "Testing Cmd4Accessory", function( )
    {
       const log = new Logger( );
       log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
       cmd4Accessory.state_cmd = "./test/echoScripts/echo_quotedNothing";
       cmd4Accessory.timeout = 500;
@@ -449,6 +469,7 @@ describe( "Testing Cmd4Accessory", function( )
    {
       const log = new Logger( );
       log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
       cmd4Accessory.state_cmd = "./test/echoScripts/echo_errorToStderr";
       cmd4Accessory.timeout = 500;
@@ -473,6 +494,7 @@ describe( "Testing Cmd4Accessory", function( )
    {
       const log = new Logger( );
       log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
       cmd4Accessory.state_cmd = "./test/echoScripts/justExitWithRCof0";
       cmd4Accessory.timeout = 500;
@@ -498,6 +520,7 @@ describe( "Testing Cmd4Accessory", function( )
    {
       const log = new Logger( );
       log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
       cmd4Accessory.state_cmd = "./test/echoScripts/justExitWithRCof1";
       cmd4Accessory.timeout = 400;

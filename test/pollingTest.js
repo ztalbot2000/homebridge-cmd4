@@ -66,6 +66,7 @@ describe('Testing Cmd4Accessory polling', ( ) =>
    it( "Test init Cmd4Accessory", function( )
    {
       const log = new Logger( );
+      log.setBufferEnabled( );
       cmd4Accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "Cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -77,6 +78,7 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       cmd4Accessory[ "polling" ] = [ { "characteristic": "on", "timeout":3000, "interval": 1 } ];
 
       const log = new Logger( );
+      log.setBufferEnabled( );
       cmd4Accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
       cmd4Accessory.determineCharacteristicsToPollForAccessory( cmd4Accessory );
