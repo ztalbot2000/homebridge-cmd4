@@ -1,12 +1,12 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
-#### 3.4.2 (2021-04-05)
+#### 3.4.3 (2021-04-08)
 
-##### New Features
+##### Bug Fixes
 
-*  Only add new Cmd4 directives for feature in progress ([438462e0](https://github.com/ztalbot2000/homebridge-cmd4/commit/438462e0148d6b96f7da7d6726242c1f1194eed3))
+*  Polling has always used the wrong timeout ([74f1f908](https://github.com/ztalbot2000/homebridge-cmd4/commit/74f1f908ca3ab847ca37de2dd4b77f6b11e373c2))
 
 ##### Tests
 
-*  Better technique for capturing logging during Unit Testing ([ee2c7dd3](https://github.com/ztalbot2000/homebridge-cmd4/commit/ee2c7dd3355785af35a8bb6221724cc6f5947cbb))
+*  Prep for using our own Logger in other than test ([8c4042a1](https://github.com/ztalbot2000/homebridge-cmd4/commit/8c4042a1c9b6d6f52e4699dfc67c19c19d6bbe9a))
 
 
