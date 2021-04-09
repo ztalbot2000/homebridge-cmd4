@@ -2337,7 +2337,7 @@ class Cmd4Accessory
                // Make sure the defined characteristics will be polled
                CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ].defaultPollingCharacteristics.forEach( defaultPollingAccTypeEnumIndex =>
                {
-                   settings.arrayOfPollingCharacteristics.push( {"accessory": accessory, "accTypeEnumIndex": defaultPollingAccTypeEnumIndex } );
+                   settings.arrayOfPollingCharacteristics.push( {"accessory": accessory, "accTypeEnumIndex": defaultPollingAccTypeEnumIndex, "timeout": accessory.timeout } );
                });
 
             }
