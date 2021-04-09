@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-3-4-4">**Whats new in 3.4.4**</a>
 * <a href="#Whats-new-in-3-4-3">**Whats new in 3.4.3**</a>
 * <a href="#Whats-new-in-3-4-2">**Whats new in 3.4.2**</a>
 * <a href="#Whats-new-in-3-4-1">**Whats new in 3.4.1**</a>
@@ -45,6 +46,14 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-3-4-4">## Whats new in 3.4.4</a>
+#### 3.4.4 (2021-04-09)
+
+##### Bug Fixes
+
+*  [#104](https://github.com/ztalbot2000/homebridge-cmd4/pull/104).  One day one bug, uncovered another ([9075bfe3](https://github.com/ztalbot2000/homebridge-cmd4/commit/9075bfe326a2561e9d511ff4bdc662767e953189))
+
 
 <a name="Whats-new-in-3-4-3">## Whats new in 3.4.3</a>
 #### 3.4.3 (2021-04-08)
