@@ -76,7 +76,6 @@ exports.UUID                     = "UUID";
 exports.ACCESSORY                = "Accessory";
 exports.CATEGORY                 = "Category";
 exports.PUBLISHEXTERNALLY        = "PublishExternally";
-exports.PROPS                    = "Props";
 exports.NAME                     = "Name";
 exports.MODEL                    = "Model";
 exports.MANUFACTURER             = "Manufacturer";
@@ -108,6 +107,16 @@ exports.LINKEDTYPES              = "LinkedTypes";
 exports.ACCESSORIES              = "Accessories";
 exports.URL                      = "Url";
 exports.ALLOWTLV8                = "AllowTLV8";
+
+exports.DEFINITIONS             = "Definitions";
+exports.FORMAT                  = "Format";
+exports.UNITS                   = "Units";
+exports.PROPS                   = "Props";
+exports.PERMS                   = "Perms";
+exports.VALIDVALUES             = "ValidValues";
+exports.ACCESS                  = "Access";
+
+
 
 exports.ERROR_TIMER_EXPIRED           = -151;
 exports.ERROR_CMD_FAILED_REPLY        = -152;

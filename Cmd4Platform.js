@@ -5,6 +5,8 @@ const { getAccessoryName,
         getAccessoryDisplayName } = require( "./utils/getAccessoryNameFunctions" );
 let getAccessoryUUID = require( "./utils/getAccessoryUUID" );
 let ucFirst = require( "./utils/ucFirst" );
+let isNumeric = require( "./utils/isNumeric" );
+let trueTypeOf = require( "./utils/trueTypeOf" );
 
 let createAccessorysInformationService = require( "./utils/createAccessorysInformationService" );
 
@@ -12,8 +14,13 @@ let createAccessorysInformationService = require( "./utils/createAccessorysInfor
 var chalk = require( "chalk" );
 
 // These would already be initialized by index.js
+let CMD4_CHAR_TYPE_ENUMS = require( "./lib/CMD4_CHAR_TYPE_ENUMS" ).CMD4_CHAR_TYPE_ENUMS;
 let CMD4_DEVICE_TYPE_ENUM = require( "./lib/CMD4_DEVICE_TYPE_ENUM" ).CMD4_DEVICE_TYPE_ENUM;
 let CMD4_ACC_TYPE_ENUM = require( "./lib/CMD4_ACC_TYPE_ENUM" ).CMD4_ACC_TYPE_ENUM;
+
+let CMD4_FORMAT_TYPE_ENUM = CMD4_CHAR_TYPE_ENUMS.CMD4_FORMAT_TYPE_ENUM;
+let CMD4_UNITS_TYPE_ENUM = CMD4_CHAR_TYPE_ENUMS.CMD4_UNIT_TYPE_ENUM;
+let CMD4_PERMS_TYPE_ENUM = CMD4_CHAR_TYPE_ENUMS.CMD4_PERMS_TYPE_ENUM;
 
 // The Cmd4 Classes
 const Cmd4Accessory = require( "./Cmd4Accessory" ).Cmd4Accessory;
@@ -62,6 +69,7 @@ class Cmd4Platform
 
       this.parseConfigForCmd4Directives( this.config );
 
+      this.processNewCharacteristicDefinitions( );
 
 
       // didFinishLaunching is only called after the
@@ -249,9 +257,126 @@ class Cmd4Platform
                this.keyPath = value;
 
                break;
+            case constants.DEFINITIONS:
+               this.definitions = value;
+
+               break;
             default:
          }
       }
+   }
+   // The purpose here is not to duplicate what is in homebridge. Just to
+   // do a little checking to make sure that what is defined won't cause
+   // Cmd4 to balk.  It is okay if homebridge does though ;-)
+   processNewCharacteristicDefinitions( )
+   {
+      if ( this.definitions == undefined )
+         return;
+
+      if ( trueTypeOf( this.definitions ) != Array )
+      {
+         this.log.error( `Error: ${ constants.DEFINITIONS } is not an array` );
+         process.exit( 270 );
+      }
+
+      this.definitions.forEach( ( definition, definitionIndex ) =>
+      {
+         this.log.debug( `Processing definition index: ${ definitionIndex }` );
+
+         if ( trueTypeOf( definition.type ) != String )
+         {
+            this.log.error( `Error: definition.type at index: ${ definitionIndex } is not an String` );
+            process.exit( 270 );
+         }
+         if ( trueTypeOf( definition.description ) != String )
+         {
+            this.log.error( `Error: definition.description at index: ${ definitionIndex } is not an String` );
+            process.exit( 270 );
+         }
+         if ( trueTypeOf( definition.props ) != Object )
+         {
+            this.log.error( `Error: definition.props at index: ${ definitionIndex } is not an Oobject` );
+            process.exit( 270 );
+         }
+         if ( trueTypeOf( definition.props.format ) != String )
+         {
+            this.log.error( `Error: definition.props.format at index: ${ definitionIndex } is not an String` );
+            process.exit( 270 );
+         }
+         // Need to check if format is correct
+         let formatIndex = CMD4_FORMAT_TYPE_ENUM.properties.indexOfEnum( i => i.type === definition.props.format );
+         if ( formatIndex < 0 )
+         {
+            this.log.error( `Error: definition.props.format at index: ${ definitionIndex } is not a valid format` );
+            process.exit( 270 );
+         }
+
+         if ( definition.props.units )
+         {
+            if ( trueTypeOf( definition.props.units ) != String )
+            {
+               this.log.error( `Error: definition.props.units at index: ${ definitionIndex } is not an String` );
+               process.exit( 270 );
+            }
+            // Need to check if units is correct
+            let unitsIndex = CMD4_UNITS_TYPE_ENUM.properties.indexOfEnum( i => i.type === definition.props.units );
+            if ( unitsIndex < 0 )
+            {
+               this.log.error( `Error: definition.props.format at index: ${ definitionIndex } is not a valid format` );
+               process.exit( 270 );
+            }
+         }
+
+         if ( definition.props.maxValue &&
+              isNumeric( definition.props.maxValue ) != true )
+         {
+            this.log.error( `Error: definition.props.maxValue at index: ${ definitionIndex } is not numeric` );
+            process.exit( 270 );
+         }
+         if ( definition.props.minValue &&
+              ! Number.isFinite( definition.props.minValue ) )
+         {
+            this.log.error( `Error: definition.props.minValue at index: ${ definitionIndex } is not finite` );
+            process.exit( 270 );
+         }
+         if ( definition.props.minStep &&
+              isNumeric( definition.props.minStep ) != true )
+         {
+            this.log.error( `Error: definition.props.minStep at index: ${ definitionIndex } is not numeric` );
+            process.exit( 270 );
+         }
+         if ( trueTypeOf( definition.props.perms ) != Array )
+         {
+            this.log.error( `Error: definition.props.perms at index: ${ definitionIndex } is not an Array` );
+            process.exit( 270 );
+         }
+         if ( definition.props.perms.length == 0 )
+         {
+            this.log.error( `Error: definition.props.perms at index: ${ definitionIndex } cannot be an empty Array` );
+            process.exit( 270 );
+         }
+         definition.props.perms.forEach( ( perm ) =>
+         {
+            let permIndex = CMD4_PERMS_TYPE_ENUM.properties.indexOfEnum( i => i.type === perm );
+            if ( permIndex < 0 )
+            {
+               this.log.error( `Error: definition.props.perms at index: ${ definitionIndex } ${ perm } is not a valid perm` );
+               process.exit( 270 );
+            }
+         });
+
+         if ( definition.validValues &&
+              trueTypeOf( definition.validValues ) != Object )
+         {
+            this.log.error( `Error: definition.validValues at index: ${ definitionIndex } is not an Object` );
+            process.exit( 270 );
+         } else {
+            definition.validValues = { };
+         }
+
+         CMD4_ACC_TYPE_ENUM.add( this.api, definition.type, definition.description, definition.props, definition.validValues );
+
+      });
    }
 
    // These would be platform accessories with/without linked accessories

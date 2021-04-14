@@ -42,6 +42,10 @@ global.sinon  = require( "sinon" );
 
 global.ACC_EOL = 222;
 global.DEVICE_EOL = 66;
+global.FORMAT_EOL = 11;
+global.UNITS_EOL = 5;
+global.PERMS_EOL = 9;
+global.ACCESS_EOL = 3;
 
 // These would be the uninitialized values, used for unit testing
 global.ACC_DATA = require( '../lib/CMD4_ACC_TYPE_ENUM' );
@@ -50,6 +54,8 @@ global.CMD4_ACC_TYPE_ENUM = ACC_DATA.CMD4_ACC_TYPE_ENUM;
 global.DEVICE_DATA = require( '../lib/CMD4_DEVICE_TYPE_ENUM' );
 global.CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.CMD4_DEVICE_TYPE_ENUM;
 
+global.CHAR_DATA = require( `../lib/CMD4_CHAR_TYPE_ENUMS` );
+global.CMD4_CHAR_TYPE_ENUMS = CHAR_DATA.CMD4_CHAR_TYPE_ENUMS;
 
 
 global.Logger = require("../utils/Logger");

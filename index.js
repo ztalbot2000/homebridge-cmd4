@@ -29,6 +29,7 @@ const settings = require( "./cmd4Settings" );
 const chalk = require( "chalk" );
 
 // The Library files that know all.
+var CHAR_DATA = require( "./lib/CMD4_CHAR_TYPE_ENUMS" );
 var ACC_DATA = require( "./lib/CMD4_ACC_TYPE_ENUM" );
 var DEVICE_DATA = require( "./lib/CMD4_DEVICE_TYPE_ENUM" );
 
@@ -36,9 +37,11 @@ module.exports =
 {
    default: function ( api )
    {
-      // Init the library for all to use
+      // Init the libraries for all to use
+      let CMD4_CHAR_TYPE_ENUMS = CHAR_DATA.init( api.hap.Characteristic );
       let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( api.hap.Characteristic );
-      let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, api.hap.Service, api.hap.Characteristic, api.hap.Categories );
+      let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init(
+         CMD4_ACC_TYPE_ENUM, api.hap.Service, api.hap.Characteristic, api.hap.Categories );
 
       api.registerAccessory( settings.PLATFORM_NAME, Cmd4Accessory );
       api.registerPlatform( settings.PLATFORM_NAME, Cmd4Platform );
@@ -47,14 +50,16 @@ module.exports =
 
       // This is not required by homebridge and does not affect it.  I use it for
       // unit testing.
-      return { CMD4_ACC_TYPE_ENUM,
+      return { CMD4_CHAR_TYPE_ENUMS,
+               CMD4_ACC_TYPE_ENUM,
                CMD4_DEVICE_TYPE_ENUM,
                api
              };
    },
    // These would be the uninitialized values,
    // used for unit testing
-   ACC_DATA: ACC_DATA,      // properties would be { } empty.
+   CHAR_DATA:   CHAR_DATA,  // properties would be { } empty.
+   ACC_DATA:    ACC_DATA,   // properties would be { } empty.
    DEVICE_DATA: DEVICE_DATA // properties would be { } empty.
 }
 

@@ -1,34 +1,35 @@
 'use strict';
 
 var _api = new HomebridgeAPI(); // object we feed to Plugins
+var Service = _api.hap.Service;
 
 
-describe( "Testing require of CMD4_ACC_TYPE_ENUM.js", ( ) =>
+describe( `Testing require of CMD4_ACC_TYPE_ENUM.js`, ( ) =>
 {
-   it( "CMD4_ACC_TYPE_ENUM should be defined ( required correctly )", ( ) =>
+   it( `CMD4_ACC_TYPE_ENUM should be defined ( required correctly )`, ( ) =>
    {
-      assert.isNotNull( ACC_DATA, "CMD4_ACC_TYPE_ENUM is null" );
+      assert.isNotNull( ACC_DATA, `CMD4_ACC_TYPE_ENUM is null` );
    });
 
-   it( "ACC_DATA.init should be a function", ( ) =>
+   it( `ACC_DATA.init should be a function`, ( ) =>
    {
-      assert.isFunction( ACC_DATA.init, ".init is not a function" );
+      assert.isFunction( ACC_DATA.init, `.init is not a function` );
    });
 
    // ************ TEST UNINITIALIZED CMD4_ACC_TYPE_ENUM EOL **************
-   describe( "Testing CMD4_ACC_TYPE_ENUM.EOL", ( ) =>
+   describe( `Testing CMD4_ACC_TYPE_ENUM.EOL`, ( ) =>
    {
-      it( "CMD4_ACC_TYPE_ENUM has EOL", ( ) =>
+      it( `CMD4_ACC_TYPE_ENUM has EOL`, ( ) =>
       {
-         assert.isNotNull( CMD4_ACC_TYPE_ENUM.EOL, "EOL is null" );
+         assert.isNotNull( CMD4_ACC_TYPE_ENUM.EOL, `EOL is null` );
       });
 
-      it( "CMD4_ACC_TYPE_ENUM.EOL = " + ACC_EOL, ( ) =>
+      it( `CMD4_ACC_TYPE_ENUM.EOL =  ${ ACC_EOL }`, ( ) =>
       {
-         assert.equal( CMD4_ACC_TYPE_ENUM.EOL, ACC_EOL, "CMD4_ACC_TYPE_ENUM.EOL FOUND: " + CMD4_ACC_TYPE_ENUM.EOL );
+         assert.equal( CMD4_ACC_TYPE_ENUM.EOL, ACC_EOL, `CMD4_ACC_TYPE_ENUM.EOL FOUND: ${ CMD4_ACC_TYPE_ENUM.EOL }` );
       });
 
-      it( "CMD4_ACC_TYPE_ENUM[ 0-" + CMD4_ACC_TYPE_ENUM.EOL + " ] should equal value at index", ( ) =>
+      it( `CMD4_ACC_TYPE_ENUM[ 0-${ CMD4_ACC_TYPE_ENUM.EOL } ] should equal value at index`, ( ) =>
       {
          for ( let index=0; index < CMD4_ACC_TYPE_ENUM.EOL; index ++ )
          {
@@ -38,20 +39,20 @@ describe( "Testing require of CMD4_ACC_TYPE_ENUM.js", ( ) =>
    });
 })
 
-describe( "Testing INITIALIZED CMD4_ACC_TYPE_ENUM", ( ) =>
+describe( `Testing INITIALIZED CMD4_ACC_TYPE_ENUM`, ( ) =>
 {
    // Init the library for all to use
    let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
 
 
-   describe("Testing Initialized CMD4_ACC_TYPE_ENUM.properties[]", ( ) =>
+   describe(`Testing Initialized CMD4_ACC_TYPE_ENUM.properties[]`, ( ) =>
    {
       it('CMD4_ACC_TYPE_ENUM.properties should be an object', ( ) =>
       {
-         assert.isObject(CMD4_ACC_TYPE_ENUM.properties, "CMD4_DEVICE_TYPE_ENUM.properties is not an object" );
+         assert.isObject(CMD4_ACC_TYPE_ENUM.properties, `CMD4_DEVICE_TYPE_ENUM.properties is not an object` );
       });
 
-      it("Testing CMD4_ACC_TYPE_ENUM.properties[]", ( ) =>
+      it(`Testing CMD4_ACC_TYPE_ENUM.properties[]`, ( ) =>
       {
          for (let index=0; index < CMD4_ACC_TYPE_ENUM.EOL; index ++ )
          {
@@ -128,7 +129,7 @@ describe( "Testing INITIALIZED CMD4_ACC_TYPE_ENUM", ( ) =>
           // Characteristics dont seem to get removed and homebridge put a limit
           // of 100 Characteristics per service, so just create a new service
           // per characteristic.  This is unit testing anyway, so not an issue.
-          let serviceName = 'Service' + accTypeEnumIndex;
+          let serviceName = `Service${ accTypeEnumIndex }`;
           let service = new _api.hap.Service(serviceName, _api.hap.uuid.generate(serviceName ), serviceName );
 
           it('Creating service to test Characteristic', ( ) =>
@@ -223,7 +224,7 @@ describe( "Testing INITIALIZED CMD4_ACC_TYPE_ENUM", ( ) =>
                    assert.equal( hapMaxValue, accProperties.props.maxValue, `maxValue: ${ accProperties.props.maxValue } not equal to expected: ${ hapMaxValue }` );
                 });
              } else {
-                //console.log("Homebridge is wrong, skipping" );
+                //console.log(`Homebridge is wrong, skipping` );
              }
 
              // test minStep
@@ -271,7 +272,7 @@ describe( "Testing INITIALIZED CMD4_ACC_TYPE_ENUM", ( ) =>
                          assert.equal(Object.keys(accProperties.validValues ).length, 0, `validValuesh for: ${ accTypeEnumIndex } is not empty` );
                       });
                    } else {
-                      // console.log("Homebridge is wrong, skipping" );
+                      // console.log(`Homebridge is wrong, skipping` );
                    }
                 }
              } else
@@ -301,7 +302,7 @@ describe( "Testing INITIALIZED CMD4_ACC_TYPE_ENUM", ( ) =>
                        });
                    }
                 } else {
-                   // console.log("Homebridge is wrong, skipping" );
+                   // console.log(`Homebridge is wrong, skipping` );
                 }
              }
              service.removeCharacteristic(characteristic );
@@ -613,4 +614,74 @@ describe( `Testing CMD4_ACC_TYPE_ENUM stringConversionFunction`, ( ) =>
    });
 });
 
+
+describe( `Testing CMD4_ACC_TYPE_ENUM Add Characteristic`, ( ) =>
+{
+   // Init the library for all to use
+   let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
+
+   it( `ACC_DATA.add should be a function`, ( ) =>
+   {
+      assert.isFunction( CMD4_ACC_TYPE_ENUM.add, `.add is not a function` );
+   });
+   it( `CMD4_ACC_TYPE_ENUM.EOL = ${ ACC_EOL }`, ( ) =>
+   {
+      assert.equal( CMD4_ACC_TYPE_ENUM.EOL, ACC_EOL, `CMD4_ACC_TYPE_ENUM.EOL FOUND: ${ CMD4_ACC_TYPE_ENUM.EOL }` );
+   });
+
+   // Changing the number of characteristics screws up other tests.
+   it.skip( `CMD4_ACC_TYPE_ENUM.add creates new characteristic, incrementing EOL`, ( ) =>
+   {
+      let definition = { };
+          definition.type = "PointX";
+          definition.description = "An X Coordinate";
+          definition.props = { };
+          definition.props.format = "uint32";
+          definition.props.minValue = 0;
+          definition.props.minStep = 1;
+          definition.props.perms = [ "pr", "pw", "ev" ];
+          definition.validValues = { };
+
+      let characteristic = CMD4_ACC_TYPE_ENUM.add( _api, definition.type, definition.description, definition.props, definition.validValues );
+
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.PointX;
+      assert.equal( accTypeEnumIndex, ACC_EOL, `ACC_TYPE_ENUM_INDEX.PointX not defined` );
+
+      assert.equal( CMD4_ACC_TYPE_ENUM.EOL, ACC_EOL +1, `CMD4_ACC_TYPE_ENUM not incremented` );
+
+
+      assert.isNotNull( characteristic, `New characteristic was is null ` );
+
+   });
+
+   // Changing the number of characteristics screws up other tests.
+   it.skip( `CMD4_ACC_TYPE_ENUM.add creates new characteristic compatible with service`, ( ) =>
+   {
+      let definition = { };
+          definition.type = "PointX";
+          definition.description = "An X Coordinate";
+          definition.props = { };
+          definition.props.format = "uint32";
+          definition.props.minValue = 0;
+          definition.props.minStep = 1;
+          definition.props.perms = [ "pr", "pw", "ev" ];
+          definition.validValues = { };
+
+      // Create the new characteristic.
+      CMD4_ACC_TYPE_ENUM.add( _api, definition.type, definition.description, definition.props, definition.validValues );
+
+      // Create a service to add the new characteristic.
+      let switchService = new Service.Switch();
+      assert.instanceOf( switchService , Service, "Expected switchService to be instance of Service. Found %s" , switchService );
+
+      // Add the new characteristic to the test service.
+      switchService.addCharacteristic( CMD4_ACC_TYPE_ENUM.properties[CMD4_ACC_TYPE_ENUM.PointX].characteristic );
+
+      // Check to see if the characteristic was accepted by the service
+      let result = switchService.testCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM.PointX ].characteristic );
+
+      assert.isTrue( result, `New characteristic not added to service. result: ${ result }` );
+   });
+
+});
 

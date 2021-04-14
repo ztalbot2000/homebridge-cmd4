@@ -1051,26 +1051,14 @@ class Cmd4Accessory
                   this.getStoredValueForIndex( accTypeEnumIndex ),
                   this.displayName );
 
-             // Get the permissions of characteristic ( Read/Write ... )
-             // Both are 100% the same.
-             // perms = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.perms
-             perms = accessory.service.getCharacteristic(
-                CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
-                .characteristic ).props.perms;
-
-             // Find out if the characteristic is Optional and needs to be added
+             // Find out if the characteristic is not part of the service
+             // and needs to be added.
              if ( ! accessory.service.testCharacteristic(
                   CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic ) )
              {
-                // We need to check if the characteristic is write only
-                if ( perms.indexOf( this.api.hap.Characteristic.Perms.WRITE ) != -1 )
-                {
-                   // Since the characteristic is writeable, then add it.
-                   accessory.log.debug( "Adding optional characteristic:%s for: %s", CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, this.displayName );
-                   accessory.service.addCharacteristic(
-                      CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].
-                         characteristic );
-                }
+                accessory.log.debug( "Adding optional characteristic:%s for: %s", CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, this.displayName );
+
+                accessory.service.addCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic );
              }
 
              let props = accessory.configHasCharacteristicProps( accTypeEnumIndex );
@@ -1087,6 +1075,14 @@ class Cmd4Accessory
                     props
                 });
              }
+
+             // Get the permissions of characteristic ( Read/Write ... )
+             // Both are 100% the same.
+             // perms = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.perms
+             perms = accessory.service.getCharacteristic(
+                CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
+                .characteristic ).props.perms;
+
 
              // Comment before change
              // "Read and or write, we need to set the value once.
