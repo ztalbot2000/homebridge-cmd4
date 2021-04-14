@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-3-5-0">**Whats new in 3.5.0**</a>
 * <a href="#Whats-new-in-3-4-4">**Whats new in 3.4.4**</a>
 * <a href="#Whats-new-in-3-4-3">**Whats new in 3.4.3**</a>
 * <a href="#Whats-new-in-3-4-2">**Whats new in 3.4.2**</a>
@@ -46,6 +47,14 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-3-5-0">## Whats new in 3.5.0</a>
+### 3.5.0 (2021-04-14)
+
+##### New Features
+
+*   Add custom characteristics ([e3c07d55](https://github.com/ztalbot2000/homebridge-cmd4/commit/e3c07d55ca7e73ed630b9ab072b3f0ec36a1b269))
+
 
 <a name="Whats-new-in-3-4-4">## Whats new in 3.4.4</a>
 #### 3.4.4 (2021-04-09)

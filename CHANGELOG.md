@@ -1,8 +1,8 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
-#### 3.4.4 (2021-04-09)
+### 3.5.0 (2021-04-14)
 
-##### Bug Fixes
+##### New Features
 
-*  [#104](https://github.com/ztalbot2000/homebridge-cmd4/pull/104).  One day one bug, uncovered another ([9075bfe3](https://github.com/ztalbot2000/homebridge-cmd4/commit/9075bfe326a2561e9d511ff4bdc662767e953189))
+*   Add custom characteristics ([e3c07d55](https://github.com/ztalbot2000/homebridge-cmd4/commit/e3c07d55ca7e73ed630b9ab072b3f0ec36a1b269))
 
 
