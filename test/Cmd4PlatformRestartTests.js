@@ -7,9 +7,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 
 
-// for some reason inside callback, log is no longer defined
-let glog = new Logger( );
-glog.setBufferEnabled( );
 
 
 // For caching/uncaching accessories to disk, like homebridge does.
@@ -201,7 +198,7 @@ describe( "Testing Cmd4Platform Setup", function( )
 
    it( "Test init Cmd4Platform", function( )
    {
-      const log = new Logger( );
+      let log = new Logger( );
       log.setBufferEnabled( );
       let cmd4Platform = new Cmd4Platform( log, TVConfig, _api );
 
@@ -261,22 +258,21 @@ describe( "Testing Cmd4Platform", function( )
       rmdir( options.dir, done );
    });
 
-   // These two trigger tests to run forever
-   it.skip( "Test trigger of Cmd4Platform.didFinishLoading", function( )
+   it( "Test trigger of Cmd4Platform.didFinishLoading", function( )
    {
-      // We need our own instance as emitting "didFinishLaunching" triggers other testcases
-      let apiInstance = new HomebridgeAPI(); // object we feed to Plugins
-
-      const log = new Logger( );
+      let log = new Logger( );
       log.setBufferEnabled( );
-      let cmd4Platform=new Cmd4Platform( log, TVConfig, apiInstance );
+      log.setOutputEnabled( false );
+      let cmd4Platform=new Cmd4Platform( log, TVConfig, _api );
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
-      apiInstance.emit("didFinishLaunching");
-
-      let expectedOutput = `Cmd4Platform didFinishLaunching`;
-
-      assert.include( log.logBuf, expectedOutput, `didFinishLaunching not called result: ${ log.logBuf }` );
+      // Instead of emitting didFinishLaunching which would cause other instances to
+      // also do the didFinishLaunching and start their polling as well,
+      // Call cmd4Platform.discoverDevices instead.
+      // apiInstance.emit("didFinishLaunching");
+      // let expectedOutput = `Cmd4Platform didFinishLaunching`;
+      // assert.include( log.logBuf, expectedOutput, `didFinishLaunching not called result: ${ log.logBuf }` );
+      cmd4Platform.discoverDevices( );
 
 
       assert.equal(cmd4Platform.createdCmd4Platforms.length, 1, `Incorrect number of Cmd4Accessories created. result: ${ cmd4Platform.createdCmd4Platforms.length }` );
@@ -286,18 +282,23 @@ describe( "Testing Cmd4Platform", function( )
       loadCachedPlatformAccessoriesFromDisk( accessoryStorage );
    });
 
-   // These two trigger tests to run forever
-   it.skip( "Test reload of saved Platforms with value change to disk", function( )
+   it( "Test reload of saved Platforms with value change to disk", function( )
    {
       // We need our own instance as emitting "didFinishLaunching" triggers other testcases
-      let apiInstance = new HomebridgeAPI(); // object we feed to Plugins
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
 
-      let cmd4Platform = new Cmd4Platform( glog, TVConfig, apiInstance );
-      apiInstance.emit("didFinishLaunching");
+      let cmd4Platform = new Cmd4Platform( log, TVConfig, _api );
 
-      let expectedOutput = `Cmd4Platform didFinishLaunching`;
-
-      assert.include( glog.logBuf, expectedOutput, `didFinishLaunching not called result: ${ glog.logBuf }` );
+      // Instead of emitting didFinishLaunching which would cause other instances to
+      // also do the didFinishLaunching and start their polling as well,
+      // Call cmd4Platform.discoverDevices instead.
+      //apiInstance.emit("didFinishLaunching");
+      //let expectedOutput = `Cmd4Platform didFinishLaunching`;
+      //assert.include( log.logBuf, expectedOutput,
+      //                `didFinishLaunching not called result: ${ log.logBuf }` );
+      cmd4Platform.discoverDevices( );
 
       assert.equal(cmd4Platform.createdCmd4Platforms.length, 1, `Incorrect number of Cmd4Platforms created. result: ${ cmd4Platform.createdCmd4Platforms.length }` );
       assert.equal(cmd4Platform.createdCmd4Accessories.length, 5, `Incorrect number of Cmd4Accessories created. result: ${ cmd4Platform.createdCmd4Accessories.length }` );
@@ -311,39 +312,39 @@ describe( "Testing Cmd4Platform", function( )
       let newValue = "NEW_TV";
 
 
-      glog.reset( );
+      log.reset( );
       cmd4Accessory.setCachedValue( acc, newValue, function( rc )
       {
          assert.equal( rc, null, `setCachedValue expected: zero received: ${ rc }` );
 
-         //let expectedOutput = "\u001b[39m\u001b[34mSetting (Cached) Example TV ConfiguredName\u001b[39m NEW_TV";
-         let expectedOutput = "Setting (Cached) Example TV ConfiguredName\u001b[39m NEW_TV";
+         let expectedOutput = "[34mSetting (Cached) Example TV ConfiguredName\u001b[39m NEW_TV";
 
-         assert.include( glog.logBuf, expectedOutput, `setCachedValue output failed: ${ expectedOutput } received: ${ glog.logBuf }` );
+         assert.include( log.logBuf, expectedOutput, `setCachedValue output failed: ${ expectedOutput } received: ${ log.logBuf }` );
 
          let result = cmd4Accessory.getStoredValueForIndex( acc );
          let expectedResult = newValue;
          assert.equal( result, expectedResult, " setCachedValue expected: " + expectedResult + " found: " + result );
 
          // Clear the log buffer for next time.
-         glog.reset();
+         log.reset();
 
          saveCachedPlatformAccessoriesOnDisk( cmd4Platform.createdCmd4Platforms, accessoryStorage  )
 
          // Simulate a restart of homebridge with a new Cmd4Platform instance and the stored date reloaded.
          let cachedPlatformAccessories = loadCachedPlatformAccessoriesFromDisk( accessoryStorage );
 
-         // We need our own instance as emitting "didFinishLaunching" triggers other testcases
-         let apiInstance2 = new HomebridgeAPI(); // object we feed to Plugins
-
-         let cmd4Platform2 = new Cmd4Platform( glog, TVConfig, apiInstance2 );
+         let cmd4Platform2 = new Cmd4Platform( log, TVConfig, _api );
 
          cachedPlatformAccessories.forEach( ( entry ) =>
          {
             restoreCachedPlatformAccessories( cmd4Platform2, entry );
          });
 
-         apiInstance2.emit("didFinishLaunching");
+         // Instead of emitting didFinishLaunching which would cause other instances to
+         // also do the didFinishLaunching and start their polling as well,
+         // Call cmd4Platform.discoverDevices instead.
+         // apiInstance2.emit("didFinishLaunching");
+         cmd4Platform2.discoverDevices( );
 
          cmd4Accessory = cmd4Platform2.createdCmd4Accessories[4];
          let newFoundConfiguredName = cmd4Accessory.getStoredValueForIndex( acc );

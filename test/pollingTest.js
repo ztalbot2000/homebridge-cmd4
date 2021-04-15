@@ -6,6 +6,9 @@ let settings = require( "../cmd4Settings" );
 let constants = require( "../cmd4Constants" );
 
 let Cmd4Accessory = require( "../Cmd4Accessory" ).Cmd4Accessory;
+let Cmd4Platform = require( "../Cmd4Platform" ).Cmd4Platform;
+
+
 
 
 var _api = new HomebridgeAPI( ); // object we feed to Plugins
@@ -14,7 +17,6 @@ var _api = new HomebridgeAPI( ); // object we feed to Plugins
 // Init the library for all to use
 let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
 let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, _api.hap.Service, _api.hap.Characteristic, _api.hap.Categories );
-
 
 
 // ******** QUICK TEST CMD4_ACC_TYPE_ENUM *************
@@ -39,6 +41,22 @@ describe( "Quick Test of CMD4_ACC_TYPE_ENUM", ( ) =>
 
 describe('Testing Cmd4Accessory polling', ( ) =>
 {
+   afterEach(function( )
+   {
+      if (this.currentTest.state == 'failed')
+      {
+         let accessory = settings.arrayOfPollingCharacteristics[0].accessory;
+         console.log(`Cancelling timers for FAILED TEST OF ${ accessory.displayName }`);
+         Object.keys(accessory.listOfRunningPolls).forEach( (key) =>
+         {
+            let timer = accessory.listOfRunningPolls[ key ];
+            clearTimeout( timer );
+         });
+
+         // Put back the array of Polling Characteristics
+         settings.arrayOfPollingCharacteristics = [ ];
+      }
+   });
    let cmd4Accessory;
 
    it( "Test if Cmd4Accessory exists", function ( )
@@ -270,4 +288,61 @@ describe('Testing Cmd4Accessory polling', ( ) =>
 
       done( );
    });
+
+   it('Cmd4Platform starts polling of 1 characteristic.', ( done ) =>
+   {
+      let platformConfig =
+      {
+         accessories: [
+            {
+               Name:         "My_Switch",
+               DisplayName:  "My_Switch",
+               StatusMsg:    true,
+               Type:         "Switch",
+               Cmd4_Mode:    "Polled",
+               On:           0,
+               polling:      [ { "characteristic": "on", "interval": 310 } ],
+               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            }
+         ]
+      }
+
+      assert.equal( settings.arrayOfPollingCharacteristics.length, 0, `Incorrect number of Initial polling characteristics` );
+
+      this.log = new Logger( );
+      this.log.setBufferEnabled( );
+      this.log.setOutputEnabled( false );
+      this.log.setDebugEnabled( );
+
+      let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
+
+      assert.equal( settings.arrayOfPollingCharacteristics.length, 1, `Incorrect number of polling characteristics` );
+
+      cmd4Platform.startPolling( );
+      // Staggered Polling takes 3 seconds to start
+      setTimeout( () =>
+      {
+         let expectedOutput1 = "[90mKicking off polling for: My_Switch On interval:310000, staggered:3000\u001b";
+         let expectedOutput2 = "Started staggered kick off of 1 polled characteristics";
+
+         assert.include( this.log.logBuf, expectedOutput1 , `expected stdout: ${ this.log.logBuf }` );
+         assert.include( this.log.logBuf, expectedOutput2 , `expected stdout: ${ this.log.logBuf }` );
+
+         let accessory = settings.arrayOfPollingCharacteristics[0].accessory;
+         Object.keys(accessory.listOfRunningPolls).forEach( (key) =>
+         {
+            let timer = accessory.listOfRunningPolls[ key ];
+            clearTimeout( timer );
+         });
+
+         // Put back the array of Polling Characteristics
+         settings.arrayOfPollingCharacteristics = [ ];
+
+         done( );
+      }, 5000);
+   }).timeout(6000);
 });

@@ -311,7 +311,7 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
                 timeout: 6000,               // msec
                 polling: true
               };
-   it( "Check that Device polling just returns", function( done )
+   it( "Check that storedValuesPerCharacteristic gets created", function( done )
    {
       let STORED_DATA_ARRAY = [ ];
 
