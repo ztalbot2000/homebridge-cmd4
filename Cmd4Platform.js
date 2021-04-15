@@ -726,8 +726,8 @@ class Cmd4Platform
       {
          let accessory = entry.accessory;
          let accTypeEnumIndex = entry.accTypeEnumIndex;
-         let timeout = accessory.timeout;
-         let interval = accessory.interval;
+         let timeout = entry.timeout;
+         let interval = entry.interval;
          let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
 
 
