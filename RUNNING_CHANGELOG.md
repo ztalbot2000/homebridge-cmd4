@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-3-5-1">**Whats new in 3.5.1**</a>
 * <a href="#Whats-new-in-3-5-0">**Whats new in 3.5.0**</a>
 * <a href="#Whats-new-in-3-4-4">**Whats new in 3.4.4**</a>
 * <a href="#Whats-new-in-3-4-3">**Whats new in 3.4.3**</a>
@@ -47,6 +48,14 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-3-5-1">## Whats new in 3.5.1</a>
+#### 3.5.1 (2021-04-15)
+
+##### Bug Fixes
+
+*  For bug [#106](https://github.com/ztalbot2000/homebridge-cmd4/pull/106) polling was not able to go lower than 6 seconds ([51459211](https://github.com/ztalbot2000/homebridge-cmd4/commit/5145921132d64483d686175c9d6a316b7186d626))
+
 
 <a name="Whats-new-in-3-5-0">## Whats new in 3.5.0</a>
 ### 3.5.0 (2021-04-14)
