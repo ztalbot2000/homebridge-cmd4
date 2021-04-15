@@ -159,7 +159,7 @@ describe('A simple logger Test', ( ) =>
       new Cmd4Accessory( log, config, _api, [ ] );
 
       assert.include( log.logBuf, "Creating Standalone Accessory type for ", `Expected debug logs to stdout with setDebugEnabled` );
-      assert.equal( log.logLineCount, 18 , `unexpected number of lines to stdout` );
+      assert.equal( log.logLineCount, 17 , `unexpected number of lines to stdout` );
       assert.equal( log.errBuf, "", `Expected no logs to stderr for a simple instance of Cmd4Accessory` );
       assert.equal( log.errLineCount, 0 , `unexpected number of lines to stderr` );
 

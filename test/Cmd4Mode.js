@@ -4,6 +4,9 @@
 
 
 let { Cmd4Accessory } = require( "../Cmd4Accessory" );
+
+// Settings, Globals and Constants
+let settings = require( "../cmd4Settings" );
 const constants = require( "../cmd4Constants" );
 
 
@@ -101,6 +104,8 @@ describe( "Testing Cmd4Accessory", function( )
       assert.equal( log.logBuf, "", ` cmd4Accessory output expected: "" received: ${ log.logBuf }` );
       assert.equal( log.errBuf, "", ` cmd4Accessory stderr output expected: "" received: ${ log.errBuf }` );
 
+      // Put back the array of Polling Characteristics
+      settings.arrayOfPollingCharacteristics = [ ];
 
    });
 });

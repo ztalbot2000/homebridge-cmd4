@@ -236,7 +236,7 @@ class Cmd4Accessory
          // log.debug( "CMD4=%s LEVEL=%s for %s", accessory.CMD4, accessory.LEVEL, accessory.displayName );
          // The linked accessory children are at different levels of recursion, so only
          // allow what is posssible.
-         if ( this.linkedAccessories )
+         if ( this.linkedAccessories && this.linkedAccessories.length > 0 )
          {
             this.log.debug( `Setting up which characteristics will be polled for Linked Accessories of ${ this.displayName }` );
 
@@ -250,7 +250,7 @@ class Cmd4Accessory
          }
 
          // The Television Speaker Platform Example
-         if ( this.accessories )
+         if ( this.accessories && this.accessories.length > 0 )
          {
             this.log.debug( `Setting up which characteristics will be polled for Added Accessories of ${ this.displayName }` );
             this.accessories.forEach( ( addedAccessory ) =>
@@ -2233,11 +2233,13 @@ class Cmd4Accessory
                // Characteristic polling is a json type
                let jsonPollingConfig = accessory.polling[ jsonIndex ];
 
-               // The default timeout is 1 minute. Timeouts are in milliseconds
-               let timeout = constants.DEFAULT_TIMEOUT;
+               // The default timeout is defined frist by the accessory, and if not defined,
+               // then the default 1 minute. Timeouts are in milliseconds
+               let timeout = ( this.timeout ) ? this.timeout : constants.DEFAULT_TIMEOUT;
 
-               // The defaault interval is 1 minute. Intervals are in seconds
-               let interval = constants.DEFAULT_INTERVAL;
+               // The default interval is defined first by the accessory, and if not defined,
+               // then the default 1 minute interval. Intervals are in seconds
+               let interval = ( this.interval ) ? this.interval : constants.DEFAULT_INTERVAL;
 
                let value;
                let accTypeEnumIndex = -1;
