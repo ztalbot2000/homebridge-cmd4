@@ -549,6 +549,7 @@ block-warning a {
          <a href="#OutputConstants_D" onclick="toggleVisibility( 'Directives');">OutputConstants</a>
          <a href="#RestartRecover_D" onclick="toggleVisibility( 'Directives');">RestartRecover</a>
          <a href="#StatusMsg_D" onclick="toggleVisibility( 'Directives');">StatusMsg</a>
+         <a href="#Definitions_D" onclick="toggleVisibility( 'Directives');">Definitions</a>
       </DIV>   <!-- panel -->
       <button class="accordion">Accessory Directives
          <i class="fa fa-caret-down"></i>
@@ -567,6 +568,12 @@ block-warning a {
          <a href="#LinkedTypes" onclick="toggleVisibility( 'AccessoryDirectives');">LinkedTypes</a>
          <a href="#OutputConstants" onclick="toggleVisibility( 'AccessoryDirectives');">OutputConstants</a>
          <a href="#StatusMsg" onclick="toggleVisibility( 'AccessoryDirectives');">StatusMsg</a>
+      </DIV>   <!-- panel -->
+      <button class="accordion">Custom Characteristics
+         <i class="fa fa-caret-down"></i>
+      </button>
+      <div class="panel">
+         <a href="#CUSTOM_CHARACTERISTICS" onclick="toggleVisibility( 'CustomCharacteristics');">$Custom Characteristics</a>
       </DIV>   <!-- panel -->
       <button class="accordion">Script Templates
          <i class="fa fa-caret-down"></i>
@@ -6474,6 +6481,7 @@ block-warning a {
             <TR ALIGN="left"><TD><a name="OutputConstants_D">OutputConstants</a><TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1 for all Accessories</TR>
             <TR ALIGN="left"><TD><a name="RestartRecover_D"> RestartRecover</a><TD> < Bool > <TD> true <TD> If Cmd4 will use previous cached state information </TR>
             <TR ALIGN="left"><TD><a name="StatusMsg_D"> StatusMsg</a><TD> < Bool > <TD> true <TD> Cmd4 will log a Set Status Message for all Accessories.</TR>
+            <TR ALIGN="left"><TD><a name="Definitions_D"> Definitions</a><TD> < Array > <TD> <TD> An Array of new Characteristic Objects. See <a href="#CUSTOM_CHARACTERISTICS" onclick="toggleVisibility( 'CUSTOM_CHARACTERISTICS');">Custom Characteristics</a> for more information</TR>
          </TABLE>
       </DIV>   <!-- main -->
       <div id="AccessoryDirectives" class="section">
@@ -6516,6 +6524,47 @@ block-warning a {
             <TR ALIGN="left"><TD><a name="LinkedTypes">LinkedTypes</a><TD>  < JSON >  <TD> <TD> Other Cmd4 Accessories like Input Source for HDMI inputs. </TR>
          </TABLE>
       </DIV>   <!-- main -->
+      <div id="CustomCharacteristics" class="section">
+         <h2><a name="CUSTOMCHARACTERISTICS">Custom Characteristics</a></h2>
+         <p>These directives appear within the Cmd4 Platform section</p><BR>
+         <p>IMPORTANT - It is unlikely that adding custom characteristics will be supported by any GUI or SIRI<BR>
+         <BR><BR>
+         <p>Custom characteristics in Cmd4 do not stray far from how Homebridge uses them from HAP-NodeJS. To create a custom characteristic an object entry is programmatically added to <a href="https://github.com/ztalbot2000/homebridge-cmd4/blob/master/lib/CMD4_ACC_TYPE_ENUM.js">lib/CMD4_ACC_TYPE_ENUM.js</a> via an entry you define in your config.json. The best way to show how to define a custom characteristic is through an example</p>.
+         <pre>
+            {
+               "platform": "Cmd4",
+               "outputConstants": false,
+               "restartRecover": true,
+               "Cmd4_Mode": "FullyPolled",
+               "statusMsg": true,
+               "QueueStatMsgInterval": 100,
+               "Definitions": [
+                  { "type": "PointX",
+                    "description": "An X Coordinate",
+                    "props": { "format": "uint32",
+                               "minValue": 0,
+                               "minStep": 1,
+                               "perms": [ "ev", "pr", "pw" ]
+                             }
+                  }
+               ],
+               "accessories": [
+                  { "type": "Switch",
+                    "name": "PS_4",
+                    "Cmd4_Mode": "Always",
+                    "PointX": 3267,
+                    "on": false,
+                    "polling": [ { "characteristic": "On", "interval": 50 },
+                                 { "characteristic": "PointX", "interval": 5 }
+                               ],
+                    "state_cmd": "node .homebridge/Cmd4Scripts/AnyDevice.js"
+                  }
+               ]
+            }
+         </pre>
+         <BR><BR>
+         <p>The definitions for "props" can be found at: <a href="https://github.com/homebridge/HAP-NodeJS/blob/master/src/lib/Characteristic.ts">HAP Characteristics - line 259</a></p>
+      </DIV>   <!-- CustomCharacteristics -->
       <div id="JS Template" class="section">
          <h2><a name="JS Template">Example Cmd4 JavaScript Template</a></h2>
          <p> This script is auto generated from: <a href=https://github.com/ztalbot2000/homebridge-cmd4/blob/master/./Extras/Cmd4Scripts/Examples/ExampleJavaScript_template.js>./Extras/Cmd4Scripts/Examples/ExampleJavaScript_template.js </a></p>

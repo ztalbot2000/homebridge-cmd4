@@ -489,7 +489,9 @@ function addMain_withinContentDiv( )
 
       addCmd4DirectivePages_WithinMain( );
 
-      addCmd4AccessoryDirectivePages_WithinMain();
+      addCmd4AccessoryDirectivePages_WithinMain( );
+
+      addCustomCharacteristicPages_withinMain( );
 
       addScriptTemplatePages_WithinMain( );
 
@@ -605,6 +607,8 @@ function addSideNav_WithinContentDiv( )
 
       addSideNavCmd4AccessoryDirectivesLinks_WithinSideNav( );
 
+      addSideNavCustomCharacteristicsLinks_WithinSideNav( );
+
       addSideNavScriptTemplateLinks_WithinSideNav( );
 
       wfs( `<a href=https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/Developers.md>Developers Guide</a>\n` );
@@ -665,6 +669,7 @@ function addSideNavCmd4DirectivesLinks_WithinSideNav( )
       wfs( `<a href="#${ constants.OUTPUTCONSTANTS }_D" onclick="toggleVisibility( 'Directives');">${ constants.OUTPUTCONSTANTS }</a>\n` );
       wfs( `<a href="#${ constants.RESTART_RECOVER }_D" onclick="toggleVisibility( 'Directives');">${ constants.RESTART_RECOVER }</a>\n` );
       wfs( `<a href="#${ constants.STATUSMSG }_D" onclick="toggleVisibility( 'Directives');">${ constants.STATUSMSG }</a>\n` );
+      wfs( `<a href="#${ constants.DEFINITIONS }_D" onclick="toggleVisibility( 'Directives');">${ constants.DEFINITIONS }</a>\n` );
    endDiv( "panel" );
 
 }
@@ -693,6 +698,18 @@ function addSideNavCmd4AccessoryDirectivesLinks_WithinSideNav( )
       wfs( `<a href="#${ constants.STATUSMSG }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.STATUSMSG }</a>\n` );
    endDiv( "panel" );
 
+}
+
+function addSideNavCustomCharacteristicsLinks_WithinSideNav( )
+{
+   // Accordion button for Characteristics
+   wf( "+", `<button class="accordion">Custom Characteristics\n` );
+      wfs( `<i class="fa fa-caret-down"></i>\n` );
+   wf( "-", `</button>\n` );
+
+   wf( "+", `<div class="panel">\n` );
+      wfs( `<a href="#CUSTOM_CHARACTERISTICS" onclick="toggleVisibility( 'CustomCharacteristics');">$Custom Characteristics</a>\n` );
+   endDiv( "panel" );
 }
 
 function addSideNavScriptTemplateLinks_WithinSideNav( )
@@ -1053,6 +1070,9 @@ function addCmd4DirectivePages_WithinMain( )
   let  defaultStatusMsg_l = constants.DEFAULT_STATUSMSG.toLowerCase();
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATUSMSG }_D"> ${ constants.STATUSMSG }</a><TD> < Bool > <TD> ${ defaultStatusMsg_l } <TD> Cmd4 will log a Set Status Message for all Accessories.</TR>\n` );
 
+   // Definitions - Custom Characteristics
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.DEFINITIONS }_D"> ${ constants.DEFINITIONS }</a><TD> < Array > <TD> <TD> An Array of new Characteristic Objects. See <a href="#CUSTOM_CHARACTERISTICS" onclick="toggleVisibility( 'CUSTOM_CHARACTERISTICS');">Custom Characteristics</a> for more information</TR>\n` );
+
    wf( "-", `</TABLE>\n` );
    endDiv( "main" );
 
@@ -1146,6 +1166,55 @@ function addCmd4AccessoryDirectivePages_WithinMain( )
    wf( "-", `</TABLE>\n` );
    endDiv( "main" );
 
+}
+
+function addCustomCharacteristicPages_withinMain( )
+{
+   wf( "+", `<div id="CustomCharacteristics" class="section">\n` );
+
+   wfs( `<h2><a name="CUSTOMCHARACTERISTICS">Custom Characteristics</a></h2>\n` );
+   wfs( `<p>These directives appear within the Cmd4 Platform section</p><BR>\n` );
+   wfs( `<p>IMPORTANT - It is unlikely that adding custom characteristics will be supported by any GUI or SIRI<BR>\n` );
+   wfs( `<BR><BR>\n` );
+   wfs( `<p>Custom characteristics in Cmd4 do not stray far from how Homebridge uses them from HAP-NodeJS. To create a custom characteristic an object entry is programmatically added to <a href="https://github.com/ztalbot2000/homebridge-cmd4/blob/master/lib/CMD4_ACC_TYPE_ENUM.js">lib/CMD4_ACC_TYPE_ENUM.js</a> via an entry you define in your config.json. The best way to show how to define a custom characteristic is through an example</p>.\n` );
+   wf( "+", `<pre>\n` );
+   wfs( `{\n` );
+   wfs( `   "platform": "Cmd4",\n` );
+   wfs( `   "outputConstants": false,\n` );
+   wfs( `   "restartRecover": true,\n` );
+   wfs( `   "Cmd4_Mode": "FullyPolled",\n` );
+   wfs( `   "statusMsg": true,\n` );
+   wfs( `   "QueueStatMsgInterval": 100,\n` );
+   wfs( `   "Definitions": [\n` );
+   wfs( `      { "type": "PointX",\n` );
+   wfs( `        "description": "An X Coordinate",\n` );
+   wfs( `        "props": { "format": "uint32",\n` );
+   wfs( `                   "minValue": 0,\n` );
+   wfs( `                   "minStep": 1,\n` );
+   wfs( `                   "perms": [ "ev", "pr", "pw" ]\n` );
+   wfs( `                 }\n` );
+   wfs( `      }\n` );
+   wfs( `   ],\n` );
+   wfs( `   "accessories": [\n` );
+   wfs( `      { "type": "Switch",\n` );
+   wfs( `        "name": "PS_4",\n` );
+   wfs( `        "Cmd4_Mode": "Always",\n` );
+   wfs( `        "PointX": 3267,\n` );
+   wfs( `        "on": false,\n` );
+   wfs( `        "polling": [ { "characteristic": "On", "interval": 50 },\n` );
+   wfs( `                     { "characteristic": "PointX", "interval": 5 }\n` );
+   wfs( `                   ],\n` );
+   wfs( `        "state_cmd": "node .homebridge/Cmd4Scripts/AnyDevice.js"\n` );
+   wfs( `      }\n` );
+   wfs( `   ]\n` );
+   wfs( `}\n` );
+   wf( "-", `</pre>\n` );
+   wfs( `<BR><BR>\n` );
+   wfs( `<p>The definitions for "props" can be found at: <a href="https://github.com/homebridge/HAP-NodeJS/blob/master/src/lib/Characteristic.ts">HAP Characteristics - line 259</a></p>\n` );
+
+
+
+   endDiv( "CustomCharacteristics" );
 }
 
 function addScriptTemplatePages_WithinMain( )

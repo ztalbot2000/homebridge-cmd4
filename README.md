@@ -40,11 +40,12 @@
 ## Features
 &nbsp;&nbsp;&nbsp; Cmd4 supports, Lights, Garage Door Openers, Outlets, Switches, Lock Maintenance Systems, Lock Management Systems, Humidity Sensors, Doors, Light Sensors, Temperature Sensors, Contact Sensors, Motion Sensors, Thermostats, Security Systems, Battery Services, Filter Maintenance Systems, Air Purifiers, Television, Television Speaker, Input Sources, Irrigation Systems,  ... everything but Camera Streaming since it is not pliable to a command line Interface.
 
-&nbsp;&nbsp;&nbsp; Cmd4 also supports three types of polling, modified by the "fetch" directive.
+&nbsp;&nbsp;&nbsp; Cmd4 also supports three types of polling, modified by the "Cmd4_Mode" directive.
 <UL>
-<LI> { "fetch": "Always" } - As before, Always fetch characteristic value. ( Default )
-<LI> { "fetch": "Cached" } - Never fetch characteristic value. Use cached value. The cached value would have to be updated through polling.
-<LI> { "fetch": "Polled" } - Polled characteristics act like before, "Always". Non polled characteristic values are fetched from cache.
+<LI> { "Cmd4_Mode": "Always" } - As before, All characteristic are sent/retrieved from the device. ( Default )
+<LI> { "Cmd4_Mode": "Polled" } - Polled characteristics are retrieved from the device. Non polled characteristic values are sent/retrieved from cache.
+<LI> { "Cmd4_Mode": "FullyPolled" } - All characteristics are retrieved from cache. Polled characteristics are sent to the device. Expect any characteristic to be updated via configuring polling.
+<LI> { "Cmd4_Mode": "Demo" } - All characteristics are sent/retrieved from cache.
 </UL>
 
 &nbsp;&nbsp;&nbsp; Cmd4 supports Fakegato History and retaining previous state over restarts.
@@ -52,6 +53,8 @@
 &nbsp;&nbsp;&nbsp; Cmd4 can be configured to respond to actual devices directly or by modifying the script file it calls.
 
 &nbsp;&nbsp;&nbsp; Cmd4 Version 2.0 supported linked Accessories and the latest 3.0 Version supports both Platform plugin and Accessory plugin configurations as documented on [developers.homebridge.io](https://developers.homebridge.io).
+
+&nbsp;&nbsp;&nbsp; Cmd4 Version 3.5 adds in support for Custom Characteristics.
 
 
 <BR><BR>
