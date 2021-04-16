@@ -13,17 +13,20 @@ var Cmd4Accessory = require( "../Cmd4Accessory" ).Cmd4Accessory;
 
 // Unfortunately this test never exits, because polling will start.
 // Warn the user of such
-//
-function abort()
-{
-   console.log("Test of Cmd4Accessory requires CTRL-c as polling was backgrounded");
-   setTimeout( abort, 1800 );
-}
-setTimeout( ( ) => { abort(); }, 1800 );
+// Note: Not true anymore as polling moved to Platform.
+//function abort()
+//{
+//   console.log("Test of Cmd4Accessory requires CTRL-c as polling was backgrounded");
+//   setTimeout( abort, 1800 );
+//}
+//setTimeout( ( ) => { abort(); }, 1800 );
 
-// The default State_cmd is called from $HOME
+// The State_cmd is called from $HOME
 const home = require( "os" ).homedir();
-process.chdir( home );
+// THIS IS WHAT SCREWS UP THE THE UNIT TEST CASES IN Cmd4AccessoryGetValues! !!!
+//process.chdir( home );
+//
+
 
 // ******** QUICK TEST of SETUP *************
 describe('Quick Test of Setup', ( ) =>
@@ -305,7 +308,7 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
    let config={ name: "Test Switch",
                 type: "Switch",
                 on:   false,
-                state_cmd:   "node .homebridge/Cmd4Scripts/State.js",
+                state_cmd: `node ${ home }/.homebridge/Cmd4Scripts/State.js`,
                 interval: 10,                // seconds
                 StateChangeResponseTime: 1,  // seconds
                 timeout: 6000,               // msec
@@ -324,7 +327,6 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
 
    });
 
-   /*
    it( "Check that storedValuesPer Array size is:  " + ACC_EOL, ( ) =>
    {
       let STORED_DATA_ARRAY = [ ];
@@ -336,6 +338,5 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
       assert.equal( accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic.length, ACC_EOL, "Expected accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic to size: %s. Found %s" , ACC_EOL, accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic.length );
 
    });
-   */
 });
 
