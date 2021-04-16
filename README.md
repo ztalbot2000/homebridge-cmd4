@@ -155,7 +155,7 @@ Note: As of version 3.0.4, Cmd4 directives like polling, state_cmd, etc will try
 <BR><BR>
 ## Todo
 * [X] Linked characteristics, i.e. a smoke detectors battery is not yet linked.
-* [ ] Support for custom characteristics for an accessory. *Not possible as it would not be displayed by any GUI*
+* [X] Support for custom characteristics for an accessory. *Warning, May Not possible to be displayed by any GUI*
 * [X] Support multi word device names. (Technically done, but scripting is hard for newbies).
 * [ ] Scripting language to avoid creating new Homebridge modules.
 * [ ] HTTP commands. *Might be just to many options*
