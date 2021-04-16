@@ -1071,7 +1071,7 @@ function addCmd4DirectivePages_WithinMain( )
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATUSMSG }_D"> ${ constants.STATUSMSG }</a><TD> < Bool > <TD> ${ defaultStatusMsg_l } <TD> Cmd4 will log a Set Status Message for all Accessories.</TR>\n` );
 
    // Definitions - Custom Characteristics
-   wfs( `<TR ALIGN="left"><TD><a name="${ constants.DEFINITIONS }_D"> ${ constants.DEFINITIONS }</a><TD> < Array > <TD> <TD> An Array of new Characteristic Objects. See <a href="#CUSTOM_CHARACTERISTICS" onclick="toggleVisibility( 'CustomCharacteristics');">Custom Characteristics</a> for more information</TR>\n` );
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.DEFINITIONS }_D"> ${ constants.DEFINITIONS }</a><TD> < Array > <TD> <TD> An Array of new Characteristic Objects. See <a href="#CUSTOM_CHARACTERISTICS" onclick="toggleVisibility( 'CustomCharacteristics');">Custom Characteristics, around line 339</a> for more information</TR>\n` );
 
    wf( "-", `</TABLE>\n` );
    endDiv( "main" );
