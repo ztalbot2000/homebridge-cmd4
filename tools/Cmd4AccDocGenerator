@@ -692,6 +692,7 @@ function addSideNavCmd4AccessoryDirectivesLinks_WithinSideNav( )
       wfs( `<a href="#${ constants.STATE_CMD }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.STATE_CMD }</a>\n` );
       wfs( `<a href="#${ constants.POLLING }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.POLLING }</a>\n` );
       wfs( `<a href="#${ constants.INTERVAL }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.INTERVAL }</a>\n` );
+      wfs( `<a href="#${ constants.TIMEOUT }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.TIMEOUT }</a>\n` );
       wfs( `<a href="#${ constants.STATECHANGERESPONSETIME }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.STATECHANGERESPONSETIME }</a>\n` );
       wfs( `<a href="#${ constants.LINKEDTYPES }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.LINKEDTYPES }</a>\n` );
       wfs( `<a href="#${ constants.OUTPUTCONSTANTS }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.OUTPUTCONSTANTS }</a>\n` );
@@ -1072,7 +1073,13 @@ function addCmd4DirectivePages_WithinMain( )
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATUSMSG }_D"> ${ constants.STATUSMSG }</a><TD> < Bool > <TD> ${ defaultStatusMsg_l } <TD> Cmd4 will log a Set Status Message for all Accessories.</TR>\n` );
 
    // Cmd4_Mode
-   wfs( `<TR ALIGN="left"><TD><a name="${ constants.CMD4_MODE }"> ${ constants.CMD4_MODE }</a><TD> "${ constants.CMD4_MODE_DEMO }" | "${ constants.CMD4_MODE_ALWAYS }" | "${ constants.CMD4_MODE_POLLED }" | "${ constants.CMD4_MODE_FULLYPOLLED }" <TD> ${ constants.CMD4_MODE_ALWAYS } <TD> Determines what and when characteristics are updated from the device. See <a href="#${ constants.CMD4_MODE }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.CMD4_MODE }/a> in Accessory Directives for full description as it can also be set per accessory.</TR>\n` );
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.CMD4_MODE }"> ${ constants.CMD4_MODE }</a><TD> "${ constants.CMD4_MODE_DEMO }" | "${ constants.CMD4_MODE_ALWAYS }" | "${ constants.CMD4_MODE_POLLED }" | "${ constants.CMD4_MODE_FULLYPOLLED }" <TD> ${ constants.CMD4_MODE_ALWAYS } <TD> Determines what and when characteristics are updated from the device. See <a href="#${ constants.CMD4_MODE }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.CMD4_MODE }</a> in Accessory Directives for full description as it can also be set per accessory.</TR>\n` );
+
+   // Interval
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.INTERVAL }"> ${ constants.INTERVAL }</a><TD> ${ constants.INTERVAL } <TD> ${ constants.DEFAULT_INTERVAL * .001 } < seconds > <TD> How long before killing the state command of all polled characteristics. See <a href="#${ constants.INTERVAL }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.INTERVAL }</a> in Accessory Directives for full description as it can also be set per accessory or per characteristic.</TR>\n` );
+
+   // Timeout
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.TIMEOUT }"> ${ constants.TIMEOUT }</a><TD> ${ constants.TIMEOUT } <TD> ${ constants.DEFAULT_TIMEOUT } < msec > <TD> How long before killing the state command of all polled characteristics. See <a href="#${ constants.TIMEOUT }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.TIMEOUT }</a> in Accessory Directives for full description as it can also be set per accessory or per characteristic.</TR>\n` );
 
    // Definitions - Custom Characteristics
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.DEFINITIONS }_D"> ${ constants.DEFINITIONS }</a><TD> < Array > <TD> <TD> An Array of new Characteristic Objects. See <a href="#CUSTOM_CHARACTERISTICS" onclick="toggleVisibility( 'CustomCharacteristics');">Custom Characteristics, around line 339</a> for more information</TR>\n` );
@@ -1132,13 +1139,16 @@ function addCmd4AccessoryDirectivePages_WithinMain( )
    // stateChangeResponseTime
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATECHANGERESPONSETIME }">${ constants.STATECHANGERESPONSETIME }</a><TD> < seconds > <TD> 60 <TD> How long to wait between a Set and Get command.</TR>\n` );
 
+   // interval
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.INTERVAL }">${ constants.INTERVAL }</a><TD> < seconds > <TD> ${ constants.DEFAULT_INTERVAL * .001 } < seconds > <TD> How long between polls of all polled characteristics.</TR>\n` );
+
    // timeout
-   wfs( `<TR ALIGN="left"><TD><a name="${ constants.TIMEOUT }">${ constants.TIMEOUT }</a><TD> < msec > <TD> <TD> How long before killing the state command.</TR>\n` );
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.TIMEOUT }">${ constants.TIMEOUT }</a><TD> ${ constants.DEFAULT_TIMEOUT } < msec > <TD> ${ constants.DEFAULT_TIMEOUT } <TD> How long before killing the state command of all polled characteristics.</TR>\n` );
 
    // polling
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.POLLING }">${ constants.POLLING }</a><TD> < Bool > <TD> false <TD> If the characteristics should be polled for state change.</TR>\n` );
 
-   wfs( `<TR><TD><TD COLSPAN=3> or  [{"characteristic" < characteristic >, [ "interval": < sec >, "timeout": < msec > ] }] </TR>\n` );
+   wfs( `<TR><TD><TD COLSPAN=3> or  [{"characteristic" < characteristic >, [ "interval": < sec >, "timeout": < msec > ] }] The timeout and interval override any higher directive.</TR>\n` );
 
    // state_cmd
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATE_CMD }">${ constants.STATE_CMD }</a><TD>  < ${ constants.STATE_CMD } > <TD> See Description <TD> The command used to Get/Set Device characteristic State.</TR>\n` );
