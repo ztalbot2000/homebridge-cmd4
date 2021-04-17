@@ -1067,8 +1067,12 @@ function addCmd4DirectivePages_WithinMain( )
    // restartRecover
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.RESTART_RECOVER }_D"> ${ constants.RESTART_RECOVER }</a><TD> < Bool > <TD> true <TD> If Cmd4 will use previous cached state information </TR>\n` );
 
-  let  defaultStatusMsg_l = constants.DEFAULT_STATUSMSG.toLowerCase();
+   // statusMsg
+   let  defaultStatusMsg_l = constants.DEFAULT_STATUSMSG.toLowerCase();
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATUSMSG }_D"> ${ constants.STATUSMSG }</a><TD> < Bool > <TD> ${ defaultStatusMsg_l } <TD> Cmd4 will log a Set Status Message for all Accessories.</TR>\n` );
+
+   // Cmd4_Mode
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.CMD4_MODE }"> ${ constants.CMD4_MODE }</a><TD> "${ constants.CMD4_MODE_DEMO }" | "${ constants.CMD4_MODE_ALWAYS }" | "${ constants.CMD4_MODE_POLLED }" | "${ constants.CMD4_MODE_FULLYPOLLED }" <TD> ${ constants.CMD4_MODE_ALWAYS } <TD> Determines what and when characteristics are updated from the device. See <a href="#${ constants.CMD4_MODE }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.CMD4_MODE }/a> in Accessory Directives for full description as it can also be set per accessory.</TR>\n` );
 
    // Definitions - Custom Characteristics
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.DEFINITIONS }_D"> ${ constants.DEFINITIONS }</a><TD> < Array > <TD> <TD> An Array of new Characteristic Objects. See <a href="#CUSTOM_CHARACTERISTICS" onclick="toggleVisibility( 'CustomCharacteristics');">Custom Characteristics, around line 339</a> for more information</TR>\n` );
