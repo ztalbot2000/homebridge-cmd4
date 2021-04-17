@@ -29,6 +29,19 @@ const Cmd4Accessory = require( "./Cmd4Accessory" ).Cmd4Accessory;
 let settings = require( "./cmd4Settings" );
 const constants = require( "./cmd4Constants" );
 
+
+// These would be sets of characteristics to be polled.
+var queuedListOfPollingCharacteristics = { };
+var queuedListOfPollingQueueStats = { };
+
+// Function to return array split by inclusion
+// returns [ truesArray, falsesArray ];
+// Taken from https://stackoverflow.com/questions/11731072/dividing-an-array-by-filter-function
+function partition(array, predicate)
+{
+   return array.reduce( ( acc, item ) => ( acc[+!predicate( item )].push( item ), acc ), [ [], [] ] );
+}
+
 // Platform definition
 class Cmd4Platform
 {
@@ -78,7 +91,8 @@ class Cmd4Platform
       {
          this.log.info( chalk.blue( "Cmd4Platform didFinishLaunching" ) );
 
-         if ( this.restartRecover == false && this.toBeRestoredPlatforms.length > 0  )
+         if ( this.restartRecover == false &&
+              this.toBeRestoredPlatforms.length > 0  )
          {
             this.log.info( chalk.yellow( `Removing ` ) + chalk.red( `*ALL* ` ) + chalk.yellow( `cached accessories as: ${ constants.RESTART_RECOVER } is set to false` ) );
             this.api.unregisterPlatformAccessories(  settings.PLUGIN_NAME, settings.PLATFORM_NAME, this.toBeRestoredPlatforms );
@@ -152,15 +166,16 @@ class Cmd4Platform
       {
          let value = config[ key ];
 
-         // I made the stupid mistake of not having all characteristics in the config.json
-         // file not upper case to match that in State.js. So instead of having everyone
-         // fix their scripts, fix it here.
+         // I made the stupid mistake of not having all characteristics in
+         // the config.json file not upper case to match that in State.js.
+         // So instead of having everyone fix their scripts, fix it here.
          let ucKey = ucFirst( key );
 
          switch ( ucKey )
          {
             case constants.TIMEOUT:
-               // Timers are in milliseconds. A low value can result in failure to get/set values
+               // Timers are in milliseconds. A low value can result in
+               // failure to get/set values
                this.timeout = parseInt( value, 10 );
                if ( this.timeout < 500 )
                   this.log.warn( `Default Timeout is in milliseconds. A value of "${ this.timeout }" seems pretty low.` );
@@ -701,28 +716,15 @@ class Cmd4Platform
       cmd4PlatformAccessory.setupAccessoryFakeGatoService( cmd4PlatformAccessory.fakegatoConfig );
    }
 
-   startPolling( )
+   startStaggeredPolling( staggeredPollingArray )
    {
-      let startDelay = 3000;
+      let startDelay = 0;
       let staggeredDelays = [ 3000, 6000, 9000, 12000 ];
       let staggeredDelaysLength = staggeredDelays.length;
       let staggeredDelayIndex = 0;
       let lastAccessoryUUID = ""
 
-      //Hmm, check for duplicates. None found, Yeah!
-      //let arr = settings.arrayOfPollingCharacteristics;
-      //arr.forEach( ( entry, index ) =>
-      //{
-      //   let UUID = entry.accessory.UUID;
-      //   let accTypeEnumIndex = entry.accTypeEnumIndex;
-      //   console.log( "index:%s %s:%s", index, entry.accessory.displayName, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type );
-      //   let duplicates = arr.filter( ( sentry, sindex ) => sentry.accessory.UUID == UUID && sentry.accTypeEnumIndex == accTypeEnumIndex && index != sindex );
-      //   if ( duplicates.length > 0 )
-      //      console.log( "**** Duplicates of %s:%s=%s", entry.accessory.displayName, accTypeEnumIndex, duplicates );
-      //});
-
-
-      settings.arrayOfPollingCharacteristics.forEach( ( entry, entryIndex )  =>
+      staggeredPollingArray.forEach( ( entry, entryIndex )  =>
       {
          let accessory = entry.accessory;
          let accTypeEnumIndex = entry.accTypeEnumIndex;
@@ -738,8 +740,8 @@ class Cmd4Platform
 
             accessory.log.debug( `Kicking off polling for: ${ accessory.displayName } ${ characteristicString } interval:${ interval }, staggered:${ staggeredDelays[ staggeredDelayIndex ]}` );
             accessory.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] =
-                        setTimeout( accessory.characteristicPolling.bind(
-                        accessory, accessory, accTypeEnumIndex, timeout, interval ), interval );
+               setTimeout( accessory.characteristicPolling.bind(
+                  accessory, accessory, accTypeEnumIndex, timeout, interval ), interval );
 
             if ( entryIndex == settings.arrayOfPollingCharacteristics.length -1 )
                accessory.log.info( `All characteristics are now being polled` );
@@ -757,6 +759,283 @@ class Cmd4Platform
 
          startDelay += staggeredDelays[ staggeredDelayIndex ];
 
+      });
+   }
+
+   startPollingQueue( queue, pollingEntryIndex )
+   {
+      let queuedArrayOfPollingCharacteristics = queuedListOfPollingCharacteristics[ queue ];
+      let queueStats = queuedListOfPollingQueueStats[ queue ];
+
+      this.log.debug( `Started to kick off polling queue ${ queue } index: ${ pollingEntryIndex } of ${ queuedArrayOfPollingCharacteristics.length } characteristics` );
+
+      let currentPollingEntry = queuedArrayOfPollingCharacteristics[ pollingEntryIndex ];
+
+      let accessory = currentPollingEntry.accessory;
+      let accTypeEnumIndex = currentPollingEntry.accTypeEnumIndex;
+      //let timeout = currentPollingEntry.timeout;
+      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+
+
+
+      // 0. Init if not done before
+      // 1. get start time
+      // 2. call getvalue
+      // 3. on return. Stop timer
+      // 4A. If OK Calculate shorter wait time
+      // 4B. If NOT OK Calculate longer wait time
+      // 5. incr index
+      // 6. Queue Polling by waiting before recalling this function
+
+      // Init all the stats for the first time
+      if ( queueStats.interval == undefined )
+      {
+         this.log.info( chalk.green( `Setting minimum interval for queue: ${ queue } to: ${ currentPollingEntry.interval }` ) + ` as defined by the interval of accessory: ${ accessory.displayName } characteristic: ${ characteristicString }` );
+         queueStats[ "originalInterval" ] = currentPollingEntry.interval;
+         queueStats[ "interval" ] = currentPollingEntry.interval;
+         queueStats[ "bestInterval" ] = 0;
+         queueStats[ "bestAverage" ] = 0;
+         queueStats[ "timeout" ] = currentPollingEntry.timeout;
+         queueStats[ "errorCount" ] = 0;
+         queueStats[ "failureCount" ] = 0;
+         queueStats[ "count" ] = 0;
+         queueStats[ "lastAttemptFailed" ] = false;
+         queueStats[ "passCountBeforeLastFailure" ] = 0;
+         queueStats[ "errorCountBeforeLastPass" ] = 0;
+         queueStats[ "startTime" ] = Date.now( );
+         queueStats[ "endTime" ] = Date.now( );
+         queueStats[ "totalTime" ] = 0;
+         queueStats[ "totalPassingTimeBeforeLastFailure" ] = 0;
+      }
+
+      // Display queue statistics every modded count
+      if ( this.queueStatMsgInterval !=0 &&
+           queueStats.count != 0 &&
+           queueStats.count % this.queueStatMsgInterval == 0 )
+      {
+         let line = `Queue "${ queue }" Stats`;
+         this.log.info( chalk.underline( chalk.blue( line )));
+         this.log.info( chalk.blue( `${ "=".repeat( line.length ) }` ));
+         this.log.info(`originalInterval: ${ queueStats.originalInterval }` );
+         this.log.info(`interval: ${ queueStats.interval }` );
+         this.log.info(`bestInterval: ${ queueStats.bestInterval }` );
+         this.log.info(`bestAverage: ${ queueStats.bestAverage }` );
+         this.log.info(`timeout: ${ queueStats.timeout }` );
+         this.log.info(`errorCount: ${ queueStats.errorCount }` );
+         this.log.info(`failureCount: ${ queueStats.failureCount }` );
+         this.log.info(`count: ${ queueStats.count }` );
+         this.log.info(`lastAttemptFailed: ${ queueStats.lastAttemptFailed }` );
+         this.log.info(`passCountBeforeLastFailure: ${ queueStats.passCountBeforeLastFailure }` );
+         this.log.info(`errorCountBeforeLastPass: ${ queueStats.errorCountBeforeLastPass }` );
+         this.log.info(`last time: ${ queueStats.endTime - queueStats.startTime }` );
+         this.log.info(`totalTime: ${ queueStats.totalTime }` );
+         this.log.info(`totalPassingTimeBeforeLastFailure: ${ queueStats.totalPassingTimeBeforeLastFailure }` );
+      }
+
+      let self = this;
+
+      // They are probably all the same and it doesn't really matter,
+      // but be nice about it anyway
+      accessory.interval = currentPollingEntry.interval;
+      let pollingID = Date.now( );
+      currentPollingEntry.pollingID = pollingID;
+
+      queueStats.count ++;
+      queueStats.startTime = Date.now( );
+      accessory.getValue( accTypeEnumIndex, function ( error, properValue, returnedPollingID )
+      {
+         // This function should only be called once, noted by the pollingID.
+         if ( currentPollingEntry.pollingID == returnedPollingID )
+         {
+            currentPollingEntry.pollingEntry = -1;
+         } else
+         {
+            accessory.log.info("More entries for pollingID");
+            return;
+         }
+
+         queueStats.endTime = Date.now( );
+         queueStats.count ++;
+         let diffTime = queueStats.endTime - queueStats.startTime;
+         queueStats.totalTime += diffTime;
+
+         switch( error )
+         {
+            case 0:
+            {
+               accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic ).updateValue( properValue );
+
+               queueStats.passCountBeforeLastFailure ++;
+               queueStats.errorCountBeforeLastPass = 0;
+               queueStats.totalPassingTimeBeforeLastFailure += diffTime;
+
+               // Allow faster intervals
+               // Each entry must pass at least five times for a good
+               // sample for polling intervals to be reduced. The reduction
+               // then happens every length of queue polls.
+               if ( queueStats.passCountBeforeLastFailure >= queuedArrayOfPollingCharacteristics.length * 5 &&
+                    queueStats.passCountBeforeLastFailure % queuedArrayOfPollingCharacteristics.length == 0 )
+               {
+                  let avg = queueStats.totalPassingTimeBeforeLastFailure / queueStats.passCountBeforeLastFailure;
+                  if ( queueStats.bestInterval == 0 ||
+                       queueStats.interval < queueStats.bestInterval )
+                  {
+                      queueStats.bestInterval = queueStats.interval;
+                      accessory.log.info(`Set bestInterval for queue: ${ queue } to ${ queueStats.bestInterval }` );
+                  }
+
+                  if ( queueStats.bestAverage == 0 ||
+                       avg < queueStats.bestAverage )
+                  {
+                      queueStats.bestAverage = avg;
+                      accessory.log.info(`Set bestAverage for queue: ${ queue } to ${ queueStats.bestAverage }` );
+                  }
+
+                  // Slowly decrease time between polls by 1/4 second
+                  let maxBackoff = 250;
+                  let backoff =  queueStats.interval - avg;
+                  if ( backoff > maxBackoff )
+                     backoff = maxBackoff;
+
+                  // Do not go below the original interval.
+                  if ( queueStats.interval - backoff > queueStats.originalInterval  )
+                  {
+                     // Do not ho below 3 times the average.
+                     if ( queueStats.interval - backoff > 3 * avg )
+                     {
+                       queueStats.interval -= backoff;
+                       accessory.log.info( `Decreasing interval by ${ backoff } to ${ queueStats.interval } for queue: ${ queue }` );
+                     }
+                  }
+               }
+
+               break;
+            }
+            case constants.ERROR_TIMER_EXPIRED:
+            // When the MyAir is busy, the result is empty strings or
+            // null and while they are not passed to homebridge, polling
+            // must slow.
+            // break omitted
+            case constants.ERROR_NULL_REPLY:
+            case constants.ERROR_NULL_STRING_REPLY:
+            case constants.ERROR_EMPTY_STRING_REPLY:
+            case constants.ERROR_2ND_NULL_STRING_REPLY:
+            case constants.exports.ERROR_NO_DATA_REPLY:
+            {
+               queueStats.errorCount++;
+               queueStats.passCountBeforeLastFailure = 0;
+               queueStats.errorCountBeforeLastPass++;
+               queueStats.totalPassingTimeBeforeLastFailure = 0;
+
+               // Increase time between intervals
+               if ( queueStats.errorCountBeforeLastPass >= 3 &&
+                  queueStats.bestInterval > queueStats.interval )
+               {
+                  queueStats.interval = queueStats.bestInterval;
+                  accessory.log.info( `Increasing interval to bestInterval: ${ queueStats.interval } for queue: ${ queue } because of error: ${ error }` );
+               }
+               else if ( queueStats.errorCountBeforeLastPass >= 2 )
+               {
+                  queueStats.interval += 1000;
+                  accessory.log.info( `Increasing interval by 1000 to ${ queueStats.interval } for queue: ${ queue } because of error: ${ error }` );
+               }
+               else if ( queueStats.errorCountBeforeLastPass >= 1 )
+               {
+                  queueStats.interval += 500;
+                  accessory.log.info( `Increasing interval by 500 to ${ queueStats.interval } for queue: ${ queue } because of error: ${ error }` );
+               }
+               if ( queueStats.interval > 8000 )
+               {
+                  queueStats.interval = 8000;
+                  accessory.log.info( `Resetting to Max interval of 8s` );
+               }
+
+               break;
+            }
+            // These are not really errors caused by polling
+            // break omitted
+            case constants.ERROR_CMD_FAILED_REPLY:
+            case constants.ERROR_NON_CONVERTABLE_REPLY:
+            {
+               queueStats.failureCount ++;
+
+               break;
+            }
+            default:
+               accessory.log.info( `Poll failed: ${ error  } for queue: ${ queue }` );
+               queueStats.failureCount ++;
+         }
+
+         pollingEntryIndex ++;
+         if ( pollingEntryIndex >= queuedArrayOfPollingCharacteristics.length )
+            pollingEntryIndex = 0;
+
+         self.log.debug( `Waiting ${ queueStats.interval } for queue: ${ queue }` );
+         //setTimeout( ( ) => {
+         //   self.log.info("Waiting2 %s", queueStats.interval );
+         //   self.startPollingQueue( queue, pollingEntryIndex );
+         //}, queueStats.interval );
+         setTimeout( self.startPollingQueue.bind(
+                        self, queue, pollingEntryIndex ), queueStats.interval );
+
+
+      }, pollingID );
+   }
+
+   startPolling( )
+   {
+      let startDelay = 3000;
+      let arrayOfPollingCharacteristics = [ ];
+      let queuedArrayOfPollingCharacteristics = [ ];
+
+
+      // Unit testing
+      if ( settings.arrayOfPollingCharacteristics.length == 0 )
+      {
+         this.log.debug( ` ! settings.arrayOfPollingCaracteristecs` );
+         return;
+      }
+
+      // Seperate what was meant to be polled into the old staggered method
+      // and the queued method
+      [ arrayOfPollingCharacteristics,
+        queuedArrayOfPollingCharacteristics] = partition(settings.arrayOfPollingCharacteristics, i => i.queue === constants.DEFAULT_QUEUE);
+
+      setTimeout( ( ) =>
+      {
+         this.startStaggeredPolling( arrayOfPollingCharacteristics );
+      }, startDelay );
+
+      // Check for any queued characteristics
+      if ( queuedArrayOfPollingCharacteristics.length == 0 )
+      {
+         this.log.debug( `No queued polling characteristics` );
+         return;
+      }
+
+      // Divide the polled characteristics into their respective queue
+      // Coerced to string in case the queue was a number
+      queuedArrayOfPollingCharacteristics.forEach( ( elem ) =>
+      {
+         if ( queuedListOfPollingCharacteristics[ `${ elem.queue }` ] === undefined )
+         {
+            this.log.debug( `Creating new Polled Queue ${ elem.queue }` );
+            queuedListOfPollingCharacteristics[ `${ elem.queue }` ] = [ ];
+            queuedListOfPollingQueueStats[ `${ elem.queue }` ] = { };
+         }
+         this.log.debug( `Adding ${ elem.accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ elem.accTypeEnumIndex ].type }  elem.timeout: ${ elem.timeout } elem.interval: ${ elem.interval }  to Polled Queue ${ elem.queue }` );
+
+         queuedListOfPollingCharacteristics[ `${elem.queue}` ].push( elem );
+      });
+
+      // Start polling of each queue of characteristics
+      Object.keys( queuedListOfPollingCharacteristics ).forEach( ( key ) =>
+      {
+         setTimeout( ( ) =>
+         {
+            this.log( ` *** Starting main queue ${ key }` );
+            this.startPollingQueue( key, 0 );
+         }, startDelay );
       });
    }
 }

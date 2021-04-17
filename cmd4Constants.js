@@ -125,6 +125,7 @@ exports.ERROR_NULL_STRING_REPLY       = -154;
 exports.ERROR_EMPTY_STRING_REPLY      = -155;
 exports.ERROR_2ND_NULL_STRING_REPLY   = -156;
 exports.ERROR_NON_CONVERTABLE_REPLY   = -157;
+exports.ERROR_NO_DATA_REPLY           = -158;
 
 // internal strings
 exports.storedValuesPerCharacteristic = "storedValuesPerCharacteristic";

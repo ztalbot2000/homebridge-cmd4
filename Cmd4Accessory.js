@@ -73,7 +73,7 @@ class Cmd4Accessory
       this.config = config;
       this.api = api;
       // keep a copy because traversing it for format checking can be slow.
-      this.Characteristic=api.hap.Characteristic;
+      this.Characteristic = api.hap.Characteristic;
       this.parentInfo = parentInfo;
 
       // Use parent values ( if any ) or these defaults.
@@ -95,6 +95,7 @@ class Cmd4Accessory
       // Instead of polling per accessory, allow the config file to be polled per characteristic.
       this.listOfRunningPolls = { };
       this.pollingStarted = false;
+
       this.ServiceCreated = false;
 
       // DisplayName and/or Name must be defined.
@@ -406,7 +407,7 @@ class Cmd4Accessory
                {
                   this.queue = value;
 
-                  break;
+                   break;
                }
                case constants.CHARACTERISTIC:
                {
@@ -789,7 +790,7 @@ class Cmd4Accessory
    //           the CMD4_ACC_TYPE_ENUM.
    //
    // ***********************************************
-   getValue( accTypeEnumIndex, callback  )
+   getValue( accTypeEnumIndex, callback, pollingID = 0 )
    {
       let self = this;
 
@@ -799,7 +800,7 @@ class Cmd4Accessory
 
       let cmd = this.state_cmd_prefix + this.state_cmd + " Get '" + this.displayName + "' '" + characteristicString  + "'" + this.state_cmd_suffix;
 
-      self.log.debug( `getValue: accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } cmd: ${ cmd }` );
+      self.log.debug( `getValue: accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } cmd: ${ cmd } pollingID: ${ pollingID }` );
 
       let replyCount = 0;
 
@@ -809,11 +810,21 @@ class Cmd4Accessory
 
       const timer = setTimeout(() =>
       {
-         child.kill( 'SIGINT' );
          self.log.error( chalk.red( `getValue ${ characteristicString } function timed out ${ timeout }ms for ${ self.displayName } cmd: ${ cmd } Failed.` ) );
+
+         child.kill( 'SIGINT' );
 
          // Do not call the callback or too many will be called.
          // Prefer homebridge complain about slow response.
+
+         // We can call our callback though ;-)
+//         self.log.info( chalk.red( `${ characteristicString } pollingID ${ pollingID }` ) );
+         if ( pollingID != 0 && replyCount == 0 )
+         {
+            self.log.info( chalk.red( `${ characteristicString } callback with TIMER_EPIRED` ) );
+            callback( constants.ERROR_TIMER_EXPIRED, null, pollingID );
+            return;
+         }
 
       }, timeout );
 
@@ -826,15 +837,38 @@ class Cmd4Accessory
       {
          if ( code != 0 )
          {
-            self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  Error: ${ code }` ) );
+            self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  replyCount: ${ replyCount } Error: ${ code }` ) );
          }
 
          clearTimeout( timer );
+
+         // Do not call the callback as too many will be called.
+         // Prefer homebridge complain about slow response.
+
+         // We can call our callback though ;-)
+         if ( pollingID != 0 && replyCount == 0 && code == 0 )
+         {
+            self.log.error( chalk.red( `getValue ${ characteristicString } function emmitted no data for ${ self.displayName } cmd: ${ cmd }.  replyCount: ${ replyCount } Error: ${ code }` ) );
+            callback( exports.ERROR_NO_DATA_REPLY, null, pollingID );
+            return;
+         }
       });
 
       child.on('error', ( error ) =>
       {
-            self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  generated Error: ${ error }` ) );
+         self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  generated Error: ${ error }` ) );
+         // Do not call the callback as too many will be called.
+         // Prefer homebridge complain about slow response.
+
+         // Stop babbling
+         child.kill( 'SIGINT' );
+
+         // We can call our callback though ;-)
+         if ( pollingID != 0 && replyCount == 0 )
+         {
+            callback( constants.ERROR_CMD_FAILED_REPLY, null, pollingID );
+            return;
+         }
       });
 
       child.stdout.on('data', ( reply ) =>
@@ -845,7 +879,17 @@ class Cmd4Accessory
          {
             self.log.error( `getValue: null returned from stdout for ${ characteristicString } ${ self.displayName }` );
             // Do not call the callback or continue processing as too many will be called.
-            // Prefer to wait for possibly more data and homebridge complain about a slow response.
+            // Prefer homebridge complain about slow response.
+
+            // Stop babbling
+            child.kill( 'SIGINT' );
+
+            // We can call our callback though ;-)
+            if ( pollingID != 0 && replyCount == 0 )
+            {
+               callback( constants.ERROR_NULL_REPLY, null, pollingID );
+            }
+
             return;
          }
 
@@ -858,11 +902,21 @@ class Cmd4Accessory
 
          // Theoretically not needed as this is caught below, but I wanted
          // to catch this before much string manipulation was done.
-         if ( trimmedReply.toUpperCase( ) == "NULL" )
-         {
+         if ( trimmedReply.toUpperCase( ) == "NULL" ) {
             self.log.error( `getValue: "${ trimmedReply }" returned from stdout for ${ characteristicString } ${ self.displayName }` );
             // Do not call the callback or continue processing as too many will be called.
-            // Prefer to wait for possibly more data and homebridge complain about a slow response.
+            // Prefer homebridge complain about slow response.
+
+
+            // Stop babbling
+            child.kill( 'SIGINT' );
+
+            // We can call our callback though ;-)
+            if ( pollingID != 0 && replyCount == 0 )
+            {
+               callback( constants.ERROR_NULL_STRING_REPLY, null, pollingID );
+            }
+
             return;
          }
 
@@ -877,7 +931,18 @@ class Cmd4Accessory
             self.log.error( `getValue: ${ characteristicString } function for: ${ self.displayName } returned an empty string "${ trimmedReply }"` );
 
             // Do not call the callback or continue processing as too many will be called.
-            // Prefer to wait for possibly more data and homebridge complain about a slow response.
+            // Prefer homebridge complain about slow response.
+
+
+            // Stop babbling
+            child.kill( 'SIGINT' );
+
+            // We can call our callback though ;-)
+            if ( pollingID != 0 && replyCount == 0 )
+            {
+               callback( constants.ERROR_EMPTY_STRING_REPLY, null, pollingID );
+            }
+
             return;
          }
 
@@ -889,16 +954,30 @@ class Cmd4Accessory
             self.log.error( `getValue: ${ characteristicString } function for ${ self.displayName } returned the string "${ trimmedReply }"` );
 
             // Do not call the callback or continue processing as too many will be called.
-            // Prefer to wait for possibly more data and homebridge complain about a slow response.
+            // Prefer homebridge complain about slow response.
+
+
+            // Stop babbling
+            child.kill( 'SIGINT' );
+
+            // We can call our callback though ;-)
+            if ( pollingID != 0 && replyCount == 0 )
+            {
+               callback( constants.ERROR_2ND_NULL_STRING_REPLY, null, pollingID );
+            }
+
             return;
          }
 
          if ( replyCount > 1 )
          {
-            self.log.warn( `${ self.displayName} ` + chalk.red( `Receiving to many lines of data( ${ replyCount } ): ${ unQuotedReply } for ${ characteristicString }` ) );
+            self.log.warn( `${ self.displayName} ` + chalk.red( `Receiving to many lines of data( ${ replyCount } ): ${ unQuotedReply } for ${ characteristicString } reply: ${ reply }` ) );
+
+
+            // Stop babbling
+            child.kill( 'SIGINT' );
 
             // Do not call the callback or continue processing as too many will be called.
-            // Prefer to wait for possibly more data and homebridge complain about a slow response.
             return;
          }
 
@@ -934,7 +1013,6 @@ class Cmd4Accessory
 
          // Return the appropriate type, by seeing what it is
          // defined as in Homebridge,
-         //unQuotedReply = self.characteristicValueToItsProperType( self, accTypeEnumIndex, unQuotedReply );
          let properValue = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( unQuotedReply );
          if ( properValue == undefined )
          {
@@ -942,12 +1020,26 @@ class Cmd4Accessory
             self.log.warn( `${ self.displayName} ` + chalk.red( `Cannot convert value: ${ unQuotedReply } to ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format } for ${ characteristicString }`  ) );
 
             // Do not call the callback or continue processing as too many will be called.
-            // Prefer to wait for possibly more data and homebridge complain about a slow response.
+
+            // Stop babbling
+            child.kill( 'SIGINT' );
+
+            // We can call our callback though ;-)
+            if ( pollingID != 0 && replyCount == 0 )
+            {
+               callback( constants.ERROR_NON_CONVERTABLE_REPLY, null, pollingID );
+            }
+
             return;
          }
 
+         replyCount++;
 
-         callback( 0, properValue );
+         if ( pollingID != 0 )
+            callback( 0, properValue, pollingID );
+         else
+            callback( 0, properValue );
+
 
          // Store history using fakegato if set up
          self.updateAccessoryAttribute( accTypeEnumIndex, properValue );
@@ -1056,7 +1148,7 @@ class Cmd4Accessory
              if ( ! accessory.service.testCharacteristic(
                   CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic ) )
              {
-                accessory.log.debug( "Adding optional characteristic:%s for: %s", CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, this.displayName );
+                   accessory.log.debug( "Adding optional characteristic:%s for: %s", CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, this.displayName );
 
                 accessory.service.addCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic );
              }
@@ -2356,7 +2448,7 @@ class Cmd4Accessory
          // Look to see if currently polled characteristics are like "Current*" and have
          // a related characteristic like "Target*"
          // Note: By default it will be put their automatically as this message says
-         //     **** Adding required characteristic TargetTemperature for Thermostat
+         // **** Adding required characteristic TargetTemperature for Thermostat
          //          Not defining a required characteristic can be problematic
          //     Except for Optional "Current*" "Target*" characteristics which
          //     isRelatedTargetCharacteristicInSameDevice does resolve.
@@ -2408,7 +2500,7 @@ class Cmd4Accessory
       // i.e. Characteristic.On
       //      Characteristic.RotationDirection
 
-      accessory.getValue( accTypeEnumIndex, function ( error, properValue) {
+      accessory.getValue( accTypeEnumIndex, function ( error, properValue)
       {
          if ( error == 0 )
          {
@@ -2419,12 +2511,12 @@ class Cmd4Accessory
             accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic ).updateValue( properValue );
          }
 
-      }});
+      }, false );
 
 
 
-      // Add the check of this.listOfRunningPolls so that in Unit Testing, we can delete polling 
-      // if we want to.
+      // Add the check of this.listOfRunningPolls so that in Unit Testing,
+      // we can stop polling if we want to.
       if ( this.listOfRunningPolls )
          this.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] =
             setTimeout( this.characteristicPolling.bind(
