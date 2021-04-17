@@ -549,6 +549,9 @@ block-warning a {
          <a href="#OutputConstants_D" onclick="toggleVisibility( 'Directives');">OutputConstants</a>
          <a href="#RestartRecover_D" onclick="toggleVisibility( 'Directives');">RestartRecover</a>
          <a href="#StatusMsg_D" onclick="toggleVisibility( 'Directives');">StatusMsg</a>
+         <a href="#Cmd4_Mode_D" onclick="toggleVisibility( 'Directives');">Cmd4_Mode</a>
+         <a href="#Interval_D" onclick="toggleVisibility( 'Directives');">Interval</a>
+         <a href="#Timeout_D" onclick="toggleVisibility( 'Directives');">Timeout</a>
          <a href="#Definitions_D" onclick="toggleVisibility( 'Directives');">Definitions</a>
       </DIV>   <!-- panel -->
       <button class="accordion">Accessory Directives
@@ -6482,9 +6485,9 @@ block-warning a {
             <TR ALIGN="left"><TD><a name="OutputConstants_D">OutputConstants</a><TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1 for all Accessories</TR>
             <TR ALIGN="left"><TD><a name="RestartRecover_D"> RestartRecover</a><TD> < Bool > <TD> true <TD> If Cmd4 will use previous cached state information </TR>
             <TR ALIGN="left"><TD><a name="StatusMsg_D"> StatusMsg</a><TD> < Bool > <TD> true <TD> Cmd4 will log a Set Status Message for all Accessories.</TR>
-            <TR ALIGN="left"><TD><a name="Cmd4_Mode"> Cmd4_Mode</a><TD> "Demo" | "Always" | "Polled" | "FullyPolled" <TD> Always <TD> Determines what and when characteristics are updated from the device. See <a href="#Cmd4_Mode" onclick="toggleVisibility( 'AccessoryDirectives');">Cmd4_Mode</a> in Accessory Directives for full description as it can also be set per accessory.</TR>
-            <TR ALIGN="left"><TD><a name="Interval"> Interval</a><TD> Interval <TD> 60 < seconds > <TD> How long before killing the state command of all polled characteristics. See <a href="#Interval" onclick="toggleVisibility( 'AccessoryDirectives');">Interval</a> in Accessory Directives for full description as it can also be set per accessory or per characteristic.</TR>
-            <TR ALIGN="left"><TD><a name="Timeout"> Timeout</a><TD> Timeout <TD> 60000 < msec > <TD> How long before killing the state command of all polled characteristics. See <a href="#Timeout" onclick="toggleVisibility( 'AccessoryDirectives');">Timeout</a> in Accessory Directives for full description as it can also be set per accessory or per characteristic.</TR>
+            <TR ALIGN="left"><TD><a name="Cmd4_Mode_D"> Cmd4_Mode</a><TD> "Demo" | "Always" | "Polled" | "FullyPolled" <TD> Always <TD> Determines what and when characteristics are updated from the device. See <a href="#Cmd4_Mode" onclick="toggleVisibility( 'AccessoryDirectives');">Cmd4_Mode</a> in Accessory Directives for full description as it can also be set per accessory.</TR>
+            <TR ALIGN="left"><TD><a name="Interval_D"> Interval</a><TD> Interval <TD> 60 < seconds > <TD> How long before killing the state command of all polled characteristics. See <a href="#Interval" onclick="toggleVisibility( 'AccessoryDirectives');">Interval</a> in Accessory Directives for full description as it can also be set per accessory or per characteristic.</TR>
+            <TR ALIGN="left"><TD><a name="Timeout_D"> Timeout</a><TD> Timeout <TD> 60000 < msec > <TD> How long before killing the state command of all polled characteristics. See <a href="#Timeout" onclick="toggleVisibility( 'AccessoryDirectives');">Timeout</a> in Accessory Directives for full description as it can also be set per accessory or per characteristic.</TR>
             <TR ALIGN="left"><TD><a name="Definitions_D"> Definitions</a><TD> < Array > <TD> <TD> An Array of new Characteristic Objects. See <a href="#CUSTOM_CHARACTERISTICS" onclick="toggleVisibility( 'CustomCharacteristics');">Custom Characteristics, around line 339</a> for more information</TR>
          </TABLE>
       </DIV>   <!-- main -->
@@ -6512,7 +6515,7 @@ block-warning a {
             </TR>
             <TR ALIGN="left"><TD><a name="StateChangeResponseTime">StateChangeResponseTime</a><TD> < seconds > <TD> 60 <TD> How long to wait between a Set and Get command.</TR>
             <TR ALIGN="left"><TD><a name="Interval">Interval</a><TD> < seconds > <TD> 60 < seconds > <TD> How long between polls of all polled characteristics.</TR>
-            <TR ALIGN="left"><TD><a name="Timeout">Timeout</a><TD> 60000 < msec > <TD> 60000 <TD> How long before killing the state command of all polled characteristics.</TR>
+            <TR ALIGN="left"><TD><a name="Timeout">Timeout</a><TD> < msec > <TD> 60000 < msec > <TD> How long before killing the state command of all polled characteristics.</TR>
             <TR ALIGN="left"><TD><a name="Polling">Polling</a><TD> < Bool > <TD> false <TD> If the characteristics should be polled for state change.</TR>
             <TR><TD><TD COLSPAN=3> or  [{"characteristic" < characteristic >, [ "interval": < sec >, "timeout": < msec > ] }] The timeout and interval override any higher directive.</TR>
             <TR ALIGN="left"><TD><a name="State_cmd">State_cmd</a><TD>  < State_cmd > <TD> See Description <TD> The command used to Get/Set Device characteristic State.</TR>
