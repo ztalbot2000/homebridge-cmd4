@@ -24,10 +24,20 @@ let CMD4_PERMS_TYPE_ENUM = CMD4_CHAR_TYPE_ENUMS.CMD4_PERMS_TYPE_ENUM;
 
 // The Cmd4 Classes
 const Cmd4Accessory = require( "./Cmd4Accessory" ).Cmd4Accessory;
+const Cmd4PriorityPollingQueue = require( "./Cmd4PriorityPollingQueue" ).Cmd4PriorityPollingQueue;
 
 // Settings, Globals and Constants
 let settings = require( "./cmd4Settings" );
 const constants = require( "./cmd4Constants" );
+
+
+// Function to return array split by inclusion
+// returns [ truesArray, falsesArray ];
+// Taken from https://stackoverflow.com/questions/11731072/dividing-an-array-by-filter-function
+function partition(array, predicate)
+{
+   return array.reduce( ( acc, item ) => ( acc[+!predicate( item )].push( item ), acc ), [ [], [] ] );
+}
 
 // Platform definition
 class Cmd4Platform
@@ -60,12 +70,19 @@ class Cmd4Platform
 
       this.services = [ ];
 
+      // These would be queues of Characteristics to be polled or get/set via IOS.
+      settings.listOfCreatedPriorityQueues = { };
+
+
       // Defaults before parse
       this.restartRecover = true;
       this.statusMsg = constants.DEFAULT_STATUSMSG;
 
-      // Every X polls, output the queue ststus information.
+      // Every X polls, output the queue status information.
       this.queueStatMsgInterval = constants.DEFAULT_QUEUE_STAT_MSG_INTERVAL;
+
+      // Track the polling timers only so that unit testing can cancel them.
+      this.pollingTimers = [ ];
 
       this.parseConfigForCmd4Directives( this.config );
 
@@ -78,7 +95,8 @@ class Cmd4Platform
       {
          this.log.info( chalk.blue( "Cmd4Platform didFinishLaunching" ) );
 
-         if ( this.restartRecover == false && this.toBeRestoredPlatforms.length > 0  )
+         if ( this.restartRecover == false &&
+              this.toBeRestoredPlatforms.length > 0  )
          {
             this.log.info( chalk.yellow( `Removing ` ) + chalk.red( `*ALL* ` ) + chalk.yellow( `cached accessories as: ${ constants.RESTART_RECOVER } is set to false` ) );
             this.api.unregisterPlatformAccessories(  settings.PLUGIN_NAME, settings.PLATFORM_NAME, this.toBeRestoredPlatforms );
@@ -152,15 +170,16 @@ class Cmd4Platform
       {
          let value = config[ key ];
 
-         // I made the stupid mistake of not having all characteristics in the config.json
-         // file not upper case to match that in State.js. So instead of having everyone
-         // fix their scripts, fix it here.
+         // I made the stupid mistake of not having all characteristics in
+         // the config.json file not upper case to match that in State.js.
+         // So instead of having everyone fix their scripts, fix it here.
          let ucKey = ucFirst( key );
 
          switch ( ucKey )
          {
             case constants.TIMEOUT:
-               // Timers are in milliseconds. A low value can result in failure to get/set values
+               // Timers are in milliseconds. A low value can result in
+               // failure to get/set values
                this.timeout = parseInt( value, 10 );
                if ( this.timeout < 500 )
                   this.log.warn( `Default Timeout is in milliseconds. A value of "${ this.timeout }" seems pretty low.` );
@@ -701,28 +720,15 @@ class Cmd4Platform
       cmd4PlatformAccessory.setupAccessoryFakeGatoService( cmd4PlatformAccessory.fakegatoConfig );
    }
 
-   startPolling( )
+   startStaggeredPolling( staggeredPollingArray )
    {
-      let startDelay = 3000;
+      let delay = 0;
       let staggeredDelays = [ 3000, 6000, 9000, 12000 ];
       let staggeredDelaysLength = staggeredDelays.length;
       let staggeredDelayIndex = 0;
       let lastAccessoryUUID = ""
 
-      //Hmm, check for duplicates. None found, Yeah!
-      //let arr = settings.arrayOfPollingCharacteristics;
-      //arr.forEach( ( entry, index ) =>
-      //{
-      //   let UUID = entry.accessory.UUID;
-      //   let accTypeEnumIndex = entry.accTypeEnumIndex;
-      //   console.log( "index:%s %s:%s", index, entry.accessory.displayName, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type );
-      //   let duplicates = arr.filter( ( sentry, sindex ) => sentry.accessory.UUID == UUID && sentry.accTypeEnumIndex == accTypeEnumIndex && index != sindex );
-      //   if ( duplicates.length > 0 )
-      //      console.log( "**** Duplicates of %s:%s=%s", entry.accessory.displayName, accTypeEnumIndex, duplicates );
-      //});
-
-
-      settings.arrayOfPollingCharacteristics.forEach( ( entry, entryIndex )  =>
+      staggeredPollingArray.forEach( ( entry, entryIndex )  =>
       {
          let accessory = entry.accessory;
          let accTypeEnumIndex = entry.accTypeEnumIndex;
@@ -738,13 +744,13 @@ class Cmd4Platform
 
             accessory.log.debug( `Kicking off polling for: ${ accessory.displayName } ${ characteristicString } interval:${ interval }, staggered:${ staggeredDelays[ staggeredDelayIndex ]}` );
             accessory.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] =
-                        setTimeout( accessory.characteristicPolling.bind(
-                        accessory, accessory, accTypeEnumIndex, timeout, interval ), interval );
+               setTimeout( accessory.characteristicPolling.bind(
+                  accessory, accessory, accTypeEnumIndex, timeout, interval ), interval );
 
             if ( entryIndex == settings.arrayOfPollingCharacteristics.length -1 )
                accessory.log.info( `All characteristics are now being polled` );
 
-         }, startDelay );
+         }, delay );
 
 
          if ( staggeredDelayIndex++ >= staggeredDelaysLength )
@@ -755,8 +761,101 @@ class Cmd4Platform
 
          lastAccessoryUUID = accessory.UUID;
 
-         startDelay += staggeredDelays[ staggeredDelayIndex ];
+         delay += staggeredDelays[ staggeredDelayIndex ];
 
+      });
+   }
+   // Set parms are accTypeEnumIndex, value, callback
+   // Get parms are accTypeEnumIndex, callback
+   priorityGetValue( accTypeEnumIndex, callback )
+   {
+      let self = this;
+      let details = self.lookupDetailsForPollingCharacteristic( self, accTypeEnumIndex );
+      let specificQueue = settings.listOfCreatedPriorityQueues[ details.queueName ];
+      // Add To Top of priority queue
+      //                         ( isSet, isPolled, accessory, accTypeEnumIndex, interval, timeout, callback, value )
+      specificQueue.addQueueEntry( false, false, self, accTypeEnumIndex, details.interval, details.timeout, callback, null );
+   }
+   prioritySetValue( accTypeEnumIndex, value, callback )
+   {
+      let self = this;
+      let details = self.lookupDetailsForPollingCharacteristic( self, accTypeEnumIndex );
+      let specificQueue = settings.listOfCreatedPriorityQueues[ details.queueName ];
+      //specificQueue.addQueueEntry( isSet, isPolled, accessory, accTypeEnumIndex, interval, timeout, callback, value )
+      specificQueue.addQueueEntry( true, false, self, accTypeEnumIndex, details.interval, details.timeout, callback, value )
+      // todo if ( relatedCharacteristic )
+      // todo   AddToTopOfQueueBehindSet( get
+   }
+
+
+
+   // The delay definitions are not meant to be changed, except for unit testing
+   // ==========================================================================
+   // staggeredStartDelay - These would be for just polling and to be nice to the system.
+   // queuedStartDelay - As this is both IOS and polling, there should be no delay.
+   startPolling( staggeredStartDelay = 3000, queuedStartDelay = 0 )
+   {
+      let arrayOfPollingCharacteristics = [ ];
+      let queuedArrayOfPollingCharacteristics = [ ];
+
+      // Only Unit testing could possibly have no polls at all.
+      if ( settings.arrayOfPollingCharacteristics.length == 0 )
+      {
+         this.log.debug( ` ! settings.arrayOfPollingCaracteristecs` );
+         return;
+      }
+
+      // Seperate what was meant to be polled into the old staggered method
+      // and the queued method
+      [ arrayOfPollingCharacteristics,
+        queuedArrayOfPollingCharacteristics] = partition(settings.arrayOfPollingCharacteristics, i => i.queueName === constants.DEFAULT_QUEUE_NAME);
+
+      if ( arrayOfPollingCharacteristics.length > 0 )
+      {
+         let pollingTimer = setTimeout( ( ) =>
+         {
+            this.startStaggeredPolling( arrayOfPollingCharacteristics );
+         }, staggeredStartDelay );
+
+         this.pollingTimers.push( pollingTimer );
+      }
+
+      // Check for any queued characteristics
+      if ( queuedArrayOfPollingCharacteristics.length == 0 )
+      {
+         this.log.debug( `No queued polling characteristics` );
+         return;
+      }
+
+      // Divide the polled characteristics into their respective queue
+      // Coerced to string in case the queue was a number
+      queuedArrayOfPollingCharacteristics.forEach( ( elem ) =>
+      {
+         let queue = settings.listOfCreatedPriorityQueues[ `${ elem.queueName }` ];
+
+         if ( queue === undefined )
+         {
+            this.log.debug( `Creating new Priority Polled Queue "${ elem.queueName }"` );
+            queue = new Cmd4PriorityPollingQueue( elem.queueName );
+            settings.listOfCreatedPriorityQueues[ elem.queueName ] = new Cmd4PriorityPollingQueue( this.log, elem.queueName );
+         }
+         this.log.debug( `Adding ${ elem.accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ elem.accTypeEnumIndex ].type }  elem.timeout: ${ elem.timeout } elem.interval: ${ elem.interval }  to Polled Queue ${ elem.queueName }` );
+         //                 ( isSet, isPolled, accessory, accTypeEnumIndex, interval, timeout, callback, value )
+         queue.addQueueEntry( false, true, elem.accessory, elem.accTypeEnumIndex, elem.interval, elem.timeout, null, null )
+
+      });
+
+      // Start polling of each queue of characteristics
+      Object.keys( settings.listOfCreatedPriorityQueues ).forEach( ( queueName ) =>
+      {
+         let queue = settings.listOfCreatedPriorityQueues[ queueName ];
+         let queuedPollingTimer = setTimeout( ( ) =>
+         {
+            this.log.info( ` *** Starting Priority Polling Queue "${ queue.queueName }"` );
+            queue.startQueue( );
+         }, queuedStartDelay );
+
+         this.pollingTimers.push( queuedPollingTimer );
       });
    }
 }

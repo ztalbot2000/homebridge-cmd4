@@ -404,7 +404,7 @@ class Cmd4Accessory
                // break omitted
                case constants.QUEUE:
                {
-                  this.queue = value;
+                  this.queueName = value;
 
                   break;
                }
@@ -630,11 +630,12 @@ class Cmd4Accessory
    //
    //       - Where he value in <> is an one of CMD4_ACC_TYPE_ENUM
    // ***********************************************
-   setValue( accTypeEnumIndex, value, callback )
+   setValue( accTypeEnumIndex, value, callback, isPriority )
    {
       let self = this;
 
-      let timeout = this.lookupTimeoutForCharacteristic( this, accTypeEnumIndex );
+      let details = this.lookupDetailsForPollingCharacteristic( this, accTypeEnumIndex );
+      let timeout = details.timeout;
 
       let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
 
@@ -676,8 +677,10 @@ class Cmd4Accessory
 
          let responded = false;
 
-         let relatedCurrentAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].relatedCurrentAccTypeEnumIndex;
-         if ( relatedCurrentAccTypeEnumIndex != null &&
+         if ( isPriority == false )
+         {
+           let relatedCurrentAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].relatedCurrentAccTypeEnumIndex;
+           if ( relatedCurrentAccTypeEnumIndex != null &&
                  settings.arrayOfPollingCharacteristics.filter( entry => entry.accessory.UUID == self.UUID &&
                                                                          entry.accTypeEnumIndex == relatedCurrentAccTypeEnumIndex
                                                               ).length > 0  &&
@@ -687,15 +690,16 @@ class Cmd4Accessory
                      CMD4_DEVICE_TYPE_ENUM,
                      CMD4_ACC_TYPE_ENUM
                  ) == relatedCurrentAccTypeEnumIndex
-            )
-         {
-            responded = true;
+             )
+            {
+               responded = true;
 
-            let relatedCharacteristic = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].characteristic;
-            setTimeout( ( ) => {
-               self.service.getCharacteristic( relatedCharacteristic ).getValue( );
-               callback( 0 );
-            }, self.stateChangeResponseTime );
+               let relatedCharacteristic = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].characteristic;
+               setTimeout( ( ) => {
+                  self.service.getCharacteristic( relatedCharacteristic ).getValue( );
+                  callback( 0 );
+               }, self.stateChangeResponseTime );
+            }
          }
 
          // The "Set" of the characteristic value was successful.
@@ -789,11 +793,12 @@ class Cmd4Accessory
    //           the CMD4_ACC_TYPE_ENUM.
    //
    // ***********************************************
-   getValue( accTypeEnumIndex, callback  )
+   getValue( accTypeEnumIndex, callback, pollingID = 0 )
    {
       let self = this;
 
-      let timeout = this.lookupTimeoutForCharacteristic( this, accTypeEnumIndex );
+      let details = this.lookupDetailsForPollingCharacteristic( this, accTypeEnumIndex );
+      let timeout = details.timeout;
 
       let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
 
@@ -809,11 +814,20 @@ class Cmd4Accessory
 
       const timer = setTimeout(() =>
       {
-         child.kill( 'SIGINT' );
          self.log.error( chalk.red( `getValue ${ characteristicString } function timed out ${ timeout }ms for ${ self.displayName } cmd: ${ cmd } Failed.` ) );
+
+         child.kill( 'SIGINT' );
 
          // Do not call the callback or too many will be called.
          // Prefer homebridge complain about slow response.
+
+         // We can call our callback though ;-)
+         if ( pollingID != 0 && replyCount == 0 )
+         {
+            self.log.info( chalk.red( `${ characteristicString } callback with TIMER_EPIRED` ) );
+            callback( constants.ERROR_TIMER_EXPIRED, null, pollingID );
+            return;
+         }
 
       }, timeout );
 
@@ -826,15 +840,38 @@ class Cmd4Accessory
       {
          if ( code != 0 )
          {
-            self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  Error: ${ code }` ) );
+            self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  replyCount: ${ replyCount } Error: ${ code }` ) );
          }
 
          clearTimeout( timer );
+
+         // Do not call the callback as too many will be called.
+         // Prefer homebridge complain about slow response.
+
+         // We can call our callback though ;-)
+         if ( pollingID != 0 && replyCount == 0 && code == 0 )
+         {
+            self.log.error( chalk.red( `getValue ${ characteristicString } function emmitted no data for ${ self.displayName } cmd: ${ cmd }.  replyCount: ${ replyCount } Error: ${ code }` ) );
+            callback( exports.ERROR_NO_DATA_REPLY, null, pollingID );
+            return;
+         }
       });
 
       child.on('error', ( error ) =>
       {
-            self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  generated Error: ${ error }` ) );
+         self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  generated Error: ${ error }` ) );
+         // Do not call the callback as too many will be called.
+         // Prefer homebridge complain about slow response.
+
+         // Stop babbling
+         child.kill( 'SIGINT' );
+
+         // We can call our callback though ;-)
+         if ( pollingID != 0 && replyCount == 0 )
+         {
+            callback( constants.ERROR_CMD_FAILED_REPLY, null, pollingID );
+            return;
+         }
       });
 
       child.stdout.on('data', ( reply ) =>
@@ -845,7 +882,17 @@ class Cmd4Accessory
          {
             self.log.error( `getValue: null returned from stdout for ${ characteristicString } ${ self.displayName }` );
             // Do not call the callback or continue processing as too many will be called.
-            // Prefer to wait for possibly more data and homebridge complain about a slow response.
+            // Prefer homebridge complain about slow response.
+
+            // Stop babbling
+            child.kill( 'SIGINT' );
+
+            // We can call our callback though ;-)
+            if ( pollingID != 0 && replyCount == 0 )
+            {
+               callback( constants.ERROR_NULL_REPLY, null, pollingID );
+            }
+
             return;
          }
 
@@ -858,11 +905,21 @@ class Cmd4Accessory
 
          // Theoretically not needed as this is caught below, but I wanted
          // to catch this before much string manipulation was done.
-         if ( trimmedReply.toUpperCase( ) == "NULL" )
-         {
+         if ( trimmedReply.toUpperCase( ) == "NULL" ) {
             self.log.error( `getValue: "${ trimmedReply }" returned from stdout for ${ characteristicString } ${ self.displayName }` );
             // Do not call the callback or continue processing as too many will be called.
-            // Prefer to wait for possibly more data and homebridge complain about a slow response.
+            // Prefer homebridge complain about slow response.
+
+
+            // Stop babbling
+            child.kill( 'SIGINT' );
+
+            // We can call our callback though ;-)
+            if ( pollingID != 0 && replyCount == 0 )
+            {
+               callback( constants.ERROR_NULL_STRING_REPLY, null, pollingID );
+            }
+
             return;
          }
 
@@ -877,7 +934,18 @@ class Cmd4Accessory
             self.log.error( `getValue: ${ characteristicString } function for: ${ self.displayName } returned an empty string "${ trimmedReply }"` );
 
             // Do not call the callback or continue processing as too many will be called.
-            // Prefer to wait for possibly more data and homebridge complain about a slow response.
+            // Prefer homebridge complain about slow response.
+
+
+            // Stop babbling
+            child.kill( 'SIGINT' );
+
+            // We can call our callback though ;-)
+            if ( pollingID != 0 && replyCount == 0 )
+            {
+               callback( constants.ERROR_EMPTY_STRING_REPLY, null, pollingID );
+            }
+
             return;
          }
 
@@ -889,16 +957,30 @@ class Cmd4Accessory
             self.log.error( `getValue: ${ characteristicString } function for ${ self.displayName } returned the string "${ trimmedReply }"` );
 
             // Do not call the callback or continue processing as too many will be called.
-            // Prefer to wait for possibly more data and homebridge complain about a slow response.
+            // Prefer homebridge complain about slow response.
+
+
+            // Stop babbling
+            child.kill( 'SIGINT' );
+
+            // We can call our callback though ;-)
+            if ( pollingID != 0 && replyCount == 0 )
+            {
+               callback( constants.ERROR_2ND_NULL_STRING_REPLY, null, pollingID );
+            }
+
             return;
          }
 
          if ( replyCount > 1 )
          {
-            self.log.warn( `${ self.displayName} ` + chalk.red( `Receiving to many lines of data( ${ replyCount } ): ${ unQuotedReply } for ${ characteristicString }` ) );
+            self.log.warn( `${ self.displayName} ` + chalk.red( `Receiving to many lines of data( ${ replyCount } ): ${ unQuotedReply } for ${ characteristicString } reply: ${ reply }` ) );
+
+
+            // Stop babbling
+            child.kill( 'SIGINT' );
 
             // Do not call the callback or continue processing as too many will be called.
-            // Prefer to wait for possibly more data and homebridge complain about a slow response.
             return;
          }
 
@@ -934,7 +1016,6 @@ class Cmd4Accessory
 
          // Return the appropriate type, by seeing what it is
          // defined as in Homebridge,
-         //unQuotedReply = self.characteristicValueToItsProperType( self, accTypeEnumIndex, unQuotedReply );
          let properValue = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( unQuotedReply );
          if ( properValue == undefined )
          {
@@ -942,12 +1023,26 @@ class Cmd4Accessory
             self.log.warn( `${ self.displayName} ` + chalk.red( `Cannot convert value: ${ unQuotedReply } to ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format } for ${ characteristicString }`  ) );
 
             // Do not call the callback or continue processing as too many will be called.
-            // Prefer to wait for possibly more data and homebridge complain about a slow response.
+
+            // Stop babbling
+            child.kill( 'SIGINT' );
+
+            // We can call our callback though ;-)
+            if ( pollingID != 0 && replyCount == 0 )
+            {
+               callback( constants.ERROR_NON_CONVERTABLE_REPLY, null, pollingID );
+            }
+
             return;
          }
 
+         replyCount++;
 
-         callback( 0, properValue );
+         if ( pollingID != 0 )
+            callback( 0, properValue, pollingID );
+         else
+            callback( 0, properValue );
+
 
          // Store history using fakegato if set up
          self.updateAccessoryAttribute( accTypeEnumIndex, properValue );
@@ -1119,37 +1214,53 @@ class Cmd4Accessory
                 if ( perms.indexOf( this.api.hap.Characteristic.Perms.READ ) != -1 )
                 {
 
-                  // cmd4Mode - getCachedValue or getValue
-                  // Set how getValue works, either immediately, cached, polled or fully polled.
-                  // 0 -> Always      -   Get everything always from the device
-                  // 1 -> Demo        -   Get only cached
-                  // 2 -> Polled      -   Get cached, except for characteristics
-                  //                      which are polled are retrieved immediately
-                  // 3 -> FullyPolled -   Get only cached like Cmd2. The difference from demo is how set behaves.
-                  if ( accessory.cmd4Mode == constants.CMD4_MODE_CACHED ||
-                       accessory.cmd4Mode == constants.CMD4_MODE_DEMO ||
-                       accessory.cmd4Mode == constants.CMD4_MODE_FULLYPOLLED ||
-                       accessory.cmd4Mode == constants.CMD4_MODE_POLLED &&
-                       settings.arrayOfPollingCharacteristics.filter( entry => entry.accessory.UUID == accessory.UUID &&
+                   // cmd4Mode - getCachedValue or getValue
+                   // Set how getValue works, either immediately, cached, polled or fully polled.
+                   // 0 -> Always      -   Get everything always from the device
+                   // 1 -> Demo        -   Get only cached
+                   // 2 -> Polled      -   Get cached, except for characteristics
+                   //                      which are polled are retrieved immediately
+                   // 3 -> FullyPolled -   Get only cached like Cmd2. The difference from demo is how set behaves.
+                   if ( accessory.cmd4Mode == constants.CMD4_MODE_CACHED ||
+                        accessory.cmd4Mode == constants.CMD4_MODE_DEMO ||
+                        accessory.cmd4Mode == constants.CMD4_MODE_FULLYPOLLED ||
+                        accessory.cmd4Mode == constants.CMD4_MODE_POLLED &&
+                        settings.arrayOfPollingCharacteristics.filter( entry => entry.accessory.UUID == accessory.UUID &&
                                                                                entry.accTypeEnumIndex == accTypeEnumIndex
                                                                     ).length == 0
-                     )
-                  {
-                     this.log.debug( chalk.yellow( `Adding getCachedValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ` ) );
-                     //Get cachedValue
-                     accessory.service.getCharacteristic(
-                        CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
-                        .characteristic )
-                           .on( "get", accessory.getCachedValue.bind( accessory, accTypeEnumIndex ) );
+                      )
+                   {
+                      this.log.debug( chalk.yellow( `Adding getCachedValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ` ) );
+                      //Get cachedValue
+                      accessory.service.getCharacteristic(
+                         CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
+                         .characteristic )
+                            .on( "get", accessory.getCachedValue.bind( accessory, accTypeEnumIndex ) );
                   } else
                   {
-                     this.log.debug( chalk.yellow( `Adding getValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` ) );
-                     accessory.service.getCharacteristic(
-                        CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
-                        .characteristic )
-                           .on( "get", accessory.getValue.bind( accessory, accTypeEnumIndex ) );
-                  }
+                      let details = this.lookupDetailsForPollingCharacteristic( accessory, accTypeEnumIndex );
+                      let queueName = details.queueName;
+                      // If the queue is the default queue or a queue was defined but there is
+                      // no parent as in the case of Standalone, use default setValue
+                      if ( queueName == constants.DEFAULT_QUEUE_NAME || this.CMD4 == constants.STANDALONE )
+                      {
+                         this.log.debug( chalk.yellow( `Adding getValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` ) );
+                         accessory.service.getCharacteristic(
+                            CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
+                            .characteristic )
+                               .on( "get", accessory.getValue.bind( accessory, accTypeEnumIndex ) );
+                      } else
+                      {
+                         this.log.debug( chalk.yellow( `Adding priorityGetValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` ) );
 
+                         // Set parms are accTypeEnumIndex, value, callback
+                         // Get parms are accTypeEnumIndex, callback
+                         accessory.service.getCharacteristic(
+                            CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
+                            .characteristic )
+                               .on( "get", this.parentInfo.priorityGetValue.bind( accessory, accTypeEnumIndex ) );
+                      }
+                   }
                 }
              }
 
@@ -1181,7 +1292,7 @@ class Cmd4Accessory
                                                                      ).length == 0
                       )
                    {
-                       this.log.debug( chalk.yellow( `Adding setCachedValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ` ) );
+                      this.log.debug( chalk.yellow( `Adding setCachedValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ` ) );
                       // setCachedValue has parameters:
                       // accTypeEnumIndex, value, callback
                       // The first bound value though is "this"
@@ -1194,16 +1305,36 @@ class Cmd4Accessory
                       });
 
                    } else {
-                       this.log.debug( chalk.yellow( `Adding setValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ` ) );
-                      // setValue has parameters:
-                      // accTypeEnumIndex, value, callback
-                      // The first bound value though is "this"
-                      let boundSetValue = accessory.setValue.bind( this, accTypeEnumIndex );
-                      accessory.service.getCharacteristic(
-                         CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
-                         .characteristic ).on( "set", ( value, callback ) => {
-                             boundSetValue( value, callback );
-                      });
+                      let details = this.lookupDetailsForPollingCharacteristic( accessory, accTypeEnumIndex );
+                      let queueName = details.queueName;
+                         this.log.debug( chalk.yellow( `queueName ${ queueName } this.CMD4: ${ this.CMD4 } ` ) );
+                      // If the queue is the default queue or a queue was defined but there is
+                      // no parent as in the case of Standalone, use default setValue
+                      if ( queueName == constants.DEFAULT_QUEUE_NAME || this.CMD4 == constants.STANDALONE )
+                      {
+                         this.log.debug( chalk.yellow( `Adding setValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ` ) );
+                         // setValue has parameters:
+                         // accTypeEnumIndex, value, callback
+                         // The first bound value though is "this"
+                         let boundSetValue = accessory.setValue.bind( this, accTypeEnumIndex );
+                         accessory.service.getCharacteristic(
+                            CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
+                            .characteristic ).on( "set", ( value, callback ) => {
+                                boundSetValue( value, callback );
+                         });
+                      } else
+                      {
+                         this.log.debug( chalk.yellow( `Adding prioritySetValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ` ) );
+
+                         // Set parms are accTypeEnumIndex, value, callback
+                         // Get parms are accTypeEnumIndex, callback
+                         let boundSetValue = this.parentInfo.prioritySetValue.bind( this, accTypeEnumIndex );
+                         accessory.service.getCharacteristic(
+                            CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
+                            .characteristic ).on( "set", ( value, callback ) => {
+                                boundSetValue( value, callback );
+                         });
+                      }
                    }
                 }
              }
@@ -2180,30 +2311,37 @@ class Cmd4Accessory
          }
       }
    }
-
-   // Normally the characteristics timeout is known, However that is not
-   // the case when getValue is called from IOS. That getvalue only knows
-   // the accessories timeout, not the characteristics timeout defined by
-   // polling.
-   lookupTimeoutForCharacteristic( accessory, accTypeEnumIndex )
+   lookupDetailsForPollingCharacteristic( accessory, accTypeEnumIndex )
    {
-      // Heirarchy is first the default timeout
+      // Heirarchy is first the default
       let timeout = constants.DEFAULT_TIMEOUT;
+      let interval = constants.DEFAULT_INTERVAL;
+      let queueName = constants.DEFAULT_QUEUE_NAME;
 
-      // Secondly the accessories timeout
+      // Secondly the accessories definition
       if ( accessory.timeout )
          timeout = accessory.timeout;
 
-      // Finally the polled timeout setting
+      if ( accessory.interval )
+         timeout = accessory.interval;
+
+      // Finally the polled setting
       let pollingEntrys = settings.arrayOfPollingCharacteristics.filter(
            entry => entry.accessory.UUID == accessory.UUID &&
            entry.accTypeEnumIndex == accTypeEnumIndex );
 
       // There should only be one, if any
       if ( pollingEntrys.length > 0 )
-         timeout = pollingEntrys[0].timeout;
+      {
+         if ( pollingEntrys[0].timeout )
+            timeout = pollingEntrys[0].timeout;
+         if ( pollingEntrys[0].interval )
+            interval = pollingEntrys[0].interval;
+         if ( pollingEntrys[0].queueName )
+            queueName = pollingEntrys[0].queueName;
+      }
 
-      return timeout;
+      return { "timeout": timeout, "interval": interval, "queueName": queueName };
 
    }
 
@@ -2216,7 +2354,7 @@ class Cmd4Accessory
          return;
 
       // By default, polled characteristics are not in any queue
-      let queue = constants.DEFAULT_QUEUE;
+      let queueName = constants.DEFAULT_QUEUE_NAME;
 
       // Now that polling calls updateValue and is not dependant on getValue, which was possibly cached,
       // Any accessories characteristic can be polled, regardless of cmd4Mode.
@@ -2264,7 +2402,7 @@ class Cmd4Accessory
                         interval = parseInt( value, 10 ) * 1000;
                         break;
                      case constants.QUEUE:
-                        queue = value;
+                        queueName = value;
                         break;
                      case constants.CHARACTERISTIC:
                      {
@@ -2316,7 +2454,7 @@ class Cmd4Accessory
 
                log.debug( `Setting up accessory: ${ accessory.displayName } for polling of: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } timeout: ${ timeout } interval: ${ interval }` );
 
-               settings.arrayOfPollingCharacteristics.push( {"accessory": accessory, "accTypeEnumIndex": accTypeEnumIndex, "interval": interval, "timeout": timeout, "queue": queue } );
+               settings.arrayOfPollingCharacteristics.push( {"accessory": accessory, "accTypeEnumIndex": accTypeEnumIndex, "interval": interval, "timeout": timeout, "queueName": queueName } );
 
             }
             break;

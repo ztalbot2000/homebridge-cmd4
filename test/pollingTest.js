@@ -45,16 +45,19 @@ describe('Testing Cmd4Accessory polling', ( ) =>
    {
       if (this.currentTest.state == 'failed')
       {
-         let accessory = settings.arrayOfPollingCharacteristics[0].accessory;
-         console.log(`Cancelling timers for FAILED TEST OF ${ accessory.displayName }`);
-         Object.keys(accessory.listOfRunningPolls).forEach( (key) =>
+         if ( settings.arrayOfPollingCharacteristics.length > 0 )
          {
-            let timer = accessory.listOfRunningPolls[ key ];
-            clearTimeout( timer );
-         });
+            let accessory = settings.arrayOfPollingCharacteristics[0].accessory;
+            console.log(`Cancelling timers for FAILED TEST OF ${ accessory.displayName }`);
+            Object.keys(accessory.listOfRunningPolls).forEach( (key) =>
+            {
+               let timer = accessory.listOfRunningPolls[ key ];
+               clearTimeout( timer );
+            });
 
-         // Put back the array of Polling Characteristics
-         settings.arrayOfPollingCharacteristics = [ ];
+            // Put back the array of Polling Characteristics
+            settings.arrayOfPollingCharacteristics = [ ];
+         }
       }
    });
    let cmd4Accessory;
