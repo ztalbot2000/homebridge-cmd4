@@ -814,7 +814,12 @@ class Cmd4Accessory
 
       const timer = setTimeout(() =>
       {
-         self.log.error( chalk.red( `getValue ${ characteristicString } function timed out ${ timeout }ms for ${ self.displayName } cmd: ${ cmd } Failed.` ) );
+         replyCount++;
+
+         // Only the first message should be valid
+         if ( replyCount == 1 )
+            self.log.error( chalk.red( `getValue ${ characteristicString } function timed out ${ timeout }ms for ${ self.displayName } cmd: ${ cmd } Failed.` ) );
+
 
          child.kill( 'SIGINT' );
 
@@ -822,12 +827,8 @@ class Cmd4Accessory
          // Prefer homebridge complain about slow response.
 
          // We can call our callback though ;-)
-         if ( pollingID != 0 && replyCount == 0 )
-         {
-            self.log.info( chalk.red( `${ characteristicString } callback with TIMER_EPIRED` ) );
-            replyCount++;
+         if ( pollingID != 0 && replyCount == 1 )
             callback( constants.ERROR_TIMER_EXPIRED, null, pollingID );
-         }
 
          return;
 
@@ -840,7 +841,10 @@ class Cmd4Accessory
 
       child.on('close', ( code ) =>
       {
-         if ( code != 0 )
+         replyCount++;
+
+         // Only the first message should be valid
+         if ( code != 0 && replyCount == 1 )
          {
             self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  replyCount: ${ replyCount } Error: ${ code }` ) );
          }
@@ -851,18 +855,20 @@ class Cmd4Accessory
          // Prefer homebridge complain about slow response.
 
          // We can call our callback though ;-)
-         if ( pollingID != 0 && replyCount == 0 && code == 0 )
-         {
-            self.log.error( chalk.red( `getValue ${ characteristicString } function emmitted no data for ${ self.displayName } cmd: ${ cmd }.  replyCount: ${ replyCount } Error: ${ code }` ) );
-            replyCount++;
+         if ( pollingID != 0 && replyCount == 1 && code == 0 )
             callback( exports.ERROR_NO_DATA_REPLY, null, pollingID );
-         }
+
          return;
       });
 
       child.on('error', ( error ) =>
       {
-         self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  generated Error: ${ error }` ) );
+         replyCount++;
+
+         // Only the first message should be valid
+         if ( replyCount == 1 )
+            self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  generated Error: ${ error }` ) );
+
          // Do not call the callback as too many will be called.
          // Prefer homebridge complain about slow response.
 
@@ -870,19 +876,31 @@ class Cmd4Accessory
          child.kill( 'SIGINT' );
 
          // We can call our callback though ;-)
-         if ( pollingID != 0 && replyCount == 0 )
-         {
-            replyCount++;
+         if ( pollingID != 0 && replyCount == 1 )
             callback( constants.ERROR_CMD_FAILED_REPLY, null, pollingID );
-         }
+
          return;
       });
 
       child.stdout.on('data', ( reply ) =>
       {
+         replyCount++;
+
+         if ( replyCount > 1 )
+         {
+            // Stop babbling
+            child.kill( 'SIGINT' );
+
+            // Do not call the callback or continue processing as too many will be called.
+            return;
+         }
+
          if ( reply == null )
          {
-            self.log.error( `getValue: null returned from stdout for ${ characteristicString } ${ self.displayName }` );
+            // Only the first message should be valid
+            if ( replyCount == 1 )
+               self.log.error( `getValue: null returned from stdout for ${ characteristicString } ${ self.displayName }` );
+
             // Do not call the callback or continue processing as too many will be called.
             // Prefer homebridge complain about slow response.
 
@@ -890,11 +908,8 @@ class Cmd4Accessory
             child.kill( 'SIGINT' );
 
             // We can call our callback though ;-)
-            if ( pollingID != 0 && replyCount == 0 )
-            {
-               replyCount++;
+            if ( pollingID != 0 && replyCount == 1 )
                callback( constants.ERROR_NULL_REPLY, null, pollingID );
-            }
 
             return;
          }
@@ -910,20 +925,19 @@ class Cmd4Accessory
          // to catch this before much string manipulation was done.
          if ( trimmedReply.toUpperCase( ) == "NULL" )
          {
-            self.log.error( `getValue: "${ trimmedReply }" returned from stdout for ${ characteristicString } ${ self.displayName }` );
+            // Only the first message should be valid
+            if ( replyCount == 1 )
+               self.log.error( `getValue: "${ trimmedReply }" returned from stdout for ${ characteristicString } ${ self.displayName }` );
+
             // Do not call the callback or continue processing as too many will be called.
             // Prefer homebridge complain about slow response.
-
 
             // Stop babbling
             child.kill( 'SIGINT' );
 
             // We can call our callback though ;-)
-            if ( pollingID != 0 && replyCount == 0 )
-            {
-               replyCount++;
+            if ( pollingID != 0 && replyCount == 1 )
                callback( constants.ERROR_NULL_STRING_REPLY, null, pollingID );
-            }
 
             return;
          }
@@ -936,7 +950,9 @@ class Cmd4Accessory
 
          if ( unQuotedReply == "" )
          {
-            self.log.error( `getValue: ${ characteristicString } function for: ${ self.displayName } returned an empty string "${ trimmedReply }"` );
+            // Only the first message should be valid
+            if ( replyCount == 1 )
+               self.log.error( `getValue: ${ characteristicString } function for: ${ self.displayName } returned an empty string "${ trimmedReply }"` );
 
             // Do not call the callback or continue processing as too many will be called.
             // Prefer homebridge complain about slow response.
@@ -946,11 +962,8 @@ class Cmd4Accessory
             child.kill( 'SIGINT' );
 
             // We can call our callback though ;-)
-            if ( pollingID != 0 && replyCount == 0 )
-            {
-               replyCount++;
+            if ( pollingID != 0 && replyCount == 1 )
                callback( constants.ERROR_EMPTY_STRING_REPLY, null, pollingID );
-            }
 
             return;
          }
@@ -960,7 +973,9 @@ class Cmd4Accessory
          // things I must do for bad data ....
          if ( unQuotedReply.toUpperCase() == "NULL" )
          {
-            self.log.error( `getValue: ${ characteristicString } function for ${ self.displayName } returned the string "${ trimmedReply }"` );
+            // Only the first message should be valid
+            if ( replyCount == 1 )
+               self.log.error( `getValue: ${ characteristicString } function for ${ self.displayName } returned the string "${ trimmedReply }"` );
 
             // Do not call the callback or continue processing as too many will be called.
             // Prefer homebridge complain about slow response.
@@ -970,27 +985,11 @@ class Cmd4Accessory
             child.kill( 'SIGINT' );
 
             // We can call our callback though ;-)
-            if ( pollingID != 0 && replyCount == 0 )
-            {
-               replyCount++;
+            if ( pollingID != 0 && replyCount == 1 )
                callback( constants.ERROR_2ND_NULL_STRING_REPLY, null, pollingID );
-            }
 
             return;
          }
-
-         if ( replyCount > 1 )
-         {
-            self.log.warn( `${ self.displayName} ` + chalk.red( `Receiving to many lines of data( ${ replyCount } ): ${ unQuotedReply } for ${ characteristicString } reply: ${ reply }` ) );
-
-
-            // Stop babbling
-            child.kill( 'SIGINT' );
-
-            // Do not call the callback or continue processing as too many will be called.
-            return;
-         }
-
 
          let words = unQuotedReply.split(" ").length;
          let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
@@ -1006,7 +1005,9 @@ class Cmd4Accessory
                )
             )
          {
-            self.log.warn( `getValue: Warning, Retrieving ${ characteristicString }, expected only one word value for: ${ self.displayName } of: ${ trimmedReply }` );
+            // Only the first message should be valid
+            if ( replyCount == 1 )
+               self.log.warn( `getValue: Warning, Retrieving ${ characteristicString }, expected only one word value for: ${ self.displayName } of: ${ trimmedReply }` );
          }
 
          self.log.debug( `getValue: ${ characteristicString } function for: ${ self.displayName } returned: ${ unQuotedReply }` );
@@ -1026,8 +1027,10 @@ class Cmd4Accessory
          let properValue = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( unQuotedReply );
          if ( properValue == undefined )
          {
-            // If the value is not convertable, just return it.
-            self.log.warn( `${ self.displayName} ` + chalk.red( `Cannot convert value: ${ unQuotedReply } to ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format } for ${ characteristicString }`  ) );
+            // Only the first message should be valid
+            if ( replyCount == 1 )
+               // If the value is not convertable, just return it.
+               self.log.warn( `${ self.displayName} ` + chalk.red( `Cannot convert value: ${ unQuotedReply } to ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format } for ${ characteristicString }`  ) );
 
             // Do not call the callback or continue processing as too many will be called.
 
@@ -1035,16 +1038,12 @@ class Cmd4Accessory
             child.kill( 'SIGINT' );
 
             // We can call our callback though ;-)
-            if ( pollingID != 0 && replyCount == 0 )
-            {
-               replyCount++;
+            if ( pollingID != 0 && replyCount == 1 )
                callback( constants.ERROR_NON_CONVERTABLE_REPLY, null, pollingID );
-            }
 
             return;
          }
 
-         replyCount++;
 
          if ( pollingID != 0 )
             callback( 0, properValue, pollingID );

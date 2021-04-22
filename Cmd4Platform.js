@@ -80,6 +80,7 @@ class Cmd4Platform
 
       // Every X polls, output the queue status information.
       this.queueStatMsgInterval = constants.DEFAULT_QUEUE_STAT_MSG_INTERVAL;
+      this.queueMsg = false;
 
       // Track the polling timers only so that unit testing can cancel them.
       this.pollingTimers = [ ];
@@ -229,6 +230,10 @@ class Cmd4Platform
                break;
             case constants.QUEUE_STAT_MSG_INTERVAL:
                this.queueStatMsgInterval = value;
+
+               break;
+            case constants.QUEUEMSG:
+               this.queueMsg = value;
 
                break;
             case constants.FETCH:
@@ -836,8 +841,8 @@ class Cmd4Platform
          if ( queue === undefined )
          {
             this.log.debug( `Creating new Priority Polled Queue "${ elem.queueName }"` );
-            queue = new Cmd4PriorityPollingQueue( elem.queueName );
-            settings.listOfCreatedPriorityQueues[ elem.queueName ] = new Cmd4PriorityPollingQueue( this.log, elem.queueName );
+            queue = new Cmd4PriorityPollingQueue( this.log, elem.queueName, this.queueMsg, this.queueStatMsgInterval );
+            settings.listOfCreatedPriorityQueues[ elem.queueName ] = queue;
          }
          this.log.debug( `Adding ${ elem.accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ elem.accTypeEnumIndex ].type }  elem.timeout: ${ elem.timeout } elem.interval: ${ elem.interval }  to Polled Queue ${ elem.queueName }` );
          //                 ( isSet, isPolled, accessory, accTypeEnumIndex, interval, timeout, callback, value )

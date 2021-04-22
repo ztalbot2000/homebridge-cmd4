@@ -66,6 +66,7 @@ exports.GOOGLE_DRIVE_l           = "googleDrive";
 exports.OUTPUTCONSTANTS          = "OutputConstants";
 exports.RESTART_RECOVER          = "RestartRecover";
 exports.STATUSMSG                = "StatusMsg";
+exports.QUEUEMSG                 = "QueueMsg";
 //exports.STATUSMSG_l              = "statusMsg";
 
 // Platform Config Constnts

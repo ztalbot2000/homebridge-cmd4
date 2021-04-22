@@ -15,7 +15,7 @@ let isRelatedTargetCharacteristicInSameDevice = require( "./utils/isRelatedTarge
 
 class Cmd4PriorityPollingQueue
 {
-   constructor( log, queueName )
+   constructor( log, queueName, queueMsg, queueStatMsgInterval )
    {
       this.log = log;
       this.queueName = queueName;
@@ -24,7 +24,19 @@ class Cmd4PriorityPollingQueue
       this.lowPriorityQueue = [ ];
       this.transactionInProgress = false;
       this.lowPriorityTimer = null;
-      this.interval = constants.DEFAULT_INTERVAL;
+      this.currentIntervalBeingUsed = 0;
+      this.queueMsg = queueMsg;
+      this.queueStatMsgInterval = queueStatMsgInterval;
+
+
+      // Relieve possible congestion by low priority queue consuming
+      // all the time that actually interacting with the real accessory
+      // is slow
+      this.lowPriorityQueueCounter = 0;
+      this.lowPriorityQueueAverageTime = 0;
+      this.lowPriorityQueueAccumulatedTime = 0;
+      this.originalInterval = 0;
+      this.optimalInterval = 0;
    }
    addQueueEntry( isSet, isPolled, accessory, accTypeEnumIndex, interval, timeout, callback, value )
    {
@@ -49,6 +61,15 @@ class Cmd4PriorityPollingQueue
       {
          // These are all gets from polling
          this.lowPriorityQueue.push( { "isSet": isSet, "isPolled": isPolled, "accessory": accessory, "accTypeEnumIndex": accTypeEnumIndex, "interval": interval, "timeout": timeout, "callback": callback, "value": value } );
+
+         if ( this.currentIntervalBeingUsed == 0 )
+         {
+            if ( this.queueMsg == true )
+               this.log.info( `Interval being used for queue: "${ this.queueName }" is from  ${ accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } interval: ${ interval }` );
+            this.currentIntervalBeingUsed = interval;
+            this.optimalInterval = interval;
+            this.originalInterval = interval;
+         }
       }
 
    }
@@ -56,7 +77,7 @@ class Cmd4PriorityPollingQueue
    processAllFromHighPriorityQueue( )
    {
       let entry = this.highPriorityQueue.shift( );
-      //console.log("******high priority processing %s", entry.accTypeEnumIndex );
+
       if ( entry.isSet )
       {
          this.log.debug( `Proccessing high priority queue "Set" entry: ${ entry.accTypeEnumIndex }` );
@@ -134,8 +155,13 @@ class Cmd4PriorityPollingQueue
       this.log.debug( `Proccessing low priority queue entry: ${ entry.accTypeEnumIndex }` );
 
       let pollingID = Date.now( );
+      this.lowPriorityQueueCounter ++;
+      let lowPriorityQueueStartTime = Date.now( );
+      let self = this;
       entry.accessory.getValue( entry.accTypeEnumIndex, function ( error, properValue, returnedPollingID )
       {
+         let lowPriorityQueueEndTime = Date.now( );
+
          // This function should only be called once, noted by the pollingID.
          if ( pollingID != returnedPollingID )
          {
@@ -143,6 +169,14 @@ class Cmd4PriorityPollingQueue
 
             return;
          }
+         self.lowPriorityQueueAccumulatedTime += lowPriorityQueueEndTime - lowPriorityQueueStartTime;
+         self.lowPriorityQueueAverageTime = self.lowPriorityQueueAccumulatedTime / self.lowPriorityQueueCounter;
+
+         // Make it only 50% full, but not less than the original interval
+         let optimal = 1.5 * self.lowPriorityQueueAverageTime;
+         if ( optimal > self.originalInterval )
+            self.optimalInterval = optimal;
+
 
          pollingID = -1;
 
@@ -199,13 +233,58 @@ class Cmd4PriorityPollingQueue
             {
                let entry = this.lowPriorityQueue[ 0 ];
                this.processEntryFromLowPriorityQueue( );
+
+               // A 10% variance is okay
+               if ( this.currentIntervalBeingUsed > ( this.optimalInterval * 1.1 ) )
+               {
+                  if ( this.queueMsg == true )
+                     this.log.info( `Interval for ${ entry.accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].type } is too reasonable. Using computed interval of ` + this.optimalInterval.toFixed( 2 ) );
+                  this.currentIntervalBeingUsed =  this.optimalInterval;
+
+                  if ( this.queueMsg == true )
+                     this.printQueueStats( );
+               }
+               if ( this.currentIntervalBeingUsed < ( this.optimalInterval * .9 ) )
+               {
+                  if ( this.queueMsg == true )
+                     this.log.warn( `Interval for ${ entry.accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].type } is unreasonable. Using computed interval of ` + this.optimalInterval.toFixed( 2 ) );
+                  this.currentIntervalBeingUsed =  this.optimalInterval;
+
+                  if ( this.queueMsg == true )
+                     this.printQueueStats( );
+               }
+
+               if ( this.queueMsg == true &&
+                    this.lowPriorityQueueCounter % this.queueStatMsgInterval == 0 )
+                  this.printQueueStats( );
+
                this.lowPriorityTimer = setTimeout( ( ) =>
                {
                   this.processQueue( );
-               }, entry.interval );
+
+               }, this.currentIntervalBeingUsed );
             }
          }
       }
+   }
+   printQueueStats( )
+   {
+      let line = `QUEUE "${ this.queueName }" stats`;
+      this.log.info( line );
+      this.log.info( `${ "=".repeat( line.length) }` );
+      this.log.info( `iterations: ${ this.lowPriorityQueueCounter }` );
+      line = `optimalInterval: ` + parseFloat( this.optimalInterval.toFixed( 2 ) );
+      if ( this.optimalInterval == this.originalInterval )
+         line = `${ line } ( Original )`;
+      this.log.info( line );
+
+      this.log.info( `lowPriorityQueueAverageTime: ` + parseFloat( this.lowPriorityQueueAverageTime.toFixed( 2 ) ) );
+      this.log.info( `lowPriorityQueueAccumulatedTime: ` + parseFloat( this.lowPriorityQueueAccumulatedTime.toFixed( 2 ) ) );
+      line = `currentIntervalBeingUsed: ` + parseFloat( this.currentIntervalBeingUsed.toFixed( 2 ) );
+      if ( this.currentIntervalBeingUsed == this.originalInterval )
+         line = `${ line } ( Original )`;
+      this.log.info( line );
+      this.log.info( `originalInterval: ${ this.originalInterval }` );
    }
 
    startQueue( )
@@ -213,6 +292,7 @@ class Cmd4PriorityPollingQueue
       this.queueStarted = true;
 
       setTimeout( ( ) => { this.processQueue( ); }, 0 );
+
    }
 }
 exports.Cmd4PriorityPollingQueue = Cmd4PriorityPollingQueue;

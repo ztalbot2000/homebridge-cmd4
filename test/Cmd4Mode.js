@@ -62,6 +62,28 @@ describe( "Quick Test load of CMD4_DEVICE_TYPE_ENUM", ( ) =>
 
 describe( "Testing Cmd4Accessory", function( )
 {
+
+   afterEach( function( )
+   {
+      if (this.currentTest.state == 'failed')
+      {
+         if ( settings.arrayOfPollingCharacteristics.length > 0 )
+         {
+            let accessory = settings.arrayOfPollingCharacteristics[0].accessory;
+            console.log(`Cancelling timers for FAILED TEST OF ${ accessory.displayName }`);
+            Object.keys(accessory.listOfRunningPolls).forEach( (key) =>
+            {
+               let timer = accessory.listOfRunningPolls[ key ];
+               clearTimeout( timer );
+            });
+         }
+      }
+      // Put back the array of Polling Characteristics
+      settings.listOfCreatedPriorityQueues = { };
+      settings.arrayOfPollingCharacteristics = [ ];
+   });
+
+
    it( "Test if Cmd4Accessory exists", function ( )
    {
       expect( Cmd4Accessory ).not.to.be.a( "null", "Cmd4Accessory was null" );
@@ -104,9 +126,6 @@ describe( "Testing Cmd4Accessory", function( )
 
       assert.equal( log.logBuf, "", ` cmd4Accessory output expected: "" received: ${ log.logBuf }` );
       assert.equal( log.errBuf, "", ` cmd4Accessory stderr output expected: "" received: ${ log.errBuf }` );
-
-      // Put back the array of Polling Characteristics
-      settings.arrayOfPollingCharacteristics = [ ];
 
    });
 });
