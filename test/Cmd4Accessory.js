@@ -1,5 +1,8 @@
 "use strict";
 
+
+// Settings, Globals and Constants
+let settings = require( "../cmd4Settings" );
 const constants = require( "../cmd4Constants" );
 
 
@@ -10,6 +13,7 @@ let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
 let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, _api.hap.Service, _api.hap.Characteristic, _api.hap.Categories );
 
 var Cmd4Accessory = require( "../Cmd4Accessory" ).Cmd4Accessory;
+let Cmd4Platform = require( "../Cmd4Platform" ).Cmd4Platform;
 
 // Unfortunately this test never exits, because polling will start.
 // Warn the user of such
@@ -33,7 +37,7 @@ describe('Quick Test of Setup', ( ) =>
 {
    // it('log should be a function', ( ) =>
    // {
-   //    assert.isFunction( log, "log is not an function" );
+   //    assert.isFunction( this.log, "log is not an function" );
    // });
 
    it('Plugin Characteristic should be a function', ( ) =>
@@ -73,9 +77,10 @@ describe('A simple Cmd4Accessory Test', ( ) =>
    {
       let parentInfo = undefined;
 
-      const log = new Logger( );
-      log.setBufferEnabled( );
-      let accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
+      this.log = new Logger( );
+      this.log.setBufferEnabled( );
+      this.log.setOutputEnabled( false );
+      let accessory = new Cmd4Accessory( this.log, config, _api, [ ], parentInfo );
 
       assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory. Found %s" , accessory );
 
@@ -94,10 +99,11 @@ describe('A simple Cmd4Accessory Test Debbuging enabled', ( ) =>
       let parentInfo = undefined;
 
 
-      const log = new Logger( );
-      log.setBufferEnabled( );
-      log.setDebugEnabled( );
-      let accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
+      this.log = new Logger( );
+      this.log.setBufferEnabled( );
+      this.log.setOutputEnabled( false );
+      this.log.setDebugEnabled( );
+      let accessory = new Cmd4Accessory( this.log, config, _api, [ ], parentInfo );
 
       assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory. Found %s" , accessory );
 
@@ -117,9 +123,10 @@ describe('Test Cmd4Accessory variables ', ( ) =>
    {
       let parentInfo = undefined;
 
-      const log = new Logger( );
-      log.setBufferEnabled( );
-      let accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
+      this.log = new Logger( );
+      this.log.setOutputEnabled( false );
+      this.log.setBufferEnabled( );
+      let accessory = new Cmd4Accessory( this.log, config, _api, [ ], parentInfo );
 
       assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory. Found %s" , accessory );
 
@@ -142,9 +149,10 @@ describe('Test Cmd4Accessory variables ', ( ) =>
          config.type = CMD4_DEVICE_TYPE_ENUM.properties[index].deviceName;
 
 
-         const log = new Logger( );
-         log.setBufferEnabled( );
-         let accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
+         this.log = new Logger( );
+         this.log.setOutputEnabled( false );
+         this.log.setBufferEnabled( );
+         let accessory = new Cmd4Accessory( this.log, config, _api, [ ], parentInfo );
 
          assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory. Found %s" , accessory );
 
@@ -165,9 +173,10 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
    {
       let STORED_DATA_ARRAY = [ ];
 
-      const log = new Logger( );
-      log.setBufferEnabled( );
-      let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
+      this.log = new Logger( );
+      this.log.setOutputEnabled( false );
+      this.log.setBufferEnabled( );
+      let accessory = new Cmd4Accessory( this.log, config, _api, STORED_DATA_ARRAY );
 
       assert.isArray( accessory.STORED_DATA_ARRAY, "Expected accessory.STORED_DATA_ARRAY to be an Array. Found %s" , typeof accessory.STORED_DATA_ARRAY );
 
@@ -176,9 +185,10 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
    {
       let STORED_DATA_ARRAY = [ ];
 
-      const log = new Logger( );
-      log.setBufferEnabled( );
-      let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
+      this.log = new Logger( );
+      this.log.setOutputEnabled( false );
+      this.log.setBufferEnabled( );
+      let accessory = new Cmd4Accessory( this.log, config, _api, STORED_DATA_ARRAY );
 
       assert.isArray( accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic, "Expected accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic to be an Array. Found %s" , typeof accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic );
 
@@ -188,9 +198,10 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
    {
       let STORED_DATA_ARRAY = [ ];
 
-      const log = new Logger( );
-      log.setBufferEnabled( );
-      let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
+      this.log = new Logger( );
+      this.log.setOutputEnabled( false );
+      this.log.setBufferEnabled( );
+      let accessory = new Cmd4Accessory( this.log, config, _api, STORED_DATA_ARRAY );
 
       assert.equal( accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic.length, ACC_EOL, "Expected storedValuesPerCharacteristic to size: %s. Found %s" , ACC_EOL, accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic.length );
 
@@ -199,9 +210,10 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
    {
       let STORED_DATA_ARRAY = [ ];
 
-      const log = new Logger( );
-      log.setBufferEnabled( );
-      new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
+      this.log = new Logger( );
+      this.log.setOutputEnabled( false );
+      this.log.setBufferEnabled( );
+      new Cmd4Accessory( this.log, config, _api, STORED_DATA_ARRAY );
 
       let accIndex = CMD4_ACC_TYPE_ENUM.On;
 
@@ -219,9 +231,10 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
    {
       let STORED_DATA_ARRAY = [ ];
 
-      const log = new Logger( );
-      log.setBufferEnabled( );
-      let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
+      this.log = new Logger( );
+      this.log.setOutputEnabled( false );
+      this.log.setBufferEnabled( );
+      let accessory = new Cmd4Accessory( this.log, config, _api, STORED_DATA_ARRAY );
 
       let accIndex = CMD4_ACC_TYPE_ENUM.On;
 
@@ -242,9 +255,10 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
    {
       let STORED_DATA_ARRAY = [ ];
 
-      const log = new Logger( );
-      log.setBufferEnabled( );
-      let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
+      this.log = new Logger( );
+      this.log.setOutputEnabled( false );
+      this.log.setBufferEnabled( );
+      let accessory = new Cmd4Accessory( this.log, config, _api, STORED_DATA_ARRAY );
 
       let accIndex = CMD4_ACC_TYPE_ENUM.On;
 
@@ -266,9 +280,10 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
    {
       let STORED_DATA_ARRAY = [ ];
 
-      const log = new Logger( );
-      log.setBufferEnabled( );
-      let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
+      this.log = new Logger( );
+      this.log.setOutputEnabled( false );
+      this.log.setBufferEnabled( );
+      let accessory = new Cmd4Accessory( this.log, config, _api, STORED_DATA_ARRAY );
 
       let accIndex = CMD4_ACC_TYPE_ENUM.On;
 
@@ -288,9 +303,10 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
    {
       let STORED_DATA_ARRAY = [ ];
 
-      const log = new Logger( );
-      log.setBufferEnabled( );
-      let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
+      this.log = new Logger( );
+      this.log.setOutputEnabled( false );
+      this.log.setBufferEnabled( );
+      let accessory = new Cmd4Accessory( this.log, config, _api, STORED_DATA_ARRAY );
 
       let index = -1;
 
@@ -305,38 +321,146 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
 });
 describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChildren', ( ) =>
 {
-   let config={ name: "Test Switch",
-                type: "Switch",
-                on:   false,
-                state_cmd: `node ${ home }/.homebridge/Cmd4Scripts/State.js`,
-                interval: 10,                // seconds
-                StateChangeResponseTime: 1,  // seconds
-                timeout: 6000,               // msec
-                polling: true
-              };
+   afterEach( function( )
+   {
+      if (this.currentTest.state == 'failed')
+      {
+         if ( settings.arrayOfPollingCharacteristics.length > 0 )
+         {
+            let accessory = settings.arrayOfPollingCharacteristics[0].accessory;
+            console.log(`Cancelling timers for FAILED TEST OF ${ accessory.displayName }`);
+            Object.keys(accessory.listOfRunningPolls).forEach( (key) =>
+            {
+               let timer = accessory.listOfRunningPolls[ key ];
+               clearTimeout( timer );
+            });
+         }
+      }
+      // Put back the array of Polling Characteristics
+      settings.listOfCreatedPriorityQueues = { };
+      settings.arrayOfPollingCharacteristics = [ ];
+   });
+
    it( "Check that storedValuesPerCharacteristic gets created", function( done )
    {
+      let config={ name: "Test Switch",
+                   type: "Switch",
+                   on:   false,
+                   state_cmd: `node ${ home }/.homebridge/Cmd4Scripts/State.js`,
+                   interval: 10,                // seconds
+                   StateChangeResponseTime: 1,  // seconds
+                   timeout: 6000,               // msec
+                   polling: true
+                 };
       let STORED_DATA_ARRAY = [ ];
 
-      const log = new Logger( );
-      log.setBufferEnabled( );
-      let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
+      this.log = new Logger( );
+      this.log.setBufferEnabled( );
+      this.log.setOutputEnabled( false );
+      this.log.setDebugEnabled( true );
+      let accessory = new Cmd4Accessory( this.log, config, _api, STORED_DATA_ARRAY );
 
       assert.isArray( accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic, Cmd4Accessory, "Expected accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic to be an Array. Found %s" , typeof accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic );
-      done( );
 
+      done( );
    });
 
    it( "Check that storedValuesPer Array size is:  " + ACC_EOL, ( ) =>
    {
+      let config={ name: "Test Switch",
+                   type: "Switch",
+                   on:   false,
+                   state_cmd: `node ${ home }/.homebridge/Cmd4Scripts/State.js`,
+                   interval: 10,                // seconds
+                   StateChangeResponseTime: 1,  // seconds
+                   timeout: 6000,               // msec
+                   polling: true
+                 };
       let STORED_DATA_ARRAY = [ ];
 
-      const log = new Logger( );
-      log.setBufferEnabled( );
-      let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
+      this.log = new Logger( );
+      this.log.setBufferEnabled( );
+      this.log.setOutputEnabled( false );
+      this.log.setDebugEnabled( true );
+      let accessory = new Cmd4Accessory( this.log, config, _api, STORED_DATA_ARRAY );
 
       assert.equal( accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic.length, ACC_EOL, "Expected accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic to size: %s. Found %s" , ACC_EOL, accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic.length );
 
    });
+
+   it('Polling complains related polling characteristic is missing', ( done ) =>
+   {
+      let platformConfig =
+      {
+         accessories: [
+            {
+               Name:         "My_Door",
+               DisplayName:  "My_Door",
+               StatusMsg:    true,
+               Type:         "Door",
+               Cmd4_Mode:    "Polled",
+               CurrentPosition:          0,
+               TargetPosition:           0,
+               PositionState:            0,
+               polling:      [ { "characteristic": "CurrentPosition" },
+                               { "characteristic": "PositionState" }
+                             ],
+               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            }
+         ]
+      }
+
+      assert.equal( settings.arrayOfPollingCharacteristics.length, 0, `Incorrect number of Initial polling characteristics` );
+
+      this.log = new Logger( );
+      this.log.setBufferEnabled( );
+      this.log.setOutputEnabled( false );
+      this.log.setDebugEnabled( true );
+
+      let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
+
+      let expectedErrOutput1 = `[33mWarning, With Cmd4_Mode set to "Polled" and polling for "CurrentPosition" requested, you also must do polling of "TargetPosition" or things will not function properl`;
+
+      assert.include( this.log.errBuf, expectedErrOutput1 , `expected stderr: ${ this.log.errBuf }` );
+
+      done( );
+   });
+
+   it( "Test Polling generates log if related characteristic not polled also", function( )
+   {
+      let thermostatConfig =
+      {
+         Type:                        "Thermostat",
+         Name:                        "Thermostat",
+         Cmd4_Mode:                   "Polled",
+         DisplayName:                 "Thermostat",
+         TemperatureDisplayUnits:     "CELSIUS",
+         Active:                      "Inactive",
+         CurrentTemperature:           20.0,
+         TargetTemperature:            20.0,
+         CurrentHeatingCoolingState:   0,
+         TargetHeatingCoolingState:    0,
+         Polling: [{"characteristic": "currentTemperature", "interval": 60, "timeout":2000}],
+         State_cmd: "./test/echoScripts/echo_quoted0"
+      };
+      let parentInfo = { };
+
+
+      this.log = new Logger( );
+      this.log.setBufferEnabled( );
+      this.log.setOutputEnabled( false);
+      new Cmd4Accessory( this.log, thermostatConfig, _api, [ ], parentInfo );
+
+      let expectedErrOutput1 = `[33mWarning, With Cmd4_Mode set to "Polled" and polling for "CurrentTemperature" requested, you also must do polling of "TargetTemperature" or things will not function properly`;
+
+      assert.equal( this.log.logBuf, "", ` cmd4Accessory output expected: "" received: ${ this.log.logBuf }` );
+      assert.include( this.log.errBuf, expectedErrOutput1, ` cmd4Accessory stderr output expected: "" received: ${ this.log.errBuf }` );
+
+   });
+
 });
 

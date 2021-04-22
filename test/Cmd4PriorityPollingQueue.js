@@ -47,7 +47,16 @@ describe( "Quick Test of CMD4_ACC_TYPE_ENUM", ( ) =>
 
 describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
 {
-   afterEach(function( )
+   before( ( ) =>
+   {
+      sinon.stub( process, `exit` );
+   });
+   after( ( ) =>
+   {
+      process.exit.restore( );
+   });
+
+   afterEach( function( )
    {
       if (this.currentTest.state == 'failed')
       {
@@ -60,11 +69,11 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
                let timer = accessory.listOfRunningPolls[ key ];
                clearTimeout( timer );
             });
-
-            // Put back the array of Polling Characteristics
-            settings.arrayOfPollingCharacteristics = [ ];
          }
       }
+      // Put back the array of Polling Characteristics
+      settings.listOfCreatedPriorityQueues = { };
+      settings.arrayOfPollingCharacteristics = [ ];
    });
 
    it( "Test if Cmd4PriorityPollingQueue exists", function ( )
@@ -297,9 +306,6 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
 
       }, 1000);
 
-      // Put back the array of Polling Characteristics
-      settings.arrayOfPollingCharacteristics = [ ];
-
    });
 
    it( "Test processEntryFromHighPriorityQueue", function( done  )
@@ -362,15 +368,13 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
 
       }, 3000);
 
-      // Put back the array of Polling Characteristics
-      settings.arrayOfPollingCharacteristics = [ ];
 
       done( );
 
    });
 
 
-   it('Cmd4Platform starts polling of 1 characteristic.', ( done ) =>
+   it('Cmd4Platform creates pollingQueue.', ( done ) =>
    {
       let platformConfig =
       {
@@ -442,7 +446,50 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
 
       expect( queue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PriorityPollingQueue" );
 
-      settings.listOfCreatedPriorityQueues = { };
+      done( );
+   });
+
+   it('Polling Queue wont be created if a polled queue name is missing', ( done ) =>
+   {
+      let platformConfig =
+      {
+         accessories: [
+            {
+               Name:         "My_Door",
+               DisplayName:  "My_Door",
+               StatusMsg:    true,
+               Type:         "Door",
+               Cmd4_Mode:    "Polled",
+               CurrentPosition:          0,
+               TargetPosition:           0,
+               PositionState:            0,
+               polling:      [ { "characteristic": "CurrentPosition", "queue": "A" },
+                               { "characteristic": "TargetPosition", "queue": "A" },
+                               { "characteristic": "PositionState" }
+                             ],
+               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            }
+         ]
+      }
+
+      assert.equal( settings.arrayOfPollingCharacteristics.length, 0, `Incorrect number of Initial polling characteristics` );
+
+      this.log = new Logger( );
+      this.log.setBufferEnabled( );
+      this.log.setOutputEnabled( false );
+      this.log.setDebugEnabled( true );
+
+      let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
+
+      sinon.assert.calledWith(process.exit, 401 );
+      let expectedErrOutput1 = `[31m: For Priority Queue Polling all polled characteristics must be in the same polling queue: "A". Missing PositionState`;
+
+      assert.include( this.log.errBuf, expectedErrOutput1 , `expected stderr: ${ this.log.errBuf }` );
+
       done( );
    });
 });

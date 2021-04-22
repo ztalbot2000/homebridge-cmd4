@@ -95,7 +95,8 @@ describe( "Testing Cmd4Accessory", function( )
    it( "Test Cmd4Accessory.Cmd4ModePolled should not generate a log", function( )
    {
       thermostatConfig.Cmd4_Mode = constants.CMD4_MODE_POLLED;
-      thermostatConfig.Polling = [{"characteristic": "currentTemperature", "interval": 60, "timeout":2000}];
+      thermostatConfig.Polling = [{"characteristic": "currentTemperature", "interval": 60, "timeout":2000},
+                                  {"characteristic": "targetTemperature", "interval": 60, "timeout":2000}];
 
       const log = new Logger( );
       log.setBufferEnabled( );

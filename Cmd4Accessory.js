@@ -825,9 +825,11 @@ class Cmd4Accessory
          if ( pollingID != 0 && replyCount == 0 )
          {
             self.log.info( chalk.red( `${ characteristicString } callback with TIMER_EPIRED` ) );
+            replyCount++;
             callback( constants.ERROR_TIMER_EXPIRED, null, pollingID );
-            return;
          }
+
+         return;
 
       }, timeout );
 
@@ -852,9 +854,10 @@ class Cmd4Accessory
          if ( pollingID != 0 && replyCount == 0 && code == 0 )
          {
             self.log.error( chalk.red( `getValue ${ characteristicString } function emmitted no data for ${ self.displayName } cmd: ${ cmd }.  replyCount: ${ replyCount } Error: ${ code }` ) );
+            replyCount++;
             callback( exports.ERROR_NO_DATA_REPLY, null, pollingID );
-            return;
          }
+         return;
       });
 
       child.on('error', ( error ) =>
@@ -869,15 +872,14 @@ class Cmd4Accessory
          // We can call our callback though ;-)
          if ( pollingID != 0 && replyCount == 0 )
          {
+            replyCount++;
             callback( constants.ERROR_CMD_FAILED_REPLY, null, pollingID );
-            return;
          }
+         return;
       });
 
       child.stdout.on('data', ( reply ) =>
       {
-         replyCount++;
-
          if ( reply == null )
          {
             self.log.error( `getValue: null returned from stdout for ${ characteristicString } ${ self.displayName }` );
@@ -890,6 +892,7 @@ class Cmd4Accessory
             // We can call our callback though ;-)
             if ( pollingID != 0 && replyCount == 0 )
             {
+               replyCount++;
                callback( constants.ERROR_NULL_REPLY, null, pollingID );
             }
 
@@ -905,7 +908,8 @@ class Cmd4Accessory
 
          // Theoretically not needed as this is caught below, but I wanted
          // to catch this before much string manipulation was done.
-         if ( trimmedReply.toUpperCase( ) == "NULL" ) {
+         if ( trimmedReply.toUpperCase( ) == "NULL" )
+         {
             self.log.error( `getValue: "${ trimmedReply }" returned from stdout for ${ characteristicString } ${ self.displayName }` );
             // Do not call the callback or continue processing as too many will be called.
             // Prefer homebridge complain about slow response.
@@ -917,6 +921,7 @@ class Cmd4Accessory
             // We can call our callback though ;-)
             if ( pollingID != 0 && replyCount == 0 )
             {
+               replyCount++;
                callback( constants.ERROR_NULL_STRING_REPLY, null, pollingID );
             }
 
@@ -943,6 +948,7 @@ class Cmd4Accessory
             // We can call our callback though ;-)
             if ( pollingID != 0 && replyCount == 0 )
             {
+               replyCount++;
                callback( constants.ERROR_EMPTY_STRING_REPLY, null, pollingID );
             }
 
@@ -966,6 +972,7 @@ class Cmd4Accessory
             // We can call our callback though ;-)
             if ( pollingID != 0 && replyCount == 0 )
             {
+               replyCount++;
                callback( constants.ERROR_2ND_NULL_STRING_REPLY, null, pollingID );
             }
 
@@ -1030,6 +1037,7 @@ class Cmd4Accessory
             // We can call our callback though ;-)
             if ( pollingID != 0 && replyCount == 0 )
             {
+               replyCount++;
                callback( constants.ERROR_NON_CONVERTABLE_REPLY, null, pollingID );
             }
 
@@ -2360,6 +2368,7 @@ class Cmd4Accessory
       // Any accessories characteristic can be polled, regardless of cmd4Mode.
 
       let warningDisplayed = false;
+      let accessoriesPollingQueueName = null;
       switch ( typeof accessory.polling )
       {
          case "object":
@@ -2370,6 +2379,7 @@ class Cmd4Accessory
             {
                // Characteristic polling is a json type
                let jsonPollingConfig = accessory.polling[ jsonIndex ];
+               queueName = constants.DEFAULT_QUEUE_NAME;
 
                // The default timeout is defined frist by the accessory, and if not defined,
                // then the default 1 minute. Timeouts are in milliseconds
@@ -2402,8 +2412,27 @@ class Cmd4Accessory
                         interval = parseInt( value, 10 ) * 1000;
                         break;
                      case constants.QUEUE:
-                        queueName = value;
+                     {
+                        if ( this.cmd4Mode == constants.CMD4_MODE_POLLED ||
+                             this.cmd4Mode == constants.CMD4_MODE_FULLYPOLLED )
+                        {
+                           queueName = value;
+                           if ( accessoriesPollingQueueName == null )
+                           {
+                              accessoriesPollingQueueName = queueName;
+                           }
+                           else if ( accessoriesPollingQueueName != queueName )
+                           {
+                               this.log.error( chalk.red( `Already defined Priority Polling Queue "${ accessoriesPollingQueueName }" for ${ this.displayName } cannot be redefined.` ) );
+                               process.exit( 208 );
+                           }
+                        } else
+                        {
+                          this.log.error( chalk.red( `Priority Queued Polling is only available with ${ constants.CMD4_MODE } set to: ${ constants.CMD4_MODE_POLLED } or ${ constants.CMD4_MODE_FULLYPOLLED }` ) );
+                           process.exit( 209 );
+                        }
                         break;
+                     }
                      case constants.CHARACTERISTIC:
                      {
                         //1 DetermineCharacteristicsToPollAndItsChildren
@@ -2488,8 +2517,9 @@ class Cmd4Accessory
       }
 
       // Over what has asked to be polled for this device
-      let accessorysPolledCharacteristics = settings.arrayOfPollingCharacteristics.filter( entry => entry.UUID );
-      for( let entry in accessorysPolledCharacteristics )
+      let accessorysPolledCharacteristics = settings.arrayOfPollingCharacteristics.filter( entry => entry.accessory.UUID === accessory.UUID );
+
+      accessorysPolledCharacteristics.forEach( ( entry ) =>
       {
          // Look to see if currently polled characteristics are like "Current*" and have
          // a related characteristic like "Target*"
@@ -2519,6 +2549,23 @@ class Cmd4Accessory
                this.log.warn( `Warning, With ${ constants.CMD4_MODE } set to "${ this.cmd4Mode }" and polling for "${ characteristicString }" requested, you also must do polling of "${ relatedCharacteristicString }" or things will not function properly` );
             }
          }
+      });
+
+      // check other characteristics have the correct queue name
+      if ( accessoriesPollingQueueName != null )
+      {
+         // This check would find characteristics that are polled, but missing the queueName
+         accessorysPolledCharacteristics.forEach( ( entry ) =>
+         {
+            if ( entry.queueName == constants.DEFAULT_QUEUE_NAME ||
+                 entry.queueName != accessoriesPollingQueueName )
+            {
+               let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].type;
+               log.error( chalk.red( `Error` ) + `: For Priority Queue Polling all polled characteristics must be in the same polling queue: "${ accessoriesPollingQueueName }". Missing ${ characteristicString }` );
+               process.exit( 401 );
+            }
+         });
+
       }
    }
 

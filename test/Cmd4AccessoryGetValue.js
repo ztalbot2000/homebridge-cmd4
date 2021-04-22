@@ -386,6 +386,7 @@ describe( "Testing Cmd4Accessory", function( )
       const log = new Logger( );
       log.setOutputEnabled( false );
       log.setBufferEnabled( true );
+      log.setDebugEnabled( false );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
       cmd4Accessory.state_cmd = "./test/echoScripts/echo_true_withRcOf1";
       cmd4Accessory.timeout = 500;
@@ -399,7 +400,7 @@ describe( "Testing Cmd4Accessory", function( )
       // We have to wait for the failing getValue to timeout to capture the log messages;
       setTimeout(() =>
       {
-         let expectedOutput = `getValue Mute function failed for My_Television cmd: ./test/echoScripts/echo_true_withRcOf1 Get 'My_Television' 'Mute' Failed.  Error: 1`;
+         let expectedOutput = `getValue Mute function failed for My_Television cmd: ./test/echoScripts/echo_true_withRcOf1 Get 'My_Television' 'Mute' Failed.  replyCount: 1 Error: 1`;
 
          assert.include( log.errBuf, expectedOutput, ` getValue stdErr output expected: ${ expectedOutput } received: ${ log.errBuf }` );
          assert.equal( log.logBuf, "", ` getValue output expected: "" received: ${ log.errBuf }` );
