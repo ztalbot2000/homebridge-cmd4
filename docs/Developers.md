@@ -228,6 +228,96 @@ Priority Queued Polling statistics can be viewed with the following Cmd4 Platfor
   The "QueueStatMsgInterval" is the counted number of background polls modded by this interval.<BR>
 <BR>
 
+## Priority Queue Polling Across Multiple accessories ( Same Device )
+&nbsp;&nbsp;&nbsp; In the case of a device like the My Air Smart Thermostat which has multiple accessories of Switches, Sensors and a Thermostat; Cmd4 Priority Queued Polling is essential. This device is actually why this feature was created. There was previously no possible configuration of Cmd4 staggered polling that would not result in the device locking up as it was hammered with requests at the same time. An example of configuring Cmd4 for this device is:
+```
+    "platforms": [
+        {
+            "platform": "Cmd4",
+            "outputConstants": false,
+            "restartRecover": true,
+            "Cmd4_Mode": "FullyPolled",
+            "timeout": 4000,
+            "stateChangeResponseTime": 3,
+            "accessories": [
+                {
+                    "type": "TemperatureSensor",
+                    "subType": "tempSensor1",
+                    "displayName": "LRoom",
+                    "name": "LRoom",
+                    "currentTemperature": 25,
+                    "statusFault": "NO_FAULT",
+                    "Manufacturer": "Advantage Air Australia",
+                    "Model": "e-zone",
+                    "SerialNumber": "Fujitsu e-zone2",
+                    "polling": [
+                        { "characteristic": "currentTemperature", "queue": "A", "interval": 2 }
+                    ],
+                    "Props": {
+                        "CurrentTemperature": {
+                            "maxValue": 100,
+                            "minValue": -100,
+                            "minStep": 0.1
+                        }
+                    },
+                    "state_cmd": "bash /home/pi/zones.sh",
+                    "state_cmd_suffix": "z01"
+                },
+                {
+                    "type": "Switch",
+                    "displayName": "TSwitch",
+                    "name": "TSwitch",
+                    "on": "FALSE",
+                    "Manufacturer": "Advantage Air Australia",
+                    "Model": "e-zone",
+                    "SerialNumber": "Fujitsu e-zone2",
+                    "polling": [
+                        { "characteristic": "On", "queue": "A" }
+                    ],
+                    "state_cmd": "bash /home/pi/zones.sh",
+                    "state_cmd_suffix": "z05"
+                },
+                {
+                    "type": "Fan",
+                    "on": "FALSE",
+                    "displayName": "Fan",
+                    "name": "Fan",
+                    "Manufacturer": "Advantage Air Australia",
+                    "Model": "e-zone",
+                    "SerialNumber": "Fujitsu e-zone2",
+                    "polling": [
+                        { "characteristic": "On", "queue": "A" }
+                    ],
+                    "stateChangeResponseTime": 1,
+                    "state_cmd": "bash /home/pi/ezone.sh"
+                },
+                {
+                    "type": "Thermostat",
+                    "displayName": "Aircon",
+                    "name": "Aircon",
+                    "currentHeatingCoolingState": "OFF",
+                    "targetHeatingCoolingState": "OFF",
+                    "currentTemperature": 25,
+                    "targetTemperature": 25,
+                    "temperatureDisplayUnits": "CELSIUS",
+                    "Manufacturer": "Advantage Air Australia",
+                    "Model": "e-zone",
+                    "SerialNumber": "Fujitsu e-zone2",
+                    "polling": [
+                        { "characteristic": "currentHeatingCoolingState", "queue": "A" },
+                        { "characteristic": "targetHeatingCoolingState", "queue": "A" },
+                        { "characteristic": "currentTemperature", "queue": "A" },
+                        { "characteristic": "targetTemperature", "queue": "A" }
+                    ],
+                    "state_cmd": "bash /home/pi/ezone.sh"
+                }
+            ]
+        }
+    ]
+}
+```
+
+
 ## Developer Notes
 ### Step 1.  The provided jsmin differs from others
 &nbsp;&nbsp;&nbsp; The resulting file is still readable. Only C and C++ comments are removed. The included config.json is created via:
