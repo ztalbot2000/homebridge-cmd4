@@ -400,9 +400,10 @@ describe( "Testing Cmd4Accessory", function( )
       // We have to wait for the failing getValue to timeout to capture the log messages;
       setTimeout(() =>
       {
-         let expectedOutput = `getValue Mute function failed for My_Television cmd: ./test/echoScripts/echo_true_withRcOf1 Get 'My_Television' 'Mute' Failed.  replyCount: 1 Error: 1`;
+         // let expectedOutput = `getValue Mute function failed for My_Television cmd: ./test/echoScripts/echo_true_withRcOf1 Get 'My_Television' 'Mute' Failed.  replyCount: 1 Error: 1`;
 
-         assert.include( log.errBuf, expectedOutput, ` getValue stdErr output expected: ${ expectedOutput } received: ${ log.errBuf }` );
+         // There is no longer a failingberror message as only the first message is now sent
+         //assert.include( log.errBuf, expectedOutput, ` getValue stdErr output expected: ${ expectedOutput } received: ${ log.errBuf }` );
          assert.equal( log.logBuf, "", ` getValue output expected: "" received: ${ log.errBuf }` );
 
          done( );
