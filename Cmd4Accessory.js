@@ -73,7 +73,7 @@ class Cmd4Accessory
       this.config = config;
       this.api = api;
       // keep a copy because traversing it for format checking can be slow.
-      this.Characteristic=api.hap.Characteristic;
+      this.Characteristic = api.hap.Characteristic;
       this.parentInfo = parentInfo;
 
       // Use parent values ( if any ) or these defaults.
@@ -109,6 +109,8 @@ class Cmd4Accessory
       this.interval = ( parentInfo && parentInfo.interval ) ? parentInfo.interval : constants.DEFAULT_INTERVAL;
       this.timeout = ( parentInfo && parentInfo.timeout ) ? parentInfo.timeout : constants.DEFAULT_TIMEOUT;
       this.statusMsg = ( parentInfo && parentInfo.statusMsg ) ? parentInfo.statusMsg : constants.DEFAULT_STATUSMSG;
+      this.queueMsg = ( parentInfo && parentInfo.queueMsg ) ? parentInfo.queueMsg : constants.DEFAULT_QUEUEMSG;
+      this.queueStatMsgInterval = ( parentInfo && parentInfo.queueStatMsgInterval ) ? parentInfo.queueStatMsgInterval : constants.DEFAULT_QUEUE_STAT_MSG_INTERVAL;
 
       // undefined is acceptable.  It can be overwritten by parseConfig
       this.state_cmd = parentInfo && parentInfo.state_cmd;
@@ -2074,6 +2076,14 @@ class Cmd4Accessory
                   this.statusMsg = "TRUE";
                 else
                   this.statusMsg = "FALSE";
+
+               break;
+            case constants.QUEUE_STAT_MSG_INTERVAL:
+               this.queueStatMsgInterval = value;
+
+               break;
+            case constants.QUEUEMSG:
+               this.queueMsg = value;
 
                break;
             case constants.TIMEOUT:

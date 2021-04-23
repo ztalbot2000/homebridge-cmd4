@@ -17,6 +17,8 @@ exports.DEFAULT_INTERVAL         = 60000; // 1 minute
 // Not a Bool, otherwise conditional check fails
 exports.DEFAULT_STATUSMSG        = "TRUE";
 
+exports.DEFAULT_QUEUEMSG         = false;
+
 // How many polls before output of queue status information
 exports.DEFAULT_QUEUE_STAT_MSG_INTERVAL = 1000;
 

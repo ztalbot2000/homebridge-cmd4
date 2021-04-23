@@ -1,4 +1,4 @@
-# Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
+# Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics, Custom Characteristics and Priority Queued Polling too!!
 <base _target="_self">
 
 <BR><BR>
@@ -50,12 +50,11 @@
 
 &nbsp;&nbsp;&nbsp; Cmd4 supports Fakegato History and retaining previous state over restarts.
 
-&nbsp;&nbsp;&nbsp; Cmd4 can be configured to respond to actual devices directly or by modifying the script file it calls.
-
 &nbsp;&nbsp;&nbsp; Cmd4 Version 2.0 supported linked Accessories and the latest 3.0 Version supports both Platform plugin and Accessory plugin configurations as documented on [developers.homebridge.io](https://developers.homebridge.io).
 
 &nbsp;&nbsp;&nbsp; Cmd4 Version 3.5 adds in support for Custom Characteristics.
 
+&nbsp;&nbsp;&nbsp; Cmd4 Version 3.6 allows you to configure Priority Queued Polling so that the accessory only receives one request at a time; with priority to all IOS requests first and polling second.
 
 <BR><BR>
 ## Screenshots

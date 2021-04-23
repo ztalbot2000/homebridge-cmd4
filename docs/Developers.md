@@ -11,6 +11,7 @@
 * [***New Cmd4 3.0 Directives***](#new-cmd4-30-directives)
 * [**Cmd4 Directives**](#cmd4-directives)
 * [**Cmd4 Devices and Characteristics**](#cmd4-devices-and-characteristics)
+* [**Priority Queued Polling**](#priority-queued-polling)
 * [**Migrating from Homebridge-cmdswitch2**](#migrating-from-homebridge-cmdswitch2)
 * [**Developer Notes**](#developer-notes)
 * [**Adding in Fakegato history**](#adding-in-fakegato-history)
@@ -203,6 +204,29 @@ Notice that there is no Platform definition. Otherwise everything is the same. Y
 ## Cmd4 Devices and Characteristics
 
 &nbsp;&nbsp;&nbsp; Homebridge-Cmd4 supports 62 Devices and over 200 Characteristics which are described in the previously mentioned config.min.json file and on the  auto generated github pages at: [https://ztalbot2000.github.io/homebridge-cmd4](https://ztalbot2000.github.io/homebridge-cmd4).
+
+## Priority Queued Polling
+
+&nbsp;&nbsp;&nbsp; Typically polling is pretty much a free for all.  While Cmd4 tries to eleviate this with staggered polling, Cmd4 supports Priority Queued Polling.  If configured correctly, only one characteristic value can be received or requested from a device at a time. The priority given to requests from IOS first and background polling second.<BR>
+<BR>
+  Priority Queued Polling is only available for Cmd4_Mode(s) of "Polled" or "FullyPolled" by the shear nature of the feature. To configure Priority Queued Polling every characteristic to the device must be configured with characteristic polling and in the same queue. as an Example:
+
+```
+"polling": [ { "characteristic": "CurrentTemperature", "interval": 5, "queue": "A" },
+             { "characteristic": "TargetTemperature", "queue": "A" }
+           ]
+```
+   Note 1. Only the first interval defined is actually used as this is now the interval between each of the other background polls.<BR>
+   Note 2. The interval is dynamically changed and will never drop below the defined interval. The rule is simple, the interval is calculated by twice the actual time of the request +/- 10%.<BR>
+<BR>
+Priority Queued Polling statistics can be viewed with the following Cmd4 Platform directives.<BR>
+
+```
+   "QueueMsg": true,
+   "QueueStatMsgInterval": 1000,
+```
+  The "QueueStatMsgInterval" is the counted number of background polls modded by this interval.<BR>
+<BR>
 
 ## Developer Notes
 ### Step 1.  The provided jsmin differs from others

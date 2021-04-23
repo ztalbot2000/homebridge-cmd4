@@ -552,6 +552,8 @@ block-warning a {
          <a href="#Cmd4_Mode_D" onclick="toggleVisibility( 'Directives');">Cmd4_Mode</a>
          <a href="#Interval_D" onclick="toggleVisibility( 'Directives');">Interval</a>
          <a href="#Timeout_D" onclick="toggleVisibility( 'Directives');">Timeout</a>
+         <a href="#QueueMsg_D" onclick="toggleVisibility( 'Directives');">QueueMsg</a>
+         <a href="#QueueStatMsgInterval_D" onclick="toggleVisibility( 'Directives');">QueueStatMsgInterval</a>
          <a href="#Definitions_D" onclick="toggleVisibility( 'Directives');">Definitions</a>
       </DIV>   <!-- panel -->
       <button class="accordion">Accessory Directives
@@ -568,6 +570,8 @@ block-warning a {
          <a href="#Polling" onclick="toggleVisibility( 'AccessoryDirectives');">Polling</a>
          <a href="#Interval" onclick="toggleVisibility( 'AccessoryDirectives');">Interval</a>
          <a href="#Timeout" onclick="toggleVisibility( 'AccessoryDirectives');">Timeout</a>
+         <a href="#QueueMsg" onclick="toggleVisibility( 'AccessoryDirectives');">QueueMsg</a>
+         <a href="#QueueStatMsgInterval" onclick="toggleVisibility( 'AccessoryDirectives');">QueueStatMsgInterval</a>
          <a href="#StateChangeResponseTime" onclick="toggleVisibility( 'AccessoryDirectives');">StateChangeResponseTime</a>
          <a href="#LinkedTypes" onclick="toggleVisibility( 'AccessoryDirectives');">LinkedTypes</a>
          <a href="#OutputConstants" onclick="toggleVisibility( 'AccessoryDirectives');">OutputConstants</a>
@@ -6488,6 +6492,8 @@ block-warning a {
             <TR ALIGN="left"><TD><a name="Cmd4_Mode_D"> Cmd4_Mode</a><TD> "Demo" | "Always" | "Polled" | "FullyPolled" <TD> Always <TD> Determines what and when characteristics are updated from the device. See <a href="#Cmd4_Mode" onclick="toggleVisibility( 'AccessoryDirectives');">Cmd4_Mode</a> in Accessory Directives for full description as it can also be set per accessory.</TR>
             <TR ALIGN="left"><TD><a name="Interval_D"> Interval</a><TD> Interval <TD> 60 < seconds > <TD> How long before killing the state command of all polled characteristics. See <a href="#Interval" onclick="toggleVisibility( 'AccessoryDirectives');">Interval</a> in Accessory Directives for full description as it can also be set per accessory or per characteristic.</TR>
             <TR ALIGN="left"><TD><a name="Timeout_D"> Timeout</a><TD> Timeout <TD> 60000 < msec > <TD> How long before killing the state command of all polled characteristics. See <a href="#Timeout" onclick="toggleVisibility( 'AccessoryDirectives');">Timeout</a> in Accessory Directives for full description as it can also be set per accessory or per characteristic.</TR>
+            <TR ALIGN="left"><TD><a name="QueueMsg_D"> QueueMsg</a><TD> QueueMsg <TD> false < Bool > <TD> Enable Priority Queued Polling statistics. This Directive can also be per queue as noted by its presence as an accessory directive.</TR>
+            <TR ALIGN="left"><TD><a name="QueueStatMsgInterval_D"> QueueStatMsgInterval</a><TD> QueueStatMsgInterval <TD> 1000 < mod count > <TD> How many counted polls before displaying the Priority Queue Polling Statistics. This Directive can also be per queue as noted by its presence as an accessory directive.</TR>
             <TR ALIGN="left"><TD><a name="Definitions_D"> Definitions</a><TD> < Array > <TD> <TD> An Array of new Characteristic Objects. See <a href="#CUSTOM_CHARACTERISTICS" onclick="toggleVisibility( 'CustomCharacteristics');">Custom Characteristics, around line 339</a> for more information</TR>
          </TABLE>
       </DIV>   <!-- main -->
@@ -6518,6 +6524,8 @@ block-warning a {
             <TR ALIGN="left"><TD><a name="Timeout">Timeout</a><TD> < msec > <TD> 60000 < msec > <TD> How long before killing the state command of all polled characteristics.</TR>
             <TR ALIGN="left"><TD><a name="Polling">Polling</a><TD> < Bool > <TD> false <TD> If the characteristics should be polled for state change.</TR>
             <TR><TD><TD COLSPAN=3> or  [{"characteristic" < characteristic >, [ "interval": < sec >, "timeout": < msec > ] }] The timeout and interval override any higher directive.</TR>
+            <TR ALIGN="left"><TD><a name="QueueMsg"> QueueMsg</a><TD> QueueMsg <TD> false < Bool > <TD> Enable Priority Queued Polling statistics.</TR>
+            <TR ALIGN="left"><TD><a name="QueueStatMsgInterval"> QueueStatMsgInterval</a><TD> QueueStatMsgInterval <TD> 1000 < mod count > <TD> How many counted polls before displaying the Priority Queue Polling Statistics.</TR>
             <TR ALIGN="left"><TD><a name="State_cmd">State_cmd</a><TD>  < State_cmd > <TD> See Description <TD> The command used to Get/Set Device characteristic State.</TR>
             <TR><TD COLSPAN="4">The State_cmd represents the path to your script. Cmd4 appends the Get/Set shown.<BR>
             State_cmd Get < DisplayName > < characteristic ><BR>

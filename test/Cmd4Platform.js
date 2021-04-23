@@ -215,11 +215,103 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
 
       cmd4Platform.discoverDevices( );
 
-      assert.equal( cmd4Platform.createdCmd4Accessories.length, 1, ` Cmd4Platform did not create the cmd4Accessory }` );
+      assert.equal( cmd4Platform.createdCmd4Accessories.length, 1, ` Cmd4Platform did not create the cmd4Accessory` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
 
       assert.equal( cmd4Accessory.cmd4Mode, constants.CMD4_MODE_POLLED, ` Created accessory has incorrect CMD4_MODE` );
+
+      done( );
+   });
+
+   it('Test if QueueMsg & QueueStatMsgInterval gets passed down to the accessory', ( done ) =>
+   {
+      let platformConfig =
+      {
+         Cmd4_Mode:    "Polled",
+         QueueMsg:      true,
+         QueueStatMsgInterval:  1200,
+         accessories: [
+            {
+               Name:         "My_Door",
+               DisplayName:  "My_Door",
+               StatusMsg:    true,
+               Type:         "Door",
+               CurrentPosition:          0,
+               TargetPosition:           0,
+               PositionState:            0,
+               polling:      [ { "characteristic": "CurrentPosition", "queue": "A" },
+                               { "characteristic": "TargetPosition", "queue": "A" },
+                               { "characteristic": "PositionState", "queue": "A" }
+                             ],
+               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            }
+         ]
+      }
+
+      assert.equal( settings.arrayOfPollingCharacteristics.length, 0, `Incorrect number of Initial polling characteristics` );
+
+      this.log = new Logger( );
+      this.log.setBufferEnabled( );
+      this.log.setOutputEnabled( false );
+      this.log.setDebugEnabled( false );
+
+      let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );
+
+      cmd4Platform.discoverDevices( );
+
+      assert.equal( cmd4Platform.createdCmd4Accessories.length, 1, ` Cmd4Platform did not create the cmd4Accessory` );
+
+      let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
+
+      assert.equal( cmd4Accessory.queueMsg, true, ` Created accessory has incorrect QueueMsg` );
+      assert.equal( cmd4Accessory.queueStatMsgInterval, 1200, ` Created accessory has incorrect QueueStatMsgInterval` );
+
+      done( );
+   });
+
+   it('Test if QueueMsg & QueueStatMsgInterval are used from the accessory', ( done ) =>
+   {
+      let platformConfig =
+      {
+         Cmd4_Mode:    "Polled",
+         accessories: [
+            {
+               Name:         "My_Door",
+               DisplayName:  "My_Door",
+               StatusMsg:    true,
+               Type:         "Door",
+               QueueMsg:      true,
+               QueueStatMsgInterval:  1400,
+               CurrentPosition:          0,
+               TargetPosition:           0,
+               PositionState:            0,
+               polling:      [ { "characteristic": "CurrentPosition", "queue": "A" },
+                               { "characteristic": "TargetPosition", "queue": "A" },
+                               { "characteristic": "PositionState", "queue": "A" }
+                             ],
+               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            }
+         ]
+      }
+
+      assert.equal( settings.arrayOfPollingCharacteristics.length, 0, `Incorrect number of Initial polling characteristics` );
+
+      this.log = new Logger( );
+      this.log.setBufferEnabled( );
+      this.log.setOutputEnabled( false );
+      this.log.setDebugEnabled( false );
+
+      let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );
+
+      cmd4Platform.discoverDevices( );
+
+      assert.equal( cmd4Platform.createdCmd4Accessories.length, 1, ` Cmd4Platform did not create the cmd4Accessory` );
+
+      let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
+
+      assert.equal( cmd4Accessory.queueMsg, true, ` Created accessory has incorrect QueueMsg` );
+      assert.equal( cmd4Accessory.queueStatMsgInterval, 1400, ` Created accessory has incorrect QueueStatMsgInterval` );
 
       done( );
    });

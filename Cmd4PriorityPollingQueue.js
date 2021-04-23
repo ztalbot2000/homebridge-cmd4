@@ -15,7 +15,7 @@ let isRelatedTargetCharacteristicInSameDevice = require( "./utils/isRelatedTarge
 
 class Cmd4PriorityPollingQueue
 {
-   constructor( log, queueName, queueMsg, queueStatMsgInterval )
+   constructor( log, queueName )
    {
       this.log = log;
       this.queueName = queueName;
@@ -25,8 +25,8 @@ class Cmd4PriorityPollingQueue
       this.transactionInProgress = false;
       this.lowPriorityTimer = null;
       this.currentIntervalBeingUsed = 0;
-      this.queueMsg = queueMsg;
-      this.queueStatMsgInterval = queueStatMsgInterval;
+      this.queueMsg = constants.DEFAULT_QUEUEMSG;
+      this.queueStatMsgInterval = constants.DEFAULT_QUEUE_STAT_MSG_INTERVAL;
 
 
       // Relieve possible congestion by low priority queue consuming
@@ -69,6 +69,8 @@ class Cmd4PriorityPollingQueue
             this.currentIntervalBeingUsed = interval;
             this.optimalInterval = interval;
             this.originalInterval = interval;
+            this.queueMsg = accessory.queueMsg;
+            this.queueStatMsgInterval = accessory.queueStatMsgInterval;
          }
       }
 
