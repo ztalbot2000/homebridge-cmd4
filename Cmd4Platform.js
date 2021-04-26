@@ -745,7 +745,7 @@ class Cmd4Platform
          setTimeout( ( ) =>
          {
             if ( entryIndex == 0 )
-               accessory.log.info( `Started staggered kick off of ${ settings.arrayOfPollingCharacteristics.length } polled characteristics` );
+               accessory.log.info( `Started staggered kick off of ${ staggeredPollingArray.length } polled characteristics` );
 
             accessory.log.debug( `Kicking off polling for: ${ accessory.displayName } ${ characteristicString } interval:${ interval }, staggered:${ staggeredDelays[ staggeredDelayIndex ]}` );
             accessory.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] =
