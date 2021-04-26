@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-3-6-1">**Whats new in 3.6.1**</a>
 * <a href="#Whats-new-in-3-6-0">**Whats new in 3.6.0**</a>
 * <a href="#Whats-new-in-3-5-1">**Whats new in 3.5.1**</a>
 * <a href="#Whats-new-in-3-5-0">**Whats new in 3.5.0**</a>
@@ -49,6 +50,14 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-3-6-1">## Whats new in 3.6.1</a>
+#### 3.6.1 (2021-04-26)
+
+##### Bug Fixes
+
+*  Obey State Change Response Time for Priority Queue Polling. Change to constants as well.
+Note: for some reason the ChangeLog was not added for this change. Added by hand.
 
 <a name="Whats-new-in-3-6-0">## Whats new in 3.6.0</a>
 ### 3.6.0 (2021-04-23)
