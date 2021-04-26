@@ -778,16 +778,16 @@ class Cmd4Platform
       let details = self.lookupDetailsForPollingCharacteristic( self, accTypeEnumIndex );
       let specificQueue = settings.listOfCreatedPriorityQueues[ details.queueName ];
       // Add To Top of priority queue
-      //                         ( isSet, isPolled, accessory, accTypeEnumIndex, interval, timeout, callback, value )
-      specificQueue.addQueueEntry( false, false, self, accTypeEnumIndex, details.interval, details.timeout, callback, null );
+      //                         ( isSet, isPolled, accessory, accTypeEnumIndex, interval, timeout, stateChangeResponseTime, callback, value )
+      specificQueue.addQueueEntry( false, false, self, accTypeEnumIndex, details.interval, details.timeout, details.stateChangeResponseTime, callback, null );
    }
    prioritySetValue( accTypeEnumIndex, value, callback )
    {
       let self = this;
       let details = self.lookupDetailsForPollingCharacteristic( self, accTypeEnumIndex );
       let specificQueue = settings.listOfCreatedPriorityQueues[ details.queueName ];
-      //specificQueue.addQueueEntry( isSet, isPolled, accessory, accTypeEnumIndex, interval, timeout, callback, value )
-      specificQueue.addQueueEntry( true, false, self, accTypeEnumIndex, details.interval, details.timeout, callback, value )
+      //specificQueue.addQueueEntry( isSet, isPolled, accessory, accTypeEnumIndex, interval, timeout, stateChangeResponseTime, callback, value )
+      specificQueue.addQueueEntry( true, false, self, accTypeEnumIndex, details.interval, details.timeout, details.stateChangeResponseTime, callback, value )
       // todo if ( relatedCharacteristic )
       // todo   AddToTopOfQueueBehindSet( get
    }
@@ -845,8 +845,8 @@ class Cmd4Platform
             settings.listOfCreatedPriorityQueues[ elem.queueName ] = queue;
          }
          this.log.debug( `Adding ${ elem.accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ elem.accTypeEnumIndex ].type }  elem.timeout: ${ elem.timeout } elem.interval: ${ elem.interval }  to Polled Queue ${ elem.queueName }` );
-         //                 ( isSet, isPolled, accessory, accTypeEnumIndex, interval, timeout, callback, value )
-         queue.addQueueEntry( false, true, elem.accessory, elem.accTypeEnumIndex, elem.interval, elem.timeout, null, null )
+         //                 ( isSet, isPolled, accessory, accTypeEnumIndex, interval, timeout, stateChangeResponseTime, callback, value )
+         queue.addQueueEntry( false, true, elem.accessory, elem.accTypeEnumIndex, elem.interval, elem.timeout, elem.stateChangeResponseTime, null, null )
 
       });
 

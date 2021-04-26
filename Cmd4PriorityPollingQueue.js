@@ -38,12 +38,12 @@ class Cmd4PriorityPollingQueue
       this.originalInterval = 0;
       this.optimalInterval = 0;
    }
-   addQueueEntry( isSet, isPolled, accessory, accTypeEnumIndex, interval, timeout, callback, value )
+   addQueueEntry( isSet, isPolled, accessory, accTypeEnumIndex, interval, timeout, stateChangeResponseTime, callback, value )
    {
       if ( isSet || ! isSet && !isPolled )
       {
          // A mixture of gets and sets, all from IOS though
-         this.highPriorityQueue.push( { "isSet": isSet, "isPolled": isPolled, "accessory": accessory, "accTypeEnumIndex": accTypeEnumIndex, "interval": interval, "timeout": timeout, "callback": callback, "value": value } );
+         this.highPriorityQueue.push( { [ constants.IS_SET_lv ]: isSet, [ constants.IS_POLLED_lv ]: isPolled, [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.INTERVAL_lv ]: interval, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.CALLBACK_lv ]: callback, [ constants.VALUE_lv ]: value } );
          if ( this.queueStarted == true )
          {
             // We cant have a low priority timer going off starting the queue
@@ -60,12 +60,12 @@ class Cmd4PriorityPollingQueue
       } else
       {
          // These are all gets from polling
-         this.lowPriorityQueue.push( { "isSet": isSet, "isPolled": isPolled, "accessory": accessory, "accTypeEnumIndex": accTypeEnumIndex, "interval": interval, "timeout": timeout, "callback": callback, "value": value } );
+         this.lowPriorityQueue.push( { [ constants.IS_SET_lv ]: isSet, [ constants.IS_POLLED_lv ]: isPolled, [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.INTERVAL_lv ]: interval, [ constants.TIMEOUT_lv ]: timeout, [ constants.CALLBACK_lv ]: callback, [ constants.VALUE_lv ]: value } );
 
          if ( this.currentIntervalBeingUsed == 0 )
          {
             if ( this.queueMsg == true )
-               this.log.info( `Interval being used for queue: "${ this.queueName }" is from  ${ accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } interval: ${ interval }` );
+               this.log.info( `Interval being used for queue: "${ this.queueName }" is from  ${ accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ${ constants.INTERVAL_lv }: ${ interval }` );
             this.currentIntervalBeingUsed = interval;
             this.optimalInterval = interval;
             this.originalInterval = interval;
@@ -90,7 +90,7 @@ class Cmd4PriorityPollingQueue
             let relatedCurrentAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].relatedCurrentAccTypeEnumIndex;
            if ( relatedCurrentAccTypeEnumIndex != null &&
                  settings.arrayOfPollingCharacteristics.filter( entry => entry.accessory.UUID == self.UUID &&
-                                                                         entry.accTypeEnumIndex == relatedCurrentAccTypeEnumIndex
+                                                                         entry.accTypeEnumIndex == 999
                                                               ).length > 0  &&
                  isRelatedTargetCharacteristicInSameDevice(
                      self.typeIndex,
@@ -102,23 +102,29 @@ class Cmd4PriorityPollingQueue
             {
                let pollingID = Date.now( );
                let relatedCharacteristic = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].characteristic;
-               entry.accessory.getValue( relatedCharacteristic, function ( error, properValue, returnedPollingID )
-               {
-                  // This function should only be called once, noted by the pollingID.
-                  if ( pollingID != returnedPollingID )
+               let stateChangeResponseTime = entry.stateChangeResponseTime;
+               if ( stateChangeResponseTime < this.currentIntervalBeingUsed * .5 )
+                  stateChangeResponseTime = this.currentIntervalBeingUsed * .5;
+
+               setTimeout(() => {
+                  entry.accessory.getValue( relatedCharacteristic, function ( error, properValue, returnedPollingID )
                   {
-                     entry.accessory.log.info("More entries for pollingID for related get");
+                     // This function should only be called once, noted by the pollingID.
+                     if ( pollingID != returnedPollingID )
+                     {
+                        entry.accessory.log.info("More entries for pollingID for related get");
 
-                     return;
-                  }
+                        return;
+                     }
 
-                  pollingID = -1;
+                     pollingID = -1;
 
-                  entry.callback( error );
+                     entry.callback( error );
 
-                  setTimeout( ( ) => { self.processQueue( ); }, 0);
+                     setTimeout( ( ) => { self.processQueue( ); }, 0);
 
-               }, pollingID );
+                  }, pollingID );
+               }, stateChangeResponseTime );
             } else {
 
                entry.callback( error );
@@ -136,7 +142,7 @@ class Cmd4PriorityPollingQueue
             // This function should only be called once, noted by the pollingID.
             if ( pollingID != returnedPollingID )
             {
-               entry.accessory.log.info(`More entries for pollingID of get error:${error} val:${properValue} returnedPollingID:${returnedPollingID}`);
+               entry.accessory.log.info(`More entries for pollingID of get error:${error} value:${properValue} returnedPollingID:${returnedPollingID}`);
 
                return;
             }

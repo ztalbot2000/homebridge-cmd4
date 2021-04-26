@@ -257,7 +257,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       new Cmd4Accessory( log, TVConfig, _api, [ ], null );
 
-      let expectedPublishedOutput = `Televisions should be Platform Accessories with "publishExternally": true,`;
+      let expectedPublishedOutput = `Televisions should be Platform Accessories with "PublishExternally": true,`;
 
       assert.include( log.errBuf, expectedPublishedOutput, `Cmd4Accessory output expected: ${ expectedPublishedOutput } received: ${ log.logBuf }` );
       assert.equal( 0, log.logLineCount, ` Cmd4Accessory logged lines than one: ${ log.logBuf }` );

@@ -134,7 +134,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       assert.isFunction( cmd4PriorityPollingQueue.addQueueEntry, `.addQueueEntry is not a function` );
 
       //                                    ( isSet, isPolled, accessory, accTypeEnumIndex, interval, timeout, callback, value )
-      cmd4PriorityPollingQueue.addQueueEntry( true, false, cmd4Accessory, CMD4_ACC_TYPE_ENUM.On, constants.DEFAULT_INTERVAL, constants.DEFAULT_TIMEOUT, dummyCallback, value );
+      cmd4PriorityPollingQueue.addQueueEntry( true, false, cmd4Accessory, CMD4_ACC_TYPE_ENUM.On, constants.DEFAULT_INTERVAL, constants.DEFAULT_TIMEOUT, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, dummyCallback, value );
 
       assert.equal( cmd4PriorityPollingQueue.highPriorityQueue.length, 1, `Set not added to high prority queue` );
 
@@ -149,6 +149,9 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       assert.equal( entry.value, value, `Wrong value for Set added to queue` );
 
       assert.equal( entry.accTypeEnumIndex, CMD4_ACC_TYPE_ENUM.On, `On was not stored as a set` );
+      assert.equal( entry.interval, constants.DEFAULT_INTERVAL, `interval was not stored` );
+      assert.equal( entry.timeout, constants.DEFAULT_TIMEOUT, `timeout was not stored` );
+      assert.equal( entry.stateChangeResponseTime, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, `stateChangeResponseTime was not stored` );
 
       assert.equal( entry.callback, dummyCallback, `callback was not stored as a set` );
    });
@@ -184,7 +187,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       assert.isFunction( cmd4PriorityPollingQueue.addQueueEntry, `.addQueueEntry is not a function` );
 
       //                                    ( isSet, isPolled, accessory, accTypeEnumIndex, interval, timeout, callback, value )
-      cmd4PriorityPollingQueue.addQueueEntry( false, false, cmd4Accessory, CMD4_ACC_TYPE_ENUM.On, constants.DEFAULT_INTERVAL, constants.DEFAULT_TIMEOUT, dummyCallback, 1 );
+      cmd4PriorityPollingQueue.addQueueEntry( false, false, cmd4Accessory, CMD4_ACC_TYPE_ENUM.On, constants.DEFAULT_INTERVAL, constants.DEFAULT_TIMEOUT, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, dummyCallback, 1 );
 
       assert.equal( cmd4PriorityPollingQueue.highPriorityQueue.length, 1, `IOS Get not added to high prority queue` );
 
@@ -232,7 +235,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       assert.isFunction( cmd4PriorityPollingQueue.addQueueEntry, `.addQueueEntry is not a function` );
 
       //                                    ( isSet, isPolled, accessory, accTypeEnumIndex, interval, timeout, callback, value )
-      cmd4PriorityPollingQueue.addQueueEntry( false, true, cmd4Accessory, CMD4_ACC_TYPE_ENUM.On, constants.DEFAULT_INTERVAL, constants.DEFAULT_TIMEOUT, dummyCallback, null );
+      cmd4PriorityPollingQueue.addQueueEntry( false, true, cmd4Accessory, CMD4_ACC_TYPE_ENUM.On, constants.DEFAULT_INTERVAL, constants.DEFAULT_TIMEOUT, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, dummyCallback, null );
 
 
       assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 1, `Polled Get added to low prority queue` );
@@ -276,8 +279,8 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       let cmd4PriorityPollingQueue = new Cmd4PriorityPollingQueue( this.log, queueName );
 
       //                                    ( isSet, isPolled, accessory, accTypeEnumIndex, interval, timeout, callback, value )
-      cmd4PriorityPollingQueue.addQueueEntry( false, true, cmd4Accessory, CMD4_ACC_TYPE_ENUM.On, constants.DEFAULT_INTERVAL, constants.DEFAULT_TIMEOUT, dummyCallback, null );
-      cmd4PriorityPollingQueue.addQueueEntry( false, true, cmd4Accessory, CMD4_ACC_TYPE_ENUM.Active, constants.DEFAULT_INTERVAL, constants.DEFAULT_TIMEOUT, dummyCallback, null );
+      cmd4PriorityPollingQueue.addQueueEntry( false, true, cmd4Accessory, CMD4_ACC_TYPE_ENUM.On, constants.DEFAULT_INTERVAL, constants.DEFAULT_TIMEOUT, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, dummyCallback, null );
+      cmd4PriorityPollingQueue.addQueueEntry( false, true, cmd4Accessory, CMD4_ACC_TYPE_ENUM.Active, constants.DEFAULT_INTERVAL, constants.DEFAULT_TIMEOUT, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, dummyCallback, null );
 
       assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 2, `Polled Get added to low prority queue` );
 
@@ -338,8 +341,8 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       let cmd4PriorityPollingQueue = new Cmd4PriorityPollingQueue( this.log, queueName );
 
       //                                    ( isSet, isPolled, accessory, accTypeEnumIndex, interval, timeout, callback, value )
-      cmd4PriorityPollingQueue.addQueueEntry( false, false, cmd4Accessory, CMD4_ACC_TYPE_ENUM.On, constants.DEFAULT_INTERVAL, constants.DEFAULT_TIMEOUT, dummyCallback, null );
-      cmd4PriorityPollingQueue.addQueueEntry( false, false, cmd4Accessory, CMD4_ACC_TYPE_ENUM.Active, constants.DEFAULT_INTERVAL, constants.DEFAULT_TIMEOUT, dummyCallback, null );
+      cmd4PriorityPollingQueue.addQueueEntry( false, false, cmd4Accessory, CMD4_ACC_TYPE_ENUM.On, constants.DEFAULT_INTERVAL, constants.DEFAULT_TIMEOUT, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, dummyCallback, null );
+      cmd4PriorityPollingQueue.addQueueEntry( false, false, cmd4Accessory, CMD4_ACC_TYPE_ENUM.Active, constants.DEFAULT_INTERVAL, constants.DEFAULT_TIMEOUT, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, dummyCallback, null );
 
       assert.equal( cmd4PriorityPollingQueue.highPriorityQueue.length, 2, `IOS Get added to high prority queue` );
 

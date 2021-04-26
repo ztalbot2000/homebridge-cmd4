@@ -165,7 +165,7 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
 
       cmd4Platform.discoverDevices( );
 
-      assert.equal( cmd4Platform.createdCmd4Accessories.length, 1, ` Cmd4Platform did not create the cmd4Accessory }` );
+      assert.equal( cmd4Platform.createdCmd4Accessories.length, 1, ` Cmd4Platform did not create the cmd4Accessory` );
 
       let expectedOutput1 = `Adding new platformAccessory: My_Door`;
       let expectedOutput2 = `35mConfiguring platformAccessory: \u001b[39mMy_Door`;
@@ -312,6 +312,123 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
 
       assert.equal( cmd4Accessory.queueMsg, true, ` Created accessory has incorrect QueueMsg` );
       assert.equal( cmd4Accessory.queueStatMsgInterval, 1400, ` Created accessory has incorrect QueueStatMsgInterval` );
+
+      done( );
+   });
+
+   it('Test if interval, timeout, stateChangeResponseTime are used from the platform', ( done ) =>
+   {
+      let platformConfig =
+      {
+         Cmd4_Mode:    "Polled",
+         timeout:    12345,
+         interval:    12,
+         stateChangeResponseTime:    18,
+         accessories: [
+            {
+               Name:         "My_Door",
+               DisplayName:  "My_Door",
+               StatusMsg:    true,
+               Type:         "Door",
+               QueueMsg:      true,
+               QueueStatMsgInterval:  1400,
+               CurrentPosition:          0,
+               TargetPosition:           0,
+               PositionState:            0,
+               polling:      [ { "characteristic": "CurrentPosition", "queue": "A" },
+                               { "characteristic": "TargetPosition", "queue": "A" },
+                               { "characteristic": "PositionState", "queue": "A" }
+                             ],
+               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            }
+         ]
+      }
+
+      assert.equal( settings.arrayOfPollingCharacteristics.length, 0, `Incorrect number of Initial polling characteristics` );
+
+      this.log = new Logger( );
+      this.log.setBufferEnabled( );
+      this.log.setOutputEnabled( false );
+      this.log.setDebugEnabled( false );
+
+      let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );
+
+      cmd4Platform.discoverDevices( );
+
+      assert.equal( cmd4Platform.createdCmd4Accessories.length, 1, ` Cmd4Platform did not create the cmd4Accessory` );
+
+      let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
+
+      assert.equal( settings.arrayOfPollingCharacteristics.length, 3, `Incorret number of polling characteristics` );
+
+      assert.equal( cmd4Accessory.timeout, 12345, `Timeout was not passed down to accessory` );
+      assert.equal( cmd4Accessory.interval, 12000, `Interval was not passed down to accessory` );
+      assert.equal( cmd4Accessory.stateChangeResponseTime, 18000, `stateChangeResponseTime was not passed down to accessory` );
+
+      settings.arrayOfPollingCharacteristics.forEach( ( entry ) =>
+      {
+         assert.equal( entry.timeout, 12345, `Timeout was not passed down to polling entry` );
+         assert.equal( entry.interval, 12000, `Interval was not passed down to polling entry` );
+         assert.equal( entry.stateChangeResponseTime, 18000, `stateChangeResponseTime was not passed down to polling entry` );
+      });
+
+      done( );
+   });
+
+   it('Test stateChangeResponseTime are used from the accessory definition', ( done ) =>
+   {
+      let platformConfig =
+      {
+         Cmd4_Mode:    "Polled",
+         timeout:    12345,
+         interval:    12,
+         accessories: [
+            {
+               Name:         "My_Door",
+               DisplayName:  "My_Door",
+               StatusMsg:    true,
+               Type:         "Door",
+               QueueMsg:      true,
+               QueueStatMsgInterval:  1400,
+               CurrentPosition:          0,
+               TargetPosition:           0,
+               PositionState:            0,
+               polling:      [ { "characteristic": "CurrentPosition", "queue": "A" },
+                               { "characteristic": "TargetPosition", "queue": "A" },
+                               { "characteristic": "PositionState", "queue": "A" }
+                             ],
+               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            }
+         ]
+      }
+
+      assert.equal( settings.arrayOfPollingCharacteristics.length, 0, `Incorrect number of Initial polling characteristics` );
+
+      this.log = new Logger( );
+      this.log.setBufferEnabled( );
+      this.log.setOutputEnabled( false );
+      this.log.setDebugEnabled( false );
+
+      let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );
+
+      cmd4Platform.discoverDevices( );
+
+      assert.equal( cmd4Platform.createdCmd4Accessories.length, 1, ` Cmd4Platform did not create the cmd4Accessory` );
+
+      let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
+
+      assert.equal( settings.arrayOfPollingCharacteristics.length, 3, `Incorret number of polling characteristics` );
+
+      assert.equal( cmd4Accessory.timeout, 12345, `Timeout was not passed down to accessory` );
+      assert.equal( cmd4Accessory.interval, 12000, `Interval was not passed down to accessory` );
+      assert.equal( cmd4Accessory.stateChangeResponseTime, constants.MEDIUM_STATE_CHANGE_RESPONSE_TIME, `stateChangeResponseTime was not passed from CMD4_DEVICE_TYPE_ENUM` );
+
+      settings.arrayOfPollingCharacteristics.forEach( ( entry ) =>
+      {
+         assert.equal( entry.timeout, 12345, `Timeout was not passed down to polling entry` );
+         assert.equal( entry.interval, 12000, `Interval was not passed down to polling entry` );
+         assert.equal( entry.stateChangeResponseTime, constants.MEDIUM_STATE_CHANGE_RESPONSE_TIME, `stateChangeResponseTime was not passed from CMD4_DEVICE_TYPE_ENUM` );
+      });
 
       done( );
    });

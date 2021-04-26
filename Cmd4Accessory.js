@@ -105,7 +105,11 @@ class Cmd4Accessory
 
       // Bring the parent config variables forward.
       // If they do not exist, they would still be undefined.
-      this.stateChangeResponseTime = ( parentInfo && parentInfo.stateChangeResponseTime ) ? parentInfo.stateChangeResponseTime : constants.DEFAULT_INTERVAL;
+      // For stateChangeResponseTime, if not the parentInfo, then
+      // it gets defined by the accessoryType devicesStateChangeDefaultTime
+      if ( parentInfo && parentInfo.stateChangeResponseTime )
+         this.stateChangeResponseTime = parentInfo.stateChangeResponseTime;
+
       this.interval = ( parentInfo && parentInfo.interval ) ? parentInfo.interval : constants.DEFAULT_INTERVAL;
       this.timeout = ( parentInfo && parentInfo.timeout ) ? parentInfo.timeout : constants.DEFAULT_TIMEOUT;
       this.statusMsg = ( parentInfo && parentInfo.statusMsg ) ? parentInfo.statusMsg : constants.DEFAULT_STATUSMSG;
@@ -142,7 +146,7 @@ class Cmd4Accessory
       // number or MAC address.
       let UUID = getAccessoryUUID( config, this.api.hap.uuid );
 
-      let existingData = this.STORED_DATA_ARRAY.find( data => data[constants.UUID] === UUID );
+      let existingData = this.STORED_DATA_ARRAY.find( data => data[ constants.UUID ] === UUID );
       if ( existingData )
       {
          this.log.debug(`Cmd4Accessory: found existingData for ${ this.displayName }` );
@@ -159,8 +163,8 @@ class Cmd4Accessory
          // restarts.
          this.storedValuesPerCharacteristic = new Array( CMD4_ACC_TYPE_ENUM.EOL ).fill( null );
 
-         this.STORED_DATA_ARRAY.push( { [constants.UUID]: UUID,
-                                        [constants.storedValuesPerCharacteristic]: this.storedValuesPerCharacteristic
+         this.STORED_DATA_ARRAY.push( { [ constants.UUID ]: UUID,
+                                        [ constants.storedValuesPerCharacteristic ]: this.storedValuesPerCharacteristic
                                       }
                                     );
       }
@@ -641,7 +645,7 @@ class Cmd4Accessory
 
       let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
 
-      var transposed = { "value": value, "rc": true, "msg": "" };
+      var transposed = { [ constants.VALUE_lv ]: value, [ constants.RC_lv ]: true, [ constants.MSG_lv ]: "" };
       if ( self.outputConstants == true )
       {
          transposed = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value );
@@ -751,7 +755,7 @@ class Cmd4Accessory
       // a Constant to its valid value.
       // I can't see this happening, but who knows between upgrades
       // or restarts.
-      var transposed = { "value": storedValue, "rc": true, "msg": "" };
+      var transposed = { [ constants.VALUE_lv ]: storedValue, [ constants.RC_lv ]: true, [ constants.MSG_lv ]: "" };
       transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, storedValue );
       if ( transposed.rc == false )
          self.log.warn( `${ self.displayName }: ${ transposed.msg }`);
@@ -1017,7 +1021,7 @@ class Cmd4Accessory
 
          // Even if outputConsts is not set, just in case, transpose
          // it anyway.
-         var transposed = { "value": unQuotedReply, "rc": true, "msg": "" };
+         var transposed = { [ constants.VALUE_lv ]: unQuotedReply, [ constants.RC_lv ]: true, [ constants.MSG_lv ]: "" };
          transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, unQuotedReply )
          if ( transposed.rc == false )
             self.log.warn( `${ self.displayName }: ${ transposed.msg }`);
@@ -1778,7 +1782,7 @@ class Cmd4Accessory
       if ( Object.keys( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].validValues ).length > 0 )
       {
          // Even if outputConsts is not set, just in case, transpose it anyway.
-         var transposed = { "value": value, "rc": true, "msg": "" };
+         var transposed = { [ constants.VALUE_lv ]: value, [ constants.RC_lv ]: true, [ constants.MSG_lv ]: "" };
          transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value ) ;
 
          if ( transposed.rc == false )
@@ -2267,7 +2271,7 @@ class Cmd4Accessory
           if ( this.CMD4 == constants.PLATFORM &&  ( ! this.publishExternally || ! this.category ) ||
                this.CMD4 == constants.STANDALONE )
           {
-               this.log.warn( 'Televisions should be Platform Accessories with "publishExternally": true, "category": "TELEVISION"' );
+               this.log.warn( `Televisions should be Platform Accessories with "${ constants.PUBLISHEXTERNALLY }": true, "${ constants.CATEGORY }": "TELEVISION"` );
           }
           if ( this.CMD4 == constants.PLATFORM && ! this.publishExternally && ( numberOfTVsPerBridge += 1 ) > 1 )
           {
@@ -2333,6 +2337,10 @@ class Cmd4Accessory
       // Heirarchy is first the default
       let timeout = constants.DEFAULT_TIMEOUT;
       let interval = constants.DEFAULT_INTERVAL;
+      let stateChangeResponseTime = constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME;
+      if ( ! accessory.stateChangeResponseTime )
+         stateChangeResponseTime = CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ].devicesStateChangeDefaultTime;
+
       let queueName = constants.DEFAULT_QUEUE_NAME;
 
       // Secondly the accessories definition
@@ -2354,11 +2362,13 @@ class Cmd4Accessory
             timeout = pollingEntrys[0].timeout;
          if ( pollingEntrys[0].interval )
             interval = pollingEntrys[0].interval;
+         if ( pollingEntrys[0].stateChangeResponseTime )
+            stateChangeResponseTime = pollingEntrys[0].stateChangeResponseTime;
          if ( pollingEntrys[0].queueName )
             queueName = pollingEntrys[0].queueName;
       }
 
-      return { "timeout": timeout, "interval": interval, "queueName": queueName };
+      return { [ constants.TIMEOUT_lv ]: timeout, [ constants.INTERVAL_lv ]: interval, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.QUEUE_NAME_lv ]: queueName };
 
    }
 
@@ -2390,13 +2400,17 @@ class Cmd4Accessory
                let jsonPollingConfig = accessory.polling[ jsonIndex ];
                queueName = constants.DEFAULT_QUEUE_NAME;
 
-               // The default timeout is defined frist by the accessory, and if not defined,
+               // The default timeout is defined first by the accessory, and if not defined,
                // then the default 1 minute. Timeouts are in milliseconds
                let timeout = ( this.timeout ) ? this.timeout : constants.DEFAULT_TIMEOUT;
 
                // The default interval is defined first by the accessory, and if not defined,
                // then the default 1 minute interval. Intervals are in seconds
                let interval = ( this.interval ) ? this.interval : constants.DEFAULT_INTERVAL;
+
+               // The default stateChangeResponseTime is defined first by the accessory, and if not defined,
+               // then the default 3 seconds. stateChangeResponseTime is in seconds
+               let stateChangeResponseTime = ( this.stateChangeResponseTime ) ? this.stateChangeResponseTime : constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME;
 
                let value;
                let accTypeEnumIndex = -1;
@@ -2419,6 +2433,11 @@ class Cmd4Accessory
                      case constants.INTERVAL:
                         // Intervals are in seconds
                         interval = parseInt( value, 10 ) * 1000;
+                        break;
+                     case constants.STATECHANGERESPONSETIME:
+                        // respnse time is in seconds
+                        stateChangeResponseTime = value * 1000;
+
                         break;
                      case constants.QUEUE:
                      {
@@ -2492,7 +2511,7 @@ class Cmd4Accessory
 
                log.debug( `Setting up accessory: ${ accessory.displayName } for polling of: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } timeout: ${ timeout } interval: ${ interval }` );
 
-               settings.arrayOfPollingCharacteristics.push( {"accessory": accessory, "accTypeEnumIndex": accTypeEnumIndex, "interval": interval, "timeout": timeout, "queueName": queueName } );
+               settings.arrayOfPollingCharacteristics.push( { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.INTERVAL_lv ]: interval, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.QUEUE_NAME_lv ]: queueName } );
 
             }
             break;
@@ -2511,7 +2530,7 @@ class Cmd4Accessory
                // Make sure the defined characteristics will be polled
                CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ].defaultPollingCharacteristics.forEach( defaultPollingAccTypeEnumIndex =>
                {
-                   settings.arrayOfPollingCharacteristics.push( {"accessory": accessory, "accTypeEnumIndex": defaultPollingAccTypeEnumIndex, "timeout": accessory.timeout } );
+                  settings.arrayOfPollingCharacteristics.push( { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: defaultPollingAccTypeEnumIndex, [ constants.INTERVAL_lv ]: accessory.interval, [ constants.TIMEOUT_lv ]: accessory.timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, [ constants.QUEUE_NAME_lv ]: constants.DEFAULT_QUEUE_NAME } );
                });
 
             }

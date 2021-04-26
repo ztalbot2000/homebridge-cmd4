@@ -1,5 +1,10 @@
 "use strict";
 
+// Naming convention
+// DEFAULT_    => Default values
+// _l          =>  Lower Case
+// _lv         =>  Lower Case Variable of same name
+
 // Triggers which Array CMD4Accessory will be placed
 // Either cmd4Accessories or cmd4StandaloneAccessories
 exports.STANDALONE               = "Standalone";
@@ -9,6 +14,7 @@ exports.COLLECTION               = "Collection";
 // Default intervals
 exports.SLOW_STATE_CHANGE_RESPONSE_TIME      = 10000;  // 10 seconds
 exports.MEDIUM_STATE_CHANGE_RESPONSE_TIME    = 3000;   // 3 seconds
+exports.DEFAULT_STATE_CHANGE_RESPONSE_TIME   = 3000;   // 3 seconds
 exports.FAST_STATE_CHANGE_RESPONSE_TIME      = 1000;   // 1 second
 
 exports.DEFAULT_TIMEOUT          = 60000; // 1 minute
@@ -120,6 +126,19 @@ exports.VALIDVALUES             = "ValidValues";
 exports.ACCESS                  = "Access";
 
 
+// Internal list variables
+exports.ACCESSORY_lv                   = "accessory";
+exports.CALLBACK_lv                    = "callback";
+exports.ACC_TYPE_ENUM_INDEX_lv         = "accTypeEnumIndex";
+exports.INTERVAL_lv                    = "interval";
+exports.IS_SET_lv                      = "isSet";
+exports.IS_POLLED_lv                   = "isPolled";
+exports.QUEUE_lv                       = "queue";
+exports.QUEUE_NAME_lv                  = "queueName";
+exports.RC_lv                          = "rc";
+exports.STATE_CHANGE_RESPONSE_TIME_lv  = "stateChangeResponseTime";
+exports.TIMEOUT_lv                     = "timeout";
+exports.VALUE_lv                       = "value";
 
 exports.ERROR_TIMER_EXPIRED           = -151;
 exports.ERROR_CMD_FAILED_REPLY        = -152;
