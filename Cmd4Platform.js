@@ -496,6 +496,21 @@ class Cmd4Platform
             // accessory you may need
             accessory.platform.context.STORED_DATA_ARRAY = accessory.STORED_DATA_ARRAY;
 
+            // Before we can add the services, if the accessory uses PriorityQueuedPolling,
+            // we need to create the queue for the service to use.
+            let queueName = this.getQueueNameOfAnyPollingCharacteristic( accessory );
+
+            if ( queueName != null )
+            {
+               let queue = settings.listOfCreatedPriorityQueues[ queueName ];
+               if ( queue === undefined )
+               {
+                  this.log.debug( `Creating new Priority Polled Queue "${ queueName }"` );
+                  queue = new Cmd4PriorityPollingQueue( this.log, queueName );
+                  settings.listOfCreatedPriorityQueues[ queueName ] = queue;
+               }
+               accessory.queue = queue;
+            }
 
             // Get the properties for this accessories device type
             let devProperties = CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ];
@@ -565,6 +580,22 @@ class Cmd4Platform
             // accessory you may need
             accessory.platform.context.STORED_DATA_ARRAY = accessory.STORED_DATA_ARRAY;
 
+            // Before we can add the services, if the accessory uses PriorityQueuedPolling,
+            // we need to create the queue for the service to use.
+            let queueName = this.getQueueNameOfAnyPollingCharacteristic( accessory );
+
+            if ( queueName != null )
+            {
+               let queue = settings.listOfCreatedPriorityQueues[ queueName ];
+               if ( queue === undefined )
+               {
+                  this.log.debug( `Creating new Priority Polled Queue "${ queueName }"` );
+                  queue = new Cmd4PriorityPollingQueue( this.log, queueName );
+                  settings.listOfCreatedPriorityQueues[ queueName ] = queue;
+               }
+               accessory.queue = queue;
+            }
+
             // Get the properties for this accessories device type
             let devProperties = CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ];
 
@@ -600,6 +631,18 @@ class Cmd4Platform
          this.createdCmd4Platforms.push( platform );
 
       });
+   }
+
+   getQueueNameOfAnyPollingCharacteristic( accessory )
+   {
+      let pollingEntrys = settings.arrayOfPollingCharacteristics.filter(
+           entry => entry.accessory.UUID == accessory.UUID &&
+           entry.queueName != constants.DEFAULT_QUEUE_NAME );
+
+      if ( pollingEntrys.length > 0 )
+         return pollingEntrys[ 0 ].queueName;
+
+      return null;
    }
 
    createServicesForAccessoriesChildren( cmd4PlatformAccessory, fromExisting )
@@ -770,29 +813,6 @@ class Cmd4Platform
 
       });
    }
-   // Set parms are accTypeEnumIndex, value, callback
-   // Get parms are accTypeEnumIndex, callback
-   priorityGetValue( accTypeEnumIndex, callback )
-   {
-      let self = this;
-      let details = self.lookupDetailsForPollingCharacteristic( self, accTypeEnumIndex );
-      let specificQueue = settings.listOfCreatedPriorityQueues[ details.queueName ];
-      // Add To Top of priority queue
-      //                         ( isSet, isPolled, accessory, accTypeEnumIndex, interval, timeout, stateChangeResponseTime, callback, value )
-      specificQueue.addQueueEntry( false, false, self, accTypeEnumIndex, details.interval, details.timeout, details.stateChangeResponseTime, callback, null );
-   }
-   prioritySetValue( accTypeEnumIndex, value, callback )
-   {
-      let self = this;
-      let details = self.lookupDetailsForPollingCharacteristic( self, accTypeEnumIndex );
-      let specificQueue = settings.listOfCreatedPriorityQueues[ details.queueName ];
-      //specificQueue.addQueueEntry( isSet, isPolled, accessory, accTypeEnumIndex, interval, timeout, stateChangeResponseTime, callback, value )
-      specificQueue.addQueueEntry( true, false, self, accTypeEnumIndex, details.interval, details.timeout, details.stateChangeResponseTime, callback, value )
-      // todo if ( relatedCharacteristic )
-      // todo   AddToTopOfQueueBehindSet( get
-   }
-
-
 
    // The delay definitions are not meant to be changed, except for unit testing
    // ==========================================================================
@@ -838,15 +858,11 @@ class Cmd4Platform
       {
          let queue = settings.listOfCreatedPriorityQueues[ `${ elem.queueName }` ];
 
-         if ( queue === undefined )
-         {
-            this.log.debug( `Creating new Priority Polled Queue "${ elem.queueName }"` );
-            queue = new Cmd4PriorityPollingQueue( this.log, elem.queueName );
-            settings.listOfCreatedPriorityQueues[ elem.queueName ] = queue;
-         }
          this.log.debug( `Adding ${ elem.accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ elem.accTypeEnumIndex ].type }  elem.timeout: ${ elem.timeout } elem.interval: ${ elem.interval }  to Polled Queue ${ elem.queueName }` );
-         //                 ( isSet, isPolled, accessory, accTypeEnumIndex, interval, timeout, stateChangeResponseTime, callback, value )
-         queue.addQueueEntry( false, true, elem.accessory, elem.accTypeEnumIndex, elem.interval, elem.timeout, elem.stateChangeResponseTime, null, null )
+         queue.addLowPriorityGetPolledQueueEntry( elem.accessory,
+                                                  elem.accTypeEnumIndex,
+                                                  elem.interval,
+                                                  elem.timeout )
 
       });
 

@@ -12,6 +12,8 @@ const constants = require( "./cmd4Constants" );
 
 let isRelatedTargetCharacteristicInSameDevice = require( "./utils/isRelatedTargetCharacteristicInSameDevice" );
 
+let HIGH_PRIORITY = 0;
+let LOW_PRIORITY = 1;
 
 class Cmd4PriorityPollingQueue
 {
@@ -38,42 +40,45 @@ class Cmd4PriorityPollingQueue
       this.originalInterval = 0;
       this.optimalInterval = 0;
    }
-   addQueueEntry( isSet, isPolled, accessory, accTypeEnumIndex, interval, timeout, stateChangeResponseTime, callback, value )
+
+   prioritySetValue( accTypeEnumIndex, timeout, stateChangeResponseTime,  value, callback )
    {
-      if ( isSet || ! isSet && !isPolled )
-      {
-         // A mixture of gets and sets, all from IOS though
-         this.highPriorityQueue.push( { [ constants.IS_SET_lv ]: isSet, [ constants.IS_POLLED_lv ]: isPolled, [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.INTERVAL_lv ]: interval, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.CALLBACK_lv ]: callback, [ constants.VALUE_lv ]: value } );
-         if ( this.queueStarted == true )
-         {
-            // We cant have a low priority timer going off starting the queue
-            // even though it woukd do high priority first.
-            if ( this.lowPriorityTimer != null )
-            {
-               // stopLowPriorityTimer
-               clearTimeout( this.lowPriorityTimer );
-               this.lowPriorityTimer = null;
-            }
+      let self = this;
+      self.queue.highPriorityQueue.push( { [ constants.IS_SET_lv ]: true, [ constants.ACCESSORY_lv ]: self, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.VALUE_lv ]: value } );
 
-            this.processQueue( );
-         }
-      } else
-      {
-         // These are all gets from polling
-         this.lowPriorityQueue.push( { [ constants.IS_SET_lv ]: isSet, [ constants.IS_POLLED_lv ]: isPolled, [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.INTERVAL_lv ]: interval, [ constants.TIMEOUT_lv ]: timeout, [ constants.CALLBACK_lv ]: callback, [ constants.VALUE_lv ]: value } );
+      // Call the callback immediately as we will call updateValue
+      callback( null );
 
-         if ( this.currentIntervalBeingUsed == 0 )
-         {
-            if ( this.queueMsg == true )
-               this.log.info( `Interval being used for queue: "${ this.queueName }" is from  ${ accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ${ constants.INTERVAL_lv }: ${ interval }` );
-            this.currentIntervalBeingUsed = interval;
-            this.optimalInterval = interval;
-            this.originalInterval = interval;
-            this.queueMsg = accessory.queueMsg;
-            this.queueStatMsgInterval = accessory.queueStatMsgInterval;
-         }
+      self.queue.processQueue( HIGH_PRIORITY );
+   }
+
+   priorityGetValue( accTypeEnumIndex, timeout, callback )
+   {
+      let self = this;
+      // Add To Top of priority queue
+      //                         ( isSet, accessory, accTypeEnumIndex, timeout, stateChangeResponseTime, value )
+      self.queue.highPriorityQueue.push( { [ constants.IS_SET_lv ]: false, [ constants.ACCESSORY_lv ]: self, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: null, [ constants.VALUE_lv ]: null, [ constants.CALLBACK_lv ]: callback } );
+
+      self.queue.processQueue( HIGH_PRIORITY );
+   }
+
+   addLowPriorityGetPolledQueueEntry( accessory, accTypeEnumIndex, interval, timeout )
+   {
+      // These are all gets from polling
+      this.lowPriorityQueue.push( { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.INTERVAL_lv ]: interval, [ constants.TIMEOUT_lv ]: timeout } );
+
+      if ( this.currentIntervalBeingUsed == 0 )
+      {
+         this.queueMsg = accessory.queueMsg;
+
+         if ( this.queueMsg == true )
+            this.log.info( `Interval being used for queue: "${ this.queueName }" is from  ${ accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ${ constants.INTERVAL_lv }: ${ interval }` );
+         this.currentIntervalBeingUsed = interval;
+         this.optimalInterval = interval;
+         this.originalInterval = interval;
+         this.queueStatMsgInterval = accessory.queueStatMsgInterval;
+
       }
-
    }
 
    processAllFromHighPriorityQueue( )
@@ -84,21 +89,22 @@ class Cmd4PriorityPollingQueue
       {
          this.log.debug( `Proccessing high priority queue "Set" entry: ${ entry.accTypeEnumIndex }` );
          let self = this;
-         entry.accessory.setValue( entry.accTypeEnumIndex, entry.value, function ( error )
+         entry.accessory.setValue( entry.accTypeEnumIndex, entry.timeout, entry.stateChangeResponseTime, entry.value, function ( error )
          {
 
             let relatedCurrentAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].relatedCurrentAccTypeEnumIndex;
-           if ( relatedCurrentAccTypeEnumIndex != null &&
-                 settings.arrayOfPollingCharacteristics.filter( entry => entry.accessory.UUID == self.UUID &&
-                                                                         entry.accTypeEnumIndex == 999
-                                                              ).length > 0  &&
+            if ( error == 0 &&
+                 relatedCurrentAccTypeEnumIndex != null &&
+                 settings.arrayOfPollingCharacteristics.filter(
+                    entry => entry.accessory.UUID == self.UUID &&
+                    entry.accTypeEnumIndex == relatedCurrentAccTypeEnumIndex
+                 ).length > 0  &&
                  isRelatedTargetCharacteristicInSameDevice(
                      self.typeIndex,
                      entry.accTypeEnumIndex,
                      CMD4_DEVICE_TYPE_ENUM,
                      CMD4_ACC_TYPE_ENUM
-                 ) == relatedCurrentAccTypeEnumIndex
-            )
+                 ) == relatedCurrentAccTypeEnumIndex )
             {
                let pollingID = Date.now( );
                let relatedCharacteristic = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].characteristic;
@@ -107,7 +113,7 @@ class Cmd4PriorityPollingQueue
                   stateChangeResponseTime = this.currentIntervalBeingUsed * .5;
 
                setTimeout(() => {
-                  entry.accessory.getValue( relatedCharacteristic, function ( error, properValue, returnedPollingID )
+                  entry.accessory.getValue( relatedCharacteristic, entry.timeout, function ( error, properValue, returnedPollingID )
                   {
                      // This function should only be called once, noted by the pollingID.
                      if ( pollingID != returnedPollingID )
@@ -119,17 +125,14 @@ class Cmd4PriorityPollingQueue
 
                      pollingID = -1;
 
-                     entry.callback( error );
-
-                     setTimeout( ( ) => { self.processQueue( ); }, 0);
+                     setTimeout( ( ) => { self.processQueue( HIGH_PRIORITY ); }, 0);
 
                   }, pollingID );
                }, stateChangeResponseTime );
+
             } else {
 
-               entry.callback( error );
-
-               setTimeout( ( ) => { self.processQueue( ); }, 0);
+               setTimeout( ( ) => { self.processQueue( HIGH_PRIORITY ); }, 0);
            }
          }, true );
       } else
@@ -137,7 +140,7 @@ class Cmd4PriorityPollingQueue
          this.log.debug( `Proccessing high priority queue "Get" entry: ${ entry.accTypeEnumIndex }` );
          let pollingID = Date.now( );
          let self = this;
-         entry.accessory.getValue( entry.accTypeEnumIndex, function ( error, properValue, returnedPollingID  )
+         entry.accessory.getValue( entry.accTypeEnumIndex, entry.timeout, function ( error, properValue, returnedPollingID  )
          {
             // This function should only be called once, noted by the pollingID.
             if ( pollingID != returnedPollingID )
@@ -151,7 +154,7 @@ class Cmd4PriorityPollingQueue
 
             entry.callback( error, properValue );
 
-            setTimeout( ( ) => { self.processQueue( ); }, 0);
+            setTimeout( ( ) => { self.processQueue( HIGH_PRIORITY ); }, 0);
 
          }, pollingID );
       }
@@ -166,7 +169,7 @@ class Cmd4PriorityPollingQueue
       this.lowPriorityQueueCounter ++;
       let lowPriorityQueueStartTime = Date.now( );
       let self = this;
-      entry.accessory.getValue( entry.accTypeEnumIndex, function ( error, properValue, returnedPollingID )
+      entry.accessory.getValue( entry.accTypeEnumIndex, entry.timeout, function ( error, properValue, returnedPollingID )
       {
          let lowPriorityQueueEndTime = Date.now( );
 
@@ -223,44 +226,56 @@ class Cmd4PriorityPollingQueue
 
       this.lowPriorityQueue.push( entry );
    }
-   processQueue( )
+
+   processQueue( queueType )
    {
+      if ( this.queueStarted == true )
+      {
+         // We cant have a low priority timer going off starting the queue
+         // even though it woukd do high priority first.
+         if ( this.lowPriorityTimer != null )
+         {
+            // stopLowPriorityTimer
+            clearTimeout( this.lowPriorityTimer );
+            this.lowPriorityTimer = null;
+         }
+      }
       // While not necessarily needed, this helps
       // with unit testing with processEntryFromLowPriorityQueue and
       // processAllFromHighPriorityQueue where because of this check
       // they would not run forever.
-      if ( this.queueStarted == true )
+      if ( this.highPriorityQueue.length > 0 )
       {
-         if ( this.highPriorityQueue.length > 0 )
-         {
-            setTimeout( ( ) => { this.processAllFromHighPriorityQueue( ); }, 0 );
+         this.processAllFromHighPriorityQueue( );
 
-         } else
+      } else if ( this.queueStarted == true &&
+                  queueType == LOW_PRIORITY &&
+                  this.lowPriorityQueue.length > 0 )
+      {
+         let entry = this.lowPriorityQueue[ 0 ];
+         this.processEntryFromLowPriorityQueue( );
+
+         // A 10% variance is okay
+         if ( this.currentIntervalBeingUsed > ( this.optimalInterval * 1.1 ) )
          {
-            if ( this.lowPriorityQueue.length > 0 )
+            if ( this.queueMsg == true )
+                 this.log.info( `Interval for ${ entry.accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].type } is too reasonable. Using computed interval of ` + this.optimalInterval.toFixed( 2 ) );
+
+            this.currentIntervalBeingUsed =  this.optimalInterval;
+
+            if ( this.queueMsg == true )
+               this.printQueueStats( );
+
+            if ( this.currentIntervalBeingUsed < ( this.optimalInterval * .9 ) )
             {
-               let entry = this.lowPriorityQueue[ 0 ];
-               this.processEntryFromLowPriorityQueue( );
+               if ( this.queueMsg == true )
+                  this.log.warn( `Interval for ${ entry.accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].type } is unreasonable. Using computed interval of ` + this.optimalInterval.toFixed( 2 ) );
 
-               // A 10% variance is okay
-               if ( this.currentIntervalBeingUsed > ( this.optimalInterval * 1.1 ) )
-               {
-                  if ( this.queueMsg == true )
-                     this.log.info( `Interval for ${ entry.accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].type } is too reasonable. Using computed interval of ` + this.optimalInterval.toFixed( 2 ) );
-                  this.currentIntervalBeingUsed =  this.optimalInterval;
+               this.currentIntervalBeingUsed =  this.optimalInterval;
 
-                  if ( this.queueMsg == true )
-                     this.printQueueStats( );
-               }
-               if ( this.currentIntervalBeingUsed < ( this.optimalInterval * .9 ) )
-               {
-                  if ( this.queueMsg == true )
-                     this.log.warn( `Interval for ${ entry.accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].type } is unreasonable. Using computed interval of ` + this.optimalInterval.toFixed( 2 ) );
-                  this.currentIntervalBeingUsed =  this.optimalInterval;
+               if ( this.queueMsg == true )
+                  this.printQueueStats( );
 
-                  if ( this.queueMsg == true )
-                     this.printQueueStats( );
-               }
 
                if ( this.queueMsg == true &&
                     this.lowPriorityQueueCounter % this.queueStatMsgInterval == 0 )
@@ -268,7 +283,7 @@ class Cmd4PriorityPollingQueue
 
                this.lowPriorityTimer = setTimeout( ( ) =>
                {
-                  this.processQueue( );
+                  this.processQueue( LOW_PRIORITY );
 
                }, this.currentIntervalBeingUsed );
             }
@@ -299,7 +314,7 @@ class Cmd4PriorityPollingQueue
    {
       this.queueStarted = true;
 
-      setTimeout( ( ) => { this.processQueue( ); }, 0 );
+      setTimeout( ( ) => { this.processQueue( LOW_PRIORITY ); }, 0 );
 
    }
 }

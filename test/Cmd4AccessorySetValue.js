@@ -129,7 +129,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       let value = Characteristic.ClosedCaptions.ENABLED;
 
-      cmd4Accessory.setValue( acc, value,  function( )
+      cmd4Accessory.setValue( acc, constants.DEFAULT_TIMEOUT, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, value,  function( )
       {
          let expectedResult =`${value}`;
          let expectedOutput = `Setting My_Television ClosedCaptions\u001b[39m 1`;
@@ -197,7 +197,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       let value = Characteristic.ClosedCaptions.ENABLED;
 
-      cmd4Accessory.setValue( acc, value,  function( )
+      cmd4Accessory.setValue( acc, constants.DEFAULT_TIMEOUT, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, value,  function( )
       {
          let expectedResult = "ENABLED";
          let expectedOutput = `Setting My_Television ClosedCaptions\u001b[39m ENABLED`;
@@ -310,7 +310,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       let value = true;
 
-      cmd4Accessory.setValue( acc, value,  function( )
+      cmd4Accessory.setValue( acc, constants.DEFAULT_TIMEOUT, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, value,  function( )
       {
          let expectedResult = 1;
          let expectedOutput = `Setting My_Television Mute\u001b[39m 1`;
