@@ -24,6 +24,7 @@ exports.DEFAULT_INTERVAL         = 60000; // 1 minute
 exports.DEFAULT_STATUSMSG        = "TRUE";
 
 exports.DEFAULT_QUEUEMSG         = false;
+exports.DEFAULT_QUEUE_TYPE       = "WoRm";
 
 // How many polls before output of queue status information
 exports.DEFAULT_QUEUE_STAT_MSG_INTERVAL = 1000;
@@ -75,6 +76,10 @@ exports.OUTPUTCONSTANTS          = "OutputConstants";
 exports.RESTART_RECOVER          = "RestartRecover";
 exports.STATUSMSG                = "StatusMsg";
 exports.QUEUEMSG                 = "QueueMsg";
+exports.QUEUETYPE                = "QueueType";
+exports.QUEUETYPE_SEQUENTIAL     = "Sequential";
+exports.QUEUETYPE_WORM           = "WoRm";
+
 //exports.STATUSMSG_l              = "statusMsg";
 
 // Platform Config Constnts
@@ -128,6 +133,7 @@ exports.ACCESS                  = "Access";
 
 // Internal list variables
 exports.ACCESSORY_lv                   = "accessory";
+exports.CHARACTERISTIC_STRING_lv       = "characteristicString";
 exports.CALLBACK_lv                    = "callback";
 exports.ACC_TYPE_ENUM_INDEX_lv         = "accTypeEnumIndex";
 exports.INTERVAL_lv                    = "interval";

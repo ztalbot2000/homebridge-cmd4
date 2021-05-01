@@ -778,25 +778,18 @@ class Cmd4Platform
 
       staggeredPollingArray.forEach( ( entry, entryIndex )  =>
       {
-         let accessory = entry.accessory;
-         let accTypeEnumIndex = entry.accTypeEnumIndex;
-         let timeout = entry.timeout;
-         let interval = entry.interval;
-         let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
-
-
          setTimeout( ( ) =>
          {
             if ( entryIndex == 0 )
-               accessory.log.info( `Started staggered kick off of ${ staggeredPollingArray.length } polled characteristics` );
+               entry.accessory.log.info( `Started staggered kick off of ${ staggeredPollingArray.length } polled characteristics` );
 
-            accessory.log.debug( `Kicking off polling for: ${ accessory.displayName } ${ characteristicString } interval:${ interval }, staggered:${ staggeredDelays[ staggeredDelayIndex ]}` );
-            accessory.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] =
-               setTimeout( accessory.characteristicPolling.bind(
-                  accessory, accessory, accTypeEnumIndex, timeout, interval ), interval );
+            entry.accessory.log.debug( `Kicking off polling for: ${ entry.accessory.displayName } ${ entry.characteristicString } interval:${ entry.interval }, staggered:${ staggeredDelays[ staggeredDelayIndex ]}` );
+            entry.accessory.listOfRunningPolls[ entry.accessory.displayName + entry.accTypeEnumIndex ] =
+               setTimeout( entry.accessory.characteristicPolling.bind(
+                  entry.accessory, entry.accessory, entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, entry.interval ), entry.interval );
 
             if ( entryIndex == settings.arrayOfPollingCharacteristics.length -1 )
-               accessory.log.info( `All characteristics are now being polled` );
+               entry.accessory.log.info( `All characteristics are now being polled` );
 
          }, delay );
 
@@ -804,10 +797,10 @@ class Cmd4Platform
          if ( staggeredDelayIndex++ >= staggeredDelaysLength )
             staggeredDelayIndex = 0;
 
-         if ( lastAccessoryUUID != accessory.UUID )
+         if ( lastAccessoryUUID != entry.accessory.UUID )
             staggeredDelayIndex = 0;
 
-         lastAccessoryUUID = accessory.UUID;
+         lastAccessoryUUID = entry.accessory.UUID;
 
          delay += staggeredDelays[ staggeredDelayIndex ];
 
@@ -817,8 +810,9 @@ class Cmd4Platform
    // The delay definitions are not meant to be changed, except for unit testing
    // ==========================================================================
    // staggeredStartDelay - These would be for just polling and to be nice to the system.
-   // queuedStartDelay - As this is both IOS and polling, there should be no delay.
-   startPolling( staggeredStartDelay = 3000, queuedStartDelay = 0 )
+   // queuedStartDelay - As this is both IOS and polling, the delay only happens to 
+   // the low priority polling.
+   startPolling( staggeredStartDelay = 5000, queuedStartDelay = 5000 )
    {
       let arrayOfPollingCharacteristics = [ ];
       let queuedArrayOfPollingCharacteristics = [ ];
@@ -861,6 +855,7 @@ class Cmd4Platform
          this.log.debug( `Adding ${ elem.accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ elem.accTypeEnumIndex ].type }  elem.timeout: ${ elem.timeout } elem.interval: ${ elem.interval }  to Polled Queue ${ elem.queueName }` );
          queue.addLowPriorityGetPolledQueueEntry( elem.accessory,
                                                   elem.accTypeEnumIndex,
+                                                  elem.characteristicString,
                                                   elem.interval,
                                                   elem.timeout )
 

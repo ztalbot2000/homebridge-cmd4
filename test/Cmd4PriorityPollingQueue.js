@@ -134,7 +134,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       assert.isFunction( cmd4PriorityPollingQueue.addQueueEntry, `.addQueueEntry is not a function` );
 
       //                                    ( isSet, isPolled, accessory, accTypeEnumIndex, interval, timeout, callback, value )
-      cmd4PriorityPollingQueue.addQueueEntry( true, false, cmd4Accessory, CMD4_ACC_TYPE_ENUM.On, constants.DEFAULT_INTERVAL, constants.DEFAULT_TIMEOUT, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, dummyCallback, value );
+      cmd4PriorityPollingQueue.addQueueEntry( true, false, cmd4Accessory, CMD4_ACC_TYPE_ENUM.On, "On", constants.DEFAULT_INTERVAL, constants.DEFAULT_TIMEOUT, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, dummyCallback, value );
 
       assert.equal( cmd4PriorityPollingQueue.highPriorityQueue.length, 1, `Set not added to high prority queue` );
 
@@ -187,7 +187,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       assert.isFunction( cmd4PriorityPollingQueue.addQueueEntry, `.addQueueEntry is not a function` );
 
       //                                    ( isSet, isPolled, accessory, accTypeEnumIndex, interval, timeout, callback, value )
-      cmd4PriorityPollingQueue.addQueueEntry( false, false, cmd4Accessory, CMD4_ACC_TYPE_ENUM.On, constants.DEFAULT_INTERVAL, constants.DEFAULT_TIMEOUT, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, dummyCallback, 1 );
+      cmd4PriorityPollingQueue.addQueueEntry( false, false, cmd4Accessory, CMD4_ACC_TYPE_ENUM.On, "On", constants.DEFAULT_INTERVAL, constants.DEFAULT_TIMEOUT, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, dummyCallback, 1 );
 
       assert.equal( cmd4PriorityPollingQueue.highPriorityQueue.length, 1, `IOS Get not added to high prority queue` );
 
@@ -235,7 +235,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       assert.isFunction( cmd4PriorityPollingQueue.addLowPriorityGetPolledQueueEntry, `.addLowPriorityGetPolledQueueEntry is not a function` );
 
       //                                    ( accessory, accTypeEnumIndex, interval, timeout )
-      cmd4PriorityPollingQueue.addLowPriorityGetPolledQueueEntry( cmd4Accessory, CMD4_ACC_TYPE_ENUM.On, constants.DEFAULT_INTERVAL, constants.DEFAULT_TIMEOUT );
+      cmd4PriorityPollingQueue.addLowPriorityGetPolledQueueEntry( cmd4Accessory, CMD4_ACC_TYPE_ENUM.On, "On", constants.DEFAULT_INTERVAL, constants.DEFAULT_TIMEOUT );
 
 
       assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 1, `Polled Get added to low prority queue` );
@@ -252,40 +252,51 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
    {
       this.log = new Logger( );
       this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( false );
-      this.log.setDebugEnabled( false );
+      this.log.setOutputEnabled( true );
+      this.log.setDebugEnabled( true );
 
       let queueName = "Queue A";
 
-      let config =
+      let platformConfig =
       {
-         Name:         "My_Switch",
-         DisplayName:  "My_Switch",
-         StatusMsg:    true,
-         Type:         "Switch",
-         Cmd4_Mode:    "Polled",
-         On:           0,
-         Active:       0,
-         polling: [{ "characteristic": "On" },
-                   { "characteristic": "Active" }],
-         State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
-      }
-      let parentInfo={ }; // Standalone so services will be created
+         accessories: [
+         {
+            Name:         "My_Switch",
+            DisplayName:  "My_Switch",
+            StatusMsg:    true,
+            Type:         "Switch",
+            Cmd4_Mode:    "Polled",
+            On:           0,
+            Active:       0,
+            polling: [{ "characteristic": "On", "queue": "A" },
+                      { "characteristic": "Active", "queue": "A" }
+                     ],
+            State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         }]
+      };
 
-      let cmd4Accessory = new Cmd4Accessory( this.log, config, _api, [ ], parentInfo );
+      let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );
 
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
-      let cmd4PriorityPollingQueue = new Cmd4PriorityPollingQueue( this.log, queueName );
-      //                                    ( accessory, accTypeEnumIndex, interval, timeout )
-      cmd4PriorityPollingQueue.addLowPriorityGetPolledQueueEntry( cmd4Accessory, CMD4_ACC_TYPE_ENUM.On, constants.DEFAULT_INTERVAL, constants.DEFAULT_TIMEOUT );
-      cmd4PriorityPollingQueue.addLowPriorityGetPolledQueueEntry( cmd4Accessory, CMD4_ACC_TYPE_ENUM.Active, constants.DEFAULT_INTERVAL, constants.DEFAULT_TIMEOUT );
+      cmd4Platform.discoverDevices( );
+
+      assert.equal( settings.arrayOfPollingCharacteristics.length, 2, `Incorrect number of polling characteristics` );
+
+      let cmd4SwitchAccessory = cmd4Platform.createdCmd4Accessories[0];
+
+      let cmd4PriorityPollingQueue = cmd4SwitchAccessory.queue;
+      expect( cmd4PriorityPollingQueue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "Cmd4PriorityPollingQueue is not an instance of Cmd4Accessory" );
+
+      cmd4PriorityPollingQueue.addLowPriorityGetPolledQueueEntry( cmd4SwitchAccessory, CMD4_ACC_TYPE_ENUM.On, "On", constants.DEFAULT_INTERVAL, constants.DEFAULT_TIMEOUT );
+      cmd4PriorityPollingQueue.addLowPriorityGetPolledQueueEntry( cmd4SwitchAccessory, CMD4_ACC_TYPE_ENUM.Active, "Active", constants.DEFAULT_INTERVAL, constants.DEFAULT_TIMEOUT );
 
       assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 2, `Polled Get added to low prority queue` );
 
       this.log.reset( );
       this.log.setDebugEnabled( true );
 
-      cmd4PriorityPollingQueue.processEntryFromLowPriorityQueue( );
+      cmd4PriorityPollingQueue.processEntryFromLowPriorityQueue( cmd4PriorityPollingQueue.lowPriorityQueue[ 0 ] );
 
       setTimeout( () =>
       {
@@ -361,7 +372,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       this.log.setDebugEnabled( true );
 
       cmd4PriorityPollingQueue.queueStarted = true;
-      cmd4PriorityPollingQueue.processAllFromHighPriorityQueue( );
+      cmd4PriorityPollingQueue.processHighPriorityGetQueue( cmd4PriorityPollingQueue.highPriorityQueue[ 0 ] );
 
       setTimeout( () =>
       {
@@ -490,7 +501,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
 
       this.log = new Logger( );
       this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( false );
+      this.log.setOutputEnabled( true );
       this.log.setDebugEnabled( true );
 
       let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );

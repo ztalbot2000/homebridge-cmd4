@@ -546,11 +546,9 @@ class Cmd4Accessory
    //   characteristic of a accessory.
    //
    // ***********************************************
-   setCachedValue( accTypeEnumIndex, value, callback )
+   setCachedValue( accTypeEnumIndex, characteristicString, value, callback )
    {
       let self = this;
-
-      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
 
       if ( self.statusMsg == "TRUE" )
          self.log.info( chalk.blue( `Setting (Cached) ${ self.displayName } ${ characteristicString }` ) + ` ${ value }` );
@@ -636,7 +634,7 @@ class Cmd4Accessory
    //
    //       - Where he value in <> is an one of CMD4_ACC_TYPE_ENUM
    // ***********************************************
-   setValue( accTypeEnumIndex, timeout, stateChangeResponseTime, value, callback, isPriority = false )
+   setValue( accTypeEnumIndex, characteristicString, timeout, stateChangeResponseTime, value, callback, isPriority = false )
    {
       let self = this;
 
@@ -645,8 +643,6 @@ class Cmd4Accessory
       let QIndicator = ".";
       if ( isPriority == false )
           QIndicator = "";
-
-      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
 
       var transposed = { [ constants.VALUE_lv ]: value, [ constants.RC_lv ]: true, [ constants.MSG_lv ]: "" };
       if ( self.outputConstants == true )
@@ -735,11 +731,9 @@ class Cmd4Accessory
    //   characteristic value.
    //
    // ***********************************************
-   getCachedValue( accTypeEnumIndex, callback )
+   getCachedValue( accTypeEnumIndex, characteristicString, callback )
    {
       let self = this;
-
-      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
 
       let storedValue = self.getStoredValueForIndex( accTypeEnumIndex );
       if ( storedValue == null || storedValue == undefined )
@@ -799,7 +793,7 @@ class Cmd4Accessory
    //           the CMD4_ACC_TYPE_ENUM.
    //
    // ***********************************************
-   getValue( accTypeEnumIndex, timeout, callback, pollingID = 0 )
+   getValue( accTypeEnumIndex, characteristicString, timeout, callback, pollingID = 0 )
    {
       let self = this;
 
@@ -808,8 +802,6 @@ class Cmd4Accessory
       let QIndicator = ".";
       if ( pollingID == 0 )
           QIndicator = "";
-
-      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
 
       let cmd = this.state_cmd_prefix + this.state_cmd + " Get '" + this.displayName + "' '" + characteristicString  + "'" + this.state_cmd_suffix;
 
@@ -1153,6 +1145,8 @@ class Cmd4Accessory
        // Check every possible characteristic
        for ( let accTypeEnumIndex = 0; accTypeEnumIndex < len; accTypeEnumIndex++ )
        {
+          let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+
           // If there is a stored value for this characteristic ( defined by the config file )
           // Then we need to add the characteristic too
           if ( accessory.storedValuesPerCharacteristic[ accTypeEnumIndex ] != undefined )
@@ -1251,7 +1245,7 @@ class Cmd4Accessory
                       accessory.service.getCharacteristic(
                          CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
                          .characteristic )
-                            .on( "get", accessory.getCachedValue.bind( accessory, accTypeEnumIndex ) );
+                            .on( "get", accessory.getCachedValue.bind( accessory, accTypeEnumIndex, characteristicString ) );
                   } else
                   {
                       let details = this.lookupDetailsForPollingCharacteristic( accessory, accTypeEnumIndex );
@@ -1264,7 +1258,7 @@ class Cmd4Accessory
                          accessory.service.getCharacteristic(
                             CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
                             .characteristic )
-                               .on( "get", accessory.getValue.bind( accessory, accTypeEnumIndex, details.timeout ) );
+                               .on( "get", accessory.getValue.bind( accessory, accTypeEnumIndex, characteristicString, details.timeout ) );
                       } else
                       {
                          this.log.debug( chalk.yellow( `Adding priorityGetValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` ) );
@@ -1274,7 +1268,7 @@ class Cmd4Accessory
                          accessory.service.getCharacteristic(
                             CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
                             .characteristic )
-                               .on( "get", accessory.queue.priorityGetValue.bind( accessory, accTypeEnumIndex, details.timeout ) );
+                               .on( "get", accessory.queue.priorityGetValue.bind( accessory, accTypeEnumIndex, characteristicString, details.timeout ) );
                       }
                    }
                 }
@@ -1312,7 +1306,7 @@ class Cmd4Accessory
                       // setCachedValue has parameters:
                       // accTypeEnumIndex, value, callback
                       // The first bound value though is "this"
-                      let boundSetCachedValue = accessory.setCachedValue.bind( this, accTypeEnumIndex );
+                      let boundSetCachedValue = accessory.setCachedValue.bind( this, accTypeEnumIndex, characteristicString );
                       accessory.service.getCharacteristic(
                          CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
                          .characteristic ).on( "set", ( value, callback ) => {
@@ -1328,11 +1322,11 @@ class Cmd4Accessory
                       // no parent as in the case of Standalone, use default setValue
                       if ( queueName == constants.DEFAULT_QUEUE_NAME || this.CMD4 == constants.STANDALONE )
                       {
-                         this.log.debug( chalk.yellow( `Adding setValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ` ) );
+                         this.log.debug( chalk.yellow( `Adding setValue for ${ accessory.displayName } characteristic: ${ characteristicString }` ) );
                          // setValue has parameters:
                          // accTypeEnumIndex, value, callback
                          // The first bound value though is "this"
-                         let boundSetValue = accessory.setValue.bind( this, accTypeEnumIndex, details.timeout, details.stateChangeResponseTime );
+                         let boundSetValue = accessory.setValue.bind( this, accTypeEnumIndex, characteristicString, details.timeout, details.stateChangeResponseTime );
                          accessory.service.getCharacteristic(
                             CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
                             .characteristic ).on( "set", ( value, callback ) => {
@@ -1344,7 +1338,7 @@ class Cmd4Accessory
 
                          // Set parms are accTypeEnumIndex, value, callback
                          // Get parms are accTypeEnumIndex, callback
-                         let boundSetValue = accessory.queue.prioritySetValue.bind( this, accTypeEnumIndex, details.timeout, details.stateChangeResponseTime );
+                         let boundSetValue = accessory.queue.prioritySetValue.bind( this, accTypeEnumIndex, characteristicString, details.timeout, details.stateChangeResponseTime );
                          accessory.service.getCharacteristic(
                             CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
                             .characteristic ).on( "set", ( value, callback ) => {
@@ -2421,6 +2415,7 @@ class Cmd4Accessory
 
                let value;
                let accTypeEnumIndex = -1;
+               let  characteristicString = "";
 
                // All this code disappears in the next major release.
                for ( let key in jsonPollingConfig )
@@ -2478,6 +2473,7 @@ class Cmd4Accessory
                            log.error( chalk.red( `No such polling characteristic: ${ value } for: ${ accessory.displayName }` ) );
                            process.exit( 261 );
                         }
+                        characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
                         // We can do this as this is a new way to do things.
                         if ( this.getStoredValueForIndex( accTypeEnumIndex ) == undefined )
                         {
@@ -2493,7 +2489,7 @@ class Cmd4Accessory
                         // but first check if one has already been defined as we can only handle one at a time.
                         if ( accTypeEnumIndex != -1 )
                         {
-                           log.error( chalk.red( `Error` ) + `: For charateristic polling, you can only define one characteristic per array item.\nCannot add "${ ucKey }" as "${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }" is already defined for: ${ accessory.displayName }` );
+                           log.error( chalk.red( `Error` ) + `: For charateristic polling, you can only define one characteristic per array item.\nCannot add "${ ucKey }" as "${ characteristicString }" is already defined for: ${ accessory.displayName }` );
                            process.exit( 263 );
                         }
                         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucKey );
@@ -2516,9 +2512,9 @@ class Cmd4Accessory
                   }
                }
 
-               log.debug( `Setting up accessory: ${ accessory.displayName } for polling of: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } timeout: ${ timeout } interval: ${ interval }` );
+               log.debug( `Setting up accessory: ${ accessory.displayName } for polling of: ${ characteristicString } timeout: ${ timeout } interval: ${ interval }` );
 
-               settings.arrayOfPollingCharacteristics.push( { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.INTERVAL_lv ]: interval, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.QUEUE_NAME_lv ]: queueName } );
+               settings.arrayOfPollingCharacteristics.push( { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: interval, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.QUEUE_NAME_lv ]: queueName } );
 
             }
             break;
@@ -2537,7 +2533,8 @@ class Cmd4Accessory
                // Make sure the defined characteristics will be polled
                CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ].defaultPollingCharacteristics.forEach( defaultPollingAccTypeEnumIndex =>
                {
-                  settings.arrayOfPollingCharacteristics.push( { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: defaultPollingAccTypeEnumIndex, [ constants.INTERVAL_lv ]: accessory.interval, [ constants.TIMEOUT_lv ]: accessory.timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, [ constants.QUEUE_NAME_lv ]: constants.DEFAULT_QUEUE_NAME } );
+                  let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ defaultPollingAccTypeEnumIndex ].type;
+                  settings.arrayOfPollingCharacteristics.push( { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: defaultPollingAccTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: accessory.interval, [ constants.TIMEOUT_lv ]: accessory.timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, [ constants.QUEUE_NAME_lv ]: constants.DEFAULT_QUEUE_NAME } );
                });
 
             }
@@ -2579,9 +2576,8 @@ class Cmd4Accessory
                               ).length == 0
                )
             {
-               let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].type;
                let relatedCharacteristicString = CMD4_ACC_TYPE_ENUM.properties[ relatedTargetAccTypeEnumIndex ].type;
-               this.log.warn( `Warning, With ${ constants.CMD4_MODE } set to "${ this.cmd4Mode }" and polling for "${ characteristicString }" requested, you also must do polling of "${ relatedCharacteristicString }" or things will not function properly` );
+               this.log.warn( `Warning, With ${ constants.CMD4_MODE } set to "${ this.cmd4Mode }" and polling for "${ entry.characteristicString }" requested, you also must do polling of "${ relatedCharacteristicString }" or things will not function properly` );
             }
          }
       });
@@ -2595,8 +2591,7 @@ class Cmd4Accessory
             if ( entry.queueName == constants.DEFAULT_QUEUE_NAME ||
                  entry.queueName != accessoriesPollingQueueName )
             {
-               let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].type;
-               log.error( chalk.red( `Error` ) + `: For Priority Queue Polling all polled characteristics must be in the same polling queue: "${ accessoriesPollingQueueName }". Missing ${ characteristicString }` );
+               log.error( chalk.red( `Error` ) + `: For Priority Queue Polling all polled characteristics must be in the same polling queue: "${ accessoriesPollingQueueName }". Missing ${ entry.characteristicString }` );
                process.exit( 401 );
             }
          });
@@ -2605,12 +2600,12 @@ class Cmd4Accessory
    }
 
    // This is the self-reaccurring routine to poll a characteristic
-   characteristicPolling ( accessory, accTypeEnumIndex, timeout, interval )
+   characteristicPolling ( accessory, accTypeEnumIndex, characteristicString, timeout, interval )
    {
       let self = accessory;
 
       self.log.debug( "Doing Poll of index:%s characteristic:%s for:%s timeout=%s interval=%s", accTypeEnumIndex,
-             CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex].type, self.displayName, timeout, interval );
+             characteristicString, self.displayName, timeout, interval );
 
       // Make sure that the characteristic exists
       if ( accTypeEnumIndex < 0 )
@@ -2628,12 +2623,10 @@ class Cmd4Accessory
       // i.e. Characteristic.On
       //      Characteristic.RotationDirection
 
-      accessory.getValue( accTypeEnumIndex, timeout, function ( error, properValue) {
+      accessory.getValue( accTypeEnumIndex, characteristicString, timeout, function ( error, properValue) {
       {
          if ( error == 0 )
          {
-            let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
-
             accessory.log.debug( chalk.blue( `characteristicPolling Updating ${ accessory.displayName } ${ characteristicString }` ) + ` ${ properValue }` );
 
             accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic ).updateValue( properValue );
@@ -2648,7 +2641,7 @@ class Cmd4Accessory
       if ( this.listOfRunningPolls )
          this.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] =
             setTimeout( this.characteristicPolling.bind(
-               this, accessory, accTypeEnumIndex, timeout, interval ), interval );
+               this, accessory, accTypeEnumIndex, characteristicString, timeout, interval ), interval );
    }
 }
 
