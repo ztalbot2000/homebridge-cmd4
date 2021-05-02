@@ -10,7 +10,13 @@ let CMD4_DEVICE_TYPE_ENUM = require( "./lib/CMD4_DEVICE_TYPE_ENUM" ).CMD4_DEVICE
 let settings = require( "./cmd4Settings" );
 const constants = require( "./cmd4Constants" );
 
+
+// Pretty Colors
+var chalk = require( "chalk" );
+
 let isRelatedTargetCharacteristicInSameDevice = require( "./utils/isRelatedTargetCharacteristicInSameDevice" );
+let trueTypeOf = require( "./utils/trueTypeOf" );
+
 
 let HIGH_PRIORITY_SET = 0;
 let HIGH_PRIORITY_GET = 1;
@@ -118,7 +124,8 @@ class Cmd4PriorityPollingQueue
             if ( stateChangeResponseTime < this.currentIntervalBeingUsed * .5 )
                stateChangeResponseTime = this.currentIntervalBeingUsed * .5;
 
-            setTimeout(() => {
+            setTimeout( ( ) =>
+            {
                entry.accessory.getValue( relatedCharacteristic, entry.characteristicString, entry.timeout, function ( error, properValue, returnedPollingID )
                {
                   // This function should only be called once, noted by the pollingID.
@@ -221,8 +228,8 @@ class Cmd4PriorityPollingQueue
          {
             case 0:
             {
-                 entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( properValue );
-                 break;
+               entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( properValue );
+               break;
             }
             case constants.ERROR_TIMER_EXPIRED:
             // When the MyAir is busy, the result is empty strings or
@@ -250,8 +257,6 @@ class Cmd4PriorityPollingQueue
 
          self.inProgressGets --;
       }, pollingID );
-
-      this.lowPriorityQueue.push( entry );
    }
 
    processQueue( transactionType )
@@ -403,6 +408,16 @@ class Cmd4PriorityPollingQueue
       this.log.info( line );
       this.log.info( `originalInterval: ${ this.originalInterval }` );
    }
+   dumpQueue( )
+   {
+      let line = `Low Priority Queue "${ this.queueName }"`;
+      this.log.info( line );
+      this.log.info( `${ "=".repeat( line.length) }` );
+      this.lowPriorityQueue.forEach( ( entry, entryIndex ) =>
+      {
+         this.log.info( `${ entryIndex } ${ entry.accessory.displayName } characteristic:  ${ entry.characteristicString } accTypeEnumIndex: ${ entry.accTypeEnumIndex } interval: ${ entry.interval } timeout: ${ entry.timeout }` );
+      });
+   }
 
    startQueue( )
    {
@@ -413,4 +428,64 @@ class Cmd4PriorityPollingQueue
 
    }
 }
-exports.Cmd4PriorityPollingQueue = Cmd4PriorityPollingQueue;
+
+var queueExists = function( queueName )
+{
+   return settings.listOfCreatedPriorityQueues[ queueName ];
+}
+
+var addQueue = function( log, queueName, queueType = constants.DEFAULT_QUEUE_TYPE )
+{
+   let queue = queueExists( queueName );
+   if ( queue != undefined )
+      return queue;
+
+   log.info( `Creating new Priority Polled Queue "${ queueName }" with QueueType of: "${ queueType }"` );
+   queue = new Cmd4PriorityPollingQueue( log, queueName, queueType );
+   settings.listOfCreatedPriorityQueues[ queueName ] = queue;
+
+   return queue;
+
+}
+
+var parseAddQueueTypes = function ( log, entrys )
+{
+   if ( trueTypeOf( entrys ) != Array )
+   {
+      log.error( chalk.red( `Error: ${ constants.QUEUETYPES } is not an Array of { "Queue Name": "QueueType" }. found: ${ entrys }` ) );
+      process.exit( 446 ) ;
+   }
+   entrys.forEach( ( entry, entryIndex ) =>
+   {
+      if ( trueTypeOf( entry.queue ) != String )
+      {
+         log.error( chalk.red( `Error: "${ constants.QUEUE }  not provided at index ${ entryIndex }` ) );
+         process.exit( 448 ) ;
+      }
+      if ( entry.queueType == constants.QUEUETYPE_WORM ||
+           entry.queueType == constants.QUEUETYPE_SEQUENTIAL )
+      {
+         if ( settings.listOfCreatedPriorityQueues[ entry.queue ] )
+         {
+            log.error( `QueueName: ${ entry.queue } was added twice` );
+            process.exit( 447 ) ;
+         } else
+         {
+            log.debug( "calling addQueue: %s type: %s", entry.queue, entry.queueType );
+            addQueue( log, entry.queue, entry.queueType );
+         }
+
+      } else {
+         log.error( chalk.red( `Error: QueueType: ${ entry.queueType } is not valid at index: ${ entryIndex }. Expected: ${ constants.QUEUETYPE_WORM } or ${ constants.QUEUETYPE_SEQUENTIAL }` ) );
+         process.exit( 448 ) ;
+      }
+   });
+}
+
+
+module.exports = { addQueue,
+                   parseAddQueueTypes,
+                   queueExists,
+                   Cmd4PriorityPollingQueue
+                 }
+//exports.Cmd4PriorityPollingQueue = Cmd4PriorityPollingQueue;

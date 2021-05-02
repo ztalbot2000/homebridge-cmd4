@@ -255,8 +255,6 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       this.log.setOutputEnabled( true );
       this.log.setDebugEnabled( true );
 
-      let queueName = "Queue A";
-
       let platformConfig =
       {
          accessories: [
@@ -274,6 +272,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
             State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
+      assert.equal( settings.arrayOfPollingCharacteristics.length, 0, `Incorrect number of polling characteristics` );
 
       let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );
 
@@ -294,6 +293,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 2, `Polled Get added to low prority queue` );
 
       this.log.reset( );
+      this.log.setOutputEnabled( false );
       this.log.setDebugEnabled( true );
 
       cmd4PriorityPollingQueue.processEntryFromLowPriorityQueue( cmd4PriorityPollingQueue.lowPriorityQueue[ 0 ] );
@@ -305,14 +305,16 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
 
          assert.include( this.log.logBuf, expectedOutput1 , `expected stdout: ${ this.log.logBuf }` );
          assert.include( this.log.logBuf, expectedOutput2 , `expected stdout: ${ this.log.logBuf }` );
-         // Low priority queues are continious, make sure it is put back
+         // Low priority queues are continious, make sure it is still the same
          assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 2, `After poll, low priority queue length should atill be the same size` );
 
          let entry0 = cmd4PriorityPollingQueue.lowPriorityQueue[ 0 ];
          let entry1 = cmd4PriorityPollingQueue.lowPriorityQueue[ 1 ];
 
-         assert.equal( entry0.accTypeEnumIndex, CMD4_ACC_TYPE_ENUM.Active, `After poll, The low priority queue should be the next characteristic to poll` );
-         assert.equal( entry1.accTypeEnumIndex, CMD4_ACC_TYPE_ENUM.On, `After poll, The low priority queue should put back the polled characteristic at the bottom of the  queue` );
+         assert.equal( entry1.accTypeEnumIndex, CMD4_ACC_TYPE_ENUM.Active, `After poll, The low priority queue should still be the same` );
+         assert.equal( entry0.accTypeEnumIndex, CMD4_ACC_TYPE_ENUM.On, `After poll, The low priority queue should still be the same` );
+
+         assert.equal( cmd4PriorityPollingQueue.lowPriorityQueueIndex, 0, `After poll the current index should be 1` );
 
          done( );
 
@@ -459,7 +461,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
 
       assert.equal( numberOfQueues, 1, `Incorrect number of polling queues` );
 
-      let expectedOutput1 = `[90mCreating new Priority Polled Queue "A"\u001b[39m`;
+      let expectedOutput1 = `Creating new Priority Polled Queue "A"`;
       let expectedOutput2 = `Adding prioritySetValue for My_Switch characteristic: On`;
       let expectedOutput3 = `Adding priorityGetValue for My_Switch characteristic: On`;
 
@@ -474,7 +476,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       done( );
    });
 
-   it('Polling Queue wont be created if a polled queue name is missing', ( done ) =>
+   it.skip('Polling Queue wont be created if a polled queue name is missing', ( done ) =>
    {
       let platformConfig =
       {
@@ -599,7 +601,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       setTimeout( () =>
       {
 
-         let expectedOutput1 = `[90mCreating new Priority Polled Queue "A"\u001b[39m`;
+         let expectedOutput1 = `Creating new Priority Polled Queue "A"`;
          let expectedOutput2 = `Adding priorityGetValue for My_Switch characteristic: On`;
          let expectedOutput3 = `Adding priorityGetValue for My_Switch characteristic: Active`;
          let expectedOutput4 = `Adding prioritySetValue for My_Switch characteristic: On`;

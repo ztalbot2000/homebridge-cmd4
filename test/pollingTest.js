@@ -127,7 +127,7 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       cmd4Accessory.determineCharacteristicsToPollForAccessory( cmd4Accessory );
       assert.equal( settings.arrayOfPollingCharacteristics.length, 1, `Incorrect number of polling characteristics` );
 
-      let expectedOutput1 = "[90mSetting up accessory: My_Switch for polling of: On timeout: 3000 interval: 1000\u001b";
+      let expectedOutput1 = `[90mSetting up accessory: My_Switch for polling of: On timeout: 3000 interval: 1000 queueName: "No_Queue"\u001b`;
 
       assert.include( log.logBuf, expectedOutput1 , `expected stdout: ${ log.logBuf }` );
       assert.equal( log.errBuf, "" , `Unexpected stderr: ${ log.errBuf }` );
@@ -165,7 +165,7 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       cmd4Accessory.determineCharacteristicsToPollForAccessory( cmd4Accessory );
       assert.equal( settings.arrayOfPollingCharacteristics.length, 1, `Incorrect number of polling characteristics` );
 
-      let expectedOutput1 = "[90mSetting up accessory: My_Switch for polling of: On timeout: 1234 interval: 99000\u001b";
+      let expectedOutput1 = `[90mSetting up accessory: My_Switch for polling of: On timeout: 1234 interval: 99000 queueName: "No_Queue"\u001b`;
 
       assert.include( log.logBuf, expectedOutput1 , `expected stdout: ${ log.logBuf }` );
       assert.equal( log.errBuf, "" , `Unexpected stderr: ${ log.errBuf }` );
@@ -205,7 +205,7 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       cmd4Accessory.determineCharacteristicsToPollForAccessory( cmd4Accessory );
       assert.equal( settings.arrayOfPollingCharacteristics.length, 1, `Incorrect number of polling characteristics` );
 
-      let expectedOutput1 = "[90mSetting up accessory: My_Switch for polling of: On timeout: 5500 interval: 44000\u001b";
+      let expectedOutput1 = `[90mSetting up accessory: My_Switch for polling of: On timeout: 5500 interval: 44000 queueName: "No_Queue"\u001b`;
 
       assert.include( log.logBuf, expectedOutput1 , `expected stdout: ${ log.logBuf }` );
       assert.equal( log.errBuf, "" , `Unexpected stderr: ${ log.errBuf }` );
@@ -243,7 +243,7 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       cmd4Accessory.determineCharacteristicsToPollForAccessory( cmd4Accessory );
       assert.equal( settings.arrayOfPollingCharacteristics.length, 1, `Incorrect number of polling characteristics` );
 
-      let expectedOutput1 = "[90mSetting up accessory: My_Switch for polling of: On timeout: 77000 interval: 22000\u001b";
+      let expectedOutput1 = `[90mSetting up accessory: My_Switch for polling of: On timeout: 77000 interval: 22000 queueName: "No_Queue"\u001b`;
 
       assert.include( log.logBuf, expectedOutput1 , `expected stdout: ${ log.logBuf }` );
       assert.equal( log.errBuf, "" , `Unexpected stderr: ${ log.errBuf }` );
@@ -280,7 +280,7 @@ describe('Testing Cmd4Accessory polling', ( ) =>
 
       assert.equal( settings.arrayOfPollingCharacteristics.length, 1, `Incorrect number of polling characteristics` );
 
-      let expectedOutput1 = "[90mSetting up accessory: My_Switch for polling of: On timeout: 2 interval: 99000\u001b";
+      let expectedOutput1 = `[90mSetting up accessory: My_Switch for polling of: On timeout: 2 interval: 99000 queueName: "No_Queue"`;
       let expectedErrOuput1 = "[33mTimeout for: My_Switch is in milliseconds. A value of: 2 seems pretty low.\u001b[39m";
 
       assert.include( log.logBuf, expectedOutput1 , `expected stdout: ${ log.logBuf }` );
@@ -346,6 +346,6 @@ describe('Testing Cmd4Accessory polling', ( ) =>
          settings.arrayOfPollingCharacteristics = [ ];
 
          done( );
-      }, 5000);
-   }).timeout(6000);
+      }, 6000);
+   }).timeout(7000);
 });

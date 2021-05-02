@@ -313,7 +313,7 @@ describe( "Testing Cmd4Platform", function( )
 
 
       log.reset( );
-      cmd4Accessory.setCachedValue( acc, newValue, function( rc )
+      cmd4Accessory.setCachedValue( acc, "ConfiguredName", newValue, function( rc )
       {
          assert.equal( rc, null, `setCachedValue expected: zero received: ${ rc }` );
 

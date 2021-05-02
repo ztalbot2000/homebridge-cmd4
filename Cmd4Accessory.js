@@ -17,6 +17,8 @@ const constants = require( "./cmd4Constants" );
 const { getAccessoryName, getAccessoryDisplayName
       } = require( "./utils/getAccessoryNameFunctions" );
 let getAccessoryUUID = require( "./utils/getAccessoryUUID" );
+const { addQueue, parseAddQueueTypes, queueExists } = require( "./Cmd4PriorityPollingQueue" );
+
 
 let createAccessorysInformationService = require( "./utils/createAccessorysInformationService" );
 let isRelatedTargetCharacteristicInSameDevice = require( "./utils/isRelatedTargetCharacteristicInSameDevice" );
@@ -115,8 +117,8 @@ class Cmd4Accessory
       this.statusMsg = ( parentInfo && parentInfo.statusMsg ) ? parentInfo.statusMsg : constants.DEFAULT_STATUSMSG;
       this.queueMsg = ( parentInfo && parentInfo.queueMsg ) ? parentInfo.queueMsg : constants.DEFAULT_QUEUEMSG;
       this.queueStatMsgInterval = ( parentInfo && parentInfo.queueStatMsgInterval ) ? parentInfo.queueStatMsgInterval : constants.DEFAULT_QUEUE_STAT_MSG_INTERVAL;
-      this.queueName = ( parentInfo && parentInfo.queueName ) ? parentInfo.queueName : constants.DEFAULT_QUEUE_NAME;
-      this.queue = ( parentInfo && parentInfo.queue ) ? parentInfo.queue : null;
+      this.queue = null;
+      this.queueName = constants.DEFAULT_QUEUE_NAME;
 
       // undefined is acceptable.  It can be overwritten by parseConfig
       this.state_cmd = parentInfo && parentInfo.state_cmd;
@@ -413,6 +415,12 @@ class Cmd4Accessory
                case constants.QUEUE:
                {
                   break;
+               }
+               case constants.QUEUETYPES:
+               {
+                  // This whole record is not a characteristic polling entry
+                  // continue to next ( via return )
+                  return;
                }
                case constants.CHARACTERISTIC:
                {
@@ -1317,7 +1325,6 @@ class Cmd4Accessory
                    } else {
                       let details = this.lookupDetailsForPollingCharacteristic( accessory, accTypeEnumIndex );
                       let queueName = details.queueName;
-                         this.log.debug( chalk.yellow( `queueName ${ queueName } this.CMD4: ${ this.CMD4 } ` ) );
                       // If the queue is the default queue or a queue was defined but there is
                       // no parent as in the case of Standalone, use default setValue
                       if ( queueName == constants.DEFAULT_QUEUE_NAME || this.CMD4 == constants.STANDALONE )
@@ -2087,10 +2094,24 @@ class Cmd4Accessory
                this.queueMsg = value;
 
                break;
-            case constants.QUEUE:
-               this.queueName = value;
+            case constants.QUEUETYPES:
+               parseAddQueueTypes( this.log, value );
 
                break;
+            case constants.QUEUE:
+            {
+               let queue = queueExists( value );
+               if ( queue == undefined )
+               {
+                  this.log.error( chalk.red( `"QueueType" must be defined first for: "queue"` ) );
+
+                  process.exit( 261 ) ;
+               }
+               this.queue = queue;
+               this.queueName = queue.queueName;
+
+               break;
+            }
             case constants.TIMEOUT:
                // Timers are in milliseconds. A low value can result in failure to get/set values
                this.timeout = parseInt( value, 10 );
@@ -2375,31 +2396,25 @@ class Cmd4Accessory
 
    determineCharacteristicsToPollForAccessory( accessory  )
    {
-      let log = accessory.log;
-
       // Polling cannot be done if there is no state_cmd
       if ( ! accessory.state_cmd )
          return;
 
-      // By default, polled characteristics are not in any queue
-      let queueName = accessory.queueName;
 
       // Now that polling calls updateValue and is not dependant on getValue, which was possibly cached,
       // Any accessories characteristic can be polled, regardless of cmd4Mode.
 
       let warningDisplayed = false;
-      let accessoriesPollingQueueName = accessory.queueName;
       switch ( typeof accessory.polling )
       {
          case "object":
          {
-            log.debug( `Characteristic polling for: ${ accessory.displayName }` );
+            this.log.debug( `Characteristic polling for: ${ accessory.displayName }` );
 
-            for ( let jsonIndex = 0; jsonIndex < accessory.polling.length; jsonIndex ++ )
+            accessory.polling.forEach( ( jsonPollingConfig ) =>
             {
                // Characteristic polling is a json type
-               let jsonPollingConfig = accessory.polling[ jsonIndex ];
-               queueName = accessory.queueName;
+               // let jsonPollingConfig = accessory.polling[ jsonIndex ];
 
                // The default timeout is defined first by the accessory, and if not defined,
                // then the default 1 minute. Timeouts are in milliseconds
@@ -2413,9 +2428,14 @@ class Cmd4Accessory
                // then the default 3 seconds. stateChangeResponseTime is in seconds
                let stateChangeResponseTime = ( this.stateChangeResponseTime ) ? this.stateChangeResponseTime : constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME;
 
+               // By default, polled characteristics are not in any queue
+               // The queue of the accessory is used for any polled characteristics.
+               let queueName = ( this.queueName ) ? this.queueName : constants.DEFAULT_QUEUE_NAME;
+
+
                let value;
                let accTypeEnumIndex = -1;
-               let  characteristicString = "";
+               let characteristicString = "";
 
                // All this code disappears in the next major release.
                for ( let key in jsonPollingConfig )
@@ -2429,7 +2449,7 @@ class Cmd4Accessory
                         // Timers are in milliseconds. A low value can result in failure to get/set values
                         timeout = parseInt( value, 10 );
                         if ( timeout < 500 )
-                           log.warn( `Timeout for: ${ accessory.displayName } is in milliseconds. A value of: ${ timeout } seems pretty low.` );
+                           this.log.warn( `Timeout for: ${ accessory.displayName } is in milliseconds. A value of: ${ timeout } seems pretty low.` );
 
                         break;
                      case constants.INTERVAL:
@@ -2446,16 +2466,18 @@ class Cmd4Accessory
                         if ( this.cmd4Mode == constants.CMD4_MODE_POLLED ||
                              this.cmd4Mode == constants.CMD4_MODE_FULLYPOLLED )
                         {
+                           if ( this.queue && this.queue.queueName != value )
+                           {
+                               this.log.error( chalk.red( `Already defined Priority Polling Queue "${ this.queue.queueName }" for ${ this.displayName } cannot be redefined.` ) );
+                               throw new Error('Already defined Priority Polling Queue' );
+                               // process.exit( 208 );
+                           }
+
+                           // The default queue type will be used if not defined in the platform section
                            queueName = value;
-                           if ( accessoriesPollingQueueName == constants.DEFAULT_QUEUE_NAME )
-                           {
-                              accessoriesPollingQueueName = queueName;
-                           }
-                           else if ( accessoriesPollingQueueName != queueName )
-                           {
-                               this.log.error( chalk.red( `Already defined Priority Polling Queue "${ accessoriesPollingQueueName }" for ${ this.displayName } cannot be redefined.` ) );
-                               process.exit( 208 );
-                           }
+                           this.queueName = value;
+                           this.queue = addQueue( this.log, this.queueName );
+
                         } else
                         {
                           this.log.error( chalk.red( `Priority Queued Polling is only available with ${ constants.CMD4_MODE } set to: ${ constants.CMD4_MODE_POLLED } or ${ constants.CMD4_MODE_FULLYPOLLED }` ) );
@@ -2470,7 +2492,7 @@ class Cmd4Accessory
                         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucValue );
                         if ( accTypeEnumIndex < 0 )
                         {
-                           log.error( chalk.red( `No such polling characteristic: ${ value } for: ${ accessory.displayName }` ) );
+                           this.log.error( chalk.red( `No such polling characteristic: ${ value } for: ${ accessory.displayName }` ) );
                            process.exit( 261 );
                         }
                         characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
@@ -2483,40 +2505,53 @@ class Cmd4Accessory
                         }
                         break;
                      }
+                     case constants.QUEUETYPES:
+                     {
+                        parseAddQueueTypes( this.log, value );
+                        // This whole record is not a characteristic polling entry
+                        // continue to next ( via return )
+                        return;
+                     }
                      default:
                      {
                         // The key must be a characteristic property
                         // but first check if one has already been defined as we can only handle one at a time.
                         if ( accTypeEnumIndex != -1 )
                         {
-                           log.error( chalk.red( `Error` ) + `: For charateristic polling, you can only define one characteristic per array item.\nCannot add "${ ucKey }" as "${ characteristicString }" is already defined for: ${ accessory.displayName }` );
+                           this.log.error( chalk.red( `Error` ) + `: For charateristic polling, you can only define one characteristic per array item.\nCannot add "${ ucKey }" as "${ characteristicString }" is already defined for: ${ accessory.displayName }` );
                            process.exit( 263 );
                         }
                         accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucKey );
                         if ( accTypeEnumIndex < 0 )
                         {
-                           log.error( chalk.red( `Error` ) + ` No such polling characteristic: ${ key } for: ${ accessory.displayName }` );
+                           this.log.error( chalk.red( `Error` ) + ` No such polling characteristic: ${ key } for: ${ accessory.displayName }` );
                            process.exit( 264 );
                         }
                         if ( warningDisplayed == false )
                         {
-                           log.warn( `Characteristic polling has changed` )
-                           log.warn( `from: <characteristic>:<default value>` )
-                           log.warn( `to: "Characteristic": <characteristic>` );
-                           log.warn( `Please update your config.json for ${ accessory.displayName } accordingly to` );
-                           log.warn( `remove this message; As in the future, this warning will be an error.` );
-                           log.warn( `Sorry for the inconvenience.` );
+                           this.log.warn( `Characteristic polling has changed` )
+                           this.log.warn( `from: <characteristic>:<default value>` )
+                           this.log.warn( `to: "Characteristic": <characteristic>` );
+                           this.log.warn( `Please update your config.json for ${ accessory.displayName } accordingly to` );
+                           this.log.warn( `remove this message; As in the future, this warning will be an error.` );
+                           this.log.warn( `Sorry for the inconvenience.` );
                            warningDisplayed = true;
                         }
                      }
                   }
                }
 
-               log.debug( `Setting up accessory: ${ accessory.displayName } for polling of: ${ characteristicString } timeout: ${ timeout } interval: ${ interval }` );
+               if ( queueName != this.queueName )
+               {
+                  this.log.error( chalk.red( `Error` ) + `: For Priority Queue Polling all polled characteristics must be in the same polling queue: "${ this.queueName }". Missing ${ characteristicString }` );
+                  process.exit( 401 );
+               }
 
-               settings.arrayOfPollingCharacteristics.push( { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: interval, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.QUEUE_NAME_lv ]: queueName } );
+               this.log.debug( `Setting up accessory: ${ accessory.displayName } for polling of: ${ characteristicString } timeout: ${ timeout } interval: ${ interval } queueName: "${ queueName }"` );
 
-            }
+               settings.arrayOfPollingCharacteristics.push( { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: interval, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.QUEUE_NAME_lv ]: this.queueName } );
+
+            });
             break;
          }
          case "string":
@@ -2528,7 +2563,7 @@ class Cmd4Accessory
 
             if ( accessory.polling == true )
             {
-               log.debug( `State polling for: ${ accessory.displayName }` );
+               this.log.debug( `State polling for: ${ accessory.displayName }` );
 
                // Make sure the defined characteristics will be polled
                CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ].defaultPollingCharacteristics.forEach( defaultPollingAccTypeEnumIndex =>
@@ -2543,7 +2578,7 @@ class Cmd4Accessory
          }
          default:
          {
-            log.error( chalk.red( `Error` ) + `: Something wrong with value of polling: ${ accessory.polling }\n       Check your config.json for errors.` );
+            this.log.error( chalk.red( `Error` ) + `: Something wrong with value of polling: ${ accessory.polling }\n       Check your config.json for errors.` );
             process.exit( 262 );
          }
       }
@@ -2582,16 +2617,16 @@ class Cmd4Accessory
          }
       });
 
-      // check other characteristics have the correct queue name
-      if ( accessoriesPollingQueueName != constants.DEFAULT_QUEUE_NAME )
+      // check other characteristics have the correct queue name.
+      // Possibly could happen if queueuTypes is defined out of order.
+      if ( this.queueName != constants.DEFAULT_QUEUE_NAME )
       {
          // This check would find characteristics that are polled, but missing the queueName
          accessorysPolledCharacteristics.forEach( ( entry ) =>
          {
-            if ( entry.queueName == constants.DEFAULT_QUEUE_NAME ||
-                 entry.queueName != accessoriesPollingQueueName )
+            if ( entry.queueName != this.queueName )
             {
-               log.error( chalk.red( `Error` ) + `: For Priority Queue Polling all polled characteristics must be in the same polling queue: "${ accessoriesPollingQueueName }". Missing ${ entry.characteristicString }` );
+               this.log.error( chalk.red( `Error` ) + `: For Priority Queue Polling all polled characteristics must be in the same polling queue: "${ this.queueName }". Missing ${ entry.characteristicString }` );
                process.exit( 401 );
             }
          });

@@ -96,7 +96,7 @@ describe( "Testing Cmd4Accessory", function( )
       log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
-      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, constants.DEFAULT_TIMEOUT, function( rc, result )
+      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, "Active", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
          let expectedResult = 1;
 
@@ -114,7 +114,7 @@ describe( "Testing Cmd4Accessory", function( )
       log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
-      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, constants.DEFAULT_TIMEOUT, function( rc, result )
+      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, "Active", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
          let expectedResult = 0;
 
@@ -132,7 +132,7 @@ describe( "Testing Cmd4Accessory", function( )
       log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
-      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, constants.DEFAULT_TIMEOUT, function( rc, result )
+      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, "Active", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
          let expectedResult = 0;
 
@@ -150,7 +150,7 @@ describe( "Testing Cmd4Accessory", function( )
       log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
-      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, constants.DEFAULT_TIMEOUT, function( rc, result )
+      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, "Active", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
          let expectedResult = 1;
 
@@ -168,7 +168,7 @@ describe( "Testing Cmd4Accessory", function( )
       log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
-      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, constants.DEFAULT_TIMEOUT, function( rc, result )
+      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, "Active", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
          let expectedResult = 0;
 
@@ -186,7 +186,7 @@ describe( "Testing Cmd4Accessory", function( )
       log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
-      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, constants.DEFAULT_TIMEOUT, function( rc, result )
+      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, "Active", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
          let expectedResult = 1;
 
@@ -204,7 +204,7 @@ describe( "Testing Cmd4Accessory", function( )
       log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
-      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, constants.DEFAULT_TIMEOUT, function( rc, result )
+      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
          let expectedResult = false;
 
@@ -222,7 +222,7 @@ describe( "Testing Cmd4Accessory", function( )
       log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
-      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, constants.DEFAULT_TIMEOUT, function( rc, result )
+      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
          let expectedResult = true;
 
@@ -240,7 +240,7 @@ describe( "Testing Cmd4Accessory", function( )
       log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
-      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, constants.DEFAULT_TIMEOUT, function( rc, result )
+      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
          let expectedResult = false;
 
@@ -258,7 +258,7 @@ describe( "Testing Cmd4Accessory", function( )
       log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
-      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, constants.DEFAULT_TIMEOUT, function( rc, result )
+      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
          let expectedResult = true;
 
@@ -276,7 +276,7 @@ describe( "Testing Cmd4Accessory", function( )
       log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
-      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, constants.DEFAULT_TIMEOUT, function( rc, result )
+      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
          let expectedResult = false;
 
@@ -294,7 +294,7 @@ describe( "Testing Cmd4Accessory", function( )
       log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
-      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, constants.DEFAULT_TIMEOUT, function( rc, result )
+      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
          let expectedResult = true;
 
@@ -313,7 +313,7 @@ describe( "Testing Cmd4Accessory", function( )
       log.setBufferEnabled( true );
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
-      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.ClosedCaptions, constants.DEFAULT_TIMEOUT, function( rc, result )
+      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.ClosedCaptions, "ClosedCaptions", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
          let expectedResult = 0;
 
@@ -333,7 +333,7 @@ describe( "Testing Cmd4Accessory", function( )
       cmd4Accessory.state_cmd = "./test/echoScripts/echo_nothing";
       cmd4Accessory.timeout = 500;
 
-      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, constants.DEFAULT_TIMEOUT, function( rc, result )
+      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
          assert.notEqual( rc, 0, ` getValue expected: not zero received: ${ rc }` );
          assert.equal( result, null, ` getValue result expected: null received: ${ result }` );
@@ -362,7 +362,7 @@ describe( "Testing Cmd4Accessory", function( )
       cmd4Accessory.state_cmd = "./test/echoScripts/echo_null";
       cmd4Accessory.timeout = 500;
 
-      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, constants.DEFAULT_TIMEOUT, function( rc, result )
+      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
          assert.notEqual( rc, 0, ` getValue expected: not zero received: ${ rc }` );
          assert.equal( result, null, ` getValue result expected: null received: ${ result }` );
@@ -391,7 +391,7 @@ describe( "Testing Cmd4Accessory", function( )
       cmd4Accessory.state_cmd = "./test/echoScripts/echo_true_withRcOf1";
       cmd4Accessory.timeout = 500;
 
-      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, constants.DEFAULT_TIMEOUT, function( rc, result )
+      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
          assert.equal( rc, 0, ` getValue expected: zero received: ${ rc }` );
          assert.equal( result, true, ` getValue result expected: true received: ${ result }` );
@@ -420,7 +420,7 @@ describe( "Testing Cmd4Accessory", function( )
       cmd4Accessory.state_cmd = "./test/echoScripts/echo_quotedNULL";
       cmd4Accessory.timeout = 500;
 
-      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, constants.DEFAULT_TIMEOUT, function( rc, result )
+      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
          assert.equal( rc, 0, ` getValue expected: zero received: ${ rc }` );
 
@@ -450,7 +450,7 @@ describe( "Testing Cmd4Accessory", function( )
       cmd4Accessory.state_cmd = "./test/echoScripts/echo_quotedNothing";
       cmd4Accessory.timeout = 500;
 
-      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, constants.DEFAULT_TIMEOUT, function( rc, result )
+      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
          assert.notEqual( rc, 0, ` getValue expected: not zero received: ${ rc }` );
          assert.equal( result, null, ` getValue result expected: null received: ${ result }` );
@@ -476,7 +476,7 @@ describe( "Testing Cmd4Accessory", function( )
       cmd4Accessory.state_cmd = "./test/echoScripts/echo_errorToStderr";
       cmd4Accessory.timeout = 500;
 
-      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, constants.DEFAULT_TIMEOUT, function( rc, result )
+      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
          assert.equal( result, 0, ` getValue result expected: 0 received: ${ result }` );
       });
@@ -501,7 +501,7 @@ describe( "Testing Cmd4Accessory", function( )
       cmd4Accessory.state_cmd = "./test/echoScripts/justExitWithRCof0";
       cmd4Accessory.timeout = 500;
 
-      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, constants.DEFAULT_TIMEOUT, function( rc, result )
+      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
          assert.equal( result, 0, ` getValue result expected: 0 received: ${ result }` );
          assert.equal( rc, 0, ` getValue rc expected: 0 received: ${ rc }` );
@@ -527,7 +527,7 @@ describe( "Testing Cmd4Accessory", function( )
       cmd4Accessory.state_cmd = "./test/echoScripts/justExitWithRCof1";
       cmd4Accessory.timeout = 400;
 
-      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, constants.DEFAULT_TIMEOUT, function( rc, result )
+      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
          assert.equal( result, 0, ` getValue result expected: 0 received: ${ result }` );
       });

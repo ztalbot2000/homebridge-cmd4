@@ -3,6 +3,8 @@
 // Cmd4 includes seperated out for Unit testing
 const { getAccessoryName,
         getAccessoryDisplayName } = require( "./utils/getAccessoryNameFunctions" );
+const { parseAddQueueTypes } = require( "./Cmd4PriorityPollingQueue" );
+
 let getAccessoryUUID = require( "./utils/getAccessoryUUID" );
 let ucFirst = require( "./utils/ucFirst" );
 let isNumeric = require( "./utils/isNumeric" );
@@ -24,7 +26,7 @@ let CMD4_PERMS_TYPE_ENUM = CMD4_CHAR_TYPE_ENUMS.CMD4_PERMS_TYPE_ENUM;
 
 // The Cmd4 Classes
 const Cmd4Accessory = require( "./Cmd4Accessory" ).Cmd4Accessory;
-const Cmd4PriorityPollingQueue = require( "./Cmd4PriorityPollingQueue" ).Cmd4PriorityPollingQueue;
+//const Cmd4PriorityPollingQueue = require( "./Cmd4PriorityPollingQueue" ).Cmd4PriorityPollingQueue;
 
 // Settings, Globals and Constants
 let settings = require( "./cmd4Settings" );
@@ -234,6 +236,10 @@ class Cmd4Platform
                break;
             case constants.QUEUEMSG:
                this.queueMsg = value;
+
+               break;
+            case constants.QUEUETYPES:
+               parseAddQueueTypes( this.log, value );
 
                break;
             case constants.FETCH:
@@ -496,22 +502,6 @@ class Cmd4Platform
             // accessory you may need
             accessory.platform.context.STORED_DATA_ARRAY = accessory.STORED_DATA_ARRAY;
 
-            // Before we can add the services, if the accessory uses PriorityQueuedPolling,
-            // we need to create the queue for the service to use.
-            let queueName = this.getQueueNameOfAnyPollingCharacteristic( accessory );
-
-            if ( queueName != null )
-            {
-               let queue = settings.listOfCreatedPriorityQueues[ queueName ];
-               if ( queue === undefined )
-               {
-                  this.log.debug( `Creating new Priority Polled Queue "${ queueName }"` );
-                  queue = new Cmd4PriorityPollingQueue( this.log, queueName );
-                  settings.listOfCreatedPriorityQueues[ queueName ] = queue;
-               }
-               accessory.queue = queue;
-            }
-
             // Get the properties for this accessories device type
             let devProperties = CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ];
 
@@ -580,22 +570,6 @@ class Cmd4Platform
             // accessory you may need
             accessory.platform.context.STORED_DATA_ARRAY = accessory.STORED_DATA_ARRAY;
 
-            // Before we can add the services, if the accessory uses PriorityQueuedPolling,
-            // we need to create the queue for the service to use.
-            let queueName = this.getQueueNameOfAnyPollingCharacteristic( accessory );
-
-            if ( queueName != null )
-            {
-               let queue = settings.listOfCreatedPriorityQueues[ queueName ];
-               if ( queue === undefined )
-               {
-                  this.log.debug( `Creating new Priority Polled Queue "${ queueName }"` );
-                  queue = new Cmd4PriorityPollingQueue( this.log, queueName );
-                  settings.listOfCreatedPriorityQueues[ queueName ] = queue;
-               }
-               accessory.queue = queue;
-            }
-
             // Get the properties for this accessories device type
             let devProperties = CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ];
 
@@ -631,18 +605,6 @@ class Cmd4Platform
          this.createdCmd4Platforms.push( platform );
 
       });
-   }
-
-   getQueueNameOfAnyPollingCharacteristic( accessory )
-   {
-      let pollingEntrys = settings.arrayOfPollingCharacteristics.filter(
-           entry => entry.accessory.UUID == accessory.UUID &&
-           entry.queueName != constants.DEFAULT_QUEUE_NAME );
-
-      if ( pollingEntrys.length > 0 )
-         return pollingEntrys[ 0 ].queueName;
-
-      return null;
    }
 
    createServicesForAccessoriesChildren( cmd4PlatformAccessory, fromExisting )

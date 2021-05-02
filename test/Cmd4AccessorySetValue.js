@@ -129,7 +129,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       let value = Characteristic.ClosedCaptions.ENABLED;
 
-      cmd4Accessory.setValue( acc, constants.DEFAULT_TIMEOUT, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, value,  function( )
+      cmd4Accessory.setValue( acc, "ClosedCaptions", constants.DEFAULT_TIMEOUT, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, value,  function( )
       {
          let expectedResult =`${value}`;
          let expectedOutput = `Setting My_Television ClosedCaptions\u001b[39m 1`;
@@ -197,7 +197,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       let value = Characteristic.ClosedCaptions.ENABLED;
 
-      cmd4Accessory.setValue( acc, constants.DEFAULT_TIMEOUT, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, value,  function( )
+      cmd4Accessory.setValue( acc, "ClosedCaptions", constants.DEFAULT_TIMEOUT, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, value,  function( )
       {
          let expectedResult = "ENABLED";
          let expectedOutput = `Setting My_Television ClosedCaptions\u001b[39m ENABLED`;
@@ -310,7 +310,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       let value = true;
 
-      cmd4Accessory.setValue( acc, constants.DEFAULT_TIMEOUT, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, value,  function( )
+      cmd4Accessory.setValue( acc, "Mute", constants.DEFAULT_TIMEOUT, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, value,  function( )
       {
          let expectedResult = 1;
          let expectedOutput = `Setting My_Television Mute\u001b[39m 1`;
@@ -358,7 +358,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       let value = 12.3;
 
-      cmd4Accessory.setCachedValue( acc, value,  function( )
+      cmd4Accessory.setCachedValue( acc, "TargetTemperature", value,  function( )
       {
          let expectedResult = value;
          let expectedOutput = `Setting (Cached) Thermostat TargetTemperature\u001b[39m 12.3`;
@@ -410,7 +410,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       let value = 12.3;
 
-      cmd4Accessory.setCachedValue( acc, value,  function( )
+      cmd4Accessory.setCachedValue( acc, "TargetTemperature", value,  function( )
       {
          let alsoExpectedOutput = `Also Setting (Cached) Thermostat CurrentTemperature\u001b[39m 12.3`;
          let expectedOutput = `Setting (Cached) Thermostat TargetTemperature\u001b[39m 12.3`;
@@ -535,7 +535,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       let value = 12.3;
 
-      cmd4Accessory.setCachedValue( acc, value,  function( )
+      cmd4Accessory.setCachedValue( acc, "CurrentTemperature", value,  function( )
       {
          let expectedResult = value;
          let expectedOutput = `Setting (Cached) TemperatureSensor CurrentTemperature\u001b[39m 12.3`;

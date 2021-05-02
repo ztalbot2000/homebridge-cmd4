@@ -77,6 +77,7 @@ exports.RESTART_RECOVER          = "RestartRecover";
 exports.STATUSMSG                = "StatusMsg";
 exports.QUEUEMSG                 = "QueueMsg";
 exports.QUEUETYPE                = "QueueType";
+exports.QUEUETYPES               = "QueueTypes";
 exports.QUEUETYPE_SEQUENTIAL     = "Sequential";
 exports.QUEUETYPE_WORM           = "WoRm";
 
