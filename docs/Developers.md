@@ -207,16 +207,69 @@ Notice that there is no Platform definition. Otherwise everything is the same. Y
 
 ## Priority Queued Polling
 
-&nbsp;&nbsp;&nbsp; Typically polling is pretty much a free for all.  While Cmd4 tries to eleviate this with staggered polling, Cmd4 supports Priority Queued Polling.  If configured correctly, only one characteristic value can be received or requested from a device at a time. The priority given to requests from IOS first and background polling second.<BR>
+&nbsp;&nbsp;&nbsp; Typically polling is pretty much a free for all.  While Cmd4 tries to eleviate this with staggered polling, Cmd4 supports two kinds of Priority Queued Polling; that being "Sequential" and "WoRm" ( Write Once Read Many).  If configured correctly, only one Set characteristic value can be sent or either one or multiple Gets from a device at a time. The priority given to requests from IOS first and background polling second.<BR>
 <BR>
-  Priority Queued Polling is only available for Cmd4_Mode(s) of "Polled" or "FullyPolled" by the shear nature of the feature. To configure Priority Queued Polling every characteristic to the device must be configured with characteristic polling and in the same queue. as an Example:
+  Priority Queued Polling is only available for Cmd4_Mode(s) of "Polled" or "FullyPolled" by the shear nature of the feature. To configure Priority Queued Polling every characteristic to the device must be configured with characteristic polling and in the same queue. as an Example of the default WoRm is:
 
 ```
 "polling": [ { "characteristic": "CurrentTemperature", "interval": 5, "queue": "A" },
              { "characteristic": "TargetTemperature", "queue": "A" }
            ]
 ```
-   Note 1. Only the first interval defined is actually used as this is now the interval between each of the other background polls.<BR>
+  You can also pre-define the queues and their types ahead of time and then just specify which accessory is going to use Priority Queue Polling. Example 2:
+
+```
+"QueueTypes: [ { "queue": "A" : "queueType": "WoRm" }
+             ],
+"queue": "A",
+"polling": [ { "characteristic": "CurrentTemperature" },
+             { "characteristic": "TargetTemperature" }
+           ]
+```
+Example 3:
+
+```
+"platforms":
+ [ { "platform": "Cmd4",
+     "QueueTypes: [ { "queue": "A" : "queueType": "WoRm" }
+                    { "queue": "B" : "queueType": "Sequentail" }
+                    { "queue": "C" } // Defaults to "WoRm"
+                  ],
+
+     "accessories": [
+     {
+        "Name": "My_Thermostat",
+        "Type": "Thermostatwitch",
+        "queue": "A",
+        "polling": [ { "characteristic": "CurrentTemperature" },
+                     { "characteristic": "TargetTemperature" },
+                     { "characteristic": "CurrentHeatingCoolingState" }
+                   ],
+        ...
+     },
+     {
+        "Name": "My_Switch",
+        "Type": "Switch",
+        "queue": "B",
+        "polling": [ { "characteristic": "On" } ],
+        ...
+     },
+     {
+        "Name": "My_Door",
+        "Type": "Door",
+        "queue": "C",
+        "polling": true,
+        ...
+     },
+     {
+        "Name": "Switch2",
+        "Type": "Switch",
+        "polling": [ { "characteristic": "On", "queue": "D" } ],   // Defaults to "WoRm"
+        ...
+     }
+
+```
+   Note 1. Only the first interval defined for the device is actually used as this is now the interval between each of the other background polls.<BR>
    Note 2. The interval is dynamically changed and will never drop below the defined interval. The rule is simple, the interval is calculated by twice the actual time of the request +/- 10%.<BR>
 <BR>
 Priority Queued Polling statistics can be viewed with the following Cmd4 Platform directives.<BR>
@@ -303,11 +356,12 @@ Priority Queued Polling statistics can be viewed with the following Cmd4 Platfor
                     "Manufacturer": "Advantage Air Australia",
                     "Model": "e-zone",
                     "SerialNumber": "Fujitsu e-zone2",
+                    "queue": "A",  // All characteristics would go to queue "A"
                     "polling": [
-                        { "characteristic": "currentHeatingCoolingState", "queue": "A" },
-                        { "characteristic": "targetHeatingCoolingState", "queue": "A" },
-                        { "characteristic": "currentTemperature", "queue": "A" },
-                        { "characteristic": "targetTemperature", "queue": "A" }
+                        { "characteristic": "currentHeatingCoolingState" },
+                        { "characteristic": "targetHeatingCoolingState" },
+                        { "characteristic": "currentTemperature" },
+                        { "characteristic": "targetTemperature" }
                     ],
                     "state_cmd": "bash /home/pi/ezone.sh"
                 }
