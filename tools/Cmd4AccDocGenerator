@@ -674,6 +674,7 @@ function addSideNavCmd4DirectivesLinks_WithinSideNav( )
       wfs( `<a href="#${ constants.TIMEOUT }_D" onclick="toggleVisibility( 'Directives');">${ constants.TIMEOUT }</a>\n` );
       wfs( `<a href="#${ constants.QUEUEMSG }_D" onclick="toggleVisibility( 'Directives');">${ constants.QUEUEMSG }</a>\n` );
       wfs( `<a href="#${ constants.QUEUE_STAT_MSG_INTERVAL }_D" onclick="toggleVisibility( 'Directives');">${ constants.QUEUE_STAT_MSG_INTERVAL }</a>\n` );
+      wfs( `<a href="#${ constants.QUEUETYPES }_D" onclick="toggleVisibility( 'Directives');">${ constants.QUEUETYPES }</a>\n` );
       wfs( `<a href="#${ constants.DEFINITIONS }_D" onclick="toggleVisibility( 'Directives');">${ constants.DEFINITIONS }</a>\n` );
    endDiv( "panel" );
 
@@ -700,6 +701,8 @@ function addSideNavCmd4AccessoryDirectivesLinks_WithinSideNav( )
       wfs( `<a href="#${ constants.TIMEOUT }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.TIMEOUT }</a>\n` );
       wfs( `<a href="#${ constants.QUEUEMSG }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.QUEUEMSG }</a>\n` );
       wfs( `<a href="#${ constants.QUEUE_STAT_MSG_INTERVAL }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.QUEUE_STAT_MSG_INTERVAL }</a>\n` );
+      wfs( `<a href="#${ constants.QUEUETYPES }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.QUEUETYPES }</a>\n` );
+      wfs( `<a href="#${ constants.QUEUE }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.QUEUE }</a>\n` );
       wfs( `<a href="#${ constants.STATECHANGERESPONSETIME }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.STATECHANGERESPONSETIME }</a>\n` );
       wfs( `<a href="#${ constants.LINKEDTYPES }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.LINKEDTYPES }</a>\n` );
       wfs( `<a href="#${ constants.OUTPUTCONSTANTS }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.OUTPUTCONSTANTS }</a>\n` );
@@ -1069,32 +1072,35 @@ function addCmd4DirectivePages_WithinMain( )
    wf( "+", `<TABLE WIDTH="100%">\n` );
    wfs( `<TR ALIGN="left"><TH>Cmd4Directive<TH>Type<TH PADDING="50px">Default<TH>Description</TR>\n` );
 
-   // outputConstants
+   // outputConstants - CMD4 Directives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.OUTPUTCONSTANTS }_D">${ constants.OUTPUTCONSTANTS }</a><TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1 for all Accessories</TR>\n` );
 
-   // restartRecover
+   // restartRecover - CMD4 Directives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.RESTART_RECOVER }_D"> ${ constants.RESTART_RECOVER }</a><TD> < Bool > <TD> true <TD> If Cmd4 will use previous cached state information </TR>\n` );
 
-   // statusMsg
+   // statusMsg - CMD4 Directives
    let  defaultStatusMsg_l = constants.DEFAULT_STATUSMSG.toLowerCase();
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATUSMSG }_D"> ${ constants.STATUSMSG }</a><TD> < Bool > <TD> ${ defaultStatusMsg_l } <TD> Cmd4 will log a Set Status Message for all Accessories.</TR>\n` );
 
-   // Cmd4_Mode
+   // Cmd4_Mode - CMD4 Directives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.CMD4_MODE }_D"> ${ constants.CMD4_MODE }</a><TD> "${ constants.CMD4_MODE_DEMO }" | "${ constants.CMD4_MODE_ALWAYS }" | "${ constants.CMD4_MODE_POLLED }" | "${ constants.CMD4_MODE_FULLYPOLLED }" <TD> ${ constants.CMD4_MODE_ALWAYS } <TD> Determines what and when characteristics are updated from the device. See <a href="#${ constants.CMD4_MODE }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.CMD4_MODE }</a> in Accessory Directives for full description as it can also be set per accessory.</TR>\n` );
 
-   // Interval
+   // Interval - CMD4 Directives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.INTERVAL }_D"> ${ constants.INTERVAL }</a><TD> ${ constants.INTERVAL } <TD> ${ constants.DEFAULT_INTERVAL * .001 } < seconds > <TD> How long before killing the state command of all polled characteristics. See <a href="#${ constants.INTERVAL }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.INTERVAL }</a> in Accessory Directives for full description as it can also be set per accessory or per characteristic.</TR>\n` );
 
-   // Timeout
+   // Timeout - CMD4 Directives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.TIMEOUT }_D"> ${ constants.TIMEOUT }</a><TD> ${ constants.TIMEOUT } <TD> ${ constants.DEFAULT_TIMEOUT } < msec > <TD> How long before killing the state command of all polled characteristics. See <a href="#${ constants.TIMEOUT }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.TIMEOUT }</a> in Accessory Directives for full description as it can also be set per accessory or per characteristic.</TR>\n` );
 
-   // QueueMsg - Priority Queue Polling
+   // QueueMsg - CMD4 Directives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.QUEUEMSG }_D"> ${ constants.QUEUEMSG }</a><TD> ${ constants.QUEUEMSG } <TD> ${ constants.DEFAULT_QUEUEMSG } < Bool > <TD> Enable Priority Queued Polling statistics. This Directive can also be per queue as noted by its presence as an accessory directive.</TR>\n` );
 
-   // QueueStatMsgInterval - Priority Queue Polling
+   // QueueStatMsgInterval - CMD4 Directives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.QUEUE_STAT_MSG_INTERVAL }_D"> ${ constants.QUEUE_STAT_MSG_INTERVAL }</a><TD> ${ constants.QUEUE_STAT_MSG_INTERVAL } <TD> ${ constants.DEFAULT_QUEUE_STAT_MSG_INTERVAL } < mod count > <TD> How many counted polls before displaying the Priority Queue Polling Statistics. This Directive can also be per queue as noted by its presence as an accessory directive.</TR>\n` );
 
-   // Definitions - Custom Characteristics
+   // QueueTypes - CMD4 Directives
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.QUEUETYPES }_D"> ${ constants.QUEUETYPES }</a><TD> < Array of < ${ constants.QUEUE }: < "name" >, ${ constants.QUEUETYPE }: < ${ constants.QUEUETYPE_SEQUENTIAL } | ${ constants.QUEUETYPE_WORM } > <TD> none <TD> Pre-defines Queue types. This Directive can also be per queue as noted by its presence as an accessory directive.</TR>\n` );
+
+   // Definitions - Custom Characteristics - CMD4 Directives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.DEFINITIONS }_D"> ${ constants.DEFINITIONS }</a><TD> < Array > <TD> <TD> An Array of new Characteristic Objects. See <a href="#CUSTOM_CHARACTERISTICS" onclick="toggleVisibility( 'CustomCharacteristics');">Custom Characteristics, around line 339</a> for more information</TR>\n` );
 
    wf( "-", `</TABLE>\n` );
@@ -1119,29 +1125,29 @@ function addCmd4AccessoryDirectivePages_WithinMain( )
    // subType
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.SUBTYPE }">${ constants.SUBTYPE }</a><TD> < unique string > <TD> accessory.name <TD> Used to distinguish accessories that have same Type and Name.</TR>\n` );
 
-   // outputConstants
+   // outputConstants - AccessoryDirectives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.OUTPUTCONSTANTS }">${ constants.OUTPUTCONSTANTS }</a><TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1 </TR>\n` );
 
-   // statusMsg
+   // statusMsg - AccessoryDirectives
    let defaultStatusMsg_l = constants.DEFAULT_STATUSMSG.toLowerCase();
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATUSMSG }">${ constants.STATUSMSG }</a><TD>  < Bool >  <TD>  ${ defaultStatusMsg_l } <TD>Cmd4 will log a Set Status Message</TR>\n` );
 
-   // publishExternally
+   // publishExternally - AccessoryDirectives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.PUBLISHEXTERNALLY }">${ constants.PUBLISHEXTERNALLY }</a><TD>  < Bool >  <TD>    false     <TD> Tell Homebridge to publish the device as its own bridge. </TR>\n` );
 
-   // Cmd4_Mode
+   // Cmd4_Mode - AccessoryDirectives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.CMD4_MODE }">${ constants.CMD4_MODE }</a><TD> < "${ constants.CMD4_MODE_DEMO }" | "${ constants.CMD4_MODE_ALWAYS }" | "${ constants.CMD4_MODE_POLLED }" | "${ constants.CMD4_MODE_FULLYPOLLED } > <TD> "${ constants.CMD4_MODE_ALWAYS }" <TD> Determines what and when characteristics are updated from the device.</TR>\n` );
 
    wfs( `<TR ALIGN="left"><TD COLSPAN=4>\n` );
    wfs( `   i.e.<BR>\n` );
    wfs( `   <UL>\n` );
-   // CMD4_MODE Always
+   // CMD4_MODE Always - AccessoryDirectives
    wfs( `      <LI> { "${constants.CMD4_MODE}": "<a name="${ constants.CMD4_MODE_ALWAYS }">${ constants.CMD4_MODE_ALWAYS }</a>" } - All characteristic are sent/retrieved from the device. ( Default )\n` );
-   // CMD4_MODE Polled
+   // CMD4_MODE Polled - AccessoryDirectives
    wfs( `      <LI> { "${constants.CMD4_MODE}": "<a name="${ constants.CMD4_MODE_POLLED }">${ constants.CMD4_MODE_POLLED }</a>" } - Polled characteristics are retrieved from the device. Non polled characteristic values are sent/retrieved from cache.\n` );
-   // CMD4_MODE FullyPolled
+   // CMD4_MODE FullyPolled - AccessoryDirectives
    wfs( `      <LI> { "${constants.CMD4_MODE}": "<a name="${ constants.CMD4_MODE_FULLYPOLLED }">${ constants.CMD4_MODE_FULLYPOLLED }</a>" } - All characteristics are retrieved from cache. Polled characteristics are sent to the device. Expect any characteristic to be updated via configuring polling.\n` );
-   // CMD4_MODE Demo ( Formerly Cached )
+   // CMD4_MODE Demo ( Formerly Cached ) - AccessoryDirectives
    wfs( `      <LI> { "${constants.CMD4_MODE}": "<a name="${ constants.CMD4_MODE_DEMO }">${ constants.CMD4_MODE_DEMO }</a>" } - All characteristics are sent/retrieved from cache.\n` );
    wfs( `  </UL>\n` );
    wfs( `</TR>\n` );
@@ -1149,51 +1155,56 @@ function addCmd4AccessoryDirectivePages_WithinMain( )
       wfs( `<img src="../images/Cmd4ModeDiagram.png" alt="Cmd4ModeDiagram.png">\n` );
    wfs( `</TR>\n` );
 
-   // stateChangeResponseTime
+   // stateChangeResponseTime - AccessoryDirectives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATECHANGERESPONSETIME }">${ constants.STATECHANGERESPONSETIME }</a><TD> < seconds > <TD> 60 <TD> How long to wait between a Set and Get command.</TR>\n` );
 
-   // interval
+   // interval - AccessoryDirectives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.INTERVAL }">${ constants.INTERVAL }</a><TD> < seconds > <TD> ${ constants.DEFAULT_INTERVAL * .001 } < seconds > <TD> How long between polls of all polled characteristics.</TR>\n` );
 
-   // timeout
+   // timeout - AccessoryDirectives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.TIMEOUT }">${ constants.TIMEOUT }</a><TD> < msec > <TD> ${ constants.DEFAULT_TIMEOUT } < msec > <TD> How long before killing the state command of all polled characteristics.</TR>\n` );
 
-   // polling
+   // polling - AccessoryDirectives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.POLLING }">${ constants.POLLING }</a><TD> < Bool > <TD> false <TD> If the characteristics should be polled for state change.</TR>\n` );
 
    wfs( `<TR><TD><TD COLSPAN=3> or  [{"characteristic" < characteristic >, [ "interval": < sec >, "timeout": < msec > ] }] The timeout and interval override any higher directive.</TR>\n` );
 
-   // QueueMsg - Priority Queue Polling
+   // QueueMsg - AccessoryDirectives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.QUEUEMSG }"> ${ constants.QUEUEMSG }</a><TD> ${ constants.QUEUEMSG } <TD> false < Bool > <TD> Enable Priority Queued Polling statistics.</TR>\n` );
 
-   // QueueStatMsgInterval - Priority Queue Polling
+   // QueueStatMsgInterval - AccessoryDirectives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.QUEUE_STAT_MSG_INTERVAL }"> ${ constants.QUEUE_STAT_MSG_INTERVAL }</a><TD> ${ constants.QUEUE_STAT_MSG_INTERVAL } <TD> ${ constants.DEFAULT_QUEUE_STAT_MSG_INTERVAL } < mod count > <TD> How many counted polls before displaying the Priority Queue Polling Statistics.</TR>\n` );
 
+   // QueueTypes - AccessoryDirectives
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.QUEUETYPES }"> ${ constants.QUEUETYPES }</a><TD> none <TD> < Array of < ${ constants.QUEUE }: < "name" >, ${ constants.QUEUETYPE }: < ${ constants.QUEUETYPE_SEQUENTIAL } | ${ constants.QUEUETYPE_WORM } > <TD> none <TD> Pre-defines the Queue types.</TR>\n` );
 
-   // state_cmd
+   // Queue - AccessoryDirectives
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.QUEUE }"> ${ constants.QUEUE }</a><TD> ${ constants.QUEUE } <TD> < String > <TD> Defines which Queue polled characteristics will be placed.</TR>\n` );
+
+   // state_cmd - AccessoryDirectives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATE_CMD }">${ constants.STATE_CMD }</a><TD>  < ${ constants.STATE_CMD } > <TD> See Description <TD> The command used to Get/Set Device characteristic State.</TR>\n` );
    wfs( `<TR><TD COLSPAN="4">The ${ constants.STATE_CMD } represents the path to your script. Cmd4 appends the Get/Set shown.<BR>\n` );
    wfs( `${ constants.STATE_CMD } Get < DisplayName > < characteristic ><BR>\n` );
    wfs( `${ constants.STATE_CMD } Set < DisplayName > < characteristic > < value ></TD></TR>\n` );
 
-   // state_cmd_prefix
+   // state_cmd_prefix - AccessoryDirectives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATE_CMD_PREFIX }">${ constants.STATE_CMD_PREFIX }</a><TD>  < String > <TD> <TD> A String prepended to the < ${ constants.STATE_CMD } >.</TR>\n` );
 
-   // state_cmd_suffix
+   // state_cmd_suffix - AccessoryDirectives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATE_CMD_SUFFIX }">${ constants.STATE_CMD_SUFFIX }</a><TD> < String > <TD> <TD> A String appended to the < ${ constants.STATE_CMD } >.</TR>\n` );
 
-   // props
+   // props - AccessoryDirectives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.PROPS }">${ constants.PROPS }</a><TD>  < Bool >  <TD>    false     <TD> A way to override Hap Characteristiic Properties<BR>\n` );
    wfs( `         Only used to set min/max temperatures, for instance:</TR>\n` );
    wfs( `<TR ALIGN="Left"><TD><TD COLSPAN=3>"${ constants.PROPS }" : { "CurrentTemperature": { "maxValue":100, "minValue": -100, "minStep": 0.1}}</TR>\n` );
 
-   // category
+   // category - AccessoryDirectives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.CATEGORY }">${ constants.CATEGORY }</a><TD> < CATEGORY > <TD> <TD> See <a href="https://developers.homebridge.io/#/categories">Homebridge Categories</a> for a complete list of possible categories.  </TR>\n` );
 
-   // fakegato
+   // fakegato - AccessoryDirectives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.FAKEGATO }">${ constants.FAKEGATO }</a><TD>  < JSON >  <TD> <TD> See the section, <a href="https://github.com/ztalbot2000/homebridge-cmd4/README.md#fakegatotag"> "Adding in Fakegato history"</a> below.</TR>\n` );
 
-   // linkedTypes
+   // linkedTypes - AccessoryDirectives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.LINKEDTYPES }">${ constants.LINKEDTYPES }</a><TD>  < JSON >  <TD> <TD> Other Cmd4 Accessories like Input Source for HDMI inputs. </TR>\n` );
 
 
