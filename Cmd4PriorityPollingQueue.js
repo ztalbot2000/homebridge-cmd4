@@ -259,13 +259,13 @@ class Cmd4PriorityPollingQueue
       }, pollingID );
    }
 
-   processQueue( transactionType )
+   processQueue( lastTransactionType )
    {
       // Set, No matter what, only one allowed
       if ( this.inProgressSets > 0 )
       {
          // This is not true, It could be another Set has been issued
-         //if ( transactionType == HIGH_PRIORITY_SET )
+         //if ( lastTransactionType == HIGH_PRIORITY_SET )
          //   this.log.error( `Queue stuck, inProgressSets ${ this.inProgressSets }` );
 
          // wait until transaction is done and calls this function
@@ -286,28 +286,41 @@ class Cmd4PriorityPollingQueue
 
             this.processHighPrioritySetQueue( this.highPriorityQueue.shift( ) );
 
+            return;
+
          } // HIGH PRIORITY GET SEQUENTIAL && WORM
          else if ( nextEntry.isSet == false &&
-                   ( this.queueType == constants.QUEUETYPE_SEQUENTIAL && this.inProgressGets == 0 ||
+                   ( ( this.queueType == constants.QUEUETYPE_SEQUENTIAL && this.inProgressGets == 0 ) ||
                      this.queueType == constants.QUEUETYPE_WORM
                    )
                  )
          {
             this.processHighPriorityGetQueue( this.highPriorityQueue.shift( ) );
 
-         } else
-         {
-            // wait until transaction is done and calls this function
             return;
+
          }
-      } else if ( this.lowPriorityQueue.length > 0 &&
-                  transactionType == LOW_PRIORITY_GET &&
-                  this.queueStarted == true )
+         // this.log.debug(`RETURNING lastTransactionType: ${ lastTransactionType } inProgressSets: ${  this.inProgressSets } inProgressGets: ${  this.inProgressGets } queueStarted: ${ this.queueStarted } lowQueueLen: ${ this.lowPriorityQueue.length } hiQueueLen: ${ this.highPriorityQueue.length }` );
+
+         // wait until transaction is done and calls this function
+         return;
+
+      } else  if ( lastTransactionType == HIGH_PRIORITY_SET ||
+                   lastTransactionType == HIGH_PRIORITY_GET )
+      {
+         // Hmm restart queue Timer ?
+         this.startPollingTimer( );
+         return;
+      }
+      // This is self evident, until their are other types of Prioritys
+      if ( lastTransactionType == LOW_PRIORITY_GET &&
+           this.lowPriorityQueue.length > 0 &&
+           this.queueStarted == true )
       {
          let nextEntry = this.lowPriorityQueue[ this.lowPriorityQueueIndex ];
 
          // We had to be called by Polling
-         if ( this.queueType == constants.QUEUETYPE_SEQUENYIAL && this.inProgressGets == 0 ||
+         if ( this.queueType == constants.QUEUETYPE_SEQUENTIAL && this.inProgressGets == 0 ||
               this.queueType == constants.QUEUETYPE_WORM )
          {
             // We cant have a low priority timer going off starting the queue
@@ -349,14 +362,23 @@ class Cmd4PriorityPollingQueue
             }
          }
       } else {
-          if ( transactionType == LOW_PRIORITY_GET &&
+          if ( lastTransactionType == LOW_PRIORITY_GET &&
                this.queueStarted == false )
           { // Noop
+
           } if ( this.inProgressGets == 0 &&
-                 this.inProgressGets == 0 )
+                 this.inProgressSets == 0 )
           { // Noop, Nothing to do
+
+             // Cant hurt to bump it
+             this.startPollingTimer( );
+
           } else {
-             this.log.debug(`Unhandled transactionType: ${ transactionType } inProgressSets: ${  this.inProgressSets } inProgressGets: ${  this.inProgressGets }` );
+             this.log.debug(`Unhandled lastTransactionType: ${ lastTransactionType } inProgressSets: ${  this.inProgressSets } inProgressGets: ${  this.inProgressGets } queueStarted: ${ this.queueStarted } lowQueueLen: ${ this.lowPriorityQueue.length } hiQueueLen: ${ this.highPriorityQueue.length }` );
+
+             // Cant hurt to bump it
+             this.startPollingTimer( );
+
           }
       }
    }
@@ -364,10 +386,11 @@ class Cmd4PriorityPollingQueue
    startPollingTimer( )
    {
       // If the queue is busy then the pollingTimer is not running
-      if ( this.isPollingBeingDone( ) == false )
+      if ( this.isPollingTimerEnabled( ) == false )
       {
          this.pollingTimer = setTimeout( ( ) =>
          {
+            this.log.debug( `Polling Timer Firing` );
             this.processQueue( LOW_PRIORITY_GET );
 
          }, this.currentIntervalBeingUsed );
@@ -376,18 +399,42 @@ class Cmd4PriorityPollingQueue
    stopPollingTimer( )
    {
       // If the queue is not busy then the pollingTimer is running
-      if ( this.isPollingBeingDone( ) == false )
+      if ( this.isPollingTimerEnabled( ) == true )
       {
          clearTimeout( this.pollingTimer );
          this.pollingTimer = null;
       }
    }
-   isPollingBeingDone( )
+   startSanityTimer( )
+   {
+      if ( this.sanityTimer == null )
+      {
+         this.sanityTimer = setInterval( ( ) =>
+         {
+             this.log.debug( `inProgressSets: ${  this.inProgressSets } inProgressGets: ${  this.inProgressGets } queueStarted: ${ this.queueStarted } lowQueueLen: ${ this.lowPriorityQueue.length } hiQueueLen: ${ this.highPriorityQueue.length } pollingTimer:${ this.pollingTimer }` );
+
+            if ( this.queueStarted == true &&
+                 this.inProgressGets == 0 &&
+                 this.inProgressSets == 0 )
+            {
+               if ( this.isPollingTimerEnabled( ) == false )
+               {
+
+            this.log.debug( `Sanity Timer Fixing PollingvTimer` );
+                  this.startPollingTimer( );
+               }
+            }
+
+         }, 120000  );
+
+      }
+   }
+   isPollingTimerEnabled( )
    {
       if ( this.pollingTimer == null )
-         return true;
+         return false;
 
-      return false;
+      return true;
    }
    printQueueStats( )
    {
@@ -424,7 +471,8 @@ class Cmd4PriorityPollingQueue
       this.lowPriorityQueueIndex = 0 ;
       this.queueStarted = true;
 
-      this.startPollingTimer( )
+      this.startPollingTimer( );
+      this.startSanityTimer( );
 
    }
 }
