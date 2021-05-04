@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-3-7-1">**Whats new in 3.7.1**</a>
 * <a href="#Whats-new-in-3-7-0">**Whats new in 3.7.0**</a>
 * <a href="#Whats-new-in-3-6-1">**Whats new in 3.6.1**</a>
 * <a href="#Whats-new-in-3-6-0">**Whats new in 3.6.0**</a>
@@ -51,6 +52,14 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-3-7-1">## Whats new in 3.7.1</a>
+#### 3.7.1 (2021-05-04)
+
+##### Bug Fixes
+
+*  branch merge issue. Fix Prio queue timer ([146a558c](https://github.com/ztalbot2000/homebridge-cmd4/commit/146a558c6bd1bbee84ccd7d8c6146ce1e11007e4))
+
 
 <a name="Whats-new-in-3-7-0">## Whats new in 3.7.0</a>
 ### 3.7.0 (2021-05-03)
