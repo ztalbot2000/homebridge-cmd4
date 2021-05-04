@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-3-7-2">**Whats new in 3.7.2**</a>
 * <a href="#Whats-new-in-3-7-1">**Whats new in 3.7.1**</a>
 * <a href="#Whats-new-in-3-7-0">**Whats new in 3.7.0**</a>
 * <a href="#Whats-new-in-3-6-1">**Whats new in 3.6.1**</a>
@@ -52,6 +53,14 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-3-7-2">## Whats new in 3.7.2</a>
+#### 3.7.2 (2021-05-04)
+
+##### Bug Fixes
+
+*  PriorityPollingQueue (this) corruption ([f51b1976](https://github.com/ztalbot2000/homebridge-cmd4/commit/f51b1976b4e8b42023bf8029fa8ab9fbb275e39b))
+
 
 <a name="Whats-new-in-3-7-1">## Whats new in 3.7.1</a>
 #### 3.7.1 (2021-05-04)
