@@ -20,7 +20,7 @@ let trueTypeOf = require( "./utils/trueTypeOf" );
 
 let HIGH_PRIORITY_SET = 0;
 let HIGH_PRIORITY_GET = 1;
-let LOW_PRIORITY_GET = 1;
+let LOW_PRIORITY_GET = 2;
 
 class Cmd4PriorityPollingQueue
 {
@@ -255,7 +255,11 @@ class Cmd4PriorityPollingQueue
                entry.accessory.log.info( `Poll failed: ${ error  } for queue: ${ this.queueName }` );
           }
 
+         // For the next one
          self.inProgressGets --;
+
+         // This will restart the polling timer if not anything else
+         setTimeout( ( ) => { self.processQueue( HIGH_PRIORITY_GET ); }, 0);
       }, pollingID );
    }
 
@@ -391,6 +395,7 @@ class Cmd4PriorityPollingQueue
          this.pollingTimer = setTimeout( ( ) =>
          {
             this.log.debug( `Polling Timer Firing` );
+            this.pollingTimer = null;
             this.processQueue( LOW_PRIORITY_GET );
 
          }, this.currentIntervalBeingUsed );
