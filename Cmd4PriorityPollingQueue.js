@@ -36,7 +36,8 @@ class Cmd4PriorityPollingQueue
       this.lowPriorityQueueMaxLength = 0 ;
       this.inProgressGets = 0;
       this.inProgressSets = 0;
-      this.lowPriorityTimer = null;
+      this.intervalPollingTimer = null;
+      this.safeToDoPollingFlag = false;
       this.currentIntervalBeingUsed = 0;
       this.queueMsg = constants.DEFAULT_QUEUEMSG;
       this.queueStatMsgInterval = constants.DEFAULT_QUEUE_STAT_MSG_INTERVAL;
@@ -60,7 +61,7 @@ class Cmd4PriorityPollingQueue
       // Call the callback immediately as we will call updateValue
       callback( null );
 
-      self.queue.processQueue( HIGH_PRIORITY_SET );
+      self.queue.processQueue( HIGH_PRIORITY_SET, self.queue );
    }
 
    priorityGetValue( accTypeEnumIndex, characteristicString, timeout, callback )
@@ -68,39 +69,44 @@ class Cmd4PriorityPollingQueue
       let self = this;
       self.queue.highPriorityQueue.push( { [ constants.IS_SET_lv ]: false, [ constants.ACCESSORY_lv ]: self, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: null, [ constants.VALUE_lv ]: null, [ constants.CALLBACK_lv ]: callback } );
 
-      self.queue.processQueue( HIGH_PRIORITY_GET );
+      self.queue.processQueue( HIGH_PRIORITY_GET, self.queue );
    }
 
    addLowPriorityGetPolledQueueEntry( accessory, accTypeEnumIndex, characteristicString, interval, timeout )
    {
+      // Similiar to self = this, but more obvious and exact
+      let queue = accessory.queue;
+
       // These are all gets from polling
-      this.lowPriorityQueue.push( { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: interval, [ constants.TIMEOUT_lv ]: timeout } );
+      queue.lowPriorityQueue.push( { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: interval, [ constants.TIMEOUT_lv ]: timeout } );
 
-      this.lowPriorityQueueMaxLength = this.lowPriorityQueue.length ;
-      if ( this.currentIntervalBeingUsed == 0 )
+      queue.lowPriorityQueueMaxLength = queue.lowPriorityQueue.length ;
+      if ( queue.currentIntervalBeingUsed == 0 )
       {
-         this.queueMsg = accessory.queueMsg;
+         queue.queueMsg = accessory.queueMsg;
 
-         if ( this.queueMsg == true )
-            this.log.info( `Interval being used for queue: "${ this.queueName }" is from  ${ accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ${ constants.INTERVAL_lv }: ${ interval }` );
-         this.currentIntervalBeingUsed = interval;
-         this.optimalInterval = interval;
-         this.originalInterval = interval;
-         this.queueStatMsgInterval = accessory.queueStatMsgInterval;
+         if ( queue.queueMsg == true )
+            this.log.info( `Interval being used for queue: "${ queue.queueName }" is from  ${ accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ${ constants.INTERVAL_lv }: ${ interval }` );
+         queue.currentIntervalBeingUsed = interval;
+         queue.optimalInterval = interval;
+         queue.originalInterval = interval;
+         queue.queueStatMsgInterval = accessory.queueStatMsgInterval;
       }
    }
 
    processHighPrioritySetQueue( entry )
    {
-      if ( this.inProgressSets > 0 || this.inProgressGets > 0 )
+      // Similiar to self = this, but more obvious and exact
+      let queue = entry.accessory.queue;
+
+      if ( queue.inProgressSets > 0 || queue.inProgressGets > 0 )
       {
-         this.log.debug( `High priority "Set" queue interrupt attempted: ${ entry.accessory.displayName } ${ entry.characteristicString } inProgressSets:${ this.inProgressSets } inProgressGets: ${ this.inProgressGets }` );
+         this.log.debug( `High priority "Set" queue interrupt attempted: ${ entry.accessory.displayName } ${ entry.characteristicString } inProgressSets:${ queue.inProgressSets } inProgressGets: ${ queue.inProgressGets }` );
          return;
       }
 
       this.log.debug( `Proccessing high priority queue "Set" entry: ${ entry.accTypeEnumIndex }` );
-      let self = this;
-      this.inProgressSets ++;
+      queue.inProgressSets ++;
       entry.accessory.setValue( entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, entry.stateChangeResponseTime, entry.value, function ( error )
       {
 
@@ -108,11 +114,11 @@ class Cmd4PriorityPollingQueue
          if ( error == 0 &&
               relatedCurrentAccTypeEnumIndex != null &&
               settings.arrayOfPollingCharacteristics.filter(
-                 entry => entry.accessory.UUID == self.UUID &&
-                 entry.accTypeEnumIndex == relatedCurrentAccTypeEnumIndex
+                 s_entry => s_entry.accessory.UUID == entry.accessory.UUID &&
+                 s_entry.accTypeEnumIndex == relatedCurrentAccTypeEnumIndex
               ).length > 0  &&
               isRelatedTargetCharacteristicInSameDevice(
-                  self.typeIndex,
+                  entry.accessory.typeIndex,
                   entry.accTypeEnumIndex,
                   CMD4_DEVICE_TYPE_ENUM,
                   CMD4_ACC_TYPE_ENUM
@@ -121,8 +127,8 @@ class Cmd4PriorityPollingQueue
             let pollingID = Date.now( );
             let relatedCharacteristic = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].characteristic;
             let stateChangeResponseTime = entry.stateChangeResponseTime;
-            if ( stateChangeResponseTime < this.currentIntervalBeingUsed * .5 )
-               stateChangeResponseTime = this.currentIntervalBeingUsed * .5;
+            if ( stateChangeResponseTime < queue.currentIntervalBeingUsed * .5 )
+               stateChangeResponseTime = queue.currentIntervalBeingUsed * .5;
 
             setTimeout( ( ) =>
             {
@@ -138,34 +144,36 @@ class Cmd4PriorityPollingQueue
 
                   pollingID = -1;
 
-                  self.inProgressSets --;
-                  setTimeout( ( ) => { self.processQueue( HIGH_PRIORITY_SET ); }, 0);
+                  queue.inProgressSets --;
+                  setTimeout( ( ) => { queue.processQueue( HIGH_PRIORITY_SET, queue ); }, 0);
 
                }, pollingID );
             }, stateChangeResponseTime );
 
          } else {
 
-            self.inProgressSets --;
-            setTimeout( ( ) => { self.processQueue( HIGH_PRIORITY_SET ); }, 0);
+            queue.inProgressSets --;
+            setTimeout( ( ) => { queue.processQueue( HIGH_PRIORITY_SET, queue ); }, 0);
         }
       }, true );
    }
 
    processHighPriorityGetQueue( entry )
    {
-      if ( this.inProgressSets > 0 ||
-           this.inProgressGets > 0 && this.queueType == constants.QUEUETYPE_SEQUENTIAL )
+      // Similiar to self = this, but more obvious and exact
+      let queue = entry.accessory.queue;
+
+      if ( queue.inProgressSets > 0 ||
+           queue.inProgressGets > 0 && queue.queueType == constants.QUEUETYPE_SEQUENTIAL )
       {
-         this.log.debug( `High priority "Get" queue interrupt attempted: ${ entry.accessory.displayName } ${ entry.characteristicString } inProgressSets:${this.inProgressSets } inProgressGets: ${ this.inProgressGets }` );
+         this.log.debug( `High priority "Get" queue interrupt attempted: ${ entry.accessory.displayName } ${ entry.characteristicString } inProgressSets:${queue.inProgressSets } inProgressGets: ${ queue.inProgressGets }` );
          return;
       }
 
       this.log.debug( `Proccessing high priority queue "Get" entry: ${ entry.accTypeEnumIndex }` );
 
-      this.inProgressGets ++;
+      queue.inProgressGets ++;
       let pollingID = Date.now( );
-      let self = this;
       entry.accessory.getValue( entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, function ( error, properValue, returnedPollingID  )
       {
          // This function should only be called once, noted by the pollingID.
@@ -180,16 +188,19 @@ class Cmd4PriorityPollingQueue
 
          entry.callback( error, properValue );
 
-         self.inProgressGets --;
-         setTimeout( ( ) => { self.processQueue( HIGH_PRIORITY_GET ); }, 0);
+         queue.inProgressGets --;
+         setTimeout( ( ) => { queue.processQueue( HIGH_PRIORITY_GET, entry.accessory.queue ); }, 0);
 
       }, pollingID );
    }
 
    processEntryFromLowPriorityQueue( entry )
    {
-      if ( this.inProgressSets > 0 ||
-           this.inProgressGets > 0 && this.queueType == constants.QUEUETYPE_SEQUENTIAL )
+      // Similiar to self = this, but more obvious and exact
+      let queue = entry.accessory.queue;
+
+      if ( queue.inProgressSets > 0 ||
+           queue.inProgressGets > 0 && queue.queueType == constants.QUEUETYPE_SEQUENTIAL )
       {
          this.log.debug( `Low priority "Get" queue interrupt attempted: ${ entry.accessory.displayName } ${ entry.characteristicString }` );
          return;
@@ -198,10 +209,9 @@ class Cmd4PriorityPollingQueue
       this.log.debug( `Proccessing low priority queue entry: ${ entry.accTypeEnumIndex }` );
 
       let pollingID = Date.now( );
-      this.inProgressGets ++;
-      this.lowPriorityQueueCounter ++;
+      queue.inProgressGets ++;
+      queue.lowPriorityQueueCounter ++;
       let lowPriorityQueueStartTime = Date.now( );
-      let self = this;
       entry.accessory.getValue( entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, function ( error, properValue, returnedPollingID )
       {
          let lowPriorityQueueEndTime = Date.now( );
@@ -213,13 +223,13 @@ class Cmd4PriorityPollingQueue
 
             return;
          }
-         self.lowPriorityQueueAccumulatedTime += lowPriorityQueueEndTime - lowPriorityQueueStartTime;
-         self.lowPriorityQueueAverageTime = self.lowPriorityQueueAccumulatedTime / self.lowPriorityQueueCounter;
+         queue.lowPriorityQueueAccumulatedTime += lowPriorityQueueEndTime - lowPriorityQueueStartTime;
+         queue.lowPriorityQueueAverageTime = queue.lowPriorityQueueAccumulatedTime / queue.lowPriorityQueueCounter;
 
          // Make it only 50% full, but not less than the original interval
-         let optimal = 1.5 * self.lowPriorityQueueAverageTime;
-         if ( optimal > self.originalInterval )
-            self.optimalInterval = optimal;
+         let optimal = 1.5 * queue.lowPriorityQueueAverageTime;
+         if ( optimal > queue.originalInterval )
+            queue.optimalInterval = optimal;
 
 
          pollingID = -1;
@@ -256,17 +266,17 @@ class Cmd4PriorityPollingQueue
           }
 
          // For the next one
-         self.inProgressGets --;
+         queue.inProgressGets --;
 
          // This will restart the polling timer if not anything else
-         setTimeout( ( ) => { self.processQueue( HIGH_PRIORITY_GET ); }, 0);
+         setTimeout( ( ) => { queue.processQueue( HIGH_PRIORITY_GET, queue ); }, 0);
       }, pollingID );
    }
 
-   processQueue( lastTransactionType )
+   processQueue( lastTransactionType, queue )
    {
       // Set, No matter what, only one allowed
-      if ( this.inProgressSets > 0 )
+      if ( queue.inProgressSets > 0 )
       {
          // This is not true, It could be another Set has been issued
          //if ( lastTransactionType == HIGH_PRIORITY_SET )
@@ -276,9 +286,9 @@ class Cmd4PriorityPollingQueue
          return;
       }
 
-      if ( this.highPriorityQueue.length > 0 )
+      if ( queue.highPriorityQueue.length > 0 )
       {
-         let nextEntry = this.highPriorityQueue[ 0 ];
+         let nextEntry = queue.highPriorityQueue[ 0 ];
 
          if ( nextEntry.isSet == true )
          {
@@ -286,25 +296,25 @@ class Cmd4PriorityPollingQueue
  
             // We cant have a low priority timer going off starting the queue during a set
             // even though it would do high priority first.
-            this.stopPollingTimer( );
+            queue.disablePolling( queue );
 
-            this.processHighPrioritySetQueue( this.highPriorityQueue.shift( ) );
+            queue.processHighPrioritySetQueue( queue.highPriorityQueue.shift( ) );
 
             return;
 
          } // HIGH PRIORITY GET SEQUENTIAL && WORM
          else if ( nextEntry.isSet == false &&
-                   ( ( this.queueType == constants.QUEUETYPE_SEQUENTIAL && this.inProgressGets == 0 ) ||
-                     this.queueType == constants.QUEUETYPE_WORM
+                   ( ( queue.queueType == constants.QUEUETYPE_SEQUENTIAL && queue.inProgressGets == 0 ) ||
+                     queue.queueType == constants.QUEUETYPE_WORM
                    )
                  )
          {
-            this.processHighPriorityGetQueue( this.highPriorityQueue.shift( ) );
+            queue.processHighPriorityGetQueue( queue.highPriorityQueue.shift( ) );
 
             return;
 
          }
-         // this.log.debug(`RETURNING lastTransactionType: ${ lastTransactionType } inProgressSets: ${  this.inProgressSets } inProgressGets: ${  this.inProgressGets } queueStarted: ${ this.queueStarted } lowQueueLen: ${ this.lowPriorityQueue.length } hiQueueLen: ${ this.highPriorityQueue.length }` );
+         // this.log.debug(`RETURNING lastTransactionType: ${ lastTransactionType } inProgressSets: ${  queue.inProgressSets } inProgressGets: ${  queue.inProgressGets } queueStarted: ${ queue.queueStarted } lowQueueLen: ${ queue.lowPriorityQueue.length } hiQueueLen: ${ queue.highPriorityQueue.length }` );
 
          // wait until transaction is done and calls this function
          return;
@@ -313,120 +323,132 @@ class Cmd4PriorityPollingQueue
                    lastTransactionType == HIGH_PRIORITY_GET )
       {
          // Hmm restart queue Timer ?
-         this.startPollingTimer( );
+         queue.enablePolling( queue );
          return;
       }
       // This is self evident, until their are other types of Prioritys
       if ( lastTransactionType == LOW_PRIORITY_GET &&
-           this.lowPriorityQueue.length > 0 &&
-           this.queueStarted == true )
+           queue.lowPriorityQueue.length > 0 &&
+           queue.queueStarted == true )
       {
-         let nextEntry = this.lowPriorityQueue[ this.lowPriorityQueueIndex ];
-
-         // We had to be called by Polling
-         if ( this.queueType == constants.QUEUETYPE_SEQUENTIAL && this.inProgressGets == 0 ||
-              this.queueType == constants.QUEUETYPE_WORM )
+         let nextEntry = queue.lowPriorityQueue[ queue.lowPriorityQueueIndex ];
+         // We had to be called by Polling because it is the only one
+         // who sets the last transaction type to LOW_PRIORITY
+         // It also turns off the safeToDoPollingFlag
+         if ( queue.queueType == constants.QUEUETYPE_SEQUENTIAL && queue.inProgressGets == 0 ||
+              queue.queueType == constants.QUEUETYPE_WORM )
          {
-            // We cant have a low priority timer going off starting the queue
-            // even though it would do high priority first.
-            this.stopPollingTimer( );
-
-            this.processEntryFromLowPriorityQueue( this.lowPriorityQueue[ this.lowPriorityQueueIndex ] );
-            this.lowPriorityQueueIndex ++;
-            if ( this.lowPriorityQueueIndex >= this.lowPriorityQueueMaxLength )
-               this.lowPriorityQueueIndex = 0;
+            queue.processEntryFromLowPriorityQueue( queue.lowPriorityQueue[ queue.lowPriorityQueueIndex ] );
+            queue.lowPriorityQueueIndex ++;
+            if ( queue.lowPriorityQueueIndex >= queue.lowPriorityQueueMaxLength )
+               queue.lowPriorityQueueIndex = 0;
 
             // A 10% variance is okay
-            if ( this.currentIntervalBeingUsed > ( this.optimalInterval * 1.1 ) )
+            if ( queue.currentIntervalBeingUsed > ( queue.optimalInterval * 1.1 ) )
             {
-               if ( this.queueMsg == true )
-                    this.log.info( `Interval for ${ nextEntry.accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ nextEntry.accTypeEnumIndex ].type } is too reasonable. Using computed interval of ` + this.optimalInterval.toFixed( 2 ) );
+               if ( queue.queueMsg == true )
+                    this.log.info( `Interval for ${ nextEntry.accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ nextEntry.accTypeEnumIndex ].type } is too reasonable. Using computed interval of ` + queue.optimalInterval.toFixed( 2 ) );
 
-               this.currentIntervalBeingUsed =  this.optimalInterval;
+               queue.currentIntervalBeingUsed =  queue.optimalInterval;
 
-               if ( this.queueMsg == true )
-                  this.printQueueStats( );
+               if ( queue.queueMsg == true )
+                  queue.printQueueStats( queue );
 
-               if ( this.currentIntervalBeingUsed < ( this.optimalInterval * .9 ) )
+               if ( queue.currentIntervalBeingUsed < ( queue.optimalInterval * .9 ) )
                {
-                  if ( this.queueMsg == true )
-                     this.log.warn( `Interval for ${ nextEntry.accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ nextEntry.accTypeEnumIndex ].type } is unreasonable. Using computed interval of ` + this.optimalInterval.toFixed( 2 ) );
+                  if ( queue.queueMsg == true )
+                     this.log.warn( `Interval for ${ nextEntry.accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ nextEntry.accTypeEnumIndex ].type } is unreasonable. Using computed interval of ` + queue.optimalInterval.toFixed( 2 ) );
 
-                  this.currentIntervalBeingUsed =  this.optimalInterval;
+                  queue.currentIntervalBeingUsed =  queue.optimalInterval;
 
-                  if ( this.queueMsg == true )
-                     this.printQueueStats( );
+                  if ( queue.queueMsg == true )
+                     queue.printQueueStats( queue );
 
-                  if ( this.queueMsg == true &&
-                       this.lowPriorityQueueCounter % this.queueStatMsgInterval == 0 )
-                     this.printQueueStats( );
+                  if ( queue.queueMsg == true &&
+                       queue.lowPriorityQueueCounter % queue.queueStatMsgInterval == 0 )
+                     queue.printQueueStats( queue );
 
-                  this.startPollingTimer( );
+                  queue.enablePolling( queue );
                }
             }
          }
       } else {
           if ( lastTransactionType == LOW_PRIORITY_GET &&
-               this.queueStarted == false )
+               queue.queueStarted == false )
           { // Noop
 
-          } if ( this.inProgressGets == 0 &&
-                 this.inProgressSets == 0 )
+          } if ( queue.inProgressGets == 0 &&
+                 queue.inProgressSets == 0 )
           { // Noop, Nothing to do
 
              // Cant hurt to bump it
-             this.startPollingTimer( );
+             queue.enablePolling( queue );
 
           } else {
-             this.log.debug(`Unhandled lastTransactionType: ${ lastTransactionType } inProgressSets: ${  this.inProgressSets } inProgressGets: ${  this.inProgressGets } queueStarted: ${ this.queueStarted } lowQueueLen: ${ this.lowPriorityQueue.length } hiQueueLen: ${ this.highPriorityQueue.length }` );
+             this.log.debug(`Unhandled lastTransactionType: ${ lastTransactionType } inProgressSets: ${  queue.inProgressSets } inProgressGets: ${  queue.inProgressGets } queueStarted: ${ queue.queueStarted } lowQueueLen: ${ queue.lowPriorityQueue.length } hiQueueLen: ${ queue.highPriorityQueue.length }` );
 
              // Cant hurt to bump it
-             this.startPollingTimer( );
-
+             queue.enablePolling( queue );
           }
       }
    }
 
-   startPollingTimer( )
+   enablePolling( queue, firstTime = false )
    {
-      // If the queue is busy then the pollingTimer is not running
-      if ( this.isPollingTimerEnabled( ) == false )
+      this.log.debug( `1 enablePolling first time ${ firstTime } queue.safeToDoPollingNow: ${ queue.safeToDoPollingNow( queue ) }, queue.safeToDoPollingNow: ${ queue.safeToDoPollingFlag }` );
+      // If the flag is not already set
+      if ( queue.safeToDoPollingNow( queue ) == false )
       {
-         this.pollingTimer = setTimeout( ( ) =>
+         // And this is called from the Platform the first time
+         this.log.debug( `2 enablePolling first time ${ firstTime }` );
+         if ( firstTime )
          {
-            this.log.debug( `Polling Timer Firing` );
-            this.pollingTimer = null;
-            this.processQueue( LOW_PRIORITY_GET );
-
-         }, this.currentIntervalBeingUsed );
-      }
-   }
-   stopPollingTimer( )
-   {
-      // If the queue is not busy then the pollingTimer is running
-      if ( this.isPollingTimerEnabled( ) == true )
-      {
-         clearTimeout( this.pollingTimer );
-         this.pollingTimer = null;
-      }
-   }
-   startSanityTimer( )
-   {
-      if ( this.sanityTimer == null )
-      {
-         this.sanityTimer = setInterval( ( ) =>
-         {
-             this.log.debug( `inProgressSets: ${  this.inProgressSets } inProgressGets: ${  this.inProgressGets } queueStarted: ${ this.queueStarted } lowQueueLen: ${ this.lowPriorityQueue.length } hiQueueLen: ${ this.highPriorityQueue.length } pollingTimer:${ this.pollingTimer }` );
-
-            if ( this.queueStarted == true &&
-                 this.inProgressGets == 0 &&
-                 this.inProgressSets == 0 )
+            this.log.debug( `Starting polling interval timer for the first time` );
+            queue.intervalPollingTimer = setInterval( ( ) =>
             {
-               if ( this.isPollingTimerEnabled( ) == false )
+               this.log.debug( "Polling interval Timer Firing safeToDoPollingFlag: %s", queue.safeToDoPollingFlag );
+               if ( queue.safeToDoPollingNow( queue ) == true )
+               {
+                  queue.safeToDoPollingFlag = false;
+                  queue.processQueue( LOW_PRIORITY_GET, queue );
+                  queue.safeToDoPollingFlag = true;
+               }
+
+            }, queue.currentIntervalBeingUsed );
+            // its safe to do Low Priority polling now, So when the interval
+            // timer goes off, it can happen.
+            queue.safeToDoPollingFlag = true;
+         }
+         this.log.debug( `Polling Timer created: ${ queue.intervalPollingTimer } firstTime: ${ firstTime }` );
+      }
+   }
+   disablePolling( queue )
+   {
+      queue.safeToDoPollingFlag = false;
+   }
+   startSanityTimer( queue )
+   {
+      if ( queue.sanityTimer == null )
+      {
+         queue.sanityTimer = setInterval( ( ) =>
+         {
+             this.log.debug( `inProgressSets: ${  queue.inProgressSets } inProgressGets: ${  queue.inProgressGets } queueStarted: ${ queue.queueStarted } lowQueueLen: ${ queue.lowPriorityQueue.length } hiQueueLen: ${ queue.highPriorityQueue.length } intervalPollingTimer:${ queue.intervalPollingTimer } safeToDoPollingFlag: ${ queue.safeToDoPollingFlag } interval: ${ queue.currentIntervalBeingUsed }` );
+
+            if ( queue.queueStarted == true &&
+                 queue.inProgressGets == 0 &&
+                 queue.inProgressSets == 0 )
+            {
+            this.log.debug( "Sanity Timer checking Polling Timer %s: Bool %s interval:%s", queue.intervalPollingTimer, queue.safeToDoPollingFlag, queue.currentIntervalBeingUsed );
+                  if ( queue.intervalPollingTimer == null )
+                  {
+                     this.log.error( `Polling  timer is null ???? ` );
+                     process.exit(333);
+                  }
+               if ( queue.safeToDoPollingNow( queue ) == false )
                {
 
-            this.log.debug( `Sanity Timer Fixing PollingvTimer` );
-                  this.startPollingTimer( );
+                  this.log.debug( "Sanity Timer Fixing Polling Timer: intervalPollingTimer: %s safeToDoPollingFlag: %s", queue.intervalPollingTimer, queue.safeToDoPollingFlag );
+                  queue.enablePolling( queue );
                }
             }
 
@@ -434,50 +456,47 @@ class Cmd4PriorityPollingQueue
 
       }
    }
-   isPollingTimerEnabled( )
+   safeToDoPollingNow( queue )
    {
-      if ( this.pollingTimer == null )
-         return false;
-
-      return true;
+      return queue.safeToDoPollingFlag;
    }
-   printQueueStats( )
+   printQueueStats( queue )
    {
       let line = `QUEUE "${ this.queueName }" stats`;
       this.log.info( line );
       this.log.info( `${ "=".repeat( line.length) }` );
-      this.log.info( `iterations: ${ this.lowPriorityQueueCounter }` );
-      line = `optimalInterval: ` + parseFloat( this.optimalInterval.toFixed( 2 ) );
-      if ( this.optimalInterval == this.originalInterval )
+      this.log.info( `iterations: ${ queue.lowPriorityQueueCounter }` );
+      line = `optimalInterval: ` + parseFloat( queue.optimalInterval.toFixed( 2 ) );
+      if ( queue.optimalInterval == queue.originalInterval )
          line = `${ line } ( Original )`;
       this.log.info( line );
 
-      this.log.info( `lowPriorityQueueAverageTime: ` + parseFloat( this.lowPriorityQueueAverageTime.toFixed( 2 ) ) );
-      this.log.info( `lowPriorityQueueAccumulatedTime: ` + parseFloat( this.lowPriorityQueueAccumulatedTime.toFixed( 2 ) ) );
-      line = `currentIntervalBeingUsed: ` + parseFloat( this.currentIntervalBeingUsed.toFixed( 2 ) );
-      if ( this.currentIntervalBeingUsed == this.originalInterval )
+      this.log.info( `lowPriorityQueueAverageTime: ` + parseFloat( queue.lowPriorityQueueAverageTime.toFixed( 2 ) ) );
+      this.log.info( `lowPriorityQueueAccumulatedTime: ` + parseFloat( queue.lowPriorityQueueAccumulatedTime.toFixed( 2 ) ) );
+      line = `currentIntervalBeingUsed: ` + parseFloat( queue.currentIntervalBeingUsed.toFixed( 2 ) );
+      if ( queue.currentIntervalBeingUsed == queue.originalInterval )
          line = `${ line } ( Original )`;
       this.log.info( line );
-      this.log.info( `originalInterval: ${ this.originalInterval }` );
+      this.log.info( `originalInterval: ${ queue.originalInterval }` );
    }
-   dumpQueue( )
+   dumpQueue( queue )
    {
-      let line = `Low Priority Queue "${ this.queueName }"`;
+      let line = `Low Priority Queue "${ queue.queueName }"`;
       this.log.info( line );
       this.log.info( `${ "=".repeat( line.length) }` );
-      this.lowPriorityQueue.forEach( ( entry, entryIndex ) =>
+      queue.lowPriorityQueue.forEach( ( entry, entryIndex ) =>
       {
          this.log.info( `${ entryIndex } ${ entry.accessory.displayName } characteristic:  ${ entry.characteristicString } accTypeEnumIndex: ${ entry.accTypeEnumIndex } interval: ${ entry.interval } timeout: ${ entry.timeout }` );
       });
    }
 
-   startQueue( )
+   startQueue( queue )
    {
-      this.lowPriorityQueueIndex = 0 ;
-      this.queueStarted = true;
+      queue.lowPriorityQueueIndex = 0 ;
 
-      this.startPollingTimer( );
-      this.startSanityTimer( );
+      queue.enablePolling( queue, true );
+      queue.queueStarted = true;
+      queue.startSanityTimer( queue );
 
    }
 }

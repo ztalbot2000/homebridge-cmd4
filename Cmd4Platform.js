@@ -830,7 +830,7 @@ class Cmd4Platform
          let queuedPollingTimer = setTimeout( ( ) =>
          {
             this.log.info( ` *** Starting Priority Polling Queue "${ queue.queueName }"` );
-            queue.startQueue( );
+            queue.startQueue( queue );
          }, queuedStartDelay );
 
          this.pollingTimers.push( queuedPollingTimer );
