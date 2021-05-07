@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-3-7-3">**Whats new in 3.7.3**</a>
 * <a href="#Whats-new-in-3-7-2">**Whats new in 3.7.2**</a>
 * <a href="#Whats-new-in-3-7-1">**Whats new in 3.7.1**</a>
 * <a href="#Whats-new-in-3-7-0">**Whats new in 3.7.0**</a>
@@ -53,6 +54,13 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-3-7-3">## Whats new in 3.7.3</a>
+#### 3.7.3 (2021-05-07)
+
+##### New Features
+
+*  Overall Performance Improvements ([80940ee29](https://github.com/ztalbot2000/homebridge-cmd4/commit/80940ee29bc84ecc1705102b489deec2698a90a0))
 
 <a name="Whats-new-in-3-7-2">## Whats new in 3.7.2</a>
 #### 3.7.2 (2021-05-04)

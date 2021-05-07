@@ -1,8 +1,10 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
-#### 3.7.2 (2021-05-04)
+#### 3.7.3 (2021-05-07)
 
-##### Bug Fixes
+##### New Features
 
-*  PriorityPollingQueue (this) corruption ([f51b1976](https://github.com/ztalbot2000/homebridge-cmd4/commit/f51b1976b4e8b42023bf8029fa8ab9fbb275e39b))
+*  Overall Performance Improvements ([80940ee29](https://github.com/ztalbot2000/homebridge-cmd4/commit/80940ee29bc84ecc1705102b489deec2698a90a0))
+
+
 
 
