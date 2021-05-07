@@ -55,14 +55,19 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
    {
       process.exit.restore( );
    });
+   beforeEach( function( )
+   {
+      settings.arrayOfAllStaggeredPollingCharacteristics = [ ];
+      settings.listOfCreatedPriorityQueues = { };
+   });
 
    afterEach( function( )
    {
       if (this.currentTest.state == 'failed')
       {
-         if ( settings.arrayOfPollingCharacteristics.length > 0 )
+         if ( settings.arrayOfAllStaggeredPollingCharacteristics.length > 0 )
          {
-            let accessory = settings.arrayOfPollingCharacteristics[0].accessory;
+            let accessory = settings.arrayOfAllStaggeredPollingCharacteristics[0].accessory;
             console.log(`Cancelling timers for FAILED TEST OF ${ accessory.displayName }`);
             Object.keys(accessory.listOfRunningPolls).forEach( (key) =>
             {
@@ -72,8 +77,8 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
          }
       }
       // Put back the array of Polling Characteristics
+      settings.arrayOfAllStaggeredPollingCharacteristics = [ ];
       settings.listOfCreatedPriorityQueues = { };
-      settings.arrayOfPollingCharacteristics = [ ];
    });
 
    it( "Test if Cmd4PriorityPollingQueue exists", function ( )
@@ -231,6 +236,8 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
 
 
       let cmd4PriorityPollingQueue = new Cmd4PriorityPollingQueue( this.log, queueName );
+      cmd4Accessory.queue = cmd4PriorityPollingQueue;
+      cmd4Accessory.queueName = queueName;
 
       assert.isFunction( cmd4PriorityPollingQueue.addLowPriorityGetPolledQueueEntry, `.addLowPriorityGetPolledQueueEntry is not a function` );
 
@@ -252,7 +259,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
    {
       this.log = new Logger( );
       this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( true );
+      this.log.setOutputEnabled( false );
       this.log.setDebugEnabled( true );
 
       let platformConfig =
@@ -272,7 +279,6 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
             State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
-      assert.equal( settings.arrayOfPollingCharacteristics.length, 0, `Incorrect number of polling characteristics` );
 
       let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );
 
@@ -280,7 +286,14 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
 
       cmd4Platform.discoverDevices( );
 
-      assert.equal( settings.arrayOfPollingCharacteristics.length, 2, `Incorrect number of polling characteristics` );
+      assert.equal( Object.keys(settings.listOfCreatedPriorityQueues).length, 1, `Incorrect number of polling queues created` );
+
+      let queue = settings.listOfCreatedPriorityQueues[ "A" ];
+
+      expect( queue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PollingQueue" );
+
+      assert.equal( queue.lowPriorityQueue.length, 2, `Incorrect number of low level polling characteristics` );
+
 
       let cmd4SwitchAccessory = cmd4Platform.createdCmd4Accessories[0];
 
@@ -290,7 +303,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       cmd4PriorityPollingQueue.addLowPriorityGetPolledQueueEntry( cmd4SwitchAccessory, CMD4_ACC_TYPE_ENUM.On, "On", constants.DEFAULT_INTERVAL, constants.DEFAULT_TIMEOUT );
       cmd4PriorityPollingQueue.addLowPriorityGetPolledQueueEntry( cmd4SwitchAccessory, CMD4_ACC_TYPE_ENUM.Active, "Active", constants.DEFAULT_INTERVAL, constants.DEFAULT_TIMEOUT );
 
-      assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 2, `Polled Get added to low prority queue` );
+      assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 4, `Polled Get added to low prority queue` );
 
       this.log.reset( );
       this.log.setOutputEnabled( false );
@@ -306,7 +319,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
          assert.include( this.log.logBuf, expectedOutput1 , `expected stdout: ${ this.log.logBuf }` );
          assert.include( this.log.logBuf, expectedOutput2 , `expected stdout: ${ this.log.logBuf }` );
          // Low priority queues are continious, make sure it is still the same
-         assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 2, `After poll, low priority queue length should atill be the same size` );
+         assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 4, `After poll, low priority queue length should atill be the same size` );
 
          let entry0 = cmd4PriorityPollingQueue.lowPriorityQueue[ 0 ];
          let entry1 = cmd4PriorityPollingQueue.lowPriorityQueue[ 1 ];
@@ -435,8 +448,6 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
          ]
       }
 
-      assert.equal( settings.arrayOfPollingCharacteristics.length, 0, `Incorrect number of Initial polling characteristics` );
-
       this.log = new Logger( );
       this.log.setBufferEnabled( );
       this.log.setOutputEnabled( false );
@@ -448,7 +459,24 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
 
       cmd4Platform.discoverDevices( );
 
-      assert.equal( settings.arrayOfPollingCharacteristics.length, 4, `Incorrect number of polling characteristics` );
+      assert.equal( cmd4Platform.createdCmd4Accessories.length, 2, `Incorrect number of created accessories` );
+
+      assert.equal( Object.keys(settings.listOfCreatedPriorityQueues).length, 1, `Incorrect number of polling queues created` );
+
+      let queue = settings.listOfCreatedPriorityQueues[ "A" ];
+
+      expect( queue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PollingQueue" );
+
+      assert.equal( queue.lowPriorityQueue.length, 4, `Incorrect number of low level polling characteristics` );
+
+      let accessory1 = cmd4Platform.createdCmd4Accessories[0];
+      let accessory2 = cmd4Platform.createdCmd4Accessories[1];
+
+      expect( accessory1 ).to.be.a.instanceOf( Cmd4Accessory, "accessory1 is not an instance of Cmd4Accessory" );
+      expect( accessory2 ).to.be.a.instanceOf( Cmd4Accessory, "accessory2 is not an instance of Cmd4Accessory" );
+
+      assert.equal( Object.keys( accessory1.listOfPollingCharacteristics).length, 2, `Incorrect number of polling characteristics for accessory1` );
+      assert.equal( Object.keys( accessory2.listOfPollingCharacteristics).length, 2, `Incorrect number of polling characteristics for accessory2` );
 
       cmd4Platform.startPolling( 5000, 5000 );
 
@@ -469,9 +497,9 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       assert.include( this.log.logBuf, expectedOutput2 , `expected stdout: ${ this.log.logBuf }` );
       assert.include( this.log.logBuf, expectedOutput3 , `expected stdout: ${ this.log.logBuf }` );
 
-      let queue = settings.listOfCreatedPriorityQueues[ "A" ];
+      //let queue = settings.listOfCreatedPriorityQueues[ "A" ];
 
-      expect( queue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PriorityPollingQueue" );
+      //expect( queue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PriorityPollingQueue" );
 
       done( );
    });
@@ -499,11 +527,9 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
          ]
       }
 
-      assert.equal( settings.arrayOfPollingCharacteristics.length, 0, `Incorrect number of Initial polling characteristics` );
-
       this.log = new Logger( );
       this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( true );
+      this.log.setOutputEnabled( false );
       this.log.setDebugEnabled( true );
 
       let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );
@@ -555,11 +581,9 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
          ]
       }
 
-      assert.equal( settings.arrayOfPollingCharacteristics.length, 0, `Incorrect number of Initial polling characteristics` );
-
       this.log = new Logger( );
       this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( true );
+      this.log.setOutputEnabled( false );
       this.log.setDebugEnabled( true );
 
       let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );

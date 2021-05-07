@@ -3,7 +3,6 @@
 
 // These would already be initialized by index.js
 let CMD4_ACC_TYPE_ENUM = require( "./lib/CMD4_ACC_TYPE_ENUM" ).CMD4_ACC_TYPE_ENUM;
-let CMD4_DEVICE_TYPE_ENUM = require( "./lib/CMD4_DEVICE_TYPE_ENUM" ).CMD4_DEVICE_TYPE_ENUM;
 
 
 // Settings, Globals and Constants
@@ -14,13 +13,13 @@ const constants = require( "./cmd4Constants" );
 // Pretty Colors
 var chalk = require( "chalk" );
 
-let isRelatedTargetCharacteristicInSameDevice = require( "./utils/isRelatedTargetCharacteristicInSameDevice" );
 let trueTypeOf = require( "./utils/trueTypeOf" );
 
 
 let HIGH_PRIORITY_SET = 0;
 let HIGH_PRIORITY_GET = 1;
 let LOW_PRIORITY_GET = 2;
+
 
 class Cmd4PriorityPollingQueue
 {
@@ -109,52 +108,31 @@ class Cmd4PriorityPollingQueue
       queue.inProgressSets ++;
       entry.accessory.setValue( entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, entry.stateChangeResponseTime, entry.value, function ( error )
       {
-
          let relatedCurrentAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].relatedCurrentAccTypeEnumIndex;
          if ( error == 0 &&
-              relatedCurrentAccTypeEnumIndex != null &&
-              settings.arrayOfPollingCharacteristics.filter(
-                 s_entry => s_entry.accessory.UUID == entry.accessory.UUID &&
-                 s_entry.accTypeEnumIndex == relatedCurrentAccTypeEnumIndex
-              ).length > 0  &&
-              isRelatedTargetCharacteristicInSameDevice(
-                  entry.accessory.typeIndex,
-                  entry.accTypeEnumIndex,
-                  CMD4_DEVICE_TYPE_ENUM,
-                  CMD4_ACC_TYPE_ENUM
-              ) == relatedCurrentAccTypeEnumIndex )
+              relatedCurrentAccTypeEnumIndex != null )
          {
-            let pollingID = Date.now( );
-            let relatedCharacteristic = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].characteristic;
+            let relatedCurrentCharacteristicString = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].type;
             let stateChangeResponseTime = entry.stateChangeResponseTime;
             if ( stateChangeResponseTime < queue.currentIntervalBeingUsed * .5 )
                stateChangeResponseTime = queue.currentIntervalBeingUsed * .5;
 
-            setTimeout( ( ) =>
-            {
-               entry.accessory.getValue( relatedCharacteristic, entry.characteristicString, entry.timeout, function ( error, properValue, returnedPollingID )
-               {
-                  // This function should only be called once, noted by the pollingID.
-                  if ( pollingID != returnedPollingID )
-                  {
-                     entry.accessory.log.info("More entries for pollingID for related get");
+            entry.accessory.getValue( relatedCurrentAccTypeEnumIndex, relatedCurrentCharacteristicString, entry.timeout, function ( error, properValue) {
+           {
+              if ( error == 0 )
+              {
+                 entry.accessory.log.debug( chalk.blue( `characteristicPolling Updating ${ entry.accessory.displayName } ${ relatedCurrentCharacteristicString }` ) + ` ${ properValue }` );
 
-                     return;
-                  }
+                 entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].characteristic ).updateValue( properValue );
+              }
 
-                  pollingID = -1;
+           }});
+         }
 
-                  queue.inProgressSets --;
-                  setTimeout( ( ) => { queue.processQueue( HIGH_PRIORITY_SET, queue ); }, 0);
+         entry.callback( 0 );
+         queue.inProgressSets --;
+         setTimeout( ( ) => { queue.processQueue( HIGH_PRIORITY_SET, queue ); }, 0);
 
-               }, pollingID );
-            }, stateChangeResponseTime );
-
-         } else {
-
-            queue.inProgressSets --;
-            setTimeout( ( ) => { queue.processQueue( HIGH_PRIORITY_SET, queue ); }, 0);
-        }
       }, true );
    }
 

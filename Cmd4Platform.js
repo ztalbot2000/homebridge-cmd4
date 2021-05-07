@@ -32,15 +32,6 @@ const Cmd4Accessory = require( "./Cmd4Accessory" ).Cmd4Accessory;
 let settings = require( "./cmd4Settings" );
 const constants = require( "./cmd4Constants" );
 
-
-// Function to return array split by inclusion
-// returns [ truesArray, falsesArray ];
-// Taken from https://stackoverflow.com/questions/11731072/dividing-an-array-by-filter-function
-function partition(array, predicate)
-{
-   return array.reduce( ( acc, item ) => ( acc[+!predicate( item )].push( item ), acc ), [ [], [] ] );
-}
-
 // Platform definition
 class Cmd4Platform
 {
@@ -106,7 +97,7 @@ class Cmd4Platform
             this.toBeRestoredPlatforms = [ ];
          }
 
-         this.discoverDevices( );
+         this.discoverDevices( this.log );
 
          // Any accessory not reachable must have been removed, find them
          this.toBeRestoredPlatforms.forEach( ( accessory ) =>
@@ -413,14 +404,13 @@ class Cmd4Platform
    discoverDevices( )
    {
       let platform;
-      let log=this.log;
       let accessory;
 
       // loop over the config.json devices and register each one if it has not
       // already been registered.
       this.config.accessories && this.config.accessories.forEach( ( device ) =>
       {
-         log.debug( `Fetching config.json Platform accessories.` );
+         this.log.debug( `Fetching config.json Platform accessories.` );
          this.Service=this.api.hap.Service;
 
          device.name = getAccessoryName( device );
@@ -446,7 +436,7 @@ class Cmd4Platform
                return;
             }
 
-            log.info('Restoring existing accessory from cache:', existingAccessory.displayName);
+            this.log.info('Restoring existing accessory from cache:', existingAccessory.displayName);
 
             // if you need to update the accessory.context then you should run
             // `api.updatePlatformAccessories`. eg.:
@@ -505,7 +495,7 @@ class Cmd4Platform
             // Get the properties for this accessories device type
             let devProperties = CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ];
 
-            log.debug( `Step 2. ${ accessory.displayName }.service = platform.getService( Service.${ devProperties.deviceName }, ${ accessory.subType })` );
+            this.log.debug( `Step 2. ${ accessory.displayName }.service = platform.getService( Service.${ devProperties.deviceName }, ${ accessory.subType })` );
             accessory.service = platform.getService( devProperties.service, accessory.name, accessory.subType );
 
             // Determine which characteristics, if any, will be polled. This
@@ -528,12 +518,12 @@ class Cmd4Platform
             //
             // the accessory does not yet exist, so we need to create it
             //
-            log.info('Adding new platformAccessory:', displayName);
+            this.log.info('Adding new platformAccessory:', displayName);
 
             // Create the new PlatformAccessory
             if ( device.category == undefined )
             {
-               log.debug( `Step 1. platformAccessory = new platformAccessory( ${ displayName }, ${ UUID } )` );
+               this.log.debug( `Step 1. platformAccessory = new platformAccessory( ${ displayName }, ${ UUID } )` );
                platform = new this.api.platformAccessory( displayName, UUID );
 
             } else
@@ -544,18 +534,18 @@ class Cmd4Platform
 
                if ( ! category )
                {
-                  log.error( `Category specified: ${ device.category } is not a valid homebridge category.` );
+                  this.log.error( `Category specified: ${ device.category } is not a valid homebridge category.` );
                   process.exit( 666 );
                }
 
-               log.debug( `Step 1. platformAccessory = new platformAccessory( ${ displayName }, ${ UUID }, ${ category } )` );
+               this.log.debug( `Step 1. platformAccessory = new platformAccessory( ${ displayName }, ${ UUID }, ${ category } )` );
 
                platform = new this.api.platformAccessory( displayName, UUID, category );
             }
 
             platform.Service = this.Service;
 
-            log.info( chalk.magenta( `Configuring platformAccessory: ` ) + `${ device.displayName }` );
+            this.log.info( chalk.magenta( `Configuring platformAccessory: ` ) + `${ device.displayName }` );
             let that = this;
             accessory = new Cmd4Accessory( that.log, device, this.api, [], this );
             accessory.platform = platform
@@ -563,7 +553,7 @@ class Cmd4Platform
             // Put the accessory into its correct collection array.
             this.createdCmd4Accessories.push( accessory );
 
-            log.debug( `Created platformAccessory: ${ accessory.displayName }` );
+            this.log.debug( `Created platformAccessory: ${ accessory.displayName }` );
 
             // Store a copy of the device object in the `accessory.context`
             // the `context` property can be used to store any data about the
@@ -585,12 +575,12 @@ class Cmd4Platform
             // Step 6. this.api.publishExternalAccessories( PLUGIN_NAME, [ this.tvAccessory ] );
             if ( accessory.publishExternally )
             {
-               log.debug( `Step 6. publishExternalAccessories( ${ settings.PLUGIN_NAME }, [ ${accessory.displayName } ] )` );
+               this.log.debug( `Step 6. publishExternalAccessories( ${ settings.PLUGIN_NAME }, [ ${accessory.displayName } ] )` );
 
                this.api.publishExternalAccessories( settings.PLUGIN_NAME, [ platform ] );
 
             } else {
-               log.debug( `Step 6. registerPlatformAccessories( ${ settings.PLUGIN_NAME }, ${ settings.PLATFORM_NAME }, [ ${  accessory.displayName } ] ) `);
+               this.log.debug( `Step 6. registerPlatformAccessories( ${ settings.PLUGIN_NAME }, ${ settings.PLATFORM_NAME }, [ ${  accessory.displayName } ] ) `);
 
                this.api.registerPlatformAccessories( settings.PLUGIN_NAME, settings.PLATFORM_NAME, [ platform ] );
             }
@@ -750,7 +740,7 @@ class Cmd4Platform
                setTimeout( entry.accessory.characteristicPolling.bind(
                   entry.accessory, entry.accessory, entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, entry.interval ), entry.interval );
 
-            if ( entryIndex == settings.arrayOfPollingCharacteristics.length -1 )
+            if ( entryIndex == settings.arrayOfAllStaggeredPollingCharacteristics.length -1 )
                entry.accessory.log.info( `All characteristics are now being polled` );
 
          }, delay );
@@ -776,52 +766,22 @@ class Cmd4Platform
    // the low priority polling.
    startPolling( staggeredStartDelay = 5000, queuedStartDelay = 5000 )
    {
-      let arrayOfPollingCharacteristics = [ ];
-      let queuedArrayOfPollingCharacteristics = [ ];
-
-      // Only Unit testing could possibly have no polls at all.
-      if ( settings.arrayOfPollingCharacteristics.length == 0 )
-      {
-         this.log.debug( ` ! settings.arrayOfPollingCaracteristecs` );
-         return;
-      }
-
-      // Seperate what was meant to be polled into the old staggered method
-      // and the queued method
-      [ arrayOfPollingCharacteristics,
-        queuedArrayOfPollingCharacteristics] = partition(settings.arrayOfPollingCharacteristics, i => i.queueName === constants.DEFAULT_QUEUE_NAME);
-
-      if ( arrayOfPollingCharacteristics.length > 0 )
+      if ( settings.arrayOfAllStaggeredPollingCharacteristics.length > 0 )
       {
          let pollingTimer = setTimeout( ( ) =>
          {
-            this.startStaggeredPolling( arrayOfPollingCharacteristics );
+            this.startStaggeredPolling( settings.arrayOfAllStaggeredPollingCharacteristics );
          }, staggeredStartDelay );
 
          this.pollingTimers.push( pollingTimer );
       }
 
       // Check for any queued characteristics
-      if ( queuedArrayOfPollingCharacteristics.length == 0 )
+      if ( Object.keys( settings.listOfCreatedPriorityQueues ).length == 0 )
       {
          this.log.debug( `No queued polling characteristics` );
          return;
       }
-
-      // Divide the polled characteristics into their respective queue
-      // Coerced to string in case the queue was a number
-      queuedArrayOfPollingCharacteristics.forEach( ( elem ) =>
-      {
-         let queue = settings.listOfCreatedPriorityQueues[ `${ elem.queueName }` ];
-
-         this.log.debug( `Adding ${ elem.accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ elem.accTypeEnumIndex ].type }  elem.timeout: ${ elem.timeout } elem.interval: ${ elem.interval }  to Polled Queue ${ elem.queueName }` );
-         queue.addLowPriorityGetPolledQueueEntry( elem.accessory,
-                                                  elem.accTypeEnumIndex,
-                                                  elem.characteristicString,
-                                                  elem.interval,
-                                                  elem.timeout )
-
-      });
 
       // Start polling of each queue of characteristics
       Object.keys( settings.listOfCreatedPriorityQueues ).forEach( ( queueName ) =>

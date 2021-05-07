@@ -37,7 +37,7 @@ describe('Quick Test of Setup', ( ) =>
 {
    // it('log should be a function', ( ) =>
    // {
-   //    assert.isFunction( this.log, "log is not an function" );
+   //    assert.isFunction( log, "log is not an function" );
    // });
 
    it('Plugin Characteristic should be a function', ( ) =>
@@ -77,10 +77,10 @@ describe('A simple Cmd4Accessory Test', ( ) =>
    {
       let parentInfo = undefined;
 
-      this.log = new Logger( );
-      this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( false );
-      let accessory = new Cmd4Accessory( this.log, config, _api, [ ], parentInfo );
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      let accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
       assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory. Found %s" , accessory );
 
@@ -99,11 +99,11 @@ describe('A simple Cmd4Accessory Test Debbuging enabled', ( ) =>
       let parentInfo = undefined;
 
 
-      this.log = new Logger( );
-      this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( false );
-      this.log.setDebugEnabled( );
-      let accessory = new Cmd4Accessory( this.log, config, _api, [ ], parentInfo );
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( );
+      let accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
       assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory. Found %s" , accessory );
 
@@ -123,10 +123,10 @@ describe('Test Cmd4Accessory variables ', ( ) =>
    {
       let parentInfo = undefined;
 
-      this.log = new Logger( );
-      this.log.setOutputEnabled( false );
-      this.log.setBufferEnabled( );
-      let accessory = new Cmd4Accessory( this.log, config, _api, [ ], parentInfo );
+      let log = new Logger( );
+      log.setOutputEnabled( false );
+      log.setBufferEnabled( );
+      let accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
       assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory. Found %s" , accessory );
 
@@ -149,10 +149,10 @@ describe('Test Cmd4Accessory variables ', ( ) =>
          config.type = CMD4_DEVICE_TYPE_ENUM.properties[index].deviceName;
 
 
-         this.log = new Logger( );
-         this.log.setOutputEnabled( false );
-         this.log.setBufferEnabled( );
-         let accessory = new Cmd4Accessory( this.log, config, _api, [ ], parentInfo );
+         let log = new Logger( );
+         log.setOutputEnabled( false );
+         log.setBufferEnabled( );
+         let accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
          assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory. Found %s" , accessory );
 
@@ -173,10 +173,10 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
    {
       let STORED_DATA_ARRAY = [ ];
 
-      this.log = new Logger( );
-      this.log.setOutputEnabled( false );
-      this.log.setBufferEnabled( );
-      let accessory = new Cmd4Accessory( this.log, config, _api, STORED_DATA_ARRAY );
+      let log = new Logger( );
+      log.setOutputEnabled( false );
+      log.setBufferEnabled( );
+      let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       assert.isArray( accessory.STORED_DATA_ARRAY, "Expected accessory.STORED_DATA_ARRAY to be an Array. Found %s" , typeof accessory.STORED_DATA_ARRAY );
 
@@ -185,10 +185,10 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
    {
       let STORED_DATA_ARRAY = [ ];
 
-      this.log = new Logger( );
-      this.log.setOutputEnabled( false );
-      this.log.setBufferEnabled( );
-      let accessory = new Cmd4Accessory( this.log, config, _api, STORED_DATA_ARRAY );
+      let log = new Logger( );
+      log.setOutputEnabled( false );
+      log.setBufferEnabled( );
+      let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       assert.isArray( accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic, "Expected accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic to be an Array. Found %s" , typeof accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic );
 
@@ -198,10 +198,10 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
    {
       let STORED_DATA_ARRAY = [ ];
 
-      this.log = new Logger( );
-      this.log.setOutputEnabled( false );
-      this.log.setBufferEnabled( );
-      let accessory = new Cmd4Accessory( this.log, config, _api, STORED_DATA_ARRAY );
+      let log = new Logger( );
+      log.setOutputEnabled( false );
+      log.setBufferEnabled( );
+      let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       assert.equal( accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic.length, ACC_EOL, "Expected storedValuesPerCharacteristic to size: %s. Found %s" , ACC_EOL, accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic.length );
 
@@ -210,10 +210,10 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
    {
       let STORED_DATA_ARRAY = [ ];
 
-      this.log = new Logger( );
-      this.log.setOutputEnabled( false );
-      this.log.setBufferEnabled( );
-      new Cmd4Accessory( this.log, config, _api, STORED_DATA_ARRAY );
+      let log = new Logger( );
+      log.setOutputEnabled( false );
+      log.setBufferEnabled( );
+      new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       let accIndex = CMD4_ACC_TYPE_ENUM.On;
 
@@ -231,10 +231,10 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
    {
       let STORED_DATA_ARRAY = [ ];
 
-      this.log = new Logger( );
-      this.log.setOutputEnabled( false );
-      this.log.setBufferEnabled( );
-      let accessory = new Cmd4Accessory( this.log, config, _api, STORED_DATA_ARRAY );
+      let log = new Logger( );
+      log.setOutputEnabled( false );
+      log.setBufferEnabled( );
+      let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       let accIndex = CMD4_ACC_TYPE_ENUM.On;
 
@@ -255,10 +255,10 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
    {
       let STORED_DATA_ARRAY = [ ];
 
-      this.log = new Logger( );
-      this.log.setOutputEnabled( false );
-      this.log.setBufferEnabled( );
-      let accessory = new Cmd4Accessory( this.log, config, _api, STORED_DATA_ARRAY );
+      let log = new Logger( );
+      log.setOutputEnabled( false );
+      log.setBufferEnabled( );
+      let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       let accIndex = CMD4_ACC_TYPE_ENUM.On;
 
@@ -280,10 +280,10 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
    {
       let STORED_DATA_ARRAY = [ ];
 
-      this.log = new Logger( );
-      this.log.setOutputEnabled( false );
-      this.log.setBufferEnabled( );
-      let accessory = new Cmd4Accessory( this.log, config, _api, STORED_DATA_ARRAY );
+      let log = new Logger( );
+      log.setOutputEnabled( false );
+      log.setBufferEnabled( );
+      let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       let accIndex = CMD4_ACC_TYPE_ENUM.On;
 
@@ -303,10 +303,10 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
    {
       let STORED_DATA_ARRAY = [ ];
 
-      this.log = new Logger( );
-      this.log.setOutputEnabled( false );
-      this.log.setBufferEnabled( );
-      let accessory = new Cmd4Accessory( this.log, config, _api, STORED_DATA_ARRAY );
+      let log = new Logger( );
+      log.setOutputEnabled( false );
+      log.setBufferEnabled( );
+      let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       let index = -1;
 
@@ -323,11 +323,16 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
 {
    afterEach( function( )
    {
+      settings.arrayOfAllStaggeredPollingCharacteristics = [ ];
+      settings.listOfCreatedPriorityQueues = { };
+   });
+   afterEach( function( )
+   {
       if (this.currentTest.state == 'failed')
       {
-         if ( settings.arrayOfPollingCharacteristics.length > 0 )
+         if ( settings.arrayOfAllStaggeredPollingCharacteristics.length > 0 )
          {
-            let accessory = settings.arrayOfPollingCharacteristics[0].accessory;
+            let accessory = settings.arrayOfAllStaggeredPollingCharacteristics[0].accessory;
             console.log(`Cancelling timers for FAILED TEST OF ${ accessory.displayName }`);
             Object.keys(accessory.listOfRunningPolls).forEach( (key) =>
             {
@@ -354,11 +359,11 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
                  };
       let STORED_DATA_ARRAY = [ ];
 
-      this.log = new Logger( );
-      this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( false );
-      this.log.setDebugEnabled( true );
-      let accessory = new Cmd4Accessory( this.log, config, _api, STORED_DATA_ARRAY );
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+      let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       assert.isArray( accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic, Cmd4Accessory, "Expected accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic to be an Array. Found %s" , typeof accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic );
 
@@ -378,11 +383,11 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
                  };
       let STORED_DATA_ARRAY = [ ];
 
-      this.log = new Logger( );
-      this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( false );
-      this.log.setDebugEnabled( true );
-      let accessory = new Cmd4Accessory( this.log, config, _api, STORED_DATA_ARRAY );
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+      let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       assert.equal( accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic.length, ACC_EOL, "Expected accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic to size: %s. Found %s" , ACC_EOL, accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic.length );
 
@@ -412,25 +417,26 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
 
       assert.equal( settings.arrayOfPollingCharacteristics.length, 0, `Incorrect number of Initial polling characteristics` );
 
-      this.log = new Logger( );
-      this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( false );
-      this.log.setDebugEnabled( true );
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
 
-      let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
+      this.config = platformConfig.accessories;
       cmd4Platform.discoverDevices( );
 
       let expectedErrOutput1 = `[33mWarning, With Cmd4_Mode set to "Polled" and polling for "CurrentPosition" requested, you also must do polling of "TargetPosition" or things will not function properl`;
 
-      assert.include( this.log.errBuf, expectedErrOutput1 , `expected stderr: ${ this.log.errBuf }` );
+      assert.include( log.errBuf, expectedErrOutput1 , `expected stderr: ${ log.errBuf }` );
 
       done( );
    });
 
-   it( "Test Polling generates log if related characteristic not polled also", function( )
+   it( "Test Polling generates log.if related characteristic not polled also", function( )
    {
       let thermostatConfig =
       {
@@ -450,15 +456,323 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
       let parentInfo = { };
 
 
-      this.log = new Logger( );
-      this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( false);
-      new Cmd4Accessory( this.log, thermostatConfig, _api, [ ], parentInfo );
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      new Cmd4Accessory( log, thermostatConfig, _api, [ ], parentInfo );
 
       let expectedErrOutput1 = `[33mWarning, With Cmd4_Mode set to "Polled" and polling for "CurrentTemperature" requested, you also must do polling of "TargetTemperature" or things will not function properly`;
 
-      assert.equal( this.log.logBuf, "", ` cmd4Accessory output expected: "" received: ${ this.log.logBuf }` );
-      assert.include( this.log.errBuf, expectedErrOutput1, ` cmd4Accessory stderr output expected: "" received: ${ this.log.errBuf }` );
+      assert.equal( log.logBuf, "", ` cmd4Accessory output expected: "" received: ${ log.logBuf }` );
+      assert.include( log.errBuf, expectedErrOutput1, ` cmd4Accessory stderr output expected: "" received: ${ log.errBuf }` );
+
+   });
+
+   it( "Test Polling generates log for linked accessory if related characteristic not polled also", function( )
+   {
+      let thermostatConfig =
+      {
+         Type:                        "Thermostat",
+         Name:                        "Thermostat",
+         Cmd4_Mode:                   "Polled",
+         DisplayName:                 "Thermostat",
+         TemperatureDisplayUnits:     "CELSIUS",
+         Active:                      "Inactive",
+         CurrentTemperature:           20.0,
+         TargetTemperature:            20.0,
+         LinkedTypes:
+         {
+            Type:                        "Thermostat",
+            Name:                        "Linked_Thermostat",
+            Cmd4_Mode:                   "Polled",
+            DisplayName:                 "Linked_Thermostat",
+            TemperatureDisplayUnits:     "CELSIUS",
+            Active:                      "Inactive",
+            CurrentTemperature:           20.0,
+            TargetTemperature:            20.0,
+            CurrentHeatingCoolingState:   0,
+            TargetHeatingCoolingState:    0,
+            Polling: [{"characteristic": "currentTemperature", "interval": 60, "timeout":2000}],
+            State_cmd: "./test/echoScripts/echo_quoted0"
+         },
+         CurrentHeatingCoolingState:   0,
+         TargetHeatingCoolingState:    0,
+         Polling: [{"characteristic": "currentTemperature", "interval": 60, "timeout":2000},
+                   {"characteristic": "targetTemperature", "interval": 60, "timeout":2000}],
+         State_cmd: "./test/echoScripts/echo_quoted0"
+      };
+      let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+      new Cmd4Accessory( log, thermostatConfig, _api, [ ], parentInfo );
+
+      let expectedOutput1 = `Creating linked accessories for: Thermostat`;
+      let expectedErrOutput1 = `[33mWarning, With Cmd4_Mode set to "Polled" and polling for "CurrentTemperature" requested, you also must do polling of "TargetTemperature" or things will not function properly`;
+
+      assert.include( log.logBuf, expectedOutput1, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.errBuf, expectedErrOutput1, ` cmd4Accessory stderr output expected: "" received: ${ log.errBuf }` );
+
+   });
+
+   it( "Test Polling generates log for Added accessory if related characteristic not polled also", function( )
+   {
+      let platformConfig=
+      {
+         Type:                        "Thermostat",
+         Name:                        "Thermostat",
+         Cmd4_Mode:                   "Polled",
+         DisplayName:                 "Thermostat",
+         TemperatureDisplayUnits:     "CELSIUS",
+         Active:                      "Inactive",
+         CurrentTemperature:           20.0,
+         TargetTemperature:            20.0,
+         CurrentHeatingCoolingState:   0,
+         TargetHeatingCoolingState:    0,
+         Polling: [{ characteristic: "CurrentTemperature" },
+                   { characteristic: "TargetTemperature" }
+                  ],
+         State_cmd: "./test/echoScripts/echo_quoted0",
+         accessories: [
+         {
+            Accessory: "Cmd4",
+            Cmd4_Mode: "Polled",
+            StatusMsg: true,
+            Type: "GarageDoorOpener",
+            DisplayName: "StandaloneDoorOpener",
+            Name: "StandaloneDoorOpener",
+            CurrentDoorState: "CLOSED",
+            TargetDoorState: "CLOSED",
+            ObstructionDetected: "1",
+            Polling: [ { characteristic: "CurrentDoorState" },
+                    // { characteristic: "TargetDoorState" },
+                       { characteristic: "ObstructionDetected" }
+                     ],
+            State_cmd: "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         }]
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
+
+      let expectedOutput1 = `[34mCreating Platform Accessory type for : StandaloneDoorOpener`;
+      let expectedOutput2 = `[90mCharacteristic polling for: StandaloneDoorOpener`;
+      let expectedOutput3 = `[90mCreated platformAccessory: StandaloneDoorOpener`;
+      let expectedErrOutput1 = `[33mWarning, With Cmd4_Mode set to "Polled" and polling for "CurrentDoorState" requested, you also must do polling of "TargetDoorState" or things will not function properly`;
+
+      assert.include( log.logBuf, expectedOutput1, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, expectedOutput2, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, expectedOutput3, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+
+      assert.include( log.errBuf, expectedErrOutput1, ` cmd4Accessory stderr output expected: "" received: ${ log.errBuf }` );
+
+   });
+
+
+   it( "Test Polling generates log for Standalone accessory if related characteristic not polled also", function( )
+   {
+      let platformConfig =
+      {
+         accessories: [
+         {
+            Accessory: "Cmd4",
+            Cmd4_Mode: "Polled",
+            StatusMsg: true,
+            Type: "GarageDoorOpener",
+            DisplayName: "StandaloneDoorOpener",
+            Name: "StandaloneDoorOpener",
+            CurrentDoorState: "CLOSED",
+            TargetDoorState: "CLOSED",
+            ObstructionDetected: "1",
+            Polling: [ { characteristic: "CurrentDoorState" },
+                    // { characteristic: "TargetDoorState" },
+                       { characteristic: "ObstructionDetected" }
+                     ],
+            State_cmd: "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         }],
+         platforms: [
+         {
+            Platform: "Cmd4",
+            OutputConstants: false,
+            RestartRecover: true,
+            Cmd4_Mode: "Always",
+            Accessories: [
+            {
+               Type:                        "Thermostat",
+               Name:                        "Thermostat",
+               Cmd4_Mode:                   "Polled",
+               DisplayName:                 "Thermostat",
+               TemperatureDisplayUnits:     "CELSIUS",
+               Active:                      "Inactive",
+               CurrentTemperature:           20.0,
+               TargetTemperature:            20.0,
+               CurrentHeatingCoolingState:   0,
+               TargetHeatingCoolingState:    0,
+               Polling: [{ characteristic: "CurrentTemperature" },
+                         { characteristic: "TargetTemperature" }
+                        ],
+               State_cmd: "./test/echoScripts/echo_quoted0"
+           }]
+         }]
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
+
+      let expectedOutput1 = `[34mCreating Platform Accessory type for : StandaloneDoorOpener`;
+      let expectedOutput2 = `[90mCharacteristic polling for: StandaloneDoorOpener`;
+      let expectedOutput3 = `[90mCreated platformAccessory: StandaloneDoorOpener`;
+      let expectedErrOutput1 = `[33mWarning, With Cmd4_Mode set to "Polled" and polling for "CurrentDoorState" requested, you also must do polling of "TargetDoorState" or things will not function properly`;
+
+
+      assert.include( log.logBuf, expectedOutput1, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, expectedOutput2, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, expectedOutput3, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.errBuf, expectedErrOutput1, ` cmd4Accessory stderr output expected: "" received: ${ log.errBuf }` );
+
+   });
+
+   it( `Test that adding Target message is generated for related "Polled"`, function( )
+   {
+      let platformConfig =
+      {
+         accessories: [
+         {
+            Accessory: "Cmd4",
+            Cmd4_Mode: "Polled",
+            StatusMsg: true,
+            Type: "GarageDoorOpener",
+            DisplayName: "StandaloneDoorOpener",
+            Name: "StandaloneDoorOpener",
+            CurrentDoorState: "CLOSED",
+            TargetDoorState: "CLOSED",
+            ObstructionDetected: "1",
+            Polling: [ { characteristic: "CurrentDoorState" },
+                       { characteristic: "TargetDoorState" },
+                       { characteristic: "ObstructionDetected" }
+                     ],
+            State_cmd: "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         }]
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
+
+      let expectedOutput1 = `[34mCreating Platform Accessory type for : StandaloneDoorOpener`;
+      let expectedOutput2 = `[90mCharacteristic polling for: StandaloneDoorOpener`;
+      let expectedOutput3 = `[90mCreated platformAccessory: StandaloneDoorOpener`;
+      let expectedOutput4 = `[33mAdding getCachedValue for StandaloneDoorOpener characteristic: Name`;
+
+      let expectedOutput5 = `[33mAdding getValue for StandaloneDoorOpener characteristic: TargetDoorState`;
+      let expectedOutput6 = `[33mAdding setValue for StandaloneDoorOpener characteristic: TargetDoorState`;
+
+      let expectedOutput7 = `[33mAdding getValue for StandaloneDoorOpener characteristic: CurrentDoorState`;
+
+      let expectedOutput8 = `[33mAdding getValue for StandaloneDoorOpener characteristic: ObstructionDetected`;
+
+
+      assert.include( log.logBuf, expectedOutput1, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, expectedOutput2, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, expectedOutput3, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, expectedOutput4, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, expectedOutput5, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, expectedOutput6, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, expectedOutput7, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, expectedOutput8, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.equal( log.errBuf, "", ` cmd4Accessory stderr output Unexpected stderr: ${ log.errBuf }` );
+
+   });
+
+   it( `Test that adding "queued" Target message is generated for related "Polled"`, function( )
+   {
+      let platformConfig =
+      {
+         accessories: [
+         {
+            Type:                        "Thermostat",
+            Name:                        "Thermostat",
+            Cmd4_Mode:                   "Polled",
+            DisplayName:                 "Thermostat",
+            TemperatureDisplayUnits:     "CELSIUS",
+            queueTypes: [{queue: "A", queueType: "WoRm"}],
+            queue:                       "A",
+            CurrentTemperature:           20.0,
+            TargetTemperature:            20.0,
+            CurrentHeatingCoolingState:   0,
+            TargetHeatingCoolingState:    0,
+            Polling: [{ characteristic: "CurrentTemperature" },
+                      { characteristic: "TargetTemperature" },
+                      { characteristic: "CurrentHeatingCoolingState" },
+                      { characteristic: "TargetHeatingCoolingState" }
+                     ],
+            State_cmd: "./test/echoScripts/echo_quoted0"
+        }]
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( true );
+      log.setDebugEnabled( true );
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
+      console.log("WEWEWE %s", log.logBuf);
+
+      let expectedOutput1 = `[34mCreating Platform Accessory type for : Thermostat`;
+      let expectedOutput2 = `[90mCharacteristic polling for: Thermostat`;
+      let expectedOutput3 = `[90mCreated platformAccessory: Thermostat`;
+      let expectedOutput4 = `[33mAdding getCachedValue for Thermostat characteristic: Name`;
+
+      let expectedOutput5 = `[33mAdding priorityGetValue for Thermostat characteristic: TargetTemperature`;
+      let expectedOutput6 = `[33mAdding prioritySetValue for Thermostat characteristic: TargetTemperature`;
+
+      let expectedOutput7 = `[33mAdding priorityGetValue for Thermostat characteristic: CurrentTemperature`;
+
+      let expectedOutput8 = `[33mAdding priorityGetValue for Thermostat characteristic: TargetHeatingCoolingState`;
+      let expectedOutput9 = `[33mAdding prioritySetValue for Thermostat characteristic: TargetHeatingCoolingState`;
+
+      let expectedOutput10 = `[33mAdding priorityGetValue for Thermostat characteristic: CurrentHeatingCoolingState`;
+
+      assert.include( log.logBuf, expectedOutput1, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, expectedOutput2, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, expectedOutput3, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, expectedOutput4, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, expectedOutput5, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, expectedOutput6, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, expectedOutput7, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, expectedOutput8, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, expectedOutput9, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, expectedOutput10, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.equal( log.errBuf, "", ` cmd4Accessory stderr output Unexpected stderr: ${ log.errBuf }` );
 
    });
 

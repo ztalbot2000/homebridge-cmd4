@@ -21,10 +21,10 @@ let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
 let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, _api.hap.Service, _api.hap.Characteristic, _api.hap.Categories );
 
 // Taken from https://stackoverflow.com/questions/11731072/dividing-an-array-by-filter-function
-function partition(array, predicate)
-{
-   return array.reduce( ( acc, item ) => ( acc[+!predicate( item )].push( item ), acc ), [ [], [] ] );
-}
+//function partition(array, predicate)
+//{
+//   return array.reduce( ( acc, item ) => ( acc[+!predicate( item )].push( item ), acc ), [ [], [] ] );
+//}
 
 // ******** QUICK TEST CMD4_ACC_TYPE_ENUM *************
 describe( "Quick Test of CMD4_DEVICE_TYPE_ENUM", ( ) =>
@@ -57,13 +57,18 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
       process.exit.restore( );
    });
 
+   beforeEach(function( )
+   {
+      settings.arrayOfAllStaggeredPollingCharacteristics = [ ];
+      settings.listOfCreatedPriorityQueues = { };
+   });
    afterEach(function( )
    {
       if (this.currentTest.state == 'failed')
       {
-         if ( settings.arrayOfPollingCharacteristics.length > 0 )
+         if ( settings.arrayOfAllStaggeredPollingCharacteristics.length > 0 )
          {
-            let accessory = settings.arrayOfPollingCharacteristics[0].accessory;
+            let accessory = settings.arrayOfAllStaggeredPollingCharacteristics[0].accessory;
             console.log(`Cancelling timers for FAILED TEST OF ${ accessory.displayName }`);
             Object.keys(accessory.listOfRunningPolls).forEach( (key) =>
             {
@@ -73,9 +78,6 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
          }
       }
 
-      // Put back the array of Polling Characteristics
-      settings.listOfCreatedPriorityQueues = { };
-      settings.arrayOfPollingCharacteristics = [ ];
    });
 
    it( "Test if Cmd4Platform exists", function ( )
@@ -117,8 +119,6 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
          ]
       }
 
-      assert.equal( settings.arrayOfPollingCharacteristics.length, 0, `Incorrect number of Initial polling characteristics` );
-
       this.log = new Logger( );
       this.log.setBufferEnabled( );
       this.log.setOutputEnabled( false );
@@ -156,8 +156,6 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
             }
          ]
       }
-
-      assert.equal( settings.arrayOfPollingCharacteristics.length, 0, `Incorrect number of Initial polling characteristics` );
 
       this.log = new Logger( );
       this.log.setBufferEnabled( );
@@ -209,8 +207,6 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
          ]
       }
 
-      assert.equal( settings.arrayOfPollingCharacteristics.length, 0, `Incorrect number of Initial polling characteristics` );
-
       this.log = new Logger( );
       this.log.setBufferEnabled( );
       this.log.setOutputEnabled( false );
@@ -253,8 +249,6 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
             }
          ]
       }
-
-      assert.equal( settings.arrayOfPollingCharacteristics.length, 0, `Incorrect number of Initial polling characteristics` );
 
       this.log = new Logger( );
       this.log.setBufferEnabled( );
@@ -318,8 +312,6 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
          ]
       }
 
-      assert.equal( settings.arrayOfPollingCharacteristics.length, 0, `Incorrect number of Initial polling characteristics` );
-
       this.log = new Logger( );
       this.log.setBufferEnabled( );
       this.log.setOutputEnabled( false );
@@ -367,8 +359,6 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
          ]
       }
 
-      assert.equal( settings.arrayOfPollingCharacteristics.length, 0, `Incorrect number of Initial polling characteristics` );
-
       this.log = new Logger( );
       this.log.setBufferEnabled( );
       this.log.setOutputEnabled( false );
@@ -382,14 +372,15 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
 
-      assert.equal( settings.arrayOfPollingCharacteristics.length, 3, `Incorret number of polling characteristics` );
+      assert.equal( Object.keys( cmd4Accessory.listOfPollingCharacteristics ).length, 3, `Incorret number of polling characteristics` );
 
       assert.equal( cmd4Accessory.timeout, 12345, `Timeout was not passed down to accessory` );
       assert.equal( cmd4Accessory.interval, 12000, `Interval was not passed down to accessory` );
       assert.equal( cmd4Accessory.stateChangeResponseTime, 18000, `stateChangeResponseTime was not passed down to accessory` );
 
-      settings.arrayOfPollingCharacteristics.forEach( ( entry ) =>
+      Object.keys( cmd4Accessory.listOfPollingCharacteristics ).forEach( ( key ) =>
       {
+         let entry = cmd4Accessory.listOfPollingCharacteristics[ key ];
          assert.equal( entry.timeout, 12345, `Timeout was not passed down to polling entry` );
          assert.equal( entry.interval, 12000, `Interval was not passed down to polling entry` );
          assert.equal( entry.stateChangeResponseTime, 18000, `stateChangeResponseTime was not passed down to polling entry` );
@@ -425,8 +416,6 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
          ]
       }
 
-      assert.equal( settings.arrayOfPollingCharacteristics.length, 0, `Incorrect number of Initial polling characteristics` );
-
       this.log = new Logger( );
       this.log.setBufferEnabled( );
       this.log.setOutputEnabled( false );
@@ -440,14 +429,15 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
 
-      assert.equal( settings.arrayOfPollingCharacteristics.length, 3, `Incorret number of polling characteristics` );
+      assert.equal( Object.keys( cmd4Accessory.listOfPollingCharacteristics ).length, 3, `Incorret number of polling characteristics` );
 
       assert.equal( cmd4Accessory.timeout, 12345, `Timeout was not passed down to accessory` );
       assert.equal( cmd4Accessory.interval, 12000, `Interval was not passed down to accessory` );
       assert.equal( cmd4Accessory.stateChangeResponseTime, constants.MEDIUM_STATE_CHANGE_RESPONSE_TIME, `stateChangeResponseTime was not passed from CMD4_DEVICE_TYPE_ENUM` );
 
-      settings.arrayOfPollingCharacteristics.forEach( ( entry ) =>
+      Object.keys( cmd4Accessory.listOfPollingCharacteristics ).forEach( ( key ) =>
       {
+         let entry = cmd4Accessory.listOfPollingCharacteristics[ key ];
          assert.equal( entry.timeout, 12345, `Timeout was not passed down to polling entry` );
          assert.equal( entry.interval, 12000, `Interval was not passed down to polling entry` );
          assert.equal( entry.stateChangeResponseTime, constants.MEDIUM_STATE_CHANGE_RESPONSE_TIME, `stateChangeResponseTime was not passed from CMD4_DEVICE_TYPE_ENUM` );
@@ -483,8 +473,6 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
          ]
       }
 
-      assert.equal( settings.arrayOfPollingCharacteristics.length, 0, `Incorrect number of Initial polling characteristics` );
-
       this.log = new Logger( );
       this.log.setBufferEnabled( );
       this.log.setOutputEnabled( false );
@@ -498,14 +486,15 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
 
-      assert.equal( settings.arrayOfPollingCharacteristics.length, 3, `Incorret number of polling characteristics` );
+      assert.equal( Object.keys( cmd4Accessory.listOfPollingCharacteristics ).length, 3, `Incorret number of polling characteristics` );
 
       assert.equal( cmd4Accessory.timeout, 12345, `Timeout was not passed down to accessory` );
       assert.equal( cmd4Accessory.interval, 12000, `Interval was not passed down to accessory` );
       assert.equal( cmd4Accessory.stateChangeResponseTime, constants.MEDIUM_STATE_CHANGE_RESPONSE_TIME, `stateChangeResponseTime was not passed from CMD4_DEVICE_TYPE_ENUM` );
 
-      settings.arrayOfPollingCharacteristics.forEach( ( entry ) =>
+      Object.keys( cmd4Accessory.listOfPollingCharacteristics ).forEach( ( key ) =>
       {
+         let entry = cmd4Accessory.listOfPollingCharacteristics[ key ];
          assert.equal( entry.timeout, 12345, `Timeout was not passed down to polling entry` );
          assert.equal( entry.interval, 12000, `Interval was not passed down to polling entry` );
          assert.equal( entry.stateChangeResponseTime, constants.MEDIUM_STATE_CHANGE_RESPONSE_TIME, `stateChangeResponseTime was not passed from CMD4_DEVICE_TYPE_ENUM` );
@@ -550,8 +539,6 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
          ]
       }
 
-      assert.equal( settings.arrayOfPollingCharacteristics.length, 0, `Incorrect number of Initial polling characteristics` );
-
       this.log = new Logger( );
       this.log.setBufferEnabled( );
       this.log.setOutputEnabled( false );
@@ -563,35 +550,23 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
 
       assert.equal( cmd4Platform.createdCmd4Accessories.length, 2, ` Cmd4Platform did not create the cmd4Accessory` );
 
-      assert.equal( settings.arrayOfPollingCharacteristics.length, 4, `Incorret number of polling characteristics` );
+      let cmd4Accessory1 = cmd4Platform.createdCmd4Accessories[0];
+      let cmd4Accessory2 = cmd4Platform.createdCmd4Accessories[1];
 
-      cmd4Platform.startPolling( 5000, 5000 );
+      assert.equal( Object.keys( cmd4Accessory1.listOfPollingCharacteristics ).length, 1, `Incorret number of polling characteristics for accessory 1` );
+      assert.equal( Object.keys( cmd4Accessory2.listOfPollingCharacteristics ).length, 3, `Incorret number of polling characteristics for accessory 2` );
 
-      cmd4Platform.pollingTimers.forEach( ( timer ) =>
-      {
-         clearTimeout( timer );
-      });
+      assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 1, `Incorret number of staggered characteristics` );
 
       let numberOfQueues = Object.keys( settings.listOfCreatedPriorityQueues ).length;
 
       assert.equal( numberOfQueues, 1, `Incorrect number of polling queues` );
-
       let queue = settings.listOfCreatedPriorityQueues[ "A" ];
 
       expect( queue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PriorityPollingQueue" );
 
       // Low priority queues are continious, make sure it is put back
       assert.equal( queue.lowPriorityQueue.length, 3, `low priority queue should init to size 3` );
-
-      let one = [];
-      let two = [];
-      [ one,
-        two] = partition(settings.arrayOfPollingCharacteristics, i => i.queueName === constants.DEFAULT_QUEUE_NAME);
-
-      // Check split is correct.
-      assert.equal( one.length, 1, `partition of inclusion should be size 1` );
-      assert.equal( two.length, 3, `partition of exclusion should be size 3` );
-
 
       done( );
    });

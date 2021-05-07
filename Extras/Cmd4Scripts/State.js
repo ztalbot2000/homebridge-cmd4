@@ -2149,7 +2149,7 @@ switch( io )
          {
             c = readData( device, characteristic );
 
-            if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             // UUID: 00000024-0000-1000-8000-0026BB765291
             // Type: public.hap.characteristic.obstruction-detected

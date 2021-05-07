@@ -21,7 +21,6 @@ const { addQueue, parseAddQueueTypes, queueExists } = require( "./Cmd4PriorityPo
 
 
 let createAccessorysInformationService = require( "./utils/createAccessorysInformationService" );
-let isRelatedTargetCharacteristicInSameDevice = require( "./utils/isRelatedTargetCharacteristicInSameDevice" );
 
 let ucFirst = require( "./utils/ucFirst" );
 let lcFirst = require( "./utils/lcFirst" );
@@ -96,7 +95,12 @@ class Cmd4Accessory
 
       // Instead of polling per accessory, allow the config file to be polled per characteristic.
       this.listOfRunningPolls = { };
-      this.pollingStarted = false;
+
+      // Used to determine missing related characteristics and
+      // to determine if the related characteristic is also polled.
+      this.listOfPollingCharacteristics = { };
+
+      // An extra flag
       this.ServiceCreated = false;
 
       // DisplayName and/or Name must be defined.
@@ -592,14 +596,7 @@ class Cmd4Accessory
          //   not do that...
          if ( self.cmd4Mode == constants.CMD4_MODE_CACHED || self.cmd4Mode == constants.CMD4_MODE_DEMO ||
               ( self.cmd4Mode == constants.CMD4_MODE_POLLED &&
-                settings.arrayOfPollingCharacteristics.filter( entry => entry.accessory.UUID == self.UUID &&
-                                                                        entry.accTypeEnumIndex == relatedCurrentAccTypeEnumIndex
-                                                             ).length > 0  &&
-                isRelatedTargetCharacteristicInSameDevice( self.typeIndex,
-                                                           accTypeEnumIndex,
-                                                           CMD4_DEVICE_TYPE_ENUM,
-                                                           CMD4_ACC_TYPE_ENUM
-                                                         ) != accTypeEnumIndex
+                self.listOfPollingCharacteristics[ relatedCurrentAccTypeEnumIndex ]
               )
             )
          {
@@ -691,24 +688,32 @@ class Cmd4Accessory
          {
            let relatedCurrentAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].relatedCurrentAccTypeEnumIndex;
            if ( relatedCurrentAccTypeEnumIndex != null &&
-                 settings.arrayOfPollingCharacteristics.filter( entry => entry.accessory.UUID == self.UUID &&
-                                                                         entry.accTypeEnumIndex == relatedCurrentAccTypeEnumIndex
-                                                              ).length > 0  &&
-                 isRelatedTargetCharacteristicInSameDevice(
-                     self.typeIndex,
-                     accTypeEnumIndex,
-                     CMD4_DEVICE_TYPE_ENUM,
-                     CMD4_ACC_TYPE_ENUM
-                 ) == relatedCurrentAccTypeEnumIndex
-             )
-            {
+                self.listOfPollingCharacteristics[ relatedCurrentAccTypeEnumIndex ]
+              )
+
+           {
                responded = true;
 
-               let relatedCharacteristic = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].characteristic;
+               let relatedCurrentCharacteristic = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].characteristic;
+               let relatedCurrentCharacteristicString = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].type;
+
                setTimeout( ( ) => {
-                  self.service.getCharacteristic( relatedCharacteristic ).getValue( );
-                  callback( 0 );
+                  self.log.debug( `Proccessing related characteristic ${ relatedCurrentCharacteristicString }` );
+
+                  self.getValue( relatedCurrentAccTypeEnumIndex, relatedCurrentCharacteristicString, timeout, function ( error, properValue) {
+                  {
+                     if ( error == 0 )
+                     {
+                        self.log.debug( chalk.blue( `characteristicPolling Updating ${ self.displayName } ${ relatedCurrentCharacteristicString }` ) + ` ${ properValue }, responseTime: ${ stateChangeResponseTime }` );
+
+                        self.service.getCharacteristic( relatedCurrentCharacteristic ).updateValue( properValue );
+                     }
+
+                  }});
                }, stateChangeResponseTime );
+
+               callback( 0 );
+               return;
             }
          }
 
@@ -1243,9 +1248,7 @@ class Cmd4Accessory
                         accessory.cmd4Mode == constants.CMD4_MODE_DEMO ||
                         accessory.cmd4Mode == constants.CMD4_MODE_FULLYPOLLED ||
                         accessory.cmd4Mode == constants.CMD4_MODE_POLLED &&
-                        settings.arrayOfPollingCharacteristics.filter( entry => entry.accessory.UUID == accessory.UUID &&
-                                                                               entry.accTypeEnumIndex == accTypeEnumIndex
-                                                                    ).length == 0
+                        accessory.listOfPollingCharacteristics[ accTypeEnumIndex ] == undefined
                       )
                    {
                       this.log.debug( chalk.yellow( `Adding getCachedValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ` ) );
@@ -1300,14 +1303,11 @@ class Cmd4Accessory
                    //                      also set.
                    // 3 -> FullyPolled -   Same as Polled, except relatedCurrent characteristics are
                    //                      not set to the same value, like Cmd2
-
                    if ( accessory.cmd4Mode == constants.CMD4_MODE_CACHED ||
                         accessory.cmd4Mode == constants.CMD4_MODE_DEMO ||
                         ( accessory.cmd4Mode == constants.CMD4_MODE_POLLED ||
                           accessory.cmd4Mode == constants.CMD4_MODE_FULLYPOLLED ) &&
-                        settings.arrayOfPollingCharacteristics.filter( entry => entry.accessory.UUID == accessory.UUID &&
-                                                                                entry.accTypeEnumIndex == accTypeEnumIndex
-                                                                     ).length == 0
+                        accessory.listOfPollingCharacteristics[ accTypeEnumIndex ] == undefined
                       )
                    {
                       this.log.debug( chalk.yellow( `Adding setCachedValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ` ) );
@@ -2373,21 +2373,18 @@ class Cmd4Accessory
          timeout = accessory.interval;
 
       // Finally the polled setting
-      let pollingEntrys = settings.arrayOfPollingCharacteristics.filter(
-           entry => entry.accessory.UUID == accessory.UUID &&
-           entry.accTypeEnumIndex == accTypeEnumIndex );
-
+      let pollingEntry = accessory.listOfPollingCharacteristics[ accTypeEnumIndex ];
       // There should only be one, if any
-      if ( pollingEntrys.length > 0 )
+      if ( pollingEntry != undefined )
       {
-         if ( pollingEntrys[0].timeout )
-            timeout = pollingEntrys[0].timeout;
-         if ( pollingEntrys[0].interval )
-            interval = pollingEntrys[0].interval;
-         if ( pollingEntrys[0].stateChangeResponseTime )
-            stateChangeResponseTime = pollingEntrys[0].stateChangeResponseTime;
-         if ( pollingEntrys[0].queueName )
-            queueName = pollingEntrys[0].queueName;
+         if ( pollingEntry.timeout )
+            timeout = pollingEntry.timeout;
+         if ( pollingEntry.interval )
+            interval = pollingEntry.interval;
+         if ( pollingEntry.stateChangeResponseTime )
+            stateChangeResponseTime = pollingEntry.stateChangeResponseTime;
+         if ( pollingEntry.queueName )
+            queueName = pollingEntry.queueName;
       }
 
       return { [ constants.TIMEOUT_lv ]: timeout, [ constants.INTERVAL_lv ]: interval, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.QUEUE_NAME_lv ]: queueName };
@@ -2548,8 +2545,25 @@ class Cmd4Accessory
                }
 
                this.log.debug( `Setting up accessory: ${ accessory.displayName } for polling of: ${ characteristicString } timeout: ${ timeout } interval: ${ interval } queueName: "${ queueName }"` );
+                  let record = { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: interval, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.QUEUE_NAME_lv ]: this.queueName };
 
-               settings.arrayOfPollingCharacteristics.push( { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: interval, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.QUEUE_NAME_lv ]: this.queueName } );
+               // Used to determine missing related characteristics and
+               // to determine if the related characteristic is also polled.
+               this.listOfPollingCharacteristics[ accTypeEnumIndex ] = record;
+               if ( this.queueName == constants.DEFAULT_QUEUE_NAME )
+               {
+                  settings.arrayOfAllStaggeredPollingCharacteristics.push( record );
+               } else
+               {
+                     let queue = settings.listOfCreatedPriorityQueues[ `${ record.queueName }` ];
+                     queue.addLowPriorityGetPolledQueueEntry(
+                        record.accessory,
+                        record.accTypeEnumIndex,
+                        record.characteristicString,
+                        record.interval,
+                        record.timeout )
+
+               }
 
             });
             break;
@@ -2569,9 +2583,28 @@ class Cmd4Accessory
                CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ].defaultPollingCharacteristics.forEach( defaultPollingAccTypeEnumIndex =>
                {
                   let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ defaultPollingAccTypeEnumIndex ].type;
-                  settings.arrayOfPollingCharacteristics.push( { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: defaultPollingAccTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: accessory.interval, [ constants.TIMEOUT_lv ]: accessory.timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, [ constants.QUEUE_NAME_lv ]: constants.DEFAULT_QUEUE_NAME } );
-               });
+                     let record = { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: defaultPollingAccTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: accessory.interval, [ constants.TIMEOUT_lv ]: accessory.timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, [ constants.QUEUE_NAME_lv ]: constants.DEFAULT_QUEUE_NAME };
 
+                  // Used to determine missing related characteristics and
+                  // to determine if the related characteristic is also polled.
+                  this.listOfPollingCharacteristics[ record.accTypeEnumIndex ] = record;
+
+                  if ( this.queueName == constants.DEFAULT_QUEUE_NAME )
+                  {
+                     settings.arrayOfAllStaggeredPollingCharacteristics.push( record );
+                  } else
+                  {
+                     let queue = settings.listOfCreatedPriorityQueues[ `${ record.queueName }` ];
+
+                     this.log.debug( `Adding ${ record.accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ record.accTypeEnumIndex ].type }  record.timeout: ${ record.timeout } record.interval: ${ record.interval }  to Polled Queue ${ record.queueName }` );
+                     queue.addLowPriorityGetPolledQueueEntry(
+                        record.accessory,
+                        record.accTypeEnumIndex,
+                        record.characteristicString,
+                        record.interval,
+                        record.timeout )
+                  }
+               });
             }
 
             break;
@@ -2583,54 +2616,23 @@ class Cmd4Accessory
          }
       }
 
-      // Over what has asked to be polled for this device
-      let accessorysPolledCharacteristics = settings.arrayOfPollingCharacteristics.filter( entry => entry.accessory.UUID === accessory.UUID );
-
-      accessorysPolledCharacteristics.forEach( ( entry ) =>
+      for( let accTypeEnumIndex in this.listOfPollingCharacteristics )
       {
+         this.log.debug("CHECKING CHARACTERISTIC: %s %s", accTypeEnumIndex, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type );
          // Look to see if currently polled characteristics are like "Current*" and have
          // a related characteristic like "Target*"
-         // Note: By default it will be put their automatically as this message says
-         //     **** Adding required characteristic TargetTemperature for Thermostat
-         //          Not defining a required characteristic can be problematic
-         //     Except for Optional "Current*" "Target*" characteristics which
-         //     isRelatedTargetCharacteristicInSameDevice does resolve.
-         let relatedTargetAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].relatedTargetAccTypeEnumIndex;
+         let relatedTargetAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].relatedTargetAccTypeEnumIndex;
 
-         if ( relatedTargetAccTypeEnumIndex != null &&
-              isRelatedTargetCharacteristicInSameDevice(
-                  this.typeIndex,
-                  entry.accTypeEnumIndex,
-                  CMD4_DEVICE_TYPE_ENUM,
-                  CMD4_ACC_TYPE_ENUM
-              ) == relatedTargetAccTypeEnumIndex )
+         if ( relatedTargetAccTypeEnumIndex != null )
          {
             // Check that the characteristic like "Target*" is also requested to be polled
-            if ( accessorysPolledCharacteristics.filter( subEntry => subEntry.accessory.UUID == accessory.UUID &&
-                                                                     subEntry.accTypeEnumIndex == relatedTargetAccTypeEnumIndex
-                              ).length == 0
-               )
+            if ( this.listOfPollingCharacteristics[ relatedTargetAccTypeEnumIndex ] == undefined )
             {
+               let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
                let relatedCharacteristicString = CMD4_ACC_TYPE_ENUM.properties[ relatedTargetAccTypeEnumIndex ].type;
-               this.log.warn( `Warning, With ${ constants.CMD4_MODE } set to "${ this.cmd4Mode }" and polling for "${ entry.characteristicString }" requested, you also must do polling of "${ relatedCharacteristicString }" or things will not function properly` );
+               this.log.warn( `Warning, With Cmd4_Mode set to "${ this.cmd4Mode }" and polling for "${ characteristicString }" requested, you also must do polling of "${ relatedCharacteristicString }" or things will not function properly` );
             }
          }
-      });
-
-      // check other characteristics have the correct queue name.
-      // Possibly could happen if queueuTypes is defined out of order.
-      if ( this.queueName != constants.DEFAULT_QUEUE_NAME )
-      {
-         // This check would find characteristics that are polled, but missing the queueName
-         accessorysPolledCharacteristics.forEach( ( entry ) =>
-         {
-            if ( entry.queueName != this.queueName )
-            {
-               this.log.error( chalk.red( `Error` ) + `: For Priority Queue Polling all polled characteristics must be in the same polling queue: "${ this.queueName }". Missing ${ entry.characteristicString }` );
-               process.exit( 401 );
-            }
-         });
-
       }
    }
 

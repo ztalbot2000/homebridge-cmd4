@@ -63,13 +63,18 @@ describe( "Quick Test load of CMD4_DEVICE_TYPE_ENUM", ( ) =>
 describe( "Testing Cmd4Accessory", function( )
 {
 
+   beforeEach( function( )
+   {
+      settings.arrayOfAllStaggeredPollingCharacteristics = [ ];
+      settings.listOfCreatedPriorityQueues = { };
+   });
    afterEach( function( )
    {
       if (this.currentTest.state == 'failed')
       {
-         if ( settings.arrayOfPollingCharacteristics.length > 0 )
+         if ( settings.arrayOfAllStaggeredPollingCharacteristics.length > 0 )
          {
-            let accessory = settings.arrayOfPollingCharacteristics[0].accessory;
+            let accessory = settings.arrayOfAllStaggeredPollingCharacteristics[0].accessory;
             console.log(`Cancelling timers for FAILED TEST OF ${ accessory.displayName }`);
             Object.keys(accessory.listOfRunningPolls).forEach( (key) =>
             {
@@ -79,8 +84,8 @@ describe( "Testing Cmd4Accessory", function( )
          }
       }
       // Put back the array of Polling Characteristics
+      settings.arrayOfAllStaggeredPollingCharacteristics = [ ];
       settings.listOfCreatedPriorityQueues = { };
-      settings.arrayOfPollingCharacteristics = [ ];
    });
 
 
