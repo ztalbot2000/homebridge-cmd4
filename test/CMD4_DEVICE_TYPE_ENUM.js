@@ -220,17 +220,54 @@ describe( "Testing INITIALIZED CMD4_DEVICE_TYPE_ENUM", ( ) =>
             {
                describe('Testing CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].requiredCharacteristics[' + rindex + ']', ( ) =>
                {
+                  let allRequiredCharacteristics = CMD4_DEVICE_TYPE_ENUM.properties[index].requiredCharacteristics;
 
                   let accTypeEnumIndex = CMD4_DEVICE_TYPE_ENUM.properties[index].requiredCharacteristics[rindex].type;
 
                   let defaultValue = CMD4_DEVICE_TYPE_ENUM.properties[index].requiredCharacteristics[rindex].defaultValue;
 
-                  testCharacteristicIndex(accTypeEnumIndex );
+                  let relatedCurrentAccTypeEnumIndex = CMD4_DEVICE_TYPE_ENUM.properties[index].requiredCharacteristics[rindex].relatedCurrentAccTypeEnumIndex;
+                  let relatedTargetAccTypeEnumIndex = CMD4_DEVICE_TYPE_ENUM.properties[index].requiredCharacteristics[rindex].relatedTargetAccTypeEnumIndex;
+
+                  testCharacteristicIndex( accTypeEnumIndex );
 
                   it('CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].requiredCharacteristics[' + rindex + '].defaultValue must not be null', ( ) =>
                   {
-                     assert.isNotNull(defaultValue, 'defaultValue is null at index:' + index );
+                     assert.isNotNull( defaultValue, 'defaultValue is null at index:' + index );
                   });
+
+                  it('CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].requiredCharacteristics[' + rindex + '].relatedCurrentAccTypeEnumIndex must not be null', ( ) =>
+                  {
+                     assert.isDefined( relatedCurrentAccTypeEnumIndex, 'relatedCurrentAccTypeEnumIndex is null at index:' + index );
+                  });
+                  it('CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].requiredCharacteristics[' + rindex + '].relatedTargetAccTypeEnumIndex must not be null', ( ) =>
+                  {
+                     assert.isDefined( relatedTargetAccTypeEnumIndex, 'relatedTargetAccTypeEnumIndex is null at index:' + index );
+                  });
+                  if ( relatedCurrentAccTypeEnumIndex != null )
+                  {
+                     it('CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].requiredCharacteristics[' + rindex + '].relatedTargetAccTypeEnumIndex must have Current Defined', ( ) =>
+                     {
+                        let foundEntry = allRequiredCharacteristics.find( entry => entry.type == relatedCurrentAccTypeEnumIndex );
+
+                        assert.isNotNull( foundEntry, ' No relatedCurrentAccTypeEnumIndex is null at index:' + index );
+                        assert.equal( accTypeEnumIndex, foundEntry.relatedTargetAccTypeEnumIndex, ' Current pointers do not match at index:' + index );
+                     });
+                  }
+                  if ( relatedTargetAccTypeEnumIndex != null )
+                  {
+                     it('CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].requiredCharacteristics[' + rindex + '].relatedCurrentAccTypeEnumIndex must have Current Defined', ( ) =>
+                     {
+                        let foundEntry = allRequiredCharacteristics.find( entry => entry.type == relatedTargetAccTypeEnumIndex );
+                        console.log("found: %s", foundEntry);
+                        console.log("rindex: %s", rindex);
+                        console.log("allRequiredCharacteristicsd: %s", allRequiredCharacteristics );
+                        console.log("CurrentPosition: %s, targetPosition: %s", CMD4_ACC_TYPE_ENUM.CurrentPosition, CMD4_ACC_TYPE_ENUM.TargetPosition);
+
+                        assert.isNotNull( foundEntry, ' No relatedTargetAccTypeEnumIndex is null at index:' + index );
+                        assert.equal( accTypeEnumIndex, foundEntry.relatedCurrentAccTypeEnumIndex, ' Current Target do not match at index:' + index );
+                     });
+                  }
                });
             }
          });

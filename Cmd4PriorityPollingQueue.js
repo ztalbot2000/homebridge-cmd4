@@ -108,7 +108,8 @@ class Cmd4PriorityPollingQueue
       queue.inProgressSets ++;
       entry.accessory.setValue( entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, entry.stateChangeResponseTime, entry.value, function ( error )
       {
-         let relatedCurrentAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].relatedCurrentAccTypeEnumIndex;
+         let relatedCurrentAccTypeEnumIndex = entry.accessory.getDevicesRelatedCurrentAccTypeEnumIndex( entry.accTypeEnumIndex );
+
          if ( error == 0 &&
               relatedCurrentAccTypeEnumIndex != null )
          {

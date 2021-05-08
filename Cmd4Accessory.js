@@ -572,7 +572,7 @@ class Cmd4Accessory
       // Fakegato does not need to be updated as that is done on a "Get".
       self.setStoredValueForIndex( accTypeEnumIndex, value );
 
-      let relatedCurrentAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].relatedCurrentAccTypeEnumIndex;
+      let relatedCurrentAccTypeEnumIndex = this.getDevicesRelatedCurrentAccTypeEnumIndex( accTypeEnumIndex );
 
       // We are currently tring to set a cached characteristics 
       // like "Target*".
@@ -686,7 +686,7 @@ class Cmd4Accessory
 
          if ( isPriority == false )
          {
-           let relatedCurrentAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].relatedCurrentAccTypeEnumIndex;
+           let relatedCurrentAccTypeEnumIndex = self.getDevicesRelatedCurrentAccTypeEnumIndex( accTypeEnumIndex );
            if ( relatedCurrentAccTypeEnumIndex != null &&
                 self.listOfPollingCharacteristics[ relatedCurrentAccTypeEnumIndex ]
               )
@@ -1115,6 +1115,24 @@ class Cmd4Accessory
 
       return rc;
    }
+   checkCharacteristicNeedsFixing( accessory, accTypeEnumIndex )
+   {
+      // Hap keeps changing this where Current and Target don't match.
+      // We fix this here.
+      if ( accTypeEnumIndex == CMD4_ACC_TYPE_ENUM.CurrentHeatingCoolingState )
+      {
+         this.log.debug("fixing heatingCoolingState");
+         accessory.service.getCharacteristic(
+            CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].
+               characteristic ).setProps(
+                  {
+                    maxValue: 3,
+                    validValues: [ 0, 1, 2, 3 ]
+                });
+      }
+
+      return;
+   }
 
    // ***********************************************
    //
@@ -1178,6 +1196,9 @@ class Cmd4Accessory
 
                 accessory.service.addCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic );
              }
+
+             this.checkCharacteristicNeedsFixing( accessory, accTypeEnumIndex );
+
 
              let props = accessory.configHasCharacteristicProps( accTypeEnumIndex );
              if ( props )
@@ -2391,6 +2412,42 @@ class Cmd4Accessory
 
    }
 
+   getDevicesRelatedTargetAccTypeEnumIndex( accCurrentEnumIndex )
+   {
+      // Get the Devices required characteristics
+      let requiredCharacteristicsArray = CMD4_DEVICE_TYPE_ENUM.properties[ this.typeIndex ].requiredCharacteristics;
+
+      if ( requiredCharacteristicsArray.length  == 0 )
+         return null;
+
+      let found = requiredCharacteristicsArray.find( entry => entry.type == accCurrentEnumIndex );
+
+      if ( found && found.relatedTargetAccTypeEnumIndex  )
+         return found.relatedTargetAccTypeEnumIndex;
+
+      return null;
+
+      // For Optional, the *Target* characteristic does not have to be
+      // defined with the *Current* characteristic as *Current* is
+      // optional, so may be *Target*
+
+   }
+   getDevicesRelatedCurrentAccTypeEnumIndex( accTargetEnumIndex )
+   {
+      // Get the Devices required characteristics
+      let requiredCharacteristicsArray = CMD4_DEVICE_TYPE_ENUM.properties[ this.typeIndex ].requiredCharacteristics;
+
+      if ( requiredCharacteristicsArray.length  == 0 )
+         return null;
+
+      let found = requiredCharacteristicsArray.find( entry => entry.type == accTargetEnumIndex );
+
+      if ( found && found.relatedCurrentAccTypeEnumIndex )
+         return found.relatedCurrentAccTypeEnumIndex;
+
+      return null;
+   }
+
    determineCharacteristicsToPollForAccessory( accessory  )
    {
       // Polling cannot be done if there is no state_cmd
@@ -2618,16 +2675,38 @@ class Cmd4Accessory
 
       for( let accTypeEnumIndex in this.listOfPollingCharacteristics )
       {
-         this.log.debug("CHECKING CHARACTERISTIC: %s %s", accTypeEnumIndex, CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type );
          // Look to see if currently polled characteristics are like "Current*" and have
          // a related characteristic like "Target*"
-         let relatedTargetAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].relatedTargetAccTypeEnumIndex;
+         let relatedTargetAccTypeEnumIndex =
+            this.getDevicesRelatedTargetAccTypeEnumIndex(
+                    accTypeEnumIndex );
 
          if ( relatedTargetAccTypeEnumIndex != null )
          {
             // Check that the characteristic like "Target*" is also requested to be polled
-            if ( this.listOfPollingCharacteristics[ relatedTargetAccTypeEnumIndex ] == undefined )
+            // We are in a "Set" but this applies to the "Get" for why we would need to
+            // set the relatedCurrentAccTypeEnumIndex Characteristic as well.
+
+            // "Get" can't be in cached if cmd4Mode:Always
+            // "Get" must be cached if cmd4Mode:Cached
+            //
+            // For cmd4Mode:Polled
+            // "Get Current" updates value when polled by calling getValue
+            // "Get Current" ( From HomeKit) calls getCachedValue.
+            // So we do not want to update the "Current*" value if it is being
+            // polled to get the real value.
+            // - For cmd4Mode:FullyPolled I do not think the current cached
+            // value should be updated, Cmd2 does not do that...
+            // - isRelated must be checked, because TemperatureSensors do
+            //   not have *Target* characteristics.
+            if ( this.cmd4Mode == constants.CMD4_MODE_CACHED ||
+                 this.cmd4Mode == constants.CMD4_MODE_DEMO ||
+                 ( this.cmd4Mode == constants.CMD4_MODE_POLLED &&
+                   this.listOfPollingCharacteristics[ relatedTargetAccTypeEnumIndex ] == undefined
+                 )
+               )
             {
+
                let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
                let relatedCharacteristicString = CMD4_ACC_TYPE_ENUM.properties[ relatedTargetAccTypeEnumIndex ].type;
                this.log.warn( `Warning, With Cmd4_Mode set to "${ this.cmd4Mode }" and polling for "${ characteristicString }" requested, you also must do polling of "${ relatedCharacteristicString }" or things will not function properly` );

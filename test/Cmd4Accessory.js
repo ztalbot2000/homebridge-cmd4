@@ -709,6 +709,55 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
 
    });
 
+   it( `Test that adding Target message is *NOT* generated for related "Polled" TemperatureSensors`, function( )
+   {
+      let platformConfig =
+      {
+         accessories: [
+         {
+            Accessory: "Cmd4",
+            Cmd4_Mode: "Polled",
+            StatusMsg: true,
+            Type: "TemperatureSensor",
+            DisplayName: "TemperatureSensor",
+            Name: "TemperatureSensor",
+            CurrentTemperature: "22.2",
+            Polling: [ { characteristic: "CurrentTemperature" }
+                     ],
+            State_cmd: "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         }]
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
+
+      let expectedOutput1 = `[34mCreating Platform Accessory type for : TemperatureSensor`;
+      let expectedOutput2 = `[90mCharacteristic polling for: TemperatureSensor`;
+      let expectedOutput3 = `[90mCreated platformAccessory: TemperatureSensor`;
+      let expectedOutput4 = `[33mAdding getCachedValue for TemperatureSensor characteristic: Name`;
+
+      let expectedOutput5 = `[33mAdding getValue for TemperatureSensor characteristic: CurrentTemperature`;
+      let expectedOutput6 = `[33mAdding setValue for TemperatureSensor characteristic: TargetTemperature`;
+
+      assert.include( log.logBuf, expectedOutput1, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, expectedOutput2, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, expectedOutput3, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, expectedOutput4, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, expectedOutput5, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.notInclude( log.logBuf, expectedOutput6, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.equal( log.errBuf, "", ` cmd4Accessory stderr output Unexpected stderr: ${ log.errBuf }` );
+
+   });
+
+
    it( `Test that adding "queued" Target message is generated for related "Polled"`, function( )
    {
       let platformConfig =
@@ -737,7 +786,7 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
 
       let log = new Logger( );
       log.setBufferEnabled( );
-      log.setOutputEnabled( true );
+      log.setOutputEnabled( false );
       log.setDebugEnabled( true );
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
@@ -745,7 +794,6 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
       cmd4Platform.discoverDevices( );
-      console.log("WEWEWE %s", log.logBuf);
 
       let expectedOutput1 = `[34mCreating Platform Accessory type for : Thermostat`;
       let expectedOutput2 = `[90mCharacteristic polling for: Thermostat`;
