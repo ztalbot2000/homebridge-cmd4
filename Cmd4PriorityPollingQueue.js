@@ -9,6 +9,7 @@ let CMD4_ACC_TYPE_ENUM = require( "./lib/CMD4_ACC_TYPE_ENUM" ).CMD4_ACC_TYPE_ENU
 let settings = require( "./cmd4Settings" );
 const constants = require( "./cmd4Constants" );
 
+const SANITY_TIMER_INTERVAL = 12000; // 2 minutes
 
 // Pretty Colors
 var chalk = require( "chalk" );
@@ -50,6 +51,10 @@ class Cmd4PriorityPollingQueue
       this.lowPriorityQueueAccumulatedTime = 0;
       this.originalInterval = 0;
       this.optimalInterval = 0;
+
+      // A primitive sanity timer
+      this.sanityTimer = null;
+      this.sanityTimerFlag = Date.now( );
    }
 
    prioritySetValue( accTypeEnumIndex, characteristicString, timeout, stateChangeResponseTime,  value, callback )
@@ -98,6 +103,9 @@ class Cmd4PriorityPollingQueue
       // Similiar to self = this, but more obvious and exact
       let queue = entry.accessory.queue;
 
+      // Clear the sanity timer flag
+      queue.sanityTimerFlag = Date.now( );
+
       if ( queue.inProgressSets > 0 || queue.inProgressGets > 0 )
       {
          this.log.debug( `High priority "Set" queue interrupt attempted: ${ entry.accessory.displayName } ${ entry.characteristicString } inProgressSets:${ queue.inProgressSets } inProgressGets: ${ queue.inProgressGets }` );
@@ -117,20 +125,29 @@ class Cmd4PriorityPollingQueue
             let stateChangeResponseTime = entry.stateChangeResponseTime;
             if ( stateChangeResponseTime < queue.currentIntervalBeingUsed * .5 )
                stateChangeResponseTime = queue.currentIntervalBeingUsed * .5;
+            entry.accessory.log( `Queuing ${relatedCurrentCharacteristicString} stateChangeResponseTime: ${ stateChangeResponseTime}` );
 
-            entry.accessory.getValue( relatedCurrentAccTypeEnumIndex, relatedCurrentCharacteristicString, entry.timeout, function ( error, properValue) {
-           {
-              if ( error == 0 )
-              {
-                 entry.accessory.log.debug( chalk.blue( `characteristicPolling Updating ${ entry.accessory.displayName } ${ relatedCurrentCharacteristicString }` ) + ` ${ properValue }` );
+            setTimeout( ( ) => {
+               entry.accessory.getValue( relatedCurrentAccTypeEnumIndex, relatedCurrentCharacteristicString, entry.timeout, function ( error, properValue) {
+               {
+                  if ( error == 0 )
+                  {
+                     entry.accessory.log.debug( chalk.blue( `characteristicPolling Updating ${ entry.accessory.displayName } ${ relatedCurrentCharacteristicString }` ) + ` ${ properValue }` );
 
-                 entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].characteristic ).updateValue( properValue );
-              }
+                     entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].characteristic ).updateValue( properValue );
 
-           }});
+                      setTimeout( ( ) => { entry.accessory.queue.processQueue( HIGH_PRIORITY_GET, entry.accessory.queue ); }, 0);
+                 }
+               } }, Date.now( ));
+
+               return;
+            }, stateChangeResponseTime );
+
          }
 
-         entry.callback( 0 );
+         // Do not call the callback as it was done when the "Set" entry was 
+         // created.
+
          queue.inProgressSets --;
          setTimeout( ( ) => { queue.processQueue( HIGH_PRIORITY_SET, queue ); }, 0);
 
@@ -141,6 +158,9 @@ class Cmd4PriorityPollingQueue
    {
       // Similiar to self = this, but more obvious and exact
       let queue = entry.accessory.queue;
+
+      // Clear the sanity timer flag
+      queue.sanityTimerFlag = Date.now( );
 
       if ( queue.inProgressSets > 0 ||
            queue.inProgressGets > 0 && queue.queueType == constants.QUEUETYPE_SEQUENTIAL )
@@ -177,6 +197,9 @@ class Cmd4PriorityPollingQueue
    {
       // Similiar to self = this, but more obvious and exact
       let queue = entry.accessory.queue;
+
+      // Clear the sanity timer flag
+      queue.sanityTimerFlag = Date.now( );
 
       if ( queue.inProgressSets > 0 ||
            queue.inProgressGets > 0 && queue.queueType == constants.QUEUETYPE_SEQUENTIAL )
@@ -413,25 +436,37 @@ class Cmd4PriorityPollingQueue
          {
              this.log.debug( `inProgressSets: ${  queue.inProgressSets } inProgressGets: ${  queue.inProgressGets } queueStarted: ${ queue.queueStarted } lowQueueLen: ${ queue.lowPriorityQueue.length } hiQueueLen: ${ queue.highPriorityQueue.length } intervalPollingTimer:${ queue.intervalPollingTimer } safeToDoPollingFlag: ${ queue.safeToDoPollingFlag } interval: ${ queue.currentIntervalBeingUsed }` );
 
-            if ( queue.queueStarted == true &&
-                 queue.inProgressGets == 0 &&
-                 queue.inProgressSets == 0 )
+            if ( queue.queueStarted == true )
             {
-            this.log.debug( "Sanity Timer checking Polling Timer %s: Bool %s interval:%s", queue.intervalPollingTimer, queue.safeToDoPollingFlag, queue.currentIntervalBeingUsed );
-                  if ( queue.intervalPollingTimer == null )
-                  {
-                     this.log.error( `Polling  timer is null ???? ` );
-                     process.exit(333);
-                  }
-               if ( queue.safeToDoPollingNow( queue ) == false )
+               if ( queue.intervalPollingTimer == null )
                {
+                  this.log.error( `Polling  timer is null ???? ` );
+                  process.exit(333);
+               }
 
-                  this.log.debug( "Sanity Timer Fixing Polling Timer: intervalPollingTimer: %s safeToDoPollingFlag: %s", queue.intervalPollingTimer, queue.safeToDoPollingFlag );
-                  queue.enablePolling( queue );
+               if ( Date.now( ) > queue.sanityTimerFlag + SANITY_TIMER_INTERVAL )
+               {
+                  this.log.debug( `Sanity Timer Fixing Polling !!!  intervalPollingTimer: ${ queue.intervalPollingTimer } safeToDoPollingFlag: ${ queue.safeToDoPollingFlag } inProgressSets: ${ queue.inProgressSets } inProgressGets: ${ queue.inProgressGets } currentIntervalBeingUsed: ${ queue.currentIntervalBeingUsed }` );
+                  if ( queue.safeToDoPollingNow( queue ) == false )
+                  {
+                     // Must set it behind its back to avoid
+                     // the now invalid checks
+                     queue.safeToDoPollingFlag = true;
+                  }
+                  if ( queue.inProgressGets != 0 )
+                     queue.inProgressSets = 0;
+
+                  // So we do not trip over this again immediately
+                  queue.sanityTimerFlag = Date.now( );
+
+               } else
+               {
+                  // Set the sanity timer flag for next time;
+                  queue.sanityTimerStaticFlag = queue.sanityTimerFlag;
                }
             }
 
-         }, 120000  );
+         }, SANITY_TIMER_INTERVAL );
 
       }
    }
