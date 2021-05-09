@@ -125,7 +125,6 @@ class Cmd4PriorityPollingQueue
             let stateChangeResponseTime = entry.stateChangeResponseTime;
             if ( stateChangeResponseTime < queue.currentIntervalBeingUsed * .5 )
                stateChangeResponseTime = queue.currentIntervalBeingUsed * .5;
-            entry.accessory.log( `Queuing ${relatedCurrentCharacteristicString} stateChangeResponseTime: ${ stateChangeResponseTime}` );
 
             setTimeout( ( ) => {
                entry.accessory.getValue( relatedCurrentAccTypeEnumIndex, relatedCurrentCharacteristicString, entry.timeout, function ( error, properValue) {
