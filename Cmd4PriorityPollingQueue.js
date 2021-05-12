@@ -21,7 +21,6 @@ let HIGH_PRIORITY_SET = 0;
 let HIGH_PRIORITY_GET = 1;
 let LOW_PRIORITY_GET = 2;
 
-
 class Cmd4PriorityPollingQueue
 {
    constructor( log, queueName, queueType = constants.DEFAULT_QUEUE_TYPE )
@@ -71,7 +70,7 @@ class Cmd4PriorityPollingQueue
    priorityGetValue( accTypeEnumIndex, characteristicString, timeout, callback )
    {
       let self = this;
-      self.queue.highPriorityQueue.push( { [ constants.IS_SET_lv ]: false, [ constants.ACCESSORY_lv ]: self, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: null, [ constants.VALUE_lv ]: null, [ constants.CALLBACK_lv ]: callback } );
+      self.queue.highPriorityQueue.push( { [ constants.IS_SET_lv ]: false, [ constants.QUEUE_GET_IS_UPDATE_lv ]: false, [ constants.ACCESSORY_lv ]: self, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: null, [ constants.VALUE_lv ]: null, [ constants.CALLBACK_lv ]: callback } );
 
       self.queue.processQueue( HIGH_PRIORITY_GET, self.queue );
    }
@@ -127,6 +126,7 @@ class Cmd4PriorityPollingQueue
                stateChangeResponseTime = queue.currentIntervalBeingUsed * .5;
 
             setTimeout( ( ) => {
+               /*
                entry.accessory.getValue( relatedCurrentAccTypeEnumIndex, relatedCurrentCharacteristicString, entry.timeout, function ( error, properValue) {
                {
                   if ( error == 0 )
@@ -138,6 +138,20 @@ class Cmd4PriorityPollingQueue
                       setTimeout( ( ) => { entry.accessory.queue.processQueue( HIGH_PRIORITY_GET, entry.accessory.queue ); }, 0);
                  }
                } }, Date.now( ));
+               */
+
+               // Change the entry to a get and set queueGetIsUpdate to true
+               entry.isSet = false;
+               entry.accTypeEnumIndex = relatedCurrentAccTypeEnumIndex;
+               entry.characteristicString = relatedCurrentCharacteristicString;
+               entry.queueGetIsUpdate = true;
+               entry.accessory.queue.highPriorityQueue.unshift( entry );
+               setTimeout( ( ) => { entry.accessory.queue.processQueue( HIGH_PRIORITY_GET, entry.accessory.queue ); }, 0);
+
+
+
+
+
 
                return;
             }, stateChangeResponseTime );
@@ -184,7 +198,23 @@ class Cmd4PriorityPollingQueue
 
          pollingID = -1;
 
-         entry.callback( error, properValue );
+         // Nothing special was done for casing on errors, so omit it.
+         if ( error == 0 )
+         {
+            if ( entry.queueGetIsUpdate == false )
+               entry.callback( error, properValue );
+            else
+               entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( properValue );
+
+         } else
+         {
+            entry.accessory.log.info( `Poll failed: ${ error } for queue: ${ this.queueName } value: ${ properValue }` );
+
+            // A response is expected for "Get" without update.
+            if ( entry.queueGetIsUpdate == false )
+               entry.callback( error );
+         }
+
 
          queue.inProgressGets --;
          setTimeout( ( ) => { queue.processQueue( HIGH_PRIORITY_GET, entry.accessory.queue ); }, 0);
@@ -235,36 +265,13 @@ class Cmd4PriorityPollingQueue
 
          pollingID = -1;
 
-         switch( error )
+         // Nothing special was done for casing on errors, so omit it.
+         if ( error == 0 )
          {
-            case 0:
-            {
-               entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( properValue );
-               break;
-            }
-            case constants.ERROR_TIMER_EXPIRED:
-            // When the MyAir is busy, the result is empty strings or
-            // null and while they are not passed to homebridge, polling
-            // must slow.
-            // break omitted
-            case constants.ERROR_NULL_REPLY:
-            case constants.ERROR_NULL_STRING_REPLY:
-            case constants.ERROR_EMPTY_STRING_REPLY:
-            case constants.ERROR_2ND_NULL_STRING_REPLY:
-            case constants.exports.ERROR_NO_DATA_REPLY:
-            {
-                break;
-            }
-            // These are not really errors caused by polling
-            // break omitted
-            case constants.ERROR_CMD_FAILED_REPLY:
-            case constants.ERROR_NON_CONVERTABLE_REPLY:
-            {
-               break;
-            }
-            default:
-               entry.accessory.log.info( `Poll failed: ${ error  } for queue: ${ this.queueName }` );
-          }
+            entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( properValue );
+         } else {
+            entry.accessory.log.info( `Poll failed: ${ error } for queue: ${ this.queueName } value: ${ properValue }` );
+         }
 
          // For the next one
          queue.inProgressGets --;

@@ -142,6 +142,7 @@ exports.IS_SET_lv                      = "isSet";
 exports.IS_POLLED_lv                   = "isPolled";
 exports.QUEUE_lv                       = "queue";
 exports.QUEUE_NAME_lv                  = "queueName";
+exports.QUEUE_GET_IS_UPDATE_lv   = "queueGetIsUpdate";
 exports.RC_lv                          = "rc";
 exports.STATE_CHANGE_RESPONSE_TIME_lv  = "stateChangeResponseTime";
 exports.TIMEOUT_lv                     = "timeout";
