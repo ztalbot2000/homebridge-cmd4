@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-3-7-4">**Whats new in 3.7.4**</a>
 * <a href="#Whats-new-in-3-7-3">**Whats new in 3.7.3**</a>
 * <a href="#Whats-new-in-3-7-2">**Whats new in 3.7.2**</a>
 * <a href="#Whats-new-in-3-7-1">**Whats new in 3.7.1**</a>
@@ -54,6 +55,14 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-3-7-4">## Whats new in 3.7.4</a>
+#### 3.7.4 (2021-05-12)
+
+##### Bug Fixes
+
+*  Why does Homebridge check validity of values with invalid return codes affecting Queued polling ([387a13a7](https://github.com/ztalbot2000/homebridge-cmd4/commit/387a13a78483c32e316d4da3dfc187902f6e668e))
+
 
 <a name="Whats-new-in-3-7-3">## Whats new in 3.7.3</a>
 #### 3.7.3 (2021-05-09)

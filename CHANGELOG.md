@@ -1,19 +1,8 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
-#### 3.7.3 (2021-05-09)
-
-##### Chores
-
-*  Update whats in v3.7.3 ([adfe4444](https://github.com/ztalbot2000/homebridge-cmd4/commit/adfe4444bdf349fe20c86dfde9252cd715df6d5b))
-*  spelling ([394d4d0d](https://github.com/ztalbot2000/homebridge-cmd4/commit/394d4d0d29d773e8e9940618b04ecc62aa2f97d2))
-*  v3.7.3 packaging ([24cda9d8](https://github.com/ztalbot2000/homebridge-cmd4/commit/24cda9d846384d43fd55a50a70c8fe6b788bd8e9))
-
-##### New Features
-
-*  overall performance improvements ([80940ee2](https://github.com/ztalbot2000/homebridge-cmd4/commit/80940ee29bc84ecc1705102b489deec2698a90a0))
+#### 3.7.4 (2021-05-12)
 
 ##### Bug Fixes
 
-*  Enhance polling queue sanity timer. Fix unneeded related queue callback ([b7b35a68](https://github.com/ztalbot2000/homebridge-cmd4/commit/b7b35a68d181f3e5e1458e1ca2f714bb9736014c))
-*  Related characteristics are Device specific as some are optional in one and required in others ([3e0faf58](https://github.com/ztalbot2000/homebridge-cmd4/commit/3e0faf585032e6d047bd91da2b1dac1453b6cd74))
+*  Why does Homebridge check validity of values with invalid return codes affecting Queued polling ([387a13a7](https://github.com/ztalbot2000/homebridge-cmd4/commit/387a13a78483c32e316d4da3dfc187902f6e668e))
 
 
