@@ -9,7 +9,7 @@ let CMD4_ACC_TYPE_ENUM = require( "./lib/CMD4_ACC_TYPE_ENUM" ).CMD4_ACC_TYPE_ENU
 let settings = require( "./cmd4Settings" );
 const constants = require( "./cmd4Constants" );
 
-const SANITY_TIMER_INTERVAL = 12000; // 2 minutes
+const SANITY_TIMER_INTERVAL = 120000; // 2 minutes
 
 // Pretty Colors
 var chalk = require( "chalk" );
@@ -208,7 +208,7 @@ class Cmd4PriorityPollingQueue
 
          } else
          {
-            entry.accessory.log.info( `Poll failed: ${ error } for queue: ${ this.queueName } value: ${ properValue }` );
+            entry.accessory.log.info( `Poll failed: ${ error } for queue: ${ queue.queueName } value: ${ properValue }` );
 
             // A response is expected for "Get" without update.
             if ( entry.queueGetIsUpdate == false )
@@ -270,7 +270,7 @@ class Cmd4PriorityPollingQueue
          {
             entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( properValue );
          } else {
-            entry.accessory.log.info( `Poll failed: ${ error } for queue: ${ this.queueName } value: ${ properValue }` );
+            entry.accessory.log.info( `Poll failed: ${ error } for queue: ${ queue.queueName } value: ${ properValue }` );
          }
 
          // For the next one
@@ -482,7 +482,7 @@ class Cmd4PriorityPollingQueue
    }
    printQueueStats( queue )
    {
-      let line = `QUEUE "${ this.queueName }" stats`;
+      let line = `QUEUE "${ queue.queueName }" stats`;
       this.log.info( line );
       this.log.info( `${ "=".repeat( line.length) }` );
       this.log.info( `iterations: ${ queue.lowPriorityQueueCounter }` );
