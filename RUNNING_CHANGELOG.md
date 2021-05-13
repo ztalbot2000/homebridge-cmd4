@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-3-7-5">**Whats new in 3.7.5**</a>
 * <a href="#Whats-new-in-3-7-4">**Whats new in 3.7.4**</a>
 * <a href="#Whats-new-in-3-7-3">**Whats new in 3.7.3**</a>
 * <a href="#Whats-new-in-3-7-2">**Whats new in 3.7.2**</a>
@@ -55,6 +56,14 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-3-7-5">## Whats new in 3.7.5</a>
+#### 3.7.5 (2021-05-13)
+
+##### Bug Fixes
+
+*  Queued sanity timer was not what it was supposed to be ([0b9314ab](https://github.com/ztalbot2000/homebridge-cmd4/commit/0b9314aba0495839c365ea817ef20da5d72cd277))
+
 
 <a name="Whats-new-in-3-7-4">## Whats new in 3.7.4</a>
 #### 3.7.4 (2021-05-12)

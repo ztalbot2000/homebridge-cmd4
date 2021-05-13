@@ -1,8 +1,8 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
-#### 3.7.4 (2021-05-12)
+#### 3.7.5 (2021-05-13)
 
 ##### Bug Fixes
 
-*  Why does Homebridge check validity of values with invalid return codes affecting Queued polling ([387a13a7](https://github.com/ztalbot2000/homebridge-cmd4/commit/387a13a78483c32e316d4da3dfc187902f6e668e))
+*  Queued sanity timer was not what it was supposed to be ([0b9314ab](https://github.com/ztalbot2000/homebridge-cmd4/commit/0b9314aba0495839c365ea817ef20da5d72cd277))
 
 
