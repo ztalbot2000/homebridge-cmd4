@@ -142,7 +142,7 @@ exports.IS_SET_lv                      = "isSet";
 exports.IS_POLLED_lv                   = "isPolled";
 exports.QUEUE_lv                       = "queue";
 exports.QUEUE_NAME_lv                  = "queueName";
-exports.QUEUE_GET_IS_UPDATE_lv   = "queueGetIsUpdate";
+exports.QUEUE_GET_IS_UPDATE_lv         = "queueGetIsUpdate";
 exports.RC_lv                          = "rc";
 exports.STATE_CHANGE_RESPONSE_TIME_lv  = "stateChangeResponseTime";
 exports.TIMEOUT_lv                     = "timeout";
@@ -159,3 +159,6 @@ exports.ERROR_NON_CONVERTABLE_REPLY   = -157;
 // internal strings
 exports.storedValuesPerCharacteristic = "storedValuesPerCharacteristic";
 
+
+// Static Messages
+exports.DBUSY                         = "Perhaps your device is busy?";

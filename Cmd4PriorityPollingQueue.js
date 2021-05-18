@@ -54,6 +54,13 @@ class Cmd4PriorityPollingQueue
       // A primitive sanity timer
       this.sanityTimer = null;
       this.sanityTimerFlag = Date.now( );
+
+      // Even with proper Queuing, 100% of interactions cannot be successful
+      // when the device0 can be controlled independantly. So try to squash
+      // repetitive failire messages.
+      this.squashList = { };
+      // Define it here so in Unit testing we can lower it.
+      this.SQUASH_TIMER_INTERVAL = 120000; // 2 minutes
    }
 
    prioritySetValue( accTypeEnumIndex, characteristicString, timeout, stateChangeResponseTime,  value, callback )
@@ -125,35 +132,19 @@ class Cmd4PriorityPollingQueue
             if ( stateChangeResponseTime < queue.currentIntervalBeingUsed * .5 )
                stateChangeResponseTime = queue.currentIntervalBeingUsed * .5;
 
-            setTimeout( ( ) => {
-               /*
-               entry.accessory.getValue( relatedCurrentAccTypeEnumIndex, relatedCurrentCharacteristicString, entry.timeout, function ( error, properValue) {
-               {
-                  if ( error == 0 )
-                  {
-                     entry.accessory.log.debug( chalk.blue( `characteristicPolling Updating ${ entry.accessory.displayName } ${ relatedCurrentCharacteristicString }` ) + ` ${ properValue }` );
-
-                     entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].characteristic ).updateValue( properValue );
-
-                      setTimeout( ( ) => { entry.accessory.queue.processQueue( HIGH_PRIORITY_GET, entry.accessory.queue ); }, 0);
-                 }
-               } }, Date.now( ));
-               */
-
+            setTimeout( ( ) =>
+            {
                // Change the entry to a get and set queueGetIsUpdate to true
                entry.isSet = false;
                entry.accTypeEnumIndex = relatedCurrentAccTypeEnumIndex;
                entry.characteristicString = relatedCurrentCharacteristicString;
                entry.queueGetIsUpdate = true;
                entry.accessory.queue.highPriorityQueue.unshift( entry );
+
                setTimeout( ( ) => { entry.accessory.queue.processQueue( HIGH_PRIORITY_GET, entry.accessory.queue ); }, 0);
 
-
-
-
-
-
                return;
+
             }, stateChangeResponseTime );
 
          }
@@ -186,12 +177,12 @@ class Cmd4PriorityPollingQueue
 
       queue.inProgressGets ++;
       let pollingID = Date.now( );
-      entry.accessory.getValue( entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, function ( error, properValue, returnedPollingID  )
+      entry.accessory.getValue( entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, function ( error, properValue, returnedPollingID, returnedErrMsg  )
       {
          // This function should only be called once, noted by the pollingID.
          if ( pollingID != returnedPollingID )
          {
-            entry.accessory.log.info(`More entries for pollingID of get error:${error} value:${properValue} returnedPollingID:${returnedPollingID}`);
+            entry.accessory.log.info(`More entries for pollingID of get error: ${ error } value: ${ properValue } returnedPollingID: ${ returnedPollingID }`);
 
             return;
          }
@@ -208,7 +199,9 @@ class Cmd4PriorityPollingQueue
 
          } else
          {
-            entry.accessory.log.info( `Poll failed: ${ error } for queue: ${ queue.queueName } value: ${ properValue }` );
+            //entry.accessory.log.info( `Poll failed: ${ error } for queue: ${ queue.queueName } value: ${ properValue }` );
+            entry.accessory.log.error( returnedErrMsg );
+            //queue.squashError( queue, error, returnedErrMsg )
 
             // A response is expected for "Get" without update.
             if ( entry.queueGetIsUpdate == false )
@@ -243,7 +236,7 @@ class Cmd4PriorityPollingQueue
       queue.inProgressGets ++;
       queue.lowPriorityQueueCounter ++;
       let lowPriorityQueueStartTime = Date.now( );
-      entry.accessory.getValue( entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, function ( error, properValue, returnedPollingID )
+      entry.accessory.getValue( entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, function ( error, properValue, returnedPollingID, returnedErrMsg )
       {
          let lowPriorityQueueEndTime = Date.now( );
 
@@ -270,7 +263,9 @@ class Cmd4PriorityPollingQueue
          {
             entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( properValue );
          } else {
-            entry.accessory.log.info( `Poll failed: ${ error } for queue: ${ queue.queueName } value: ${ properValue }` );
+
+            queue.squashError( queue, error, returnedErrMsg )
+
          }
 
          // For the next one
@@ -279,6 +274,71 @@ class Cmd4PriorityPollingQueue
          // This will restart the polling timer if not anything else
          setTimeout( ( ) => { queue.processQueue( HIGH_PRIORITY_GET, queue ); }, 0);
       }, pollingID );
+   }
+
+   squashError( queue, error, errMsg )
+   {
+      switch ( error )
+      {
+         // When the MyAir is busy, the result is empty strings or
+         // null and while they are not passed to homebridge, polling
+         // must slow.
+         // break omitted
+         case constants.ERROR_NULL_REPLY:
+         case constants.ERROR_NULL_STRING_REPLY:
+         case constants.ERROR_2ND_NULL_STRING_REPLY:
+         case constants.ERROR_EMPTY_STRING_REPLY:
+         case constants.ERROR_NO_DATA_REPLY:
+         {
+            // Say the error the first time.
+            queue.log.error( errMsg );
+            /* tmp
+            if ( queue.squashList[ error ] == undefined )
+            {
+               // Say the error the first time.
+               queue.log.error( errMsg );
+
+               // The first one is emitted, so does not count
+               let errList = { errCount: 0 , errTimer: null, errMsg: errMsg };
+               queue.squashList[ error ] = errList;
+
+               // Start the timer
+               errList.errTimer = setTimeout( ( ) =>
+               {
+                  // Say the message again with the number of times
+                  let entry = queue.squashList[ error ];
+
+                  if ( entry.errCount > 0 )
+                     queue.log.error( `This message has been omitted ${ entry.errCount } times => ${ entry.errMsg }` );
+
+                  // Kill the squashList, for the next possible time
+                  queue.squashList[ error ] = undefined;
+
+               },  queue.SQUASH_TIMER_INTERVAL );
+
+
+            } else {
+               // increment the error counter
+               queue.squashList[ error ].errCount += 1;
+            }
+            */
+            break;
+         }
+         // These are not really errors caused by polling
+         // break omitted
+         case constants.ERROR_TIMER_EXPIRED:
+         case constants.ERROR_NON_CONVERTABLE_REPLY:
+         case constants.ERROR_CMD_FAILED_REPLY:
+             // These would have been displayed in getValue
+            break;
+         case 0:
+            // This is not an error.  it should not even be here
+         // break omitted
+         default:
+         {
+            //tmp queue.log.error( `Unhandled error: ${ error } errMsg: ${ errMsg }`  );
+         }
+      }
    }
 
    processQueue( lastTransactionType, queue )

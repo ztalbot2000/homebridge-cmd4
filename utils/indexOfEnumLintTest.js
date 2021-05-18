@@ -30,7 +30,7 @@ let j = 63;
 let type;
 let ucKeyIndex;
 
-type = CMD4_DEVICE_TYPE_ENUM.properties[ j ]. deviceName;
+type = CMD4_DEVICE_TYPE_ENUM.properties[ j ].deviceName;
 console.log("checking type:" + type );
 
 

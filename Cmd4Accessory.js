@@ -809,6 +809,7 @@ class Cmd4Accessory
    getValue( accTypeEnumIndex, characteristicString, timeout, callback, pollingID = 0 )
    {
       let self = this;
+      let errMsg = "";
 
       // As innocuious as this sounds the purpose is to flag that PriorityQueuePolling
       // was initiated.
@@ -842,7 +843,7 @@ class Cmd4Accessory
 
          // We can call our callback though ;-)
          if ( pollingID != 0 && replyCount == 1 )
-            callback( constants.ERROR_TIMER_EXPIRED, null, pollingID );
+            callback( constants.ERROR_TIMER_EXPIRED, null, pollingID, errMsg );
 
          return;
 
@@ -860,7 +861,10 @@ class Cmd4Accessory
          // Only the first message should be valid
          if ( code != 0 && replyCount == 1 )
          {
-            self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  replyCount: ${ replyCount } Error: ${ code }${ QIndicator }` ) );
+            errMsg = chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  replyCount: ${ replyCount } Error: ${ code }. ${ constants.DBUSY }${ QIndicator }` );
+
+            if ( pollingID == 0 )
+               self.log.error( errMsg );
          }
 
          clearTimeout( timer );
@@ -870,7 +874,7 @@ class Cmd4Accessory
 
          // We can call our callback though ;-)
          if ( pollingID != 0 && replyCount == 1 && code == 0 )
-            callback( exports.ERROR_NO_DATA_REPLY, null, pollingID );
+            callback( exports.ERROR_NO_DATA_REPLY, null, pollingID, errMsg );
 
          return;
       });
@@ -891,7 +895,7 @@ class Cmd4Accessory
 
          // We can call our callback though ;-)
          if ( pollingID != 0 && replyCount == 1 )
-            callback( constants.ERROR_CMD_FAILED_REPLY, null, pollingID );
+            callback( constants.ERROR_CMD_FAILED_REPLY, null, pollingID, errMsg);
 
          return;
       });
@@ -900,6 +904,7 @@ class Cmd4Accessory
       {
          replyCount++;
 
+         // Only the first message should be valid
          if ( replyCount > 1 )
          {
             // Stop babbling
@@ -911,9 +916,10 @@ class Cmd4Accessory
 
          if ( reply == null )
          {
-            // Only the first message should be valid
-            if ( replyCount == 1 )
-               self.log.error( `getValue: null returned from stdout for ${ characteristicString } ${ self.displayName }${ QIndicator }` );
+            errMsg = `getValue: null returned from stdout for ${ characteristicString } ${ self.displayName }. ${ constants.DBUSY }${ QIndicator }`;
+
+            if ( pollingID == 0 )
+               self.log.error( errMsg );
 
             // Do not call the callback or continue processing as too many will be called.
             // Prefer homebridge complain about slow response.
@@ -922,8 +928,8 @@ class Cmd4Accessory
             child.kill( 'SIGINT' );
 
             // We can call our callback though ;-)
-            if ( pollingID != 0 && replyCount == 1 )
-               callback( constants.ERROR_NULL_REPLY, null, pollingID );
+            if ( pollingID != 0 )
+               callback( constants.ERROR_NULL_REPLY, null, pollingID, errMsg );
 
             return;
          }
@@ -939,9 +945,9 @@ class Cmd4Accessory
          // to catch this before much string manipulation was done.
          if ( trimmedReply.toUpperCase( ) == "NULL" )
          {
-            // Only the first message should be valid
-            if ( replyCount == 1 )
-               self.log.error( `getValue: "${ trimmedReply }" returned from stdout for ${ characteristicString } ${ self.displayName }${ QIndicator }` );
+            errMsg = `getValue: "${ trimmedReply }" returned from stdout for ${ characteristicString } ${ self.displayName }. ${ constants.DBUSY}${ QIndicator }`;
+            if ( pollingID == 0 )
+               self.log.error( errMsg );
 
             // Do not call the callback or continue processing as too many will be called.
             // Prefer homebridge complain about slow response.
@@ -950,8 +956,8 @@ class Cmd4Accessory
             child.kill( 'SIGINT' );
 
             // We can call our callback though ;-)
-            if ( pollingID != 0 && replyCount == 1 )
-               callback( constants.ERROR_NULL_STRING_REPLY, null, pollingID );
+            if ( pollingID != 0 )
+               callback( constants.ERROR_NULL_STRING_REPLY, null, pollingID, errMsg );
 
             return;
          }
@@ -964,9 +970,10 @@ class Cmd4Accessory
 
          if ( unQuotedReply == "" )
          {
-            // Only the first message should be valid
-            if ( replyCount == 1 )
-               self.log.error( `getValue: ${ characteristicString } function for: ${ self.displayName } returned an empty string "${ trimmedReply }"${ QIndicator }` );
+            errMsg = `getValue: ${ characteristicString } function for: ${ self.displayName } returned an empty string "${ trimmedReply }". ${ constants.DBUSY }${ QIndicator }`;
+
+            if ( pollingID == 0 )
+               self.log.error( errMsg );
 
             // Do not call the callback or continue processing as too many will be called.
             // Prefer homebridge complain about slow response.
@@ -976,8 +983,8 @@ class Cmd4Accessory
             child.kill( 'SIGINT' );
 
             // We can call our callback though ;-)
-            if ( pollingID != 0 && replyCount == 1 )
-               callback( constants.ERROR_EMPTY_STRING_REPLY, null, pollingID );
+            if ( pollingID != 0 )
+               callback( constants.ERROR_EMPTY_STRING_REPLY, null, pollingID, errMsg );
 
             return;
          }
@@ -987,9 +994,9 @@ class Cmd4Accessory
          // things I must do for bad data ....
          if ( unQuotedReply.toUpperCase() == "NULL" )
          {
-            // Only the first message should be valid
-            if ( replyCount == 1 )
-               self.log.error( `getValue: ${ characteristicString } function for ${ self.displayName } returned the string "${ trimmedReply }"${ QIndicator }` );
+            errMsg = `getValue: ${ characteristicString } function for ${ self.displayName } returned the string "${ trimmedReply }". ${ constants.DBUSY }${ QIndicator }`;
+            if ( pollingID == 0 )
+                  self.log.error( errMsg );
 
             // Do not call the callback or continue processing as too many will be called.
             // Prefer homebridge complain about slow response.
@@ -999,8 +1006,8 @@ class Cmd4Accessory
             child.kill( 'SIGINT' );
 
             // We can call our callback though ;-)
-            if ( pollingID != 0 && replyCount == 1 )
-               callback( constants.ERROR_2ND_NULL_STRING_REPLY, null, pollingID );
+            if ( pollingID != 0 )
+               callback( constants.ERROR_2ND_NULL_STRING_REPLY, null, pollingID, errMsg );
 
             return;
          }
@@ -1019,9 +1026,7 @@ class Cmd4Accessory
                )
             )
          {
-            // Only the first message should be valid
-            if ( replyCount == 1 )
-               self.log.warn( `getValue: Warning, Retrieving ${ characteristicString }, expected only one word value for: ${ self.displayName } of: ${ trimmedReply }${ QIndicator }` );
+            self.log.warn( `getValue: Warning, Retrieving ${ characteristicString }, expected only one word value for: ${ self.displayName } of: ${ trimmedReply }${ QIndicator }` );
          }
 
          self.log.debug( `getValue: ${ characteristicString } function for: ${ self.displayName } returned: ${ unQuotedReply }${ QIndicator }` );
@@ -1041,10 +1046,7 @@ class Cmd4Accessory
          let properValue = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( unQuotedReply );
          if ( properValue == undefined )
          {
-            // Only the first message should be valid
-            if ( replyCount == 1 )
-               // If the value is not convertable, just return it.
-               self.log.warn( `${ self.displayName} ` + chalk.red( `Cannot convert value: ${ unQuotedReply } to ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format } for ${ characteristicString }${ QIndicator }` ) );
+            self.log.warn( `${ self.displayName} ` + chalk.red( `Cannot convert value: ${ unQuotedReply } to ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format } for ${ characteristicString }${ QIndicator }` ) );
 
             // Do not call the callback or continue processing as too many will be called.
 
@@ -1052,15 +1054,15 @@ class Cmd4Accessory
             child.kill( 'SIGINT' );
 
             // We can call our callback though ;-)
-            if ( pollingID != 0 && replyCount == 1 )
-               callback( constants.ERROR_NON_CONVERTABLE_REPLY, null, pollingID );
+            if ( pollingID != 0 )
+               callback( constants.ERROR_NON_CONVERTABLE_REPLY, null, pollingID, errMsg );
 
             return;
          }
 
 
          if ( pollingID != 0 )
-            callback( 0, properValue, pollingID );
+            callback( 0, properValue, pollingID, errMsg );
          else
             callback( 0, properValue );
 

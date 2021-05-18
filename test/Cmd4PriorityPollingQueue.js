@@ -104,6 +104,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       assert.equal( cmd4PriorityPollingQueue.queueName, queueName, ` Cmd4PriorityPollingQueue.queueName is incorrect` );
 
       assert.isFalse( cmd4PriorityPollingQueue.queueStarted, ` Cmd4PriorityPollingQueue should not be started` );
+      assert.equal( cmd4PriorityPollingQueue.SQUASH_TIMER_INTERVAL, 5 * 60 * 1000, ` incorrect squash timer interval` );
 
    });
 
@@ -313,7 +314,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
 
       setTimeout( () =>
       {
-         let expectedOutput1 = `[90mgetValue: accTypeEnumIndex:( 105 )-"On" function for: My_Switch cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Switch' 'On'\u001b[39m`;
+         let expectedOutput1 = `[90mgetValue: accTypeEnumIndex:( 105 )-"On" function for: My_Switch cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Switch' 'On'.\u001b[39m`;
          let expectedOutput2 = `[90mgetValue: On function for: My_Switch returned: 0`;
 
          assert.include( this.log.logBuf, expectedOutput1 , `expected stdout: ${ this.log.logBuf }` );
@@ -641,4 +642,261 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
          done( );
       }, 9000);
    }).timeout(10000);
+});
+describe('Testing Cmd4PriorityPollingQueue squashError', ( ) =>
+{
+   it( "Test Cmd4PriorityPollingQueue.squashError exists", function( )
+   {
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( );
+
+      let queueName = "Queue A";
+
+      let cmd4PriorityPollingQueue = new Cmd4PriorityPollingQueue( log, queueName );
+
+      expect( cmd4PriorityPollingQueue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "cmd4PollingQueues is not an instance of Cmd4PollingQueues" );
+
+      assert.isFunction( cmd4PriorityPollingQueue.squashError, `.squashError is not a function` );
+
+      assert.equal( "", log.logBuf, ` Cmd4PriorityPollingQueue unexpected stdout received: ${ log.logBuf }` );
+      assert.equal( "", log.errBuf, ` Cmd4PriorityPollingQueue unexpected stderr received: ${ log.errBuf }` );
+   });
+
+   it( "Test Cmd4PriorityPollingQueue.squashError exists", function( )
+   {
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( );
+
+      let queueName = "Queue A";
+
+      let cmd4PriorityPollingQueue = new Cmd4PriorityPollingQueue( log, queueName );
+
+      expect( cmd4PriorityPollingQueue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "cmd4PollingQueues is not an instance of Cmd4PollingQueues" );
+   });
+
+});
+describe('Testing Cmd4PriorityPollingQueue squashError', ( ) =>
+{
+   let log = new Logger( );
+   log.setBufferEnabled( );
+   log.setOutputEnabled( false );
+   log.setDebugEnabled( );
+
+   let queueName = "Queue A";
+
+   let cmd4PriorityPollingQueue = new Cmd4PriorityPollingQueue( log, queueName );
+   afterEach( function( )
+   {
+      Object.keys( cmd4PriorityPollingQueue.squashList).forEach( ( error ) =>
+      {
+         let entry = cmd4PriorityPollingQueue.squashList[ error ];
+         // console.log( "Cancelling timer" );
+         if ( entry != undefined )
+            clearTimeout( entry.errTimer );
+      });
+
+      cmd4PriorityPollingQueue.squashList = { };
+      cmd4PriorityPollingQueue.log.reset( );
+      log.setOutputEnabled( false );
+   });
+
+   it( "Test Cmd4PriorityPollingQueue.squashError outputs 1 message", function( done )
+   {
+      let errNo = constants.ERROR_NULL_REPLY;
+      cmd4PriorityPollingQueue.squashError( cmd4PriorityPollingQueue, errNo, "test message" );
+
+      let expectedErrOutput1 = `[31mtest message`;
+
+      assert.equal( "", log.logBuf, ` Cmd4PriorityPollingQueue unexpected stdout received: ${ log.logBuf }` );
+      assert.include( log.errBuf, expectedErrOutput1, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
+      assert.equal( log.errLineCount, 1, ` Cmd4PriorityPollingQueue expected only 1 error line ${ log.errBuf }` );
+
+      done( );
+   });
+
+   it( "Test Cmd4PriorityPollingQueue.squashError outputs 1 message of the same type in < 5 min ", function( done )
+   {
+      let errNo = constants.ERROR_NULL_REPLY;
+      cmd4PriorityPollingQueue.squashError( cmd4PriorityPollingQueue, errNo, "test message" );
+      cmd4PriorityPollingQueue.squashError( cmd4PriorityPollingQueue, errNo, "test message" );
+
+      let expectedErrOutput1 = `[31mtest message`;
+
+      assert.equal( "", log.logBuf, ` Cmd4PriorityPollingQueue unexpected stdout received: ${ log.logBuf }` );
+      assert.include( log.errBuf, expectedErrOutput1, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
+      assert.equal( log.errLineCount, 1, ` Cmd4PriorityPollingQueue expected only 1 error line ${ log.errBuf }` );
+
+      done( );
+   });
+
+   it( "Test Cmd4PriorityPollingQueue.squashError outputs 2 message of different types in < 5 min ", function( done )
+   {
+      let errNo1 = constants.ERROR_NULL_REPLY;
+      let errNo2 = constants.ERROR_EMPTY_STRING_REPLY;
+      cmd4PriorityPollingQueue.squashError( cmd4PriorityPollingQueue, errNo1, "test message" );
+      cmd4PriorityPollingQueue.squashError( cmd4PriorityPollingQueue, errNo1, "test message" );
+      cmd4PriorityPollingQueue.squashError( cmd4PriorityPollingQueue, errNo1, "test message" );
+      cmd4PriorityPollingQueue.squashError( cmd4PriorityPollingQueue, errNo2, "Second message" );
+      cmd4PriorityPollingQueue.squashError( cmd4PriorityPollingQueue, errNo2, "Second message" );
+
+      let expectedErrOutput1 = `[31mtest message`;
+      let expectedErrOutput2 = `[31mSecond message`;
+
+      assert.equal( "", log.logBuf, ` Cmd4PriorityPollingQueue unexpected stdout received: ${ log.logBuf }` );
+      assert.include( log.errBuf, expectedErrOutput1, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
+      assert.include( log.errBuf, expectedErrOutput2, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
+      assert.equal( log.errLineCount, 2, ` Cmd4PriorityPollingQueue expected only 1 error line ${ log.errBuf }` );
+
+      let entry = cmd4PriorityPollingQueue.squashList[ errNo1 ];
+      assert.equal( entry.errCount, 2, ` Cmd4PriorityPollingQueue expected two counts of error message ${ entry.errCount }` );
+
+
+      done( );
+   });
+
+   it( "Test Cmd4PriorityPollingQueue.squashError outputs timed message ", function( done )
+   {
+      let errNo1 = constants.ERROR_NULL_REPLY;
+      // Set to 3 seconds for quick testing
+      cmd4PriorityPollingQueue.SQUASH_TIMER_INTERVAL = 500;
+      for ( let i = 0; i < 10; i++ )
+         cmd4PriorityPollingQueue.squashError( cmd4PriorityPollingQueue, errNo1, "test message" );
+
+      let expectedErrOutput1 = `[31mtest message`;
+      let expectedErrOutput2 = `[31mThis message has been omitted 9 times => test message`;
+
+      assert.equal( "", log.logBuf, ` Cmd4PriorityPollingQueue unexpected stdout received: ${ log.logBuf }` );
+      assert.include( log.errBuf, expectedErrOutput1, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
+      setTimeout( () =>
+      {
+         assert.include( log.errBuf, expectedErrOutput2, ` Cmd4PriorityPollingQueue expected omitted stderr message received: ${ log.errBuf }` );
+
+         assert.equal( log.errLineCount, 2, ` Cmd4PriorityPollingQueue expected only 1 error line ${ log.errBuf }` );
+
+         done( );
+      }, 700);
+   }).timeout(1000);
+
+   it( "Test Cmd4PriorityPollingQueue.squashError invalid error ", function( done )
+   {
+      let errNo1 = -355;
+      // Set to 3 seconds for quick testing
+      cmd4PriorityPollingQueue.SQUASH_TIMER_INTERVAL = 500;
+      cmd4PriorityPollingQueue.squashError( cmd4PriorityPollingQueue, errNo1, "test message" );
+
+      let expectedErrOutput1 = `[31mUnhandled error: -355 errMsg: test message`;
+
+      assert.equal( "", log.logBuf, ` Cmd4PriorityPollingQueue unexpected stdout received: ${ log.logBuf }` );
+      assert.include( log.errBuf, expectedErrOutput1, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
+
+      assert.equal( log.errLineCount, 1, ` Cmd4PriorityPollingQueue expected only 1 error line ${ log.errBuf }` );
+
+      done( );
+   });
+
+   it( "Test Cmd4PriorityPollingQueue.squashError restarts timed message ", function( done )
+   {
+      let errNo1 = constants.ERROR_NULL_REPLY;
+      // Set to 3 seconds for quick testing
+      cmd4PriorityPollingQueue.SQUASH_TIMER_INTERVAL = 500;
+      for ( let i = 0; i < 10; i++ )
+         cmd4PriorityPollingQueue.squashError( cmd4PriorityPollingQueue, errNo1, "test message" );
+
+      let expectedErrOutput1 = `[31mtest message`;
+      let expectedErrOutput2 = `[31mThis message has been omitted 9 times => test message`;
+
+      assert.equal( "", log.logBuf, ` Cmd4PriorityPollingQueue unexpected stdout received: ${ log.logBuf }` );
+      assert.include( log.errBuf, expectedErrOutput1, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
+      setTimeout( () =>
+      {
+         assert.include( log.errBuf, expectedErrOutput2, ` Cmd4PriorityPollingQueue expected omitted stderr message received: ${ log.errBuf }` );
+
+         assert.equal( log.errLineCount, 2, ` Cmd4PriorityPollingQueue expected only 1 error line ${ log.errBuf }` );
+
+         // Do it again
+         log.reset( );
+         let expectedErrOutput3 = `[31mtest message2`;
+
+         for ( let i = 0; i < 10; i++ )
+            cmd4PriorityPollingQueue.squashError( cmd4PriorityPollingQueue, errNo1, "test message2" );
+
+         assert.equal( "", log.logBuf, ` Cmd4PriorityPollingQueue unexpected stdout received: ${ log.logBuf }` );
+         assert.include( log.errBuf, expectedErrOutput3, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
+
+         setTimeout( () =>
+         {
+            assert.include( log.errBuf, expectedErrOutput2, ` Cmd4PriorityPollingQueue expected omitted stderr message received: ${ log.errBuf }` );
+
+            assert.equal( log.errLineCount, 2, ` Cmd4PriorityPollingQueue expected only 1 error line ${ log.errBuf }` );
+
+            done( );
+         }, 700);
+
+      }, 700);
+   }).timeout(2000);
+
+   it( "Test Cmd4PriorityPollingQueue.squashError debug message ", function( done )
+   {
+      log.setDebugEnabled( true );
+      let errNo1 = constants.ERROR_NULL_REPLY;
+      // Set to 3 seconds for quick testing
+      cmd4PriorityPollingQueue.SQUASH_TIMER_INTERVAL = 500;
+      for ( let i = 0; i < 10; i++ )
+         cmd4PriorityPollingQueue.squashError( cmd4PriorityPollingQueue, errNo1, "test message" );
+
+      let expectedErrOutput1 = `[31mtest message`;
+      let expectedErrOutput2 = `[31mThis message has been omitted 9 times => test message`;
+
+      assert.include( log.errBuf, expectedErrOutput1, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
+      setTimeout( () =>
+      {
+         assert.include( log.errBuf, expectedErrOutput2, ` Cmd4PriorityPollingQueue expected omitted stderr message received: ${ log.errBuf }` );
+
+         assert.equal( log.errLineCount, 2, ` Cmd4PriorityPollingQueue expected only 1 error line ${ log.errBuf }` );
+
+         // Do it again
+         log.reset( );
+         let expectedErrOutput3 = `[31mtest message2`;
+
+         for ( let i = 0; i < 10; i++ )
+            cmd4PriorityPollingQueue.squashError( cmd4PriorityPollingQueue, errNo1, "test message2" );
+
+         assert.include( log.errBuf, expectedErrOutput3, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
+
+         setTimeout( () =>
+         {
+            assert.include( log.errBuf, expectedErrOutput2, ` Cmd4PriorityPollingQueue expected omitted stderr message received: ${ log.errBuf }` );
+
+            assert.equal( log.errLineCount, 2, ` Cmd4PriorityPollingQueue expected only 1 error line ${ log.errBuf }` );
+
+            done( );
+         }, 700);
+
+      }, 700);
+   }).timeout(2000);
+
+   it( "Test Cmd4PriorityPollingQueue.squashError occurs once in 5 min ", function( done )
+   {
+      log.setDebugEnabled( true );
+      let errNo1 = constants.ERROR_NULL_REPLY;
+      // Set to 3 seconds for quick testing
+      cmd4PriorityPollingQueue.SQUASH_TIMER_INTERVAL = 500;
+         cmd4PriorityPollingQueue.squashError( cmd4PriorityPollingQueue, errNo1, "test message" );
+
+      let expectedErrOutput1 = `[31mtest message`;
+
+      assert.include( log.errBuf, expectedErrOutput1, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
+      log.reset( );
+      setTimeout( () =>
+      {
+         assert.equal( log.errBuf, "", ` Cmd4PriorityPollingQueue Unexpected stderr: ${ log.errBuf }` );
+
+         done( );
+
+      }, 700);
+   }).timeout(2000);
 });
