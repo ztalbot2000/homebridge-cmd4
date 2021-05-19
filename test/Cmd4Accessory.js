@@ -509,11 +509,8 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
       log.setDebugEnabled( false );
       new Cmd4Accessory( log, thermostatConfig, _api, [ ], parentInfo );
 
-      let expectedOutput1 = `Creating linked accessories for: Thermostat`;
-      let expectedErrOutput1 = `[33mWarning, With Cmd4_Mode set to "Polled" and polling for "CurrentTemperature" requested, you also must do polling of "TargetTemperature" or things will not function properly`;
-
-      assert.include( log.logBuf, expectedOutput1, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.errBuf, expectedErrOutput1, ` cmd4Accessory stderr output expected: "" received: ${ log.errBuf }` );
+      assert.include( log.logBuf, `Creating linked accessories for: Thermostat`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.errBuf, `[33mWarning, With Cmd4_Mode set to "Polled" and polling for "CurrentTemperature" requested, you also must do polling of "TargetTemperature" or things will not function properly`, ` cmd4Accessory stderr output expected: "" received: ${ log.errBuf }` );
 
    });
 
@@ -565,16 +562,12 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
 
       cmd4Platform.discoverDevices( );
 
-      let expectedOutput1 = `[34mCreating Platform Accessory type for : StandaloneDoorOpener`;
-      let expectedOutput2 = `[90mCharacteristic polling for: StandaloneDoorOpener`;
-      let expectedOutput3 = `[90mCreated platformAccessory: StandaloneDoorOpener`;
-      let expectedErrOutput1 = `[33mWarning, With Cmd4_Mode set to "Polled" and polling for "CurrentDoorState" requested, you also must do polling of "TargetDoorState" or things will not function properly`;
 
-      assert.include( log.logBuf, expectedOutput1, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput2, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput3, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : StandaloneDoorOpener`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCharacteristic polling for: StandaloneDoorOpener`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: StandaloneDoorOpener`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
 
-      assert.include( log.errBuf, expectedErrOutput1, ` cmd4Accessory stderr output expected: "" received: ${ log.errBuf }` );
+      assert.include( log.errBuf, `[33mWarning, With Cmd4_Mode set to "Polled" and polling for "CurrentDoorState" requested, you also must do polling of "TargetDoorState" or things will not function properly`, ` cmd4Accessory stderr output expected: "" received: ${ log.errBuf }` );
 
    });
 
@@ -637,16 +630,11 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
 
       cmd4Platform.discoverDevices( );
 
-      let expectedOutput1 = `[34mCreating Platform Accessory type for : StandaloneDoorOpener`;
-      let expectedOutput2 = `[90mCharacteristic polling for: StandaloneDoorOpener`;
-      let expectedOutput3 = `[90mCreated platformAccessory: StandaloneDoorOpener`;
-      let expectedErrOutput1 = `[33mWarning, With Cmd4_Mode set to "Polled" and polling for "CurrentDoorState" requested, you also must do polling of "TargetDoorState" or things will not function properly`;
 
-
-      assert.include( log.logBuf, expectedOutput1, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput2, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput3, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.errBuf, expectedErrOutput1, ` cmd4Accessory stderr output expected: "" received: ${ log.errBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : StandaloneDoorOpener`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCharacteristic polling for: StandaloneDoorOpener`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: StandaloneDoorOpener`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.errBuf, `[33mWarning, With Cmd4_Mode set to "Polled" and polling for "CurrentDoorState" requested, you also must do polling of "TargetDoorState" or things will not function properly`, ` cmd4Accessory stderr output expected: "" received: ${ log.errBuf }` );
 
    });
 
@@ -684,27 +672,15 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
 
       cmd4Platform.discoverDevices( );
 
-      let expectedOutput1 = `[34mCreating Platform Accessory type for : StandaloneDoorOpener`;
-      let expectedOutput2 = `[90mCharacteristic polling for: StandaloneDoorOpener`;
-      let expectedOutput3 = `[90mCreated platformAccessory: StandaloneDoorOpener`;
-      let expectedOutput4 = `[33mAdding getCachedValue for StandaloneDoorOpener characteristic: Name`;
 
-      let expectedOutput5 = `[33mAdding getValue for StandaloneDoorOpener characteristic: TargetDoorState`;
-      let expectedOutput6 = `[33mAdding setValue for StandaloneDoorOpener characteristic: TargetDoorState`;
-
-      let expectedOutput7 = `[33mAdding getValue for StandaloneDoorOpener characteristic: CurrentDoorState`;
-
-      let expectedOutput8 = `[33mAdding getValue for StandaloneDoorOpener characteristic: ObstructionDetected`;
-
-
-      assert.include( log.logBuf, expectedOutput1, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput2, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput3, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput4, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput5, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput6, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput7, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput8, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : StandaloneDoorOpener`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCharacteristic polling for: StandaloneDoorOpener`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: StandaloneDoorOpener`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[33mAdding getCachedValue for StandaloneDoorOpener characteristic: Name`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[33mAdding getValue for StandaloneDoorOpener characteristic: TargetDoorState`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[33mAdding setValue for StandaloneDoorOpener characteristic: TargetDoorState`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[33mAdding getValue for StandaloneDoorOpener characteristic: CurrentDoorState`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[33mAdding getValue for StandaloneDoorOpener characteristic: ObstructionDetected`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
       assert.equal( log.errBuf, "", ` cmd4Accessory stderr output Unexpected stderr: ${ log.errBuf }` );
 
    });
@@ -739,20 +715,13 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
 
       cmd4Platform.discoverDevices( );
 
-      let expectedOutput1 = `[34mCreating Platform Accessory type for : TemperatureSensor`;
-      let expectedOutput2 = `[90mCharacteristic polling for: TemperatureSensor`;
-      let expectedOutput3 = `[90mCreated platformAccessory: TemperatureSensor`;
-      let expectedOutput4 = `[33mAdding getCachedValue for TemperatureSensor characteristic: Name`;
 
-      let expectedOutput5 = `[33mAdding getValue for TemperatureSensor characteristic: CurrentTemperature`;
-      let expectedOutput6 = `[33mAdding setValue for TemperatureSensor characteristic: TargetTemperature`;
-
-      assert.include( log.logBuf, expectedOutput1, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput2, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput3, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput4, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput5, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.notInclude( log.logBuf, expectedOutput6, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : TemperatureSensor`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCharacteristic polling for: TemperatureSensor`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: TemperatureSensor`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[33mAdding getCachedValue for TemperatureSensor characteristic: Name`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[33mAdding getValue for TemperatureSensor characteristic: CurrentTemperature`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.notInclude( log.logBuf, `[33mAdding setValue for TemperatureSensor characteristic: TargetTemperature`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
       assert.equal( log.errBuf, "", ` cmd4Accessory stderr output Unexpected stderr: ${ log.errBuf }` );
 
    });
@@ -769,12 +738,12 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
             Cmd4_Mode:                   "Polled",
             DisplayName:                 "Thermostat",
             TemperatureDisplayUnits:     "CELSIUS",
-            queueTypes: [{queue: "A", queueType: "WoRm"}],
-            queue:                       "A",
             CurrentTemperature:           20.0,
             TargetTemperature:            20.0,
             CurrentHeatingCoolingState:   0,
             TargetHeatingCoolingState:    0,
+            QueueTypes: [{ queue: "A", queueType: "WoRm" }],
+            Queue:        "A",
             Polling: [{ characteristic: "CurrentTemperature" },
                       { characteristic: "TargetTemperature" },
                       { characteristic: "CurrentHeatingCoolingState" },
@@ -795,31 +764,18 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
 
       cmd4Platform.discoverDevices( );
 
-      let expectedOutput1 = `[34mCreating Platform Accessory type for : Thermostat`;
-      let expectedOutput2 = `[90mCharacteristic polling for: Thermostat`;
-      let expectedOutput3 = `[90mCreated platformAccessory: Thermostat`;
-      let expectedOutput4 = `[33mAdding getCachedValue for Thermostat characteristic: Name`;
 
-      let expectedOutput5 = `[33mAdding priorityGetValue for Thermostat characteristic: TargetTemperature`;
-      let expectedOutput6 = `[33mAdding prioritySetValue for Thermostat characteristic: TargetTemperature`;
 
-      let expectedOutput7 = `[33mAdding priorityGetValue for Thermostat characteristic: CurrentTemperature`;
-
-      let expectedOutput8 = `[33mAdding priorityGetValue for Thermostat characteristic: TargetHeatingCoolingState`;
-      let expectedOutput9 = `[33mAdding prioritySetValue for Thermostat characteristic: TargetHeatingCoolingState`;
-
-      let expectedOutput10 = `[33mAdding priorityGetValue for Thermostat characteristic: CurrentHeatingCoolingState`;
-
-      assert.include( log.logBuf, expectedOutput1, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput2, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput3, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput4, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput5, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput6, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput7, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput8, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput9, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput10, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : Thermostat`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCharacteristic polling for: Thermostat`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: Thermostat`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[33mAdding getCachedValue for Thermostat characteristic: Name`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[33mAdding priorityGetValue for Thermostat characteristic: TargetTemperature`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[33mAdding prioritySetValue for Thermostat characteristic: TargetTemperature`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[33mAdding priorityGetValue for Thermostat characteristic: CurrentTemperature`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[33mAdding priorityGetValue for Thermostat characteristic: TargetHeatingCoolingState`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[33mAdding prioritySetValue for Thermostat characteristic: TargetHeatingCoolingState`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[33mAdding priorityGetValue for Thermostat characteristic: CurrentHeatingCoolingState`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
       assert.equal( log.errBuf, "", ` cmd4Accessory stderr output Unexpected stderr: ${ log.errBuf }` );
 
    });

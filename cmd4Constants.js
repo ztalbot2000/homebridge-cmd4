@@ -25,6 +25,9 @@ exports.DEFAULT_STATUSMSG        = "TRUE";
 
 exports.DEFAULT_QUEUEMSG         = false;
 exports.DEFAULT_QUEUE_TYPE       = "WoRm";
+exports.DEFAULT_BURST_GROUP_SIZE = 0;     // No burst
+exports.DEFAULT_BURST_INTERVAL   = 15000; // 2.5 minutes
+exports.DEFAULT_SQUASH_TIMER_INTERVAL   = 12000; // 2 minutes
 
 // How many polls before output of queue status information
 exports.DEFAULT_QUEUE_STAT_MSG_INTERVAL = 1000;
@@ -80,6 +83,7 @@ exports.QUEUETYPE                = "QueueType";
 exports.QUEUETYPES               = "QueueTypes";
 exports.QUEUETYPE_SEQUENTIAL     = "Sequential";
 exports.QUEUETYPE_WORM           = "WoRm";
+exports.BURST_GROUP_SIZE         = "BurstGroupSize";
 
 //exports.STATUSMSG_l              = "statusMsg";
 

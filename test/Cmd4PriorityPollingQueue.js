@@ -88,161 +88,149 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
 
    it( "Test creation of Cmd4PriorityPollingQueue", function( )
    {
-      this.log = new Logger( );
-      this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( false );
-      this.log.setDebugEnabled( );
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( );
 
       let queueName = "Queue A";
 
-      let cmd4PriorityPollingQueue = new Cmd4PriorityPollingQueue( this.log, queueName );
+      let cmd4PriorityPollingQueue = new Cmd4PriorityPollingQueue( log, queueName );
 
       expect( cmd4PriorityPollingQueue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "cmd4PollingQueues is not an instance of Cmd4PollingQueues" );
 
-      assert.equal( "", this.log.logBuf, ` Cmd4PriorityPollingQueue unexpected stdout received: ${ this.log.logBuf }` );
-      assert.equal( "", this.log.errBuf, ` Cmd4PriorityPollingQueue unexpected stderr received: ${ this.log.errBuf }` );
+      assert.equal( "", log.logBuf, ` Cmd4PriorityPollingQueue unexpected stdout received: ${ log.logBuf }` );
+      assert.equal( "", log.errBuf, ` Cmd4PriorityPollingQueue unexpected stderr received: ${ log.errBuf }` );
       assert.equal( cmd4PriorityPollingQueue.queueName, queueName, ` Cmd4PriorityPollingQueue.queueName is incorrect` );
 
       assert.isFalse( cmd4PriorityPollingQueue.queueStarted, ` Cmd4PriorityPollingQueue should not be started` );
-      assert.equal( cmd4PriorityPollingQueue.SQUASH_TIMER_INTERVAL, 5 * 60 * 1000, ` incorrect squash timer interval` );
+      assert.equal( cmd4PriorityPollingQueue.SQUASH_TIMER_INTERVAL, constants.DEFAULT_SQUASH_TIMER_INTERVAL, ` incorrect squash timer interval` );
+      assert.equal( cmd4PriorityPollingQueue.queueType, constants.DEFAULT_QUEUE_TYPE, ` incorrect default queue type` );
+      assert.equal( cmd4PriorityPollingQueue.queueBurst, constants.DEFAULT_QUEUE_BURST, ` incorrect default queue burst` );
+      assert.equal( cmd4PriorityPollingQueue.burstInterval, constants.DEFAULT_BURST_INTERVAL, ` incorrect default burst interval` );
 
    });
 
-   it.skip( "Test add set entry goes to high priority queue", function( )
+   it( "Test existiance of prioritySetValue", function( )
    {
-      this.log = new Logger( );
-      this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( false );
-      this.log.setDebugEnabled( );
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( );
 
       let queueName = "Queue A";
-      let value = 0;
 
-      let config =
+      let platformConfig =
       {
-         Name:         "My_Switch",
-         DisplayName:  "My_Switch",
-         StatusMsg:    true,
-         Type:         "Switch",
-         Cmd4_Mode:    "Polled",
-         On:           0,
-         State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
-      }
-      let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
+         accessories: [
+         {
+            Name:         "My_Switch",
+            DisplayName:  "My_Switch",
+            StatusMsg:    true,
+            Type:         "Switch",
+            Cmd4_Mode:    "Polled",
+            On:           0,
+            State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         }]
+      };
 
-      let cmd4Accessory = new Cmd4Accessory( this.log, config, _api, [ ], parentInfo );
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
-      expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "Cmd4Accessory is not an instance of Cmd4Accessory" );
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
+      cmd4Platform.discoverDevices( );
 
-      let cmd4PriorityPollingQueue = new Cmd4PriorityPollingQueue( this.log, queueName );
+      let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
+      expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, `cmd4Platform did not create an instance of Cmd4Accessory` );
 
-      assert.isFunction( cmd4PriorityPollingQueue.addQueueEntry, `.addQueueEntry is not a function` );
+      let cmd4PriorityPollingQueue = new Cmd4PriorityPollingQueue( log, queueName );
 
-      //                                    ( isSet, isPolled, accessory, accTypeEnumIndex, interval, timeout, callback, value )
-      cmd4PriorityPollingQueue.addQueueEntry( true, false, cmd4Accessory, CMD4_ACC_TYPE_ENUM.On, "On", constants.DEFAULT_INTERVAL, constants.DEFAULT_TIMEOUT, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, dummyCallback, value );
+      assert.isFunction( cmd4PriorityPollingQueue.prioritySetValue, `.prioritySetValue is not a function` );
 
-      assert.equal( cmd4PriorityPollingQueue.highPriorityQueue.length, 1, `Set not added to high prority queue` );
-
-      assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 0, `Set added to low prority queue` );
-
-      let entry = cmd4PriorityPollingQueue.highPriorityQueue[ 0 ];
-
-      assert.isTrue( entry.isSet, `Entry was not stored as isSet` );
-
-      assert.isFalse( entry.isPolled, `Entry was not stored as not Polled` );
-
-      assert.equal( entry.value, value, `Wrong value for Set added to queue` );
-
-      assert.equal( entry.accTypeEnumIndex, CMD4_ACC_TYPE_ENUM.On, `On was not stored as a set` );
-      assert.equal( entry.interval, constants.DEFAULT_INTERVAL, `interval was not stored` );
-      assert.equal( entry.timeout, constants.DEFAULT_TIMEOUT, `timeout was not stored` );
-      assert.equal( entry.stateChangeResponseTime, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, `stateChangeResponseTime was not stored` );
-
-      assert.equal( entry.callback, dummyCallback, `callback was not stored as a set` );
    });
 
-   it.skip( "Test add IOS Get entry goes to high priority queue", function( )
+   it( "Test existiance of priorityGetValue", function( )
    {
-      this.log = new Logger( );
-      this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( false );
-      this.log.setDebugEnabled( );
-
-      let queueName = "Queue A";
-
-      let config =
+      let platformConfig =
       {
-         Name:         "My_Switch",
-         DisplayName:  "My_Switch",
-         StatusMsg:    true,
-         Type:         "Switch",
-         Cmd4_Mode:    "Polled",
-         On:           0,
-         State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
-      }
-      let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
+         accessories: [
+         {
+            Name:         "My_Switch",
+            DisplayName:  "My_Switch",
+            StatusMsg:    true,
+            Type:         "Switch",
+            QueueTypes: [{ queue: "A", queueType: "WoRm" }],
+            Queue:        "A",
+            Cmd4_Mode:    "Polled",
+            On:           0,
+            State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         }]
+      };
 
-      let cmd4Accessory = new Cmd4Accessory( this.log, config, _api, [ ], parentInfo );
-
-      expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "Cmd4Accessory is not an instance of Cmd4Accessory" );
-
-
-      let cmd4PriorityPollingQueue = new Cmd4PriorityPollingQueue( this.log, queueName );
-
-      assert.isFunction( cmd4PriorityPollingQueue.addQueueEntry, `.addQueueEntry is not a function` );
-
-      //                                    ( isSet, isPolled, accessory, accTypeEnumIndex, interval, timeout, callback, value )
-      cmd4PriorityPollingQueue.addQueueEntry( false, false, cmd4Accessory, CMD4_ACC_TYPE_ENUM.On, "On", constants.DEFAULT_INTERVAL, constants.DEFAULT_TIMEOUT, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, dummyCallback, 1 );
-
-      assert.equal( cmd4PriorityPollingQueue.highPriorityQueue.length, 1, `IOS Get not added to high prority queue` );
-
-      assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 0, `Get added to low prority queue` );
-
-      let entry = cmd4PriorityPollingQueue.highPriorityQueue[ 0 ];
-
-      assert.isFalse( entry.isSet, `Entry was not stored as a get` );
-
-      assert.isFalse( entry.isPolled, `Entry was not stored as not Polled` );
-
-      assert.equal( entry.accTypeEnumIndex, CMD4_ACC_TYPE_ENUM.On, `On was not stored as a get` );
-
-      assert.equal( entry.callback, dummyCallback, `callback was not stored as a get` );
-   });
-
-   it( "Test add Polled Get entry goes to low priority queue", function( )
-   {
-      this.log = new Logger( );
-      this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( false );
-      this.log.setDebugEnabled( );
-
-      let queueName = "Queue A";
-
-      let config =
-      {
-         Name:         "My_Switch",
-         DisplayName:  "My_Switch",
-         StatusMsg:    true,
-         Type:         "Switch",
-         Cmd4_Mode:    "Polled",
-         On:           0,
-         State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
-      }
-      let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
-
-      let cmd4Accessory = new Cmd4Accessory( this.log, config, _api, [ ], parentInfo );
-
-      expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "Cmd4Accessory is not an instance of Cmd4Accessory" );
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
 
 
-      let cmd4PriorityPollingQueue = new Cmd4PriorityPollingQueue( this.log, queueName );
-      cmd4Accessory.queue = cmd4PriorityPollingQueue;
-      cmd4Accessory.queueName = queueName;
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
+
+      let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
+      expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, `cmd4Platform did not create an instance of Cmd4Accessory` );
+
+      let cmd4PriorityPollingQueue = settings.listOfCreatedPriorityQueues[ "A" ];
+      expect( cmd4PriorityPollingQueue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PollingQueue" );
 
       assert.isFunction( cmd4PriorityPollingQueue.addLowPriorityGetPolledQueueEntry, `.addLowPriorityGetPolledQueueEntry is not a function` );
 
-      //                                    ( accessory, accTypeEnumIndex, interval, timeout )
+      assert.isFunction( cmd4PriorityPollingQueue.priorityGetValue, `.priorityGetValue is not a function` );
+
+   });
+
+   it( "Test addLowPriorityGetPolledQueueEntry goes to low priority queue", function( )
+   {
+      let platformConfig =
+      {
+         accessories: [
+         {
+            Name:         "My_Switch",
+            DisplayName:  "My_Switch",
+            StatusMsg:    true,
+            Type:         "Switch",
+            Cmd4_Mode:    "Polled",
+            QueueTypes: [{ queue: "A", queueType: "WoRm" }],
+            Queue:        "A",
+            On:           0,
+            State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         }]
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
+
+      let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
+      expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, `cmd4Platform did not create an instance of Cmd4Accessory` );
+
+      let cmd4PriorityPollingQueue = settings.listOfCreatedPriorityQueues[ "A" ];
+      expect( cmd4PriorityPollingQueue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PollingQueue" );
+
+      assert.isFunction( cmd4PriorityPollingQueue.addLowPriorityGetPolledQueueEntry, `.addLowPriorityGetPolledQueueEntry is not a function` );
+
+      //                                    ( accessory, accTypeEnumIndex, characteristicstring, interval, timeout )
       cmd4PriorityPollingQueue.addLowPriorityGetPolledQueueEntry( cmd4Accessory, CMD4_ACC_TYPE_ENUM.On, "On", constants.DEFAULT_INTERVAL, constants.DEFAULT_TIMEOUT );
 
 
@@ -256,13 +244,52 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
 
    });
 
+   it( "Test queue interval is taken from first polling characteristic", function( done  )
+   {
+      let platformConfig =
+      {
+         accessories: [
+         {
+            Name:         "My_Switch",
+            DisplayName:  "My_Switch",
+            StatusMsg:    true,
+            Type:         "Switch",
+            Cmd4_Mode:    "Polled",
+            On:           0,
+            Active:       0,
+            polling: [{ characteristic: "On", queue: "A", interval: 4 },
+                      { characteristic: "Active", queue: "A", interval: 3 }
+                     ],
+            State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         }]
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
+
+      assert.equal( Object.keys(settings.listOfCreatedPriorityQueues).length, 1, `Incorrect number of polling queues created` );
+
+      let queue = settings.listOfCreatedPriorityQueues[ "A" ];
+
+      expect( queue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PollingQueue" );
+
+      assert.equal( queue.lowPriorityQueue.length, 2, `Incorrect number of low level polling characteristics` );
+
+      assert.equal( queue.variablePollingTimer.iv, 4000, `Incorrect starting interval of queue.` );
+      done();
+
+   });
    it( "Test processEntryFromLowPriorityQueue", function( done  )
    {
-      this.log = new Logger( );
-      this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( false );
-      this.log.setDebugEnabled( true );
-
       let platformConfig =
       {
          accessories: [
@@ -281,7 +308,13 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
          }]
       };
 
-      let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
@@ -306,19 +339,16 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
 
       assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 4, `Polled Get added to low prority queue` );
 
-      this.log.reset( );
-      this.log.setOutputEnabled( false );
-      this.log.setDebugEnabled( true );
+      log.reset( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
 
       cmd4PriorityPollingQueue.processEntryFromLowPriorityQueue( cmd4PriorityPollingQueue.lowPriorityQueue[ 0 ] );
 
       setTimeout( () =>
       {
-         let expectedOutput1 = `[90mgetValue: accTypeEnumIndex:( 105 )-"On" function for: My_Switch cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Switch' 'On'.\u001b[39m`;
-         let expectedOutput2 = `[90mgetValue: On function for: My_Switch returned: 0`;
-
-         assert.include( this.log.logBuf, expectedOutput1 , `expected stdout: ${ this.log.logBuf }` );
-         assert.include( this.log.logBuf, expectedOutput2 , `expected stdout: ${ this.log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: accTypeEnumIndex:( 105 )-"On" function for: My_Switch cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Switch' 'On'.\u001b[39m` , `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: On function for: My_Switch returned: 0` , `expected stdout: ${ log.logBuf }` );
          // Low priority queues are continious, make sure it is still the same
          assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 4, `After poll, low priority queue length should atill be the same size` );
 
@@ -339,10 +369,10 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
    // Fails because queue.priorityGetValue is to be called by the accessory
    it.skip( "Test processEntryFromHighPriorityQueue", function( done  )
    {
-      this.log = new Logger( );
-      this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( false );
-      this.log.setDebugEnabled( false );
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
 
       let platformConfig =
       {
@@ -361,7 +391,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
          }]
       }
 
-      let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
@@ -384,25 +414,20 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
 
       assert.equal( cmd4PriorityPollingQueue.highPriorityQueue.length, 2, `IOS Get added to high prority queue` );
 
-      this.log.reset( );
-      this.log.setDebugEnabled( true );
+      log.reset( );
+      log.setDebugEnabled( true );
 
       cmd4PriorityPollingQueue.queueStarted = true;
       cmd4PriorityPollingQueue.processHighPriorityGetQueue( cmd4PriorityPollingQueue.highPriorityQueue[ 0 ] );
 
       setTimeout( () =>
       {
-         let expectedOutput1 = `[90mgetValue: accTypeEnumIndex:( 105 )-"On" function for: My_Switch cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Switch' 'On'\u001b[39m`;
-         let expectedOutput2 = `[90mgetValue: On function for: My_Switch returned: 0`;
-         let expectedOutput3 = `[90mgetValue: accTypeEnumIndex:( 3 )-"Active" function for: My_Switch cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Switch' 'Active'\u001b[39m`;
-         let expectedOutput4 = `[90mgetValue: On function for: My_Switch returned: 0`;
-
          // Output for first high priority characteristic
-         assert.include( this.log.logBuf, expectedOutput1 , `expected stdout: ${ this.log.logBuf }` );
-         assert.include( this.log.logBuf, expectedOutput2 , `expected stdout: ${ this.log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: accTypeEnumIndex:( 105 )-"On" function for: My_Switch cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Switch' 'On'\u001b[39m` , `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: On function for: My_Switch returned: 0` , `expected stdout: ${ log.logBuf }` );
          // Output for second high priority characteristic
-         assert.include( this.log.logBuf, expectedOutput3 , `expected stdout: ${ this.log.logBuf }` );
-         assert.include( this.log.logBuf, expectedOutput4 , `expected stdout: ${ this.log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: accTypeEnumIndex:( 3 )-"Active" function for: My_Switch cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Switch' 'Active'\u001b[39m` , `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: On function for: My_Switch returned: 0` , `expected stdout: ${ log.logBuf }` );
          // High priority queues have their entries removed as they are completed.
          assert.equal( cmd4PriorityPollingQueue.highPriorityQueue.length, 0, `After poll, high priority queue length should 1` );
 
@@ -449,12 +474,12 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
          ]
       }
 
-      this.log = new Logger( );
-      this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( false );
-      this.log.setDebugEnabled( true );
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
 
-      let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
@@ -490,13 +515,9 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
 
       assert.equal( numberOfQueues, 1, `Incorrect number of polling queues` );
 
-      let expectedOutput1 = `Creating new Priority Polled Queue "A"`;
-      let expectedOutput2 = `Adding prioritySetValue for My_Switch characteristic: On`;
-      let expectedOutput3 = `Adding priorityGetValue for My_Switch characteristic: On`;
-
-      assert.include( this.log.logBuf, expectedOutput1 , `expected stdout: ${ this.log.logBuf }` );
-      assert.include( this.log.logBuf, expectedOutput2 , `expected stdout: ${ this.log.logBuf }` );
-      assert.include( this.log.logBuf, expectedOutput3 , `expected stdout: ${ this.log.logBuf }` );
+      assert.include( log.logBuf, `Creating new Priority Polled Queue "A"` , `expected stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `Adding prioritySetValue for My_Switch characteristic: On` , `expected stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `Adding priorityGetValue for My_Switch characteristic: On` , `expected stdout: ${ log.logBuf }` );
 
       //let queue = settings.listOfCreatedPriorityQueues[ "A" ];
 
@@ -505,50 +526,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       done( );
    });
 
-   it.skip('Polling Queue wont be created if a polled queue name is missing', ( done ) =>
-   {
-      let platformConfig =
-      {
-         accessories: [
-            {
-               Name:         "My_Door",
-               DisplayName:  "My_Door",
-               StatusMsg:    true,
-               Type:         "Door",
-               Cmd4_Mode:    "Polled",
-               CurrentPosition:          0,
-               TargetPosition:           0,
-               PositionState:            0,
-               polling:      [ { "characteristic": "CurrentPosition", "queue": "A" },
-                               { "characteristic": "TargetPosition", "queue": "A" },
-                               { "characteristic": "PositionState" }
-                             ],
-               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
-            }
-         ]
-      }
-
-      this.log = new Logger( );
-      this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( false );
-      this.log.setDebugEnabled( true );
-
-      let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );
-
-      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
-
-      cmd4Platform.discoverDevices( );
-
-      sinon.assert.calledWith(process.exit, 401 );
-      let expectedErrOutput1 = `[31m: For Priority Queue Polling all polled characteristics must be in the same polling queue: "A". Missing PositionState`;
-
-      assert.include( this.log.errBuf, expectedErrOutput1 , `expected stderr: ${ this.log.errBuf }` );
-
-      done( );
-   });
-
-   // Fails because queue.priorityGetValue is to be called by the accessory
-   it.skip('PollingQueue cannot be interrupted.', ( done ) =>
+   it('PollingQueue getValue.', ( done ) =>
    {
       let platformConfig =
       {
@@ -582,18 +560,25 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
          ]
       }
 
-      this.log = new Logger( );
-      this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( false );
-      this.log.setDebugEnabled( true );
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
 
-      let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
       cmd4Platform.discoverDevices( );
 
-      assert.equal( settings.arrayOfPollingCharacteristics.length, 4, `Incorrect number of polling characteristics` );
+      let numberOfQueues = Object.keys( settings.listOfCreatedPriorityQueues ).length;
+
+      assert.equal( numberOfQueues, 1, `Incorrect number of polling queues` );
+      let cmd4PriorityPollingQueue = settings.listOfCreatedPriorityQueues[ "A" ];
+      expect( cmd4PriorityPollingQueue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PriorityPollingQueue" );
+
+      assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 4, `Incorrect number of low priority polled characteristics` );
+
 
       //let cmd4LightAccessory = cmd4Platform.createdCmd4Accessories[0];
       let cmd4SwitchAccessory = cmd4Platform.createdCmd4Accessories[1];
@@ -606,41 +591,11 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
          clearTimeout( timer );
       });
 
-      let numberOfQueues = Object.keys( settings.listOfCreatedPriorityQueues ).length;
-
-      assert.equal( numberOfQueues, 1, `Incorrect number of polling queues` );
-      let cmd4PriorityPollingQueue = settings.listOfCreatedPriorityQueues[ "A" ];
-      assert.equal( cmd4PriorityPollingQueue.highPriorityQueue.length, 0, `Set not added to high prority queue` );
-
-      expect( cmd4PriorityPollingQueue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PriorityPollingQueue" );
-
       // Add  IOS Get to start with. This will trigger queue as we had stopped it from starting
-      cmd4PriorityPollingQueue.priorityGetValue( cmd4SwitchAccessory, CMD4_ACC_TYPE_ENUM.Active, constants.DEFAULT_TIMEOUT, dummyCallback );
-      assert.equal( cmd4PriorityPollingQueue.highPriorityQueue.length, 1, `Set not added to high prority queue` );
+      cmd4PriorityPollingQueue.addLowPriorityGetPolledQueueEntry( cmd4SwitchAccessory, CMD4_ACC_TYPE_ENUM.Active, "Active", constants.DEFAULT_TIMEOUT, dummyCallback );
+      assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 5, `Set not added to high prority queue` );
 
-      cmd4PriorityPollingQueue.startQueue( );
-
-      // Add IOS Set in the middle
-      let value = 0;
-      cmd4PriorityPollingQueue.prioritySetValue( cmd4SwitchAccessory, CMD4_ACC_TYPE_ENUM.On, constants.DEFAULT_TIMEOUT, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, dummyCallback, value );
-      setTimeout( () =>
-      {
-
-         let expectedOutput1 = `Creating new Priority Polled Queue "A"`;
-         let expectedOutput2 = `Adding priorityGetValue for My_Switch characteristic: On`;
-         let expectedOutput3 = `Adding priorityGetValue for My_Switch characteristic: Active`;
-         let expectedOutput4 = `Adding prioritySetValue for My_Switch characteristic: On`;
-         let expectedOutput5 = `[90mgetValue: On function for: My_Light returned: ${ value }.`;
-
-         assert.include( this.log.logBuf, expectedOutput1 , `expected stdout: ${ this.log.logBuf }` );
-         assert.include( this.log.logBuf, expectedOutput2 , `expected stdout: ${ this.log.logBuf }` );
-         assert.include( this.log.logBuf, expectedOutput3 , `expected stdout: ${ this.log.logBuf }` );
-         assert.include( this.log.logBuf, expectedOutput4 , `expected stdout: ${ this.log.logBuf }` );
-         assert.include( this.log.logBuf, expectedOutput5 , `expected stdout: ${ this.log.logBuf }` );
-         assert.equal( this.log.errBuf, "" , `unexpected stderr: ${ this.log.errBuf }` );
-
-         done( );
-      }, 9000);
+      done();
    }).timeout(10000);
 });
 describe('Testing Cmd4PriorityPollingQueue squashError', ( ) =>
@@ -679,7 +634,7 @@ describe('Testing Cmd4PriorityPollingQueue squashError', ( ) =>
    });
 
 });
-describe('Testing Cmd4PriorityPollingQueue squashError', ( ) =>
+describe.skip('Testing Cmd4PriorityPollingQueue squashError', ( ) =>
 {
    let log = new Logger( );
    log.setBufferEnabled( );
@@ -709,10 +664,8 @@ describe('Testing Cmd4PriorityPollingQueue squashError', ( ) =>
       let errNo = constants.ERROR_NULL_REPLY;
       cmd4PriorityPollingQueue.squashError( cmd4PriorityPollingQueue, errNo, "test message" );
 
-      let expectedErrOutput1 = `[31mtest message`;
-
       assert.equal( "", log.logBuf, ` Cmd4PriorityPollingQueue unexpected stdout received: ${ log.logBuf }` );
-      assert.include( log.errBuf, expectedErrOutput1, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
+      assert.include( log.errBuf, `[31mtest message`, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
       assert.equal( log.errLineCount, 1, ` Cmd4PriorityPollingQueue expected only 1 error line ${ log.errBuf }` );
 
       done( );
@@ -724,10 +677,9 @@ describe('Testing Cmd4PriorityPollingQueue squashError', ( ) =>
       cmd4PriorityPollingQueue.squashError( cmd4PriorityPollingQueue, errNo, "test message" );
       cmd4PriorityPollingQueue.squashError( cmd4PriorityPollingQueue, errNo, "test message" );
 
-      let expectedErrOutput1 = `[31mtest message`;
 
       assert.equal( "", log.logBuf, ` Cmd4PriorityPollingQueue unexpected stdout received: ${ log.logBuf }` );
-      assert.include( log.errBuf, expectedErrOutput1, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
+      assert.include( log.errBuf, `[31mtest message`, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
       assert.equal( log.errLineCount, 1, ` Cmd4PriorityPollingQueue expected only 1 error line ${ log.errBuf }` );
 
       done( );
@@ -743,12 +695,10 @@ describe('Testing Cmd4PriorityPollingQueue squashError', ( ) =>
       cmd4PriorityPollingQueue.squashError( cmd4PriorityPollingQueue, errNo2, "Second message" );
       cmd4PriorityPollingQueue.squashError( cmd4PriorityPollingQueue, errNo2, "Second message" );
 
-      let expectedErrOutput1 = `[31mtest message`;
-      let expectedErrOutput2 = `[31mSecond message`;
 
       assert.equal( "", log.logBuf, ` Cmd4PriorityPollingQueue unexpected stdout received: ${ log.logBuf }` );
-      assert.include( log.errBuf, expectedErrOutput1, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
-      assert.include( log.errBuf, expectedErrOutput2, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
+      assert.include( log.errBuf, `[31mtest message`, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
+      assert.include( log.errBuf, `[31mSecond message`, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
       assert.equal( log.errLineCount, 2, ` Cmd4PriorityPollingQueue expected only 1 error line ${ log.errBuf }` );
 
       let entry = cmd4PriorityPollingQueue.squashList[ errNo1 ];
@@ -766,14 +716,12 @@ describe('Testing Cmd4PriorityPollingQueue squashError', ( ) =>
       for ( let i = 0; i < 10; i++ )
          cmd4PriorityPollingQueue.squashError( cmd4PriorityPollingQueue, errNo1, "test message" );
 
-      let expectedErrOutput1 = `[31mtest message`;
-      let expectedErrOutput2 = `[31mThis message has been omitted 9 times => test message`;
 
       assert.equal( "", log.logBuf, ` Cmd4PriorityPollingQueue unexpected stdout received: ${ log.logBuf }` );
-      assert.include( log.errBuf, expectedErrOutput1, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
+      assert.include( log.errBuf, `[31mtest message`, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
       setTimeout( () =>
       {
-         assert.include( log.errBuf, expectedErrOutput2, ` Cmd4PriorityPollingQueue expected omitted stderr message received: ${ log.errBuf }` );
+         assert.include( log.errBuf,  `[31mThis message has been omitted 9 times => test message`, ` Cmd4PriorityPollingQueue expected omitted stderr message received: ${ log.errBuf }` );
 
          assert.equal( log.errLineCount, 2, ` Cmd4PriorityPollingQueue expected only 1 error line ${ log.errBuf }` );
 
@@ -788,10 +736,9 @@ describe('Testing Cmd4PriorityPollingQueue squashError', ( ) =>
       cmd4PriorityPollingQueue.SQUASH_TIMER_INTERVAL = 500;
       cmd4PriorityPollingQueue.squashError( cmd4PriorityPollingQueue, errNo1, "test message" );
 
-      let expectedErrOutput1 = `[31mUnhandled error: -355 errMsg: test message`;
 
       assert.equal( "", log.logBuf, ` Cmd4PriorityPollingQueue unexpected stdout received: ${ log.logBuf }` );
-      assert.include( log.errBuf, expectedErrOutput1, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
+      assert.include( log.errBuf, `[31mUnhandled error: -355 errMsg: test message`, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
 
       assert.equal( log.errLineCount, 1, ` Cmd4PriorityPollingQueue expected only 1 error line ${ log.errBuf }` );
 
@@ -806,30 +753,26 @@ describe('Testing Cmd4PriorityPollingQueue squashError', ( ) =>
       for ( let i = 0; i < 10; i++ )
          cmd4PriorityPollingQueue.squashError( cmd4PriorityPollingQueue, errNo1, "test message" );
 
-      let expectedErrOutput1 = `[31mtest message`;
-      let expectedErrOutput2 = `[31mThis message has been omitted 9 times => test message`;
-
       assert.equal( "", log.logBuf, ` Cmd4PriorityPollingQueue unexpected stdout received: ${ log.logBuf }` );
-      assert.include( log.errBuf, expectedErrOutput1, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
+      assert.include( log.errBuf, `[31mtest message`, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
       setTimeout( () =>
       {
-         assert.include( log.errBuf, expectedErrOutput2, ` Cmd4PriorityPollingQueue expected omitted stderr message received: ${ log.errBuf }` );
+         assert.include( log.errBuf, `[31mThis message has been omitted 9 times => test message`, ` Cmd4PriorityPollingQueue expected omitted stderr message received: ${ log.errBuf }` );
 
          assert.equal( log.errLineCount, 2, ` Cmd4PriorityPollingQueue expected only 1 error line ${ log.errBuf }` );
 
          // Do it again
          log.reset( );
-         let expectedErrOutput3 = `[31mtest message2`;
 
          for ( let i = 0; i < 10; i++ )
             cmd4PriorityPollingQueue.squashError( cmd4PriorityPollingQueue, errNo1, "test message2" );
 
          assert.equal( "", log.logBuf, ` Cmd4PriorityPollingQueue unexpected stdout received: ${ log.logBuf }` );
-         assert.include( log.errBuf, expectedErrOutput3, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
+         assert.include( log.errBuf, `[31mtest message2`, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
 
          setTimeout( () =>
          {
-            assert.include( log.errBuf, expectedErrOutput2, ` Cmd4PriorityPollingQueue expected omitted stderr message received: ${ log.errBuf }` );
+            assert.include( log.errBuf, `[31mThis message has been omitted 9 times => test message`, ` Cmd4PriorityPollingQueue expected omitted stderr message received: ${ log.errBuf }` );
 
             assert.equal( log.errLineCount, 2, ` Cmd4PriorityPollingQueue expected only 1 error line ${ log.errBuf }` );
 
@@ -848,28 +791,25 @@ describe('Testing Cmd4PriorityPollingQueue squashError', ( ) =>
       for ( let i = 0; i < 10; i++ )
          cmd4PriorityPollingQueue.squashError( cmd4PriorityPollingQueue, errNo1, "test message" );
 
-      let expectedErrOutput1 = `[31mtest message`;
-      let expectedErrOutput2 = `[31mThis message has been omitted 9 times => test message`;
 
-      assert.include( log.errBuf, expectedErrOutput1, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
+      assert.include( log.errBuf, `[31mtest message`, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
       setTimeout( () =>
       {
-         assert.include( log.errBuf, expectedErrOutput2, ` Cmd4PriorityPollingQueue expected omitted stderr message received: ${ log.errBuf }` );
+         assert.include( log.errBuf, `[31mThis message has been omitted 9 times => test message`, ` Cmd4PriorityPollingQueue expected omitted stderr message received: ${ log.errBuf }` );
 
          assert.equal( log.errLineCount, 2, ` Cmd4PriorityPollingQueue expected only 1 error line ${ log.errBuf }` );
 
          // Do it again
          log.reset( );
-         let expectedErrOutput3 = `[31mtest message2`;
 
          for ( let i = 0; i < 10; i++ )
             cmd4PriorityPollingQueue.squashError( cmd4PriorityPollingQueue, errNo1, "test message2" );
 
-         assert.include( log.errBuf, expectedErrOutput3, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
+         assert.include( log.errBuf, `[31mtest message2`, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
 
          setTimeout( () =>
          {
-            assert.include( log.errBuf, expectedErrOutput2, ` Cmd4PriorityPollingQueue expected omitted stderr message received: ${ log.errBuf }` );
+            assert.include( log.errBuf, `[31mThis message has been omitted 9 times => test message`, ` Cmd4PriorityPollingQueue expected omitted stderr message received: ${ log.errBuf }` );
 
             assert.equal( log.errLineCount, 2, ` Cmd4PriorityPollingQueue expected only 1 error line ${ log.errBuf }` );
 
@@ -887,9 +827,8 @@ describe('Testing Cmd4PriorityPollingQueue squashError', ( ) =>
       cmd4PriorityPollingQueue.SQUASH_TIMER_INTERVAL = 500;
          cmd4PriorityPollingQueue.squashError( cmd4PriorityPollingQueue, errNo1, "test message" );
 
-      let expectedErrOutput1 = `[31mtest message`;
 
-      assert.include( log.errBuf, expectedErrOutput1, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
+      assert.include( log.errBuf, `[31mtest message`, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
       log.reset( );
       setTimeout( () =>
       {
