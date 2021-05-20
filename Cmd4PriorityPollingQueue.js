@@ -420,8 +420,8 @@ class Cmd4PriorityPollingQueue
             {
                let burstSize = Math.ceil( queue.lowPriorityQueueMaxLength / queue.burstGroupSize );
                for ( let burstIndex = 0;
-                     queue.lowPriorityQueueIndex < queue.lowPriorityQueueMaxLength,
-                     burstIndex < burstSize;
+                     ( queue.lowPriorityQueueIndex < queue.lowPriorityQueueMaxLength &&
+                     burstIndex < burstSize );
                      burstIndex++, queue.lowPriorityQueueIndex++ )
                {
                    queue.processEntryFromLowPriorityQueue( queue.lowPriorityQueue[ queue.lowPriorityQueueIndex ] );
