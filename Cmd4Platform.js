@@ -282,7 +282,17 @@ class Cmd4Platform
                this.definitions = value;
 
                break;
+            case constants.PLATFORM:
+               // Noop
+
+               break;
+            case constants.ACCESSORIES:
+               // Noop
+
+               break;
             default:
+               this.log.error( chalk.red( `Error: Unknown Cmd4 Platform config option: "${ key }"` ) );
+               process.exit( 448 ) ;
          }
       }
    }

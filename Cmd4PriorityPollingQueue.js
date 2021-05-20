@@ -416,15 +416,15 @@ class Cmd4PriorityPollingQueue
               queue.queueType == constants.QUEUETYPE_WORM )
          {
             // Do Low Priority Queue all in bursts
-            if ( queue.burstQueueSize >= 1 )
+            if ( queue.burstGroupSize >= 1 )
             {
-               let burstSize = Math.ceil( queue.lowPriorityQueueMaxLength / queue.burstQueueSize );
+               let burstSize = Math.ceil( queue.lowPriorityQueueMaxLength / queue.burstGroupSize );
                for ( let burstIndex = 0;
                      queue.lowPriorityQueueIndex < queue.lowPriorityQueueMaxLength,
                      burstIndex < burstSize;
                      burstIndex++, queue.lowPriorityQueueIndex++ )
                {
-                   queue.processEntryFromLowPriorityQueue( queue.lowPriorityQueueIndex );
+                   queue.processEntryFromLowPriorityQueue( queue.lowPriorityQueue[ queue.lowPriorityQueueIndex ] );
                }
             } else {
 

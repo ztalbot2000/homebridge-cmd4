@@ -648,7 +648,7 @@ describe('Testing Cmd4PriorityPollingQueue burst', ( ) =>
                Cmd4_Mode:    "Polled",
                On:           0,
                Brightness:   100,
-               QueueTypes: [{ queue: "A", queueType: "WoRm", BurstGroupSize: 1 }],
+               QueueTypes: [{ queue: "A", queueType: "WoRm", BurstGroupSize: 5 }],
                Queue:        "A",
                polling:      [ { "characteristic": "on"  },
                                { "characteristic": "brightness"  }
@@ -679,11 +679,11 @@ describe('Testing Cmd4PriorityPollingQueue burst', ( ) =>
 
       assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 2, `Incorrect number of low priority polled characteristics` );
 
-      assert.equal( cmd4PriorityPollingQueue.burstGroupSize, 1, `Incorrect burst group size` );
+      assert.equal( cmd4PriorityPollingQueue.burstGroupSize, 5, `Incorrect burst group size` );
 
       assert.equal( cmd4PriorityPollingQueue.burstInterval, constants.DEFAULT_BURST_INTERVAL, `Incorrect burst interval` );
 
-      assert.include( log.logBuf, `Creating new Priority Polled Queue "A" with QueueType of: "WoRm" burstGroupSize: 1 interval: 15000`, "Polling Queue with burst created incorrectly" );
+      assert.include( log.logBuf, `Creating new Priority Polled Queue "A" with QueueType of: "WoRm" burstGroupSize: 5 interval: 15000`, "Polling Queue with burst created incorrectly" );
 
       done();
    }).timeout(10000);
