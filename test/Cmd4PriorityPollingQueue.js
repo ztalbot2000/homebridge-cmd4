@@ -598,6 +598,151 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       done();
    }).timeout(10000);
 });
+
+describe('Testing Cmd4PriorityPollingQueue burst', ( ) =>
+{
+   before( ( ) =>
+   {
+      sinon.stub( process, `exit` );
+   });
+   after( ( ) =>
+   {
+      process.exit.restore( );
+   });
+   beforeEach( function( )
+   {
+      settings.arrayOfAllStaggeredPollingCharacteristics = [ ];
+      settings.listOfCreatedPriorityQueues = { };
+   });
+
+   afterEach( function( )
+   {
+      if (this.currentTest.state == 'failed')
+      {
+         if ( settings.arrayOfAllStaggeredPollingCharacteristics.length > 0 )
+         {
+            let accessory = settings.arrayOfAllStaggeredPollingCharacteristics[0].accessory;
+            console.log(`Cancelling timers for FAILED TEST OF ${ accessory.displayName }`);
+            Object.keys(accessory.listOfRunningPolls).forEach( (key) =>
+            {
+               let timer = accessory.listOfRunningPolls[ key ];
+               clearTimeout( timer );
+            });
+         }
+      }
+      // Put back the array of Polling Characteristics
+      settings.arrayOfAllStaggeredPollingCharacteristics = [ ];
+      settings.listOfCreatedPriorityQueues = { };
+   });
+
+   it('PollingQueue burstGroupSize can be set.', ( done ) =>
+   {
+      let platformConfig =
+      {
+         accessories: [
+            {
+               Name:         "My_Light",
+               DisplayName:  "My_Light",
+               StatusMsg:    true,
+               Type:         "Lightbulb",
+               Cmd4_Mode:    "Polled",
+               On:           0,
+               Brightness:   100,
+               QueueTypes: [{ queue: "A", queueType: "WoRm", BurstGroupSize: 1 }],
+               Queue:        "A",
+               polling:      [ { "characteristic": "on"  },
+                               { "characteristic": "brightness"  }
+                             ],
+               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            }
+         ]
+      }
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
+
+      let numberOfQueues = Object.keys( settings.listOfCreatedPriorityQueues ).length;
+
+      assert.equal( numberOfQueues, 1, `Incorrect number of polling queues` );
+      let cmd4PriorityPollingQueue = settings.listOfCreatedPriorityQueues[ "A" ];
+      expect( cmd4PriorityPollingQueue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PriorityPollingQueue" );
+
+      assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 2, `Incorrect number of low priority polled characteristics` );
+
+      assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 2, `Incorrect number of low priority polled characteristics` );
+
+      assert.equal( cmd4PriorityPollingQueue.burstGroupSize, 1, `Incorrect burst group size` );
+
+      assert.equal( cmd4PriorityPollingQueue.burstInterval, constants.DEFAULT_BURST_INTERVAL, `Incorrect burst interval` );
+
+      assert.include( log.logBuf, `Creating new Priority Polled Queue "A" with QueueType of: "WoRm" burstGroupSize: 1 interval: 15000`, "Polling Queue with burst created incorrectly" );
+
+      done();
+   }).timeout(10000);
+
+   it('PollingQueue burst interval can be set.', ( done ) =>
+   {
+      let platformConfig =
+      {
+         accessories: [
+            {
+               Name:         "My_Light",
+               DisplayName:  "My_Light",
+               StatusMsg:    true,
+               Type:         "Lightbulb",
+               Cmd4_Mode:    "Polled",
+               On:           0,
+               Brightness:   100,
+               QueueTypes: [{ queue: "A", queueType: "WoRm", BurstGroupSize: 1, Interval: 5 }],
+               Queue:        "A",
+               polling:      [ { "characteristic": "on"  },
+                               { "characteristic": "brightness"  }
+                             ],
+               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            }
+         ]
+      }
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
+
+      let numberOfQueues = Object.keys( settings.listOfCreatedPriorityQueues ).length;
+
+      assert.equal( numberOfQueues, 1, `Incorrect number of polling queues` );
+      let cmd4PriorityPollingQueue = settings.listOfCreatedPriorityQueues[ "A" ];
+      expect( cmd4PriorityPollingQueue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PriorityPollingQueue" );
+
+      assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 2, `Incorrect number of low priority polled characteristics` );
+
+      assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 2, `Incorrect number of low priority polled characteristics` );
+
+      assert.equal( cmd4PriorityPollingQueue.burstGroupSize, 1, `Incorrect burst group size` );
+
+      assert.equal( cmd4PriorityPollingQueue.burstInterval, 5000, `Incorrect burst interval` );
+
+      assert.include( log.logBuf, `Creating new Priority Polled Queue "A" with QueueType of: "WoRm" burstGroupSize: 1 interval: 5000`, "Polling Queue with burst Interval created incorrectly" );
+
+      done();
+   }).timeout(10000);
+});
+
+
 describe('Testing Cmd4PriorityPollingQueue squashError', ( ) =>
 {
    it( "Test Cmd4PriorityPollingQueue.squashError exists", function( )

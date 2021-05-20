@@ -622,7 +622,7 @@ var addQueue = function( log, queueName, queueType = constants.DEFAULT_QUEUE_TYP
    if ( queue != undefined )
       return queue;
 
-   log.info( `Creating new Priority Polled Queue "${ queueName }" with QueueType of: "${ queueType }"` );
+   log.info( `Creating new Priority Polled Queue "${ queueName }" with QueueType of: "${ queueType }" burstGroupSize: ${ burstGroupSize } interval: ${ interval }` );
    queue = new Cmd4PriorityPollingQueue( log, queueName, queueType, burstGroupSize, interval );
    settings.listOfCreatedPriorityQueues[ queueName ] = queue;
 
@@ -649,7 +649,6 @@ var parseAddQueueTypes = function ( log, entrys )
          let value = entry[ key ];
          let ucKey = ucFirst( key );
 
-
          switch( ucKey )
          {
             case constants.QUEUE:
@@ -673,6 +672,12 @@ var parseAddQueueTypes = function ( log, entrys )
 
                break;
             case constants.INTERVAL:
+               if ( parseInt( value, 10 )  < 5 )
+               {
+                 log.error( chalk.red( `Error: Burst interval of ( ${ value }s /) to short at index: ${ entryIndex }. Expected: number >= 5s` ) );
+                 process.exit( 448 ) ;
+               }
+
                // Intervals are in seconds
                interval = parseInt( value, 10 ) * 1000;
 
@@ -684,28 +689,29 @@ var parseAddQueueTypes = function ( log, entrys )
                  process.exit( 448 ) ;
               }
               burstGroupSize = value;
+
               break
             default:
                log.error( chalk.red( `Error: Unknown Queue option"${ key }  not provided at index ${ entryIndex }` ) );
                process.exit( 448 ) ;
          }
 
-
-         // At least a Queue name must be defined, the rest are defaulted
-         if ( queueName == constants.DEFAULT_QUEUE_NAME )
-         {
-            log.error( chalk.red( `Error: "${ constants.QUEUE }"  not provided at index ${ entryIndex }` ) );
-            process.exit( 448 ) ;
-         }
-         if ( queueType == constants.QUEUETYPE_SEQUENTIAL  &&
-              burstGroupSize >= 1 )
-         {
-            log.error( chalk.red( `Error: Queue Type: "${ constants.QUEUETYPE_SEQUENTIAL  }" and "${ constants.BURST_GROUP_SIZE }" are incompatible at index ${ entryIndex }` ) );
-            process.exit( 448 ) ;
-         }
-         log.debug( "calling addQueue: %s type: %s burstGroupSize: %s interval: %s", queueName, queueType, burstGroupSize, interval);
-         addQueue( log, queueName, queueType, burstGroupSize, interval );
       }
+
+      // At least a Queue name must be defined, the rest are defaulted
+      if ( queueName == constants.DEFAULT_QUEUE_NAME )
+      {
+         log.error( chalk.red( `Error: "${ constants.QUEUE }"  not provided at index ${ entryIndex }` ) );
+         process.exit( 448 ) ;
+      }
+      if ( queueType == constants.QUEUETYPE_SEQUENTIAL  &&
+           burstGroupSize >= 1 )
+      {
+         log.error( chalk.red( `Error: Queue Type: "${ constants.QUEUETYPE_SEQUENTIAL  }" and "${ constants.BURST_GROUP_SIZE }" are incompatible at index ${ entryIndex }` ) );
+         process.exit( 448 ) ;
+      }
+      log.debug( "calling addQueue: %s type: %s burstGroupSize: %s interval: %s", queueName, queueType, burstGroupSize, interval);
+      addQueue( log, queueName, queueType, burstGroupSize, interval );
    });
 }
 
