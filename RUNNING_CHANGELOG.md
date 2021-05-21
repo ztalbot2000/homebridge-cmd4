@@ -61,6 +61,10 @@
 <a name="Whats-new-in-3-8-0">## Whats new in 3.8.0</a>
 ### 3.8.0 (2021-05-21)
 
+##### Chores
+
+*  v3.8.0 packaging ([1cc9006f](https://github.com/ztalbot2000/homebridge-cmd4/commit/1cc9006ff3867cba44c150d87c028b0621f97c62))
+
 ##### Documentation Changes
 
 *  Document Burst for Queue ([fe057931](https://github.com/ztalbot2000/homebridge-cmd4/commit/fe0579315ea79523fb979b1bec69cfddd71c9e55))
@@ -72,6 +76,7 @@
 
 ##### Bug Fixes
 
+*  Proper check for burst enabled ([7fab1be6](https://github.com/ztalbot2000/homebridge-cmd4/commit/7fab1be642cd70d28f5433c8b08a7535cb9405ca))
 *  For burst feat, Dont confuse interval and burstInterval ([59c6490b](https://github.com/ztalbot2000/homebridge-cmd4/commit/59c6490b2c5b4b9ea15ddfa63e1d790b3d3ff9f5))
 *  Added tests for Queue sanity timer which found stuff ([d1296b13](https://github.com/ztalbot2000/homebridge-cmd4/commit/d1296b13d91e6f7cdd60272ebc327bbe2d9f6e40))
 *  Change loop condition to bracketed && instead of comma ([3a213e0c](https://github.com/ztalbot2000/homebridge-cmd4/commit/3a213e0c0ef271786080013e3eeddf7a37e74e74))
