@@ -104,7 +104,7 @@ class Cmd4PriorityPollingQueue
             this.log.info( `Interval being used for queue: "${ queue.queueName }" is from  ${ accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ${ constants.INTERVAL_lv }: ${ interval }` );
 
          // Do not overide the burstInterval
-         if ( queue.burstGroupSize == 0 )
+         if ( queue.burstGroupSize != 0 )
             queue.variablePollingTimer.iv = interval;
 
          queue.optimalInterval = interval;
