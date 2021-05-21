@@ -212,18 +212,18 @@ Notice that there is no Platform definition. Otherwise everything is the same. Y
   Priority Queued Polling is only available for Cmd4_Mode(s) of "Polled" or "FullyPolled" by the shear nature of the feature. To configure Priority Queued Polling every characteristic to the device must be configured with characteristic polling and in the same queue. as an Example of the default WoRm is:
 
 ```
-"polling": [ { "characteristic": "CurrentTemperature", "interval": 5, "queue": "A" },
-             { "characteristic": "TargetTemperature", "queue": "A" }
+"Polling": [ { "Characteristic": "CurrentTemperature", "Interval": 5, "queue": "A" },
+             { "Characteristic": "TargetTemperature", "Queue": "A" }
            ]
 ```
   You can also pre-define the queues and their types ahead of time and then just specify which accessory is going to use Priority Queue Polling. Example 2:
 
 ```
-"QueueTypes: [ { "queue": "A" : "queueType": "WoRm" }
+"QueueTypes: [ { "Queue": "A" : "QueueType": "WoRm" }
              ],
-"queue": "A",
-"polling": [ { "characteristic": "CurrentTemperature" },
-             { "characteristic": "TargetTemperature" }
+"Queue": "A",
+"Polling": [ { "Characteristic": "CurrentTemperature" },
+             { "Characteristic": "TargetTemperature" }
            ]
 ```
 Example 3:
@@ -231,46 +231,46 @@ Example 3:
 ```
 "platforms":
  [ { "platform": "Cmd4",
-     "QueueTypes: [ { "queue": "A" : "queueType": "WoRm" }
-                    { "queue": "B" : "queueType": "Sequentail" }
-                    { "queue": "C" } // Defaults to "WoRm"
+     "QueueTypes: [ { "Queue": "A" : "QueueType": "WoRm" }
+                    { "Queue": "B" : "QueueType": "Sequentail" }
+                    { "Queue": "C" } // Defaults to "WoRm"
                   ],
 
      "accessories": [
      {
         "Name": "My_Thermostat",
         "Type": "Thermostatwitch",
-        "queue": "A",
-        "polling": [ { "characteristic": "CurrentTemperature" },
-                     { "characteristic": "TargetTemperature" },
-                     { "characteristic": "CurrentHeatingCoolingState" }
+        "Queue": "A",
+        "Polling": [ { "Characteristic": "CurrentTemperature" },
+                     { "Characteristic": "TargetTemperature" },
+                     { "Characteristic": "CurrentHeatingCoolingState" }
                    ],
         ...
      },
      {
         "Name": "My_Switch",
         "Type": "Switch",
-        "queue": "B",
-        "polling": [ { "characteristic": "On" } ],
+        "Queue": "B",
+        "Polling": [ { "Characteristic": "On" } ],
         ...
      },
      {
         "Name": "My_Door",
         "Type": "Door",
-        "queue": "C",
-        "polling": true,
+        "Queue": "C",
+        "Polling": true,
         ...
      },
      {
         "Name": "Switch2",
         "Type": "Switch",
-        "polling": [ { "characteristic": "On", "queue": "D" } ],   // Defaults to "WoRm"
+        "Polling": [ { "Characteristic": "On", "Queue": "D" } ],   // Defaults to "WoRm"
         ...
      }
 
 ```
    Note 1. Only the first interval defined for the device is actually used as this is now the interval between each of the other background polls.<BR>
-   Note 2. The interval is dynamically changed and will never drop below the defined interval. The rule is simple, the interval is calculated by twice the actual time of the request +/- 10%.<BR>
+   Note 2. The interval is dynamically changed and will never drop below the defined interval. The rule is simple, the interval is calculated by seven times the actual time of the request +/- 10%.<BR>
 <BR>
 Priority Queued Polling statistics can be viewed with the following Cmd4 Platform directives.<BR>
 
@@ -280,6 +280,14 @@ Priority Queued Polling statistics can be viewed with the following Cmd4 Platfor
 ```
   The "QueueStatMsgInterval" is the counted number of background polls modded by this interval.<BR>
 <BR>
+
+## Priority Queue Burst Polling
+&nbsp;&nbsp;&nbsp; The whole purpose of Priority Queued Polling is to provide as many options possible where you can successfully talk to your device. WoRm and Sequential are the previous examples.  For WorM there is a further option in that all Polls ( which are all reads, of course ) can be scheduled at once. This option is called Burst Polling. Both the number of characteristics that are sent between each burst and the burst interval can be defined.
+```
+
+     "QueueTypes: [ { "Queue": "A" : "QueueType": "WoRm", "BurstGroupSize": 1, "BurstInterval": 15000 }]
+```
+The number of Burst Groups is calculated as the number of polled characteristics in the queue, divided by the BurstGroupSize.  A burstGroupSize of 1, means that they will all be sent at the same interval defined by the burstInterval, which defaults to 5 seconds.
 
 ## Priority Queue Polling Across Multiple accessories ( Same Device )
 &nbsp;&nbsp;&nbsp; In the case of a device like the My Air Smart Thermostat which has multiple accessories of Switches, Sensors and a Thermostat; Cmd4 Priority Queued Polling is essential. This device is actually why this feature was created. There was previously no possible configuration of Cmd4 staggered polling that would not result in the device locking up as it was hammered with requests at the same time. An example of configuring Cmd4 for this device is:
