@@ -24,13 +24,13 @@ let LOW_PRIORITY_GET = 2;
 
 class Cmd4PriorityPollingQueue
 {
-   constructor( log, queueName, queueType = constants.DEFAULT_QUEUE_TYPE, burstGroupSize = constants.DEFAULT_BURSTGROUP_SIZE, interval = constants.DEFAULT_BURST_INTERVAL )
+   constructor( log, queueName, queueType = constants.DEFAULT_QUEUE_TYPE, burstGroupSize = constants.DEFAULT_BURSTGROUP_SIZE, burstInterval = constants.DEFAULT_BURST_INTERVAL )
    {
       this.log = log;
       this.queueName = queueName;
       this.queueType = queueType;
       this.burstGroupSize = burstGroupSize;
-      this.burstInterval = interval;
+      this.burstInterval = burstInterval;
       this.queueStarted = false;
       this.highPriorityQueue = [ ];
       this.lowPriorityQueue = [ ];
@@ -102,7 +102,11 @@ class Cmd4PriorityPollingQueue
 
          if ( queue.queueMsg == true )
             this.log.info( `Interval being used for queue: "${ queue.queueName }" is from  ${ accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ${ constants.INTERVAL_lv }: ${ interval }` );
-         queue.variablePollingTimer.iv = interval;
+
+         // Do not overide the burstInterval
+         if ( queue.burstGroupSize == 0 )
+            queue.variablePollingTimer.iv = interval;
+
          queue.optimalInterval = interval;
          queue.originalInterval = interval;
          queue.queueStatMsgInterval = accessory.queueStatMsgInterval;
@@ -629,14 +633,14 @@ var queueExists = function( queueName )
    return settings.listOfCreatedPriorityQueues[ queueName ];
 }
 
-var addQueue = function( log, queueName, queueType = constants.DEFAULT_QUEUE_TYPE, burstGroupSize = constants.DEFAULT_BURST_GROUP_SIZE, interval = constants.DEFAULT_BURST_INTERVAL )
+var addQueue = function( log, queueName, queueType = constants.DEFAULT_QUEUE_TYPE, burstGroupSize = constants.DEFAULT_BURST_GROUP_SIZE, burstInterval = constants.DEFAULT_BURST_INTERVAL )
 {
    let queue = queueExists( queueName );
    if ( queue != undefined )
       return queue;
 
-   log.info( `Creating new Priority Polled Queue "${ queueName }" with QueueType of: "${ queueType }" burstGroupSize: ${ burstGroupSize } interval: ${ interval }` );
-   queue = new Cmd4PriorityPollingQueue( log, queueName, queueType, burstGroupSize, interval );
+   log.info( `Creating new Priority Polled Queue "${ queueName }" with QueueType of: "${ queueType }" burstGroupSize: ${ burstGroupSize } interval: ${ burstInterval }` );
+   queue = new Cmd4PriorityPollingQueue( log, queueName, queueType, burstGroupSize, burstInterval );
    settings.listOfCreatedPriorityQueues[ queueName ] = queue;
 
    return queue;
@@ -655,7 +659,7 @@ var parseAddQueueTypes = function ( log, entrys )
       let queueName = constants.DEFAULT_QUEUE_NAME;
       let queueType = constants.DEFAULT_QUEUE_TYPE;
       let burstGroupSize = constants.DEFAULT_BURST_GROUP_SIZE;
-      let interval = constants.DEFAULT_BURST_INTERVAL;
+      let burstInterval = constants.DEFAULT_BURST_INTERVAL;
 
       for ( let key in entry )
       {
@@ -684,7 +688,7 @@ var parseAddQueueTypes = function ( log, entrys )
                queueType = value;
 
                break;
-            case constants.INTERVAL:
+            case constants.BURST_INTERVAL:
                if ( parseInt( value, 10 )  < 5 )
                {
                  log.error( chalk.red( `Error: Burst interval of ( ${ value }s /) to short at index: ${ entryIndex }. Expected: number >= 5s` ) );
@@ -692,7 +696,7 @@ var parseAddQueueTypes = function ( log, entrys )
                }
 
                // Intervals are in seconds
-               interval = parseInt( value, 10 ) * 1000;
+               burstInterval = parseInt( value, 10 ) * 1000;
 
                break;
             case constants.BURST_GROUP_SIZE:
@@ -723,8 +727,8 @@ var parseAddQueueTypes = function ( log, entrys )
          log.error( chalk.red( `Error: Queue Type: "${ constants.QUEUETYPE_SEQUENTIAL  }" and "${ constants.BURST_GROUP_SIZE }" are incompatible at index ${ entryIndex }` ) );
          process.exit( 448 ) ;
       }
-      log.debug( "calling addQueue: %s type: %s burstGroupSize: %s interval: %s", queueName, queueType, burstGroupSize, interval);
-      addQueue( log, queueName, queueType, burstGroupSize, interval );
+      log.debug( `calling addQueue: ${ queueName } type: ${ queueType} burstGroupSize: ${ burstGroupSize } burstInterval: ${ burstInterval }` );
+      addQueue( log, queueName, queueType, burstGroupSize, burstInterval );
    });
 }
 

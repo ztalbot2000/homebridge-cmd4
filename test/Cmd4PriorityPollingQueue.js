@@ -722,7 +722,7 @@ describe('Testing Cmd4PriorityPollingQueue burst', ( ) =>
                Cmd4_Mode:    "Polled",
                On:           0,
                Brightness:   100,
-               QueueTypes: [{ queue: "A", queueType: "WoRm", BurstGroupSize: 1, Interval: 5 }],
+               QueueTypes: [{ queue: "A", queueType: "WoRm", BurstGroupSize: 1, burstInterval: 5 }],
                Queue:        "A",
                polling:      [ { "characteristic": "on"  },
                                { "characteristic": "brightness"  }
@@ -925,7 +925,7 @@ describe('Testing Cmd4PriorityPollingQueue sanity correction', ( ) =>
                Cmd4_Mode:    "Polled",
                On:           0,
                Brightness:   100,
-               QueueTypes: [{ queue: "A", queueType: "WoRm", BurstGroupSize: 1, Interval: 5 }],
+               QueueTypes: [{ queue: "A", queueType: "WoRm", BurstGroupSize: 1, burstInterval: 5 }],
                Queue:        "A",
                polling:      [ { "characteristic": "on"  },
                                { "characteristic": "brightness"  }

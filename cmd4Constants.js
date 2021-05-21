@@ -84,6 +84,7 @@ exports.QUEUETYPES               = "QueueTypes";
 exports.QUEUETYPE_SEQUENTIAL     = "Sequential";
 exports.QUEUETYPE_WORM           = "WoRm";
 exports.BURST_GROUP_SIZE         = "BurstGroupSize";
+exports.BURST_INTERVAL           = "BurstInterval";
 
 //exports.STATUSMSG_l              = "statusMsg";
 
