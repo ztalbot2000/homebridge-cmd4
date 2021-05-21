@@ -291,8 +291,10 @@ class Cmd4Platform
 
                break;
             default:
-               this.log.error( chalk.red( `Error: Unknown Cmd4 Platform config option: "${ key }"` ) );
-               process.exit( 448 ) ;
+               // This cannot be because all the Cmd4Accessory directives
+               // for Standalone would have to be added.
+               //this.log.error( chalk.red( `Error: Unknown Cmd4 Platform config option: "${ key }"` ) );
+               //process.exit( 448 ) ;
          }
       }
    }

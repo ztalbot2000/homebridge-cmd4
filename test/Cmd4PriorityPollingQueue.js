@@ -75,6 +75,17 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
                clearTimeout( timer );
             });
          }
+         Object.keys( settings.listOfCreatedPriorityQueues).forEach( ( queueName ) =>
+         {
+            let queue = settings.listOfCreatedPriorityQueues[ queueName ];
+            let variablePollingTimer = queue.variablePollingTimer;
+            if ( variablePollingTimer != null )
+            {
+               variablePollingTimer.stop( );
+               console.log("Cancelling variablePollingTimer");
+            }
+            clearTimeout( queue.sanityTimer );
+         });
       }
       // Put back the array of Polling Characteristics
       settings.arrayOfAllStaggeredPollingCharacteristics = [ ];
@@ -629,6 +640,16 @@ describe('Testing Cmd4PriorityPollingQueue burst', ( ) =>
                clearTimeout( timer );
             });
          }
+         Object.keys( settings.listOfCreatedPriorityQueues).forEach( ( queue ) =>
+         {
+            let variablePollingTimer = queue.variablePollingTimer;
+            if ( variablePollingTimer != null )
+            {
+               variablePollingTimer.stop( );
+               console.log("Cancelling variablePollingTimer");
+            }
+            clearTimeout( queue.sanityTimer );
+         });
       }
       // Put back the array of Polling Characteristics
       settings.arrayOfAllStaggeredPollingCharacteristics = [ ];
@@ -742,6 +763,208 @@ describe('Testing Cmd4PriorityPollingQueue burst', ( ) =>
    }).timeout(10000);
 });
 
+describe('Testing Cmd4PriorityPollingQueue sanity correction', ( ) =>
+{
+   before( ( ) =>
+   {
+      sinon.stub( process, `exit` );
+   });
+   after( ( ) =>
+   {
+      process.exit.restore( );
+   });
+   beforeEach( function( )
+   {
+      settings.arrayOfAllStaggeredPollingCharacteristics = [ ];
+      settings.listOfCreatedPriorityQueues = { };
+   });
+
+   afterEach( function( )
+   {
+      if (this.currentTest.state == 'failed')
+      {
+         if ( settings.arrayOfAllStaggeredPollingCharacteristics.length > 0 )
+         {
+            let accessory = settings.arrayOfAllStaggeredPollingCharacteristics[0].accessory;
+            console.log(`Cancelling timers for FAILED TEST OF ${ accessory.displayName }`);
+            Object.keys(accessory.listOfRunningPolls).forEach( (key) =>
+            {
+               let timer = accessory.listOfRunningPolls[ key ];
+               clearTimeout( timer );
+            });
+         }
+
+         Object.keys( settings.listOfCreatedPriorityQueues).forEach( ( queueName ) =>
+         {
+            let queue = settings.listOfCreatedPriorityQueues[ queueName ];
+            let variablePollingTimer = queue.variablePollingTimer;
+            if ( variablePollingTimer != null )
+            {
+               variablePollingTimer.stop( );
+               console.log("Cancelling variablePollingTimer");
+            }
+            clearTimeout( queue.sanityTimer );
+         });
+      }
+
+      // Put back the array of Polling Characteristics
+      //
+      settings.arrayOfAllStaggeredPollingCharacteristics = [ ];
+      settings.listOfCreatedPriorityQueues = { };
+
+      // Resolves: node:14247) MaxListenersExceededWarning: Possible
+      // EventEmitter memory leak detected. 11 didFinishLaunching listeners
+      // added to [HomebridgeAPI]. Use emitter.setMaxListeners() to
+      // increase limit
+      _api.removeAllListeners("didFinishLaunching");
+   });
+
+   it('Sanity can be fixed from corrupt set.', ( done ) =>
+   {
+      let platformConfig =
+      {
+         accessories: [
+            {
+               Name:         "My_Light",
+               DisplayName:  "My_Light",
+               StatusMsg:    true,
+               Type:         "Lightbulb",
+               Cmd4_Mode:    "Polled",
+               On:           0,
+               Brightness:   100,
+               QueueTypes: [{ queue: "A", queueType: "Sequential" }],
+               Queue:        "A",
+               polling:      [ { "characteristic": "on"  },
+                               { "characteristic": "brightness"  }
+                             ],
+               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            }
+         ]
+      }
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+      process.on('warning', e => console.warn(e.stack));
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
+
+      let cmd4PriorityPollingQueue = settings.listOfCreatedPriorityQueues[ "A" ];
+      expect( cmd4PriorityPollingQueue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PriorityPollingQueue" );
+
+      assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 2, `Incorrect number of low priority polled characteristics` );
+
+
+      assert.include( log.logBuf, `Creating new Priority Polled Queue "A" with QueueType of: "Sequential" burstGroupSize: 0 interval: 15000`, "Polling Queue created incorrectly" );
+
+      // Set polling timer long so it does not happen at all
+      cmd4PriorityPollingQueue.variablePollingTimer.iv = 3000;
+
+      // Set sanity timer short so it happens now
+      cmd4PriorityPollingQueue.SANITY_TIMER_INTERVAL = 1000;
+
+      log.logBuf = "";
+      log.errBuf = "";
+
+      // Start polling
+      cmd4PriorityPollingQueue.startQueue( cmd4PriorityPollingQueue );
+
+      assert.include( log.logBuf, `[90menablePolling first time true queue.safeToDoPollingNow: false, queue.safeToDoPollingFlag: false`, `polling not started` );
+
+      assert.include( log.logBuf, `Starting polling interval timer for the first time with interval: ${ cmd4PriorityPollingQueue.variablePollingTimer.iv }`, `Polling interval timer not started` );
+
+      assert.isTrue( cmd4PriorityPollingQueue.safeToDoPollingFlag, `safeToDoPollingFlag not set` );
+
+      // Corrupt thw queue with a hanging set
+      cmd4PriorityPollingQueue.inProgressSets = 1;
+
+      // Reset the log
+      log.logBuf = "";
+      log.errBuf = "";
+
+      // capture the sanity timer firing the first time
+      setTimeout( ( ) =>
+      {
+         assert.include( log.logBuf, `inProgressSets: 1 inProgressGets: 0 queueStarted: true lowQueueLen: 2 hiQueueLen: 0 safeToDoPollingFlag: true interval: ${ cmd4PriorityPollingQueue.variablePollingTimer.iv } variablePollingTimer:`, `Sanity timer did not fire` );
+
+         assert.include( log.logBuf, `[90mSanity Timer Fixing Polling !!!  safeToDoPollingFlag: true inProgressSets: 1 inProgressGets: 0 queue.variablePollingTimer.iv: ${ cmd4PriorityPollingQueue.variablePollingTimer.iv }`, `Sanity timer did not fire` );
+
+         // Wait for next process of queue
+         setTimeout( ( ) =>
+         {
+            assert.include( log.logBuf, `Proccessing low priority queue entry: 105`, `Polling interval timer not started` );
+
+            assert.include( log.logBuf, `getValue: accTypeEnumIndex:( 105 )-"On" function for: My_Light cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Light' 'On'.`, `Polling did not resume` );
+
+            cmd4PriorityPollingQueue.variablePollingTimer.stop( );
+            clearTimeout( cmd4PriorityPollingQueue.sanityTimer );
+
+            done();
+
+         }, cmd4PriorityPollingQueue.variablePollingTimer.iv );
+
+      }, cmd4PriorityPollingQueue.SANITY_TIMER_INTERVAL );
+   }).timeout(10000);
+
+   it('PollingQueue burst interval can be set.', ( done ) =>
+   {
+      let platformConfig =
+      {
+         accessories: [
+            {
+               Name:         "My_Light",
+               DisplayName:  "My_Light",
+               StatusMsg:    true,
+               Type:         "Lightbulb",
+               Cmd4_Mode:    "Polled",
+               On:           0,
+               Brightness:   100,
+               QueueTypes: [{ queue: "A", queueType: "WoRm", BurstGroupSize: 1, Interval: 5 }],
+               Queue:        "A",
+               polling:      [ { "characteristic": "on"  },
+                               { "characteristic": "brightness"  }
+                             ],
+               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            }
+         ]
+      }
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
+
+      let numberOfQueues = Object.keys( settings.listOfCreatedPriorityQueues ).length;
+
+      assert.equal( numberOfQueues, 1, `Incorrect number of polling queues` );
+      let cmd4PriorityPollingQueue = settings.listOfCreatedPriorityQueues[ "A" ];
+      expect( cmd4PriorityPollingQueue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PriorityPollingQueue" );
+
+      assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 2, `Incorrect number of low priority polled characteristics` );
+
+      assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 2, `Incorrect number of low priority polled characteristics` );
+
+      assert.equal( cmd4PriorityPollingQueue.burstGroupSize, 1, `Incorrect burst group size` );
+
+      assert.equal( cmd4PriorityPollingQueue.burstInterval, 5000, `Incorrect burst interval` );
+
+      assert.include( log.logBuf, `Creating new Priority Polled Queue "A" with QueueType of: "WoRm" burstGroupSize: 1 interval: 5000`, "Polling Queue with burst Interval created incorrectly" );
+
+      done();
+   }).timeout(10000);
+});
 
 describe('Testing Cmd4PriorityPollingQueue squashError', ( ) =>
 {
@@ -779,6 +1002,7 @@ describe('Testing Cmd4PriorityPollingQueue squashError', ( ) =>
    });
 
 });
+// Skipped as squashError temporarily removed
 describe.skip('Testing Cmd4PriorityPollingQueue squashError', ( ) =>
 {
    let log = new Logger( );

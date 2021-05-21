@@ -9,8 +9,6 @@ let CMD4_ACC_TYPE_ENUM = require( "./lib/CMD4_ACC_TYPE_ENUM" ).CMD4_ACC_TYPE_ENU
 let settings = require( "./cmd4Settings" );
 const constants = require( "./cmd4Constants" );
 
-const SANITY_TIMER_INTERVAL = 120000; // 2 minutes
-
 // Pretty Colors
 var chalk = require( "chalk" );
 
@@ -58,6 +56,9 @@ class Cmd4PriorityPollingQueue
       // A primitive sanity timer
       this.sanityTimer = null;
       this.sanityTimerFlag = Date.now( );
+      // Not a const so it can be manipulated during unit testing
+      this.SANITY_TIMER_INTERVAL = 120000; // 2 minutes
+
 
       // Even with proper Queuing, 100% of interactions cannot be successful
       // when the device0 can be controlled independantly. So try to squash
@@ -493,12 +494,12 @@ class Cmd4PriorityPollingQueue
 
    enablePolling( queue, firstTime = false )
    {
-      this.log.debug( `1 enablePolling first time ${ firstTime } queue.safeToDoPollingNow: ${ queue.safeToDoPollingNow( queue ) }, queue.safeToDoPollingNow: ${ queue.safeToDoPollingFlag }` );
+      this.log.debug( `enablePolling first time ${ firstTime } queue.safeToDoPollingNow: ${ queue.safeToDoPollingNow( queue ) }, queue.safeToDoPollingFlag: ${ queue.safeToDoPollingFlag }` );
       // If the flag is not already set
       if ( queue.safeToDoPollingNow( queue ) == false )
       {
          // And this is called from the Platform the first time
-         this.log.debug( `2 enablePolling first time ${ firstTime }` );
+         this.log.debug( `enablePolling first time ${ firstTime }` );
          if ( firstTime )
          {
             this.log.debug( `Starting polling interval timer for the first time with interval: ${ queue.variablePollingTimer.iv }` );
@@ -530,30 +531,42 @@ class Cmd4PriorityPollingQueue
       {
          queue.sanityTimer = setInterval( ( ) =>
          {
-             this.log.debug( `inProgressSets: ${  queue.inProgressSets } inProgressGets: ${  queue.inProgressGets } queueStarted: ${ queue.queueStarted } lowQueueLen: ${ queue.lowPriorityQueue.length } hiQueueLen: ${ queue.highPriorityQueue.length } variablePollingTimer:${ queue.variablePollingTimer } safeToDoPollingFlag: ${ queue.safeToDoPollingFlag } interval: ${ queue.variablePollingTimer.iv }` );
+             this.log.debug( `inProgressSets: ${  queue.inProgressSets } inProgressGets: ${  queue.inProgressGets } queueStarted: ${ queue.queueStarted } lowQueueLen: ${ queue.lowPriorityQueue.length } hiQueueLen: ${ queue.highPriorityQueue.length } safeToDoPollingFlag: ${ queue.safeToDoPollingFlag } interval: ${ queue.variablePollingTimer.iv } variablePollingTimer:${ queue.variablePollingTimer } ` );
 
             if ( queue.queueStarted == true )
             {
-               if ( queue.variablePollingTimer == null )
+               // This actually is triggered upon the second interval
+               if ( Date.now( ) > queue.sanityTimerFlag + this.SANITY_TIMER_INTERVAL )
                {
-                  this.log.error( `Polling  timer is null ???? ` );
-                  process.exit(333);
-               }
+                  this.log.debug( `Sanity Timer Fixing Polling !!!  safeToDoPollingFlag: ${ queue.safeToDoPollingFlag } inProgressSets: ${ queue.inProgressSets } inProgressGets: ${ queue.inProgressGets } queue.variablePollingTimer.iv: ${ queue.variablePollingTimer.iv } variablePollingTimer: ${ queue.variablePollingTimer } ` );
+                  if ( queue.variablePollingTimer == null )
+                  {
+                     // If it is not running, we got bigger problems
+                     this.log.error( `Polling timer is null ???? ` );
+                     process.exit(333);
+                  }
 
-               if ( Date.now( ) > queue.sanityTimerFlag + SANITY_TIMER_INTERVAL )
-               {
-                  this.log.debug( `Sanity Timer Fixing Polling !!!  variablePollingTimer: ${ queue.variablePollingTimer } safeToDoPollingFlag: ${ queue.safeToDoPollingFlag } inProgressSets: ${ queue.inProgressSets } inProgressGets: ${ queue.inProgressGets } queue.variablePollingTimer.iv: ${ queue.variablePollingTimer.iv }` );
                   if ( queue.safeToDoPollingNow( queue ) == false )
                   {
                      // Must set it behind its back to avoid
                      // the now invalid checks
                      queue.safeToDoPollingFlag = true;
                   }
+
                   if ( queue.inProgressGets != 0 )
+                     queue.inProgressGets = 0;
+
+                  if ( queue.inProgressSets != 0 )
                      queue.inProgressSets = 0;
 
                   // So we do not trip over this again immediately
                   queue.sanityTimerFlag = Date.now( );
+
+                  // Do not call startQueue as it starts this sanity timer
+                  // instead, do what it did.
+                  queue.lowPriorityQueueIndex = 0 ;
+
+                  queue.queueStarted = true;
 
                } else
                {
@@ -562,7 +575,7 @@ class Cmd4PriorityPollingQueue
                }
             }
 
-         }, SANITY_TIMER_INTERVAL );
+         }, this.SANITY_TIMER_INTERVAL );
 
       }
    }
