@@ -73,6 +73,13 @@ class VariableTimer
 
    set_interval( iv )
    {
+      // You can't change an interval when timer is not running
+      if ( this.running == false )
+      {
+         this.iv = iv;
+         return;
+      }
+
       // Do not change interval if less than .5 seconds difference
       let round = Math.trunc( iv / 500) * 500;
       if (round !=  this.iv )

@@ -118,7 +118,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       assert.equal( cmd4PriorityPollingQueue.SQUASH_TIMER_INTERVAL, constants.DEFAULT_SQUASH_TIMER_INTERVAL, ` incorrect squash timer interval` );
       assert.equal( cmd4PriorityPollingQueue.queueType, constants.DEFAULT_QUEUE_TYPE, ` incorrect default queue type` );
       assert.equal( cmd4PriorityPollingQueue.queueBurst, constants.DEFAULT_QUEUE_BURST, ` incorrect default queue burst` );
-      assert.equal( cmd4PriorityPollingQueue.burstInterval, constants.DEFAULT_BURST_INTERVAL, ` incorrect default burst interval` );
+      assert.equal( cmd4PriorityPollingQueue.variablePollingTimer.iv, constants.DEFAULT_BURST_INTERVAL, ` incorrect default burst interval` );
 
    });
 
@@ -170,7 +170,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
             DisplayName:  "My_Switch",
             StatusMsg:    true,
             Type:         "Switch",
-            QueueTypes: [{ queue: "A", queueType: "WoRm" }],
+            QueueTypes: [{ Queue: "A", QueueType: "WoRm" }],
             Queue:        "A",
             Cmd4_Mode:    "Polled",
             On:           0,
@@ -214,7 +214,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
             StatusMsg:    true,
             Type:         "Switch",
             Cmd4_Mode:    "Polled",
-            QueueTypes: [{ queue: "A", queueType: "WoRm" }],
+            QueueTypes: [{ Queue: "A", QueueType: "WoRm" }],
             Queue:        "A",
             On:           0,
             State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
@@ -268,8 +268,8 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
             Cmd4_Mode:    "Polled",
             On:           0,
             Active:       0,
-            polling: [{ characteristic: "On", queue: "A", interval: 4 },
-                      { characteristic: "Active", queue: "A", interval: 3 }
+            Polling: [{ Characteristic: "On", Queue: "A", Interval: 4 },
+                      { Characteristic: "Active", Queue: "A", Interval: 3 }
                      ],
             State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
@@ -312,8 +312,8 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
             Cmd4_Mode:    "Polled",
             On:           0,
             Active:       0,
-            polling: [{ "characteristic": "On", "queue": "A" },
-                      { "characteristic": "Active", "queue": "A" }
+            Polling: [{ Characteristic: "On", Queue: "A" },
+                      { Characteristic: "Active", Queue: "A" }
                      ],
             State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
@@ -396,8 +396,8 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
             Cmd4_Mode:    "Polled",
             On:           0,
             Active:       0,
-            polling: [{ "characteristic": "On", "queue": "A" },
-                      { "characteristic": "Active", "queue": "A" }],
+            Polling: [{ Characteristic: "On", Queue: "A" },
+                      { Characteristic: "Active", Queue: "A" }],
             State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       }
@@ -464,8 +464,8 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
                Cmd4_Mode:    "Polled",
                On:           0,
                Brightness:   100,
-               polling:      [ { "characteristic": "on", "interval": 310, "queue": "A" },
-                               { "characteristic": "brightness", "queue": "A" }
+               Polling:      [ { Characteristic: "On", Interval: 310, Queue: "A" },
+                               { Characteristic: "Brightness", Queue: "A" }
                              ],
                State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
             },
@@ -477,8 +477,8 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
                Cmd4_Mode:    "Polled",
                On:           0,
                Active:       0,
-               polling: [{ "characteristic": "On", "queue": "A" },
-                         { "characteristic": "Active", "queue": "A" }
+               Polling: [{ Characteristic: "On", Queue: "A" },
+                         { Characteristic: "Active", Queue: "A" }
                         ],
                State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
             }
@@ -550,8 +550,8 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
                Cmd4_Mode:    "Polled",
                On:           0,
                Brightness:   100,
-               polling:      [ { "characteristic": "on", "interval": 310, "queue": "A" },
-                               { "characteristic": "brightness", "queue": "A" }
+               Polling:      [ { Characteristic: "On", Interval: 310, Queue: "A" },
+                               { Characteristic: "Brightness", Queue: "A" }
                              ],
                State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
             },
@@ -563,8 +563,8 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
                Cmd4_Mode:    "Polled",
                On:           0,
                Active:       0,
-               polling: [{ "characteristic": "On", "queue": "A" },
-                         { "characteristic": "Active", "queue": "A" }
+               Polling: [{ Characteristic: "On", Queue: "A" },
+                         { Characteristic: "Active", Queue: "A" }
                         ],
                State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
             }
@@ -651,9 +651,16 @@ describe('Testing Cmd4PriorityPollingQueue burst', ( ) =>
             clearTimeout( queue.sanityTimer );
          });
       }
+
       // Put back the array of Polling Characteristics
       settings.arrayOfAllStaggeredPollingCharacteristics = [ ];
       settings.listOfCreatedPriorityQueues = { };
+
+      // Resolves: node:14247) MaxListenersExceededWarning: Possible
+      // EventEmitter memory leak detected. 11 didFinishLaunching listeners
+      // added to [HomebridgeAPI]. Use emitter.setMaxListeners() to
+      // increase limit
+      _api.removeAllListeners("didFinishLaunching");
    });
 
    it('PollingQueue burstGroupSize can be set.', ( done ) =>
@@ -669,10 +676,10 @@ describe('Testing Cmd4PriorityPollingQueue burst', ( ) =>
                Cmd4_Mode:    "Polled",
                On:           0,
                Brightness:   100,
-               QueueTypes: [{ queue: "A", queueType: "WoRm", BurstGroupSize: 5 }],
+               QueueTypes: [{ Queue: "A", QueueType: "WoRm", BurstGroupSize: 5 }],
                Queue:        "A",
-               polling:      [ { "characteristic": "on"  },
-                               { "characteristic": "brightness"  }
+               Polling:      [ { Characteristic: "On"  },
+                               { Characteristic: "Brightness"  }
                              ],
                State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
             }
@@ -702,14 +709,14 @@ describe('Testing Cmd4PriorityPollingQueue burst', ( ) =>
 
       assert.equal( cmd4PriorityPollingQueue.burstGroupSize, 5, `Incorrect burst group size` );
 
-      assert.equal( cmd4PriorityPollingQueue.burstInterval, constants.DEFAULT_BURST_INTERVAL, `Incorrect burst interval` );
+      assert.equal( cmd4PriorityPollingQueue.variablePollingTimer.iv, constants.DEFAULT_BURST_INTERVAL, `Incorrect burst interval` );
 
-      assert.include( log.logBuf, `Creating new Priority Polled Queue "A" with QueueType of: "WoRm" burstGroupSize: 5 interval: 15000`, "Polling Queue with burst created incorrectly" );
+      assert.include( log.logBuf, `Creating new Priority Polled Queue "A" with QueueType of: "WoRm" burstGroupSize: 5 burstInterval: 15000`, "Polling Queue with burst created incorrectly" );
 
       done();
    }).timeout(10000);
 
-   it('PollingQueue burst interval can be set.', ( done ) =>
+   it('PollingQueue burstInterval can be set. Interval Ignored.', ( done ) =>
    {
       let platformConfig =
       {
@@ -718,14 +725,15 @@ describe('Testing Cmd4PriorityPollingQueue burst', ( ) =>
                Name:         "My_Light",
                DisplayName:  "My_Light",
                StatusMsg:    true,
+               QueueMsg:     true,
                Type:         "Lightbulb",
                Cmd4_Mode:    "Polled",
                On:           0,
                Brightness:   100,
-               QueueTypes: [{ queue: "A", queueType: "WoRm", BurstGroupSize: 1, burstInterval: 5 }],
+               QueueTypes: [{ Queue: "A", QueueType: "WoRm", BurstGroupSize: 1, BurstInterval: 5 }],
                Queue:        "A",
-               polling:      [ { "characteristic": "on"  },
-                               { "characteristic": "brightness"  }
+               Polling:      [ { Characteristic: "On", Interval: 30 },
+                               { Characteristic: "Brightness"  }
                              ],
                State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
             }
@@ -755,9 +763,74 @@ describe('Testing Cmd4PriorityPollingQueue burst', ( ) =>
 
       assert.equal( cmd4PriorityPollingQueue.burstGroupSize, 1, `Incorrect burst group size` );
 
-      assert.equal( cmd4PriorityPollingQueue.burstInterval, 5000, `Incorrect burst interval` );
+      assert.equal( cmd4PriorityPollingQueue.variablePollingTimer.iv, 5000, `Incorrect variablePollingTimer` );
 
-      assert.include( log.logBuf, `Creating new Priority Polled Queue "A" with QueueType of: "WoRm" burstGroupSize: 1 interval: 5000`, "Polling Queue with burst Interval created incorrectly" );
+      assert.include( log.logBuf, `Creating new Priority Polled Queue "A" with QueueType of: "WoRm" burstGroupSize: 1 burstInterval: 5000`, "Polling Queue with burst Interval created incorrectly" );
+
+      // This line copied from next testcase but changed to notInclude
+      assert.notInclude( log.logBuf, `Interval being used for queue: "A" is from  My_Light On ${ constants.INTERVAL_lv }: 3000`, "Polling Queue with burst Interval created incorrectly" );
+
+      assert.isTrue( cmd4PriorityPollingQueue.burstMode, `Queue should be in burst mode` );
+
+      done();
+   }).timeout(10000);
+
+   it('PollingQueue interval can be set. burstIInterval Ignored.', ( done ) =>
+   {
+      let platformConfig =
+      {
+         accessories: [
+            {
+               Name:         "My_Light",
+               DisplayName:  "My_Light",
+               StatusMsg:    true,
+               QueueMsg:     true,
+               Type:         "Lightbulb",
+               Cmd4_Mode:    "Polled",
+               On:           0,
+               Brightness:   100,
+               QueueTypes: [{ Queue: "A", QueueType: "WoRm", BurstInterval: 5 }],
+               Queue:        "A",
+               Polling:      [ { Characteristic: "On", Interval: 30 },
+                               { Characteristic: "Brightness"  }
+                             ],
+               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            }
+         ]
+      }
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
+
+      let numberOfQueues = Object.keys( settings.listOfCreatedPriorityQueues ).length;
+
+      assert.equal( numberOfQueues, 1, `Incorrect number of polling queues` );
+      let cmd4PriorityPollingQueue = settings.listOfCreatedPriorityQueues[ "A" ];
+      expect( cmd4PriorityPollingQueue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PriorityPollingQueue" );
+
+      assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 2, `Incorrect number of low priority polled characteristics` );
+
+      assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 2, `Incorrect number of low priority polled characteristics` );
+
+      assert.include( log.logBuf, `[90mcalling addQueue: A type: WoRm burstGroupSize: 0 burstInterval: 5000`, "Polling Queue with burst Interval created incorrectly" );
+
+      assert.equal( cmd4PriorityPollingQueue.burstGroupSize, constants.DEFAULT_BURST_GROUP_SIZE, `burst group size should not be set` );
+
+      assert.equal( cmd4PriorityPollingQueue.variablePollingTimer.iv, 30000, `Incorrect variablePollingTimer` );
+
+      assert.include( log.logBuf, `Creating new Priority Polled Queue "A" with QueueType of: "WoRm" burstGroupSize: 0 burstInterval: 5000`, "Polling Queue with burst Interval created incorrectly" );
+
+      assert.include( log.logBuf, `Interval being used for queue: "A" is from  My_Light On ${ constants.INTERVAL_lv }: 3000`, "Polling Queue with burst Interval created incorrectly" );
+
+      assert.isFalse( cmd4PriorityPollingQueue.burstMode, `Queue should *NOT* be in burst mode` );
 
       done();
    }).timeout(10000);
@@ -808,7 +881,6 @@ describe('Testing Cmd4PriorityPollingQueue sanity correction', ( ) =>
       }
 
       // Put back the array of Polling Characteristics
-      //
       settings.arrayOfAllStaggeredPollingCharacteristics = [ ];
       settings.listOfCreatedPriorityQueues = { };
 
@@ -832,10 +904,10 @@ describe('Testing Cmd4PriorityPollingQueue sanity correction', ( ) =>
                Cmd4_Mode:    "Polled",
                On:           0,
                Brightness:   100,
-               QueueTypes: [{ queue: "A", queueType: "Sequential" }],
+               QueueTypes: [{ Queue: "A", QueueType: "Sequential" }],
                Queue:        "A",
-               polling:      [ { "characteristic": "on"  },
-                               { "characteristic": "brightness"  }
+               Polling:      [ { Characteristic: "On"  },
+                               { Characteristic: "Brightness"  }
                              ],
                State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
             }
@@ -861,7 +933,7 @@ describe('Testing Cmd4PriorityPollingQueue sanity correction', ( ) =>
       assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 2, `Incorrect number of low priority polled characteristics` );
 
 
-      assert.include( log.logBuf, `Creating new Priority Polled Queue "A" with QueueType of: "Sequential" burstGroupSize: 0 interval: 15000`, "Polling Queue created incorrectly" );
+      assert.include( log.logBuf, `Creating new Priority Polled Queue "A" with QueueType of: "Sequential" burstGroupSize: 0 burstInterval: 15000`, "Polling Queue created incorrectly" );
 
       // Set polling timer long so it does not happen at all
       cmd4PriorityPollingQueue.variablePollingTimer.iv = 3000;
@@ -925,10 +997,10 @@ describe('Testing Cmd4PriorityPollingQueue sanity correction', ( ) =>
                Cmd4_Mode:    "Polled",
                On:           0,
                Brightness:   100,
-               QueueTypes: [{ queue: "A", queueType: "WoRm", BurstGroupSize: 1, burstInterval: 5 }],
+               QueueTypes: [{ Queue: "A", QueueType: "WoRm", BurstGroupSize: 1, BurstInterval: 5 }],
                Queue:        "A",
-               polling:      [ { "characteristic": "on"  },
-                               { "characteristic": "brightness"  }
+               Polling:      [ { Characteristic: "On"  },
+                               { Characteristic: "Brightness"  }
                              ],
                State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
             }
@@ -958,9 +1030,9 @@ describe('Testing Cmd4PriorityPollingQueue sanity correction', ( ) =>
 
       assert.equal( cmd4PriorityPollingQueue.burstGroupSize, 1, `Incorrect burst group size` );
 
-      assert.equal( cmd4PriorityPollingQueue.burstInterval, 5000, `Incorrect burst interval` );
+      assert.equal( cmd4PriorityPollingQueue.variablePollingTimer.iv, 5000, `Incorrect burst interval` );
 
-      assert.include( log.logBuf, `Creating new Priority Polled Queue "A" with QueueType of: "WoRm" burstGroupSize: 1 interval: 5000`, "Polling Queue with burst Interval created incorrectly" );
+      assert.include( log.logBuf, `Creating new Priority Polled Queue "A" with QueueType of: "WoRm" burstGroupSize: 1 burstInterval: 5000`, "Polling Queue with burst Interval created incorrectly" );
 
       done();
    }).timeout(10000);

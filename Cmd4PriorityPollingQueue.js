@@ -30,7 +30,6 @@ class Cmd4PriorityPollingQueue
       this.queueName = queueName;
       this.queueType = queueType;
       this.burstGroupSize = burstGroupSize;
-      this.burstInterval = burstInterval;
       this.queueStarted = false;
       this.highPriorityQueue = [ ];
       this.lowPriorityQueue = [ ];
@@ -43,6 +42,11 @@ class Cmd4PriorityPollingQueue
       this.queueMsg = constants.DEFAULT_QUEUEMSG;
       this.queueStatMsgInterval = constants.DEFAULT_QUEUE_STAT_MSG_INTERVAL;
 
+      this.burstMode = true;
+      if ( this.burstGroupSize == constants.DEFAULT_BURST_GROUP_SIZE )
+        this.burstMode = false;
+      else
+         this.variablePollingTimer.iv = burstInterval;
 
       // Relieve possible congestion by low priority queue consuming
       // all the time that actually interacting with the real accessory
@@ -50,8 +54,8 @@ class Cmd4PriorityPollingQueue
       this.lowPriorityQueueCounter = 0;
       this.lowPriorityQueueAverageTime = 0;
       this.lowPriorityQueueAccumulatedTime = 0;
-      this.originalInterval = 0;
-      this.optimalInterval = 0;
+      this.originalInterval = burstInterval;   // Defaults to 0
+      this.optimalInterval = burstInterval;    // Defaults to 0
 
       // A primitive sanity timer
       this.sanityTimer = null;
@@ -96,19 +100,21 @@ class Cmd4PriorityPollingQueue
       queue.lowPriorityQueue.push( { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: interval, [ constants.TIMEOUT_lv ]: timeout } );
 
       queue.lowPriorityQueueMaxLength = queue.lowPriorityQueue.length ;
-      if ( queue.variablePollingTimer.iv == 0 )
+
+      // If not in burstMode then the very first characteristic being
+      // polled has the interval of which polling will be done
+      if ( queue.variablePollingTimer.iv == 0 && queue.burstMode == false )
       {
          queue.queueMsg = accessory.queueMsg;
 
          if ( queue.queueMsg == true )
             this.log.info( `Interval being used for queue: "${ queue.queueName }" is from  ${ accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ${ constants.INTERVAL_lv }: ${ interval }` );
 
-         // Do not overide the burstInterval
-         if ( queue.burstGroupSize != 0 )
-            queue.variablePollingTimer.iv = interval;
+         queue.variablePollingTimer.iv = interval;
 
          queue.optimalInterval = interval;
          queue.originalInterval = interval;
+
          queue.queueStatMsgInterval = accessory.queueStatMsgInterval;
       }
    }
@@ -256,16 +262,20 @@ class Cmd4PriorityPollingQueue
          queue.lowPriorityQueueAccumulatedTime += lowPriorityQueueEndTime - lowPriorityQueueStartTime;
          queue.lowPriorityQueueAverageTime = queue.lowPriorityQueueAccumulatedTime / queue.lowPriorityQueueCounter;
 
-         // Make it 7x, but not less than the original interval
-         // We need to accomodate the fact that the unit could
-         // be interacted with manually.
-         let optimal = 7 * queue.lowPriorityQueueAverageTime;
-         if ( optimal > queue.originalInterval )
+         // This only applies to non burst mode
+         if ( queue.burstMode == false )
          {
-            queue.optimalInterval = optimal;
+            // Make it 7x, but not less than the original interval
+            // We need to accomodate the fact that the unit could
+            // be interacted with manually.
+            let optimal = 7 * queue.lowPriorityQueueAverageTime;
+            if ( optimal > queue.originalInterval )
+            {
+               queue.optimalInterval = optimal;
 
-            // Change the Polling timer interval to the optimal value
-            queue.variablePollingTimer.set_interval( optimal );
+               // Change the Polling timer interval to the optimal value
+               queue.variablePollingTimer.set_interval( optimal );
+            }
          }
 
 
@@ -421,7 +431,7 @@ class Cmd4PriorityPollingQueue
               queue.queueType == constants.QUEUETYPE_WORM )
          {
             // Do Low Priority Queue all in bursts
-            if ( queue.burstGroupSize >= 1 )
+            if ( queue.burstMode == true )
             {
                let burstSize = Math.ceil( queue.lowPriorityQueueMaxLength / queue.burstGroupSize );
                for ( let burstIndex = 0;
@@ -439,32 +449,36 @@ class Cmd4PriorityPollingQueue
 
                queue.lowPriorityQueueIndex ++;
 
-               // A 10% variance is okay
-               if ( queue.variablePollingTimer.iv > ( queue.optimalInterval * 1.1 ) )
+               // This only applies to non burst mode
+               if ( queue.burstMode == false )
                {
-                  if ( queue.queueMsg == true )
-                     this.log.info( `Interval for ${ nextEntry.accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ nextEntry.accTypeEnumIndex ].type } is too reasonable. Using computed interval of ` + queue.optimalInterval.toFixed( 2 ) );
-
-                  // Change the Polling timer interval to the optimal value
-                  queue.variablePollintTimer.set_interval( queue.optimalInterval );
-
-                  if ( queue.queueMsg == true )
-                     queue.printQueueStats( queue );
-
-                  if ( queue.variablePollingTimer.iv < ( queue.optimalInterval * .9 ) )
+                  // A 10% variance is okay
+                  if ( queue.variablePollingTimer.iv > ( queue.optimalInterval * 1.1 ) )
                   {
                      if ( queue.queueMsg == true )
-                        this.log.warn( `Interval for ${ nextEntry.accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ nextEntry.accTypeEnumIndex ].type } is unreasonable. Using computed interval of ` + queue.optimalInterval.toFixed( 2 ) );
+                        this.log.info( `Interval for ${ nextEntry.accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ nextEntry.accTypeEnumIndex ].type } is too reasonable. Using computed interval of ` + queue.optimalInterval.toFixed( 2 ) );
 
                      // Change the Polling timer interval to the optimal value
-                     queue.variablePollingTimer.set_interval( queue.optimalInterval );
+                     queue.variablePollintTimer.set_interval( queue.optimalInterval );
 
                      if ( queue.queueMsg == true )
                         queue.printQueueStats( queue );
+
+                     if ( queue.variablePollingTimer.iv < ( queue.optimalInterval * .9 ) )
+                     {
+                        if ( queue.queueMsg == true )
+                           this.log.warn( `Interval for ${ nextEntry.accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ nextEntry.accTypeEnumIndex ].type } is unreasonable. Using computed interval of ` + queue.optimalInterval.toFixed( 2 ) );
+
+                        // Change the Polling timer interval to the optimal value
+                        queue.variablePollingTimer.set_interval( queue.optimalInterval );
+
+                     }
 
                      if ( queue.queueMsg == true &&
                           queue.lowPriorityQueueCounter % queue.queueStatMsgInterval == 0 )
+                     {
                         queue.printQueueStats( queue );
+                     }
 
                      queue.enablePolling( queue, false );
                   }
@@ -507,7 +521,9 @@ class Cmd4PriorityPollingQueue
          if ( firstTime )
          {
             this.log.debug( `Starting polling interval timer for the first time with interval: ${ queue.variablePollingTimer.iv }` );
+
             // The interval would have already been set by the first added get
+            // or by the burstInterval
             queue.variablePollingTimer.start( ( ) =>
             {
                this.log.debug( "Polling interval Timer Firing safeToDoPollingFlag: %s", queue.safeToDoPollingFlag );
@@ -639,7 +655,7 @@ var addQueue = function( log, queueName, queueType = constants.DEFAULT_QUEUE_TYP
    if ( queue != undefined )
       return queue;
 
-   log.info( `Creating new Priority Polled Queue "${ queueName }" with QueueType of: "${ queueType }" burstGroupSize: ${ burstGroupSize } interval: ${ burstInterval }` );
+   log.info( `Creating new Priority Polled Queue "${ queueName }" with QueueType of: "${ queueType }" burstGroupSize: ${ burstGroupSize } burstInterval: ${ burstInterval }` );
    queue = new Cmd4PriorityPollingQueue( log, queueName, queueType, burstGroupSize, burstInterval );
    settings.listOfCreatedPriorityQueues[ queueName ] = queue;
 
