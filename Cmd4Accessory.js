@@ -2424,8 +2424,8 @@ class Cmd4Accessory
 
       let found = requiredCharacteristicsArray.find( entry => entry.type == accCurrentEnumIndex );
 
-      if ( found && found.relatedTargetAccTypeEnumIndex  )
-         return found.relatedTargetAccTypeEnumIndex;
+      if ( found && found.relatedTargetAccTypeEnumArray.length > 0  )
+         return found.relatedTargetAccTypeEnumArray[ 0 ];
 
       return null;
 
@@ -2444,8 +2444,8 @@ class Cmd4Accessory
 
       let found = requiredCharacteristicsArray.find( entry => entry.type == accTargetEnumIndex );
 
-      if ( found && found.relatedCurrentAccTypeEnumIndex )
-         return found.relatedCurrentAccTypeEnumIndex;
+      if ( found && found.relatedCurrentAccTypeEnumArray.length > 0 )
+         return found.relatedCurrentAccTypeEnumArray[ 0 ];
 
       return null;
    }
