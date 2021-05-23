@@ -1,26 +1,14 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
-### 3.8.0 (2021-05-21)
-
-##### Chores
-
-*  v3.8.0 packaging ([1cc9006f](https://github.com/ztalbot2000/homebridge-cmd4/commit/1cc9006ff3867cba44c150d87c028b0621f97c62))
-
-##### Documentation Changes
-
-*  Document Burst for Queue ([fe057931](https://github.com/ztalbot2000/homebridge-cmd4/commit/fe0579315ea79523fb979b1bec69cfddd71c9e55))
-
-##### New Features
-
-*  Add in burst read of Queued Polling ([8b3e8b6e](https://github.com/ztalbot2000/homebridge-cmd4/commit/8b3e8b6eabb07455f2acc90fb6fbe2b0061c79fa))
-*  rough in quash of error message for Queued Polling ([e1ec4947](https://github.com/ztalbot2000/homebridge-cmd4/commit/e1ec49474fdcda73bad780a2caae91b4ed9bab07))
+#### 3.8.1 (2021-05-23)
 
 ##### Bug Fixes
 
-*  Proper check for burst enabled ([7fab1be6](https://github.com/ztalbot2000/homebridge-cmd4/commit/7fab1be642cd70d28f5433c8b08a7535cb9405ca))
-*  For burst feat, Dont confuse interval and burstInterval ([59c6490b](https://github.com/ztalbot2000/homebridge-cmd4/commit/59c6490b2c5b4b9ea15ddfa63e1d790b3d3ff9f5))
-*  Added tests for Queue sanity timer which found stuff ([d1296b13](https://github.com/ztalbot2000/homebridge-cmd4/commit/d1296b13d91e6f7cdd60272ebc327bbe2d9f6e40))
-*  Change loop condition to bracketed && instead of comma ([3a213e0c](https://github.com/ztalbot2000/homebridge-cmd4/commit/3a213e0c0ef271786080013e3eeddf7a37e74e74))
-*  From previous rough in commit, fix burstGroupSize ([84e9a3da](https://github.com/ztalbot2000/homebridge-cmd4/commit/84e9a3daf987dc9f0a2eb76492713ab9fc64ab34))
-*  from previous commit. Adding burst changes the way entry can be parsed ([a1e5ae06](https://github.com/ztalbot2000/homebridge-cmd4/commit/a1e5ae0635dbb50b873033986eabce7920fb0f97))
+*  set to #!/usr/bin/env node for multi platform ([d3544fa1](https://github.com/ztalbot2000/homebridge-cmd4/commit/d3544fa13a9cf654e2b2b36c335ae19c7302a49d))
+*  First step of multiple related characteristics using an array; no functionality change ([3092e06e](https://github.com/ztalbot2000/homebridge-cmd4/commit/3092e06e1025cf39be924699108fbf17b2d6ff4f))
+*  Create variable burstMode instead of using burstGroupSize causing issues ([b403f679](https://github.com/ztalbot2000/homebridge-cmd4/commit/b403f679df9ceac72234ba1e0f307697be036b2b))
+
+##### Tests
+
+*  Add routine to check for unused constants ([1da024a0](https://github.com/ztalbot2000/homebridge-cmd4/commit/1da024a0dfaab4664384073a90759aab6c3beebb))
 
 

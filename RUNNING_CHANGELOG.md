@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-3-8-1">**Whats new in 3.8.1**</a>
 * <a href="#Whats-new-in-3-8-0">**Whats new in 3.8.0**</a>
 * <a href="#Whats-new-in-3-7-5">**Whats new in 3.7.5**</a>
 * <a href="#Whats-new-in-3-7-4">**Whats new in 3.7.4**</a>
@@ -57,6 +58,20 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-3-8-1">## Whats new in 3.8.1</a>
+#### 3.8.1 (2021-05-23)
+
+##### Bug Fixes
+
+*  set to #!/usr/bin/env node for multi platform ([d3544fa1](https://github.com/ztalbot2000/homebridge-cmd4/commit/d3544fa13a9cf654e2b2b36c335ae19c7302a49d))
+*  First step of multiple related characteristics using an array; no functionality change ([3092e06e](https://github.com/ztalbot2000/homebridge-cmd4/commit/3092e06e1025cf39be924699108fbf17b2d6ff4f))
+*  Create variable burstMode instead of using burstGroupSize causing issues ([b403f679](https://github.com/ztalbot2000/homebridge-cmd4/commit/b403f679df9ceac72234ba1e0f307697be036b2b))
+
+##### Tests
+
+*  Add routine to check for unused constants ([1da024a0](https://github.com/ztalbot2000/homebridge-cmd4/commit/1da024a0dfaab4664384073a90759aab6c3beebb))
+
 
 <a name="Whats-new-in-3-8-0">## Whats new in 3.8.0</a>
 ### 3.8.0 (2021-05-21)
