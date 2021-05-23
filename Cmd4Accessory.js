@@ -29,7 +29,7 @@ let trueTypeOf = require( "./utils/trueTypeOf" );
 // The sObject.defineProperty is to resolve a lint issue.
 // See utils/indexOfEnumLintTest.js for further information.
 let indexOfEnum = require( "./utils/indexOfEnum" );
-Object.defineProperty(exports, "indexOfEnum", { enumerable: true, get: function () { return indexOfEnum.indexOfEnum; } });
+Object.defineProperty( exports, "indexOfEnum", { enumerable: true, get: function ( ){ return indexOfEnum.indexOfEnum; } });
 
 // For changing validValue Constants to Values and back again
 var { transposeConstantToValidValue,
@@ -145,7 +145,7 @@ class Cmd4Accessory
       let parseConfigShouldUseCharacteristicValues = true;
       if ( ! Array.isArray( this.STORED_DATA_ARRAY ) )
       {
-         this.log.warn("STORED_DATA_ARRAY passed in is not an array and should be reported.");
+         this.log.warn( "STORED_DATA_ARRAY passed in is not an array and should be reported." );
          this.STORED_DATA_ARRAY = [ ];
       }
 
@@ -700,7 +700,7 @@ class Cmd4Accessory
                setTimeout( ( ) => {
                   self.log.debug( `Proccessing related characteristic ${ relatedCurrentCharacteristicString }` );
 
-                  self.getValue( relatedCurrentAccTypeEnumIndex, relatedCurrentCharacteristicString, timeout, function ( error, properValue) {
+                  self.getValue( relatedCurrentAccTypeEnumIndex, relatedCurrentCharacteristicString, timeout, function ( error, properValue ) {
                   {
                      if ( error == 0 )
                      {
@@ -765,7 +765,7 @@ class Cmd4Accessory
       var transposed = { [ constants.VALUE_lv ]: storedValue, [ constants.RC_lv ]: true, [ constants.MSG_lv ]: "" };
       transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, storedValue );
       if ( transposed.rc == false )
-         self.log.warn( `${ self.displayName }: ${ transposed.msg }`);
+         self.log.warn( `${ self.displayName }: ${ transposed.msg }` );
 
       let transposedValue = transposed.value;
 
@@ -825,9 +825,9 @@ class Cmd4Accessory
 
       // Execute command to Get a characteristics value for an accessory
       // exec( cmd, { timeout: timeout }, function ( error, stdout, stderr )
-      let child = spawn( cmd, { shell:true });
+      let child = spawn( cmd, { shell:true } );
 
-      const timer = setTimeout(() =>
+      const timer = setTimeout( ( ) =>
       {
          replyCount++;
 
@@ -895,7 +895,7 @@ class Cmd4Accessory
 
          // We can call our callback though ;-)
          if ( pollingID != 0 && replyCount == 1 )
-            callback( constants.ERROR_CMD_FAILED_REPLY, null, pollingID, errMsg);
+            callback( constants.ERROR_CMD_FAILED_REPLY, null, pollingID, errMsg );
 
          return;
       });
@@ -992,7 +992,7 @@ class Cmd4Accessory
          // The above "null" checked could possibly have quotes around it.
          // Now that the quotes are removed, I must check again.  The
          // things I must do for bad data ....
-         if ( unQuotedReply.toUpperCase() == "NULL" )
+         if ( unQuotedReply.toUpperCase( ) == "NULL" )
          {
             errMsg = `getValue: ${ characteristicString } function for ${ self.displayName } returned the string "${ trimmedReply }". ${ constants.DBUSY }${ QIndicator }`;
             if ( pollingID == 0 )
@@ -1012,7 +1012,7 @@ class Cmd4Accessory
             return;
          }
 
-         let words = unQuotedReply.split(" ").length;
+         let words = unQuotedReply.split( " " ).length;
          let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
          // Temp variable is faster than traversing large object
          let hapFormats = self.Characteristic.Formats;
@@ -1110,7 +1110,7 @@ class Cmd4Accessory
 
          if ( typeof characteristicProps[ key ] !=  typeof definitions[ key ] )
          {
-            this.log.error( chalk.red( `Error` ) + `: props for key: ${ key } type: ${ typeof definitions[ key] }  not equal to definition of: ${ typeof characteristicProps[ key] }` );
+            this.log.error( chalk.red( `Error` ) + `: props for key: ${ key } type: ${ typeof definitions[ key ] }  not equal to definition of: ${ typeof characteristicProps[ key ] }` );
             process.exit( 221 );
          }
       }
@@ -1123,7 +1123,7 @@ class Cmd4Accessory
       // We fix this here.
       if ( accTypeEnumIndex == CMD4_ACC_TYPE_ENUM.CurrentHeatingCoolingState )
       {
-         this.log.debug("fixing heatingCoolingState");
+         this.log.debug( "fixing heatingCoolingState" );
          accessory.service.getCharacteristic(
             CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].
                characteristic ).setProps(
@@ -1475,10 +1475,10 @@ class Cmd4Accessory
 
                // Eve Weather ( TempSensor Service )
                this.loggingService.addEntry(
-                  { [ constants.TIME_l]     : moment( ).unix( ),
-                    [ constants.TEMP_l]     : firstParmValue,
-                    [ constants.PRESSURE_l] : secondParmValue,
-                    [ constants.HUMIDITY_l] : thirdParmValue
+                  { [ constants.TIME_l ]     : moment( ).unix( ),
+                    [ constants.TEMP_l ]     : firstParmValue,
+                    [ constants.PRESSURE_l ] : secondParmValue,
+                    [ constants.HUMIDITY_l ] : thirdParmValue
                   });
                break;
             }
@@ -1539,14 +1539,14 @@ class Cmd4Accessory
                thirdParmValue = ( this.testStoredValueForIndex( thirdParmIndex ) == undefined ) ?
                   thirdParmValue : this.getStoredValueForIndex( thirdParmIndex );
 
-               this.log.debug( `Logging ${ constants.CURRENTTEMP_l }: ${ firstParmValue } ${ constants.SETTEMP_l }:${ secondParmValue } ${constants.VALVEPOSITION_l }:${ thirdParmValue } `);
+               this.log.debug( `Logging ${ constants.CURRENTTEMP_l }: ${ firstParmValue } ${ constants.SETTEMP_l }:${ secondParmValue } ${constants.VALVEPOSITION_l }:${ thirdParmValue } ` );
 
                // Eve Thermo ( Thermostat service )
                this.loggingService.addEntry(
-                  { [ constants.TIME_l]          : moment( ).unix( ),
-                    [ constants.CURRENTTEMP_l]   : firstParmValue,
-                    [ constants.SETTEMP_l]       : secondParmValue,
-                    [ constants.VALVEPOSITION_l] : thirdParmValue
+                  { [ constants.TIME_l ]          : moment( ).unix( ),
+                    [ constants.CURRENTTEMP_l ]   : firstParmValue,
+                    [ constants.SETTEMP_l ]       : secondParmValue,
+                    [ constants.VALVEPOSITION_l ] : thirdParmValue
                   });
                break;
             }
@@ -1683,21 +1683,21 @@ class Cmd4Accessory
             (
                this.eve,
                this,
-               { [ constants.STORAGE_l] : constants.FS_l,
+               { [ constants.STORAGE_l ] : constants.FS_l,
                  [ constants.PATH_l ]   : this.storagePath
                }
             );
             this.services.push( this.loggingService );
 
-         } else if ( this.storage == constants.GOOGLEDRIVE_l )
+         } else if ( this.storage == constants.GOOGLE_DRIVE_l )
          {
             this.loggingService = new FakeGatoHistoryService
             (
                this.eve,
                this,
-               { [ constants.STORAGE_l] : constants.GOOGLEDRIVE_l,
-                 [ constants.FOLDER_l]  : this.folder,
-                 [ constants.KEYPATH_l] : this.keyPath }
+               { [ constants.STORAGE_l ] : constants.GOOGLE_DRIVE_l,
+                 [ constants.FOLDER_l ]  : this.folder,
+                 [ constants.KEYPATH_l ] : this.keyPath }
             );
             this.services.push( this.loggingService );
          } else
@@ -1813,7 +1813,7 @@ class Cmd4Accessory
          transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value ) ;
 
          if ( transposed.rc == false )
-            this.log.warn( `${ this.displayName }: ${ transposed.msg }`);
+            this.log.warn( `${ this.displayName }: ${ transposed.msg }` );
 
          value = transposed.value;
       }
@@ -2359,7 +2359,7 @@ class Cmd4Accessory
       for ( let accTypeEnumIndex = 0; accTypeEnumIndex < len; accTypeEnumIndex ++ )
       {
          // There was a previously stored characteristic, if it was not initialized
-         if ( this.storedValuesPerCharacteristic[ accTypeEnumIndex] != null )
+         if ( this.storedValuesPerCharacteristic[ accTypeEnumIndex ] != null )
          {
             // concert the accTypeEnumIndex to its characteristic string
             let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
@@ -2371,7 +2371,7 @@ class Cmd4Accessory
             {
                continue;
             } else {
-                this.log.warn(`Removing previously configured characteristic: ${ characteristicString }`);
+                this.log.warn( `Removing previously configured characteristic: ${ characteristicString }` );
                 this.storedValuesPerCharacteristic[ accTypeEnumIndex ] = null;
             }
          }
@@ -2741,7 +2741,7 @@ class Cmd4Accessory
       // i.e. Characteristic.On
       //      Characteristic.RotationDirection
 
-      accessory.getValue( accTypeEnumIndex, characteristicString, timeout, function ( error, properValue) {
+      accessory.getValue( accTypeEnumIndex, characteristicString, timeout, function ( error, properValue ) {
       {
          if ( error == 0 )
          {

@@ -12,7 +12,6 @@ describe( "Testing cmd4Constants", function( )
    {
        assert.equal( constants.STANDALONE, "Standalone", `Incorrect global value` );
        assert.equal( constants.PLATFORM, "Platform", `Incorrect global value` );
-       assert.equal( constants.COLLECTION, "Collection", `Incorrect global value` );
 
        assert.equal( constants.SLOW_STATE_CHANGE_RESPONSE_TIME, 10000, `Incorrect global value` );
        assert.equal( constants.MEDIUM_STATE_CHANGE_RESPONSE_TIME, 3000, `Incorrect global value` );
@@ -111,4 +110,69 @@ describe( "Testing cmd4Constants", function( )
        done( );
    });
 
+});
+var fs = require("fs");
+describe( "Testing cmd4Constants - unused", function( )
+{
+   it( "All cmd4Constants should be used somewhere", function ( done )
+   {
+      var cmd4Files = [ "./Cmd4Platform.js",
+                        "./Cmd4Accessory.js",
+                        "./Cmd4PriorityPollingQueue.js",
+                        "./index.js",
+                        "./tools/Cmd4AccDocGenerator"];
+
+      let data = fs.readFileSync( "./cmd4Constants.js", "utf8" );
+
+      var exportMatches = data.toString().match(/exports.(\w).*\n/g);
+      var result = exportMatches.map( ( s ) =>
+      {
+          s = s.slice(8);
+          return s.substr(0, s.indexOf(' ') );
+      });
+
+      let foundCount=0;
+      for ( let cIndex = 0;
+                cIndex < result.length;
+                cIndex++)
+      {
+         let found = false;
+         let c = result[ cIndex ];
+         const regex = new RegExp(`\\bconstants.${ c }[\\s|,|:|\\.]` ); // 115
+         //console.log("Looking for constant: %s ( %s of %s )", c, cIndex, result.length );
+
+         for ( let fileIndex = 0;
+                   (fileIndex < cmd4Files.length );
+                   fileIndex++ )
+         {
+             let cmd4File = cmd4Files[ fileIndex ];
+
+             let code =  fs.readFileSync( cmd4File, "utf8" );
+
+             var codeLines = code.split( '\n' );
+             let lineCount = 0;
+             for ( let lineIndex = 0;
+                       lineIndex < codeLines.length;
+                       lineIndex++, lineCount++ )
+             {
+                let line = codeLines[ lineIndex ];
+                //let t = line.includes( s );   // 50
+                let t = regex.test(line);
+                if ( t == true )
+                {
+                   //console.log("Match found of %s on line: %s of file: %s", c, lineCount, cmd4File );
+                   found = true;
+                   foundCount++;
+                   break;
+                }
+             }
+             if (found == true )
+                break;
+          }
+          if (found == false )
+             console.log( "Not Found %s ", c );
+      }
+      console.log( "Total found was %s of %s ", foundCount, result.length );
+      done( );
+   }).timeout(20000);
 });
