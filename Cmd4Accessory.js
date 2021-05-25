@@ -2333,7 +2333,7 @@ class Cmd4Accessory
             this.log.debug( `No polling configured.` );
             return;
          case Boolean:
-            this.log.debug( `Polling config is old style. Nothing to check for unset polling characteristics` );
+            this.log.debug( `Polling config is Default Polling. Nothing to check for unset polling characteristics` );
             return;
          case String:
             this.log.error( `Unknown type for Polling ${ pollingType }` );
@@ -2641,7 +2641,7 @@ class Cmd4Accessory
                CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ].defaultPollingCharacteristics.forEach( defaultPollingAccTypeEnumIndex =>
                {
                   let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ defaultPollingAccTypeEnumIndex ].type;
-                     let record = { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: defaultPollingAccTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: accessory.interval, [ constants.TIMEOUT_lv ]: accessory.timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, [ constants.QUEUE_NAME_lv ]: constants.DEFAULT_QUEUE_NAME };
+                     let record = { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: defaultPollingAccTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: accessory.interval, [ constants.TIMEOUT_lv ]: accessory.timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: accessory.stateChangeResponseTime, [ constants.QUEUE_NAME_lv ]: accessory.queueName };
 
                   // Used to determine missing related characteristics and
                   // to determine if the related characteristic is also polled.

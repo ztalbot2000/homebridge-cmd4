@@ -94,7 +94,7 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       cmd4Accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "Cmd4Accessory is not an instance of Cmd4Accessory" );
-      let expectedOutput1 = "[90mPolling config is old style. Nothing to check for unset polling characteristics\u001b";
+      let expectedOutput1 = "[90mPolling config is Default Polling. Nothing to check for unset polling characteristics\u001b";
       let expectedOutput2 = "[90mSetting up which characteristics will be polled for My_Switch\u001b";
 
       assert.include( log.logBuf, expectedOutput1 , `expected stdout: ${ log.logBuf }` );

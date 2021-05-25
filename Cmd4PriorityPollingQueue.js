@@ -532,7 +532,6 @@ class Cmd4PriorityPollingQueue
             // timer goes off, it can happen.
             queue.safeToDoPollingFlag = true;
          }
-         this.log.debug( `Polling Timer created: ${ queue.variablePollingTimer } firstTime: ${ firstTime }` );
       }
    }
    disablePolling( queue )

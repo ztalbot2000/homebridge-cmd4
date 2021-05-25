@@ -3,7 +3,6 @@
 var fs = require("fs");
 
 const constants = require( "../cmd4Constants" );
-const trueTypeOf = require( "../utils//trueTypeOf" );
 
 
 describe( "Testing cmd4Constants", function( )
