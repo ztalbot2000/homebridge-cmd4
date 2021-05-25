@@ -9,7 +9,6 @@
 // Either cmd4Accessories or cmd4StandaloneAccessories
 exports.STANDALONE               = "Standalone";
 exports.PLATFORM                 = "Platform";
-exports.COLLECTION               = "Collection";
 
 // Default intervals
 exports.SLOW_STATE_CHANGE_RESPONSE_TIME      = 10000;  // 10 seconds
@@ -19,6 +18,7 @@ exports.FAST_STATE_CHANGE_RESPONSE_TIME      = 1000;   // 1 second
 
 exports.DEFAULT_TIMEOUT          = 60000; // 1 minute
 exports.DEFAULT_INTERVAL         = 60000; // 1 minute
+exports.DEFAULT_QUEUE_INTERVAL   = 60000; // 1 minute
 
 // Not a Bool, otherwise conditional check fails
 exports.DEFAULT_STATUSMSG        = "TRUE";
@@ -43,8 +43,10 @@ exports.FAKEGATO_TYPE_THERMO_l   = "thermo";
 exports.FAKEGATO_TYPE_AQUA_l     = "aqua";
 exports.EVE                      = "Eve";
 exports.STORAGE                  = "Storage";
+exports.STORAGE_l                = "storage";
 exports.STORAGEPATH              = "StoragePath";
 exports.FOLDER                   = "Folder";
+exports.FOLDER_l                 = "folder";
 exports.KEYPATH                  = "KeyPath";
 exports.STATUS                   = "Status";
 exports.STATUS_l                 = "status";
@@ -69,9 +71,7 @@ exports.TIME_l                   = "time";
 exports.PATH_l                   = "path";
 exports.KEYPATH_l                = "keyPath";
 
-//exports.FS                       = "Fs";
 exports.FS_l                     = "fs";
-//exports.GOOGLE_DRIVE             = "GoogleDrive";
 exports.GOOGLE_DRIVE_l           = "googleDrive";
 
 // Config Constnts
@@ -82,11 +82,11 @@ exports.QUEUEMSG                 = "QueueMsg";
 exports.QUEUETYPE                = "QueueType";
 exports.QUEUETYPES               = "QueueTypes";
 exports.QUEUETYPE_SEQUENTIAL     = "Sequential";
+exports.QUEUE_INTERVAL           = "QueueInterval";
 exports.QUEUETYPE_WORM           = "WoRm";
 exports.BURST_GROUP_SIZE         = "BurstGroupSize";
 exports.BURST_INTERVAL           = "BurstInterval";
 
-//exports.STATUSMSG_l              = "statusMsg";
 
 // Platform Config Constnts
 exports.TYPE                     = "Type";
@@ -129,12 +129,7 @@ exports.URL                      = "Url";
 exports.ALLOWTLV8                = "AllowTLV8";
 
 exports.DEFINITIONS             = "Definitions";
-exports.FORMAT                  = "Format";
-exports.UNITS                   = "Units";
 exports.PROPS                   = "Props";
-exports.PERMS                   = "Perms";
-exports.VALIDVALUES             = "ValidValues";
-exports.ACCESS                  = "Access";
 
 
 // Internal list variables
@@ -144,14 +139,15 @@ exports.CALLBACK_lv                    = "callback";
 exports.ACC_TYPE_ENUM_INDEX_lv         = "accTypeEnumIndex";
 exports.INTERVAL_lv                    = "interval";
 exports.IS_SET_lv                      = "isSet";
-exports.IS_POLLED_lv                   = "isPolled";
-exports.QUEUE_lv                       = "queue";
 exports.QUEUE_NAME_lv                  = "queueName";
 exports.QUEUE_GET_IS_UPDATE_lv         = "queueGetIsUpdate";
+exports.QUEUEMSG_lv                    = "queueMsg";
+exports.QUEUE_STAT_MSG_INTERVAL_lv     = "queueStatMsgInterval";
 exports.RC_lv                          = "rc";
 exports.STATE_CHANGE_RESPONSE_TIME_lv  = "stateChangeResponseTime";
 exports.TIMEOUT_lv                     = "timeout";
 exports.VALUE_lv                       = "value";
+exports.STORED_VALUES_PER_CHARACTERISTIC_lv = "storedValuesPerCharacteristic";
 
 exports.ERROR_TIMER_EXPIRED           = -151;
 exports.ERROR_CMD_FAILED_REPLY        = -152;
@@ -160,9 +156,8 @@ exports.ERROR_NULL_STRING_REPLY       = -154;
 exports.ERROR_EMPTY_STRING_REPLY      = -155;
 exports.ERROR_2ND_NULL_STRING_REPLY   = -156;
 exports.ERROR_NON_CONVERTABLE_REPLY   = -157;
+exports.ERROR_NO_DATA_REPLY           = -158;
 
-// internal strings
-exports.storedValuesPerCharacteristic = "storedValuesPerCharacteristic";
 
 
 // Static Messages

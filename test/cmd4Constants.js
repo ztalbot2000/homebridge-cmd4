@@ -1,9 +1,9 @@
 "use strict";
 
-// ***************** TEST LOADING **********************
-
+var fs = require("fs");
 
 const constants = require( "../cmd4Constants" );
+const trueTypeOf = require( "../utils//trueTypeOf" );
 
 
 describe( "Testing cmd4Constants", function( )
@@ -13,9 +13,6 @@ describe( "Testing cmd4Constants", function( )
        assert.equal( constants.STANDALONE, "Standalone", `Incorrect global value` );
        assert.equal( constants.PLATFORM, "Platform", `Incorrect global value` );
 
-       assert.equal( constants.SLOW_STATE_CHANGE_RESPONSE_TIME, 10000, `Incorrect global value` );
-       assert.equal( constants.MEDIUM_STATE_CHANGE_RESPONSE_TIME, 3000, `Incorrect global value` );
-       assert.equal( constants.FAST_STATE_CHANGE_RESPONSE_TIME, 1000, `Incorrect global value` );
 
        assert.equal( constants.DEFAULT_TIMEOUT, 60000, `Incorrect global value` );
        assert.equal( constants.DEFAULT_INTERVAL, 60000, `Incorrect global value` );
@@ -105,13 +102,13 @@ describe( "Testing cmd4Constants", function( )
        assert.equal( constants.URL, "Url", `Incorrect global value` );
        assert.equal( constants.ALLOWTLV8, "AllowTLV8", `Incorrect global value` );
 
-       assert.equal( constants.storedValuesPerCharacteristic, "storedValuesPerCharacteristic", `Incorrect global value` );
+       assert.equal( constants.STORED_VALUES_PER_CHARACTERISTIC_lv, "storedValuesPerCharacteristic", `Incorrect global value` );
 
        done( );
    });
 
 });
-var fs = require("fs");
+
 describe( "Testing cmd4Constants - unused", function( )
 {
    it( "All cmd4Constants should be used somewhere", function ( done )
@@ -120,59 +117,204 @@ describe( "Testing cmd4Constants - unused", function( )
                         "./Cmd4Accessory.js",
                         "./Cmd4PriorityPollingQueue.js",
                         "./index.js",
+                        "./lib/CMD4_DEVICE_TYPE_ENUM.js",
                         "./tools/Cmd4AccDocGenerator"];
 
       let data = fs.readFileSync( "./cmd4Constants.js", "utf8" );
 
       var exportMatches = data.toString().match(/exports.(\w).*\n/g);
-      var result = exportMatches.map( ( s ) =>
+
+      // This is the array of defined constants
+      var constantsArray = exportMatches.map( ( s ) =>
       {
-          s = s.slice(8);
-          return s.substr(0, s.indexOf(' ') );
+         // remove "exports."
+         s = s.slice(8);
+
+         // return "NAME"
+         return s.substr(0, s.indexOf(' ') );
       });
 
+      // This is the count of the found constants in result
       let foundCount=0;
+
+      // Over ever constant, find where they exist in our sources
       for ( let cIndex = 0;
-                cIndex < result.length;
+                cIndex < constantsArray.length;
                 cIndex++)
       {
+         // This one is not found yet
          let found = false;
-         let c = result[ cIndex ];
-         const regex = new RegExp(`\\bconstants.${ c }[\\s|,|:|\\.]` ); // 115
+
+         // This is the constant defind in cmd4Constants
+         let c = constantsArray[ cIndex ];
+
+         // The regex to find the constant in the source files
+         const regex = new RegExp(`\\bconstants.${ c }[\\s|,|:|\\.|;]` ); // 115
          //console.log("Looking for constant: %s ( %s of %s )", c, cIndex, result.length );
 
+         // The constant must be in one of the Cmd4 source files
          for ( let fileIndex = 0;
                    (fileIndex < cmd4Files.length );
                    fileIndex++ )
          {
-             let cmd4File = cmd4Files[ fileIndex ];
+            let cmd4File = cmd4Files[ fileIndex ];
 
-             let code =  fs.readFileSync( cmd4File, "utf8" );
+            // Read in all the code from the source file
+            let code =  fs.readFileSync( cmd4File, "utf8" );
 
-             var codeLines = code.split( '\n' );
-             let lineCount = 0;
-             for ( let lineIndex = 0;
-                       lineIndex < codeLines.length;
-                       lineIndex++, lineCount++ )
-             {
-                let line = codeLines[ lineIndex ];
-                //let t = line.includes( s );   // 50
-                let t = regex.test(line);
-                if ( t == true )
-                {
-                   //console.log("Match found of %s on line: %s of file: %s", c, lineCount, cmd4File );
-                   found = true;
-                   foundCount++;
-                   break;
-                }
-             }
-             if (found == true )
-                break;
-          }
-          if (found == false )
-             console.log( "Not Found %s ", c );
+            // If I could grep the source file I would, so
+            // check the regex against each line
+            var codeLines = code.split( '\n' );
+            let lineCount = 0;
+            for ( let lineIndex = 0;
+                      lineIndex < codeLines.length;
+                      lineIndex++, lineCount++ )
+            {
+               let line = codeLines[ lineIndex ];
+
+               // Check the regex
+               let t = regex.test( line );
+               if ( t == true )
+               {
+                  //console.log("Match found of %s on line: %s of file: %s", c, lineCount, cmd4File );
+                  found = true;
+                  foundCount++;
+                  break;
+               }
+            }
+            if (found == true )
+               break;
+         }
+         if (found == false )
+         {
+            console.log( "Not Found %s", c );
+            assert.isTrue( found, `Not found ${ c } in source files` );
+         }
       }
-      console.log( "Total found was %s of %s ", foundCount, result.length );
+      console.log( "Total found was %s of %s ", foundCount, constantsArray.length );
+      assert.equal( foundCount, constantsArray.length, `Totals do not match` );
+
+      done( );
+   }).timeout(20000);
+});
+
+describe( "Testing source constants  -  are defined", function( )
+{
+   it( "All Source constants should be defined", function ( done )
+   {
+      var cmd4Files = [ "./Cmd4Platform.js",
+                        "./Cmd4Accessory.js",
+                        "./Cmd4PriorityPollingQueue.js",
+                        "./tools/Cmd4AccDocGenerator",
+                        "./lib/CMD4_DEVICE_TYPE_ENUM.js",
+                        "./tools/Cmd4AccDocGenerator"];
+
+      let totalSourceConstants = 0;
+      let foundCount = 0;
+
+      let data = fs.readFileSync( "./cmd4Constants.js", "utf8" );
+
+      var exportMatches = data.toString().match(/exports.(\w).*\n/g);
+
+      // This is the array of defined constants from cmd4Constants
+      var cmd4ConstantsArray = exportMatches.map( ( s ) =>
+      {
+         // remove "exports."
+         s = s.slice(8);
+
+         // return "NAME"
+         return s.substr(0, s.indexOf(' ') );
+      });
+
+      //cmd4ConstantsArray.forEach( (item, itemIndex) =>
+      //{
+      //   console.log( "cmd4ConstantsArray[%s] -->%s<--", itemIndex, item );
+      //});
+
+      // The constant must be in one of the Cmd4 source files
+      for ( let fileIndex = 0;
+         (fileIndex < cmd4Files.length );
+         fileIndex++ )
+      {
+         let cmd4File = cmd4Files[ fileIndex ];
+
+         let sourceData = fs.readFileSync( cmd4File, "utf8" );
+
+         var sourceConstantsMatches = sourceData.toString().match(/constants.(\w).*\n/g);
+         assert.isNotNull( sourceConstantsMatches, `Fike ${ cmd4File } has no constants and should be removed from this testcase` );
+
+         // This is the array of defined constants
+         var sourceMappedConstantsArray = sourceConstantsMatches.map( ( s ) =>
+         {
+            let returningArray = [ ];
+            let occurranceCountArray = s.match( /constants./g );
+
+            for ( let i = 0; i < occurranceCountArray.length; i++ )
+            {
+               s = s.slice( s.indexOf( "constants." ) + 10 );
+
+               const reg = new RegExp(`[\\s|,|:|;|}]` );
+               let sourceConstantLen = s.search( reg );
+               let sourceConstant = s.substr(0,  sourceConstantLen );
+
+               if ( returningArray.length == 0 )
+               {
+                  //console.log("pushing -->%s<--", sourceConstant );
+                  returningArray.push( sourceConstant );
+               } else if ( returningArray.find( ( entry ) => entry == sourceConstant ) == -1 )
+               {
+                  //console.log("pushing another  -->%s<--", sourceConstant );
+                  returningArray.push( sourceConstant );
+               } else
+               {
+                  // Duplicate
+               }
+
+               // Proceed to the next constant within the same line
+               if ( i + 1 < occurranceCountArray.length )
+               {
+                  s = s.slice( sourceConstant.length )
+               }
+            }
+
+            // return [ "NAME", "NAME2" ... ]
+            return returningArray;
+         });
+
+         // Inside the mapping we created an array of constants because
+         // there could be multiple constants per line. Therefore we need
+         // to unwind the array of arrays.
+         let sourceConstantsArray = [ ];
+         sourceMappedConstantsArray.forEach( ( item ) =>
+         {
+            item.forEach( ( sourceConstant ) =>
+            {
+               sourceConstantsArray.push( sourceConstant );
+            });
+         });
+
+         totalSourceConstants += sourceConstantsArray.length;
+
+         // Over every source constant, find if defined in cmd4Constants
+         for ( let sIndex = 0;
+                   sIndex < sourceConstantsArray.length;
+                   sIndex++)
+         {
+             let sourceConstant = sourceConstantsArray[ sIndex ];
+
+             if ( cmd4ConstantsArray.indexOf( sourceConstant ) == -1 )
+             {
+                console.log( "Not Found from: %s -->%s<--", cmd4File, sourceConstant );
+                assert( "Not Found from: %s -->%s<--", cmd4File, sourceConstant );
+             } else {
+                //console.log( "FOUND -->%s<--", sourceConstant );
+                foundCount ++
+             }
+         }
+      }
+      console.log( "Total found was %s of %s", foundCount, totalSourceConstants );
+      assert.equal( foundCount, totalSourceConstants, `Totals do not match` );
+
       done( );
    }).timeout(20000);
 });

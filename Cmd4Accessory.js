@@ -172,7 +172,7 @@ class Cmd4Accessory
          this.storedValuesPerCharacteristic = new Array( CMD4_ACC_TYPE_ENUM.EOL ).fill( null );
 
          this.STORED_DATA_ARRAY.push( { [ constants.UUID ]: UUID,
-                                        [ constants.storedValuesPerCharacteristic ]: this.storedValuesPerCharacteristic
+                                        [ constants.STORED_VALUES_PER_CHARACTERISTIC_lv ]: this.storedValuesPerCharacteristic
                                       }
                                     );
       }
@@ -194,7 +194,7 @@ class Cmd4Accessory
       this.folder = parentInfo && parentInfo.folder;
       this.keyPath = parentInfo && parentInfo.keyPath;
 
-      // Direct if constants should be sent or their value.
+      // Direct if Constants should be sent or their value.
       if ( parentInfo && parentInfo.outputConstants == true )
          this.outputConstants = true;
       else
@@ -323,7 +323,7 @@ class Cmd4Accessory
    {
       if ( accTypeEnumIndex < 0 || accTypeEnumIndex > CMD4_ACC_TYPE_ENUM.EOL )
       {
-         this.log.error( `CMD4 Warning: getStoredValue - Characteristic: ${ accTypeEnumIndex} for: ${ this.displayName }` );
+         this.log.error( `CMD4 Warning: getStoredValue - Characteristic: ${ accTypeEnumIndex } for: ${ this.displayName }` );
          this.log.error( `Check your config.json file for this error` );
          process.exit( 205 );
       }
@@ -776,7 +776,7 @@ class Cmd4Accessory
       if ( properValue == undefined )
       {
          // If the value is not convertable, just return it.
-         self.log.warn( `${ self.displayName} ` + chalk.red( `Cannot convert value: ${ transposedValue } to ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].properties.format } for ${ characteristicString }`  ) );
+         self.log.warn( `${ self.displayName } ` + chalk.red( `Cannot convert value: ${ transposedValue } to ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].properties.format } for ${ characteristicString }`  ) );
 
          callback( 20, null );
 
@@ -874,7 +874,7 @@ class Cmd4Accessory
 
          // We can call our callback though ;-)
          if ( pollingID != 0 && replyCount == 1 && code == 0 )
-            callback( exports.ERROR_NO_DATA_REPLY, null, pollingID, errMsg );
+            callback( constants.ERROR_NO_DATA_REPLY, null, pollingID, errMsg );
 
          return;
       });
@@ -945,7 +945,7 @@ class Cmd4Accessory
          // to catch this before much string manipulation was done.
          if ( trimmedReply.toUpperCase( ) == "NULL" )
          {
-            errMsg = `getValue: "${ trimmedReply }" returned from stdout for ${ characteristicString } ${ self.displayName }. ${ constants.DBUSY}${ QIndicator }`;
+            errMsg = `getValue: "${ trimmedReply }" returned from stdout for ${ characteristicString } ${ self.displayName }. ${ constants.DBUSY }${ QIndicator }`;
             if ( pollingID == 0 )
                self.log.error( errMsg );
 
@@ -1046,7 +1046,7 @@ class Cmd4Accessory
          let properValue = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( unQuotedReply );
          if ( properValue == undefined )
          {
-            self.log.warn( `${ self.displayName} ` + chalk.red( `Cannot convert value: ${ unQuotedReply } to ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format } for ${ characteristicString }${ QIndicator }` ) );
+            self.log.warn( `${ self.displayName } ` + chalk.red( `Cannot convert value: ${ unQuotedReply } to ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format } for ${ characteristicString }${ QIndicator }` ) );
 
             // Do not call the callback or continue processing as too many will be called.
 
@@ -1471,7 +1471,7 @@ class Cmd4Accessory
                thirdParmValue = ( this.testStoredValueForIndex( thirdParmIndex ) == undefined ) ?
                   thirdParmValue : this.getStoredValueForIndex( thirdParmIndex );
 
-               this.log.debug( `Logging ${ constants.TEMP_l }: ${ firstParmValue } ${ constants.PRESSURE_l}: ${ secondParmValue} ${ constants.HUMIDITY_l }: ${ thirdParmValue }` );
+               this.log.debug( `Logging ${ constants.TEMP_l }: ${ firstParmValue } ${ constants.PRESSURE_l }: ${ secondParmValue } ${ constants.HUMIDITY_l }: ${ thirdParmValue }` );
 
                // Eve Weather ( TempSensor Service )
                this.loggingService.addEntry(
@@ -1825,7 +1825,7 @@ class Cmd4Accessory
       {
          let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
          // If the value is not convertable, just return it.
-         this.log.warn( `parseKeyForCharacterisitcs: ${ this.displayName} ` + chalk.red( `Cannot convert value: ${ value } to ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format } for ${ characteristicString }`  ) );
+         this.log.warn( `parseKeyForCharacterisitcs: ${ this.displayName } ` + chalk.red( `Cannot convert value: ${ value } to ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format } for ${ characteristicString }`  ) );
 
          return;
       }
@@ -1866,22 +1866,22 @@ class Cmd4Accessory
       process.exit( 241 );
    }
 
-   processConstants( constants )
+   processConstants( constantArg )
    {
-      if ( Array.isArray ( constants ) )
+      if ( Array.isArray ( constantArg ) )
       {
-         for ( let constant in constants )
-            this.processConstants( constants[ constant ] );
+         for ( let constant in constantArg )
+            this.processConstants( constantArg[ constant ] );
  
          return;
       }
-      if ( isJSON( constants ) )
+      if ( isJSON( constantArg ) )
       {
          // I assume only 1, but you know about assuming ...
-         for ( let key in constants )
+         for ( let key in constantArg )
          {
             let keyToAdd = key ;
-            let valueToAdd = constants[ key ] ;
+            let valueToAdd = constantArg[ key ] ;
             if ( ! keyToAdd.startsWith( "${" ) )
             {
                this.log.error( `Constant definition for: ${ keyToAdd } must start with "\${" for clarity.` );
@@ -1904,7 +1904,7 @@ class Cmd4Accessory
         return;
      }
 
-     this.log.error( `Constants must be an array of/or list of key/value pairs: ${ constants }` );
+     this.log.error( `Constants must be an array of/or list of key/value pairs: ${ constantArg }` );
      process.exit( 247 );
    }
 
@@ -1941,7 +1941,7 @@ class Cmd4Accessory
             valueToAdd.replace(/^'/, "")
             valueToAdd.replace(/'$/, "")
 
-            // The resultant variable may have constants to be replaced.
+            // The resultant variable may have Constants to be replaced.
             let value = this.replaceConstantsInString( valueToAdd );
 
             this.listOfVariables[ keyToAdd ] = value;
@@ -2118,7 +2118,9 @@ class Cmd4Accessory
 
                break;
             case constants.QUEUETYPES:
-               parseAddQueueTypes( this.log, value );
+               parseAddQueueTypes( this.log, value,
+                  { [ constants.QUEUE_STAT_MSG_INTERVAL_lv ]: this.queueStatMsgInterval,
+                    [ constants.QUEUEMSG_lv ]: this.queueMsg } );
 
                break;
             case constants.QUEUE:
@@ -2249,9 +2251,6 @@ class Cmd4Accessory
                break;
             case constants.ALLOWTLV8:
                this.allowTLV8 = value;
-               break;
-            case constants.StoredValuesPerCharacteristic:
-               // handled elsewhere
                break;
             default:
             {
@@ -2532,7 +2531,7 @@ class Cmd4Accessory
                            // The default queue type will be used if not defined in the platform section
                            queueName = value;
                            this.queueName = value;
-                           this.queue = addQueue( this.log, this.queueName );
+                           this.queue = addQueue( this.log, this.queueName, constants.DEFAULT_QUEUE_TYPE, this.interval, constants.DEFAULT_GROUP_SIZE, constants.DEFAULT_BURST_INTERVAL, this.queueMsg, this.queueStatMsgInterval );
 
                         } else
                         {

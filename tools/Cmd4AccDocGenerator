@@ -673,6 +673,8 @@ function addSideNavCmd4DirectivesLinks_WithinSideNav( )
       wfs( `<a href="#${ constants.INTERVAL }_D" onclick="toggleVisibility( 'Directives');">${ constants.INTERVAL }</a>\n` );
       wfs( `<a href="#${ constants.TIMEOUT }_D" onclick="toggleVisibility( 'Directives');">${ constants.TIMEOUT }</a>\n` );
       wfs( `<a href="#${ constants.QUEUEMSG }_D" onclick="toggleVisibility( 'Directives');">${ constants.QUEUEMSG }</a>\n` );
+      wfs( `<a href="#${ constants.QUEUE_INTERVAL }_D" onclick="toggleVisibility( 'Directives');">${ constants.QUEUE_INTERVAL }</a>\n` );
+      wfs( `<a href="#${ constants.QUEUE_STAT_MSG_INTERVAL }_D" onclick="toggleVisibility( 'Directives');">${ constants.QUEUE_STAT_MSG_INTERVAL }</a>\n` );
       wfs( `<a href="#${ constants.QUEUE_STAT_MSG_INTERVAL }_D" onclick="toggleVisibility( 'Directives');">${ constants.QUEUE_STAT_MSG_INTERVAL }</a>\n` );
       wfs( `<a href="#${ constants.QUEUETYPES }_D" onclick="toggleVisibility( 'Directives');">${ constants.QUEUETYPES }</a>\n` );
       wfs( `<a href="#${ constants.DEFINITIONS }_D" onclick="toggleVisibility( 'Directives');">${ constants.DEFINITIONS }</a>\n` );
@@ -700,6 +702,7 @@ function addSideNavCmd4AccessoryDirectivesLinks_WithinSideNav( )
       wfs( `<a href="#${ constants.INTERVAL }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.INTERVAL }</a>\n` );
       wfs( `<a href="#${ constants.TIMEOUT }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.TIMEOUT }</a>\n` );
       wfs( `<a href="#${ constants.QUEUEMSG }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.QUEUEMSG }</a>\n` );
+      wfs( `<a href="#${ constants.QUEUE_INTERVAL }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.QUEUE_INTERVAL }</a>\n` );
       wfs( `<a href="#${ constants.QUEUE_STAT_MSG_INTERVAL }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.QUEUE_STAT_MSG_INTERVAL }</a>\n` );
       wfs( `<a href="#${ constants.QUEUETYPES }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.QUEUETYPES }</a>\n` );
       wfs( `<a href="#${ constants.QUEUE }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.QUEUE }</a>\n` );
@@ -1078,8 +1081,9 @@ function addCmd4DirectivePages_WithinMain( )
    // restartRecover - CMD4 Directives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.RESTART_RECOVER }_D"> ${ constants.RESTART_RECOVER }</a><TD> < Bool > <TD> true <TD> If Cmd4 will use previous cached state information </TR>\n` );
 
-   // statusMsg - CMD4 Directives
-   let  defaultStatusMsg_l = constants.DEFAULT_STATUSMSG.toLowerCase();
+   // statusMsg - CMD4 Directives - See cmd4Constants as why we do this
+   let  defaultStatusMsg = constants.DEFAULT_STATUSMSG;
+   let  defaultStatusMsg_l = defaultStatusMsg.toLowerCase();
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATUSMSG }_D"> ${ constants.STATUSMSG }</a><TD> < Bool > <TD> ${ defaultStatusMsg_l } <TD> Cmd4 will log a Set Status Message for all Accessories.</TR>\n` );
 
    // Cmd4_Mode - CMD4 Directives
@@ -1093,6 +1097,9 @@ function addCmd4DirectivePages_WithinMain( )
 
    // QueueMsg - CMD4 Directives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.QUEUEMSG }_D"> ${ constants.QUEUEMSG }</a><TD> ${ constants.QUEUEMSG } <TD> ${ constants.DEFAULT_QUEUEMSG } < Bool > <TD> Enable Priority Queued Polling statistics. This Directive can also be per queue as noted by its presence as an accessory directive.</TR>\n` );
+
+   // QueueInterval - CMD4 Directives
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.QUEUE_INTERVAL }_D"> ${ constants.QUEUE_INTERVAL }</a><TD> ${ constants.QUEUE_INTERVAL } <TD> ${ constants.DEFAULT_QUEUE_INTERVAL } < Number > <TD> Sets the Queue Polling Interval. This Directive can also be per queue as noted by its presence as an accessory directive.</TR>\n` );
 
    // QueueStatMsgInterval - CMD4 Directives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.QUEUE_STAT_MSG_INTERVAL }_D"> ${ constants.QUEUE_STAT_MSG_INTERVAL }</a><TD> ${ constants.QUEUE_STAT_MSG_INTERVAL } <TD> ${ constants.DEFAULT_QUEUE_STAT_MSG_INTERVAL } < mod count > <TD> How many counted polls before displaying the Priority Queue Polling Statistics. This Directive can also be per queue as noted by its presence as an accessory directive.</TR>\n` );
@@ -1129,7 +1136,8 @@ function addCmd4AccessoryDirectivePages_WithinMain( )
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.OUTPUTCONSTANTS }">${ constants.OUTPUTCONSTANTS }</a><TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1 </TR>\n` );
 
    // statusMsg - AccessoryDirectives
-   let defaultStatusMsg_l = constants.DEFAULT_STATUSMSG.toLowerCase();
+   let defaultStatusMsg = constants.DEFAULT_STATUSMSG;
+   let defaultStatusMsg_l = defaultStatusMsg.toLowerCase();
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATUSMSG }">${ constants.STATUSMSG }</a><TD>  < Bool >  <TD>  ${ defaultStatusMsg_l } <TD>Cmd4 will log a Set Status Message</TR>\n` );
 
    // publishExternally - AccessoryDirectives
@@ -1171,6 +1179,9 @@ function addCmd4AccessoryDirectivePages_WithinMain( )
 
    // QueueMsg - AccessoryDirectives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.QUEUEMSG }"> ${ constants.QUEUEMSG }</a><TD> ${ constants.QUEUEMSG } <TD> false < Bool > <TD> Enable Priority Queued Polling statistics.</TR>\n` );
+
+   // QueueInterval - AccessoryDirectives
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.QUEUE_INTERVAL }"> ${ constants.QUEUE_INTERVAL }</a><TD> ${ constants.QUEUE_INTERVAL } <TD> ${ constants.DEFAULT_QUEUE_INTERVAL } < Number > <TD> Sets the queue Polling Interval.</TR>\n` );
 
    // QueueStatMsgInterval - AccessoryDirectives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.QUEUE_STAT_MSG_INTERVAL }"> ${ constants.QUEUE_STAT_MSG_INTERVAL }</a><TD> ${ constants.QUEUE_STAT_MSG_INTERVAL } <TD> ${ constants.DEFAULT_QUEUE_STAT_MSG_INTERVAL } < mod count > <TD> How many counted polls before displaying the Priority Queue Polling Statistics.</TR>\n` );

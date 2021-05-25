@@ -230,7 +230,9 @@ class Cmd4Platform
 
                break;
             case constants.QUEUETYPES:
-               parseAddQueueTypes( this.log, value );
+               parseAddQueueTypes( this.log, value,
+                  { [ constants.QUEUE_STAT_MSG_INTERVAL_lv ]: this.queueStatMsgInterval,
+                    [ constants.QUEUEMSG_lv ]: this.queueMsg } );
 
                break;
             case constants.FETCH:
@@ -270,8 +272,8 @@ class Cmd4Platform
                this.storagePath = value;
 
                break;
-            case constants.FOLDERS:
-               this.folders = value;
+            case constants.FOLDER:
+               this.folder = value;
 
                break;
             case constants.KEYPATH:
@@ -453,13 +455,13 @@ class Cmd4Platform
             // if you need to update the accessory.context then you should run
             // `api.updatePlatformAccessories`. eg.:
             //    existingAccessory.context.device = device;
-            //    this.api.updatePlatformAccessories([existingAccessory]);
+            //    this.api.updatePlatformAccessories( [ existingAccessory ] );
             //existingAccessory.context.device = device;
-            //this.api.updatePlatformAccessories([existingAccessory]);
+            //this.api.updatePlatformAccessories( [ existingAccessory ] );
 
             // create the accessory handler for the restored accessory
             // this is imported from `platformAccessory.ts`
-            // new ExamplePlatformAccessory(this, existingAccessory);
+            // new ExamplePlatformAccessory( this, existingAccessory );
 
             platform = existingAccessory;
             platform.Service = this.Service;
@@ -471,7 +473,7 @@ class Cmd4Platform
             // there infomation gets put in this as well.  I'm pretty sure
             // that previosly these states were lost.
 
-            // Init the STORED_DATA_ARRAY to empty [].  If there was never any
+            // Init the STORED_DATA_ARRAY to empty [ ].  If there was never any
             // type to use, this is okay to.
             let STORED_DATA_ARRAY = [ ];
 
@@ -484,8 +486,8 @@ class Cmd4Platform
             {
                // If we have an old version of the stored status, convert it to our new format.
                this.log.debug(`Cmd4Platform: Creating STORED_DATA_ARRAY with existing storedValuesPerCharacteristic UUID:${ existingAccessory.UUID }` );
-               STORED_DATA_ARRAY = [ {[constants.UUID]: existingAccessory.UUID,
-                                      [constants.storedValuesPerCharacteristic]: existingAccessory.context.device.storedValuesPerCharacteristic}
+               STORED_DATA_ARRAY = [ {[ constants.UUID ]: existingAccessory.UUID,
+                                      [ constants.STORED_VALUES_PER_CHARACTERISTIC_lv ]: existingAccessory.context.device.storedValuesPerCharacteristic }
                       ];
                // Get rid of old persistance data
                existingAccessory.context.device = undefined;
@@ -559,7 +561,7 @@ class Cmd4Platform
 
             this.log.info( chalk.magenta( `Configuring platformAccessory: ` ) + `${ device.displayName }` );
             let that = this;
-            accessory = new Cmd4Accessory( that.log, device, this.api, [], this );
+            accessory = new Cmd4Accessory( that.log, device, this.api, [ ], this );
             accessory.platform = platform
 
             // Put the accessory into its correct collection array.
@@ -662,7 +664,7 @@ class Cmd4Platform
          } else
          {
 
-            this.log.debug( `Platform (AddedAccessory-new) Step 3, ${ addedAccessory.displayName }.service = PlatformAccessory: ${ cmd4PlatformAccessory.displayName } addService( Service:${ devProperties.deviceName}, ${ addedAccessory.name }, ${ addedAccessory.subType } )` );
+            this.log.debug( `Platform (AddedAccessory-new) Step 3, ${ addedAccessory.displayName }.service = PlatformAccessory: ${ cmd4PlatformAccessory.displayName } addService( Service:${ devProperties.deviceName }, ${ addedAccessory.name }, ${ addedAccessory.subType } )` );
 
             addedAccessory.service = cmd4PlatformAccessory.platform.addService( new devProperties.service( addedAccessory.name, addedAccessory.subType ) );
          }
@@ -747,7 +749,7 @@ class Cmd4Platform
             if ( entryIndex == 0 )
                entry.accessory.log.info( `Started staggered kick off of ${ staggeredPollingArray.length } polled characteristics` );
 
-            entry.accessory.log.debug( `Kicking off polling for: ${ entry.accessory.displayName } ${ entry.characteristicString } interval:${ entry.interval }, staggered:${ staggeredDelays[ staggeredDelayIndex ]}` );
+            entry.accessory.log.debug( `Kicking off polling for: ${ entry.accessory.displayName } ${ entry.characteristicString } interval:${ entry.interval }, staggered:${ staggeredDelays[ staggeredDelayIndex ] }` );
             entry.accessory.listOfRunningPolls[ entry.accessory.displayName + entry.accTypeEnumIndex ] =
                setTimeout( entry.accessory.characteristicPolling.bind(
                   entry.accessory, entry.accessory, entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, entry.interval ), entry.interval );

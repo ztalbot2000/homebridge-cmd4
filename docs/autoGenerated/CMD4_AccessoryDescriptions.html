@@ -553,6 +553,8 @@ block-warning a {
          <a href="#Interval_D" onclick="toggleVisibility( 'Directives');">Interval</a>
          <a href="#Timeout_D" onclick="toggleVisibility( 'Directives');">Timeout</a>
          <a href="#QueueMsg_D" onclick="toggleVisibility( 'Directives');">QueueMsg</a>
+         <a href="#QueueInterval_D" onclick="toggleVisibility( 'Directives');">QueueInterval</a>
+         <a href="#QueueStatMsgInterval_D" onclick="toggleVisibility( 'Directives');">QueueStatMsgInterval</a>
          <a href="#QueueStatMsgInterval_D" onclick="toggleVisibility( 'Directives');">QueueStatMsgInterval</a>
          <a href="#QueueTypes_D" onclick="toggleVisibility( 'Directives');">QueueTypes</a>
          <a href="#Definitions_D" onclick="toggleVisibility( 'Directives');">Definitions</a>
@@ -572,6 +574,7 @@ block-warning a {
          <a href="#Interval" onclick="toggleVisibility( 'AccessoryDirectives');">Interval</a>
          <a href="#Timeout" onclick="toggleVisibility( 'AccessoryDirectives');">Timeout</a>
          <a href="#QueueMsg" onclick="toggleVisibility( 'AccessoryDirectives');">QueueMsg</a>
+         <a href="#QueueInterval" onclick="toggleVisibility( 'AccessoryDirectives');">QueueInterval</a>
          <a href="#QueueStatMsgInterval" onclick="toggleVisibility( 'AccessoryDirectives');">QueueStatMsgInterval</a>
          <a href="#QueueTypes" onclick="toggleVisibility( 'AccessoryDirectives');">QueueTypes</a>
          <a href="#Queue" onclick="toggleVisibility( 'AccessoryDirectives');">Queue</a>
@@ -6496,6 +6499,7 @@ block-warning a {
             <TR ALIGN="left"><TD><a name="Interval_D"> Interval</a><TD> Interval <TD> 60 < seconds > <TD> How long before killing the state command of all polled characteristics. See <a href="#Interval" onclick="toggleVisibility( 'AccessoryDirectives');">Interval</a> in Accessory Directives for full description as it can also be set per accessory or per characteristic.</TR>
             <TR ALIGN="left"><TD><a name="Timeout_D"> Timeout</a><TD> Timeout <TD> 60000 < msec > <TD> How long before killing the state command of all polled characteristics. See <a href="#Timeout" onclick="toggleVisibility( 'AccessoryDirectives');">Timeout</a> in Accessory Directives for full description as it can also be set per accessory or per characteristic.</TR>
             <TR ALIGN="left"><TD><a name="QueueMsg_D"> QueueMsg</a><TD> QueueMsg <TD> false < Bool > <TD> Enable Priority Queued Polling statistics. This Directive can also be per queue as noted by its presence as an accessory directive.</TR>
+            <TR ALIGN="left"><TD><a name="QueueInterval_D"> QueueInterval</a><TD> QueueInterval <TD> 60000 < Number > <TD> Sets the Queue Polling Interval. This Directive can also be per queue as noted by its presence as an accessory directive.</TR>
             <TR ALIGN="left"><TD><a name="QueueStatMsgInterval_D"> QueueStatMsgInterval</a><TD> QueueStatMsgInterval <TD> 1000 < mod count > <TD> How many counted polls before displaying the Priority Queue Polling Statistics. This Directive can also be per queue as noted by its presence as an accessory directive.</TR>
             <TR ALIGN="left"><TD><a name="QueueTypes_D"> QueueTypes</a><TD> < Array of < Queue: < "name" >, QueueType: < Sequential | WoRm >, [ BurstGroupSize < burst group size >, BurstInterval < burst interval in seconds > ] <TD> none <TD> Pre-defines Queue types. This Directive can also be per queue as noted by its presence as an accessory directive.</TR>
             <TR ALIGN="left"><TD><a name="Definitions_D"> Definitions</a><TD> < Array > <TD> <TD> An Array of new Characteristic Objects. See <a href="#CUSTOM_CHARACTERISTICS" onclick="toggleVisibility( 'CustomCharacteristics');">Custom Characteristics, around line 339</a> for more information</TR>
@@ -6529,6 +6533,7 @@ block-warning a {
             <TR ALIGN="left"><TD><a name="Polling">Polling</a><TD> < Bool > <TD> false <TD> If the characteristics should be polled for state change.</TR>
             <TR><TD><TD COLSPAN=3> or  [{"characteristic" < characteristic >, [ "interval": < sec >, "timeout": < msec > ] }] The timeout and interval override any higher directive.</TR>
             <TR ALIGN="left"><TD><a name="QueueMsg"> QueueMsg</a><TD> QueueMsg <TD> false < Bool > <TD> Enable Priority Queued Polling statistics.</TR>
+            <TR ALIGN="left"><TD><a name="QueueInterval"> QueueInterval</a><TD> QueueInterval <TD> 60000 < Number > <TD> Sets the queue Polling Interval.</TR>
             <TR ALIGN="left"><TD><a name="QueueStatMsgInterval"> QueueStatMsgInterval</a><TD> QueueStatMsgInterval <TD> 1000 < mod count > <TD> How many counted polls before displaying the Priority Queue Polling Statistics.</TR>
             <TR ALIGN="left"><TD><a name="QueueTypes"> QueueTypes</a><TD> none <TD> < Array of < Queue: < "name" >, QueueType: < Sequential | WoRm, [ BurstGroupSize < burst group size >, BurstInterval < burst interval in seconds > ] <TD> none <TD> Pre-defines the Queue types.</TR>
             <TR ALIGN="left"><TD><a name="Queue"> Queue</a><TD> Queue <TD> < String > <TD> Defines which Queue polled characteristics will be placed.</TR>
@@ -6591,7 +6596,7 @@ block-warning a {
          <h2><a name="JS Template">Example Cmd4 JavaScript Template</a></h2>
          <p> This script is auto generated from: <a href=https://github.com/ztalbot2000/homebridge-cmd4/blob/master/./Extras/Cmd4Scripts/Examples/ExampleJavaScript_template.js>./Extras/Cmd4Scripts/Examples/ExampleJavaScript_template.js </a></p>
          <pre>
-#!/usr/local/bin/node
+#!/usr/bin/env node
 //  ExampleScript_template.js
 //
 // Description:
