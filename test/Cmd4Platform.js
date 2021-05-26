@@ -225,7 +225,7 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
       done( );
    });
 
-   it('Test if QueueMsg & QueueStatMsgInterval gets passed down to the accessory', ( done ) =>
+   it('Test if QueueMsg, QueueStatMsgInterval gets passed down to the accessory', ( done ) =>
    {
       let platformConfig =
       {
@@ -287,11 +287,12 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
       done( );
    });
 
-   it('Test if QueueMsg & QueueStatMsgInterval are used from the accessory', ( done ) =>
+   it('Test if OutputConstants, QueueMsg, QueueStatMsgInterval are used from the accessory', ( done ) =>
    {
       let platformConfig =
       {
          Cmd4_Mode:    "Polled",
+         OutputConstants:    true,
          accessories: [
             {
                Name:         "My_Door",
@@ -319,6 +320,7 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
 
       let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );
 
+      assert.equal( cmd4Platform.outputConstants, true, ` Created Platform has incorrect OutputConstants` );
       cmd4Platform.discoverDevices( );
 
       assert.equal( cmd4Platform.createdCmd4Accessories.length, 1, ` Cmd4Platform did not create the cmd4Accessory` );
@@ -327,11 +329,12 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
 
       assert.equal( cmd4Accessory.queueMsg, true, ` Created accessory has incorrect QueueMsg` );
       assert.equal( cmd4Accessory.queueStatMsgInterval, 1400, ` Created accessory has incorrect QueueStatMsgInterval` );
+      assert.equal( cmd4Accessory.outputConstants, true, ` Created Accessory has incorrect OutputConstants` );
 
       done( );
    });
 
-   it('Test if interval, timeout, stateChangeResponseTime are used from the platform', ( done ) =>
+   it('Test if interval, timeout, outputConstants, stateChangeResponseTime are used from the platform', ( done ) =>
    {
       let platformConfig =
       {
@@ -339,6 +342,7 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
          timeout:    12345,
          interval:    12,
          stateChangeResponseTime:    18,
+         outputConstants:    true,
          accessories: [
             {
                Name:         "My_Door",
@@ -377,6 +381,7 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
       assert.equal( cmd4Accessory.timeout, 12345, `Timeout was not passed down to accessory` );
       assert.equal( cmd4Accessory.interval, 12000, `Interval was not passed down to accessory` );
       assert.equal( cmd4Accessory.stateChangeResponseTime, 18000, `stateChangeResponseTime was not passed down to accessory` );
+      assert.equal( cmd4Accessory.outputConstants, true, `outputConstants was not passed down to accessory` );
 
       Object.keys( cmd4Accessory.listOfPollingCharacteristics ).forEach( ( key ) =>
       {
@@ -389,7 +394,7 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
       done( );
    });
 
-   it('Test stateChangeResponseTime are used from the accessory definition', ( done ) =>
+   it('Test outputConstants, stateChangeResponseTime are used from the accessory definition', ( done ) =>
    {
       let platformConfig =
       {
@@ -402,6 +407,7 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
                DisplayName:  "My_Door",
                StatusMsg:    true,
                Type:         "Door",
+               OutputConstants: true,
                QueueMsg:      true,
                QueueStatMsgInterval:  1400,
                CurrentPosition:          0,
@@ -422,6 +428,7 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
       this.log.setDebugEnabled( false );
 
       let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );
+      assert.equal( cmd4Platform.outputConstants, false, ` Created Platform has incorrect OutputConstants` );
 
       cmd4Platform.discoverDevices( );
 
@@ -434,6 +441,7 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
       assert.equal( cmd4Accessory.timeout, 12345, `Timeout was not passed down to accessory` );
       assert.equal( cmd4Accessory.interval, 12000, `Interval was not passed down to accessory` );
       assert.equal( cmd4Accessory.stateChangeResponseTime, constants.MEDIUM_STATE_CHANGE_RESPONSE_TIME, `stateChangeResponseTime was not passed from CMD4_DEVICE_TYPE_ENUM` );
+      assert.equal( cmd4Accessory.outputConstants, true, ` Created Accessory has incorrect OutputConstants` );
 
       Object.keys( cmd4Accessory.listOfPollingCharacteristics ).forEach( ( key ) =>
       {

@@ -23,6 +23,7 @@ exports.DEFAULT_QUEUE_INTERVAL   = 60000; // 1 minute
 // Not a Bool, otherwise conditional check fails
 exports.DEFAULT_STATUSMSG        = "TRUE";
 
+exports.DEFAULT_OUTPUTCONSTANTS  = false;
 exports.DEFAULT_QUEUEMSG         = false;
 exports.DEFAULT_QUEUE_TYPE       = "WoRm";
 exports.DEFAULT_BURST_GROUP_SIZE = 0;     // No burst

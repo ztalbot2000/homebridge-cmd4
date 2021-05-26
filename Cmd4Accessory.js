@@ -116,6 +116,9 @@ class Cmd4Accessory
       if ( parentInfo && parentInfo.stateChangeResponseTime )
          this.stateChangeResponseTime = parentInfo.stateChangeResponseTime;
 
+      // Direct if Constants should be sent or their value.
+      this.outputConstants = ( parentInfo && parentInfo.outputConstants ) ? parentInfo.outputConstants : constants.DEFAULT_OUTPUTCONSTANTS;
+
       this.interval = ( parentInfo && parentInfo.interval ) ? parentInfo.interval : constants.DEFAULT_INTERVAL;
       this.timeout = ( parentInfo && parentInfo.timeout ) ? parentInfo.timeout : constants.DEFAULT_TIMEOUT;
       this.statusMsg = ( parentInfo && parentInfo.statusMsg ) ? parentInfo.statusMsg : constants.DEFAULT_STATUSMSG;
@@ -194,11 +197,6 @@ class Cmd4Accessory
       this.folder = parentInfo && parentInfo.folder;
       this.keyPath = parentInfo && parentInfo.keyPath;
 
-      // Direct if Constants should be sent or their value.
-      if ( parentInfo && parentInfo.outputConstants == true )
-         this.outputConstants = true;
-      else
-         this.outputConstants = false;
 
       // Get the supplied values from the accessory config.
       this.parseConfig( this.config, parseConfigShouldUseCharacteristicValues  );
@@ -2097,8 +2095,6 @@ class Cmd4Accessory
                // instead of values
                if ( value === true )
                   this.outputConstants = value;
-                else
-                  this.outputConstants = false;
 
                break;
             case constants.STATUSMSG:

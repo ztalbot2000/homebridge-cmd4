@@ -69,6 +69,7 @@ class Cmd4Platform
 
       // Defaults before parse
       this.restartRecover = true;
+      this.outputConstants = constants.DEFAULT_OUTPUTCONSTANTS;
       this.statusMsg = constants.DEFAULT_STATUSMSG;
 
       // Every X polls, output the queue status information.
@@ -206,10 +207,7 @@ class Cmd4Platform
 
                break;
             case constants.OUTPUTCONSTANTS:
-               if ( value === true )
-                  this.outputConstants = true;
-                else
-                  this.outputConstants = false;
+               this.outputConstants = value;
 
                break;
             case constants.RESTART_RECOVER:
