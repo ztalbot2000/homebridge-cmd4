@@ -212,14 +212,16 @@ Notice that there is no Platform definition. Otherwise everything is the same. Y
   Priority Queued Polling is only available for Cmd4_Mode(s) of "Polled" or "FullyPolled" by the shear nature of the feature. To configure Priority Queued Polling every characteristic to the device must be configured with characteristic polling and in the same queue. as an Example of the default WoRm is:
 
 ```
-"Polling": [ { "Characteristic": "CurrentTemperature", "Interval": 5, "queue": "A" },
+"Interval": 5,
+"Polling": [ { "Characteristic": "CurrentTemperature", "queue": "A" },
              { "Characteristic": "TargetTemperature", "Queue": "A" }
            ]
 ```
-  You can also pre-define the queues and their types ahead of time and then just specify which accessory is going to use Priority Queue Polling. Example 2:
+  The interval of the queue would be the first Interval defined of where the queue is first seen, as in the example above.<BR>
+  A simpler solution would be topre define the queues and the queue characteristics ahead of time and then just specify which accessory is going to use Priority Queue Polling. Example 2:
 
 ```
-"QueueTypes: [ { "Queue": "A" : "QueueType": "WoRm" }
+"QueueTypes: [ { "Queue": "A" : "QueueType": "WoRm", "QueueInterval": 10 }
              ],
 "Queue": "A",
 "Polling": [ { "Characteristic": "CurrentTemperature" },
@@ -231,9 +233,9 @@ Example 3:
 ```
 "platforms":
  [ { "platform": "Cmd4",
-     "QueueTypes: [ { "Queue": "A" : "QueueType": "WoRm" }
-                    { "Queue": "B" : "QueueType": "Sequentail" }
-                    { "Queue": "C" } // Defaults to "WoRm"
+     "QueueTypes: [ { "Queue": "A" : "QueueType": "WoRm", "QueueInterval": 22 }
+                    { "Queue": "B" : "QueueType": "Sequentail", "QueueInterval": 30 }
+                    { "Queue": "C" } // Defaults to "WoRm", "QueueInterval": 25
                   ],
 
      "accessories": [
@@ -269,14 +271,18 @@ Example 3:
      }
 
 ```
-   Note 1. Only the first interval defined for the device is actually used as this is now the interval between each of the other background polls.<BR>
-   Note 2. The interval is dynamically changed and will never drop below the defined interval. The rule is simple, the interval is calculated by seven times the actual time of the request +/- 10%.<BR>
+   Note 1. The interval is dynamically changed and will never drop below the defined interval. The rule is simple, the interval is calculated by seven times the actual time of the request +/- 10%.<BR>
 <BR>
 Priority Queued Polling statistics can be viewed with the following Cmd4 Platform directives.<BR>
 
 ```
    "QueueMsg": true,
    "QueueStatMsgInterval": 1000,
+
+    or
+
+   "QueueTypes: [ { "Queue": "A" : "QueueType": "WoRm", "QueueInterval": 10, "QueueMsg": true, "QueueStatMsgInterval": 1000 }
+                ],
 ```
   The "QueueStatMsgInterval" is the counted number of background polls modded by this interval.<BR>
 <BR>
@@ -300,6 +306,7 @@ The number of Burst Groups is calculated as the number of polled characteristics
             "Cmd4_Mode": "FullyPolled",
             "timeout": 4000,
             "stateChangeResponseTime": 3,
+            "QueueTypes:[ { "Queue": "A", "QueueType": "WoRm", "QueueInterval":20 } ],
             "accessories": [
                 {
                     "type": "TemperatureSensor",
@@ -312,7 +319,7 @@ The number of Burst Groups is calculated as the number of polled characteristics
                     "Model": "e-zone",
                     "SerialNumber": "Fujitsu e-zone2",
                     "polling": [
-                        { "characteristic": "currentTemperature", "queue": "A", "interval": 2 }
+                        { "characteristic": "currentTemperature", "queue": "A"  }
                     ],
                     "Props": {
                         "CurrentTemperature": {

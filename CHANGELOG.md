@@ -1,14 +1,13 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
-#### 3.8.1 (2021-05-23)
+### 3.9.0 (2021-05-26)
+
+##### New Features
+
+*  Unit test constants defined but not used and used but not defined ([e52fe8d0](https://github.com/ztalbot2000/homebridge-cmd4/commit/e52fe8d0728093644c0e27d25ebdec83625a00fb))
 
 ##### Bug Fixes
 
-*  set to #!/usr/bin/env node for multi platform ([d3544fa1](https://github.com/ztalbot2000/homebridge-cmd4/commit/d3544fa13a9cf654e2b2b36c335ae19c7302a49d))
-*  First step of multiple related characteristics using an array; no functionality change ([3092e06e](https://github.com/ztalbot2000/homebridge-cmd4/commit/3092e06e1025cf39be924699108fbf17b2d6ff4f))
-*  Create variable burstMode instead of using burstGroupSize causing issues ([b403f679](https://github.com/ztalbot2000/homebridge-cmd4/commit/b403f679df9ceac72234ba1e0f307697be036b2b))
-
-##### Tests
-
-*  Add routine to check for unused constants ([1da024a0](https://github.com/ztalbot2000/homebridge-cmd4/commit/1da024a0dfaab4664384073a90759aab6c3beebb))
+*  Pass down outputConstants like other Cmd4 Directives ([44c44b24](https://github.com/ztalbot2000/homebridge-cmd4/commit/44c44b24fa42404976c9cbfd538e3812f3bf3a7d))
+*  Possible crash when defining Default Polling before defining the Queue ([e125abab](https://github.com/ztalbot2000/homebridge-cmd4/commit/e125ababe194b2541f25c8f23ac78f4b138db10c))
 
 

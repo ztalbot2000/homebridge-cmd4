@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-3-9-0">**Whats new in 3.9.0**</a>
 * <a href="#Whats-new-in-3-8-1">**Whats new in 3.8.1**</a>
 * <a href="#Whats-new-in-3-8-0">**Whats new in 3.8.0**</a>
 * <a href="#Whats-new-in-3-7-5">**Whats new in 3.7.5**</a>
@@ -58,6 +59,19 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-3-9-0">## Whats new in 3.9.0</a>
+### 3.9.0 (2021-05-26)
+
+##### New Features
+
+*  Unit test constants defined but not used and used but not defined ([e52fe8d0](https://github.com/ztalbot2000/homebridge-cmd4/commit/e52fe8d0728093644c0e27d25ebdec83625a00fb))
+
+##### Bug Fixes
+
+*  Pass down outputConstants like other Cmd4 Directives ([44c44b24](https://github.com/ztalbot2000/homebridge-cmd4/commit/44c44b24fa42404976c9cbfd538e3812f3bf3a7d))
+*  Possible crash when defining Default Polling before defining the Queue ([e125abab](https://github.com/ztalbot2000/homebridge-cmd4/commit/e125ababe194b2541f25c8f23ac78f4b138db10c))
+
 
 <a name="Whats-new-in-3-8-1">## Whats new in 3.8.1</a>
 #### 3.8.1 (2021-05-23)
