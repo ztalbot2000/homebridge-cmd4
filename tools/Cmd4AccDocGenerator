@@ -1,4 +1,4 @@
-#!/usr/local/bin/node
+#!/usr/bin/env node
 
 // Note:
 // Must read https://docs.github.com/en/rest/reference/markdown#render-an-arbitrary-markdown-document
@@ -1105,7 +1105,7 @@ function addCmd4DirectivePages_WithinMain( )
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.QUEUE_STAT_MSG_INTERVAL }_D"> ${ constants.QUEUE_STAT_MSG_INTERVAL }</a><TD> ${ constants.QUEUE_STAT_MSG_INTERVAL } <TD> ${ constants.DEFAULT_QUEUE_STAT_MSG_INTERVAL } < mod count > <TD> How many counted polls before displaying the Priority Queue Polling Statistics. This Directive can also be per queue as noted by its presence as an accessory directive.</TR>\n` );
 
    // QueueTypes - CMD4 Directives
-   wfs( `<TR ALIGN="left"><TD><a name="${ constants.QUEUETYPES }_D"> ${ constants.QUEUETYPES }</a><TD> < Array of < ${ constants.QUEUE }: < "name" >, ${ constants.QUEUETYPE }: < ${ constants.QUEUETYPE_SEQUENTIAL } | ${ constants.QUEUETYPE_WORM } >, [ ${ constants.BURST_GROUP_SIZE } < burst group size >, ${ constants.BURST_INTERVAL } < burst interval in seconds > ] <TD> none <TD> Pre-defines Queue types. This Directive can also be per queue as noted by its presence as an accessory directive.</TR>\n` );
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.QUEUETYPES }_D"> ${ constants.QUEUETYPES }</a><TD> < Array of < ${ constants.QUEUE }: < "name" >, ${ constants.QUEUETYPE }: < ${ constants.QUEUETYPE_SEQUENTIAL } | ${ constants.QUEUETYPE_WORM } > <TD> none <TD> Pre-defines Queue types. This Directive can also be per queue as noted by its presence as an accessory directive.</TR>\n` );
 
    // Definitions - Custom Characteristics - CMD4 Directives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.DEFINITIONS }_D"> ${ constants.DEFINITIONS }</a><TD> < Array > <TD> <TD> An Array of new Characteristic Objects. See <a href="#CUSTOM_CHARACTERISTICS" onclick="toggleVisibility( 'CustomCharacteristics');">Custom Characteristics, around line 339</a> for more information</TR>\n` );
@@ -1187,7 +1187,7 @@ function addCmd4AccessoryDirectivePages_WithinMain( )
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.QUEUE_STAT_MSG_INTERVAL }"> ${ constants.QUEUE_STAT_MSG_INTERVAL }</a><TD> ${ constants.QUEUE_STAT_MSG_INTERVAL } <TD> ${ constants.DEFAULT_QUEUE_STAT_MSG_INTERVAL } < mod count > <TD> How many counted polls before displaying the Priority Queue Polling Statistics.</TR>\n` );
 
    // QueueTypes - AccessoryDirectives
-   wfs( `<TR ALIGN="left"><TD><a name="${ constants.QUEUETYPES }"> ${ constants.QUEUETYPES }</a><TD> none <TD> < Array of < ${ constants.QUEUE }: < "name" >, ${ constants.QUEUETYPE }: < ${ constants.QUEUETYPE_SEQUENTIAL } | ${ constants.QUEUETYPE_WORM }, [ ${ constants.BURST_GROUP_SIZE } < burst group size >, ${ constants.BURST_INTERVAL } < burst interval in seconds > ] <TD> none <TD> Pre-defines the Queue types.</TR>\n` );
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.QUEUETYPES }"> ${ constants.QUEUETYPES }</a><TD> none <TD> < Array of < ${ constants.QUEUE }: < "name" >, ${ constants.QUEUETYPE }: < ${ constants.QUEUETYPE_SEQUENTIAL } | ${ constants.QUEUETYPE_WORM } <TD> none <TD> Pre-defines the Queue types.</TR>\n` );
 
    // Queue - AccessoryDirectives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.QUEUE }"> ${ constants.QUEUE }</a><TD> ${ constants.QUEUE } <TD> < String > <TD> Defines which Queue polled characteristics will be placed.</TR>\n` );

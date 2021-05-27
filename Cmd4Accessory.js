@@ -2527,7 +2527,7 @@ class Cmd4Accessory
                            // The default queue type will be used if not defined in the platform section
                            queueName = value;
                            this.queueName = value;
-                           this.queue = addQueue( this.log, this.queueName, constants.DEFAULT_QUEUE_TYPE, this.interval, constants.DEFAULT_GROUP_SIZE, constants.DEFAULT_BURST_INTERVAL, this.queueMsg, this.queueStatMsgInterval );
+                           this.queue = addQueue( this.log, this.queueName, constants.DEFAULT_QUEUE_TYPE, this.interval, this.queueMsg, this.queueStatMsgInterval );
 
                         } else
                         {
