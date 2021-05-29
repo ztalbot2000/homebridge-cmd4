@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-3-10-0">**Whats new in 3.10.0**</a>
 * <a href="#Whats-new-in-3-9-0">**Whats new in 3.9.0**</a>
 * <a href="#Whats-new-in-3-8-1">**Whats new in 3.8.1**</a>
 * <a href="#Whats-new-in-3-8-0">**Whats new in 3.8.0**</a>
@@ -59,6 +60,15 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-3-10-0">## Whats new in 3.10.0</a>
+### 3.10.0 (2021-05-29)
+
+##### New Features
+
+*  Antifeat as queueBurst was a bust. Squash queue errors for 1min instead ([854fec2f](https://github.com/ztalbot2000/homebridge-cmd4/commit/854fec2f9dcbe393f7ab58dfc7ee9d484cb0b7cd))
+*  Remove feat burst as no added benefit ([afe6b021](https://github.com/ztalbot2000/homebridge-cmd4/commit/afe6b021dd2ecc6564b6396f4368e77836d438de))
+
 
 <a name="Whats-new-in-3-9-0">## Whats new in 3.9.0</a>
 ### 3.9.0 (2021-05-26)
