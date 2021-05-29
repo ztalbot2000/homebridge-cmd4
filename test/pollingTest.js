@@ -94,11 +94,9 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       cmd4Accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "Cmd4Accessory is not an instance of Cmd4Accessory" );
-      let expectedOutput1 = "[90mPolling config is Default Polling. Nothing to check for unset polling characteristics\u001b";
-      let expectedOutput2 = "[90mSetting up which characteristics will be polled for My_Switch\u001b";
 
-      assert.include( log.logBuf, expectedOutput1 , `expected stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput2 , `expected stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, "[90mPolling config is Default Polling. Nothing to check for unset polling characteristics\u001b" , `expected stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, "[90mSetting up which characteristics will be polled for My_Switch\u001b" , `expected stdout: ${ log.logBuf }` );
       assert.equal( log.errBuf, "" , `Unexpected stderr: ${ log.errBuf }` );
 
    });
@@ -131,9 +129,8 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       cmd4Accessory.determineCharacteristicsToPollForAccessory( cmd4Accessory );
       assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 1, `Incorrect number of arrayOfAllStaggeredPollingCharacteristics` );
 
-      let expectedOutput1 = `[90mSetting up accessory: My_Switch for polling of: On timeout: 3000 interval: 1000 queueName: "No_Queue"\u001b`;
 
-      assert.include( log.logBuf, expectedOutput1 , `expected stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mSetting up accessory: My_Switch for polling of: On timeout: 3000 interval: 1000 queueName: "No_Queue"\u001b` , `expected stdout: ${ log.logBuf }` );
       assert.equal( log.errBuf, "" , `Unexpected stderr: ${ log.errBuf }` );
 
       done( );
@@ -166,9 +163,8 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       cmd4Accessory.determineCharacteristicsToPollForAccessory( cmd4Accessory );
       assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 1, `Incorrect number of arrayOfAllStaggeredPollingCharacteristics` );
 
-      let expectedOutput1 = `[90mSetting up accessory: My_Switch for polling of: On timeout: 1234 interval: 99000 queueName: "No_Queue"\u001b`;
 
-      assert.include( log.logBuf, expectedOutput1 , `expected stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mSetting up accessory: My_Switch for polling of: On timeout: 1234 interval: 99000 queueName: "No_Queue"\u001b` , `expected stdout: ${ log.logBuf }` );
       assert.equal( log.errBuf, "" , `Unexpected stderr: ${ log.errBuf }` );
 
       done( );
@@ -203,9 +199,8 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       cmd4Accessory.determineCharacteristicsToPollForAccessory( cmd4Accessory );
       assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 1, `Incorrect number of arrayOfAllStaggeredPollingCharacteristics` );
 
-      let expectedOutput1 = `[90mSetting up accessory: My_Switch for polling of: On timeout: 5500 interval: 44000 queueName: "No_Queue"\u001b`;
 
-      assert.include( log.logBuf, expectedOutput1 , `expected stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mSetting up accessory: My_Switch for polling of: On timeout: 5500 interval: 44000 queueName: "No_Queue"\u001b` , `expected stdout: ${ log.logBuf }` );
       assert.equal( log.errBuf, "" , `Unexpected stderr: ${ log.errBuf }` );
 
       done( );
@@ -238,9 +233,8 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       cmd4Accessory.determineCharacteristicsToPollForAccessory( cmd4Accessory );
       assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 1, `Incorrect number of arrayOfAllStaggeredPollingCharacteristics` );
 
-      let expectedOutput1 = `[90mSetting up accessory: My_Switch for polling of: On timeout: 77000 interval: 22000 queueName: "No_Queue"\u001b`;
 
-      assert.include( log.logBuf, expectedOutput1 , `expected stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mSetting up accessory: My_Switch for polling of: On timeout: 77000 interval: 22000 queueName: "No_Queue"\u001b` , `expected stdout: ${ log.logBuf }` );
       assert.equal( log.errBuf, "" , `Unexpected stderr: ${ log.errBuf }` );
 
       done( );
@@ -271,11 +265,9 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       cmd4Accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
       assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 1, `Incorrect number of arrayOfAllStaggeredPollingCharacteristics` );
 
-      let expectedOutput1 = `[90mSetting up accessory: My_Switch for polling of: On timeout: 2 interval: 99000 queueName: "No_Queue"`;
-      let expectedErrOuput1 = "[33mTimeout for: My_Switch is in milliseconds. A value of: 2 seems pretty low.\u001b[39m";
 
-      assert.include( log.logBuf, expectedOutput1 , `expected stdout: ${ log.logBuf }` );
-      assert.include( log.errBuf, expectedErrOuput1 , `expected stderr: ${ log.errBuf }` );
+      assert.include( log.logBuf, `[90mSetting up accessory: My_Switch for polling of: On timeout: 2 interval: 99000 queueName: "No_Queue"` , `expected stdout: ${ log.logBuf }` );
+      assert.include( log.errBuf, `[33mTimeout for: My_Switch is in milliseconds. A value of: 2 seems pretty low.\u001b[39m` , `expected stderr: ${ log.errBuf }` );
 
       done( );
    });
@@ -313,15 +305,15 @@ describe('Testing Cmd4Accessory polling', ( ) =>
 
       assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 1, `Incorrect number of arrayOfAllStaggeredPollingCharacteristics` );
 
-      cmd4Platform.startPolling( );
+      // For unit testing, start te polling now
+      cmd4Platform.startPolling( 0, 0 );
+
       // Staggered Polling takes 3 seconds to start
       setTimeout( () =>
       {
-         let expectedOutput1 = "[90mKicking off polling for: My_Switch On interval:310000, staggered:3000\u001b";
-         let expectedOutput2 = "Started staggered kick off of 1 polled characteristics";
 
-         assert.include( this.log.logBuf, expectedOutput1 , `expected stdout: ${ this.log.logBuf }` );
-         assert.include( this.log.logBuf, expectedOutput2 , `expected stdout: ${ this.log.logBuf }` );
+         assert.include( this.log.logBuf, `[90mKicking off polling for: My_Switch On interval:310000, staggered:3000\u001b` , `expected stdout: ${ this.log.logBuf }` );
+         assert.include( this.log.logBuf, "Started staggered kick off of 1 polled characteristics" , `expected stdout: ${ this.log.logBuf }` );
 
          let accessory = settings.arrayOfAllStaggeredPollingCharacteristics[0].accessory;
          Object.keys(accessory.listOfRunningPolls).forEach( (key) =>

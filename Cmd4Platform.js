@@ -776,7 +776,7 @@ class Cmd4Platform
    // staggeredStartDelay - These would be for just polling and to be nice to the system.
    // queuedStartDelay - As this is both IOS and polling, the delay only happens to 
    // the low priority polling.
-   startPolling( staggeredStartDelay = 5000, queuedStartDelay = 5000 )
+   startPolling( staggeredStartDelay = 30000, queuedStartDelay = 40000 )
    {
       if ( settings.arrayOfAllStaggeredPollingCharacteristics.length > 0 )
       {
