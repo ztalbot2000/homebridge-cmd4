@@ -138,7 +138,7 @@ class Cmd4PriorityPollingQueue
             let relatedCurrentCharacteristicString = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].type;
 
             // A set with no error means the queue is sane to do reading
-            this.lastGoodReadTime =  Date.now( );
+            queue.lastGoodReadTime =  Date.now( );
 
             setTimeout( ( ) =>
             {
