@@ -73,10 +73,44 @@ class Cmd4PriorityPollingQueue
    prioritySetValue( accTypeEnumIndex, characteristicString, timeout, stateChangeResponseTime,  value, callback )
    {
       let self = this;
-      self.queue.highPriorityQueue.push( { [ constants.IS_SET_lv ]: true, [ constants.ACCESSORY_lv ]: self, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.VALUE_lv ]: value } );
 
       // Call the callback immediately as we will call updateValue
       callback( null );
+
+      let newEntry = { [ constants.IS_SET_lv ]: true, [ constants.ACCESSORY_lv ]: self, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.VALUE_lv ]: value };
+
+      // Determine wherebto put theventry in the queue
+      if ( self.queue.highPriorityQueue.length == 0 )
+      {
+         // No entries, then it goes on top
+         self.queue.highPriorityQueue.push( newEntry );
+
+      } else {
+
+         // Make sure that this is the latest "Set" of this entry
+         let index = self.queue.highPriorityQueue.findIndex( ( entry ) => entry.accessory.UUID == self.UUID && entry.isSet == true && entry.accTypeEnumIndex == accTypeEnumIndex );
+
+         if ( index == -1 )
+         {
+            // It doesn't exist in the queue, It needs to be placed after any "Sets".
+            // First Determine the first "Get"
+            let getIndex = self.queue.highPriorityQueue.findIndex( ( entry ) => entry.isSet == false );
+
+            if ( getIndex == -1 )
+            {
+               // No "Get" entrys, it goes at the end after everything.
+               self.queue.highPriorityQueue.push( newEntry );
+
+            } else
+            {
+               // Insert before the first "Get" entry
+               self.queue.highPriorityQueue.splice( getIndex, 0, newEntry );
+            }
+         } else
+         {
+            self.queue.highPriorityQueue[ index ] = newEntry;
+         }
+      }
 
       self.queue.processQueue( HIGH_PRIORITY_SET, self.queue );
    }
@@ -138,7 +172,7 @@ class Cmd4PriorityPollingQueue
             setTimeout( ( ) =>
             {
                // Change the entry to a get and set queueGetIsUpdate to true
-               // Use unshift to makemit next in line
+               // Use unshift to make it next in line
                entry.isSet = false;
                entry.accTypeEnumIndex = relatedCurrentAccTypeEnumIndex;
                entry.characteristicString = relatedCurrentCharacteristicString;
@@ -209,7 +243,7 @@ class Cmd4PriorityPollingQueue
 
          } else
          {
-            entry.accessory.log.error( returnedErrMsg );
+            // Do not output the returnedErrMsg, it will be done in squashError.
 
             // A response is expected for "Get" without update.
             if ( entry.queueGetIsUpdate == false )
@@ -313,7 +347,7 @@ class Cmd4PriorityPollingQueue
                queue.squashStartTime =  Date.now( );
 
                // Say the error the first time.
-               queue.log.error( errMsg );
+               queue.log.error( `${ errMsg } rc: ${ error }` );
 
                queue.squashErrCounter = 0;
                queue.squashErrMsg = errMsg;
@@ -330,7 +364,7 @@ class Cmd4PriorityPollingQueue
          case constants.ERROR_TIMER_EXPIRED:
          case constants.ERROR_NON_CONVERTABLE_REPLY:
          case constants.ERROR_CMD_FAILED_REPLY:
-             // These would have been displayed in getValue
+             // These error messages would have been displayed in getValue
             break;
          case 0:
             // A good anything, updates the lastGoodReadTime
@@ -394,7 +428,7 @@ class Cmd4PriorityPollingQueue
          queue.squashErrCounter++;
 
 
-         queue.log.debug( `Debug Warning: squashing ${ nextEntry.accessory.displayName }, Returning cached value for ${ nextEntry.characteristicString }` );
+         queue.log.debug( `Debug Warning: squashing ${ nextEntry.accessory.displayName } ${ nextEntry.characteristicString }` );
       } else
       {
          queue.processEntryFromLowPriorityQueue( nextEntry );
@@ -449,7 +483,16 @@ class Cmd4PriorityPollingQueue
             {
                queue.squashErrCounter++;
 
-               queue.log.debug( `Debug Warning: squashing ${ nextEntry.accessory.displayName }, Returning cached value for ${ nextEntry.characteristicString }` );
+               let cachedValue = nextEntry.accessory.getStoredValue( nextEntry.accTypeEnumIndex );
+
+               queue.log.debug( `Debug Warning: squashing ${ nextEntry.accessory.displayName } ${ nextEntry.characteristicString } Returning cached value ${ cachedValue }` );
+
+               // Send the cached value
+               nextEntry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ nextEntry.accTypeEnumIndex ].characteristic ).updateValue( cachedValue );
+
+               // Remove the nextEntry from the queue.
+               queue.highPriorityQueue.shift( );
+
 
                return;
             }
@@ -565,6 +608,13 @@ class Cmd4PriorityPollingQueue
                   // Do not call startQueue as it starts this sanity timer
                   // instead, do what it did.
                   queue.lowPriorityQueueIndex = 0 ;
+
+                  // Purge the high priority queue or it would grow uncontrollably
+                  queue.highPriorityQueue.forEach( ( entry, entryIndex ) =>
+                  {
+                     queue.log.debug( `Purging ( ${ entryIndex } ): ${ entry.accessory.displayName } ${ entry.characteristicString } isSet: ${ entry.isSet ? "true" : "false" }` );
+                  });
+                  queue.highPriorityQueue = [ ];
 
                   queue.queueStarted = true;
 

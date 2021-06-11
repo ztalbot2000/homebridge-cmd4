@@ -57,6 +57,9 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
    after( ( ) =>
    {
       process.exit.restore( );
+
+      // MaxListenersExceededWarning: Possible EventEmitter memory leak detected
+      _api.removeAllListeners();
    });
    beforeEach( function( )
    {
@@ -599,7 +602,7 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
 
    });
 
-   it( "Test Cmd4PriorityPollingQueue.squashError outputs 1 message", function( done )
+   it( `Test Cmd4PriorityPollingQueue.squashError outputs 1 message`, function( done )
    {
       let log = new Logger( );
       log.setBufferEnabled( );
@@ -622,7 +625,7 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       done( );
    });
 
-   it( "Test Cmd4PriorityPollingQueue.squashError outputs 1 message of the same type  ", function( done )
+   it( `Test Cmd4PriorityPollingQueue.squashError outputs 1 message of the same type`, function( done )
    {
       let log = new Logger( );
       log.setBufferEnabled( );
@@ -647,7 +650,7 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       done( );
    });
 
-   it( "Test Cmd4PriorityPollingQueue.squashError outputs 1 message but counts the 5 squashed", function( done )
+   it( `Test Cmd4PriorityPollingQueue.squashError outputs 1 message but counts the 5 squashed`, function( done )
    {
       let log = new Logger( );
       log.setBufferEnabled( );
@@ -679,7 +682,7 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       done( );
    });
 
-   it( "Test Cmd4PriorityPollingQueue startQueue  outputs 1 message but counts the 5 squashed", function( done )
+   it( `Test Cmd4PriorityPollingQueue startQueue  outputs 1 message but counts the 5 squashed`, function( done )
    {
       let log = new Logger( );
       log.setBufferEnabled( );
@@ -702,7 +705,7 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       done( );
    });
 
-   it ( "Test Cmd4PriorityPollingQueue.squashError outputs timed message ", function( done )
+   it ( `Test Cmd4PriorityPollingQueue.squashError outputs timed message`, function( done )
    {
       let log = new Logger( );
       log.setBufferEnabled( );
@@ -737,7 +740,7 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       }, cmd4PriorityPollingQueue.recoveryTimerInterval * 2);
    }).timeout( 2000 );
 
-   it( "Test Cmd4PriorityPollingQueue.squashError invalid error ", function( done )
+   it( `Test Cmd4PriorityPollingQueue.squashError invalid error`, function( done )
    {
       let log = new Logger( );
       log.setBufferEnabled( );
@@ -766,7 +769,7 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       done( );
    });
 
-   it( "Test recoveryTimer restarts timed message ", function( done )
+   it( `Test recoveryTimer restarts timed message`, function( done )
    {
       let log = new Logger( );
       log.setBufferEnabled( );
@@ -818,7 +821,7 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       }, cmd4PriorityPollingQueue.recoveryTimerInterval * 2);
    }).timeout(10000);
 
-   it( "Test Cmd4PriorityPollingQueue.squashError debug message", function( done )
+   it( `Test Cmd4PriorityPollingQueue.squashError debug message`, function( done )
    {
       let log = new Logger( );
       log.setBufferEnabled( );
@@ -874,4 +877,378 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
 
       }, 700);
    }).timeout(2000);
+
+   it( `Test Cmd4PriorityPollingQueue adds an entry to the highPriorityQueue`, function( done )
+   {
+      let platformConfig =
+      {
+         accessories: [
+            {
+               Name:         "My_Light",
+               DisplayName:  "My_Light",
+               StatusMsg:    true,
+               Type:         "Lightbulb",
+               Cmd4_Mode:    "Polled",
+               On:           0,
+               Brightness:   100,
+               Polling:      [ { Characteristic: "On", Interval: 310, Queue: "A" },
+                               { Characteristic: "Brightness", Queue: "A" }
+                             ],
+               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            }
+         ]
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
+
+      assert.include( log.logBuf, `[33mAdding prioritySetValue for My_Light characteristic: On`, `Cmd4PriorityPollingQueue expected stdout received: ${ log.logBuf }` );
+
+      let cmd4LightAccessory = cmd4Platform.createdCmd4Accessories[0];
+      expect( cmd4LightAccessory ).to.be.a.instanceOf( Cmd4Accessory, `cmd4Platform did not create an instance of Cmd4Accessory` );
+
+      let cmd4PriorityPollingQueue = settings.listOfCreatedPriorityQueues[ "A" ];
+      expect( cmd4PriorityPollingQueue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PollingQueue" );
+
+      assert.isFunction( cmd4PriorityPollingQueue.prioritySetValue, `.prioritySetValue is not a function` );
+
+      // Set to a large amount so it does not happen
+      cmd4PriorityPollingQueue.recoveryTimerInterval = 500000;
+
+      // Fake the queue to be blocked
+      cmd4PriorityPollingQueue.inProgressSets = 1;
+
+      // Call the setValue bound function, which is priorritySetValue
+      cmd4LightAccessory.service.getCharacteristic(
+                            CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM.Brightness ]
+                            .characteristic ).setValue( 22, dummyCallback );
+
+      assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 2, `Polled Get added to low prority queue` );
+      assert.equal( cmd4PriorityPollingQueue.highPriorityQueue.length, 1, `Polled Get added to high prority queue` );
+
+      let entry = cmd4PriorityPollingQueue.highPriorityQueue[ 0 ];
+
+      assert.equal( entry.accTypeEnumIndex, CMD4_ACC_TYPE_ENUM.Brightness, `Incorrect accTypeEnumIndex in entry` );
+      assert.equal( entry.isSet, true, `Incorrect isSet in entry` );
+      assert.equal( entry.characteristicString, "Brightness", `Incorrect isSet in entry` );
+      assert.equal( entry.value, 22, `Incorrect value in entry` );
+
+      done();
+
+   });
+
+   it( `Test Cmd4PriorityPollingQueue adds multiple entries to the highPriorityQueue`, function( done )
+   {
+      let platformConfig =
+      {
+         accessories: [
+            {
+               Name:         "My_Light",
+               DisplayName:  "My_Light",
+               StatusMsg:    true,
+               Type:         "Lightbulb",
+               Cmd4_Mode:    "Polled",
+               On:           0,
+               Brightness:   100,
+               Polling:      [ { Characteristic: "On", Interval: 310, Queue: "A" },
+                               { Characteristic: "Brightness", Queue: "A" }
+                             ],
+               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            }
+         ]
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
+
+      assert.include( log.logBuf, `[33mAdding prioritySetValue for My_Light characteristic: On`, `Cmd4PriorityPollingQueue expected stdout received: ${ log.logBuf }` );
+
+      let cmd4LightAccessory = cmd4Platform.createdCmd4Accessories[0];
+      expect( cmd4LightAccessory ).to.be.a.instanceOf( Cmd4Accessory, `cmd4Platform did not create an instance of Cmd4Accessory` );
+
+      let cmd4PriorityPollingQueue = settings.listOfCreatedPriorityQueues[ "A" ];
+      expect( cmd4PriorityPollingQueue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PollingQueue" );
+
+      assert.isFunction( cmd4PriorityPollingQueue.prioritySetValue, `.prioritySetValue is not a function` );
+
+      // Set to a large amount so it does not happen
+      cmd4PriorityPollingQueue.recoveryTimerInterval = 500000;
+
+      // Fake the queue to be blocked
+      cmd4PriorityPollingQueue.inProgressSets = 1;
+
+      // Call the setValue bound function, which is priorritySetValue
+      cmd4LightAccessory.service.getCharacteristic(
+                            CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM.Brightness ]
+                            .characteristic ).setValue( 22, dummyCallback );
+
+      // Call the setValue bound function, which is priorritySetValue
+      cmd4LightAccessory.service.getCharacteristic(
+                            CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM.On ]
+                            .characteristic ).setValue( 0, dummyCallback );
+
+      assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 2, `Polled Get added to low prority queue` );
+      assert.equal( cmd4PriorityPollingQueue.highPriorityQueue.length, 2, `Polled Get added to high prority queue` );
+
+      let entry = cmd4PriorityPollingQueue.highPriorityQueue[ 1 ];
+
+      assert.equal( entry.accTypeEnumIndex, CMD4_ACC_TYPE_ENUM.On, `Incorrect accTypeEnumIndex in entry` );
+      assert.equal( entry.isSet, true, `Incorrect isSet in entry` );
+      assert.equal( entry.characteristicString, "On", `Incorrect isSet in entry` );
+      assert.equal( entry.value, 0, `Incorrect value in entry` );
+
+      done();
+
+   });
+
+   it( `Test Cmd4PriorityPollingQueue Adds "Set" after existing "set" in queue`, function( done )
+   {
+      let platformConfig =
+      {
+         accessories: [
+            {
+               Name:         "My_Light",
+               DisplayName:  "My_Light",
+               StatusMsg:    true,
+               Type:         "Lightbulb",
+               Cmd4_Mode:    "Polled",
+               On:           0,
+               Brightness:   100,
+               Polling:      [ { Characteristic: "On", Interval: 310, Queue: "A" },
+                               { Characteristic: "Brightness", Queue: "A" }
+                             ],
+               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            }
+         ]
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
+
+      assert.include( log.logBuf, `[33mAdding prioritySetValue for My_Light characteristic: On`, `Cmd4PriorityPollingQueue expected stdout received: ${ log.logBuf }` );
+
+      let cmd4LightAccessory = cmd4Platform.createdCmd4Accessories[0];
+      expect( cmd4LightAccessory ).to.be.a.instanceOf( Cmd4Accessory, `cmd4Platform did not create an instance of Cmd4Accessory` );
+
+      let cmd4PriorityPollingQueue = settings.listOfCreatedPriorityQueues[ "A" ];
+      expect( cmd4PriorityPollingQueue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PollingQueue" );
+
+      assert.isFunction( cmd4PriorityPollingQueue.prioritySetValue, `.prioritySetValue is not a function` );
+
+      // Set to a large amount so it does not happen
+      cmd4PriorityPollingQueue.recoveryTimerInterval = 500000;
+
+      // Fake the queue to be blocked
+      cmd4PriorityPollingQueue.inProgressSets = 1;
+
+      // Call the setValue bound function, which is priorritySetValue
+      cmd4LightAccessory.service.getCharacteristic(
+                            CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM.Brightness ]
+                            .characteristic ).setValue( 22, dummyCallback );
+
+      // Call the setValue bound function, which is priorritySetValue
+      cmd4LightAccessory.service.getCharacteristic(
+                            CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM.On ]
+                            .characteristic ).setValue( 1, dummyCallback );
+
+      assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 2, `Polled Get added to low prority queue` );
+      assert.equal( cmd4PriorityPollingQueue.highPriorityQueue.length, 2, `Polled Get added to high prority queue` );
+
+      let entry = cmd4PriorityPollingQueue.highPriorityQueue[ 1 ];
+
+      assert.equal( entry.accTypeEnumIndex, CMD4_ACC_TYPE_ENUM.On, `Incorrect accTypeEnumIndex in entry` );
+      assert.equal( entry.isSet, true, `Incorrect isSet in entry` );
+      assert.equal( entry.characteristicString, "On", `Incorrect isSet in entry` );
+      assert.equal( entry.value, true, `Incorrect value in entry` );
+
+      done();
+
+   });
+
+   it( `Test Cmd4PriorityPollingQueue Adds "Get" after existing "set" in queue`, function( done )
+   {
+      let platformConfig =
+      {
+         accessories: [
+            {
+               Name:         "My_Light",
+               DisplayName:  "My_Light",
+               StatusMsg:    true,
+               Type:         "Lightbulb",
+               Cmd4_Mode:    "Polled",
+               On:           0,
+               Brightness:   100,
+               Polling:      [ { Characteristic: "On", Interval: 310, Queue: "A" },
+                               { Characteristic: "Brightness", Queue: "A" }
+                             ],
+               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            }
+         ]
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
+
+      assert.include( log.logBuf, `[33mAdding prioritySetValue for My_Light characteristic: On`, `Cmd4PriorityPollingQueue expected stdout received: ${ log.logBuf }` );
+
+      let cmd4LightAccessory = cmd4Platform.createdCmd4Accessories[0];
+      expect( cmd4LightAccessory ).to.be.a.instanceOf( Cmd4Accessory, `cmd4Platform did not create an instance of Cmd4Accessory` );
+
+      let cmd4PriorityPollingQueue = settings.listOfCreatedPriorityQueues[ "A" ];
+      expect( cmd4PriorityPollingQueue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PollingQueue" );
+
+      assert.isFunction( cmd4PriorityPollingQueue.prioritySetValue, `.prioritySetValue is not a function` );
+
+      // Set to a large amount so it does not happen
+      cmd4PriorityPollingQueue.recoveryTimerInterval = 500000;
+
+      // Fake the queue to be blocked
+      cmd4PriorityPollingQueue.inProgressSets = 1;
+
+      // Call the setValue bound function, which is priorritySetValue
+      cmd4LightAccessory.service.getCharacteristic(
+                            CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM.Brightness ]
+                            .characteristic ).setValue( 22, dummyCallback );
+
+      // Call the getValue bound function, which is priorrityGetValue
+      cmd4LightAccessory.service.getCharacteristic(
+                            CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM.On ]
+                            .characteristic ).getValue( dummyCallback );
+
+      assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 2, `Polled Get added to low prority queue` );
+      assert.equal( cmd4PriorityPollingQueue.highPriorityQueue.length, 2, `Polled Get added to high prority queue` );
+
+      let entry = cmd4PriorityPollingQueue.highPriorityQueue[ 1 ];
+
+      // Even though the "Get" was added second, the next "Set" gets put before it
+      assert.equal( entry.accTypeEnumIndex, CMD4_ACC_TYPE_ENUM.On, `Incorrect accTypeEnumIndex in entry` );
+      assert.equal( entry.isSet, false, `Incorrect isSet in entry` );
+      assert.equal( entry.characteristicString, "On", `Incorrect isSet in entry` );
+
+      done();
+
+   });
+
+   it( `Test Cmd4PriorityPollingQueue same "Set" replaces old in queue`, function( done )
+   {
+      let platformConfig =
+      {
+         accessories: [
+            {
+               Name:         "My_Light",
+               DisplayName:  "My_Light",
+               StatusMsg:    true,
+               Type:         "Lightbulb",
+               Cmd4_Mode:    "Polled",
+               On:           0,
+               Brightness:   100,
+               Polling:      [ { Characteristic: "On", Interval: 310, Queue: "A" },
+                               { Characteristic: "Brightness", Queue: "A" }
+                             ],
+               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            }
+         ]
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
+
+      assert.include( log.logBuf, `[33mAdding prioritySetValue for My_Light characteristic: On`, `Cmd4PriorityPollingQueue expected stdout received: ${ log.logBuf }` );
+
+      let cmd4LightAccessory = cmd4Platform.createdCmd4Accessories[0];
+      expect( cmd4LightAccessory ).to.be.a.instanceOf( Cmd4Accessory, `cmd4Platform did not create an instance of Cmd4Accessory` );
+
+      let cmd4PriorityPollingQueue = settings.listOfCreatedPriorityQueues[ "A" ];
+      expect( cmd4PriorityPollingQueue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PollingQueue" );
+
+      assert.isFunction( cmd4PriorityPollingQueue.prioritySetValue, `.prioritySetValue is not a function` );
+
+      // Set to a large amount so it does not happen
+      cmd4PriorityPollingQueue.recoveryTimerInterval = 5000000;
+
+      // Fake the queue to be blocked
+      cmd4PriorityPollingQueue.inProgressSets = 1;
+
+      // Call the setValue bound function, which is priorritySetValue
+      cmd4LightAccessory.service.getCharacteristic(
+                            CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM.Brightness ]
+                            .characteristic ).setValue( 22, dummyCallback );
+      assert.equal( cmd4PriorityPollingQueue.highPriorityQueue.length, 1, `Polled Get added to high prority queue` );
+
+      // Call the getValue bound function, which is priorrityGetValue
+      cmd4LightAccessory.service.getCharacteristic(
+                            CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM.On ]
+                            .characteristic ).getValue( dummyCallback );
+      assert.equal( cmd4PriorityPollingQueue.highPriorityQueue.length, 2, `Polled Get added to high prority queue` );
+
+      // Call the setValue bound function, which is priorritySetValue
+      cmd4LightAccessory.service.getCharacteristic(
+                            CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM.On ]
+                            .characteristic ).setValue( 1, dummyCallback );
+      assert.equal( cmd4PriorityPollingQueue.highPriorityQueue.length, 3, `Polled Get added to high prority queue` );
+
+      // This setValue should replace the first
+      cmd4LightAccessory.service.getCharacteristic(
+                            CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM.Brightness ]
+                            .characteristic ).setValue( 30, dummyCallback );
+
+      assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 2, `Polled Get added to low prority queue` );
+      assert.equal( cmd4PriorityPollingQueue.highPriorityQueue.length, 3, `Polled Get added to high prority queue` );
+
+      let entry = cmd4PriorityPollingQueue.highPriorityQueue[ 0 ];
+
+      // Check that the entry was replaced at queue index 0.
+      assert.equal( entry.accTypeEnumIndex, CMD4_ACC_TYPE_ENUM.Brightness, `Incorrect accTypeEnumIndex in entry` );
+      assert.equal( entry.isSet, true, `Incorrect isSet in entry` );
+      assert.equal( entry.characteristicString, "Brightness", `Incorrect isSet in entry` );
+      assert.equal( entry.value, 30, `Incorrect value in entry` );
+
+      done();
+
+   });
 });
