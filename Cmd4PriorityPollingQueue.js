@@ -103,31 +103,26 @@ class Cmd4PriorityPollingQueue
 
    addLowPriorityGetPolledQueueEntry( accessory, accTypeEnumIndex, characteristicString, interval, timeout )
    {
-      // Similiar to self = this, but more obvious and exact
-      let queue = accessory.queue;
-
       // These are all gets from polling
-      queue.lowPriorityQueue.push( { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: interval, [ constants.TIMEOUT_lv ]: timeout } );
+      accessory.queue.lowPriorityQueue.push( { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: interval, [ constants.TIMEOUT_lv ]: timeout } );
 
-      queue.lowPriorityQueueMaxLength = queue.lowPriorityQueue.length ;
+      accessory.queue.lowPriorityQueueMaxLength = accessory.queue.lowPriorityQueue.length ;
 
    }
 
    processHighPrioritySetQueue( entry )
    {
-      // Similiar to self = this, but more obvious and exact
-      let queue = entry.accessory.queue;
-
       // This is just a double check and processQueue should not 
       // ever let this happen
-      if ( queue.inProgressSets > 0 || queue.inProgressGets > 0 )
+      if ( entry.accessory.queue.inProgressSets > 0 ||
+           entry.accessory.queue.inProgressGets > 0 )
       {
-         this.log.debug( `High priority "Set" queue interrupt attempted: ${ entry.accessory.displayName } ${ entry.characteristicString } inProgressSets:${ queue.inProgressSets } inProgressGets: ${ queue.inProgressGets }` );
+         this.log.debug( `High priority "Set" queue interrupt attempted: ${ entry.accessory.displayName } ${ entry.characteristicString } inProgressSets:${ entry.accessory.queue.inProgressSets } inProgressGets: ${ entry.accessory.queue.inProgressGets }` );
          return;
       }
 
       this.log.debug( `Proccessing high priority queue "Set" entry: ${ entry.accTypeEnumIndex }` );
-      queue.inProgressSets ++;
+      entry.accessory.queue.inProgressSets ++;
       entry.accessory.setValue( entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, entry.stateChangeResponseTime, entry.value, function ( error )
       {
          let relatedCurrentAccTypeEnumIndex = entry.accessory.getDevicesRelatedCurrentAccTypeEnumIndex( entry.accTypeEnumIndex );
@@ -138,16 +133,20 @@ class Cmd4PriorityPollingQueue
             let relatedCurrentCharacteristicString = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].type;
 
             // A set with no error means the queue is sane to do reading
-            queue.lastGoodReadTime =  Date.now( );
+            entry.accessory.queue.lastGoodReadTime =  Date.now( );
 
             setTimeout( ( ) =>
             {
                // Change the entry to a get and set queueGetIsUpdate to true
+               // Use unshift to makemit next in line
                entry.isSet = false;
                entry.accTypeEnumIndex = relatedCurrentAccTypeEnumIndex;
                entry.characteristicString = relatedCurrentCharacteristicString;
                entry.queueGetIsUpdate = true;
                entry.accessory.queue.highPriorityQueue.unshift( entry );
+
+               // The "Set" is now complete after its stateChangeResponseTime.
+               entry.accessory.queue.inProgressSets --;
 
                setTimeout( ( ) => { entry.accessory.queue.processQueue( HIGH_PRIORITY_GET, entry.accessory.queue ); }, 0 );
 
@@ -157,32 +156,36 @@ class Cmd4PriorityPollingQueue
 
          }
 
+         // Note 1.
          // Do not call the callback as it was done when the "Set" entry was 
          // created.
 
-         queue.inProgressSets --;
-         setTimeout( ( ) => { queue.processQueue( HIGH_PRIORITY_SET, queue ); }, 0 );
+         // Note 2.
+         // We cannot release the queue for further processing as the 
+         // statechangeResponseTime has not completed. This must be
+         // done first or any next "Get" or "Set" would interfere
+         // with the device
+
+
 
       }, true );
    }
 
    processHighPriorityGetQueue( entry )
    {
-      // Similiar to self = this, but more obvious and exact
-      let queue = entry.accessory.queue;
-
       // This is just a double check and processQueue should not
       // ever let this happen
-      if ( queue.inProgressSets > 0 ||
-           queue.inProgressGets > 0 && queue.queueType == constants.QUEUETYPE_SEQUENTIAL )
+      if ( entry.accessory.queue.inProgressSets > 0 ||
+           entry.accessory.queue.inProgressGets > 0 &&
+           entry.accessory.queue.queueType == constants.QUEUETYPE_SEQUENTIAL )
       {
-         this.log.debug( `High priority "Get" queue interrupt attempted: ${ entry.accessory.displayName } ${ entry.characteristicString } inProgressSets:${ queue.inProgressSets } inProgressGets: ${ queue.inProgressGets }` );
+         this.log.debug( `High priority "Get" queue interrupt attempted: ${ entry.accessory.displayName } ${ entry.characteristicString } inProgressSets:${ entry.accessory.queue.inProgressSets } inProgressGets: ${ entry.accessory.queue.inProgressGets }` );
          return;
       }
 
       this.log.debug( `Proccessing high priority queue "Get" entry: ${ entry.accTypeEnumIndex }` );
 
-      queue.inProgressGets ++;
+      entry.accessory.queue.inProgressGets ++;
       let pollingID =  Date.now( );
       entry.accessory.getValue( entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, function ( error, properValue, returnedPollingID, returnedErrMsg  )
       {
@@ -214,23 +217,21 @@ class Cmd4PriorityPollingQueue
          }
 
          // could also be unsquashing
-         queue.squashError( queue, error, returnedErrMsg )
+         entry.accessory.queue.squashError( entry.accessory.queue, error, returnedErrMsg )
 
-         queue.inProgressGets --;
-         setTimeout( ( ) => { queue.processQueue( HIGH_PRIORITY_GET, entry.accessory.queue ); }, 0 );
+         entry.accessory.queue.inProgressGets --;
+         setTimeout( ( ) => { entry.accessory.queue.processQueue( HIGH_PRIORITY_GET, entry.accessory.queue ); }, 0 );
 
       }, pollingID );
    }
 
    processEntryFromLowPriorityQueue( entry )
    {
-      // Similiar to self = this, but more obvious and exact
-      let queue = entry.accessory.queue;
-
       // This is just a double check and processQueue should not
       // ever let this happen
-      if ( queue.inProgressSets > 0 ||
-           queue.inProgressGets > 0 && queue.queueType == constants.QUEUETYPE_SEQUENTIAL )
+      if ( entry.accessory.queue.inProgressSets > 0 ||
+           entry.accessory.queue.inProgressGets > 0 &&
+           entry.accessory.queue.queueType == constants.QUEUETYPE_SEQUENTIAL )
       {
          this.log.debug( `Low priority "Get" queue interrupt attempted: ${ entry.accessory.displayName } ${ entry.characteristicString }` );
          return;
@@ -239,8 +240,8 @@ class Cmd4PriorityPollingQueue
       this.log.debug( `Proccessing low priority queue entry: ${ entry.accTypeEnumIndex }` );
 
       let pollingID =  Date.now( );
-      queue.inProgressGets ++;
-      queue.lowPriorityQueueCounter ++;
+      entry.accessory.queue.inProgressGets ++;
+      entry.accessory.queue.lowPriorityQueueCounter ++;
       let lowPriorityQueueStartTime =  Date.now( );
       entry.accessory.getValue( entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, function ( error, properValue, returnedPollingID, returnedErrMsg )
       {
@@ -253,19 +254,19 @@ class Cmd4PriorityPollingQueue
 
             return;
          }
-         queue.lowPriorityQueueAccumulatedTime += lowPriorityQueueEndTime - lowPriorityQueueStartTime;
-         queue.lowPriorityQueueAverageTime = queue.lowPriorityQueueAccumulatedTime / queue.lowPriorityQueueCounter;
+         entry.accessory.queue.lowPriorityQueueAccumulatedTime += lowPriorityQueueEndTime - lowPriorityQueueStartTime;
+         entry.accessory.queue.lowPriorityQueueAverageTime = entry.accessory.queue.lowPriorityQueueAccumulatedTime / entry.accessory.queue.lowPriorityQueueCounter;
 
          // Make it 7x, but not less than the original interval
          // We need to accomodate the fact that the unit could
          // be interacted with manually.
-         let optimal = 7 * queue.lowPriorityQueueAverageTime;
-         if ( optimal > queue.originalInterval )
+         let optimal = 7 * entry.accessory.queue.lowPriorityQueueAverageTime;
+         if ( optimal > entry.accessory.queue.originalInterval )
          {
-            queue.optimalInterval = optimal;
+            entry.accessory.queue.optimalInterval = optimal;
 
             // Change the Polling timer interval to the optimal value
-            queue.variablePollingTimer.set_interval( optimal );
+            entry.accessory.queue.variablePollingTimer.set_interval( optimal );
          }
 
 
@@ -279,13 +280,13 @@ class Cmd4PriorityPollingQueue
          }
 
          // could also be unsquashing
-         queue.squashError( queue, error, returnedErrMsg )
+         entry.accessory.queue.squashError( entry.accessory.queue, error, returnedErrMsg )
 
          // For the next one
-         queue.inProgressGets --;
+         entry.accessory.queue.inProgressGets --;
 
          // This will restart the polling timer if not anything else
-         setTimeout( ( ) => { queue.processQueue( HIGH_PRIORITY_GET, queue ); }, 0 );
+         setTimeout( ( ) => { entry.accessory.queue.processQueue( HIGH_PRIORITY_GET, entry.accessory.queue ); }, 0 );
       }, pollingID );
    }
 
@@ -559,7 +560,7 @@ class Cmd4PriorityPollingQueue
                      queue.inProgressSets = 0;
 
                   // So we do not trip over this again immediately
-                  queue.lastGoodReadTime =  Date.now( );
+                  queue.lastGoodReadTime = Date.now( );
 
                   // Do not call startQueue as it starts this sanity timer
                   // instead, do what it did.
