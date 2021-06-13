@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-3-10-1">**Whats new in 3.10.1**</a>
 * <a href="#Whats-new-in-3-10-0">**Whats new in 3.10.0**</a>
 * <a href="#Whats-new-in-3-9-0">**Whats new in 3.9.0**</a>
 * <a href="#Whats-new-in-3-8-1">**Whats new in 3.8.1**</a>
@@ -60,6 +61,15 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-3-10-1">## Whats new in 3.10.1</a>
+#### 3.10.1 (2021-06-13)
+
+##### Bug Fixes
+
+*  Queue "Sets" should always come before "Gets" and Replace duplicate Sets ([4da5e323](https://github.com/ztalbot2000/homebridge-cmd4/commit/4da5e323bf4971ec68ee60010b13cedab901cd73))
+*  All "Gets" should wait until the stateChangeResponseTime in Queues ([9dbfc768](https://github.com/ztalbot2000/homebridge-cmd4/commit/9dbfc76867ac6903a9cf64ad7afa52687d0a7d8a))
+
 
 <a name="Whats-new-in-3-10-0">## Whats new in 3.10.0</a>
 ### 3.10.0 (2021-05-29)
