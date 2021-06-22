@@ -75,7 +75,7 @@ class Cmd4PriorityPollingQueue
       let self = this;
 
       // Call the callback immediately as we will call updateValue
-      callback( null );
+      callback( );
 
       let newEntry = { [ constants.IS_SET_lv ]: true, [ constants.ACCESSORY_lv ]: self, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.VALUE_lv ]: value };
 
@@ -151,11 +151,14 @@ class Cmd4PriorityPollingQueue
       if ( entry.accessory.queue.inProgressSets > 0 ||
            entry.accessory.queue.inProgressGets > 0 )
       {
-         this.log.debug( `High priority "Set" queue interrupt attempted: ${ entry.accessory.displayName } ${ entry.characteristicString } inProgressSets:${ entry.accessory.queue.inProgressSets } inProgressGets: ${ entry.accessory.queue.inProgressGets }` );
+         // If the queue mistakenly calls this, then it would also have
+         // removed the entry from the queue
+         this.log.debug( chalk.red( `QUEUE ERROR: High priority "Set" queue interrupt attempted: ${ entry.accessory.displayName } ${ entry.characteristicString } inProgressSets:${ entry.accessory.queue.inProgressSets } inProgressGets: ${ entry.accessory.queue.inProgressGets }`));
          return;
       }
 
-      this.log.debug( `Proccessing high priority queue "Set" entry: ${ entry.accTypeEnumIndex }` );
+      this.log.debug( `Processing high priority queue "Set" entry: ${ entry.accTypeEnumIndex } length: ${ entry.accessory.queue.highPriorityQueue.length }` );
+
       entry.accessory.queue.inProgressSets ++;
       entry.accessory.setValue( entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, entry.stateChangeResponseTime, entry.value, function ( error )
       {
@@ -182,7 +185,8 @@ class Cmd4PriorityPollingQueue
                // The "Set" is now complete after its stateChangeResponseTime.
                entry.accessory.queue.inProgressSets --;
 
-               setTimeout( ( ) => { entry.accessory.queue.processQueue( HIGH_PRIORITY_GET, entry.accessory.queue ); }, 0 );
+               if ( entry.accessory.queue.queueType == constants.QUEUETYPE_SEQUENTIAL )
+                  setTimeout( ( ) => { entry.accessory.queue.processQueue( HIGH_PRIORITY_GET, entry.accessory.queue ); }, 0 );
 
                return;
 
@@ -217,7 +221,7 @@ class Cmd4PriorityPollingQueue
          return;
       }
 
-      this.log.debug( `Proccessing high priority queue "Get" entry: ${ entry.accTypeEnumIndex }` );
+      this.log.debug( `Processing high priority queue "Get" entry: ${ entry.accTypeEnumIndex } isUpdate: ${ entry.queueGetIsUpdate } length: ${ entry.accessory.queue.highPriorityQueue.length }` );
 
       entry.accessory.queue.inProgressGets ++;
       let pollingID =  Date.now( );
@@ -271,7 +275,7 @@ class Cmd4PriorityPollingQueue
          return;
       }
 
-      this.log.debug( `Proccessing low priority queue entry: ${ entry.accTypeEnumIndex }` );
+      this.log.debug( `Processing low priority queue entry: ${ entry.accTypeEnumIndex }` );
 
       let pollingID =  Date.now( );
       entry.accessory.queue.inProgressGets ++;
@@ -328,15 +332,37 @@ class Cmd4PriorityPollingQueue
    {
       switch ( error )
       {
+         // These are not really errors caused by polling
+         // break omitted
+         case constants.ERROR_TIMER_EXPIRED:
+         case constants.ERROR_NON_CONVERTABLE_REPLY:
+         case constants.ERROR_CMD_FAILED_REPLY:
+             // These error messages would have been displayed in getValue
+            break;
+         case 0:
+            // A good anything, updates the lastGoodReadTime
+            queue.lastGoodReadTime = Date.now( );
+
+            // No error, then squashing is over
+            if ( queue.squashErrCounter > 0 )
+            {
+               let seconds = Math.round( ( Date.now( ) - queue.squashStartTime ) / 1000 );
+               queue.log.error( `This message has been omitted ${ queue.squashErrCounter } times in ${ seconds } seconds => ${ queue.squashErrMsg }` );
+               queue.squashErrCounter = 0;
+            }
+
+            break;
          // When the MyAir is busy, the result is empty strings or
          // null and while they are not passed to homebridge, polling
          // must slow.
-         // break omitted
          case constants.ERROR_NULL_REPLY:
          case constants.ERROR_NULL_STRING_REPLY:
          case constants.ERROR_2ND_NULL_STRING_REPLY:
          case constants.ERROR_EMPTY_STRING_REPLY:
          case constants.ERROR_NO_DATA_REPLY:
+         // Other errors like jq, rc=1 should be treated as being squashed.
+         // break omitted
+         default:
          {
             if ( queue.lastGoodReadTime == 0 )
             {
@@ -358,30 +384,6 @@ class Cmd4PriorityPollingQueue
 
 
             break;
-         }
-         // These are not really errors caused by polling
-         // break omitted
-         case constants.ERROR_TIMER_EXPIRED:
-         case constants.ERROR_NON_CONVERTABLE_REPLY:
-         case constants.ERROR_CMD_FAILED_REPLY:
-             // These error messages would have been displayed in getValue
-            break;
-         case 0:
-            // A good anything, updates the lastGoodReadTime
-            queue.lastGoodReadTime = Date.now( );
-
-            // No error, then squashing is over
-            if ( queue.squashErrCounter > 0 )
-            {
-               let seconds = Math.round( ( Date.now( ) - queue.squashStartTime ) / 1000 );
-               queue.log.error( `This message has been omitted ${ queue.squashErrCounter } times in ${ seconds } seconds => ${ queue.squashErrMsg }` );
-               queue.squashErrCounter = 0;
-            }
-
-            break;
-         default:
-         {
-            queue.log.error( `Unhandled error: ${ error } errMsg: ${ errMsg }`  );
          }
       }
    }
@@ -461,8 +463,15 @@ class Cmd4PriorityPollingQueue
 
          if ( nextEntry.isSet == true )
          {
+            // If already in progress, when they finish they will restart the queue
+            // Otherwise continuing will purge the next item from the queue as it
+            // cannot be run with an entry already in progress.
+            if ( nextEntry.accessory.queue.inProgressSets > 0 ||
+                 nextEntry.accessory.queue.inProgressGets > 0 )
+               return;
+
             // The check for Set already running is above
- 
+
             // We cant have a low priority timer going off starting the
             // queue during a set even though it would do high priority first.
             queue.safeToDoPollingFlag = false;
@@ -481,23 +490,50 @@ class Cmd4PriorityPollingQueue
             // It is not a good time to do a "Get", so Squash it
             if ( queue.lastGoodReadTime == 0 )
             {
-               queue.squashErrCounter++;
+               // Squash all the "Gets" based on the Queue Type
+               let max = 1;
+               if ( queue.queueType == constants.QUEUETYPE_WORM )
+                  max = queue.highPriorityQueue.length;
 
-               let cachedValue = nextEntry.accessory.getStoredValue( nextEntry.accTypeEnumIndex );
+               while( queue.highPriorityQueue.length > 0 &&
+                      nextEntry.isSet == false &&
+                      max >= 1 )
+               {
 
-               queue.log.debug( `Debug Warning: squashing ${ nextEntry.accessory.displayName } ${ nextEntry.characteristicString } Returning cached value ${ cachedValue }` );
+                  queue.squashErrCounter++;
 
-               // Send the cached value
-               nextEntry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ nextEntry.accTypeEnumIndex ].characteristic ).updateValue( cachedValue );
+                  let cachedValue = nextEntry.accessory.getStoredValue( nextEntry.accTypeEnumIndex );
 
-               // Remove the nextEntry from the queue.
-               queue.highPriorityQueue.shift( );
+                  queue.log.debug( `Debug Warning: squashing ${ nextEntry.accessory.displayName } ${ nextEntry.characteristicString } Returning cached value ${ cachedValue }` );
 
+                  // Send the cached value
+                  nextEntry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ nextEntry.accTypeEnumIndex ].characteristic ).updateValue( cachedValue );
+
+                  // Remove the nextEntry from the queue.
+                  queue.highPriorityQueue.shift( );
+
+                  nextEntry = queue.highPriorityQueue[ 0 ];
+
+                  max--;
+
+               }
 
                return;
             }
 
-            queue.processHighPriorityGetQueue( queue.highPriorityQueue.shift( ) );
+            // Process all the "Gets" based on the Queue Type
+            let max = 1;
+            if ( queue.queueType == constants.QUEUETYPE_WORM )
+               max = queue.highPriorityQueue.length;
+
+            while( queue.highPriorityQueue.length > 0 &&
+                   nextEntry.isSet == false &&
+                   max >= 1 )
+            {
+               queue.processHighPriorityGetQueue( queue.highPriorityQueue.shift( ) );
+               nextEntry = queue.highPriorityQueue[ 0 ];
+               max--;
+            }
 
             return;
 
