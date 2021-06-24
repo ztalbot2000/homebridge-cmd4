@@ -2,6 +2,9 @@
 var __importDefault = (this && this.__importDefault) || function ( mod ) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+
+const settings = require( "../cmd4Settings" );
+
 const util_1 = __importDefault( require( "util" ) );
 const chalk_1 = __importDefault( require( "chalk" ) );
 //
@@ -36,6 +39,11 @@ class Logger
       this.errBuf = "";
       this.outputEnabled = true;
       this.bufferEnabled = false;
+
+      // Added as was set outside the class
+      this.timestampEnabled = true;
+      this.prefix = settings.PLATFORM_NAME;
+      this.forceColor( );
    }
    //
    // Turns on debug level logging. Off by default.
@@ -89,7 +97,8 @@ class Logger
    }
    debug( message, ...parameters )
    {
-      this.log( "debug" /* DEBUG */, message, ...parameters );
+      if ( this.debugEnabled )
+         this.log( "debug" /* DEBUG */, message, ...parameters );
    }
    log( level, message, ...parameters )
    {

@@ -74,6 +74,8 @@
 const which = require('which');
 const path = require( "path" );
 
+const settings = require( "../cmd4Settings" );
+
 // Get the real path of homebridge instead of a dev dependancy,
 // which caused issues if you forget to update dependancies but
 // upgrade homebridge.
@@ -666,6 +668,7 @@ function addSideNavCmd4DirectivesLinks_WithinSideNav( )
    wf( "-", `</button>\n` );
 
    wf( "+", `<div class="panel">\n` );
+      wfs( `<a href="#${ constants.DEBUG }_D" onclick="toggleVisibility( 'Directives');">${ constants.DEBUG }</a>\n` );
       wfs( `<a href="#${ constants.OUTPUTCONSTANTS }_D" onclick="toggleVisibility( 'Directives');">${ constants.OUTPUTCONSTANTS }</a>\n` );
       wfs( `<a href="#${ constants.RESTART_RECOVER }_D" onclick="toggleVisibility( 'Directives');">${ constants.RESTART_RECOVER }</a>\n` );
       wfs( `<a href="#${ constants.STATUSMSG }_D" onclick="toggleVisibility( 'Directives');">${ constants.STATUSMSG }</a>\n` );
@@ -1074,6 +1077,9 @@ function addCmd4DirectivePages_WithinMain( )
 
    wf( "+", `<TABLE WIDTH="100%">\n` );
    wfs( `<TR ALIGN="left"><TH>Cmd4Directive<TH>Type<TH PADDING="50px">Default<TH>Description</TR>\n` );
+
+   // debug - CMD4 Directives
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.DEBUG }_D">${ constants.DEBUG }</a><TD>  < Bool >  <TD>    false    <TD> Output Debug messages. Can also be accomplished with setenv DEBUG=${ settings.PLATFORM_NAME}</TR>\n` );
 
    // outputConstants - CMD4 Directives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.OUTPUTCONSTANTS }_D">${ constants.OUTPUTCONSTANTS }</a><TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1 for all Accessories</TR>\n` );

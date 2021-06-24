@@ -146,9 +146,6 @@ describe( `Testing index.js plugin Initialized variables.`, ( ) =>
       let Cmd4Platform = require( "../Cmd4Platform" ).Cmd4Platform;
 
 
-      const log = new Logger( );
-      log.setBufferEnabled( );
-
       var apiInstance = new HomebridgeAPI(); // object we feed to Plugins
 
       let cmd4 = pluginModule.default( apiInstance );
@@ -174,7 +171,10 @@ describe( `Testing index.js plugin Initialized variables.`, ( ) =>
            ]
        }
 
-      let cmd4Platform = new Cmd4Platform( log, config, apiInstance );
+      let cmd4Platform = new Cmd4Platform( null, config, apiInstance );
+      let log = cmd4Platform.log;
+      log.setBufferEnabled( );
+
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
       assert.equal( log.logBuf, "", ` cmd4Platform unexpected output received: ${ log.logBuf }` );

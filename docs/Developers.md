@@ -51,6 +51,7 @@
    [
       {
          "platform": "Cmd4",
+         "debug":                          false,
          "outputConstants":                false,
          "restartRecover":                 true,
          "accessories" :
@@ -301,6 +302,7 @@ The number of Burst Groups is calculated as the number of polled characteristics
     "platforms": [
         {
             "platform": "Cmd4",
+            "debug": false,
             "outputConstants": false,
             "restartRecover": true,
             "Cmd4_Mode": "FullyPolled",

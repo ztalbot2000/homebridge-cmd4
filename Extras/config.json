@@ -11,6 +11,7 @@
       {
          "platform":                       "Cmd4",
          "name":                           "Cmd4",
+         "debug":                           false,
          "allowTLV8":                       false,
          "outputConstants":                 false,
          "restartRecover":                  true,

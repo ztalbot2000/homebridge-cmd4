@@ -5,6 +5,10 @@ const { getAccessoryName,
         getAccessoryDisplayName } = require( "./utils/getAccessoryNameFunctions" );
 const { parseAddQueueTypes } = require( "./Cmd4PriorityPollingQueue" );
 
+
+
+
+let Logger = require( "./utils/Logger" );
 let getAccessoryUUID = require( "./utils/getAccessoryUUID" );
 let ucFirst = require( "./utils/ucFirst" );
 let isNumeric = require( "./utils/isNumeric" );
@@ -37,12 +41,18 @@ class Cmd4Platform
 {
    constructor( log, config, api )
    {
-      log.debug( chalk.blue( `Class Cmd4Platform` ) );
+      // By using our own Logger, we don't trigger others
+      this.log = new Logger( );
+      if ( config[ constants.DEBUG ]  == true ||
+           config[ constants.DEBUG_l ]  == true ||
+           process.env.DEBUG == settings.PLATFORM_NAME )
+         this.log.setDebugEnabled( true );
+
+      this.log.debug( chalk.blue( `Class Cmd4Platform` ) );
 
       if ( config === undefined )
          return;
 
-      this.log = log;
       this.config = config;
       this.api = api;
       this.Service = this.api.hap.Service;

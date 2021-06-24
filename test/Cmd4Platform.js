@@ -119,17 +119,17 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
          ]
       }
 
-      this.log = new Logger( );
-      this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( false );
-      this.log.setDebugEnabled( false );
 
-      let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );
+      let cmd4Platform = new Cmd4Platform( null, platformConfig, _api );
+      let log = cmd4Platform.log;
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
-      assert.equal( "", this.log.logBuf, ` Cmd4Platform unexpected stdout received: ${ this.log.logBuf }` );
-      assert.equal( "", this.log.errBuf, ` Cmd4Platform unexpected stderr received: ${ this.log.errBuf }` );
+      assert.equal( "", log.logBuf, ` Cmd4Platform unexpected stdout received: ${ log.logBuf }` );
+      assert.equal( "", log.errBuf, ` Cmd4Platform unexpected stderr received: ${ log.errBuf }` );
 
       done( );
    });
@@ -157,12 +157,12 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
          ]
       }
 
-      this.log = new Logger( );
-      this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( false );
-      this.log.setDebugEnabled( false );
 
-      let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );
+      let cmd4Platform = new Cmd4Platform( null, platformConfig, _api );
+      let log = cmd4Platform.log;
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
@@ -173,8 +173,8 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
       let expectedOutput1 = `Adding new platformAccessory: My_Door`;
       let expectedOutput2 = `35mConfiguring platformAccessory: \u001b[39mMy_Door`;
 
-      assert.include( this.log.logBuf, expectedOutput1, ` Cmd4Platform missing message of new platform accessory being created` );
-      assert.include( this.log.logBuf, expectedOutput2, ` Cmd4Platform missing message of Configuring platform accessory` );
+      assert.include( log.logBuf, expectedOutput1, ` Cmd4Platform missing message of new platform accessory being created` );
+      assert.include( log.logBuf, expectedOutput2, ` Cmd4Platform missing message of Configuring platform accessory` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, `cmd4Platform did not create an instance of Cmd4Accessory` );
@@ -207,12 +207,12 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
          ]
       }
 
-      this.log = new Logger( );
-      this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( false );
-      this.log.setDebugEnabled( false );
 
-      let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );
+      let cmd4Platform = new Cmd4Platform( null, platformConfig, _api );
+      let log = cmd4Platform.log;
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
 
       cmd4Platform.discoverDevices( );
 
@@ -250,12 +250,12 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
          ]
       }
 
-      this.log = new Logger( );
-      this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( false );
-      this.log.setDebugEnabled( false );
 
-      let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );
+      let cmd4Platform = new Cmd4Platform( null, platformConfig, _api );
+      let log = cmd4Platform.log;
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
 
       cmd4Platform.discoverDevices( );
 
@@ -313,14 +313,15 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
          ]
       }
 
-      this.log = new Logger( );
-      this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( false );
-      this.log.setDebugEnabled( false );
 
-      let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );
+      let cmd4Platform = new Cmd4Platform( null, platformConfig, _api );
+      let log = cmd4Platform.log;
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
 
       assert.equal( cmd4Platform.outputConstants, true, ` Created Platform has incorrect OutputConstants` );
+
       cmd4Platform.discoverDevices( );
 
       assert.equal( cmd4Platform.createdCmd4Accessories.length, 1, ` Cmd4Platform did not create the cmd4Accessory` );
@@ -363,12 +364,12 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
          ]
       }
 
-      this.log = new Logger( );
-      this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( false );
-      this.log.setDebugEnabled( false );
 
-      let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );
+      let cmd4Platform = new Cmd4Platform( null, platformConfig, _api );
+      let log = cmd4Platform.log;
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
 
       cmd4Platform.discoverDevices( );
 
@@ -422,12 +423,13 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
          ]
       }
 
-      this.log = new Logger( );
-      this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( false );
-      this.log.setDebugEnabled( false );
 
-      let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );
+      let cmd4Platform = new Cmd4Platform( null, platformConfig, _api );
+      let log = cmd4Platform.log;
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
       assert.equal( cmd4Platform.outputConstants, false, ` Created Platform has incorrect OutputConstants` );
 
       cmd4Platform.discoverDevices( );
@@ -481,12 +483,12 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
          ]
       }
 
-      this.log = new Logger( );
-      this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( false );
-      this.log.setDebugEnabled( false );
 
-      let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );
+      let cmd4Platform = new Cmd4Platform( null, platformConfig, _api );
+      let log = cmd4Platform.log;
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
 
       cmd4Platform.discoverDevices( );
 
@@ -547,12 +549,12 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
          ]
       }
 
-      this.log = new Logger( );
-      this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( false );
-      this.log.setDebugEnabled( false );
 
-      let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );
+      let cmd4Platform = new Cmd4Platform( null, platformConfig, _api );
+      let log = cmd4Platform.log;
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
 
       cmd4Platform.discoverDevices( );
 

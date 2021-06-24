@@ -292,12 +292,12 @@ describe('Testing Cmd4Accessory polling', ( ) =>
 
       assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 0, `Incorrect number of Initial arrayOfAllStaggeredPollingCharacteristics` );
 
-      this.log = new Logger( );
-      this.log.setBufferEnabled( );
-      this.log.setOutputEnabled( false );
-      this.log.setDebugEnabled( );
 
-      let cmd4Platform = new Cmd4Platform( this.log, platformConfig, _api );
+      let cmd4Platform = new Cmd4Platform( null, platformConfig, _api );
+      let log = cmd4Platform.log;
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( );
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
@@ -312,8 +312,8 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       setTimeout( () =>
       {
 
-         assert.include( this.log.logBuf, `[90mKicking off polling for: My_Switch On interval:310000, staggered:3000\u001b` , `expected stdout: ${ this.log.logBuf }` );
-         assert.include( this.log.logBuf, "Started staggered kick off of 1 polled characteristics" , `expected stdout: ${ this.log.logBuf }` );
+         assert.include( log.logBuf, `[90mKicking off polling for: My_Switch On interval:310000, staggered:3000\u001b` , `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, "Started staggered kick off of 1 polled characteristics" , `expected stdout: ${ log.logBuf }` );
 
          let accessory = settings.arrayOfAllStaggeredPollingCharacteristics[0].accessory;
          Object.keys(accessory.listOfRunningPolls).forEach( (key) =>

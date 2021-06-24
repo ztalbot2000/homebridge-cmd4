@@ -132,18 +132,26 @@ Note: As of version 3.0.4, Cmd4 directives like polling, state_cmd, etc will try
 </UL>
 
 ### Debug Steps
-#### Step 1.  Change to your $HOME directory
-&nbsp;&nbsp;&nbsp; Homebridge is expected to run from a user's home directory where it can find the .homebridge/config.json.
+   New in Cmd4 v4.0.0 is how to enable Debug mode. The logs are 100% the same, except that now that Cmd4 has its own logging system ( Copied from Homebridge for compatability ); Enabling Debug logs will not enable Debug logs in other plugins. <BR>
+   There are two ways to enable Cmd4 Debug logs.
 
-```bash
-   *SHELL*> cd $HOME
+#### Method 1.  Modifying the Cmd4 Platform section
+&nbsp;&nbsp;&nbsp; The Cmd4 Platform section can contain the enable Debug directive.
+
+```json
+   {
+      "platform": "Cmd4",
+      "name": "Cmd4",
+      "debug": true
+   }
 ```
 
-#### Step 2.  Run homebridge in debug mode
+#### Method 2.  Add DEBUG environental variable
 
 ```bash
-   *SHELL*> DEBUG=* homebridge -D
+   *SHELL*> DEBUG=Cmd4
 ```
+Note: For Homebridge-config-ui-x, you only need to write Cmd4 in the Environmental variable section.
 
 
 <BR><BR>

@@ -61,10 +61,27 @@ Note: Your script must also exit with a 0 return code.
 
 ### Debug mode is your best friend
 &nbsp;&nbsp;&nbsp; As with Basic Troubleshooting, if your script passes at the CLI, run homebridge in debug mode:<BR>
+&nbsp;&nbsp;&nbsp; New in Cmd4 v4.0.0 is how to enable Debug mode. The logs are 100% the same, except that now that Cmd4 has its own logging system ( Copied from Homebridge for compatability ); Enabling Debug logs will not enable Debug logs in other plugins. <BR>
+   There are two ways to enable Cmd4 Debug logs.
+
+#### Method 1.  Modifying the Cmd4 Platform section
+&nbsp;&nbsp;&nbsp; The Cmd4 Platform section can contain the enable Debug directive.
+
+```json
+   {
+      "platform": "Cmd4",
+      "name": "Cmd4",
+      "debug": true
+   }
+```
+
+#### Method 2.  Add DEBUG environental variable
 
 ```bash
-   *Shell>* DEBUG=* homebridge -D
+   *SHELL*> DEBUG=Cmd4
 ```
+Note: For Homebridge-config-ui-x, you only need to write Cmd4 in the Environmental variable section.
+
 
 ### Create a middleWare shell script
 &nbsp;&nbsp;&nbsp; To see when and what both Cmd4 is sending/receiving as well as what your script is sending and receiving, create a middleWare.sh script that is called from the config.json and then calls your script. A script similiar to:<BR>

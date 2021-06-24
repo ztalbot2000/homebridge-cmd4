@@ -131,10 +131,6 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
 
    it( "Test existiance of prioritySetValue", function( )
    {
-      let log = new Logger( );
-      log.setBufferEnabled( );
-      log.setOutputEnabled( false );
-      log.setDebugEnabled( );
 
       let queueName = "Queue A";
 
@@ -152,7 +148,12 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
          }]
       };
 
-      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      let cmd4Platform = new Cmd4Platform( null, platformConfig, _api );
+      let log = cmd4Platform.log;
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( );
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
@@ -185,14 +186,12 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
          }]
       };
 
-      let log = new Logger( );
+
+      let cmd4Platform = new Cmd4Platform( null, platformConfig, _api );
+      let log = cmd4Platform.log;
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( false );
-
-
-
-      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
@@ -228,13 +227,12 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
          }]
       };
 
-      let log = new Logger( );
+
+      let cmd4Platform = new Cmd4Platform( null, platformConfig, _api );
+      let log = cmd4Platform.log;
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( false );
-
-
-      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
@@ -283,13 +281,12 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
          }]
       };
 
-      let log = new Logger( );
+
+      let cmd4Platform = new Cmd4Platform( null, platformConfig, _api );
+      let log = cmd4Platform.log;
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
-
-
-      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
@@ -327,13 +324,12 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
          }]
       };
 
-      let log = new Logger( );
+
+      let cmd4Platform = new Cmd4Platform( null, platformConfig, _api );
+      let log = cmd4Platform.log;
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
-
-
-      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
@@ -417,14 +413,14 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
                State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
             }
          ]
-      }
+      };
 
-      let log = new Logger( );
+
+      let cmd4Platform = new Cmd4Platform( null, platformConfig, _api );
+      let log = cmd4Platform.log;
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
-
-      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
@@ -503,14 +499,14 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
                State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
             }
          ]
-      }
+      };
 
-      let log = new Logger( );
+
+      let cmd4Platform = new Cmd4Platform( null, platformConfig, _api );
+      let log = cmd4Platform.log;
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
-
-      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
@@ -740,35 +736,6 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       }, cmd4PriorityPollingQueue.recoveryTimerInterval * 2);
    }).timeout( 2000 );
 
-   it( `Test Cmd4PriorityPollingQueue.squashError invalid error`, function( done )
-   {
-      let log = new Logger( );
-      log.setBufferEnabled( );
-      log.setOutputEnabled( false );
-      log.setDebugEnabled( );
-
-      let queueName = "Queue A";
-
-      cmd4PriorityPollingQueue = new Cmd4PriorityPollingQueue( log, queueName );
-      expect( cmd4PriorityPollingQueue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "cmd4PollingQueues is not an instance of Cmd4PollingQueues" );
-
-      // Set to 1/2 second for quick testing
-      cmd4PriorityPollingQueue.recoveryTimerInterval = 500;
-
-      cmd4PriorityPollingQueue.startQueue( cmd4PriorityPollingQueue );
-
-      let errNo1 = -355;
-      cmd4PriorityPollingQueue.squashError( cmd4PriorityPollingQueue, errNo1, "test message" );
-
-
-      assert.include( log.logBuf, `[90menablePolling for the first time, queue.safeToDoPollingFlag: false`, `Cmd4PriorityPollingQueue expected stdout received: ${ log.logBuf }` );
-      assert.include( log.errBuf, `[31mUnhandled error: -355 errMsg: test message`, ` Cmd4PriorityPollingQueue expected stderr received: ${ log.errBuf }` );
-
-      assert.equal( log.errLineCount, 1, ` Cmd4PriorityPollingQueue expected only 1 error line ${ log.errBuf }` );
-
-      done( );
-   });
-
    it( `Test recoveryTimer restarts timed message`, function( done )
    {
       let log = new Logger( );
@@ -899,13 +866,12 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
          ]
       };
 
-      let log = new Logger( );
+
+      let cmd4Platform = new Cmd4Platform( null, platformConfig, _api );
+      let log = cmd4Platform.log;
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
-
-
-      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
@@ -967,13 +933,12 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
          ]
       };
 
-      let log = new Logger( );
+
+      let cmd4Platform = new Cmd4Platform( null, platformConfig, _api );
+      let log = cmd4Platform.log;
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
-
-
-      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
@@ -1040,13 +1005,12 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
          ]
       };
 
-      let log = new Logger( );
+
+      let cmd4Platform = new Cmd4Platform( null, platformConfig, _api );
+      let log = cmd4Platform.log;
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
-
-
-      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
@@ -1113,13 +1077,12 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
          ]
       };
 
-      let log = new Logger( );
+
+      let cmd4Platform = new Cmd4Platform( null, platformConfig, _api );
+      let log = cmd4Platform.log;
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
-
-
-      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
@@ -1186,13 +1149,12 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
          ]
       };
 
-      let log = new Logger( );
+
+      let cmd4Platform = new Cmd4Platform( null, platformConfig, _api );
+      let log = cmd4Platform.log;
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
-
-
-      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 

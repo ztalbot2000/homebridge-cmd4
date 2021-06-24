@@ -74,6 +74,8 @@ exports.FS_l                     = "fs";
 exports.GOOGLE_DRIVE_l           = "googleDrive";
 
 // Config Constnts
+exports.DEBUG                    = "Debug";
+exports.DEBUG_l                  = "debug";
 exports.OUTPUTCONSTANTS          = "OutputConstants";
 exports.RESTART_RECOVER          = "RestartRecover";
 exports.STATUSMSG                = "StatusMsg";
