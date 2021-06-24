@@ -16,3 +16,7 @@ exports.PLUGIN_NAME = "homebridge-cmd4";
 // the same device of which a linkedAccessory is not an option.
 exports.arrayOfAllStaggeredPollingCharacteristics = [ ];
 exports.listOfCreatedPriorityQueues = { };
+
+
+// By using our own Logger, we don't trigger others
+exports.cmd4Dbg = false;

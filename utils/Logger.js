@@ -39,6 +39,7 @@ class Logger
       this.errBuf = "";
       this.outputEnabled = true;
       this.bufferEnabled = false;
+      this.debugEnabled = false;
 
       // Added as was set outside the class
       this.timestampEnabled = true;

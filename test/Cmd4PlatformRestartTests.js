@@ -198,9 +198,12 @@ describe( "Testing Cmd4Platform Setup", function( )
 
    it( "Test init Cmd4Platform", function( )
    {
-      let cmd4Platform = new Cmd4Platform( null, TVConfig, _api );
-      let log = cmd4Platform.log;
+      let log = new Logger( );
       log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( );
+
+      let cmd4Platform = new Cmd4Platform( log, TVConfig, _api );
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
@@ -263,6 +266,8 @@ describe( "Testing Cmd4Platform", function( )
       let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
       let cmd4Platform=new Cmd4Platform( log, TVConfig, _api );
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
@@ -284,12 +289,14 @@ describe( "Testing Cmd4Platform", function( )
 
    it( "Test reload of saved Platforms with value change to disk", function( )
    {
-      // We need our own instance as emitting "didFinishLaunching" triggers other testcases
-
-      let cmd4Platform = new Cmd4Platform( null, TVConfig, _api );
-      let log = cmd4Platform.log;
+      let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
+      log.setDebugEnabled( );
+
+      // We need our own instance as emitting "didFinishLaunching" triggers other testcases
+
+      let cmd4Platform = new Cmd4Platform( log, TVConfig, _api );
 
       // Instead of emitting didFinishLaunching which would cause other instances to
       // also do the didFinishLaunching and start their polling as well,

@@ -21,12 +21,18 @@ let HIGH_PRIORITY_SET = 0;
 let HIGH_PRIORITY_GET = 1;
 let LOW_PRIORITY_GET = 2;
 
+let cmd4Dbg = settings.cmd4Dbg;
+
 
 class Cmd4PriorityPollingQueue
 {
    constructor( log, queueName, queueType = constants.DEFAULT_QUEUE_TYPE, queueInterval = constants.DEFAULT_QUEUE_INTERVAL, queueMsg = constants.DEFAULT_QUEUEMSG, queueStatMsgInterval = constants.DEFAULT_QUEUE_STAT_MSG_INTERVAL )
    {
       this.log = log;
+
+      // This works better for Unit testing
+      cmd4Dbg = log.debugEnabled;
+
       this.queueName = queueName;
       this.queueType = queueType;
       this.queueMsg = queueMsg;
@@ -124,7 +130,7 @@ class Cmd4PriorityPollingQueue
       {
          self.queue.squashErrCounter++;
 
-         self.log.debug( `Debug Warning: ${ self.displayName }, Returning cached value for ${ characteristicString }` );
+         if ( cmd4Dbg ) self.log.debug( `Debug Warning: ${ self.displayName }, Returning cached value for ${ characteristicString }` );
          callback( null, self.getStoredValueForIndex( accTypeEnumIndex ) );
 
          return;
@@ -157,11 +163,11 @@ class Cmd4PriorityPollingQueue
       {
          // If the queue mistakenly calls this, then it would also have
          // removed the entry from the queue
-         this.log.debug( chalk.red( `QUEUE ERROR: High priority "Set" queue interrupt attempted: ${ entry.accessory.displayName } ${ entry.characteristicString } inProgressSets:${ entry.accessory.queue.inProgressSets } inProgressGets: ${ entry.accessory.queue.inProgressGets }`));
+         if ( cmd4Dbg ) this.log.debug( chalk.red( `QUEUE ERROR: High priority "Set" queue interrupt attempted: ${ entry.accessory.displayName } ${ entry.characteristicString } inProgressSets:${ entry.accessory.queue.inProgressSets } inProgressGets: ${ entry.accessory.queue.inProgressGets }`));
          return;
       }
 
-      this.log.debug( `Processing high priority queue "Set" entry: ${ entry.accTypeEnumIndex } length: ${ entry.accessory.queue.highPriorityQueue.length }` );
+      if ( cmd4Dbg ) this.log.debug( `Processing high priority queue "Set" entry: ${ entry.accTypeEnumIndex } length: ${ entry.accessory.queue.highPriorityQueue.length }` );
 
       entry.accessory.queue.inProgressSets ++;
       entry.accessory.setValue( entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, entry.stateChangeResponseTime, entry.value, function ( error )
@@ -221,11 +227,11 @@ class Cmd4PriorityPollingQueue
            entry.accessory.queue.inProgressGets > 0 &&
            entry.accessory.queue.queueType == constants.QUEUETYPE_SEQUENTIAL )
       {
-         this.log.debug( `High priority "Get" queue interrupt attempted: ${ entry.accessory.displayName } ${ entry.characteristicString } inProgressSets:${ entry.accessory.queue.inProgressSets } inProgressGets: ${ entry.accessory.queue.inProgressGets }` );
+         if ( cmd4Dbg ) this.log.debug( `High priority "Get" queue interrupt attempted: ${ entry.accessory.displayName } ${ entry.characteristicString } inProgressSets:${ entry.accessory.queue.inProgressSets } inProgressGets: ${ entry.accessory.queue.inProgressGets }` );
          return;
       }
 
-      this.log.debug( `Processing high priority queue "Get" entry: ${ entry.accTypeEnumIndex } isUpdate: ${ entry.queueGetIsUpdate } length: ${ entry.accessory.queue.highPriorityQueue.length }` );
+      if ( cmd4Dbg ) this.log.debug( `Processing high priority queue "Get" entry: ${ entry.accTypeEnumIndex } isUpdate: ${ entry.queueGetIsUpdate } length: ${ entry.accessory.queue.highPriorityQueue.length }` );
 
       entry.accessory.queue.inProgressGets ++;
       let pollingID =  Date.now( );
@@ -275,11 +281,11 @@ class Cmd4PriorityPollingQueue
            entry.accessory.queue.inProgressGets > 0 &&
            entry.accessory.queue.queueType == constants.QUEUETYPE_SEQUENTIAL )
       {
-         this.log.debug( `Low priority "Get" queue interrupt attempted: ${ entry.accessory.displayName } ${ entry.characteristicString }` );
+         if ( cmd4Dbg ) this.log.debug( `Low priority "Get" queue interrupt attempted: ${ entry.accessory.displayName } ${ entry.characteristicString }` );
          return;
       }
 
-      this.log.debug( `Processing low priority queue entry: ${ entry.accTypeEnumIndex }` );
+      if ( cmd4Dbg ) this.log.debug( `Processing low priority queue entry: ${ entry.accTypeEnumIndex }` );
 
       let pollingID =  Date.now( );
       entry.accessory.queue.inProgressGets ++;
@@ -434,7 +440,7 @@ class Cmd4PriorityPollingQueue
          queue.squashErrCounter++;
 
 
-         queue.log.debug( `Debug Warning: squashing ${ nextEntry.accessory.displayName } ${ nextEntry.characteristicString }` );
+         if ( cmd4Dbg ) queue.log.debug( `Debug Warning: squashing ${ nextEntry.accessory.displayName } ${ nextEntry.characteristicString }` );
       } else
       {
          queue.processEntryFromLowPriorityQueue( nextEntry );
@@ -508,7 +514,7 @@ class Cmd4PriorityPollingQueue
 
                   let cachedValue = nextEntry.accessory.getStoredValue( nextEntry.accTypeEnumIndex );
 
-                  queue.log.debug( `Debug Warning: squashing ${ nextEntry.accessory.displayName } ${ nextEntry.characteristicString } Returning cached value ${ cachedValue }` );
+                  if ( cmd4Dbg ) queue.log.debug( `Debug Warning: squashing ${ nextEntry.accessory.displayName } ${ nextEntry.characteristicString } Returning cached value ${ cachedValue }` );
 
                   // Send the cached value
                   nextEntry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ nextEntry.accTypeEnumIndex ].characteristic ).updateValue( cachedValue );
@@ -542,7 +548,7 @@ class Cmd4PriorityPollingQueue
             return;
 
          }
-         // this.log.debug( `RETURNING lastTransactionType: ${ lastTransactionType } inProgressSets: ${  queue.inProgressSets } inProgressGets: ${  queue.inProgressGets } queueStarted: ${ queue.queueStarted } lowQueueLen: ${ queue.lowPriorityQueue.length } hiQueueLen: ${ queue.highPriorityQueue.length }` );
+         // if ( cmd4Dbg ) this.log.debug( `RETURNING lastTransactionType: ${ lastTransactionType } inProgressSets: ${  queue.inProgressSets } inProgressGets: ${  queue.inProgressGets } queueStarted: ${ queue.queueStarted } lowQueueLen: ${ queue.lowPriorityQueue.length } hiQueueLen: ${ queue.highPriorityQueue.length }` );
 
          // wait until transaction is done and calls this function
          return;
@@ -578,7 +584,7 @@ class Cmd4PriorityPollingQueue
              // Noop, Nothing to do
 
           } else {
-             this.log.debug( `Unhandled lastTransactionType: ${ lastTransactionType } inProgressSets: ${  queue.inProgressSets } inProgressGets: ${  queue.inProgressGets } queueStarted: ${ queue.queueStarted } lowQueueLen: ${ queue.lowPriorityQueue.length } hiQueueLen: ${ queue.highPriorityQueue.length }` );
+             if ( cmd4Dbg ) this.log.debug( `Unhandled lastTransactionType: ${ lastTransactionType } inProgressSets: ${  queue.inProgressSets } inProgressGets: ${  queue.inProgressGets } queueStarted: ${ queue.queueStarted } lowQueueLen: ${ queue.lowPriorityQueue.length } hiQueueLen: ${ queue.highPriorityQueue.length }` );
 
           }
       }
@@ -586,15 +592,15 @@ class Cmd4PriorityPollingQueue
 
    enablePollingFirstTime( queue )
    {
-      this.log.debug( `enablePolling for the first time, queue.safeToDoPollingFlag: ${ queue.safeToDoPollingFlag }` );
+      if ( cmd4Dbg ) this.log.debug( `enablePolling for the first time, queue.safeToDoPollingFlag: ${ queue.safeToDoPollingFlag }` );
       if ( queue.safeToDoPollingFlag == false )
       {
-         this.log.debug( `Starting polling interval timer for the first time with interval: ${ queue.variablePollingTimer.iv }` );
+         if ( cmd4Dbg ) this.log.debug( `Starting polling interval timer for the first time with interval: ${ queue.variablePollingTimer.iv }` );
 
          // The interval would have already been set by the queueInterval
          queue.variablePollingTimer.start( ( ) =>
          {
-            this.log.debug( "Polling interval Timer Firing safeToDoPollingFlag: %s", queue.safeToDoPollingFlag );
+            if ( cmd4Dbg ) this.log.debug( "Polling interval Timer Firing safeToDoPollingFlag: %s", queue.safeToDoPollingFlag );
             if ( queue.safeToDoPollingFlag == true )
             {
                queue.safeToDoPollingFlag = false;
@@ -613,7 +619,7 @@ class Cmd4PriorityPollingQueue
       {
          queue.recoveryTimer = setInterval( ( ) =>
          {
-             this.log.debug( `inProgressSets: ${  queue.inProgressSets } inProgressGets: ${  queue.inProgressGets } queueStarted: ${ queue.queueStarted } lowQueueLen: ${ queue.lowPriorityQueue.length } hiQueueLen: ${ queue.highPriorityQueue.length } safeToDoPollingFlag: ${ queue.safeToDoPollingFlag } interval: ${ queue.variablePollingTimer.iv } variablePollingTimer:${ queue.variablePollingTimer } lastGoodReadTime: ${ queue.lastGoodReadTime } recoveryTimerInterval: ${ queue.recoveryTimerInterval }` );
+             if ( cmd4Dbg ) this.log.debug( `inProgressSets: ${  queue.inProgressSets } inProgressGets: ${  queue.inProgressGets } queueStarted: ${ queue.queueStarted } lowQueueLen: ${ queue.lowPriorityQueue.length } hiQueueLen: ${ queue.highPriorityQueue.length } safeToDoPollingFlag: ${ queue.safeToDoPollingFlag } interval: ${ queue.variablePollingTimer.iv } variablePollingTimer:${ queue.variablePollingTimer } lastGoodReadTime: ${ queue.lastGoodReadTime } recoveryTimerInterval: ${ queue.recoveryTimerInterval }` );
 
             // The queue must be started before any recovery can take place
             if ( queue.queueStarted == true )
@@ -621,7 +627,7 @@ class Cmd4PriorityPollingQueue
                // This actually is triggered upon the second interval
                if (  Date.now( ) > queue.lastGoodReadTime + queue.recoveryTimerInterval )
                {
-                  this.log.debug( `Recovery Timer Fixing Polling !!!  safeToDoPollingFlag: ${ queue.safeToDoPollingFlag } inProgressSets: ${ queue.inProgressSets } inProgressGets: ${ queue.inProgressGets } queue.variablePollingTimer.iv: ${ queue.variablePollingTimer.iv } variablePollingTimer: ${ queue.variablePollingTimer } ` );
+                  if ( cmd4Dbg ) this.log.debug( `Recovery Timer Fixing Polling !!!  safeToDoPollingFlag: ${ queue.safeToDoPollingFlag } inProgressSets: ${ queue.inProgressSets } inProgressGets: ${ queue.inProgressGets } queue.variablePollingTimer.iv: ${ queue.variablePollingTimer.iv } variablePollingTimer: ${ queue.variablePollingTimer } ` );
                   if ( queue.variablePollingTimer == null )
                   {
                      // If it is not running, we got bigger problems
@@ -652,7 +658,7 @@ class Cmd4PriorityPollingQueue
                   // Purge the high priority queue or it would grow uncontrollably
                   queue.highPriorityQueue.forEach( ( entry, entryIndex ) =>
                   {
-                     queue.log.debug( `Purging ( ${ entryIndex } ): ${ entry.accessory.displayName } ${ entry.characteristicString } isSet: ${ entry.isSet ? "true" : "false" }` );
+                     if ( cmd4Dbg ) queue.log.debug( `Purging ( ${ entryIndex } ): ${ entry.accessory.displayName } ${ entry.characteristicString } isSet: ${ entry.isSet ? "true" : "false" }` );
                   });
                   queue.highPriorityQueue = [ ];
 
@@ -810,7 +816,7 @@ var parseAddQueueTypes = function ( log, entrys, options )
          log.error( chalk.red( `Error: "${ constants.QUEUE }"  not provided at index ${ entryIndex }` ) );
          process.exit( 448 ) ;
       }
-      log.debug( `calling addQueue: ${ queueName } type: ${ queueType } queueInterval: ${ queueInterval } queueMsg: ${ queueMsg } queueStatMsgInterval: ${ queueStatMsgInterval }` );
+      if ( cmd4Dbg ) log.debug( `calling addQueue: ${ queueName } type: ${ queueType } queueInterval: ${ queueInterval } queueMsg: ${ queueMsg } queueStatMsgInterval: ${ queueStatMsgInterval }` );
       addQueue( log, queueName, queueType, queueInterval, queueMsg, queueStatMsgInterval );
    } );
 }

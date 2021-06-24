@@ -86,11 +86,11 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
 
 
-
       const log = new Logger( );
       log.setBufferEnabled( );
-      log.setDebugEnabled( );
       log.setOutputEnabled( false );
+      log.setDebugEnabled( );
+
       cmd4Accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "Cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -117,15 +117,16 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
       assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 0, `Incorrect number of Initial arrayOfAllStaggeredPollingCharacteristics` );
 
+
       const log = new Logger( );
       log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( );
 
       cmd4Accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
       cmd4Accessory["polling"] = [ { "characteristic": "on", "timeout":3000, "interval": 1 } ];
 
-      log.setDebugEnabled( );
-      log.setOutputEnabled( false );
       cmd4Accessory.determineCharacteristicsToPollForAccessory( cmd4Accessory );
       assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 1, `Incorrect number of arrayOfAllStaggeredPollingCharacteristics` );
 
@@ -151,15 +152,16 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
       assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 0, `Incorrect number of Initial arrayOfAllStaggeredPollingCharacteristics` );
 
+
       const log = new Logger( );
       log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( );
 
       cmd4Accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
       cmd4Accessory["polling"] = [ { "characteristic": "on", "timeout":1234, "interval": 99 } ];
 
-      log.setDebugEnabled( );
-      log.setOutputEnabled( false );
       cmd4Accessory.determineCharacteristicsToPollForAccessory( cmd4Accessory );
       assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 1, `Incorrect number of arrayOfAllStaggeredPollingCharacteristics` );
 
@@ -187,15 +189,16 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
       assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 0, `Incorrect number of Initial arrayOfAllStaggeredPollingCharacteristics` );
 
+
       const log = new Logger( );
       log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( );
 
       cmd4Accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
       cmd4Accessory["polling"] = [ { "characteristic": "on" } ];
 
-      log.setDebugEnabled( );
-      log.setOutputEnabled( false );
       cmd4Accessory.determineCharacteristicsToPollForAccessory( cmd4Accessory );
       assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 1, `Incorrect number of arrayOfAllStaggeredPollingCharacteristics` );
 
@@ -221,15 +224,16 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1, "timeout": 77000, "interval": 22000 };
       assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 0, `Incorrect number of Initial arrayOfAllStaggeredPollingCharacteristics` );
 
+
       const log = new Logger( );
       log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( );
 
       cmd4Accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
       cmd4Accessory["polling"] = [ { "characteristic": "on" } ];
 
-      log.setDebugEnabled( );
-      log.setOutputEnabled( false );
       cmd4Accessory.determineCharacteristicsToPollForAccessory( cmd4Accessory );
       assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 1, `Incorrect number of arrayOfAllStaggeredPollingCharacteristics` );
 
@@ -256,6 +260,7 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
 
       assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 0, `Incorrect number of Initial arrayOfAllStaggeredPollingCharacteristics` );
+
 
       const log = new Logger( );
       log.setBufferEnabled( );
@@ -292,12 +297,12 @@ describe('Testing Cmd4Accessory polling', ( ) =>
 
       assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 0, `Incorrect number of Initial arrayOfAllStaggeredPollingCharacteristics` );
 
-
-      let cmd4Platform = new Cmd4Platform( null, platformConfig, _api );
-      let log = cmd4Platform.log;
+      let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( );
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 

@@ -79,11 +79,12 @@ describe( "Testing Cmd4Accessory", function( )
       };
 
 
-      let cmd4Platform = new Cmd4Platform( null, platformConfig, _api );
-      let log = cmd4Platform.log;
+      let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
@@ -137,11 +138,12 @@ describe( "Testing Cmd4Accessory", function( )
       // Note: We need a characteristic that does not have a verify characteristic
       // because the getSetValueScript can't seem to handle it. At least not yet.
 
-      let cmd4Platform = new Cmd4Platform( null, platformConfig, _api );
-      let log = cmd4Platform.log;
+      let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
@@ -217,11 +219,12 @@ describe( "Testing Cmd4Accessory", function( )
       };
 
 
-      let cmd4Platform = new Cmd4Platform( null, platformConfig, _api );
-      let log = cmd4Platform.log;
+      let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
@@ -301,11 +304,12 @@ describe( "Testing Cmd4Accessory", function( )
       // because the getSetValueScript can't seem to handle it. At least not yet.
 
 
-      let cmd4Platform = new Cmd4Platform( null, platformConfig, _api );
-      let log = cmd4Platform.log;
+      let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
@@ -364,11 +368,12 @@ describe( "Testing Cmd4Accessory", function( )
       };
 
 
-      let cmd4Platform = new Cmd4Platform( null, platformConfig, _api );
-      let log = cmd4Platform.log;
+      let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 

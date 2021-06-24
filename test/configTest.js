@@ -48,7 +48,7 @@ describe( "Testing our config.json", ( ) =>
 
 function testAccessoryConfig ( accessoryConfig )
 {
-   describe( "Testing Device Name:" + accessoryConfig.displayName, ( ) =>
+   describe( "Testing Device Name:" + accessoryConfig.DisplayName, ( ) =>
    {
       for ( let key in accessoryConfig )
       {

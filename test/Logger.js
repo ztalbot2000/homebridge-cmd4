@@ -1,5 +1,9 @@
 "use strict";
 
+// Settings, Globals and Constants
+let settings = require( "../cmd4Settings" );
+// Let logger control logs for Unit Testing
+settings.cmd4Dbg = true;
 
 var _api = new HomebridgeAPI( ); // object we feed to Plugins
 
@@ -127,6 +131,7 @@ describe('A simple logger Test', ( ) =>
       const log = new Logger( );
       log.setOutputEnabled( false );
       log.setBufferEnabled( true );
+      log.setDebugEnabled( false );
 
       let config={ name:      "Test Switch",
                    type:      "Switch",
@@ -183,6 +188,38 @@ describe('A simple logger Test', ( ) =>
       assert.equal( log.logLineCount, 0 , `unexpected number of lines to stdout` );
       assert.include( log.errBuf , "Warning: Fetch:Demo is changing to Cmd4_Mode:Demo to reflect its affect on both Set and Get", `Expected warb logs to stderr ` );
       assert.equal( log.errLineCount, 2 , `unexpected number of lines to stderr` );
+
+   });
+   it( "Test logger performance of NOT enabled message", ( ) =>
+   {
+      const log = new Logger( );
+      log.setOutputEnabled( true );
+      log.setBufferEnabled( false );
+      log.setDebugEnabled( false );
+      let entry = { characteristicString: "testCraracteristic",
+                    accessory:
+                    { displayName: "testDevice",
+                      queue:
+                      { inProgressGets: 0,
+                        inProgressSets: 0
+                      }
+                    }
+                  };
+
+      let logStartTime = process.hrtime( );
+
+      log.debug( `OUTPUT FOR MEASUREMENT High priority "Get" queue interrupt attempted: ${ entry.accessory.displayName } ${ entry.characteristicString } inProgressSets:${ entry.accessory.queue.inProgressSets } inProgressGets: ${ entry.accessory.queue.inProgressGets }` );
+      let logTotalTime = process.hrtime( logStartTime );
+
+      let debug = false;
+      let debugStartTime = process.hrtime( );
+      if ( debug ) log.debug( `OUTPUT FOR MEASUREMENT High priority "Get" queue interrupt attempted: ${ entry.accessory.displayName } ${ entry.characteristicString } inProgressSets:${ entry.accessory.queue.inProgressSets } inProgressGets: ${ entry.accessory.queue.inProgressGets }` );
+      let debugTotalTime = process.hrtime(  debugStartTime );
+
+      let diff = logTotalTime[1] - debugTotalTime[1];
+      console.log( `logTotalTime: ${ logTotalTime[1] } debugTotalTime: ${ debugTotalTime[1] } diff: ${ diff }` );
+
+      assert.isAbove( logTotalTime[1], debugTotalTime[1], `Expected log total time to be greater than debug total time` );
 
    });
 });
