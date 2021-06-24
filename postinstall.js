@@ -18,13 +18,13 @@ const { isUpgrade }  = require( "./utils/versionChecker" );
       {
          console.log( chalk.green( `[UPDATE AVAILABLE] ` ) + `Version ${lv} of ${myPkg.name} is available. Any release notes can be found here: ` + chalk.underline( `${myPkg.changelog}` ) );
       }
-      console.log( chalk.yellow( `HomeBridge-Cmd4 3.0.12+ Important Deprecation Notice:\n` ) );
-      console.log( `State.js will soon be deprecated for Cmd4 Github pages at https://ztalbot2000.github.io/homebridge-cmd4 and some new Example script templates. The Cmd4 Github pages will become the portal for all your Cmd4 Information needs.` );
-      console.log( `For new users who just want to see all the devices working, this would be accomplished with just the pre-existing config.json with full caching enabled.\n` );
+      console.log( chalk.yellow( `HomeBridge-Cmd4 4.0.0+ Important Notice:\n` ) );
+      console.log( `Cmd4 uses a copy of Homebridges logging system so that turning on debugging does not turn on debugging of other plugins.` );
+      console.log( `Debug can be enabled with, "Debug": true in the Cmd4 Platform section or if using config-ui-x, placing "Cmd4" in the DEBUG environmental variable section.\n` );
 
-      console.log( chalk.underline( `HomeBridge-Cmd4 3.0.0+ Notes:\n` ) );
-      console.log( chalk.green( `* ` ) + `For new users, you will need to follow the README to continue the configuration of HomeBridge-CMD4.\n` );
-      console.log( chalk.green( `* ` ) + `If you are upgrading to version 3.0, it is ` + chalk.red( `*Very* ` ) + `important that you read the Changelogs as there are some new options avaliable..\n` );
+      console.log( chalk.underline( `Cmd4 New Users\n` ) );
+      console.log( chalk.green( `* ` ) + `You will need to follow the README to continue the configuration of HomeBridge-CMD4.\n` );
+
       console.log(`\n   As always, if you like this plugin, don't forget to star it on GitHub.\n`);
       console.log(`\n   Enjoy`);
       console.log(`      John Talbot\n`);

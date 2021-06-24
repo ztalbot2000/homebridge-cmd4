@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-4-0-0">**Whats new in 4.0.0**</a>
 * <a href="#Whats-new-in-3-10-1">**Whats new in 3.10.1**</a>
 * <a href="#Whats-new-in-3-10-0">**Whats new in 3.10.0**</a>
 * <a href="#Whats-new-in-3-9-0">**Whats new in 3.9.0**</a>
@@ -61,6 +62,18 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-4-0-0">## Whats new in 4.0.0</a>
+## 4.0.0 (2021-06-24)
+
+##### New Features
+
+*  Cmd4 gets its own logging mechanism ([048af55c](https://github.com/ztalbot2000/homebridge-cmd4/commit/048af55ca078603889e7d951ff897526d9239179))
+
+##### Bug Fixes
+
+*  if the queue is busy, the next Get entry should not even be tried ([56632c3c](https://github.com/ztalbot2000/homebridge-cmd4/commit/56632c3c4f92530242c83548c95a0d8111964d51))
+
 
 <a name="Whats-new-in-3-10-1">## Whats new in 3.10.1</a>
 #### 3.10.1 (2021-06-13)
