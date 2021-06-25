@@ -1,9 +1,6 @@
 "use strict";
 
 
-// Settings, Globals and Constants
-let settings = require( "../cmd4Settings" );
-
 var Cmd4Platform = require( "../Cmd4Platform" ).Cmd4Platform;
 
 describe( "Initializing our CMD4 Libraries ", ( ) => {});
@@ -273,8 +270,6 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
       assert.include( log.logBuf, `[90mCreated platformAccessory: Door`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
       assert.include( log.logBuf, `[33mAdding getCachedValue for Door characteristic: Name`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
       assert.include( log.logBuf, `[33mAdding getValue for Door characteristic: CurrentPosition`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-
-      let expectedErrOutput1 = `[33mWarning, With Cmd4_Mode set to "Polled" and polling for "CurrentPosition" requested, you also must do polling of "TargetPosition" or things will not function properl`;
 
       assert.include( log.errBuf, `[33mWarning, With Cmd4_Mode set to "Polled" and polling for "CurrentPosition" requested, you also must do polling of "TargetPosition" or things will not function properl` , `expected stderr: ${ log.errBuf }` );
       assert.notInclude( log.logBuf, `[33mAdding setValue for Door characteristic: TargetPosition`, ` cmd4Accessory output Unexpected. received: ${ log.logBuf }` );

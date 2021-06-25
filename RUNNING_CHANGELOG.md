@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-4-0-1">**Whats new in 4.0.1**</a>
 * <a href="#Whats-new-in-4-0-0">**Whats new in 4.0.0**</a>
 * <a href="#Whats-new-in-3-10-1">**Whats new in 3.10.1**</a>
 * <a href="#Whats-new-in-3-10-0">**Whats new in 3.10.0**</a>
@@ -62,6 +63,14 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-4-0-1">## Whats new in 4.0.1</a>
+#### 4.0.1 (2021-06-25)
+
+##### Enhancements
+
+*  performance improvement. Cost of every debug log not printed was 300ms ([3c44fab2](https://github.com/ztalbot2000/homebridge-cmd4/commit/3c44fab2800d39deb496cf8d4ad946f3a6368456))
+
 
 <a name="Whats-new-in-4-0-0">## Whats new in 4.0.0</a>
 ## 4.0.0 (2021-06-24)
