@@ -119,9 +119,6 @@ class Cmd4Accessory
       this.listOfVariables = { };
       this.listOfConstants = { };
 
-      // Instead of polling per accessory, allow the config file to be polled per characteristic.
-      this.listOfRunningPolls = { };
-
       // Used to determine missing related characteristics and
       // to determine if the related characteristic is also polled.
       this.listOfPollingCharacteristics = { };
@@ -2630,20 +2627,23 @@ class Cmd4Accessory
                // Used to determine missing related characteristics and
                // to determine if the related characteristic is also polled.
                this.listOfPollingCharacteristics[ accTypeEnumIndex ] = record;
+
                if ( this.queueName == constants.DEFAULT_QUEUE_NAME )
                {
-                  settings.arrayOfAllStaggeredPollingCharacteristics.push( record );
-               } else
-               {
-                     let queue = settings.listOfCreatedPriorityQueues[ `${ record.queueName }` ];
-                     queue.addLowPriorityGetPolledQueueEntry(
-                        record.accessory,
-                        record.accTypeEnumIndex,
-                        record.characteristicString,
-                        record.interval,
-                        record.timeout )
+                  if ( settings.defaultQueue == null )
+                     settings.defaultQueue = addQueue( this.log, constants.DEFAULT_QUEUE_NAME, constants.QUEUE_TYPE_FREE_RUNNING );
 
+                  this.queue = settings.defaultQueue;
                }
+                  // settings.arrayOfAllStaggeredPollingCharacteristics.push( record );
+               let queue = settings.listOfCreatedPriorityQueues[ `${ record.queueName }` ];
+               queue.addLowPriorityGetPolledQueueEntry(
+                  record.accessory,
+                  record.accTypeEnumIndex,
+                  record.characteristicString,
+                  record.interval,
+                  record.timeout )
+
 
             });
             break;
@@ -2738,50 +2738,6 @@ class Cmd4Accessory
       }
    }
 
-   // This is the self-reaccurring routine to poll a characteristic
-   characteristicPolling ( accessory, accTypeEnumIndex, characteristicString, timeout, interval )
-   {
-      let self = accessory;
-
-      if ( cmd4Dbg ) self.log.debug( "Doing Poll of index:%s characteristic:%s for:%s timeout=%s interval=%s", accTypeEnumIndex,
-             characteristicString, self.displayName, timeout, interval );
-
-      // Make sure that the characteristic exists
-      if ( accTypeEnumIndex < 0 )
-      {
-         self.log.error( chalk.red( `Error` ) + `: No Such polling accTypeEnumIndex: ${ accTypeEnumIndex } for: ${ self.displayName }` );
-         process.exit( 263 );
-         return;
-      }
-
-      // Clear polling
-      if ( this.listOfRunningPolls &&
-           this.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] == undefined )
-              clearTimeout( this.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] );
-
-      // i.e. Characteristic.On
-      //      Characteristic.RotationDirection
-
-      accessory.getValue( accTypeEnumIndex, characteristicString, timeout, function ( error, properValue ) {
-      {
-         if ( error == 0 )
-         {
-            if ( cmd4Dbg ) accessory.log.debug( chalk.blue( `characteristicPolling Updating ${ accessory.displayName } ${ characteristicString }` ) + ` ${ properValue }` );
-
-            accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic ).updateValue( properValue );
-         }
-
-      }});
-
-
-
-      // Add the check of this.listOfRunningPolls so that in Unit Testing, we can delete polling 
-      // if we want to.
-      if ( this.listOfRunningPolls )
-         this.listOfRunningPolls[ accessory.displayName + accTypeEnumIndex ] =
-            setTimeout( this.characteristicPolling.bind(
-               this, accessory, accTypeEnumIndex, characteristicString, timeout, interval ), interval );
-   }
 }
 
 // Compare accessory's UUID with those already created for possible duplicates

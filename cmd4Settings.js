@@ -14,7 +14,8 @@ exports.PLUGIN_NAME = "homebridge-cmd4";
 // polled at the same time. Specifically a MyAir that has
 // multiple fans, switches and temperature sensors, all in
 // the same device of which a linkedAccessory is not an option.
-exports.arrayOfAllStaggeredPollingCharacteristics = [ ];
+//exports.arrayOfAllStaggeredPollingCharacteristics = [ ];
+exports.defaultQueue = null;
 exports.listOfCreatedPriorityQueues = { };
 
 

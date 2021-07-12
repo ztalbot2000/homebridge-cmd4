@@ -82,9 +82,10 @@ exports.STATUSMSG                = "StatusMsg";
 exports.QUEUEMSG                 = "QueueMsg";
 exports.QUEUETYPE                = "QueueType";
 exports.QUEUETYPES               = "QueueTypes";
-exports.QUEUETYPE_SEQUENTIAL     = "Sequential";
 exports.QUEUE_INTERVAL           = "QueueInterval";
+exports.QUEUETYPE_SEQUENTIAL     = "Sequential";
 exports.QUEUETYPE_WORM           = "WoRm";
+exports.QUEUETYPE_FREE_RUNNING   = "Free";
 
 
 // Platform Config Constnts
