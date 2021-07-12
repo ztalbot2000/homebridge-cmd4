@@ -670,24 +670,28 @@ class Cmd4Accessory
       if ( isPriority == false )
           QIndicator = "";
 
-      var transposed = { [ constants.VALUE_lv ]: value, [ constants.RC_lv ]: true, [ constants.MSG_lv ]: "" };
+      //var transposed = { [ constants.VALUE_lv ]: value, [ constants.RC_lv ]: true, [ constants.MSG_lv ]: "" };
       if ( self.outputConstants == true )
       {
-         transposed = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value );
+         //transposed = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value );
+         value = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value );
 
-      } else {
-
-         transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value );
       }
-      if ( transposed.rc == false )
-         self.log.warn( `${ self.displayName }: ${ transposed.msg }${ QIndicator }`);
+      //else {
 
-      let valueToSend = transposed.value;
+         //transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value );
+      //}
+      //if ( transposed.rc == false )
+      //   self.log.warn( `${ self.displayName }: ${ transposed.msg }${ QIndicator }`);
 
-      let cmd = self.state_cmd_prefix + self.state_cmd + " Set '" + self.displayName + "' '" + characteristicString  + "' '" + valueToSend  + "'" + self.state_cmd_suffix;
+      //let valueToSend = transposed.value;
+
+      let cmd = self.state_cmd_prefix + self.state_cmd + " Set '" + self.displayName + "' '" + characteristicString  + "' '" + value  + "'" + self.state_cmd_suffix;
 
       if ( self.statusMsg == "TRUE" )
-         self.log.info( chalk.blue( `Setting ${ self.displayName } ${ characteristicString }` ) + ` ${ valueToSend }${ QIndicator }` );
+         self.log.info( chalk.blue( `Setting ${ self.displayName } ${ characteristicString }` ) + ` ${ value }${ QIndicator }` );
+
+      if ( cmd4Dbg ) self.log.debug( `setValue: accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } ${ value }  cmd: ${ cmd }${ QIndicator }` );
 
       // Execute command to Set a characteristic value for an accessory
       exec( cmd, { timeout: timeout }, function ( error, stdout, stderr )
@@ -783,31 +787,34 @@ class Cmd4Accessory
       // a Constant to its valid value.
       // I can't see this happening, but who knows between upgrades
       // or restarts.
-      var transposed = { [ constants.VALUE_lv ]: storedValue, [ constants.RC_lv ]: true, [ constants.MSG_lv ]: "" };
-      transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, storedValue );
-      if ( transposed.rc == false )
-         self.log.warn( `${ self.displayName }: ${ transposed.msg }` );
+      //var transposed = { [ constants.VALUE_lv ]: storedValue, [ constants.RC_lv ]: true, [ constants.MSG_lv ]: "" };
+      //let transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, storedValue );
+      //if ( transposed.rc == false )
+      //   self.log.warn( `${ self.displayName }: ${ transposed.msg }` );
 
-      let transposedValue = transposed.value;
+      // let transposedValue = transposed.value;
 
       // Return the appropriate type, by seeing what it is defined as
       // in Homebridge,
       //let result = self.characteristicValueToItsProperType( self, accTypeEnumIndex, transposedValue );
-      let properValue = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( transposedValue  );
-      if ( properValue == undefined )
-      {
+      //let properValue = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( transposedValue  );
+      //let properValue = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( transposed  );
+      //if ( properValue == undefined )
+      //{
          // If the value is not convertable, just return it.
-         self.log.warn( `${ self.displayName } ` + chalk.red( `Cannot convert value: ${ transposedValue } to ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].properties.format } for ${ characteristicString }`  ) );
+      //   self.log.warn( `${ self.displayName } ` + chalk.red( `Cannot convert value: ${ transposedValue } to ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].properties.format } for ${ characteristicString }`  ) );
 
-         callback( 20, null );
+      //   callback( 20, null );
 
-         return;
-      }
+      //   return;
+      //}
 
-      callback( 0, properValue );
+      //callback( 0, properValue );
+      callback( 0, storedValue );
 
       // Store history using fakegato if set up
-      self.updateAccessoryAttribute( accTypeEnumIndex, properValue );
+      //self.updateAccessoryAttribute( accTypeEnumIndex, properValue );
+      self.updateAccessoryAttribute( accTypeEnumIndex, storedValue );
    }
 
    // ***********************************************
@@ -1055,16 +1062,17 @@ class Cmd4Accessory
 
          // Even if outputConsts is not set, just in case, transpose
          // it anyway.
-         var transposed = { [ constants.VALUE_lv ]: unQuotedReply, [ constants.RC_lv ]: true, [ constants.MSG_lv ]: "" };
-         transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, unQuotedReply )
-         if ( transposed.rc == false )
-            self.log.warn( `${ self.displayName }: ${ transposed.msg }${ QIndicator }` );
+         //var transposed = { [ constants.VALUE_lv ]: unQuotedReply, [ constants.RC_lv ]: true, [ constants.MSG_lv ]: "" };
+         var transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, unQuotedReply )
+         //if ( transposed.rc == false )
+         //   self.log.warn( `${ self.displayName }: ${ transposed.msg }${ QIndicator }` );
 
-         unQuotedReply = transposed.value;
+         //unQuotedReply = transposed.value;
 
          // Return the appropriate type, by seeing what it is
          // defined as in Homebridge,
-         let properValue = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( unQuotedReply );
+         //let properValue = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( unQuotedReply );
+         let properValue = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( transposed );
          if ( properValue == undefined )
          {
             self.log.warn( `${ self.displayName } ` + chalk.red( `Cannot convert value: ${ unQuotedReply } to ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format } for ${ characteristicString }${ QIndicator }` ) );
@@ -1830,13 +1838,13 @@ class Cmd4Accessory
       if ( Object.keys( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].validValues ).length > 0 )
       {
          // Even if outputConsts is not set, just in case, transpose it anyway.
-         var transposed = { [ constants.VALUE_lv ]: value, [ constants.RC_lv ]: true, [ constants.MSG_lv ]: "" };
-         transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value ) ;
+         //var transposed = { [ constants.VALUE_lv ]: value, [ constants.RC_lv ]: true, [ constants.MSG_lv ]: "" };
+         value = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value ) ;
 
-         if ( transposed.rc == false )
-            this.log.warn( `${ this.displayName }: ${ transposed.msg }` );
+         //if ( transposed.rc == false )
+         //   this.log.warn( `${ this.displayName }: ${ transposed.msg }` );
 
-         value = transposed.value;
+         //value = transposed.value;
       }
 
       // Return the appropriate type, by seeing what it is defined as in Homebridge,

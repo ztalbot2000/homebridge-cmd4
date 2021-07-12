@@ -22,7 +22,6 @@ let LOW_PRIORITY_GET = 2;
 
 let cmd4Dbg = settings.cmd4Dbg;
 
-
 class Cmd4PriorityPollingQueue
 {
    constructor( log, queueName, queueType = constants.DEFAULT_QUEUE_TYPE, queueMsg = constants.DEFAULT_QUEUEMSG, queueStatMsgInterval = constants.DEFAULT_QUEUE_STAT_MSG_INTERVAL )
@@ -62,10 +61,7 @@ class Cmd4PriorityPollingQueue
    {
       let self = this;
 
-      // Call the callback immediately as we will call updateValue
-      callback( );
-
-      let newEntry = { [ constants.IS_SET_lv ]: true, [ constants.ACCESSORY_lv ]: self, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.VALUE_lv ]: value };
+      let newEntry = { [ constants.IS_SET_lv ]: true, [ constants.ACCESSORY_lv ]: self, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.CALLBACK_lv ]: callback, [ constants.VALUE_lv ]: value };
 
       // Determine wherebto put theventry in the queue
       if ( self.queue.highPriorityQueue.length == 0 )
@@ -106,10 +102,6 @@ class Cmd4PriorityPollingQueue
    priorityGetValue( accTypeEnumIndex, characteristicString, timeout, callback )
    {
       let self = this;
-
-      // Call the callback immediately as we will call updateValue
-      // Homebridge does not like an empty callback for "Gets"
-      callback( null, self.getStoredValueForIndex( accTypeEnumIndex ) );
 
       self.queue.highPriorityQueue.push( { [ constants.IS_SET_lv ]: false, [ constants.QUEUE_GET_IS_UPDATE_lv ]: false, [ constants.ACCESSORY_lv ]: self, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: null, [ constants.VALUE_lv ]: null, [ constants.CALLBACK_lv ]: callback } );
 
@@ -219,9 +211,9 @@ class Cmd4PriorityPollingQueue
          // Nothing special was done for casing on errors, so omit it.
          if ( error == 0 )
          {
-            //if ( entry.queueGetIsUpdate == false )
-            //   entry.callback( error, properValue );
-            //else
+            if ( entry.queueGetIsUpdate == false )
+               entry.callback( error, properValue );
+            else
                entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( properValue );
 
              // A good anything, updates the lastGoodTransactionTime

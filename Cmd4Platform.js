@@ -760,62 +760,13 @@ class Cmd4Platform
       cmd4PlatformAccessory.setupAccessoryFakeGatoService( cmd4PlatformAccessory.fakegatoConfig );
    }
 
-   startStaggeredPolling( staggeredPollingArray )
-   {
-      let delay = 0;
-      let staggeredDelays = [ 3000, 6000, 9000, 12000 ];
-      let staggeredDelaysLength = staggeredDelays.length;
-      let staggeredDelayIndex = 0;
-      let lastAccessoryUUID = ""
-
-      staggeredPollingArray.forEach( ( entry, entryIndex )  =>
-      {
-         setTimeout( ( ) =>
-         {
-            if ( entryIndex == 0 )
-               entry.accessory.log.info( `Started staggered kick off of ${ staggeredPollingArray.length } polled characteristics` );
-
-            if ( cmd4Dbg ) entry.accessory.log.debug( `Kicking off polling for: ${ entry.accessory.displayName } ${ entry.characteristicString } interval:${ entry.interval }, staggered:${ staggeredDelays[ staggeredDelayIndex ] }` );
-            entry.accessory.listOfRunningPolls[ entry.accessory.displayName + entry.accTypeEnumIndex ] =
-               setTimeout( entry.accessory.characteristicPolling.bind(
-                  entry.accessory, entry.accessory, entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, entry.interval ), entry.interval );
-
-            if ( entryIndex == settings.arrayOfAllStaggeredPollingCharacteristics.length -1 )
-               entry.accessory.log.info( `All characteristics are now being polled` );
-
-         }, delay );
-
-
-         if ( staggeredDelayIndex++ >= staggeredDelaysLength )
-            staggeredDelayIndex = 0;
-
-         if ( lastAccessoryUUID != entry.accessory.UUID )
-            staggeredDelayIndex = 0;
-
-         lastAccessoryUUID = entry.accessory.UUID;
-
-         delay += staggeredDelays[ staggeredDelayIndex ];
-
-      });
-   }
-
    // The delay definitions are not meant to be changed, except for unit testing
    // ==========================================================================
    // staggeredStartDelay - These would be for just polling and to be nice to the system.
    // queuedStartDelay - As this is both IOS and polling, the delay only happens to 
    // the low priority polling.
-   startPolling( staggeredStartDelay = 30000, queuedStartDelay = 40000 )
+   startPolling( queuedStartDelay = 40000 )
    {
-      if ( settings.arrayOfAllStaggeredPollingCharacteristics.length > 0 )
-      {
-         let pollingTimer = setTimeout( ( ) =>
-         {
-            this.startStaggeredPolling( settings.arrayOfAllStaggeredPollingCharacteristics );
-         }, staggeredStartDelay );
-
-         this.pollingTimers.push( pollingTimer );
-      }
-
       // Check for any queued characteristics
       if ( Object.keys( settings.listOfCreatedPriorityQueues ).length == 0 )
       {

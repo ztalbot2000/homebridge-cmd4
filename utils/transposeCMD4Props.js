@@ -29,7 +29,8 @@ var transposeConstantToValidValue = function ( CMD4_ENUM_properties_obj, accType
    {
       // Return the original as it should be used instead of nothing
       // This is not a failure
-      return { "value": constantString, "rc": true, "msg": `Non Convertible characteristic ${ constantString } for ${ CMD4_ENUM_properties_obj[ accTypeEnumIndex ].type }` };
+      //return { "value": constantString, "rc": true, "msg": `Non Convertible characteristic ${ constantString } for ${ CMD4_ENUM_properties_obj[ accTypeEnumIndex ].type }` };
+      return constantString;
    }
 
    // In case constantString is not a string, ie false
@@ -38,17 +39,19 @@ var transposeConstantToValidValue = function ( CMD4_ENUM_properties_obj, accType
 
    if ( Object.prototype.hasOwnProperty.call( CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues, ucConstantString ) )
    {
-      let value = CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues[ ucConstantString ];
+      // let value = CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues[ ucConstantString ];
+      return CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues[ ucConstantString ];
 
-      return { "value": value, "rc": true, "msg": "Transpose success" };
+      //return { "value": value, "rc": true, "msg": "Transpose success" };
    }
 
    // What if it is already transposed correctly?
-   let constant = extractKeyValue( CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues, constantString );
-   if ( constant == undefined || constant == null )
-       return { "value": constantString, "rc": false, "msg": `Cannot convert ${ constantString } to a value for ${ CMD4_ENUM_properties_obj[ accTypeEnumIndex ].type }` };
-   else
-      return { "value": constantString, "rc": true, "msg": "Already transposed" };
+   // let constant = extractKeyValue( CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues, constantString );
+   // if ( constant == undefined || constant == null )
+   //     return { "value": constantString, "rc": false, "msg": `Cannot convert ${ constantString } to a value for ${ CMD4_ENUM_properties_obj[ accTypeEnumIndex ].type }` };
+   //else
+   //   return { "value": constantString, "rc": true, "msg": "Already transposed" };
+   return constantString;
 }
 
 // Used to convet ValidValues Value to its corresponding Constant.
@@ -58,7 +61,8 @@ var transposeValueToValidConstant = function ( CMD4_ENUM_properties_obj, accType
    {
       // Return the original as it should be used instead of nothing
       // This is not a failure
-      return { "value": valueString, "rc": true, "msg": `Non Convertible characteristic ${ valueString } for ${ CMD4_ENUM_properties_obj[ accTypeEnumIndex ].type }` };
+      //return { "value": valueString, "rc": true, "msg": `Non Convertible characteristic ${ valueString } for ${ CMD4_ENUM_properties_obj[ accTypeEnumIndex ].type }` };
+      return valueString;
    }
 
    let constant = extractKeyValue( CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues, valueString );
@@ -66,14 +70,17 @@ var transposeValueToValidConstant = function ( CMD4_ENUM_properties_obj, accType
    if ( constant == undefined || constant == null )
    {
       // What if it is already transposed correctly?
-      let value = CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues[ valueString ];
-      if ( value == undefined || value == null )
-         return { "value": valueString, "rc": false, "msg": `Cannot convert ${ valueString } to a constant for ${ CMD4_ENUM_properties_obj[ accTypeEnumIndex ].type }` };
-      else
-         return { "value": valueString, "rc": true, "msg": "Already transposed" };
+      //let value = CMD4_ENUM_properties_obj[ accTypeEnumIndex ].validValues[ valueString ];
+      //if ( value == undefined || value == null )
+      //   return { "value": valueString, "rc": false, "msg": `Cannot convert ${ valueString } to a constant for ${ CMD4_ENUM_properties_obj[ accTypeEnumIndex ].type }` };
+      //else
+      //   return { "value": valueString, "rc": true, "msg": "Already transposed" };
+
+      return valueString;
    }
 
-   return { "value": constant, "rc": true, "msg": "Transpose success" };
+   // return { "value": constant, "rc": true, "msg": "Transpose success" };
+   return constant;
 }
 
 
