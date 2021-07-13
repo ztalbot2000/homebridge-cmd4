@@ -174,11 +174,8 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
 
       assert.equal( cmd4Platform.createdCmd4Accessories.length, 1, ` Cmd4Platform did not create the cmd4Accessory` );
 
-      let expectedOutput1 = `Adding new platformAccessory: My_Door`;
-      let expectedOutput2 = `35mConfiguring platformAccessory: \u001b[39mMy_Door`;
-
-      assert.include( log.logBuf, expectedOutput1, ` Cmd4Platform missing message of new platform accessory being created` );
-      assert.include( log.logBuf, expectedOutput2, ` Cmd4Platform missing message of Configuring platform accessory` );
+      assert.include( log.logBuf, `Adding new platformAccessory: My_Door`, ` Cmd4Platform Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `35mConfiguring platformAccessory: \u001b[39mMy_Door`, ` Cmd4Platform Incorrect stdout: ${ log.logBuf}` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, `cmd4Platform did not create an instance of Cmd4Accessory` );

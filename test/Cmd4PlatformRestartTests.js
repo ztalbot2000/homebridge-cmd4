@@ -324,13 +324,10 @@ describe( "Testing Cmd4Platform", function( )
       {
          assert.equal( rc, null, `setCachedValue expected: zero received: ${ rc }` );
 
-         let expectedOutput = "[34mSetting (Cached) Example TV ConfiguredName\u001b[39m NEW_TV";
-
-         assert.include( log.logBuf, expectedOutput, `setCachedValue output failed: ${ expectedOutput } received: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[34mSetting (Cached) Example TV ConfiguredName\u001b[39m NEW_TV`, `setCachedValue Incorrect stdout: ${ log.logBuf }` );
 
          let result = cmd4Accessory.getStoredValueForIndex( acc );
-         let expectedResult = newValue;
-         assert.equal( result, expectedResult, " setCachedValue expected: " + expectedResult + " found: " + result );
+         assert.equal( result, newValue, " setCachedValue Incorrect result" );
 
          // Clear the log buffer for next time.
          log.reset();
@@ -355,7 +352,7 @@ describe( "Testing Cmd4Platform", function( )
 
          cmd4Accessory = cmd4Platform2.createdCmd4Accessories[4];
          let newFoundConfiguredName = cmd4Accessory.getStoredValueForIndex( acc );
-         assert.equal( newFoundConfiguredName, expectedResult, `Incorrect configuredName: ${  newFoundConfiguredName }` );
+         assert.equal( newFoundConfiguredName, newValue, `Incorrect configuredName: ${  newFoundConfiguredName }` );
 
       });
 

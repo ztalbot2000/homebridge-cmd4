@@ -342,10 +342,8 @@ describe( "Testing Cmd4Accessory", function( )
       // We have to wait for the failing getValue to timeout to capture the log messages;
       setTimeout(() =>
       {
-         let expectedOutput = `getValue: Mute function for: My_Television returned an empty string ""`;
-
-         assert.include( log.errBuf, expectedOutput, ` getValue stdErr output expected: ${ expectedOutput } received: ${ log.errBuf }` );
-         assert.equal( log.logBuf, "", ` getValue output expected: "" received: ${ log.errBuf }` );
+         assert.include( log.errBuf, `getValue: Mute function for: My_Television returned an empty string ""`, ` getValue Incorrect stderr: ${ log.errBuf }` );
+         assert.equal( log.logBuf, "", ` getValue Unexpected stdout: ${ log.errBuf }` );
 
          done( );
 
@@ -371,10 +369,7 @@ describe( "Testing Cmd4Accessory", function( )
       // We have to wait for the failing getValue to timeout to capture the log messages;
       setTimeout(() =>
       {
-         let expectedOutput = `getValue: "null" returned from stdout for Mute My_Television`;
-
-
-         assert.include( log.errBuf, expectedOutput, ` getValue output expected: ${ expectedOutput } received: ${ log.errBuf }` );
+         assert.include( log.errBuf, `getValue: "null" returned from stdout for Mute My_Television`, ` getValue Incorrect stderr: ${ log.errBuf }` );
 
          done( );
 
@@ -400,10 +395,8 @@ describe( "Testing Cmd4Accessory", function( )
       // We have to wait for the failing getValue to timeout to capture the log messages;
       setTimeout(() =>
       {
-         // let expectedOutput = `getValue Mute function failed for My_Television cmd: ./test/echoScripts/echo_true_withRcOf1 Get 'My_Television' 'Mute' Failed.  replyCount: 1 Error: 1`;
-
          // There is no longer a failingberror message as only the first message is now sent
-         //assert.include( log.errBuf, expectedOutput, ` getValue stdErr output expected: ${ expectedOutput } received: ${ log.errBuf }` );
+         //assert.include( log.errBuf, `getValue Mute function failed for My_Television cmd: ./test/echoScripts/echo_true_withRcOf1 Get 'My_Television' 'Mute' Failed.  replyCount: 1 Error: 1`, ` getValue Incorrect stderr: ${ log.errBuf }` );
          assert.equal( log.logBuf, "", ` getValue output expected: "" received: ${ log.errBuf }` );
 
          done( );
@@ -431,10 +424,7 @@ describe( "Testing Cmd4Accessory", function( )
       // We have to wait for the failing getValue to timeout to capture the log messages;
       setTimeout(() =>
       {
-         let expectedOutput = `getValue: Mute function for My_Television returned the string ""NULL""`;
-
-
-         assert.include( log.errBuf, expectedOutput, ` getValue output expected: ${ expectedOutput } received: ${ log.errBuf }` );
+         assert.include( log.errBuf, `getValue: Mute function for My_Television returned the string ""NULL""`, ` getValue Incorrect stderr: ${ log.errBuf }` );
 
          done( );
 
@@ -458,10 +448,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout(() =>
       {
-         let expectedOutput = `getValue: Mute function for: My_Television returned an empty string "" ""`;
-
-
-         assert.include( log.errBuf, expectedOutput, ` getValue output expected: ${ expectedOutput } received: ${ log.errBuf }` );
+         assert.include( log.errBuf, `getValue: Mute function for: My_Television returned an empty string "" ""`, ` getValue Incorrect stdout: ${ log.errBuf }` );
          done( );
 
       }, 1000 );
@@ -483,9 +470,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout(() =>
       {
-         let expectedOutput = "This message goes to stderr";
-         assert.include( log.errBuf, expectedOutput, ` getValue stdErr output expected: ${ expectedOutput } received: ${ log.errBuf }` );
-         assert.equal( log.logBuf, "", ` getValue output expected: "" received: ${ log.errBuf }` );
+         assert.include( log.errBuf, "This message goes to stderr", ` getValue Incorrect stderr: ${ log.errBuf }` );
+         assert.equal( log.logBuf, "", ` getValue Unexpected stdout: ${ log.errBuf }` );
 
          done( );
 

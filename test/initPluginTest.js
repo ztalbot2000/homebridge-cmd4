@@ -184,9 +184,8 @@ describe( `Testing index.js plugin Initialized variables.`, ( ) =>
 
       apiInstance.emit("didFinishLaunching");
 
-      let expectedOutput = `Cmd4Platform didFinishLaunching`;
-      assert.include( log.logBuf, expectedOutput, `didFinishLaunching not called result: ${ log.logBuf }` );
-      assert.equal( log.errBuf, "", ` cmd4Platform unexpected error output received: ${ log.errBuf }` );
+      assert.include( log.logBuf, `Cmd4Platform didFinishLaunching`, `didFinishLaunching Incorrect stdout: ${ log.logBuf }` );
+      assert.equal( log.errBuf, "", ` cmd4Platform Unexpected stderr: ${ log.errBuf }` );
 
    });
    */
