@@ -86,7 +86,7 @@ describe( `Testing transposeConstantToValidValue`, ( ) =>
 
       let transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, constantToBeChecked );
 
-      expect( transposed.value ).to.equal( expectedResult, `transposeConstantToValidValue from ${ constantToBeChecked } returned ${ transposed.value } instead of ${ expectedResult } for ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
+      expect( transposed ).to.equal( expectedResult, `transposeConstantToValidValue from ${ constantToBeChecked } returned ${ transposed } instead of ${ expectedResult } for ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
    });
 
    it( `transposeConstantToValidValue should return correct constant for 0-INACTIVE `, ( ) =>
@@ -98,7 +98,7 @@ describe( `Testing transposeConstantToValidValue`, ( ) =>
 
       let transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, constantToBeChecked );
 
-      expect( transposed.value ).to.equal( expectedResult, `transposeConstantToValidValue from ${ constantToBeChecked } returned ${ transposed.value } instead of ${ expectedResult } for ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
+      expect( transposed ).to.equal( expectedResult, `transposeConstantToValidValue from ${ constantToBeChecked } returned ${ transposed } instead of ${ expectedResult } for ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
    });
 
    it( `transposeConstantToValidValue should return correct constant for 0-iNACTIVE`, ( ) =>
@@ -110,7 +110,7 @@ describe( `Testing transposeConstantToValidValue`, ( ) =>
 
       let transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, constantToBeChecked );
 
-      expect( transposed.value ).to.equal( expectedResult, `transposeConstantToValidValue from ${ constantToBeChecked } returned ${ transposed.value } instead of ${ expectedResult } for ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
+      expect( transposed ).to.equal( expectedResult, `transposeConstantToValidValue from ${ constantToBeChecked } returned ${ transposed } instead of ${ expectedResult } for ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
    });
 
    it( `transposeConstantToValidValue should return correct constant for 1-ACTIVE `, ( ) =>
@@ -122,7 +122,7 @@ describe( `Testing transposeConstantToValidValue`, ( ) =>
 
       let transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, constantToBeChecked );
 
-      expect( transposed.value ).to.equal( expectedResult, `transposeConstantToValidValue from ${ constantToBeChecked } returned ${ transposed.value } instead of ${ expectedResult } for ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
+      expect( transposed ).to.equal( expectedResult, `transposeConstantToValidValue from ${ constantToBeChecked } returned ${ transposed } instead of ${ expectedResult } for ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
    });
 
    it( `transposeConstantToValidValue should return correct value 1 for constant "TRUE"`, ( ) =>
@@ -134,7 +134,7 @@ describe( `Testing transposeConstantToValidValue`, ( ) =>
 
       let transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, constantToBeChecked );
 
-      expect( transposed.value ).to.equal( expectedResult, `transposeConstantToValidValue from ${ constantToBeChecked } returned ${ transposed.value } instead of ${ expectedResult } for ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
+      expect( transposed ).to.equal( expectedResult, `transposeConstantToValidValue from ${ constantToBeChecked } returned ${ transposed } instead of ${ expectedResult } for ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
    });
 });
 
@@ -150,7 +150,7 @@ describe( `Testing transposeValueToValidConstant`, ( ) =>
 
       let transposed = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, valueToBeChecked );
 
-      expect( transposed.value ).to.equal( expectedResult, `transposeValueToValidConstant from ${ valueToBeChecked } returned ${ transposed.value } instead of ${ expectedResult } for ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
+      expect( transposed ).to.equal( expectedResult, `transposeValueToValidConstant from ${ valueToBeChecked } returned ${ transposed } instead of ${ expectedResult } for ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
    });
 
    it( `transposeValueToValidConstant should return correct constant for 0-INACTIVE`, ( ) =>
@@ -162,7 +162,7 @@ describe( `Testing transposeValueToValidConstant`, ( ) =>
 
       let transposed = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, valueToBeChecked );
 
-      expect( transposed.value ).to.equal( expectedResult, `transposeValueToValidConstant from ${ valueToBeChecked } returned ${ transposed.value } instead of ${ expectedResult } for ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
+      expect( transposed ).to.equal( expectedResult, `transposeValueToValidConstant from ${ valueToBeChecked } returned ${ transposed } instead of ${ expectedResult } for ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
    });
 
    it( `transposeValueToValidConstant should return correct constant for 1-ACTIVE`, ( ) =>
@@ -174,7 +174,7 @@ describe( `Testing transposeValueToValidConstant`, ( ) =>
 
       let transposed = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, valueToBeChecked );
 
-      expect( transposed.value ).to.equal( expectedResult, `transposeValueToValidConstant from ${ valueToBeChecked } returned ${ transposed.value } instead of ${ expectedResult } for ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
+      expect( transposed ).to.equal( expectedResult, `transposeValueToValidConstant from ${ valueToBeChecked } returned ${ transposed } instead of ${ expectedResult } for ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
    });
 
    it( `transposeValueToValidConstant should return correct constant for value 1`, ( ) =>
@@ -186,7 +186,7 @@ describe( `Testing transposeValueToValidConstant`, ( ) =>
 
       let transposed = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, valueToBeChecked );
 
-      expect( transposed.value ).to.equal( expectedResult, `transposeValueToValidConstant from ${ valueToBeChecked } returned ${ transposed.value } instead of ${ expectedResult } for ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
+      expect( transposed ).to.equal( expectedResult, `transposeValueToValidConstant from ${ valueToBeChecked } returned ${ transposed } instead of ${ expectedResult } for ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
    });
 });
 
@@ -252,9 +252,7 @@ describe( `Testing all Possible transposeConstantToValidValue`, ( ) =>
    {
       let  accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TemperatureDisplayUnits;
       let transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, "CELSIUS");
-      expect( transposed.value ).to.equal( _api.hap.Characteristic.TemperatureDisplayUnits.CELSIUS, `transposeConstantTo from CELSIUS returned incorrect value`  );
-      expect( transposed.rc ).to.equal( true, `transposeConstantTo failed`  );
-      expect( transposed.msg ).to.equal( "Transpose success", `transposeConstantTo from CELSIUS returned incorrect msg`  );
+      expect( transposed ).to.equal( _api.hap.Characteristic.TemperatureDisplayUnits.CELSIUS, `transposeConstantTo from CELSIUS returned incorrect value`  );
    });
    // Test constantToValidValue mispelled CELSIUS - CELcIUS
    it( `transposeConstantToValidValue for incorrectly spelled "CELciUS" should fail`, ( ) =>
@@ -262,27 +260,21 @@ describe( `Testing all Possible transposeConstantToValidValue`, ( ) =>
       let  accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TemperatureDisplayUnits;
       let badInput = "CELcIUS";
       let transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, badInput );
-      expect( transposed.value ).to.equal( badInput, `transposeConstantTo from ${ badInput } returned incorrect value` );
-      expect( transposed.rc ).to.equal( false, `transposeConstantTo should fail`  );
-      expect( transposed.msg ).to.equal( `Cannot convert ${ badInput } to a value for TemperatureDisplayUnits`, `transposeConstantTo from CELSIUS returned incorrect msg` );
+      expect( transposed ).to.equal( badInput, `transposeConstantTo from ${ badInput } returned incorrect value` );
    });
 
    it( `transposeConstantToValidValue for: "FAHRENHEIT" should return expected value`, ( ) =>
    {
       let  accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TemperatureDisplayUnits;
       let transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, "FAHRENHEIT");
-      expect( transposed.value ).to.equal( _api.hap.Characteristic.TemperatureDisplayUnits.FAHRENHEIT, `transposeConstantTo from "FAHRENHEIT" returned incorrect value`  );
-      expect( transposed.rc ).to.equal( true, `transposeConstantTo failed` );
-      expect( transposed.msg ).to.equal( "Transpose success", `transposeConstantTo from FAHRENHEIT returned incorrect msg` );
+      expect( transposed ).to.equal( _api.hap.Characteristic.TemperatureDisplayUnits.FAHRENHEIT, `transposeConstantTo from "FAHRENHEIT" returned incorrect value`  );
    });
 
    it( `transposeValueToValidConstant for: 1 should return expected "FAHRENHEIT"`, ( ) =>
    {
       let  accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TemperatureDisplayUnits;
       let transposed = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, _api.hap.Characteristic.TemperatureDisplayUnits.FAHRENHEIT);
-      expect( transposed.value ).to.equal( "FAHRENHEIT", `transposeValueTo from 1 returned incorrect constant` );
-      expect( transposed.rc ).to.equal( true, `transposeValueTo failed`  );
-      expect( transposed.msg ).to.equal( "Transpose success", `transposeValidValueTo from 1 returned incorrect msg` );
+      expect( transposed ).to.equal( "FAHRENHEIT", `transposeValueTo from 1 returned incorrect constant` );
    });
 
    it( `transposeValueToValidConstant for: 3 should fail as expected`, ( ) =>
@@ -290,54 +282,42 @@ describe( `Testing all Possible transposeConstantToValidValue`, ( ) =>
       let  accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TemperatureDisplayUnits;
       let badInput = 3;
       let transposed = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, badInput);
-      expect( transposed.value ).to.equal( badInput, `transposeValueTo from ${ badInput } returned incorrect value` );
-      expect( transposed.rc ).to.equal( false, `transposeValueTo should fail`  );
-      expect( transposed.msg ).to.equal( `Cannot convert ${ badInput } to a constant for TemperatureDisplayUnits`, `transposeConstantTo from ${ badInput } returned incorrect msg` );
+      expect( transposed ).to.equal( badInput, `transposeValueTo from ${ badInput } returned incorrect value` );
    });
 
    it( `transposeValueToValidConstant SENDING "FAHRENHEIT", should return "FAHRENHEIT" and say already transposed`, ( ) =>
    {
       let  accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TemperatureDisplayUnits;
       let transposed = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, "FAHRENHEIT");
-      expect( transposed.value ).to.equal( "FAHRENHEIT", `transposeValueTo from 1 returned incorrect constant` );
-      expect( transposed.rc ).to.equal( true, `transposeValueTo failed`  );
-      expect( transposed.msg ).to.equal( "Already transposed", `transposeValidValueTo from 1 returned incorrect msg` );
+      expect( transposed ).to.equal( "FAHRENHEIT", `transposeValueTo from 1 returned incorrect constant` );
    });
 
    it( `transposeConstantToValidValue SENDING "1", should return "1" (FAHRENHEIT) and say already transposed`, ( ) =>
    {
       let  accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TemperatureDisplayUnits;
       let transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, 1);
-      expect( transposed.value ).to.equal( 1, `transposeConstantTo from 1 returned incorrect value` );
-      expect( transposed.rc ).to.equal( true, `transposeConstantTo failed`  );
-      expect( transposed.msg ).to.equal( "Already transposed", `transposeConstantTo from 1 returned incorrect msg` );
+      expect( transposed ).to.equal( 1, `transposeConstantTo from 1 returned incorrect value` );
    });
 
    it( `transposeConstantToValidValue To characteristic with no valid values should fail approperiately.`, ( ) =>
    {
       let  accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ActiveIdentifier;
       let transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, 1);
-      expect( transposed.value ).to.equal( 1, `transposeConstantTo from 1 returned incorrect value` );
-      expect( transposed.rc ).to.equal( true, `transposeConstantTo should fail`  );
-      expect( transposed.msg ).to.equal( "Non Convertible characteristic 1 for ActiveIdentifier", `transposeConstantTo from 1 returned incorrect msg` );
+      expect( transposed ).to.equal( 1, `transposeConstantTo from 1 returned incorrect value` );
    });
 
    it( `transposeValueToValidConstant To characteristic with no valid values should fail approperiately.`, ( ) =>
    {
       let  accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.ActiveIdentifier;
       let transposed = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, "BLAST");
-      expect( transposed.value ).to.equal( "BLAST", `transposeValueTo from "BLAST" returned incorrect value` );
-      expect( transposed.rc ).to.equal( true, `transposeValueTo should fail`  );
-      expect( transposed.msg ).to.equal( "Non Convertible characteristic BLAST for ActiveIdentifier", `transposeValueTo from 1 returned incorrect msg` );
+      expect( transposed ).to.equal( "BLAST", `transposeValueTo from "BLAST" returned incorrect value` );
    });
 
    it( `transposeConstantToValidValue for: "1" should pass as expected`, ( ) =>
    {
       let  accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Active;
       let transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, "1");
-      expect( transposed.value ).to.equal( "1", `transposeValueTo from "1" returned incorrect value` );
-      expect( transposed.rc ).to.equal( true, `transposeValueTo failed`  );
-      expect( transposed.msg ).to.equal( "Already transposed", `transposeConstantTo from 1 returned incorrect msg` );
+      expect( transposed ).to.equal( "1", `transposeValueTo from "1" returned incorrect value` );
    });
 
    it( `transposeConstantToValidValue for: "ENABLED" should fail as expected`, ( ) =>
@@ -346,14 +326,8 @@ describe( `Testing all Possible transposeConstantToValidValue`, ( ) =>
       let  accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.Active;
       let data = "ENABLED"
       let transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, data);
-      expect( transposed.value ).to.equal( data, `transposeValueTo from "${ data } " returned incorrect value: ${ transposed }` );
-      expect( transposed.rc ).to.equal( false, `transposeValueTo failed`  );
-      expect( transposed.msg ).to.equal( "Cannot convert ENABLED to a value for Active", `transposeConstantTo from ${ data } returned incorrect msg` );
+      expect( transposed ).to.equal( data, `transposeValueTo from "${ data } " returned incorrect value: ${ transposed }` );
    });
-
-
-
-
 });
 
 
@@ -386,14 +360,14 @@ function testTransposeConstantTo( CMD4_ENUM_properties_obj, accTypeEnumIndex, vi
 
       let transposed = transposeConstantToValidValue( CMD4_ENUM_properties_obj, accTypeEnumIndex, key);
 
-      it( `transposeConstantToValidValue for: ${ CMD4_ENUM_properties_obj[accTypeEnumIndex].type } should return expected value: ${ transposed.value } for key: ${ key }`, ( ) =>
+      it( `transposeConstantToValidValue for: ${ CMD4_ENUM_properties_obj[accTypeEnumIndex].type } should return expected value: ${ transposed } for key: ${ key }`, ( ) =>
       {
          if ( shouldPass )
          {
-            expect( valueThatShouldBeReturned ).to.equal( transposed.value, `transposeConstantTo from ${ key } returned ${ transposed.value } instead of ${ valueThatShouldBeReturned } for ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
+            expect( valueThatShouldBeReturned ).to.equal( transposed, `transposeConstantTo from ${ key } returned ${ transposed } instead of ${ valueThatShouldBeReturned } for ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
          } else
          {
-            expect( valueThatShouldBeReturned ).to.not.equal( transposed.value, `transposeConstantTo from ${ key } returned ${ transposed.value } instead of ${ valueThatShouldBeReturned } for ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
+            expect( valueThatShouldBeReturned ).to.not.equal( transposed, `transposeConstantTo from ${ key } returned ${ transposed } instead of ${ valueThatShouldBeReturned } for ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
          }
       });
 
@@ -424,10 +398,10 @@ function testTransposeValueTo( CMD4_ENUM_properties_obj, accTypeEnumIndex, vinde
       {
          if ( shouldPass )
          {
-            expect( key ).to.equal( transposed.value, `transposeValueTo from ${ constantToBeChecked } returned ${ transposed.value } instead of ${ key } for ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
+            expect( key ).to.equal( transposed, `transposeValueTo from ${ constantToBeChecked } returned ${ transposed } instead of ${ key } for ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
          } else
          {
-            expect( key ).to.not.equal( transposed.value, `transposeValueTo from ${ constantToBeChecked } returned ${ transposed.value } instead of ${ key } for ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
+            expect( key ).to.not.equal( transposed, `transposeValueTo from ${ constantToBeChecked } returned ${ transposed } instead of ${ key } for ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
          }
       });
    }

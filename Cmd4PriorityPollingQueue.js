@@ -53,7 +53,7 @@ class Cmd4PriorityPollingQueue
       this.lastGoodTransactionTime =  Date.now( );
 
       // - Not a const so it can be manipulated during unit testing
-      this.pauseTimerTimeout = 10 * 1000;
+      this.pauseTimerTimeout = constants.DEFAULT_QUEUE_PAUSE_TIMEOUT;
 
    }
 
@@ -363,7 +363,7 @@ class Cmd4PriorityPollingQueue
          // who sets the last transaction type to LOW_PRIORITY
          if ( queue.queueType == constants.QUEUETYPE_SEQUENTIAL && queue.inProgressGets == 0 ||
               queue.queueType == constants.QUEUETYPE_WORM ||
-              queue.queueType == constants.FREE_RUNNING )
+              queue.queueType == constants.QUEUETYPE_FREE_RUNNING )
          {
             queue.processEntryFromLowPriorityQueue( lowPriorityEntry );
 
@@ -510,7 +510,9 @@ var addQueue = function( log, queueName, queueType = constants.DEFAULT_QUEUE_TYP
    if ( queue != undefined )
       return queue;
 
-   log.info( `Creating new Priority Polled Queue "${ queueName }" with QueueType of: "${ queueType }" QueueInterval: ${ queueInterval } QueueMsg: ${ queueMsg } QueueStatMsgInterval: ${ queueStatMsgInterval }` );
+   if ( queueType != constants.QUEUETYPE_FREE_RUNNING )
+      log.info( `Creating new Priority Polled Queue "${ queueName }" with QueueType of: "${ queueType }" QueueInterval: ${ queueInterval } QueueMsg: ${ queueMsg } QueueStatMsgInterval: ${ queueStatMsgInterval }` );
+
    queue = new Cmd4PriorityPollingQueue( log, queueName, queueType, queueInterval, queueMsg, queueStatMsgInterval );
    settings.listOfCreatedPriorityQueues[ queueName ] = queue;
 

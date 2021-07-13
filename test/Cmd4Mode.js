@@ -65,26 +65,26 @@ describe( "Testing Cmd4Accessory", function( )
 
    beforeEach( function( )
    {
-      settings.arrayOfAllStaggeredPollingCharacteristics = [ ];
+      settings.defaultQueue = null;
       settings.listOfCreatedPriorityQueues = { };
    });
    afterEach( function( )
    {
-      if (this.currentTest.state == 'failed')
+      // Clear any timers created for any polling queue
+      Object.keys(settings.listOfCreatedPriorityQueues).forEach( (queueName) =>
       {
-         if ( settings.arrayOfAllStaggeredPollingCharacteristics.length > 0 )
+         let queue = settings.listOfCreatedPriorityQueues[ queueName ];
+         Object.keys(queue.listOfRunningPolls).forEach( (key) =>
          {
-            let accessory = settings.arrayOfAllStaggeredPollingCharacteristics[0].accessory;
-            console.log(`Cancelling timers for FAILED TEST OF ${ accessory.displayName }`);
-            Object.keys(accessory.listOfRunningPolls).forEach( (key) =>
-            {
-               let timer = accessory.listOfRunningPolls[ key ];
-               clearTimeout( timer );
-            });
-         }
-      }
-      // Put back the array of Polling Characteristics
-      settings.arrayOfAllStaggeredPollingCharacteristics = [ ];
+            let timer = queue.listOfRunningPolls[ key ];
+            clearTimeout( timer );
+         });
+
+         clearTimeout( queue.pauseTimer );
+      });
+
+      // Put back the polling queues
+      settings.defaultQueue = null;
       settings.listOfCreatedPriorityQueues = { };
    });
 
@@ -100,8 +100,8 @@ describe( "Testing Cmd4Accessory", function( )
       log.setBufferEnabled( );
       let cmd4Accessory = new Cmd4Accessory( log, thermostatConfig, _api, [ ], parentInfo );
 
-      assert.equal( log.logBuf, "", ` cmd4Accessory output expected: "" received: ${ log.logBuf }` );
-      assert.equal( log.errBuf, "", ` cmd4Accessory stderr output expected: "" received: ${ log.errBuf }` );
+      assert.equal( log.logBuf, "", ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.equal( log.errBuf, "", ` Cmd4Accessory Unexpected stderr: ${ log.errBuf }` );
 
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "Cmd4Accessory is not an instance of Cmd4Accessory" );
    });
@@ -112,8 +112,8 @@ describe( "Testing Cmd4Accessory", function( )
       log.setBufferEnabled( );
       let cmd4Accessory = new Cmd4Accessory( log, thermostatConfig, _api, [ ], parentInfo );
 
-      assert.equal( log.logBuf, "", ` cmd4Accessory output expected: "" received: ${ log.logBuf }` );
-      assert.equal( log.errBuf, "", ` cmd4Accessory stderr output expected: "" received: ${ log.errBuf }` );
+      assert.equal( log.logBuf, "", ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.equal( log.errBuf, "", ` Cmd4Accessory Unexpected stderr: ${ log.errBuf }` );
 
       assert.isFunction( cmd4Accessory.addAllServiceCharacteristicsForAccessory, "Cmd4Accessory.addAllServiceCharacteristicsForAccessory is not a function" );
 
@@ -129,8 +129,8 @@ describe( "Testing Cmd4Accessory", function( )
       log.setBufferEnabled( );
       new Cmd4Accessory( log, thermostatConfig, _api, [ ], parentInfo );
 
-      assert.equal( log.logBuf, "", ` cmd4Accessory output expected: "" received: ${ log.logBuf }` );
-      assert.equal( log.errBuf, "", ` cmd4Accessory stderr output expected: "" received: ${ log.errBuf }` );
+      assert.equal( log.logBuf, "", ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.equal( log.errBuf, "", ` Cmd4Accessory Unexpected stderr: ${ log.errBuf }` );
 
    });
 });

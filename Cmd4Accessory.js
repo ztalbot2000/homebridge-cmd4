@@ -35,7 +35,8 @@ Object.defineProperty( exports, "indexOfEnum", { enumerable: true, get: function
 
 // For changing validValue Constants to Values and back again
 var { transposeConstantToValidValue,
-      transposeValueToValidConstant
+      transposeValueToValidConstant,
+      transposeBoolToValue
     } = require( "./utils/transposeCMD4Props" );
 
 let isJSON = require( "./utils/isJSON" );
@@ -677,10 +678,12 @@ class Cmd4Accessory
          value = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value );
 
       }
-      //else {
+      else {
 
          //transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value );
-      //}
+         // This is historical
+         value = transposeBoolToValue( value );
+      }
       //if ( transposed.rc == false )
       //   self.log.warn( `${ self.displayName }: ${ transposed.msg }${ QIndicator }`);
 
@@ -1041,18 +1044,9 @@ class Cmd4Accessory
          }
 
          let words = unQuotedReply.split( " " ).length;
-         let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
+         let allowedWordCount = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.allowedWordCount;
          // Temp variable is faster than traversing large object
-         let hapFormats = self.Characteristic.Formats;
-         if ( words > 1 &&
-               ( format == hapFormats.INT    ||
-                 format == hapFormats.UINT8  ||
-                 format == hapFormats.UINT16 ||
-                 format == hapFormats.UINT32 ||
-                 format == hapFormats.BOOL   ||
-                 format == hapFormats.FLOAT
-               )
-            )
+         if ( words > 1 && allowedWordCount == 1 )
          {
             self.log.warn( `getValue: Warning, Retrieving ${ characteristicString }, expected only one word value for: ${ self.displayName } of: ${ trimmedReply }${ QIndicator }` );
          }
@@ -2630,7 +2624,8 @@ class Cmd4Accessory
                }
 
                if ( cmd4Dbg ) this.log.debug( `Setting up accessory: ${ accessory.displayName } for polling of: ${ characteristicString } timeout: ${ timeout } interval: ${ interval } queueName: "${ queueName }"` );
-                  let record = { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: interval, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.QUEUE_NAME_lv ]: this.queueName };
+
+               let record = { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: interval, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.QUEUE_NAME_lv ]: this.queueName };
 
                // Used to determine missing related characteristics and
                // to determine if the related characteristic is also polled.
@@ -2639,11 +2634,10 @@ class Cmd4Accessory
                if ( this.queueName == constants.DEFAULT_QUEUE_NAME )
                {
                   if ( settings.defaultQueue == null )
-                     settings.defaultQueue = addQueue( this.log, constants.DEFAULT_QUEUE_NAME, constants.QUEUE_TYPE_FREE_RUNNING );
+                     settings.defaultQueue = addQueue( this.log, constants.DEFAULT_QUEUE_NAME, constants.QUEUETYPE_FREE_RUNNING );
 
                   this.queue = settings.defaultQueue;
                }
-                  // settings.arrayOfAllStaggeredPollingCharacteristics.push( record );
                let queue = settings.listOfCreatedPriorityQueues[ `${ record.queueName }` ];
                queue.addLowPriorityGetPolledQueueEntry(
                   record.accessory,
@@ -2671,7 +2665,7 @@ class Cmd4Accessory
                CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ].defaultPollingCharacteristics.forEach( defaultPollingAccTypeEnumIndex =>
                {
                   let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ defaultPollingAccTypeEnumIndex ].type;
-                     let record = { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: defaultPollingAccTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: accessory.interval, [ constants.TIMEOUT_lv ]: accessory.timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: accessory.stateChangeResponseTime, [ constants.QUEUE_NAME_lv ]: accessory.queueName };
+                  let record = { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: defaultPollingAccTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: accessory.interval, [ constants.TIMEOUT_lv ]: accessory.timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: accessory.stateChangeResponseTime, [ constants.QUEUE_NAME_lv ]: accessory.queueName };
 
                   // Used to determine missing related characteristics and
                   // to determine if the related characteristic is also polled.
@@ -2679,19 +2673,22 @@ class Cmd4Accessory
 
                   if ( this.queueName == constants.DEFAULT_QUEUE_NAME )
                   {
-                     settings.arrayOfAllStaggeredPollingCharacteristics.push( record );
-                  } else
-                  {
-                     let queue = settings.listOfCreatedPriorityQueues[ `${ record.queueName }` ];
+                     if ( settings.defaultQueue == null )
+                        settings.defaultQueue = addQueue( this.log, constants.DEFAULT_QUEUE_NAME, constants.QUEUETYPE_FREE_RUNNING );
 
-                     if ( cmd4Dbg ) this.log.debug( `Adding ${ record.accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ record.accTypeEnumIndex ].type }  record.timeout: ${ record.timeout } record.interval: ${ record.interval }  to Polled Queue ${ record.queueName }` );
-                     queue.addLowPriorityGetPolledQueueEntry(
-                        record.accessory,
-                        record.accTypeEnumIndex,
-                        record.characteristicString,
-                        record.interval,
-                        record.timeout )
+                     this.queue = settings.defaultQueue;
                   }
+
+                  let queue = settings.listOfCreatedPriorityQueues[ `${ record.queueName }` ];
+
+                  if ( cmd4Dbg ) this.log.debug( `Adding ${ record.accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ record.accTypeEnumIndex ].type }  record.timeout: ${ record.timeout } record.interval: ${ record.interval }  to Polled Queue ${ record.queueName }` );
+
+                  queue.addLowPriorityGetPolledQueueEntry(
+                     record.accessory,
+                     record.accTypeEnumIndex,
+                     record.characteristicString,
+                     record.interval,
+                     record.timeout )
                });
             }
 

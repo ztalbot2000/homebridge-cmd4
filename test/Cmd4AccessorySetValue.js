@@ -90,10 +90,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Platform.discoverDevices( );
 
-      let expectedOutput1 = `[34mCreating Platform Accessory type for : Television`;
-      let expectedOutput2 = `[90mCreated platformAccessory: Television`;
-      assert.include( log.logBuf, expectedOutput1, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput2, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: Television`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -149,10 +147,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Platform.discoverDevices( );
 
-      let expectedOutput1 = `[34mCreating Platform Accessory type for : Television`;
-      let expectedOutput2 = `[90mCreated platformAccessory: Television`;
-      assert.include( log.logBuf, expectedOutput1, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput2, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -164,22 +160,21 @@ describe( "Testing Cmd4Accessory", function( )
       let CHARACTERISTIC = CMD4_ACC_TYPE_ENUM.properties[ acc ].type;
 
 
+      cmd4Accessory.log.reset( );
+      cmd4Accessory.log.setDebugEnabled( false );
       cmd4Accessory.setValue( acc, "ClosedCaptions", constants.DEFAULT_TIMEOUT, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, value,  function( )
       {
-         let expectedResult =`${value}`;
-         let expectedOutput = `Setting Television ClosedCaptions\u001b[39m 1`;
-
          let newfn = `${ fn }_${ DEVICE }_${ CHARACTERISTIC }`;
          let INPUTS=require( `${ newfn }` );
          let sentResult = INPUTS.VALUE;
 
-         assert.include( log.logBuf, expectedOutput, ` setValue output expected: ${ expectedOutput } received: ${ log.logBuf }` );
-         //assert.equal( 1, log.logLineCount, ` setCachedValue logged lines than one: ${ log.logBuf }` );
-         assert.equal( "", log.errBuf, ` setCachedValue unexpected error output received: ${ log.errBuf }` );
-         //assert.equal( 0, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
+         assert.include( log.logBuf, `Setting Television ClosedCaptions\u001b[39m 1`, ` setValue incorrect stdout: ${ log.logBuf }` );
+         assert.equal( 1, log.logLineCount, ` setCachedValue logged lines than one: ${ log.logBuf }` );
+         assert.equal( "", log.errBuf, ` setCachedValue unexpected stderr: ${ log.errBuf }` );
+         assert.equal( 0, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
 
 
-         assert.equal( sentResult, expectedResult, " setValue expected: " + expectedResult + " received: " + sentResult );
+         assert.equal( sentResult, value, " setValue incorrect value" );
 
          done( );
       });
@@ -230,10 +225,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Platform.discoverDevices( );
 
-      let expectedOutput1 = `[34mCreating Platform Accessory type for : Television`;
-      let expectedOutput2 = `[90mCreated platformAccessory: Television`;
-      assert.include( log.logBuf, expectedOutput1, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput2, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -248,21 +241,21 @@ describe( "Testing Cmd4Accessory", function( )
 
       let value = Characteristic.ClosedCaptions.ENABLED;
 
+      cmd4Accessory.log.reset( );
+      cmd4Accessory.log.setDebugEnabled( false );
       cmd4Accessory.setValue( acc, "ClosedCaptions", constants.DEFAULT_TIMEOUT, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, value,  function( )
       {
-         let expectedResult = "ENABLED";
-         let expectedOutput = `Setting Television ClosedCaptions\u001b[39m ENABLED`;
 
          let newfn = `${ fn }_${ DEVICE }_${ CHARACTERISTIC }`;
          let INPUTS=require( `${ newfn }` );
          let sentResult = INPUTS.VALUE;
 
-         assert.include( log.logBuf, expectedOutput, ` setValue output expected: ${ expectedOutput } received: ${ log.logBuf}` );
-         //assert.equal( 1, log.logLineCount, ` setValue logged lines than one: ${ log.logBuf }` );
+         assert.include( log.logBuf, `Setting Television ClosedCaptions\u001b[39m ENABLED`, ` setValue incorrect stdout: ${ log.logBuf}` );
+         assert.equal( 1, log.logLineCount, ` setValue logged lines than one: ${ log.logBuf }` );
          assert.equal( "", log.errBuf, ` setValue unexpected error output received: ${ log.errBuf }` );
          assert.equal( 0, log.errLineCount, ` setValue logged Error lines more than one: ${ log.errBuf }` );
 
-         assert.equal( sentResult, expectedResult, " setValue expected: " + expectedResult + " received: " + sentResult );
+         assert.equal( sentResult, "ENABLED", " setValue incorrect result" );
 
          done( );
       });
@@ -313,23 +306,17 @@ describe( "Testing Cmd4Accessory", function( )
 
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
+      cmd4Platform.log.reset( );
       cmd4Platform.discoverDevices( );
 
-      let expectedOutput1 = `[34mCreating Platform Accessory type for : Television`;
-      let expectedOutput2 = `[90mCreated platformAccessory: Television`;
-      assert.include( log.logBuf, expectedOutput1, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput2, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
 
 
-
-
-      let expectedPublishedOutput = `Televisions should be Platform Accessories with "PublishExternally": true,`;
-
-      assert.include( log.errBuf, expectedPublishedOutput, `Cmd4Accessory output expected: ${ expectedPublishedOutput } received: ${ log.logBuf }` );
-      //assert.equal( 0, log.logLineCount, ` Cmd4Accessory logged lines than one: ${ log.logBuf }` );
+      assert.include( log.errBuf, `Televisions should be Platform Accessories with "PublishExternally": true`, `Cmd4Accessory incorrect stderr: ${ log.logBuf }` );
       assert.equal( 1, log.errLineCount, ` Cmd4Accessory logged Error lines more than one: ${ log.errBuf }` );
 
       done( );
@@ -379,10 +366,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Platform.discoverDevices( );
 
-      let expectedOutput1 = `[34mCreating Platform Accessory type for : Television`;
-      let expectedOutput2 = `[90mCreated platformAccessory: Television`;
-      assert.include( log.logBuf, expectedOutput1, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, expectedOutput2, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -394,21 +379,20 @@ describe( "Testing Cmd4Accessory", function( )
 
       let value = true;
 
+      cmd4Accessory.log.reset( );
+      cmd4Accessory.log.setDebugEnabled( false );
       cmd4Accessory.setValue( acc, "Mute", constants.DEFAULT_TIMEOUT, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, value,  function( )
       {
-         let expectedResult = 1;
-         let expectedOutput = `Setting Television Mute\u001b[39m 1`;
-
          let newfn = `${ fn }_${ DEVICE }_${ CHARACTERISTIC }`;
          let INPUTS=require( `${ newfn }` );
          let sentResult = INPUTS.VALUE;
 
-         assert.include( log.logBuf, expectedOutput, ` setValue output expected: ${ expectedOutput } received: ${ log.logBuf }` );
-         //assert.equal( 1, log.logLineCount, ` setValue logged lines than one: ${ log.logBuf }` );
+         assert.include( log.logBuf, `Setting Television Mute\u001b[39m 1`, ` setValue incorrect output. received: ${ log.logBuf }` );
+         assert.equal( 1, log.logLineCount, ` setValue logged lines than one: ${ log.stdout }` );
          assert.equal( "", log.errBuf, ` setValue unexpected error output received: ${ log.errBuf }` );
          assert.equal( 0, log.errLineCount, ` setValue logged Error lines more than one: ${ log.errBuf }` );
 
-         assert.equal( sentResult, expectedResult, " setValue expected: " + expectedResult + " received: " + sentResult );
+         assert.equal( sentResult, 1, " setValue incorrect result" );
 
          done( );
       });
@@ -437,32 +421,29 @@ describe( "Testing Cmd4Accessory", function( )
       const log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
-      log.setDebugEnabled( true );
+      log.setDebugEnabled( false );
 
       let cmd4Accessory = new Cmd4Accessory( log, ThermostatConfig, _api, [ ], null );
 
       let value = 12.3;
 
+      cmd4Accessory.log.reset( );
       cmd4Accessory.setCachedValue( acc, "TargetTemperature", value,  function( )
       {
-         let expectedResult = value;
-         let expectedOutput = `Setting (Cached) Thermostat TargetTemperature\u001b[39m 12.3`;
-         let alsoExpectedOutput = `Also Setting (Cached) Thermostat CurrentTemperature\u001b[39m 12.3`;
-
          let result = cmd4Accessory.getStoredValueForIndex( acc );
 
-         assert.include( log.logBuf, expectedOutput, ` setCachedValue output expected: ${ expectedOutput } received: ${ log.logBuf }` );
-         assert.include( log.logBuf, alsoExpectedOutput, ` setCachedValue output expected: ${ expectedOutput } received: ${ log.logBuf }` );
-         //assert.equal( 2, log.logLineCount, ` setCachedValue logged lines than one: ${ log.logBuf }` );
+         assert.include( log.logBuf, `Setting (Cached) Thermostat TargetTemperature\u001b[39m 12.3`, ` setCachedValue incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `Also Setting (Cached) Thermostat CurrentTemperature\u001b[39m 12.3`, ` setCachedValue incorrect stdout: ${ log.logBuf }` );
+         assert.equal( 2, log.logLineCount, ` setCachedValue logged lines than one: ${ log.logBuf }` );
          assert.equal( "", log.errBuf, ` setCachedValue unexpected error output received: ${ log.errBuf }` );
          assert.equal( 0, log.errLineCount, ` setCachedValue err lines than one: ${ log.errBuf }` );
 
-         assert.equal(result, expectedResult, " setValue expected: " + expectedResult + " to be stored.  found: " + result );
+         assert.equal(result, value, " setValue incorrect storedValue.  found: " + result );
 
          let relatedCurrentAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ acc ].relatedCurrentAccTypeEnumIndex;
 
          result = cmd4Accessory.getStoredValueForIndex( relatedCurrentAccTypeEnumIndex );
-         assert.equal(result, expectedResult, " setValue relatedCurrentAccTypeEnumIndex expected: " + expectedResult + " to be stored.  found: " + result );
+         assert.equal(result, value, " setValue relatedCurrentAccTypeEnumIndex incorrect stored value " );
 
          done( );
       });
@@ -491,32 +472,29 @@ describe( "Testing Cmd4Accessory", function( )
       const log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
-      log.setDebugEnabled( true );
+      log.setDebugEnabled( false );
 
       let cmd4Accessory = new Cmd4Accessory( log, ThermostatConfig, _api, [ ], null );
 
       let value = 12.3;
 
+      cmd4Accessory.log.reset( );
       cmd4Accessory.setCachedValue( acc, "TargetTemperature", value,  function( )
       {
-         let alsoExpectedOutput = `Also Setting (Cached) Thermostat CurrentTemperature\u001b[39m 12.3`;
-         let expectedOutput = `Setting (Cached) Thermostat TargetTemperature\u001b[39m 12.3`;
-         let expectedResult = value;
-
          let result = cmd4Accessory.getStoredValueForIndex( acc );
 
-         assert.include( log.logBuf, expectedOutput, ` setCachedValue output expected: ${ expectedOutput } received: ${ log.logBuf }` );
-         assert.include( log.logBuf, alsoExpectedOutput, ` setCachedValue output ALSO expected: ${ alsoExpectedOutput } received: ${ log.logBuf }` );
-         //assert.equal( 2, log.logLineCount, ` setCachedValue logged lines than one: ${ log.logBuf }` );
-         assert.equal( "", log.errBuf, ` setCachedValue unexpected error output received: ${ log.errBuf }` );
+         assert.include( log.logBuf, `Setting (Cached) Thermostat TargetTemperature\u001b[39m 12.3`, ` setCachedValue incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `Also Setting (Cached) Thermostat CurrentTemperature\u001b[39m 12.3`, ` setCachedValue incorrect stdout: ${ log.logBuf }` );
+         assert.equal( 2, log.logLineCount, ` setCachedValue logged lines than one: ${ log.logBuf }` );
+         assert.equal( "", log.errBuf, ` setCachedValue unexpected stderr: ${ log.errBuf }` );
          assert.equal( 0, log.errLineCount, ` setCachedValue err lines than one: ${ log.errBuf }` );
 
-         assert.equal(result, expectedResult, " setValue expected: " + expectedResult + " to be stored.  found: " + result );
+         assert.equal(result, value, " setValue incorrect stored value" );
 
          let relatedCurrentAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ acc ].relatedCurrentAccTypeEnumIndex;
 
          result = cmd4Accessory.getStoredValueForIndex( relatedCurrentAccTypeEnumIndex );
-         assert.equal(result, expectedResult, " setValue relatedCurrentAccTypeEnumIndex expected: " + expectedResult + " to be stored.  found: " + result );
+         assert.equal(result, value, " setValue relatedCurrentAccTypeEnum incorrect value" );
 
          done( );
       });
@@ -544,23 +522,20 @@ describe( "Testing Cmd4Accessory", function( )
       const log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
-      log.setDebugEnabled( true );
+      log.setDebugEnabled( false );
 
       let cmd4Accessory = new Cmd4Accessory( log, ThermostatConfig, _api, [ ], null );
 
-      let expectedErrOutput1 = `m**** Adding required characteristic TargetTemperature for Thermostat`;
-      let expectedErrOutput2 = `Not defining a required characteristic can be problematic`;
-
-      //assert.equal( log.logBuf, "", ` setCachedValue output expected nothing to stdout` );
-      //assert.equal( 0, log.logLineCount, ` setCachedValue logged lines than one: ${ log.logBuf }` );
-      assert.include( log.errBuf, expectedErrOutput1, ` setCachedValue output expected: ${ expectedErrOutput1 } received: ${ log.errBuf }` );
-      assert.include( log.errBuf, expectedErrOutput2, ` setCachedValue output expected: ${ expectedErrOutput2 } received: ${ log.errBuf }` );
-      //assert.equal( 2, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
+      assert.equal( log.logBuf, "", ` setCachedValue output expected nothing to stdout` );
+      assert.equal( 0, log.logLineCount, ` setCachedValue logged lines than one: ${ log.logBuf }` );
+      assert.include( log.errBuf, `m**** Adding required characteristic TargetTemperature for Thermostat`, ` setCachedValue incorrect stdout:${ log.errBuf }` );
+      assert.include( log.errBuf, `Not defining a required characteristic can be problematic`, ` setCachedValue incorrect stdout: ${ log.errBuf }` );
+      assert.equal( 2, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
 
       let defaultValue = CMD4_DEVICE_TYPE_ENUM.properties[ cmd4Accessory.typeIndex ].requiredCharacteristics.find( key => key.type ===  acc ).defaultValue;
 
       let result = cmd4Accessory.getStoredValueForIndex( acc );
-      assert.equal(result, defaultValue, ` setValue ${ acc } expected: ${ defaultValue } to be stored.  found: ${ result }` );
+      assert.equal(result, defaultValue, ` setValue incorrect stored value` );
 
       done( );
    });
@@ -586,18 +561,15 @@ describe( "Testing Cmd4Accessory", function( )
       const log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
-      log.setDebugEnabled( true );
+      log.setDebugEnabled( false );
 
       new Cmd4Accessory( log, ThermostatConfig, _api, [ ], null );
 
-      let expectedErrOutput = `**** Adding required characteristic TargetHeatingCoolingState for Thermostat`;
-      let expectedErrOutput2= `Not defining a required characteristic can be problematic`;
-
-      //assert.equal( log.logBuf, "", ` setCachedValue logged some output. received: ${ log.logBuf }` );
-      //assert.equal( 0, log.logLineCount, ` setCachedValue logged lines than one: ${ log.logBuf }` );
-      assert.include( log.errBuf, expectedErrOutput, ` setCachedValue output expected: ${ expectedErrOutput } received: ${ log.errBuf }` );
-      assert.include( log.errBuf, expectedErrOutput2, ` setCachedValue output expected: ${ expectedErrOutput } received: ${ log.errBuf }` );
-      //assert.equal( 2, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
+      assert.equal( log.logBuf, "", ` setCachedValue logged some output. received: ${ log.logBuf }` );
+      assert.equal( 0, log.logLineCount, ` setCachedValue logged lines than one: ${ log.logBuf }` );
+      assert.include( log.errBuf, `**** Adding required characteristic TargetHeatingCoolingState for Thermostat`, ` setCachedValue incorrect stderr: ${ log.errBuf }` );
+      assert.include( log.errBuf, `Not defining a required characteristic can be problematic`, ` setCachedValue incorrect stderr: ${ log.errBuf }` );
+      assert.equal( 2, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
 
       done( );
    });
@@ -622,31 +594,29 @@ describe( "Testing Cmd4Accessory", function( )
       const log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
-      log.setDebugEnabled( true );
+      log.setDebugEnabled( false );
 
       let cmd4Accessory = new Cmd4Accessory( log, TempSensorConfig, _api, [ ], null );
 
       let value = 12.3;
 
+      cmd4Accessory.log.reset( );
       cmd4Accessory.setCachedValue( acc, "CurrentTemperature", value,  function( )
       {
-         let expectedResult = value;
-         let expectedOutput = `Setting (Cached) TemperatureSensor CurrentTemperature\u001b[39m 12.3`;
-
          let result = cmd4Accessory.getStoredValueForIndex( acc );
 
 
-         assert.include( log.logBuf, expectedOutput, ` setCachedValue output expected: ${ expectedOutput } received: ${ log.logBuf }` );
-         //assert.equal( 1, log.logLineCount, ` setCachedValue logged lines than one: ${ log.logBuf }` );
+         assert.include( log.logBuf, `Setting (Cached) TemperatureSensor CurrentTemperature\u001b[39m 12.3`, ` setCachedValue incorrect stdout: ${ log.logBuf }` );
+         assert.equal( 1, log.logLineCount, ` setCachedValue logged lines than one: ${ log.logBuf }` );
          assert.equal( "", log.errBuf, ` setCachedValue logged an error: ${ log.errBuf }` );
-         //assert.equal( 0, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
+         assert.equal( 0, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
 
-         assert.equal(result, expectedResult, " setValue expected: " + expectedResult + " to be stored.  found: " + result );
+         assert.equal(result, value, " setValue incorrect value" );
 
          let relatedTargetAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ acc ].relatedTargetAccTypeEnumIndex;
 
          result = cmd4Accessory.getStoredValueForIndex( relatedTargetAccTypeEnumIndex );
-         assert.isNull(result, ` getValue TargetAccTypeEnumIndex expected null to be stored.  found: ${ result }` );
+         assert.isNull(result, ` getValue TargetAccTypeEnumIndex expected null to be stored.` );
 
          done( );
       });

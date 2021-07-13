@@ -7,6 +7,7 @@ let constants = require( "../cmd4Constants" );
 
 let Cmd4Accessory = require( "../Cmd4Accessory" ).Cmd4Accessory;
 let Cmd4Platform = require( "../Cmd4Platform" ).Cmd4Platform;
+let Cmd4PriorityPollingQueue = require( "../Cmd4PriorityPollingQueue" ).Cmd4PriorityPollingQueue;
 
 
 
@@ -43,26 +44,27 @@ describe('Testing Cmd4Accessory polling', ( ) =>
 {
    beforeEach(function( )
    {
-      settings.arrayOfAllStaggeredPollingCharacteristics = [ ];
+      settings.defaultQueue = null;
       settings.listOfCreatedPriorityQueues = { };
    });
    afterEach(function( )
    {
       if (this.currentTest.state == 'failed')
       {
-         if ( settings.arrayOfAllStaggeredPollingCharacteristics.length > 0 )
+         // Clear any timers created for any polling queue
+         Object.keys(settings.listOfCreatedPriorityQueues).forEach( (queueName) =>
          {
-            let accessory = settings.arrayOfAllStaggeredPollingCharacteristics[0].accessory;
-            console.log(`Cancelling timers for FAILED TEST OF ${ accessory.displayName }`);
-            Object.keys(accessory.listOfRunningPolls).forEach( (key) =>
+            let queue = settings.listOfCreatedPriorityQueues[ queueName ];
+            Object.keys(queue.listOfRunningPolls).forEach( (key) =>
             {
-               let timer = accessory.listOfRunningPolls[ key ];
+               let timer = queue.listOfRunningPolls[ key ];
                clearTimeout( timer );
             });
-         }
-         settings.arrayOfAllStaggeredPollingCharacteristics = [ ];
-         settings.listOfCreatedPriorityQueues = { };
+         });
       }
+      // Put back the polling queues
+      settings.defaultQueue = null;
+      settings.listOfCreatedPriorityQueues = { };
    });
    let cmd4Accessory;
 
@@ -71,7 +73,7 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       expect( Cmd4Accessory ).not.to.be.a( "null", "Cmd4Accessory was null" );
    });
 
-   it( "Test init Cmd4Accessory has default polling messages", function( )
+   it( "Test init Cmd4Accessory has default polling messages", function( done )
    {
       let config =
       {
@@ -95,14 +97,15 @@ describe('Testing Cmd4Accessory polling', ( ) =>
 
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "Cmd4Accessory is not an instance of Cmd4Accessory" );
 
-      assert.include( log.logBuf, "[90mPolling config is Default Polling. Nothing to check for unset polling characteristics\u001b" , `expected stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, "[90mSetting up which characteristics will be polled for My_Switch\u001b" , `expected stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, "[90mPolling config is Default Polling. Nothing to check for unset polling characteristics\u001b" , `Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, "[90mSetting up which characteristics will be polled for My_Switch\u001b" , `Incorrect stdout: ${ log.logBuf }` );
       assert.equal( log.errBuf, "" , `Unexpected stderr: ${ log.errBuf }` );
 
+      done( );
    });
 
 
-   it('cmd4Accessory determineCharacteristicsToPollForAccessory works.', ( done ) =>
+   it('cmd4Accessory determineCharacteristicsToPollForAccessory works for non queued polling characteristics.', ( done ) =>
    {
       let config =
       {
@@ -115,8 +118,6 @@ describe('Testing Cmd4Accessory polling', ( ) =>
          State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
       }
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
-      assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 0, `Incorrect number of Initial arrayOfAllStaggeredPollingCharacteristics` );
-
 
       const log = new Logger( );
       log.setBufferEnabled( );
@@ -128,10 +129,12 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       cmd4Accessory["polling"] = [ { "characteristic": "on", "timeout":3000, "interval": 1 } ];
 
       cmd4Accessory.determineCharacteristicsToPollForAccessory( cmd4Accessory );
-      assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 1, `Incorrect number of arrayOfAllStaggeredPollingCharacteristics` );
+      assert.equal( Object.keys(cmd4Accessory.listOfPollingCharacteristics).length, 1, `Incorrect number of listOfPollingCharacteristics` );
+      expect( settings.defaultQueue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "defaultQueue is not an instance of Cmd4PriorityPollingQueue" );
+      assert.equal( settings.defaultQueue.lowPriorityQueue.length, 1, `Incorrect number of lowPriorityQueue Entries` );
 
 
-      assert.include( log.logBuf, `[90mSetting up accessory: My_Switch for polling of: On timeout: 3000 interval: 1000 queueName: "No_Queue"\u001b` , `expected stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mSetting up accessory: My_Switch for polling of: On timeout: 3000 interval: 1000 queueName: "No_Queue"\u001b` , `Incorrect stdout: ${ log.logBuf }` );
       assert.equal( log.errBuf, "" , `Unexpected stderr: ${ log.errBuf }` );
 
       done( );
@@ -150,8 +153,6 @@ describe('Testing Cmd4Accessory polling', ( ) =>
          State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
       }
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
-      assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 0, `Incorrect number of Initial arrayOfAllStaggeredPollingCharacteristics` );
-
 
       const log = new Logger( );
       log.setBufferEnabled( );
@@ -163,10 +164,9 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       cmd4Accessory["polling"] = [ { "characteristic": "on", "timeout":1234, "interval": 99 } ];
 
       cmd4Accessory.determineCharacteristicsToPollForAccessory( cmd4Accessory );
-      assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 1, `Incorrect number of arrayOfAllStaggeredPollingCharacteristics` );
 
 
-      assert.include( log.logBuf, `[90mSetting up accessory: My_Switch for polling of: On timeout: 1234 interval: 99000 queueName: "No_Queue"\u001b` , `expected stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mSetting up accessory: My_Switch for polling of: On timeout: 1234 interval: 99000 queueName: "No_Queue"\u001b` , `Incorrect stdout: ${ log.logBuf }` );
       assert.equal( log.errBuf, "" , `Unexpected stderr: ${ log.errBuf }` );
 
       done( );
@@ -187,7 +187,6 @@ describe('Testing Cmd4Accessory polling', ( ) =>
          State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
       }
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
-      assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 0, `Incorrect number of Initial arrayOfAllStaggeredPollingCharacteristics` );
 
 
       const log = new Logger( );
@@ -200,10 +199,9 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       cmd4Accessory["polling"] = [ { "characteristic": "on" } ];
 
       cmd4Accessory.determineCharacteristicsToPollForAccessory( cmd4Accessory );
-      assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 1, `Incorrect number of arrayOfAllStaggeredPollingCharacteristics` );
 
 
-      assert.include( log.logBuf, `[90mSetting up accessory: My_Switch for polling of: On timeout: 5500 interval: 44000 queueName: "No_Queue"\u001b` , `expected stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mSetting up accessory: My_Switch for polling of: On timeout: 5500 interval: 44000 queueName: "No_Queue"\u001b` , `Incorrect stdout: ${ log.logBuf }` );
       assert.equal( log.errBuf, "" , `Unexpected stderr: ${ log.errBuf }` );
 
       done( );
@@ -222,7 +220,6 @@ describe('Testing Cmd4Accessory polling', ( ) =>
          State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
       }
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1, "timeout": 77000, "interval": 22000 };
-      assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 0, `Incorrect number of Initial arrayOfAllStaggeredPollingCharacteristics` );
 
 
       const log = new Logger( );
@@ -235,10 +232,9 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       cmd4Accessory["polling"] = [ { "characteristic": "on" } ];
 
       cmd4Accessory.determineCharacteristicsToPollForAccessory( cmd4Accessory );
-      assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 1, `Incorrect number of arrayOfAllStaggeredPollingCharacteristics` );
 
 
-      assert.include( log.logBuf, `[90mSetting up accessory: My_Switch for polling of: On timeout: 77000 interval: 22000 queueName: "No_Queue"\u001b` , `expected stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mSetting up accessory: My_Switch for polling of: On timeout: 77000 interval: 22000 queueName: "No_Queue"\u001b` , `Incorrect stdout: ${ log.logBuf }` );
       assert.equal( log.errBuf, "" , `Unexpected stderr: ${ log.errBuf }` );
 
       done( );
@@ -259,8 +255,6 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       }
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
 
-      assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 0, `Incorrect number of Initial arrayOfAllStaggeredPollingCharacteristics` );
-
 
       const log = new Logger( );
       log.setBufferEnabled( );
@@ -268,11 +262,10 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       log.setDebugEnabled( );
 
       cmd4Accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
-      assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 1, `Incorrect number of arrayOfAllStaggeredPollingCharacteristics` );
 
 
-      assert.include( log.logBuf, `[90mSetting up accessory: My_Switch for polling of: On timeout: 2 interval: 99000 queueName: "No_Queue"` , `expected stdout: ${ log.logBuf }` );
-      assert.include( log.errBuf, `[33mTimeout for: My_Switch is in milliseconds. A value of: 2 seems pretty low.\u001b[39m` , `expected stderr: ${ log.errBuf }` );
+      assert.include( log.logBuf, `[90mSetting up accessory: My_Switch for polling of: On timeout: 2 interval: 99000 queueName: "No_Queue"` , `Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.errBuf, `[33mTimeout for: My_Switch is in milliseconds. A value of: 2 seems pretty low.\u001b[39m` , `Incorrect stderr: ${ log.errBuf }` );
 
       done( );
    });
@@ -295,7 +288,6 @@ describe('Testing Cmd4Accessory polling', ( ) =>
          ]
       }
 
-      assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 0, `Incorrect number of Initial arrayOfAllStaggeredPollingCharacteristics` );
 
       let log = new Logger( );
       log.setBufferEnabled( );
@@ -308,22 +300,24 @@ describe('Testing Cmd4Accessory polling', ( ) =>
 
       cmd4Platform.discoverDevices( );
 
-      assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 1, `Incorrect number of arrayOfAllStaggeredPollingCharacteristics` );
+      expect( settings.defaultQueue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "defaultQueue is not an instance of Cmd4PriorityPollingQueue" );
+      assert.equal( settings.defaultQueue.lowPriorityQueue.length, 1, `Incorrect number of lowPriorityQueue Entries` );
+
+      //assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 1, `Incorrect number of arrayOfAllStaggeredPollingCharacteristics` );
 
       // For unit testing, start te polling now
-      cmd4Platform.startPolling( 0, 0 );
+      cmd4Platform.startPolling( 0 );
 
       // Staggered Polling takes 3 seconds to start
       setTimeout( () =>
       {
 
-         assert.include( log.logBuf, `[90mKicking off polling for: My_Switch On interval:310000, staggered:3000\u001b` , `expected stdout: ${ log.logBuf }` );
-         assert.include( log.logBuf, "Started staggered kick off of 1 polled characteristics" , `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mKicking off polling for: My_Switch On interval:310000, staggered:3000\u001b` , `Incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, "Started staggered kick off of 1 polled characteristics" , `Incorrect stdout: ${ log.logBuf }` );
 
-         let accessory = settings.arrayOfAllStaggeredPollingCharacteristics[0].accessory;
-         Object.keys(accessory.listOfRunningPolls).forEach( (key) =>
+         Object.keys(settings.defaultQueue.listOfRunningPolls).forEach( (key) =>
          {
-            let timer = accessory.listOfRunningPolls[ key ];
+            let timer = settings.defaultQueue.listOfRunningPolls[ key ];
             clearTimeout( timer );
          });
 

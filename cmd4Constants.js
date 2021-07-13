@@ -26,7 +26,7 @@ exports.DEFAULT_STATUSMSG        = "TRUE";
 exports.DEFAULT_OUTPUTCONSTANTS  = false;
 exports.DEFAULT_QUEUEMSG         = false;
 exports.DEFAULT_QUEUE_TYPE       = "WoRm";
-exports.DEFAULT_RECOVERY_TIMER_INTERVAL   = 60000; // 1 minute
+exports.DEFAULT_QUEUE_PAUSE_TIMEOUT = 10000; // 10 seconds
 
 // How many polls before output of queue status information
 exports.DEFAULT_QUEUE_STAT_MSG_INTERVAL = 1000;

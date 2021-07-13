@@ -2,6 +2,7 @@
 
 var _api = new HomebridgeAPI(); // object we feed to Plugins
 var Service = _api.hap.Service;
+var Characteristic = _api.hap.Characteristic;
 
 
 describe( `Testing require of CMD4_ACC_TYPE_ENUM.js`, ( ) =>
@@ -195,6 +196,34 @@ describe( `Testing INITIALIZED CMD4_ACC_TYPE_ENUM`, ( ) =>
              {
                 assert.equal( hapFormat, accProperties.props.format, `format:${ accProperties.props.format } not equal to expected ${ hapFormat }` );
              });
+
+             // Test cFormat
+             it(`CMD4_ACC_TYPE_ENUM.properties[${ accTypeEnumIndex }].props.cFormat should not be null`, ( ) =>
+             {
+                assert.isNumber( accProperties.props.allowedWordCount, `allowedWordCount is not a Number at accTypeEnumIndex:${ accTypeEnumIndex }` );
+
+                switch( hapFormat )
+                {
+                   case Characteristic.Formats.STRING:
+                   case Characteristic.Formats.TLV8:
+                   case Characteristic.Formats.DATA:
+                      assert.equal( 0, accProperties.props.allowedWordCount, `allowedWordCount not 0 at accTypeEnumIndex: ${ accTypeEnumIndex }` );
+
+                      break;
+                   case Characteristic.Formats.INT:
+                   case Characteristic.Formats.UINT8:
+                   case Characteristic.Formats.UINT16:
+                   case Characteristic.Formats.UINT32:
+                   case Characteristic.Formats.BOOL:
+                   case Characteristic.Formats.FLOAT:
+                      assert.equal( 1, accProperties.props.allowedWordCount, `allowedWordCount not 1 at accTypeEnumIndex: ${ accTypeEnumIndex }` );
+                      break;
+                   default:
+                      assert( `allowedWordCount unknown at accTypeEnumIndex: ${ accTypeEnumIndex }` );
+                }
+
+             });
+
 
              // Test units
              let hapUnits = hapProps.units;

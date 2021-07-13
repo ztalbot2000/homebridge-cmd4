@@ -58,26 +58,29 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
       process.exit.restore( );
    });
 
-   beforeEach(function( )
+   beforeEach( function( )
    {
-      settings.arrayOfAllStaggeredPollingCharacteristics = [ ];
+      settings.defaultQueue = null;
       settings.listOfCreatedPriorityQueues = { };
    });
    afterEach(function( )
    {
-      if (this.currentTest.state == 'failed')
+      // Clear any timers created for any polling queue
+      Object.keys(settings.listOfCreatedPriorityQueues).forEach( (queueName) =>
       {
-         if ( settings.arrayOfAllStaggeredPollingCharacteristics.length > 0 )
+         let queue = settings.listOfCreatedPriorityQueues[ queueName ];
+         Object.keys(queue.listOfRunningPolls).forEach( (key) =>
          {
-            let accessory = settings.arrayOfAllStaggeredPollingCharacteristics[0].accessory;
-            console.log(`Cancelling timers for FAILED TEST OF ${ accessory.displayName }`);
-            Object.keys(accessory.listOfRunningPolls).forEach( (key) =>
-            {
-               let timer = accessory.listOfRunningPolls[ key ];
-               clearTimeout( timer );
-            });
-         }
-      }
+            let timer = queue.listOfRunningPolls[ key ];
+            clearTimeout( timer );
+         });
+
+         clearTimeout( queue.pauseTimer );
+      });
+
+      // Put back the polling queues
+      settings.defaultQueue = null;
+      settings.listOfCreatedPriorityQueues = { };
 
    });
 
@@ -283,9 +286,6 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
       let queue = settings.listOfCreatedPriorityQueues[ "A" ];
 
       expect( queue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PriorityPollingQueue" );
-
-      assert.equal( queue.queueMsg, true, ` Created queue has incorrect QueueMsg` );
-      assert.equal( queue.queueStatMsgInterval, 1200, ` Created queue has incorrect QueueStatMsgInterval` );
 
       done( );
    });
@@ -574,11 +574,9 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
       assert.equal( Object.keys( cmd4Accessory1.listOfPollingCharacteristics ).length, 1, `Incorret number of polling characteristics for accessory 1` );
       assert.equal( Object.keys( cmd4Accessory2.listOfPollingCharacteristics ).length, 3, `Incorret number of polling characteristics for accessory 2` );
 
-      assert.equal( settings.arrayOfAllStaggeredPollingCharacteristics.length, 1, `Incorret number of staggered characteristics` );
-
       let numberOfQueues = Object.keys( settings.listOfCreatedPriorityQueues ).length;
 
-      assert.equal( numberOfQueues, 1, `Incorrect number of polling queues` );
+      assert.equal( numberOfQueues, 2, `Incorrect number of polling queues` );
       let queue = settings.listOfCreatedPriorityQueues[ "A" ];
 
       expect( queue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PriorityPollingQueue" );

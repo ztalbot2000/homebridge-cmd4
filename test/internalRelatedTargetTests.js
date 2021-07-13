@@ -1,5 +1,7 @@
 "use strict";
 
+// Settings, Globals and Constants
+let settings = require( "../cmd4Settings" );
 
 var Cmd4Platform = require( "../Cmd4Platform" ).Cmd4Platform;
 
@@ -34,6 +36,30 @@ describe( "Quick Test of CMD4_ACC_TYPE_ENUM", ( ) =>
 
 describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
 {
+   afterEach( function( )
+   {
+      settings.defaultQueue = null;
+      settings.listOfCreatedPriorityQueues = { };
+   });
+   afterEach( function( )
+   {
+      // Clear any timers created for any polling queue
+      Object.keys(settings.listOfCreatedPriorityQueues).forEach( (queueName) =>
+      {
+         let queue = settings.listOfCreatedPriorityQueues[ queueName ];
+         Object.keys(queue.listOfRunningPolls).forEach( (key) =>
+         {
+            let timer = queue.listOfRunningPolls[ key ];
+            clearTimeout( timer );
+         });
+
+         clearTimeout( queue.pauseTimer );
+      });
+
+      // Put back the polling queues
+      settings.defaultQueue = null;
+      settings.listOfCreatedPriorityQueues = { };
+   });
 
    it('isRelatedTargetCharacteristicInSameDevice returns correctly for TemperatureSensor with no REQUIRED *Target* Characteristic', ( ) =>
    {
@@ -65,20 +91,20 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
       cmd4Platform.discoverDevices( );
 
 
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : TemperatureSensor`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCharacteristic polling for: TemperatureSensor`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: TemperatureSensor`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[33mAdding getCachedValue for TemperatureSensor characteristic: Name`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mSetting up accessory: TemperatureSensor for polling of: CurrentTemperature timeout: 60000 interval: 60000 queueName: "No_Queue"`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[33mAdding getValue for TemperatureSensor characteristic: CurrentTemperature`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mSetting up accessory: TemperatureSensor for polling of: CurrentTemperature timeout: 60000 interval: 60000`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : TemperatureSensor`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCharacteristic polling for: TemperatureSensor`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: TemperatureSensor`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[33mAdding getCachedValue for TemperatureSensor characteristic: Name`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mSetting up accessory: TemperatureSensor for polling of: CurrentTemperature timeout: 60000 interval: 60000 queueName: "No_Queue"`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[33mAdding getValue for TemperatureSensor characteristic: CurrentTemperature`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mSetting up accessory: TemperatureSensor for polling of: CurrentTemperature timeout: 60000 interval: 60000`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
 
       // Not Target setValue
-      assert.notInclude( log.logBuf,  `[33mAdding setValue for TemperatureSensor characteristic: TargetTemperature`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.notInclude( log.logBuf,  `[33mAdding setValue for TemperatureSensor characteristic: TargetTemperature`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
       // Not Target polling
-      assert.notInclude( log.logBuf, `[90mSetting up accessory: TemperatureSensor for polling of: TargetTemperature timeout: 60000 interval: 60000`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.notInclude( log.logBuf, `[90mSetting up accessory: TemperatureSensor for polling of: TargetTemperature timeout: 60000 interval: 60000`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
       // No errors
-      assert.equal( log.errBuf, "", ` cmd4Accessory stderr output Unexpected stderr: ${ log.errBuf }` );
+      assert.equal( log.errBuf, "", ` Cmd4Accessory Unexpected stderr: ${ log.errBuf }` );
 
 
    });
@@ -114,20 +140,20 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
       cmd4Platform.discoverDevices( );
 
 
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : CameraControl`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCharacteristic polling for: CameraControl`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: CameraControl`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[33mAdding getCachedValue for CameraControl characteristic: Name`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[33mAdding getValue for CameraControl characteristic: CurrentHorizontalTiltAngle`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mSetting up accessory: CameraControl for polling of: CurrentHorizontalTiltAngle timeout: 60000 interval: 60000`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : CameraControl`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCharacteristic polling for: CameraControl`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: CameraControl`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[33mAdding getCachedValue for CameraControl characteristic: Name`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[33mAdding getValue for CameraControl characteristic: CurrentHorizontalTiltAngle`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mSetting up accessory: CameraControl for polling of: CurrentHorizontalTiltAngle timeout: 60000 interval: 60000`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
 
       // Not setValue
-      assert.notInclude( log.logBuf, `[33mAdding setValue for CameraControl characteristic: TargetHorizontalTiltAngle`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.notInclude( log.logBuf, `[33mAdding setValue for CameraControl characteristic: TargetHorizontalTiltAngle`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
       // Not polling
-      assert.notInclude( log.logBuf, `[90mSetting up accessory: CameraControl for polling of: TargetHorizontalTiltAngle timeout: 60000 interval: 60000`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.notInclude( log.logBuf, `[90mSetting up accessory: CameraControl for polling of: TargetHorizontalTiltAngle timeout: 60000 interval: 60000`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
 
       // No errors
-      assert.equal( log.errBuf, "", ` cmd4Accessory stderr output Unexpected stderr: ${ log.errBuf }` );
+      assert.equal( log.errBuf, "", ` cmd4Accessory Unexpected stderr: ${ log.errBuf }` );
 
 
    });
@@ -164,20 +190,20 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
       cmd4Platform.discoverDevices( );
 
 
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : TemperatureSensor`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCharacteristic polling for: TemperatureSensor`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: TemperatureSensor`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf,  `[33mAdding getCachedValue for TemperatureSensor characteristic: Name`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mSetting up accessory: TemperatureSensor for polling of: CurrentTemperature timeout: 60000 interval: 60000 queueName: "A"`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[33mAdding priorityGetValue for TemperatureSensor characteristic: CurrentTemperature`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mSetting up accessory: TemperatureSensor for polling of: CurrentTemperature timeout: 60000 interval: 60000 queueName: "A"`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : TemperatureSensor`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCharacteristic polling for: TemperatureSensor`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: TemperatureSensor`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf,  `[33mAdding getCachedValue for TemperatureSensor characteristic: Name`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mSetting up accessory: TemperatureSensor for polling of: CurrentTemperature timeout: 60000 interval: 60000 queueName: "A"`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[33mAdding priorityGetValue for TemperatureSensor characteristic: CurrentTemperature`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mSetting up accessory: TemperatureSensor for polling of: CurrentTemperature timeout: 60000 interval: 60000 queueName: "A"`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
 
       // Not setValue
-      assert.notInclude( log.logBuf, `[33mAdding prioritySetValue for TemperatureSensor characteristic: TargetTemperature`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.notInclude( log.logBuf, `[33mAdding prioritySetValue for TemperatureSensor characteristic: TargetTemperature`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
       // Not polling
-      assert.notInclude( log.logBuf, `[90mSetting up accessory: TemperatureSensor for polling of: TargetTemperature timeout: 60000 interval: 60000 queueName: "A"`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.notInclude( log.logBuf, `[90mSetting up accessory: TemperatureSensor for polling of: TargetTemperature timeout: 60000 interval: 60000 queueName: "A"`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
       // No errors
-      assert.equal( log.errBuf, "", ` cmd4Accessory stderr output Unexpected stderr: ${ log.errBuf }` );
+      assert.equal( log.errBuf, "", ` Cmd4Accessory Unexpected stderr: ${ log.errBuf }` );
 
    });
 
@@ -214,18 +240,18 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
       cmd4Platform.discoverDevices( );
 
 
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : CameraControl`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCharacteristic polling for: CameraControl`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: CameraControl`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[33mAdding getCachedValue for CameraControl characteristic: Name`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[33mAdding priorityGetValue for CameraControl characteristic: CurrentHorizontalTiltAngle`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mSetting up accessory: CameraControl for polling of: CurrentHorizontalTiltAngle timeout: 60000 interval: 60000 queueName: "A"`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : CameraControl`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCharacteristic polling for: CameraControl`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: CameraControl`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[33mAdding getCachedValue for CameraControl characteristic: Name`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[33mAdding priorityGetValue for CameraControl characteristic: CurrentHorizontalTiltAngle`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mSetting up accessory: CameraControl for polling of: CurrentHorizontalTiltAngle timeout: 60000 interval: 60000 queueName: "A"`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
 
       // Not setValue
-      assert.notInclude( log.logBuf,  `[33mAdding prioritySetValue for CameraControl characteristic: TargetHorizontalTiltAngle`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.notInclude( log.logBuf,  `[33mAdding prioritySetValue for CameraControl characteristic: TargetHorizontalTiltAngle`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
 
       // No errors
-      assert.equal( log.errBuf, "", ` cmd4Accessory stderr output Unexpected stderr: ${ log.errBuf }` );
+      assert.equal( log.errBuf, "", ` Cmd4Accessory Unexpected stderr: ${ log.errBuf }` );
 
 
    });
@@ -265,14 +291,14 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
       cmd4Platform.discoverDevices( );
 
 
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : Door`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCharacteristic polling for: Door`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: Door`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[33mAdding getCachedValue for Door characteristic: Name`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[33mAdding getValue for Door characteristic: CurrentPosition`, ` cmd4Accessory output expected. received: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : Door`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCharacteristic polling for: Door`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: Door`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[33mAdding getCachedValue for Door characteristic: Name`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[33mAdding getValue for Door characteristic: CurrentPosition`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
 
-      assert.include( log.errBuf, `[33mWarning, With Cmd4_Mode set to "Polled" and polling for "CurrentPosition" requested, you also must do polling of "TargetPosition" or things will not function properl` , `expected stderr: ${ log.errBuf }` );
-      assert.notInclude( log.logBuf, `[33mAdding setValue for Door characteristic: TargetPosition`, ` cmd4Accessory output Unexpected. received: ${ log.logBuf }` );
+      assert.include( log.errBuf, `[33mWarning, With Cmd4_Mode set to "Polled" and polling for "CurrentPosition" requested, you also must do polling of "TargetPosition" or things will not function properl` , `Incorrect stderr: ${ log.errBuf }` );
+      assert.notInclude( log.logBuf, `[33mAdding setValue for Door characteristic: TargetPosition`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
 
       done( );
    });

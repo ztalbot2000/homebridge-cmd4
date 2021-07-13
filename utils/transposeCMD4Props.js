@@ -83,9 +83,20 @@ var transposeValueToValidConstant = function ( CMD4_ENUM_properties_obj, accType
    return constant;
 }
 
+// SendValue does not send true/false for historical reasons
+var transposeBoolToValue  = function ( valueString )
+{
+   if ( valueString == true )
+      return 1;
+   if ( valueString == false )
+      return 0;
+
+   return valueString;
+}
 
 module.exports = {
    transposeConstantToValidValue,
    transposeValueToValidConstant,
+   transposeBoolToValue,
    extractKeyValue
 };
