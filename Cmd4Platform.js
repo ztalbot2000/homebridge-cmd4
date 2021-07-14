@@ -780,7 +780,11 @@ class Cmd4Platform
          let queue = settings.listOfCreatedPriorityQueues[ queueName ];
          let queuedPollingTimer = setTimeout( ( ) =>
          {
-            this.log.info( ` *** Starting Priority Polling Queue "${ queue.queueName }"` );
+            if ( queue.queueType == constants.QUEUETYPE_STANDARD )
+               this.log.info( `*** Starting Polling` );
+            else
+               this.log.info( `*** Starting Priority Polling Queue "${ queue.queueName }"` );
+
             queue.startQueue( queue );
          }, queuedStartDelay );
 

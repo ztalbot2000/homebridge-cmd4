@@ -85,7 +85,7 @@ exports.QUEUETYPES               = "QueueTypes";
 exports.QUEUE_INTERVAL           = "QueueInterval";
 exports.QUEUETYPE_SEQUENTIAL     = "Sequential";
 exports.QUEUETYPE_WORM           = "WoRm";
-exports.QUEUETYPE_FREE_RUNNING   = "Free";
+exports.QUEUETYPE_STANDARD       = "StandarD";
 
 
 // Platform Config Constnts

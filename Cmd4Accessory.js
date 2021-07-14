@@ -2634,7 +2634,7 @@ class Cmd4Accessory
                if ( this.queueName == constants.DEFAULT_QUEUE_NAME )
                {
                   if ( settings.defaultQueue == null )
-                     settings.defaultQueue = addQueue( this.log, constants.DEFAULT_QUEUE_NAME, constants.QUEUETYPE_FREE_RUNNING );
+                     settings.defaultQueue = addQueue( this.log, constants.DEFAULT_QUEUE_NAME, constants.QUEUETYPE_STANDARD );
 
                   this.queue = settings.defaultQueue;
                }
@@ -2674,7 +2674,7 @@ class Cmd4Accessory
                   if ( this.queueName == constants.DEFAULT_QUEUE_NAME )
                   {
                      if ( settings.defaultQueue == null )
-                        settings.defaultQueue = addQueue( this.log, constants.DEFAULT_QUEUE_NAME, constants.QUEUETYPE_FREE_RUNNING );
+                        settings.defaultQueue = addQueue( this.log, constants.DEFAULT_QUEUE_NAME, constants.QUEUETYPE_STANDARD );
 
                      this.queue = settings.defaultQueue;
                   }

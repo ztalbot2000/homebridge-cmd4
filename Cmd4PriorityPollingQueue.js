@@ -363,7 +363,7 @@ class Cmd4PriorityPollingQueue
          // who sets the last transaction type to LOW_PRIORITY
          if ( queue.queueType == constants.QUEUETYPE_SEQUENTIAL && queue.inProgressGets == 0 ||
               queue.queueType == constants.QUEUETYPE_WORM ||
-              queue.queueType == constants.QUEUETYPE_FREE_RUNNING )
+              queue.queueType == constants.QUEUETYPE_STANDARD )
          {
             queue.processEntryFromLowPriorityQueue( lowPriorityEntry );
 
@@ -430,14 +430,20 @@ class Cmd4PriorityPollingQueue
          setTimeout( ( ) =>
          {
             if ( entryIndex == 0 )
-               entry.accessory.log.info( `Started staggered kick off of ${ queue.lowPriorityQueue.length } polled characteristics` );
+               if ( queue.queueType != constants.QUEUETYPE_STANDARD )
+                  entry.accessory.log.info( `Started staggered kick off of ${ queue.lowPriorityQueue.length } polled characteristics for queue: "${ queue.queueName }"` );
+               else
+                  entry.accessory.log.info( `Started staggered kick off of ${ queue.lowPriorityQueue.length } polled characteristics` );
 
             if ( cmd4Dbg ) entry.accessory.log.debug( `Kicking off polling for: ${ entry.accessory.displayName } ${ entry.characteristicString } interval:${ entry.interval }, staggered:${ staggeredDelays[ staggeredDelayIndex ] }` );
 
             queue.scheduleLowPriorityEntry( entry );
 
             if ( entryIndex == queue.lowPriorityQueue.length -1 )
-               entry.accessory.log.info( `All characteristics are now being polled` );
+               if ( queue.queueType != constants.QUEUETYPE_STANDARD )
+                  entry.accessory.log.info( `All characteristics are now being polled for queue: "${ queue.queueName }"` );
+               else
+                  entry.accessory.log.info( `All characteristics are now being polled` );
 
          }, delay );
 
@@ -510,7 +516,7 @@ var addQueue = function( log, queueName, queueType = constants.DEFAULT_QUEUE_TYP
    if ( queue != undefined )
       return queue;
 
-   if ( queueType != constants.QUEUETYPE_FREE_RUNNING )
+   if ( queueType != constants.QUEUETYPE_STANDARD )
       log.info( `Creating new Priority Polled Queue "${ queueName }" with QueueType of: "${ queueType }" QueueInterval: ${ queueInterval } QueueMsg: ${ queueMsg } QueueStatMsgInterval: ${ queueStatMsgInterval }` );
 
    queue = new Cmd4PriorityPollingQueue( log, queueName, queueType, queueInterval, queueMsg, queueStatMsgInterval );
