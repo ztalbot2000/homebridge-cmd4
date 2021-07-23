@@ -131,7 +131,7 @@ class Cmd4PriorityPollingQueue
       if ( cmd4Dbg ) this.log.debug( `Processing high priority queue "Set" entry: ${ entry.accTypeEnumIndex } length: ${ entry.accessory.queue.highPriorityQueue.length }` );
 
       entry.accessory.queue.inProgressSets ++;
-      entry.accessory.setValue( entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, entry.stateChangeResponseTime, entry.value, function ( error )
+      entry.accessory.setValue( entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, entry.stateChangeResponseTime, entry.value, entry.callback, function ( error )
       {
          let relatedCurrentAccTypeEnumIndex = entry.accessory.getDevicesRelatedCurrentAccTypeEnumIndex( entry.accTypeEnumIndex );
 
@@ -156,7 +156,7 @@ class Cmd4PriorityPollingQueue
                // The "Set" is now complete after its stateChangeResponseTime.
                entry.accessory.queue.inProgressSets --;
 
-               if ( entry.accessory.queue.queueType == constants.QUEUETYPE_SEQUENTIAL )
+               //if ( entry.accessory.queue.queueType == constants.QUEUETYPE_SEQUENTIAL )
                   setTimeout( ( ) => { entry.accessory.queue.processQueue( HIGH_PRIORITY_GET, entry.accessory.queue ); }, 0 );
 
                return;
@@ -175,9 +175,7 @@ class Cmd4PriorityPollingQueue
          // done first or any next "Get" or "Set" would interfere
          // with the device
 
-
-
-      }, true );
+      });
    }
 
    processHighPriorityGetQueue( entry )
@@ -195,19 +193,8 @@ class Cmd4PriorityPollingQueue
       if ( cmd4Dbg ) this.log.debug( `Processing high priority queue "Get" entry: ${ entry.accTypeEnumIndex } isUpdate: ${ entry.queueGetIsUpdate } length: ${ entry.accessory.queue.highPriorityQueue.length }` );
 
       entry.accessory.queue.inProgressGets ++;
-      let pollingID =  Date.now( );
-      entry.accessory.getValue( entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, function ( error, properValue, returnedPollingID, returnedErrMsg  )
+      entry.accessory.getValue( entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, function ( error, properValue )
       {
-         // This function should only be called once, noted by the pollingID.
-         if ( pollingID != returnedPollingID )
-         {
-            entry.accessory.log.info( `More entries for pollingID of get error: ${ error } value: ${ properValue } returnedPollingID: ${ returnedPollingID }` );
-
-            return;
-         }
-
-         pollingID = -1;
-
          // Nothing special was done for casing on errors, so omit it.
          if ( error == 0 )
          {
@@ -225,15 +212,13 @@ class Cmd4PriorityPollingQueue
             if ( entry.queueGetIsUpdate == false )
                entry.callback( error );
 
-            entry.accessory.log.error( returnedErrMsg );
-
             entry.accessory.queue.pauseQueue( entry.accessory.queue );
          }
 
          entry.accessory.queue.inProgressGets --;
          setTimeout( ( ) => { entry.accessory.queue.processQueue( HIGH_PRIORITY_GET, entry.accessory.queue ); }, 0 );
 
-      }, pollingID );
+      });
    }
 
    processEntryFromLowPriorityQueue( entry )
@@ -250,20 +235,13 @@ class Cmd4PriorityPollingQueue
 
       if ( cmd4Dbg ) this.log.debug( `Processing low priority queue entry: ${ entry.accTypeEnumIndex }` );
 
-      let pollingID =  Date.now( );
       entry.accessory.queue.inProgressGets ++;
 
-      entry.accessory.getValue( entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, function ( error, properValue, returnedPollingID, returnedErrMsg )
+      entry.accessory.getValue( entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, function ( error, properValue )
       {
 
          // For the next one
          entry.accessory.queue.inProgressGets --;
-
-         // This function should only be called once, noted by the pollingID.
-         if ( pollingID != returnedPollingID )
-            entry.accessory.log.info( `More entries for pollingID of get error:${ error } val:${ properValue } returnedPollingID:${ returnedPollingID }` );
-
-         pollingID = -1;
 
          // Nothing special was done for casing on errors, so omit it.
          if ( error == 0 )
@@ -274,7 +252,6 @@ class Cmd4PriorityPollingQueue
             entry.accessory.queue.lastGoodTransactionTime = Date.now( );
 
          } else {
-            entry.accessory.log.error( returnedErrMsg );
             entry.accessory.queue.pauseQueue( entry.accessory.queue );
          }
 
@@ -283,7 +260,7 @@ class Cmd4PriorityPollingQueue
 
          entry.accessory.queue.scheduleLowPriorityEntry( entry )
 
-      }, pollingID );
+      });
    }
 
    // The queue is self maintaining, except for lowPriorityEntries

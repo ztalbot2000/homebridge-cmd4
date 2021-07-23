@@ -81,7 +81,9 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./echoScripts/echo_ACTIVE";
 
       const log = new Logger( );
+      log.setOutputEnabled( false );
       log.setBufferEnabled( true );
+
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       assert.isFunction( cmd4Accessory.getValue, "Cmd4Accessory.getValue is not a function" );
@@ -93,14 +95,18 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_ACTIVE";
 
       const log = new Logger( );
+      log.setOutputEnabled( false );
       log.setBufferEnabled( true );
+
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, "Active", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
-         let expectedResult = 1;
+         assert.equal( rc, 0, ` getValue incorrect rc: ${ rc }` );
+         assert.equal( result, 1, ` getValue incorrect result: ${ result }` );
 
-         assert.equal( result, expectedResult, ` getValue expected ${ expectedResult } received: ${ result }` );
+         assert.equal( log.logBuf, "", ` getValue Unexpected stdout: ${ log.logBuf }` );
+         assert.equal( log.errBuf, "", ` getValue Unexpected stderr: ${ log.errBuf }` );
 
          done( );
       });
@@ -111,14 +117,18 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_INACTIVE";
 
       const log = new Logger( );
+      log.setOutputEnabled( false );
       log.setBufferEnabled( true );
+
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, "Active", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
-         let expectedResult = 0;
+         assert.equal( rc, 0, ` getValue incorrect rc: ${ rc }` );
+         assert.equal( result, 0, ` getValue incorrect result: ${ result }` );
 
-         assert.equal( result, expectedResult, " getValue expected" + expectedResult + " received: " + result );
+         assert.equal( log.logBuf, "", ` getValue Unexpected stdout: ${ log.logBuf }` );
+         assert.equal( log.errBuf, "", ` getValue Unexpected stderr: ${ log.errBuf }` );
 
          done( );
       });
@@ -129,14 +139,18 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_0";
 
       const log = new Logger( );
+      log.setOutputEnabled( false );
       log.setBufferEnabled( true );
+
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, "Active", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
-         let expectedResult = 0;
+         assert.equal( rc, 0, ` getValue incorrect rc: ${ rc }` );
+         assert.equal( result, 0, ` getValue incorrect result: ${ result }` );
 
-         assert.equal( result, expectedResult, ` getValue expected ${ expectedResult } received: ${ result }` );
+         assert.equal( log.logBuf, "", ` getValue Unexpected stdout: ${ log.logBuf }` );
+         assert.equal( log.errBuf, "", ` getValue Unexpected stderr: ${ log.errBuf }` );
 
          done( );
       });
@@ -147,14 +161,18 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_1";
 
       const log = new Logger( );
+      log.setOutputEnabled( false );
       log.setBufferEnabled( true );
+
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, "Active", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
-         let expectedResult = 1;
+         assert.equal( rc, 0, ` getValue incorrect rc: ${ rc }` );
+         assert.equal( result, 1, ` getValue incorrect result: ${ result }` );
 
-         assert.equal( result, expectedResult, ` getValue expected ${ expectedResult } received: ${ result }` );
+         assert.equal( log.logBuf, "", ` getValue Unexpected stdout: ${ log.logBuf }` );
+         assert.equal( log.errBuf, "", ` getValue Unexpected stderr: ${ log.errBuf }` );
 
          done( );
       });
@@ -165,14 +183,18 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_quoted0";
 
       const log = new Logger( );
+      log.setOutputEnabled( false );
       log.setBufferEnabled( true );
+
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, "Active", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
-         let expectedResult = 0;
+         assert.equal( rc, 0, ` getValue incorrect rc: ${ rc }` );
+         assert.equal( result, 0, ` getValue incorrect result: ${ result }` );
 
-         assert.equal( result, expectedResult, ` getValue expected ${ expectedResult } received: ${ result }` );
+         assert.equal( log.logBuf, "", ` getValue Unexpected stdout: ${ log.logBuf }` );
+         assert.equal( log.errBuf, "", ` getValue Unexpected stderr: ${ log.errBuf }` );
 
          done( );
       });
@@ -183,14 +205,18 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_quoted1";
 
       const log = new Logger( );
+      log.setOutputEnabled( false );
       log.setBufferEnabled( true );
+
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Active, "Active", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
-         let expectedResult = 1;
+         assert.equal( rc, 0, ` getValue incorrect rc: ${ rc }` );
+         assert.equal( result, 1, ` getValue incorrect result: ${ result }` );
 
-         assert.equal( result, expectedResult, ` getValue expected ${ expectedResult } received: ${ result }` );
+         assert.equal( log.logBuf, "", ` getValue Unexpected stdout: ${ log.logBuf }` );
+         assert.equal( log.errBuf, "", ` getValue Unexpected stderr: ${ log.errBuf }` );
 
          done( );
       });
@@ -201,14 +227,18 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_false";
 
       const log = new Logger( );
+      log.setOutputEnabled( false );
       log.setBufferEnabled( true );
+
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
-         let expectedResult = false;
+         assert.equal( rc, 0, ` getValue incorrect rc: ${ rc }` );
+         assert.equal( result, false, ` getValue incorrect result: ${ result }` );
 
-         assert.equal( result, expectedResult, ` getValue expected ${ expectedResult } received: ${ result }` );
+         assert.equal( log.logBuf, "", ` getValue Unexpected stdout: ${ log.logBuf }` );
+         assert.equal( log.errBuf, "", ` getValue Unexpected stderr: ${ log.errBuf }` );
 
          done( );
       });
@@ -219,14 +249,18 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_true";
 
       const log = new Logger( );
+      log.setOutputEnabled( false );
       log.setBufferEnabled( true );
+
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
-         let expectedResult = true;
+         assert.equal( rc, 0, ` getValue incorrect rc: ${ rc }` );
+         assert.equal( result, true, ` getValue incorrect result: ${ result }` );
 
-         assert.equal( result, expectedResult, ` getValue expected ${ expectedResult } received: ${ result }` );
+         assert.equal( log.logBuf, "", ` getValue Unexpected stdout: ${ log.logBuf }` );
+         assert.equal( log.errBuf, "", ` getValue Unexpected stderr: ${ log.errBuf }` );
 
          done( );
       });
@@ -237,14 +271,18 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_0";
 
       const log = new Logger( );
+      log.setOutputEnabled( false );
       log.setBufferEnabled( true );
+
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
-         let expectedResult = false;
+         assert.equal( rc, 0, ` getValue incorrect rc: ${ rc }` );
+         assert.equal( result, false, ` getValue incorrect result: ${ result }` );
 
-         assert.equal( result, expectedResult, ` getValue expected ${ expectedResult } received: ${ result }` );
+         assert.equal( log.logBuf, "", ` getValue Unexpected stdout: ${ log.logBuf }` );
+         assert.equal( log.errBuf, "", ` getValue Unexpected stderr: ${ log.errBuf }` );
 
          done( );
       });
@@ -255,14 +293,18 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_1";
 
       const log = new Logger( );
+      log.setOutputEnabled( false );
       log.setBufferEnabled( true );
+
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
-         let expectedResult = true;
+         assert.equal( rc, 0, ` getValue incorrect rc: ${ rc }` );
+         assert.equal( result, true, ` getValue incorrect result: ${ result }` );
 
-         assert.equal( result, expectedResult, ` getValue expected ${ expectedResult } received: ${ result }` );
+         assert.equal( log.logBuf, "", ` getValue Unexpected stdout: ${ log.logBuf }` );
+         assert.equal( log.errBuf, "", ` getValue Unexpected stderr: ${ log.errBuf }` );
 
          done( );
       });
@@ -273,14 +315,18 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_quotedFALSE";
 
       const log = new Logger( );
+      log.setOutputEnabled( false );
       log.setBufferEnabled( true );
+
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
-         let expectedResult = false;
+         assert.equal( rc, 0, ` getValue incorrect rc: ${ rc }` );
+         assert.equal( result, false, ` getValue incorrect result: ${ result }` );
 
-         assert.equal( result, expectedResult, ` getValue expected ${ expectedResult } received: ${ result }` );
+         assert.equal( log.logBuf, "", ` getValue Unexpected stdout: ${ log.logBuf }` );
+         assert.equal( log.errBuf, "", ` getValue Unexpected stderr: ${ log.errBuf }` );
 
          done( );
       });
@@ -291,15 +337,18 @@ describe( "Testing Cmd4Accessory", function( )
       TVConfig.state_cmd = "./test/echoScripts/echo_quotedTRUE";
 
       const log = new Logger( );
+      log.setOutputEnabled( false );
       log.setBufferEnabled( true );
+
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
-         let expectedResult = true;
+         assert.equal( rc, 0, ` getValue incorrect rc: ${ rc }` );
+         assert.equal( result, true, ` getValue incorrect result: ${ result }` );
 
-         assert.equal( result, expectedResult, ` getValue expected ${ expectedResult } received: ${ result }` );
-
+         assert.equal( log.logBuf, "", ` getValue Unexpected stdout: ${ log.logBuf }` );
+         assert.equal( log.errBuf, "", ` getValue Unexpected stderr: ${ log.errBuf }` );
          done( );
       });
    });
@@ -311,13 +360,16 @@ describe( "Testing Cmd4Accessory", function( )
       const log = new Logger( );
       log.setOutputEnabled( false );
       log.setBufferEnabled( true );
+
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.ClosedCaptions, "ClosedCaptions", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
-         let expectedResult = 0;
+         assert.equal( rc, 0, ` getValue incorrect rc: ${ rc }` );
+         assert.equal( result, 0, ` getValue incorrect result: ${ result }` );
 
-         assert.equal( result, expectedResult, ` getValue expected ${ expectedResult } received: ${ result }` );
+         assert.equal( log.logBuf, "", ` getValue Unexpected stdout: ${ log.logBuf }` );
+         assert.equal( log.errBuf, "", ` getValue Unexpected stderr: ${ log.errBuf }` );
 
          done( );
       });
@@ -325,56 +377,48 @@ describe( "Testing Cmd4Accessory", function( )
 
    it( "getValue of empty response should fail correctly", function ( done )
    {
-
       const log = new Logger( );
       log.setOutputEnabled( false );
       log.setBufferEnabled( true );
+
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
       cmd4Accessory.state_cmd = "./test/echoScripts/echo_nothing";
       cmd4Accessory.timeout = 500;
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
-         assert.notEqual( rc, 0, ` getValue expected: not zero received: ${ rc }` );
-         assert.equal( result, null, ` getValue result expected: null received: ${ result }` );
-      });
+         assert.equal( rc, constants.ERROR_EMPTY_STRING_REPLY, ` getValue incorrect rc: ${ rc }` );
+         expect( result, ` getValue incorrect result: ${ result }` ).to.not.exist;
 
-      // We have to wait for the failing getValue to timeout to capture the log messages;
-      setTimeout(() =>
-      {
+         assert.equal( log.logBuf, "", ` getValue Unexpected stdout: ${ log.logBuf }` );
          assert.include( log.errBuf, `getValue: Mute function for: My_Television returned an empty string ""`, ` getValue Incorrect stderr: ${ log.errBuf }` );
-         assert.equal( log.logBuf, "", ` getValue Unexpected stdout: ${ log.errBuf }` );
 
          done( );
+      });
 
-      }, 1000 );
-
-   }).timeout( 2000 );
+   });
 
    it( "getValue of null response should fail correctly", function ( done )
    {
       const log = new Logger( );
       log.setOutputEnabled( false );
       log.setBufferEnabled( true );
+
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
       cmd4Accessory.state_cmd = "./test/echoScripts/echo_null";
       cmd4Accessory.timeout = 500;
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
-         assert.notEqual( rc, 0, ` getValue expected: not zero received: ${ rc }` );
-         assert.equal( result, null, ` getValue result expected: null received: ${ result }` );
-      });
+         assert.equal( rc, constants.ERROR_NULL_STRING_REPLY, ` getValue incorrect rc: ${ rc }` );
+         expect( result, ` getValue incorrect result: ${ result }` ).to.not.exist;
 
-      // We have to wait for the failing getValue to timeout to capture the log messages;
-      setTimeout(() =>
-      {
+         assert.equal( log.logBuf, "", ` getValue unexpected stdout: ${ log.logBuf }` );
          assert.include( log.errBuf, `getValue: "null" returned from stdout for Mute My_Television`, ` getValue Incorrect stderr: ${ log.errBuf }` );
 
          done( );
-
-      }, 1000 );
-   }).timeout( 2000 );
+      });
+   });
 
    it( "getValue of echo true rc=1 response pass with error message", function ( done )
    {
@@ -382,151 +426,153 @@ describe( "Testing Cmd4Accessory", function( )
       log.setOutputEnabled( false );
       log.setBufferEnabled( true );
       log.setDebugEnabled( false );
+
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
       cmd4Accessory.state_cmd = "./test/echoScripts/echo_true_withRcOf1";
       cmd4Accessory.timeout = 500;
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
-         assert.equal( rc, 0, ` getValue expected: zero received: ${ rc }` );
-         assert.equal( result, true, ` getValue result expected: true received: ${ result }` );
-      });
+         assert.equal( rc, 1, ` getValue expected: 1 received: ${ rc }` );
+         expect( result, ` getValue incorrect result: ${ result }` ).to.not.exist;
 
-      // We have to wait for the failing getValue to timeout to capture the log messages;
-      setTimeout(() =>
-      {
-         // There is no longer a failingberror message as only the first message is now sent
-         //assert.include( log.errBuf, `getValue Mute function failed for My_Television cmd: ./test/echoScripts/echo_true_withRcOf1 Get 'My_Television' 'Mute' Failed.  replyCount: 1 Error: 1`, ` getValue Incorrect stderr: ${ log.errBuf }` );
-         assert.equal( log.logBuf, "", ` getValue output expected: "" received: ${ log.errBuf }` );
+         assert.equal( log.logBuf, "", ` getValue unexpected stdout: ${ log.logBuf }` );
+         assert.include( log.errBuf, `[31m\u001b[31mgetValue Mute function failed for My_Television cmd: ./test/echoScripts/echo_true_withRcOf1 Get 'My_Television' 'Mute' Failed. Error: 1`, ` getValue Incorrect stderr: ${ log.errBuf }` );
 
          done( );
+      });
 
-      }, 1000 );
-   }).timeout( 2000 );
+   });
 
    it( "getValue of quoted Null should fail correctly", function ( done )
    {
       const log = new Logger( );
       log.setOutputEnabled( false );
       log.setBufferEnabled( true );
+
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
       cmd4Accessory.state_cmd = "./test/echoScripts/echo_quotedNULL";
       cmd4Accessory.timeout = 500;
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
-         assert.equal( rc, 0, ` getValue expected: zero received: ${ rc }` );
+         assert.equal( rc, constants.ERROR_2ND_NULL_STRING_REPLY , ` getValue incorrect rc: ${ rc }` );
+         expect( result, ` getValue incorrect result: ${ result }` ).to.not.exist;
 
-         assert.equal( result, null, ` getValue result expected: null received: ${ result }` );
-
-      });
-
-      // We have to wait for the failing getValue to timeout to capture the log messages;
-      setTimeout(() =>
-      {
+         assert.equal( log.logBuf, "", ` getValue unexpected stdout: ${ log.logBuf }` );
          assert.include( log.errBuf, `getValue: Mute function for My_Television returned the string ""NULL""`, ` getValue Incorrect stderr: ${ log.errBuf }` );
 
          done( );
-
-      }, 1000 );
-   }).timeout( 2000 );
+      });
+   });
 
    it( "getValue of quoted Nothing should fail correctly", function ( done )
    {
       const log = new Logger( );
       log.setOutputEnabled( false );
       log.setBufferEnabled( true );
+
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
       cmd4Accessory.state_cmd = "./test/echoScripts/echo_quotedNothing";
       cmd4Accessory.timeout = 500;
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
-         assert.notEqual( rc, 0, ` getValue expected: not zero received: ${ rc }` );
-         assert.equal( result, null, ` getValue result expected: null received: ${ result }` );
-      });
+         assert.equal( rc, constants.ERROR_EMPTY_STRING_REPLY, ` getValue incorrect rc: ${ rc }` );
+         assert.equal( result, null, ` getValue incorrect result: ${ result }` );
 
-      setTimeout(() =>
-      {
          assert.include( log.errBuf, `getValue: Mute function for: My_Television returned an empty string "" ""`, ` getValue Incorrect stdout: ${ log.errBuf }` );
          done( );
-
-      }, 1000 );
-   }).timeout( 2000 );
+      });
+   });
 
    it( "getValue of Nothing to stdout and something to stderr should show error message", function ( done )
    {
       const log = new Logger( );
       log.setOutputEnabled( false );
       log.setBufferEnabled( true );
+
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
       cmd4Accessory.state_cmd = "./test/echoScripts/echo_errorToStderr";
       cmd4Accessory.timeout = 500;
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
-         assert.equal( result, 0, ` getValue result expected: 0 received: ${ result }` );
-      });
+         assert.equal( rc, constants.ERROR_EMPTY_STRING_REPLY , ` getValue incorrect rc: ${ rc }` );
+         expect( result, ` getValue incorrect result: ${ result }` ).to.not.exist;
 
-      setTimeout(() =>
-      {
+         assert.equal( log.logBuf, "", ` getValue Unexpected stdout: ${ log.logBuf }` );
          assert.include( log.errBuf, "This message goes to stderr", ` getValue Incorrect stderr: ${ log.errBuf }` );
-         assert.equal( log.logBuf, "", ` getValue Unexpected stdout: ${ log.errBuf }` );
 
          done( );
+      });
 
-      }, 1000 );
-   }).timeout( 2000 );
+   });
 
    it( "getValue of Nothing to stdout and rc=0 should show error message", function ( done )
    {
       const log = new Logger( );
       log.setOutputEnabled( false );
       log.setBufferEnabled( true );
+
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
       cmd4Accessory.state_cmd = "./test/echoScripts/justExitWithRCof0";
       cmd4Accessory.timeout = 500;
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
-         assert.equal( result, 0, ` getValue result expected: 0 received: ${ result }` );
-         assert.equal( rc, 0, ` getValue rc expected: 0 received: ${ rc }` );
-      });
+         assert.equal( rc, constants.ERROR_EMPTY_STRING_REPLY , ` getValue incorrect rc: ${ rc }` );
+         expect( result, ` getValue incorrect result: ${ result }` ).to.not.exist;
 
-      setTimeout(() =>
-      {
-         assert.equal( log.logBuf, "", ` getValue output something to stdout: ${ log.logBuf }` );
-         assert.equal( log.errBuf, "", ` getValue output nothing to stderr: ${ log.errBuf }` );
-
+         assert.equal( log.logBuf, "", ` getValue output nothing to stdout: ${ log.logBuf }` );
+         assert.include( log.errBuf, `[31mgetValue: Mute function for: My_Television returned an empty string ""`, ` getValue incorrect stderr: ${ log.errBuf }` );
 
          done( );
-
-      }, 1000 );
-   }).timeout( 2000 );
+      });
+   });
 
    it( "getValue of Nothing to stdout and rc=1 should show error message", function ( done )
    {
       const log = new Logger( );
       log.setOutputEnabled( false );
       log.setBufferEnabled( true );
+
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
       cmd4Accessory.state_cmd = "./test/echoScripts/justExitWithRCof1";
       cmd4Accessory.timeout = 400;
 
       cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", constants.DEFAULT_TIMEOUT, function( rc, result )
       {
-         assert.equal( result, 0, ` getValue result expected: 0 received: ${ result }` );
-      });
-
-      setTimeout(() =>
-      {
-         let expectedErrOutput = `getValue Mute function failed for My_Television cmd: ./test/echoScripts/justExitWithRCof1 Get 'My_Television' 'Mute' Failed.`;
+         assert.equal( rc, 1 , ` getValue incorrect rc: ${ rc }` );
+         expect( result, ` getValue incorrect result: ${ result }` ).to.not.exist;
 
          assert.equal( log.logBuf, "", ` getValue output something to stdout: ${ log.logBuf }` );
-         assert.include( log.errBuf, expectedErrOutput, ` getValue output expected: ${ expectedErrOutput } received: ${ log.errBuf }` );
+         assert.include( log.errBuf, `getValue Mute function failed for My_Television cmd: ./test/echoScripts/justExitWithRCof1 Get 'My_Television' 'Mute' Failed.`, ` getValue incorrect stderr: ${ log.errBuf }` );
 
          done( );
+      });
+   });
 
-      }, 800 );
-   }).timeout( 2000 );
+   it( "getValue of timeout response should fail correctly", function ( done )
+   {
+      const log = new Logger( );
+      log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
+
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
+      cmd4Accessory.state_cmd = "./test/echoScripts/runToTimeoutRcOf0";
+      cmd4Accessory.timeout = 400;
+
+      cmd4Accessory.getValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", cmd4Accessory.timeout, function( rc, result )
+      {
+         assert.equal( rc, constants.ERROR_TIMER_EXPIRED, ` getValue incorrect rc: ${ rc }` );
+         expect( result, ` getValue incorrect result: ${ result }` ).to.not.exist;
+
+         assert.equal( log.logBuf, "", ` getValue output something to stdout: ${ log.logBuf }` );
+         assert.include( log.errBuf, `[31mgetValue Mute function timed out 400ms for My_Television cmd: ./test/echoScripts/runToTimeoutRcOf0 Get 'My_Television' 'Mute' Failed`, ` getValue incorrect stderr: ${ log.errBuf }` );
+
+         done( );
+      });
+
+   });
 });

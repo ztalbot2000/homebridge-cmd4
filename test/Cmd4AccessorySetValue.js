@@ -621,4 +621,50 @@ describe( "Testing Cmd4Accessory", function( )
          done( );
       });
    });
+
+   it( "setValue of timeout response should fail correctly", function ( done )
+   {
+      const log = new Logger( );
+      log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
+
+      // A config file to play with.
+      let TVConfig =
+      {
+          name:                     "My_Television",
+          type:                     "Television",
+          Cmd4_Mode:                "Demo",
+          category:                 "TELEVISION",
+          publishExternally:        true,
+          active:                   "ACTIVE",
+          activeIdentifier:          1234,
+          mute:                     true,
+          configuredName:           "My_Television",
+          sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
+          brightness:                8,
+          closedCaptions:           "DISABLED",
+          currentMediaState:        "STOP",
+          targetMediaState:         "STOP",
+          pictureMode:              "STANDARD",
+          remoteKey:                "SELECT"
+      };
+
+      let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
+
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
+      cmd4Accessory.state_cmd = "./test/echoScripts/runToTimeoutRcOf0";
+      cmd4Accessory.timeout = 400;
+
+      cmd4Accessory.setValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", cmd4Accessory.timeout, cmd4Accessory.stateChangeResponseTime, 0, function( rc, result )
+      {
+         assert.equal( rc, constants.ERROR_TIMER_EXPIRED, ` setValue incorrect rc: ${ rc }` );
+         expect( result, ` getValue incorrect result: ${ result }` ).to.not.exist;
+
+         assert.include( log.logBuf, `[34mSetting My_Television Mute\u001b[39m 0`, ` setValue output something to stdout: ${ log.logBuf }` );
+         assert.include( log.errBuf, `[31m\u001b[31msetValue Mute function failed for My_Television cmd: ./test/echoScripts/runToTimeoutRcOf0 Set 'My_Television' 'Mute' '0' Failed`, ` setValue incorrect stderr: ${ log.errBuf }` );
+
+         done( );
+      });
+   });
+
 });

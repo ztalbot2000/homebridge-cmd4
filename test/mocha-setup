@@ -71,3 +71,31 @@ global.sleep = function( secondsToSleep = 1 )
 
 // How it's used
 // sleep( 10 );
+
+global.cleanStatesDir = function( )
+{
+   const os = require( "os" );
+   const cmd4StateDir = os.homedir( ) + "/.homebridge/Cmd4Scripts/Cmd4States/"
+
+   var glob = require( "glob" );
+
+
+   glob( cmd4StateDir + "Status_Device_*", null, function ( er, files )
+   {
+      for ( var file of files )
+      {
+         // To use the promise of unlink, it must be in an async function
+         // so put it in one.  Why not unLinkSync, because for whatever reason
+         // some files were notbremoved synchronously.
+         ( async( ) =>
+         {
+            await fs.unlink( file, function( err, result )
+            {
+                  if ( err && err.code != 'ENOENT' )
+                     console.log( 'file not removed err: ' + err + " result: " + result );
+            });
+         });
+      }
+   })
+}
+

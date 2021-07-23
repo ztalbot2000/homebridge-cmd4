@@ -3,7 +3,6 @@
 // 3rd Party includes
 const exec = require( "child_process" ).exec;
 //const spawn = require( "child_process" ).spawn;
-const spawn = require( "cross-spawn" );
 const moment = require( "moment" );
 const fs = require( "fs" );
 const commandExistsSync = require( "command-exists" ).sync;
@@ -661,58 +660,58 @@ class Cmd4Accessory
    //
    //       - Where he value in <> is an one of CMD4_ACC_TYPE_ENUM
    // ***********************************************
-   setValue( accTypeEnumIndex, characteristicString, timeout, stateChangeResponseTime, value, callback, isPriority = false )
+   setValue( accTypeEnumIndex, characteristicString, timeout, stateChangeResponseTime, value, callback, qCallback = null )
    {
       let self = this;
 
-      // As innocuious as this sounds the purpose is to flag that PriorityQueuePolling
-      // was initiated.
-      let QIndicator = ".";
-      if ( isPriority == false )
-          QIndicator = "";
-
-      //var transposed = { [ constants.VALUE_lv ]: value, [ constants.RC_lv ]: true, [ constants.MSG_lv ]: "" };
       if ( self.outputConstants == true )
       {
-         //transposed = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value );
          value = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value );
 
-      }
-      else {
-
-         //transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value );
-         // This is historical
+      } else
+      {
          value = transposeBoolToValue( value );
       }
-      //if ( transposed.rc == false )
-      //   self.log.warn( `${ self.displayName }: ${ transposed.msg }${ QIndicator }`);
-
-      //let valueToSend = transposed.value;
 
       let cmd = self.state_cmd_prefix + self.state_cmd + " Set '" + self.displayName + "' '" + characteristicString  + "' '" + value  + "'" + self.state_cmd_suffix;
 
       if ( self.statusMsg == "TRUE" )
-         self.log.info( chalk.blue( `Setting ${ self.displayName } ${ characteristicString }` ) + ` ${ value }${ QIndicator }` );
+         self.log.info( chalk.blue( `Setting ${ self.displayName } ${ characteristicString }` ) + ` ${ value }` );
 
-      if ( cmd4Dbg ) self.log.debug( `setValue: accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } ${ value }  cmd: ${ cmd }${ QIndicator }` );
+      if ( cmd4Dbg ) self.log.debug( `setValue: accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } ${ value }  cmd: ${ cmd }` );
 
       // Execute command to Set a characteristic value for an accessory
-      exec( cmd, { timeout: timeout }, function ( error, stdout, stderr )
+      let child = exec( cmd, { timeout: timeout }, function ( error, stdout, stderr )
       {
          if ( stderr )
-            self.log.error( `setValue: ${ characteristicString } function for ${ self.displayName } streamed to stderr: ${ stderr }${ QIndicator }` );
+            self.log.error( `setValue: ${ characteristicString } function for ${ self.displayName } streamed to stderr: ${ stderr }` );
 
          if ( error )
+            self.log.error( chalk.red( `setValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  Error: ${ error.message }` ) );
+
+      }).on( "close", ( code ) =>
+      {
+         if ( code != 0 )
          {
-            self.log.error( chalk.red( `setValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  Error: ${ error.message }${ QIndicator }` ) );
-            callback( error );
+            if ( child.killed == true )
+            {
+               self.log.error( chalk.red( `setValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  Error: ${ code } ${ constants.DBUSY }` ) );
+
+               callback( constants.ERROR_TIMER_EXPIRED );
+               if ( qCallback) qCallback( constants.ERROR_TIMER_EXPIRED );
+
+               return;
+            }
+
+            callback( code );
+            if ( qCallback) qCallback( code );
 
             return;
          }
 
          let responded = false;
 
-         if ( isPriority == false )
+         if ( qCallback == null )
          {
            let relatedCurrentAccTypeEnumIndex = self.getDevicesRelatedCurrentAccTypeEnumIndex( accTypeEnumIndex );
            if ( relatedCurrentAccTypeEnumIndex != null &&
@@ -725,7 +724,8 @@ class Cmd4Accessory
                let relatedCurrentCharacteristic = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].characteristic;
                let relatedCurrentCharacteristicString = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].type;
 
-               setTimeout( ( ) => {
+               setTimeout( ( ) =>
+               {
                   if ( cmd4Dbg ) self.log.debug( `Proccessing related characteristic ${ relatedCurrentCharacteristicString }` );
 
                   self.getValue( relatedCurrentAccTypeEnumIndex, relatedCurrentCharacteristicString, timeout, function ( error, properValue ) {
@@ -760,7 +760,13 @@ class Cmd4Accessory
             self.setStoredValueForIndex( accTypeEnumIndex, value );
 
          if ( responded == false )
-            callback( 0 );
+         {
+            callback( code );
+            if ( qCallback)
+            {
+               qCallback( code );
+            }
+         }
 
       });
    }
@@ -837,133 +843,75 @@ class Cmd4Accessory
    //           the CMD4_ACC_TYPE_ENUM.
    //
    // ***********************************************
-   getValue( accTypeEnumIndex, characteristicString, timeout, callback, pollingID = 0 )
+   getValue( accTypeEnumIndex, characteristicString, timeout, callback, qCallback = null )
    {
       let self = this;
-      let errMsg = "";
-
-      // As innocuious as this sounds the purpose is to flag that PriorityQueuePolling
-      // was initiated.
-      let QIndicator = ".";
-      if ( pollingID == 0 )
-          QIndicator = "";
 
       let cmd = this.state_cmd_prefix + this.state_cmd + " Get '" + this.displayName + "' '" + characteristicString  + "'" + this.state_cmd_suffix;
 
-      if ( cmd4Dbg ) self.log.debug( `getValue: accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } cmd: ${ cmd }${ QIndicator }` );
+      if ( cmd4Dbg ) self.log.debug( `getValue: accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } cmd: ${ cmd }` );
 
-      let replyCount = 0;
+      let reply = "NxN";
 
       // Execute command to Get a characteristics value for an accessory
       // exec( cmd, { timeout: timeout }, function ( error, stdout, stderr )
-      let child = spawn( cmd, { shell:true } );
-
-      const timer = setTimeout( ( ) =>
+      //let child = spawn( cmd, { shell:true } );
+      let child = exec( cmd, { timeout:self.timeout }, function ( error, stdout, stderr )
       {
-         replyCount++;
+         if ( stderr )
+            self.log.error( `getValue: ${ characteristicString } function for ${ self.displayName } streamed to stderr: ${ stderr }` );
 
-         // Only the first message should be valid
-         if ( replyCount == 1 )
-            self.log.error( chalk.red( `getValue ${ characteristicString } function timed out ${ timeout }ms for ${ self.displayName } cmd: ${ cmd } Failed${ QIndicator }` ) );
+         // Handle errors when process closes
+         if ( error )
+            self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  generated Error: ${ error }` ) );
+
+         reply = stdout;
 
 
-         child.kill( 'SIGINT' );
-
-         // Do not call the callback or too many will be called.
-         // Prefer homebridge complain about slow response.
-
-         // We can call our callback though ;-)
-         if ( pollingID != 0 && replyCount == 1 )
-            callback( constants.ERROR_TIMER_EXPIRED, null, pollingID, errMsg );
-
-         return;
-
-      }, timeout );
-
-      child.stderr.on('data', ( data ) =>
+      }).on('close', ( code ) =>
       {
-         self.log.error( `getValue: ${ characteristicString } function for ${ self.displayName } streamed to stderr: ${ data }${ QIndicator }` );
-      });
 
-      child.on('close', ( code ) =>
-      {
-         replyCount++;
-
-         // Only the first message should be valid
-         if ( code != 0 && replyCount == 1 )
+         // Was the return code successful ?
+         if ( code != 0 )
          {
-            errMsg = chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  replyCount: ${ replyCount } Error: ${ code }. ${ constants.DBUSY }${ QIndicator }` );
+            // Commands that time out have "null" return codes. So get the real one.
+            if ( child.killed == true )
+            {
+               self.log.error( chalk.red( `getValue ${ characteristicString } function timed out ${ timeout }ms for ${ self.displayName } cmd: ${ cmd } Failed` ) );
+               callback( constants.ERROR_TIMER_EXPIRED );
 
-            if ( pollingID == 0 )
-               self.log.error( errMsg );
+               return;
+            }
+            self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed. Error: ${ code }. ${ constants.DBUSY }` ) );
+
+            callback( code );
+            if ( qCallback ) qCallback( code );
+
+            return;
          }
 
-         clearTimeout( timer );
-
-         // Do not call the callback as too many will be called.
-         // Prefer homebridge complain about slow response.
-
-         // We can call our callback though ;-)
-         if ( pollingID != 0 && replyCount == 1 && code == 0 )
-            callback( constants.ERROR_NO_DATA_REPLY, null, pollingID, errMsg );
-
-         return;
-      });
-
-      child.on('error', ( error ) =>
-      {
-         replyCount++;
-
-         // Only the first message should be valid
-         if ( replyCount == 1 )
-            self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  generated Error: ${ error }${ QIndicator }` ) );
-
-         // Do not call the callback as too many will be called.
-         // Prefer homebridge complain about slow response.
-
-         // Stop babbling
-         child.kill( 'SIGINT' );
-
-         // We can call our callback though ;-)
-         if ( pollingID != 0 && replyCount == 1 )
-            callback( constants.ERROR_CMD_FAILED_REPLY, null, pollingID, errMsg );
-
-         return;
-      });
-
-      child.stdout.on('data', ( reply ) =>
-      {
-         replyCount++;
-
-         // Only the first message should be valid
-         if ( replyCount > 1 )
+         if ( reply == "NxN" )
          {
-            // Stop babbling
-            child.kill( 'SIGINT' );
+            self.log.error( `getValue: nothing returned from stdout for ${ characteristicString } ${ self.displayName }. ${ constants.DBUSY }` );
 
-            // Do not call the callback or continue processing as too many will be called.
+            // We can call our callback though ;-)
+            callback( constants.ERROR_NO_DATA_REPLY );
+            if ( qCallback ) qCallback( constants.ERROR_NO_DATA_REPLY );
+
             return;
          }
 
          if ( reply == null )
          {
-            errMsg = `getValue: null returned from stdout for ${ characteristicString } ${ self.displayName }. ${ constants.DBUSY }${ QIndicator }`;
-
-            if ( pollingID == 0 )
-               self.log.error( errMsg );
-
-            // Do not call the callback or continue processing as too many will be called.
-            // Prefer homebridge complain about slow response.
-
-            // Stop babbling
-            child.kill( 'SIGINT' );
+            self.log.error( `getValue: null returned from stdout for ${ characteristicString } ${ self.displayName }. ${ constants.DBUSY }` );
 
             // We can call our callback though ;-)
-            if ( pollingID != 0 )
-               callback( constants.ERROR_NULL_REPLY, null, pollingID, errMsg );
+            callback( constants.ERROR_NULL_REPLY );
+            if ( qCallback ) qCallback( constants.ERROR_NULL_REPLY );
 
             return;
          }
+
 
          // Coerce to string for manipulation
          reply += '';
@@ -976,19 +924,9 @@ class Cmd4Accessory
          // to catch this before much string manipulation was done.
          if ( trimmedReply.toUpperCase( ) == "NULL" )
          {
-            errMsg = `getValue: "${ trimmedReply }" returned from stdout for ${ characteristicString } ${ self.displayName }. ${ constants.DBUSY }${ QIndicator }`;
-            if ( pollingID == 0 )
-               self.log.error( errMsg );
-
-            // Do not call the callback or continue processing as too many will be called.
-            // Prefer homebridge complain about slow response.
-
-            // Stop babbling
-            child.kill( 'SIGINT' );
-
-            // We can call our callback though ;-)
-            if ( pollingID != 0 )
-               callback( constants.ERROR_NULL_STRING_REPLY, null, pollingID, errMsg );
+            self.log.error( `getValue: "${ trimmedReply }" returned from stdout for ${ characteristicString } ${ self.displayName }. ${ constants.DBUSY }` );
+            callback( constants.ERROR_NULL_STRING_REPLY );
+            if ( qCallback ) qCallback( constants.ERROR_NULL_STRING_REPLY );
 
             return;
          }
@@ -1001,21 +939,10 @@ class Cmd4Accessory
 
          if ( unQuotedReply == "" )
          {
-            errMsg = `getValue: ${ characteristicString } function for: ${ self.displayName } returned an empty string "${ trimmedReply }". ${ constants.DBUSY }${ QIndicator }`;
+            self.log.error( `getValue: ${ characteristicString } function for: ${ self.displayName } returned an empty string "${ trimmedReply }". ${ constants.DBUSY }` );
 
-            if ( pollingID == 0 )
-               self.log.error( errMsg );
-
-            // Do not call the callback or continue processing as too many will be called.
-            // Prefer homebridge complain about slow response.
-
-
-            // Stop babbling
-            child.kill( 'SIGINT' );
-
-            // We can call our callback though ;-)
-            if ( pollingID != 0 )
-               callback( constants.ERROR_EMPTY_STRING_REPLY, null, pollingID, errMsg );
+            callback( constants.ERROR_EMPTY_STRING_REPLY );
+            if ( qCallback ) qCallback( constants.ERROR_EMPTY_STRING_REPLY );
 
             return;
          }
@@ -1025,70 +952,44 @@ class Cmd4Accessory
          // things I must do for bad data ....
          if ( unQuotedReply.toUpperCase( ) == "NULL" )
          {
-            errMsg = `getValue: ${ characteristicString } function for ${ self.displayName } returned the string "${ trimmedReply }". ${ constants.DBUSY }${ QIndicator }`;
-            if ( pollingID == 0 )
-                  self.log.error( errMsg );
+            self.log.error( `getValue: ${ characteristicString } function for ${ self.displayName } returned the string "${ trimmedReply }". ${ constants.DBUSY }` );
 
-            // Do not call the callback or continue processing as too many will be called.
-            // Prefer homebridge complain about slow response.
-
-
-            // Stop babbling
-            child.kill( 'SIGINT' );
-
-            // We can call our callback though ;-)
-            if ( pollingID != 0 )
-               callback( constants.ERROR_2ND_NULL_STRING_REPLY, null, pollingID, errMsg );
+            callback( constants.ERROR_2ND_NULL_STRING_REPLY );
+            if ( qCallback ) qCallback( constants.ERROR_2ND_NULL_STRING_REPLY );
 
             return;
          }
 
          let words = unQuotedReply.split( " " ).length;
-         let allowedWordCount = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.allowedWordCount;
-         // Temp variable is faster than traversing large object
-         if ( words > 1 && allowedWordCount == 1 )
+         if ( words > 1 && CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.allowedWordCount == 1 )
          {
-            self.log.warn( `getValue: Warning, Retrieving ${ characteristicString }, expected only one word value for: ${ self.displayName } of: ${ trimmedReply }${ QIndicator }` );
+            self.log.warn( `getValue: Warning, Retrieving ${ characteristicString }, expected only one word value for: ${ self.displayName } of: ${ trimmedReply }` );
          }
 
-         if ( cmd4Dbg ) self.log.debug( `getValue: ${ characteristicString } function for: ${ self.displayName } returned: ${ unQuotedReply }${ QIndicator }` );
+         if ( cmd4Dbg ) self.log.debug( `getValue: ${ characteristicString } function for: ${ self.displayName } returned: ${ unQuotedReply }` );
 
 
-         // Even if outputConsts is not set, just in case, transpose
-         // it anyway.
-         //var transposed = { [ constants.VALUE_lv ]: unQuotedReply, [ constants.RC_lv ]: true, [ constants.MSG_lv ]: "" };
          var transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, unQuotedReply )
-         //if ( transposed.rc == false )
-         //   self.log.warn( `${ self.displayName }: ${ transposed.msg }${ QIndicator }` );
 
-         //unQuotedReply = transposed.value;
 
          // Return the appropriate type, by seeing what it is
          // defined as in Homebridge,
-         //let properValue = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( unQuotedReply );
          let properValue = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( transposed );
          if ( properValue == undefined )
          {
-            self.log.warn( `${ self.displayName } ` + chalk.red( `Cannot convert value: ${ unQuotedReply } to ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format } for ${ characteristicString }${ QIndicator }` ) );
+            self.log.warn( `${ self.displayName } ` + chalk.red( `Cannot convert value: ${ unQuotedReply } to ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format } for ${ characteristicString }` ) );
 
-            // Do not call the callback or continue processing as too many will be called.
-
-            // Stop babbling
-            child.kill( 'SIGINT' );
-
-            // We can call our callback though ;-)
-            if ( pollingID != 0 )
-               callback( constants.ERROR_NON_CONVERTABLE_REPLY, null, pollingID, errMsg );
+            callback( constants.ERROR_NON_CONVERTABLE_REPLY );
+            if ( qCallback ) qCallback( constants.ERROR_NON_CONVERTABLE_REPLY );
 
             return;
          }
 
+         // Success !!!!
+         callback( 0, properValue );
 
-         if ( pollingID != 0 )
-            callback( 0, properValue, pollingID, errMsg );
-         else
-            callback( 0, properValue );
 
+         if ( qCallback ) qCallback( 0, properValue );
 
          // Store history using fakegato if set up
          self.updateAccessoryAttribute( accTypeEnumIndex, properValue );

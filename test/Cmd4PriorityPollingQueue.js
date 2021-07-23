@@ -10,7 +10,9 @@ let Cmd4Platform = require( "../Cmd4Platform" ).Cmd4Platform;
 let Cmd4PriorityPollingQueue = require( "../Cmd4PriorityPollingQueue" ).Cmd4PriorityPollingQueue;
 
 
-
+let HIGH_PRIORITY_SET = 0;
+let HIGH_PRIORITY_GET = 1;
+//let LOW_PRIORITY_GET = 2;
 
 
 var _api = new HomebridgeAPI( ); // object we feed to Plugins
@@ -53,6 +55,8 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
    before( ( ) =>
    {
       sinon.stub( process, `exit` );
+
+      cleanStatesDir();
    });
    after( ( ) =>
    {
@@ -116,7 +120,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
 
    });
 
-   it( "Test existiance of prioritySetValue", function( )
+   it( "Test existance of prioritySetValue", function( )
    {
 
       let queueName = "Queue A";
@@ -155,7 +159,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
 
    });
 
-   it( "Test existiance of priorityGetValue", function( )
+   it( "Test existance of priorityGetValue", function( )
    {
       let platformConfig =
       {
@@ -291,6 +295,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       done();
 
    });
+
    it( "Test processEntryFromLowPriorityQueue", function( done  )
    {
       let platformConfig =
@@ -349,8 +354,8 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
 
       setTimeout( () =>
       {
-         assert.include( log.logBuf, `[90mgetValue: accTypeEnumIndex:( 105 )-"On" function for: My_Switch cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Switch' 'On'.\u001b[39m` , `expected stdout: ${ log.logBuf }` );
-         assert.include( log.logBuf, `[90mgetValue: On function for: My_Switch returned: 0` , `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: accTypeEnumIndex:( 105 )-"On" function for: My_Switch cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Switch' 'On'\u001b[39m` , `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: On function for: My_Switch returned: 1` , `expected stdout: ${ log.logBuf }` );
          // Low priority queues are continious, make sure it is still the same
          assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 4, `After poll, low priority queue length should atill be the same size` );
 
@@ -535,6 +540,9 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
    before( ( ) =>
    {
       sinon.stub( process, `exit` );
+
+      cleanStatesDir();
+
    });
    after( ( ) =>
    {
@@ -567,11 +575,11 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
 
    });
 
-   it( `Test Cmd4PriorityPollingQueue startQueue outputs 1 message but counts the 5 squashed`, function( done )
+   it( `Test Cmd4PriorityPollingQueue queue can be started`, function( done )
    {
       let log = new Logger( );
       log.setBufferEnabled( );
-      log.setOutputEnabled( true );
+      log.setOutputEnabled( false );
       log.setDebugEnabled( true );
 
       let queueName = "Queue A";
@@ -962,4 +970,227 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       done();
 
    });
+
+   it( `Test "Get" Entry From High Priority Queue`, ( done  ) =>
+   {
+      let platformConfig =
+      {
+         accessories: [
+         {
+            Name:         "My_Switch",
+            DisplayName:  "My_Switch",
+            StatusMsg:    true,
+            Type:         "Switch",
+            Cmd4_Mode:    "Polled",
+            On:           0,
+            Active:       0,
+            Polling: [{ Characteristic: "On", Queue: "A" },
+                      { Characteristic: "Active", Queue: "A" }
+                     ],
+            State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         }]
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
+
+      assert.equal( Object.keys(settings.listOfCreatedPriorityQueues).length, 1, `Incorrect number of polling queues created` );
+
+      let queue = settings.listOfCreatedPriorityQueues[ "A" ];
+
+      expect( queue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PollingQueue" );
+
+      assert.equal( queue.lowPriorityQueue.length, 2, `Incorrect number of low level polling characteristics` );
+
+
+      let cmd4SwitchAccessory = cmd4Platform.createdCmd4Accessories[0];
+
+      let cmd4PriorityPollingQueue = cmd4SwitchAccessory.queue;
+      expect( cmd4PriorityPollingQueue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "Cmd4PriorityPollingQueue is not an instance of Cmd4Accessory" );
+
+
+      log.reset( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+      var dummyCallback = function( rc, result )
+      {
+
+         assert.equal( rc, 0, ` getValue incorrect rc: ${ rc }` );
+         assert.equal( result, true, ` getValue incorrect result: ${ result }` );
+
+         assert.include( log.logBuf, `[90mProcessing high priority queue "Get" entry: 105 isUpdate: false length: 0` , `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: accTypeEnumIndex:( 105 )-"On" function for: My_Switch cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Switch' 'On'\u001b[39m` , `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: On function for: My_Switch returned: 1` , `expected stdout: ${ log.logBuf }` );
+
+         done( );
+
+      };
+
+      cmd4PriorityPollingQueue.highPriorityQueue.push( { [ constants.IS_SET_lv ]: false, [ constants.QUEUE_GET_IS_UPDATE_lv ]: false, [ constants.ACCESSORY_lv ]: cmd4SwitchAccessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: CMD4_ACC_TYPE_ENUM.On, [ constants.CHARACTERISTIC_STRING_lv ]: "On", [ constants.TIMEOUT_lv ]: cmd4SwitchAccessory.timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: null, [ constants.VALUE_lv ]: null, [ constants.CALLBACK_lv ]: dummyCallback } );
+
+      cmd4PriorityPollingQueue.processQueue( HIGH_PRIORITY_GET, cmd4PriorityPollingQueue );
+   });
+
+   it( `Test "Set" Entry From High Priority Queue`, ( done  ) =>
+   {
+      let platformConfig =
+      {
+         accessories: [
+         {
+            Name:         "My_Switch",
+            DisplayName:  "My_Switch",
+            StatusMsg:    true,
+            Type:         "Switch",
+            Cmd4_Mode:    "Polled",
+            On:           0,
+            Active:       0,
+            Polling: [{ Characteristic: "On", Queue: "A" },
+                      { Characteristic: "Active", Queue: "A" }
+                     ],
+            State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         }]
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
+
+      assert.equal( Object.keys(settings.listOfCreatedPriorityQueues).length, 1, `Incorrect number of polling queues created` );
+
+      let queue = settings.listOfCreatedPriorityQueues[ "A" ];
+
+      expect( queue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PollingQueue" );
+
+      assert.equal( queue.lowPriorityQueue.length, 2, `Incorrect number of low level polling characteristics` );
+
+
+      let cmd4SwitchAccessory = cmd4Platform.createdCmd4Accessories[0];
+
+      let cmd4PriorityPollingQueue = cmd4SwitchAccessory.queue;
+      expect( cmd4PriorityPollingQueue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "Cmd4PriorityPollingQueue is not an instance of Cmd4Accessory" );
+
+
+      log.reset( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+      var dummyCallback = function( rc )
+      {
+
+         assert.equal( rc, 0, ` getValue incorrect rc: ${ rc }` );
+
+         assert.include( log.logBuf, `[90mProcessing high priority queue "Set" entry: 105 length: 0` , `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90msetValue: accTypeEnumIndex:( 105 )-"On" function for: My_Switch 1  cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Set 'My_Switch' 'On' '1'` , `expected stdout: ${ log.logBuf }` );
+
+         done( );
+
+      };
+
+      cmd4PriorityPollingQueue.highPriorityQueue.push( { [ constants.IS_SET_lv ]: true, [ constants.QUEUE_GET_IS_UPDATE_lv ]: false, [ constants.ACCESSORY_lv ]: cmd4SwitchAccessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: CMD4_ACC_TYPE_ENUM.On, [ constants.CHARACTERISTIC_STRING_lv ]: "On", [ constants.TIMEOUT_lv ]: cmd4SwitchAccessory.timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: null, [ constants.VALUE_lv ]: true, [ constants.CALLBACK_lv ]: dummyCallback } );
+
+      cmd4PriorityPollingQueue.processQueue( HIGH_PRIORITY_GET, cmd4PriorityPollingQueue );
+   });
+
+   it( `Test "Set" Entry With Related CharacteristicFrom High Priority Queue`, ( done  ) =>
+   {
+      let platformConfig =
+      {
+         accessories: [
+         {
+            Name:         "My_Door",
+            DisplayName:  "My_Door",
+            StatusMsg:    true,
+            Type:         "Door",
+            Cmd4_Mode:    "Polled",
+            CurrentPosition:      0,
+            TargetPosition:       0,
+            PositionState:       "STOPPED",
+            StateChangeResponseTime: 0,
+            Polling: [{ Characteristic: "CurrentPosition", Queue: "A" },
+                      { Characteristic: "TargetPosition", Queue: "A" }
+                     ],
+            State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         }]
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
+
+      assert.equal( Object.keys(settings.listOfCreatedPriorityQueues).length, 1, `Incorrect number of polling queues created` );
+
+      let queue = settings.listOfCreatedPriorityQueues[ "A" ];
+
+      expect( queue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PollingQueue" );
+
+      assert.equal( queue.lowPriorityQueue.length, 2, `Incorrect number of low level polling characteristics` );
+
+
+      let cmd4DoorAccessory = cmd4Platform.createdCmd4Accessories[0];
+
+      let cmd4PriorityPollingQueue = cmd4DoorAccessory.queue;
+      expect( cmd4PriorityPollingQueue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "Cmd4PriorityPollingQueue is not an instance of Cmd4Accessory" );
+
+
+      log.reset( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+      let dummyCallbackCount = 0;
+      var dummyCallback = function( rc )
+      {
+         dummyCallbackCount ++;
+         assert.equal( dummyCallbackCount, 1, ` callback called too many times` );
+
+         assert.equal( rc, 0, ` setValue incorrect rc: ${ rc }` );
+
+         assert.include( log.logBuf, `[90mProcessing high priority queue "Set" entry: 192 length: 0` , `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90msetValue: accTypeEnumIndex:( 192 )-"TargetPosition" function for: My_Door 100  cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Set 'My_Door' 'TargetPosition' '100'`, `expected stdout: ${ log.logBuf }` );
+
+         //log.reset( );
+         //log.setOutputEnabled( false );
+         //log.setDebugEnabled( true );
+
+         // Wait for the related getValue to happen
+         setTimeout( ( ) =>
+         {
+            assert.include( log.logBuf, `[90mProcessing high priority queue "Get" entry: 43 isUpdate: true length: ` , `expected stdout: ${ log.logBuf }` );
+            assert.include( log.logBuf, `[90mgetValue: accTypeEnumIndex:( 43 )-"CurrentPosition" function for: My_Door cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Door' 'CurrentPosition'`, `expected stdout: ${ log.logBuf }` );
+            assert.include( log.logBuf, `[90mgetValue: CurrentPosition function for: My_Door returned: 100`, `expected stdout: ${ log.logBuf }` );
+
+            done( );
+
+         }, 3000 );
+
+      };
+
+      cmd4PriorityPollingQueue.highPriorityQueue.push( { [ constants.IS_SET_lv ]: true, [ constants.QUEUE_GET_IS_UPDATE_lv ]: false, [ constants.ACCESSORY_lv ]: cmd4DoorAccessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: CMD4_ACC_TYPE_ENUM.TargetPosition, [ constants.CHARACTERISTIC_STRING_lv ]: "TargetPosition", [ constants.TIMEOUT_lv ]: cmd4DoorAccessory.timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: null, [ constants.VALUE_lv ]: 100, [ constants.CALLBACK_lv ]: dummyCallback } );
+
+      cmd4PriorityPollingQueue.processQueue( HIGH_PRIORITY_SET, cmd4PriorityPollingQueue );
+
+   }).timeout( 6000 );
+
 });

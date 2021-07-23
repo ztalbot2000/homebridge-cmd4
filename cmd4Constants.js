@@ -150,7 +150,7 @@ exports.VALUE_lv                       = "value";
 exports.STORED_VALUES_PER_CHARACTERISTIC_lv = "storedValuesPerCharacteristic";
 
 exports.ERROR_TIMER_EXPIRED           = -151;
-exports.ERROR_CMD_FAILED_REPLY        = -152;
+//Exports.ERROR_CMD_FAILED_REPLY        = -152;
 exports.ERROR_NULL_REPLY              = -153;
 exports.ERROR_NULL_STRING_REPLY       = -154;
 exports.ERROR_EMPTY_STRING_REPLY      = -155;
