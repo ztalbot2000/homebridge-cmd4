@@ -22,6 +22,10 @@ let LOW_PRIORITY_GET = 2;
 
 let cmd4Dbg = settings.cmd4Dbg;
 
+function dummyCallback( )
+{
+}
+
 class Cmd4PriorityPollingQueue
 {
    constructor( log, queueName, queueType = constants.DEFAULT_QUEUE_TYPE, queueMsg = constants.DEFAULT_QUEUEMSG, queueStatMsgInterval = constants.DEFAULT_QUEUE_STAT_MSG_INTERVAL )
@@ -193,14 +197,22 @@ class Cmd4PriorityPollingQueue
       if ( cmd4Dbg ) this.log.debug( `Processing high priority queue "Get" entry: ${ entry.accTypeEnumIndex } isUpdate: ${ entry.queueGetIsUpdate } length: ${ entry.accessory.queue.highPriorityQueue.length }` );
 
       entry.accessory.queue.inProgressGets ++;
-      entry.accessory.getValue( entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, function ( error, properValue )
+
+      // By default the high priority "Get" callback is the callback given by homebridge
+      // However, A high priority "Set" will cause a High Priority "Get" that needs
+      // to update homebrige with a getValue call.
+      let callback = entry.callback;
+      if ( entry.queueGetIsUpdate == true )
+         callback = dummyCallback;
+
+
+      // isLowPriority is set to false,
+      entry.accessory.getValue( entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, callback, false, function ( error, properValue )
       {
          // Nothing special was done for casing on errors, so omit it.
          if ( error == 0 )
          {
-            if ( entry.queueGetIsUpdate == false )
-               entry.callback( error, properValue );
-            else
+            if ( entry.queueGetIsUpdate == true )
                entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( properValue );
 
              // A good anything, updates the lastGoodTransactionTime
@@ -208,9 +220,6 @@ class Cmd4PriorityPollingQueue
 
          } else
          {
-            // A response is expected for "Get" without update.
-            if ( entry.queueGetIsUpdate == false )
-               entry.callback( error );
 
             entry.accessory.queue.pauseQueue( entry.accessory.queue );
          }
@@ -237,7 +246,9 @@ class Cmd4PriorityPollingQueue
 
       entry.accessory.queue.inProgressGets ++;
 
-      entry.accessory.getValue( entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, function ( error, properValue )
+      // isLowPriority is set to true,
+      // lowPriority "Gets" do not have a callback. Use the qCallback
+      entry.accessory.getValue( entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, dummyCallback, true, function ( error, properValue )
       {
 
          // For the next one
