@@ -843,9 +843,14 @@ class Cmd4Accessory
    //           the CMD4_ACC_TYPE_ENUM.
    //
    // ***********************************************
-   getValue( accTypeEnumIndex, characteristicString, timeout, callback, qCallback = null )
+   getValue( accTypeEnumIndex, characteristicString, timeout, callback, isLowPriority = false,  qCallback = null )
    {
       let self = this;
+
+      // Ignore lowPriority queue messages that could be caused by the device being busy.
+      let nDbg = true;
+      if ( cmd4Dbg && isLowPriority )
+         nDbg = false;
 
       let cmd = this.state_cmd_prefix + this.state_cmd + " Get '" + this.displayName + "' '" + characteristicString  + "'" + this.state_cmd_suffix;
 
@@ -882,7 +887,7 @@ class Cmd4Accessory
 
                return;
             }
-            self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed. Error: ${ code }. ${ constants.DBUSY }` ) );
+            if ( nDbg ) self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed. Error: ${ code }. ${ constants.DBUSY }` ) );
 
             callback( code );
             if ( qCallback ) qCallback( code );
@@ -892,7 +897,7 @@ class Cmd4Accessory
 
          if ( reply == "NxN" )
          {
-            self.log.error( `getValue: nothing returned from stdout for ${ characteristicString } ${ self.displayName }. ${ constants.DBUSY }` );
+            if ( nDbg ) self.log.error( `getValue: nothing returned from stdout for ${ characteristicString } ${ self.displayName }. ${ constants.DBUSY }` );
 
             // We can call our callback though ;-)
             callback( constants.ERROR_NO_DATA_REPLY );
@@ -903,7 +908,7 @@ class Cmd4Accessory
 
          if ( reply == null )
          {
-            self.log.error( `getValue: null returned from stdout for ${ characteristicString } ${ self.displayName }. ${ constants.DBUSY }` );
+            if ( nDbg ) self.log.error( `getValue: null returned from stdout for ${ characteristicString } ${ self.displayName }. ${ constants.DBUSY }` );
 
             // We can call our callback though ;-)
             callback( constants.ERROR_NULL_REPLY );
@@ -924,7 +929,7 @@ class Cmd4Accessory
          // to catch this before much string manipulation was done.
          if ( trimmedReply.toUpperCase( ) == "NULL" )
          {
-            self.log.error( `getValue: "${ trimmedReply }" returned from stdout for ${ characteristicString } ${ self.displayName }. ${ constants.DBUSY }` );
+            if ( nDbg ) self.log.error( `getValue: "${ trimmedReply }" returned from stdout for ${ characteristicString } ${ self.displayName }. ${ constants.DBUSY }` );
             callback( constants.ERROR_NULL_STRING_REPLY );
             if ( qCallback ) qCallback( constants.ERROR_NULL_STRING_REPLY );
 
@@ -939,7 +944,7 @@ class Cmd4Accessory
 
          if ( unQuotedReply == "" )
          {
-            self.log.error( `getValue: ${ characteristicString } function for: ${ self.displayName } returned an empty string "${ trimmedReply }". ${ constants.DBUSY }` );
+            if ( nDbg ) self.log.error( `getValue: ${ characteristicString } function for: ${ self.displayName } returned an empty string "${ trimmedReply }". ${ constants.DBUSY }` );
 
             callback( constants.ERROR_EMPTY_STRING_REPLY );
             if ( qCallback ) qCallback( constants.ERROR_EMPTY_STRING_REPLY );
@@ -952,7 +957,7 @@ class Cmd4Accessory
          // things I must do for bad data ....
          if ( unQuotedReply.toUpperCase( ) == "NULL" )
          {
-            self.log.error( `getValue: ${ characteristicString } function for ${ self.displayName } returned the string "${ trimmedReply }". ${ constants.DBUSY }` );
+            if ( nDbg ) self.log.error( `getValue: ${ characteristicString } function for ${ self.displayName } returned the string "${ trimmedReply }". ${ constants.DBUSY }` );
 
             callback( constants.ERROR_2ND_NULL_STRING_REPLY );
             if ( qCallback ) qCallback( constants.ERROR_2ND_NULL_STRING_REPLY );
