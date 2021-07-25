@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-4-2-1">**Whats new in 4.2.1**</a>
 * <a href="#Whats-new-in-4-2-0">**Whats new in 4.2.0**</a>
 * <a href="#Whats-new-in-4-0-1">**Whats new in 4.0.1**</a>
 * <a href="#Whats-new-in-4-0-0">**Whats new in 4.0.0**</a>
@@ -64,6 +65,14 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-4-2-1">## Whats new in 4.2.1</a>
+#### 4.2.1 (2021-07-25)
+
+##### Bug Fixes
+
+*  For ticket [#111](https://github.com/ztalbot2000/homebridge-cmd4/pull/111). Oddly node.js is not passing unused arguments in the correct order ([1b50675a](https://github.com/ztalbot2000/homebridge-cmd4/commit/1b50675a4ceebd2fa34ce69b2b4004dba6ae5a25))
+
 
 <a name="Whats-new-in-4-2-0">## Whats new in 4.2.0</a>
 ## v4.2.0 (2021-07-24)
