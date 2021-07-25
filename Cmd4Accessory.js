@@ -890,7 +890,7 @@ class Cmd4Accessory
             if ( nDbg ) self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed. Error: ${ code }. ${ constants.DBUSY }` ) );
 
             callback( code );
-            if ( qCallback ) qCallback( code );
+            if ( typeof qCallback == "function" ) qCallback( code );
 
             return;
          }
@@ -901,7 +901,7 @@ class Cmd4Accessory
 
             // We can call our callback though ;-)
             callback( constants.ERROR_NO_DATA_REPLY );
-            if ( qCallback ) qCallback( constants.ERROR_NO_DATA_REPLY );
+            if ( typeof qCallback == "function" ) qCallback( constants.ERROR_NO_DATA_REPLY );
 
             return;
          }
@@ -912,7 +912,7 @@ class Cmd4Accessory
 
             // We can call our callback though ;-)
             callback( constants.ERROR_NULL_REPLY );
-            if ( qCallback ) qCallback( constants.ERROR_NULL_REPLY );
+            if ( typeof qCallback == "function" ) qCallback( constants.ERROR_NULL_REPLY );
 
             return;
          }
@@ -931,7 +931,7 @@ class Cmd4Accessory
          {
             if ( nDbg ) self.log.error( `getValue: "${ trimmedReply }" returned from stdout for ${ characteristicString } ${ self.displayName }. ${ constants.DBUSY }` );
             callback( constants.ERROR_NULL_STRING_REPLY );
-            if ( qCallback ) qCallback( constants.ERROR_NULL_STRING_REPLY );
+            if ( typeof qCallback == "function" ) qCallback( constants.ERROR_NULL_STRING_REPLY );
 
             return;
          }
@@ -947,7 +947,7 @@ class Cmd4Accessory
             if ( nDbg ) self.log.error( `getValue: ${ characteristicString } function for: ${ self.displayName } returned an empty string "${ trimmedReply }". ${ constants.DBUSY }` );
 
             callback( constants.ERROR_EMPTY_STRING_REPLY );
-            if ( qCallback ) qCallback( constants.ERROR_EMPTY_STRING_REPLY );
+            if ( typeof qCallback == "function" ) qCallback( constants.ERROR_EMPTY_STRING_REPLY );
 
             return;
          }
@@ -960,7 +960,7 @@ class Cmd4Accessory
             if ( nDbg ) self.log.error( `getValue: ${ characteristicString } function for ${ self.displayName } returned the string "${ trimmedReply }". ${ constants.DBUSY }` );
 
             callback( constants.ERROR_2ND_NULL_STRING_REPLY );
-            if ( qCallback ) qCallback( constants.ERROR_2ND_NULL_STRING_REPLY );
+            if ( typeof qCallback == "function" ) qCallback( constants.ERROR_2ND_NULL_STRING_REPLY );
 
             return;
          }
@@ -985,7 +985,7 @@ class Cmd4Accessory
             self.log.warn( `${ self.displayName } ` + chalk.red( `Cannot convert value: ${ unQuotedReply } to ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format } for ${ characteristicString }` ) );
 
             callback( constants.ERROR_NON_CONVERTABLE_REPLY );
-            if ( qCallback ) qCallback( constants.ERROR_NON_CONVERTABLE_REPLY );
+            if ( typeof qCallback == "function" ) qCallback( constants.ERROR_NON_CONVERTABLE_REPLY );
 
             return;
          }
@@ -993,8 +993,7 @@ class Cmd4Accessory
          // Success !!!!
          callback( 0, properValue );
 
-
-         if ( qCallback ) qCallback( 0, properValue );
+         if ( typeof qCallback == "function" ) qCallback( 0, properValue );
 
          // Store history using fakegato if set up
          self.updateAccessoryAttribute( accTypeEnumIndex, properValue );
