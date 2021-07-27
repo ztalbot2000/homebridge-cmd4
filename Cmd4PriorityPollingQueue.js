@@ -1,5 +1,8 @@
 'use strict';
 
+// 3rd Party includes
+const exec = require( "child_process" ).exec;
+
 
 // These would already be initialized by index.js
 let CMD4_ACC_TYPE_ENUM = require( "./lib/CMD4_ACC_TYPE_ENUM" ).CMD4_ACC_TYPE_ENUM;
@@ -15,16 +18,18 @@ var chalk = require( "chalk" );
 let trueTypeOf = require( "./utils/trueTypeOf" );
 let ucFirst = require( "./utils/ucFirst" );
 
+// For changing validValue Constants to Values and back again
+var { transposeConstantToValidValue,
+      transposeValueToValidConstant,
+      transposeBoolToValue
+    } = require( "./utils/transposeCMD4Props" );
+
 
 let HIGH_PRIORITY_SET = 0;
 let HIGH_PRIORITY_GET = 1;
 let LOW_PRIORITY_GET = 2;
 
 let cmd4Dbg = settings.cmd4Dbg;
-
-function dummyCallback( )
-{
-}
 
 class Cmd4PriorityPollingQueue
 {
@@ -55,6 +60,7 @@ class Cmd4PriorityPollingQueue
       // this timer.
       this.pauseTimer = null;
       this.lastGoodTransactionTime =  Date.now( );
+      this.errorCountSinceLastGoodTransaction;
 
       // - Not a const so it can be manipulated during unit testing
       this.pauseTimerTimeout = constants.DEFAULT_QUEUE_PAUSE_TIMEOUT;
@@ -65,9 +71,13 @@ class Cmd4PriorityPollingQueue
    {
       let self = this;
 
+      // Save the value to cache. The set will come later
+      self.setStoredValueForIndex( accTypeEnumIndex, value );
+      callback( 0 );
+
       let newEntry = { [ constants.IS_SET_lv ]: true, [ constants.ACCESSORY_lv ]: self, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.CALLBACK_lv ]: callback, [ constants.VALUE_lv ]: value };
 
-      // Determine wherebto put theventry in the queue
+      // Determine where to put the entry in the queue
       if ( self.queue.highPriorityQueue.length == 0 )
       {
          // No entries, then it goes on top
@@ -107,7 +117,12 @@ class Cmd4PriorityPollingQueue
    {
       let self = this;
 
-      self.queue.highPriorityQueue.push( { [ constants.IS_SET_lv ]: false, [ constants.QUEUE_GET_IS_UPDATE_lv ]: false, [ constants.ACCESSORY_lv ]: self, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: null, [ constants.VALUE_lv ]: null, [ constants.CALLBACK_lv ]: callback } );
+      // return the cached value
+      let storedValue = self.getStoredValueForIndex( accTypeEnumIndex );
+      callback( 0, storedValue );
+
+      // When the value is returned, it will update homebridge
+      self.queue.highPriorityQueue.push( { [ constants.IS_SET_lv ]: false, [ constants.QUEUE_GET_IS_UPDATE_lv ]: true, [ constants.ACCESSORY_lv ]: self, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: null, [ constants.VALUE_lv ]: null, [ constants.CALLBACK_lv ]: callback } );
 
       self.queue.processQueue( HIGH_PRIORITY_GET, self.queue );
    }
@@ -121,23 +136,14 @@ class Cmd4PriorityPollingQueue
 
    processHighPrioritySetQueue( entry )
    {
-      // This is just a double check and processQueue should not 
-      // ever let this happen
-      if ( entry.accessory.queue.inProgressSets > 0 ||
-           entry.accessory.queue.inProgressGets > 0 )
-      {
-         // If the queue mistakenly calls this, then it would also have
-         // removed the entry from the queue
-         if ( cmd4Dbg ) this.log.debug( chalk.red( `QUEUE ERROR: High priority "Set" queue interrupt attempted: ${ entry.accessory.displayName } ${ entry.characteristicString } inProgressSets:${ entry.accessory.queue.inProgressSets } inProgressGets: ${ entry.accessory.queue.inProgressGets }`));
-         return;
-      }
+      if ( cmd4Dbg ) this.log.debug( `Processing high priority queue "Set" entry: ${ entry.accTypeEnumIndex } length: ${ this.highPriorityQueue.length }` );
 
-      if ( cmd4Dbg ) this.log.debug( `Processing high priority queue "Set" entry: ${ entry.accTypeEnumIndex } length: ${ entry.accessory.queue.highPriorityQueue.length }` );
-
-      entry.accessory.queue.inProgressSets ++;
-      entry.accessory.setValue( entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, entry.stateChangeResponseTime, entry.value, entry.callback, function ( error )
+      this.inProgressSets ++;
+      this.qSetValue( entry.accessory, entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, entry.stateChangeResponseTime, entry.value, function ( error )
       {
          let relatedCurrentAccTypeEnumIndex = entry.accessory.getDevicesRelatedCurrentAccTypeEnumIndex( entry.accTypeEnumIndex );
+
+         let queue = entry.accessory.queue;
 
          if ( error == 0 &&
               relatedCurrentAccTypeEnumIndex != null )
@@ -145,7 +151,8 @@ class Cmd4PriorityPollingQueue
             let relatedCurrentCharacteristicString = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].type;
 
             // A set with no error means the queue is sane to do reading
-            entry.accessory.queue.lastGoodTransactionTime = Date.now( );
+            queue.lastGoodTransactionTime = Date.now( );
+            queue.errorCountSinceLastGoodTransaction = 0;
 
             setTimeout( ( ) =>
             {
@@ -155,22 +162,29 @@ class Cmd4PriorityPollingQueue
                entry.accTypeEnumIndex = relatedCurrentAccTypeEnumIndex;
                entry.characteristicString = relatedCurrentCharacteristicString;
                entry.queueGetIsUpdate = true;
-               entry.accessory.queue.highPriorityQueue.unshift( entry );
+               queue.highPriorityQueue.unshift( entry );
 
                // The "Set" is now complete after its stateChangeResponseTime.
-               entry.accessory.queue.inProgressSets --;
+               queue.inProgressSets --;
 
-               //if ( entry.accessory.queue.queueType == constants.QUEUETYPE_SEQUENTIAL )
-                  setTimeout( ( ) => { entry.accessory.queue.processQueue( HIGH_PRIORITY_GET, entry.accessory.queue ); }, 0 );
+               setTimeout( ( ) => { queue.processQueue( HIGH_PRIORITY_GET, queue ); }, 0 );
 
                return;
 
             }, entry.stateChangeResponseTime );
 
+         } else {
+            // Set failed. We need to keep trying
+            queue.highPriorityQueue.push( entry );
+
+            queue.errorCountSinceLastGoodTransaction++;
+            let count = queue.errorCountSinceLastGoodTransaction;
+            if ( count != 0 && count % 50 == 0 )
+               this.log.warn( `More than ${ count } errors were encountered in a row for ${ entry.accessory.displayName }. Last error found Setting: ${ entry.characteristicString} value: ${ entry.value }. Perhaps you should run in debug mode to find out what the problem might be.` );
          }
 
          // Note 1.
-         // Do not call the callback as it was done when the "Set" entry was 
+         // Do not call the callback as it was done when the "Set" entry was
          // created.
 
          // Note 2.
@@ -184,31 +198,14 @@ class Cmd4PriorityPollingQueue
 
    processHighPriorityGetQueue( entry )
    {
-      // This is just a double check and processQueue should not
-      // ever let this happen
-      if ( entry.accessory.queue.inProgressSets > 0 ||
-           entry.accessory.queue.inProgressGets > 0 &&
-           entry.accessory.queue.queueType == constants.QUEUETYPE_SEQUENTIAL )
+      if ( cmd4Dbg ) this.log.debug( `Processing high priority queue "Get" entry: ${ entry.accTypeEnumIndex } isUpdate: ${ entry.queueGetIsUpdate } length: ${ this.highPriorityQueue.length }` );
+
+      this.inProgressGets ++;
+
+      this.qGetValue( entry.accessory, entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, function ( error, properValue )
       {
-         if ( cmd4Dbg ) this.log.debug( `High priority "Get" queue interrupt attempted: ${ entry.accessory.displayName } ${ entry.characteristicString } inProgressSets:${ entry.accessory.queue.inProgressSets } inProgressGets: ${ entry.accessory.queue.inProgressGets }` );
-         return;
-      }
+         let queue = entry.accessory.queue;
 
-      if ( cmd4Dbg ) this.log.debug( `Processing high priority queue "Get" entry: ${ entry.accTypeEnumIndex } isUpdate: ${ entry.queueGetIsUpdate } length: ${ entry.accessory.queue.highPriorityQueue.length }` );
-
-      entry.accessory.queue.inProgressGets ++;
-
-      // By default the high priority "Get" callback is the callback given by homebridge
-      // However, A high priority "Set" will cause a High Priority "Get" that needs
-      // to update homebrige with a getValue call.
-      let callback = entry.callback;
-      if ( entry.queueGetIsUpdate == true )
-         callback = dummyCallback;
-
-
-      // isLowPriority is set to false,
-      entry.accessory.getValue( entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, callback, false, function ( error, properValue )
-      {
          // Nothing special was done for casing on errors, so omit it.
          if ( error == 0 )
          {
@@ -216,43 +213,41 @@ class Cmd4PriorityPollingQueue
                entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( properValue );
 
              // A good anything, updates the lastGoodTransactionTime
-            entry.accessory.queue.lastGoodTransactionTime = Date.now( );
+            queue.lastGoodTransactionTime = Date.now( );
+            queue.errorCountSinceLastGoodTransaction = 0;
 
          } else
          {
+            // High Priority Get failed. We need to keep trying
+            queue.highPriorityQueue.push( entry );
+
+            queue.errorCountSinceLastGoodTransaction++;
+            let count = queue.errorCountSinceLastGoodTransaction;
+            if ( count != 0 && count % 50 == 0 )
+               this.log.warn( `More than ${ count } errors were encountered in a row for ${ entry.accessory.displayName }. Last error found Getting: ${ entry.characteristicString}. Perhaps you should run in debug mode to find out what the problem might be.` );
 
             entry.accessory.queue.pauseQueue( entry.accessory.queue );
          }
 
-         entry.accessory.queue.inProgressGets --;
-         setTimeout( ( ) => { entry.accessory.queue.processQueue( HIGH_PRIORITY_GET, entry.accessory.queue ); }, 0 );
+         queue.inProgressGets --;
+         setTimeout( ( ) => { queue.processQueue( HIGH_PRIORITY_GET, queue ); }, 0 );
 
       });
    }
 
    processEntryFromLowPriorityQueue( entry )
    {
-      // This is just a double check and processQueue should not
-      // ever let this happen
-      if ( entry.accessory.queue.inProgressSets > 0 ||
-           entry.accessory.queue.inProgressGets > 0 &&
-           entry.accessory.queue.queueType == constants.QUEUETYPE_SEQUENTIAL )
-      {
-         if ( cmd4Dbg ) this.log.debug( `Low priority "Get" queue interrupt attempted: ${ entry.accessory.displayName } ${ entry.characteristicString }` );
-         return;
-      }
-
       if ( cmd4Dbg ) this.log.debug( `Processing low priority queue entry: ${ entry.accTypeEnumIndex }` );
 
-      entry.accessory.queue.inProgressGets ++;
+      let queue = entry.accessory.queue;
+
+      queue.inProgressGets ++;
 
       // isLowPriority is set to true,
-      // lowPriority "Gets" do not have a callback. Use the qCallback
-      entry.accessory.getValue( entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, dummyCallback, true, function ( error, properValue )
+      queue.qGetValue( entry.accessory, entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, function ( error, properValue )
       {
-
          // For the next one
-         entry.accessory.queue.inProgressGets --;
+         queue.inProgressGets --;
 
          // Nothing special was done for casing on errors, so omit it.
          if ( error == 0 )
@@ -260,16 +255,254 @@ class Cmd4PriorityPollingQueue
             entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( properValue );
 
              // A good anything, updates the lastGoodTransactionTime
-            entry.accessory.queue.lastGoodTransactionTime = Date.now( );
+            queue.lastGoodTransactionTime = Date.now( );
+            queue.errorCountSinceLastGoodTransaction = 0;
 
          } else {
-            entry.accessory.queue.pauseQueue( entry.accessory.queue );
+            queue.pauseQueue( entry.accessory.queue );
          }
 
          // Now that this one has been processed, schedule it again.
-         if ( cmd4Dbg ) entry.accessory.log.debug( `rescheduling entry` );
+         queue.scheduleLowPriorityEntry( entry )
 
-         entry.accessory.queue.scheduleLowPriorityEntry( entry )
+      });
+   }
+
+   // ***********************************************
+   //
+   // qGetValue: Method to call an external script
+   //            that returns an accessories status
+   //            for a given characteristic.
+   //
+   //   The script will be passed:
+   //      Get <Device Name> <accTypeEnumIndex>
+   //
+   //      Where:
+   //         - Device name is the name in your
+   //           config.json file.
+   //         - accTypeEnumIndex represents
+   //           the characteristic to get as in index into
+   //           the CMD4_ACC_TYPE_ENUM.
+   //
+   // ***********************************************
+   qGetValue( accessory, accTypeEnumIndex, characteristicString, timeout, callback )
+   {
+      let self = accessory;
+
+      let cmd = self.state_cmd_prefix + self.state_cmd + " Get '" + self.displayName + "' '" + characteristicString  + "'" + self.state_cmd_suffix;
+
+      if ( cmd4Dbg ) self.log.debug( `getValue: accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } cmd: ${ cmd }` );
+
+      let reply = "NxN";
+
+      // Execute command to Get a characteristics value for an accessory
+      // exec( cmd, { timeout: timeout }, function ( error, stdout, stderr )
+      //let child = spawn( cmd, { shell:true } );
+      let child = exec( cmd, { timeout: timeout }, function ( error, stdout, stderr )
+      {
+         if ( stderr )
+            if ( cmd4Dbg) self.log.error( "X" + `getValue: ${ characteristicString } function for ${ self.displayName } streamed to stderr: ${ stderr }` );
+
+         // Handle errors when process closes
+         if ( error )
+            if ( cmd4Dbg) self.log.error( "X" + chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  generated Error: ${ error }` ) );
+
+         reply = stdout;
+
+      }).on('close', ( code ) =>
+      {
+         // Was the return code successful ?
+         if ( code != 0 )
+         {
+            // Commands that time out have "null" return codes. So get the real one.
+            if ( child.killed == true )
+            {
+               if ( cmd4Dbg ) self.log.error( "X" + chalk.red( `getValue ${ characteristicString } function timed out ${ timeout }ms for ${ self.displayName } cmd: ${ cmd } Failed` ) );
+               callback( constants.ERROR_TIMER_EXPIRED );
+
+               return;
+            }
+            if ( cmd4Dbg ) self.log.error( "X" + chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed. Error: ${ code }. ${ constants.DBUSY }` ) );
+
+            callback( code );
+
+            return;
+         }
+
+         if ( reply == "NxN" )
+         {
+            if ( cmd4Dbg ) self.log.error( "X" + `getValue: nothing returned from stdout for ${ characteristicString } ${ self.displayName }. ${ constants.DBUSY }` );
+
+            callback( constants.ERROR_NO_DATA_REPLY );
+
+            return;
+         }
+
+         if ( reply == null )
+         {
+            if ( cmd4Dbg ) self.log.error( "X" + `getValue: null returned from stdout for ${ characteristicString } ${ self.displayName }. ${ constants.DBUSY }` );
+
+            // We can call our callback though ;-)
+            callback( constants.ERROR_NULL_REPLY );
+
+            return;
+         }
+
+
+         // Coerce to string for manipulation
+         reply += '';
+
+         // Remove trailing newline or carriage return, then
+         // Remove leading and trailing spaces, carriage returns ...
+         let trimmedReply = reply.replace(/\n|\r$/,"").trim( );
+
+         // Theoretically not needed as this is caught below, but I wanted
+         // to catch this before much string manipulation was done.
+         if ( trimmedReply.toUpperCase( ) == "NULL" )
+         {
+            if ( cmd4Dbg ) self.log.error( "X" + `getValue: "${ trimmedReply }" returned from stdout for ${ characteristicString } ${ self.displayName }. ${ constants.DBUSY }` );
+            callback( constants.ERROR_NULL_STRING_REPLY );
+
+            return;
+         }
+
+         // Handle beginning and ending matched single or double quotes. Previous version too heavy duty.
+         // - Remove matched double quotes at begining and end, then
+         // - Remove matched single quotes at beginning and end, then
+         // - remove leading and trailing spaces.
+         let unQuotedReply = trimmedReply.replace(/^"(.+)"$/,"$1").replace(/^'(.+)'$/,"$1").trim( );
+
+         if ( unQuotedReply == "" )
+         {
+            if ( cmd4Dbg ) self.log.error( "X" + `getValue: ${ characteristicString } function for: ${ self.displayName } returned an empty string "${ trimmedReply }". ${ constants.DBUSY }` );
+
+            callback( constants.ERROR_EMPTY_STRING_REPLY );
+
+            return;
+         }
+
+         // The above "null" checked could possibly have quotes around it.
+         // Now that the quotes are removed, I must check again.  The
+         // things I must do for bad data ....
+         if ( unQuotedReply.toUpperCase( ) == "NULL" )
+         {
+            if ( cmd4Dbg ) self.log.error( "X" + `getValue: ${ characteristicString } function for ${ self.displayName } returned the string "${ trimmedReply }". ${ constants.DBUSY }` );
+
+            callback( constants.ERROR_2ND_NULL_STRING_REPLY );
+
+            return;
+         }
+
+         let words = unQuotedReply.split( " " ).length;
+         if ( words > 1 && CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.allowedWordCount == 1 )
+         {
+            self.log.warn( `getValue: Warning, Retrieving ${ characteristicString }, expected only one word value for: ${ self.displayName } of: ${ trimmedReply }` );
+         }
+
+         if ( cmd4Dbg ) self.log.debug( `getValue: ${ characteristicString } function for: ${ self.displayName } returned: ${ unQuotedReply }` );
+
+
+         var transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, unQuotedReply )
+
+
+         // Return the appropriate type, by seeing what it is
+         // defined as in Homebridge,
+         let properValue = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( transposed );
+         if ( properValue == undefined )
+         {
+            self.log.warn( `${ self.displayName } ` + chalk.red( `Cannot convert value: ${ unQuotedReply } to ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format } for ${ characteristicString }` ) );
+
+            callback( constants.ERROR_NON_CONVERTABLE_REPLY );
+
+            return;
+         }
+
+         // Success !!!!
+         callback( 0, properValue );
+
+         // Store history using fakegato if set up
+         self.updateAccessoryAttribute( accTypeEnumIndex, properValue );
+
+      });
+   }
+
+   // ***********************************************
+   //
+   // qSetValue: Method to call an external script
+   //            that sets an accessories status
+   //            for a given characteristic.
+   //
+   //
+   //   The script will be passed:
+   //      Set < Device Name > < accTypeEnumIndex > < Value >
+   //
+   //
+   //      Where:
+   //         - Device name is the name in your
+   //           config.json file.
+   //         - accTypeEnumIndex represents
+   //           the characteristic to get as in index into
+   //           the CMD4_ACC_TYPE_ENUM.
+   //         - Characteristic is the accTypeEnumIndex
+   //           in HAP form.
+   //         - Value is new characteristic value.
+   //
+   //  Notes:
+   //    ( 1 ) In the special TARGET set characteristics, getValue
+   //        is called to update HomeKit.
+   //          Example: Set My_Door < TargetDoorState > 1
+   //            calls: Get My_Door < CurrentDoorState >
+   //
+   //       - Where he value in <> is an one of CMD4_ACC_TYPE_ENUM
+   // ***********************************************
+   qSetValue( accessory, accTypeEnumIndex, characteristicString, timeout, stateChangeResponseTime, value, callback )
+   {
+      let self = accessory;
+
+      if ( self.outputConstants == true )
+      {
+         value = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value );
+
+      } else
+      {
+         value = transposeBoolToValue( value );
+      }
+
+      let cmd = accessory.state_cmd_prefix + accessory.state_cmd + " Set '" + accessory.displayName + "' '" + characteristicString  + "' '" + value  + "'" + accessory.state_cmd_suffix;
+
+      if ( accessory.statusMsg == "TRUE" )
+         self.log.info( chalk.blue( `Setting ${ self.displayName } ${ characteristicString }` ) + ` ${ value }` );
+
+      if ( cmd4Dbg ) self.log.debug( `setValue: accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } ${ value }  cmd: ${ cmd }` );
+
+      // Execute command to Set a characteristic value for an accessory
+      let child = exec( cmd, { timeout: timeout }, function ( error, stdout, stderr )
+      {
+         if ( stderr )
+            if ( cmd4Dbg) self.log.error( "X" + `setValue: ${ characteristicString } function for ${ self.displayName } streamed to stderr: ${ stderr }` );
+
+         if ( error )
+            if ( cmd4Dbg ) self.log.error( chalk.red( "X" + `setValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  Error: ${ error.message }` ) );
+
+      }).on( "close", ( code ) =>
+      {
+         if ( code != 0 )
+         {
+            if ( child.killed == true )
+            {
+               if ( cmd4Dbg ) self.log.error( "X" + chalk.red( `setValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  Error: ${ code } ${ constants.DBUSY }` ) );
+
+               callback( constants.ERROR_TIMER_EXPIRED );
+
+               return;
+            }
+
+            callback( code );
+
+            return;
+         }
+
+         callback( code );
 
       });
    }
