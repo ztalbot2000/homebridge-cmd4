@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-4-2-2">**Whats new in 4.2.2**</a>
 * <a href="#Whats-new-in-4-2-1">**Whats new in 4.2.1**</a>
 * <a href="#Whats-new-in-4-2-0">**Whats new in 4.2.0**</a>
 * <a href="#Whats-new-in-4-0-1">**Whats new in 4.0.1**</a>
@@ -65,6 +66,14 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-4-2-2">## Whats new in 4.2.2</a>
+#### 4.2.2 (2021-07-27)
+
+##### Bug Fixes
+
+*  WoRm queues must act like cached for Aircon ([223c83c7](https://github.com/ztalbot2000/homebridge-cmd4/commit/223c83c7bc4219c54c0f70e6439cd3cc4bb6cf50))
+
 
 <a name="Whats-new-in-4-2-1">## Whats new in 4.2.1</a>
 #### 4.2.1 (2021-07-25)

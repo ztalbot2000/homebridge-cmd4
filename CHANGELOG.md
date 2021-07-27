@@ -1,8 +1,8 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
-#### 4.2.1 (2021-07-25)
+#### 4.2.2 (2021-07-27)
 
 ##### Bug Fixes
 
-*  For ticket [#111](https://github.com/ztalbot2000/homebridge-cmd4/pull/111). Oddly node.js is not passing unused arguments in the correct order ([1b50675a](https://github.com/ztalbot2000/homebridge-cmd4/commit/1b50675a4ceebd2fa34ce69b2b4004dba6ae5a25))
+*  WoRm queues must act like cached for Aircon ([223c83c7](https://github.com/ztalbot2000/homebridge-cmd4/commit/223c83c7bc4219c54c0f70e6439cd3cc4bb6cf50))
 
 
