@@ -323,7 +323,6 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
 {
    afterEach( function( )
    {
-      settings.defaultQueue = null;
       settings.listOfCreatedPriorityQueues = { };
    });
    afterEach( function( )
@@ -342,7 +341,6 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
       });
 
       // Put back the polling queues
-      settings.defaultQueue = null;
       settings.listOfCreatedPriorityQueues = { };
    });
 
@@ -674,10 +672,10 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
       assert.include( log.logBuf, `[90mCharacteristic polling for: StandaloneDoorOpener`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
       assert.include( log.logBuf, `[90mCreated platformAccessory: StandaloneDoorOpener`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
       assert.include( log.logBuf, `[33mAdding getCachedValue for StandaloneDoorOpener characteristic: Name`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[33mAdding getValue for StandaloneDoorOpener characteristic: TargetDoorState`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[33mAdding setValue for StandaloneDoorOpener characteristic: TargetDoorState`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[33mAdding getValue for StandaloneDoorOpener characteristic: CurrentDoorState`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[33mAdding getValue for StandaloneDoorOpener characteristic: ObstructionDetected`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[33mAdding priorityGetValue for StandaloneDoorOpener characteristic: TargetDoorState`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[33mAdding prioritySetValue for StandaloneDoorOpener characteristic: TargetDoorState`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[33mAdding priorityGetValue for StandaloneDoorOpener characteristic: CurrentDoorState`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[33mAdding priorityGetValue for StandaloneDoorOpener characteristic: ObstructionDetected`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
       assert.equal( log.errBuf, "", ` Cmd4Accessory Unexpected stderr: ${ log.errBuf }` );
 
    });
@@ -718,8 +716,8 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
       assert.include( log.logBuf, `[90mCharacteristic polling for: TemperatureSensor`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
       assert.include( log.logBuf, `[90mCreated platformAccessory: TemperatureSensor`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
       assert.include( log.logBuf, `[33mAdding getCachedValue for TemperatureSensor characteristic: Name`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[33mAdding getValue for TemperatureSensor characteristic: CurrentTemperature`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
-      assert.notInclude( log.logBuf, `[33mAdding setValue for TemperatureSensor characteristic: TargetTemperature`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[33mAdding priorityGetValue for TemperatureSensor characteristic: CurrentTemperature`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.notInclude( log.logBuf, `[33mAdding prioritySetValue for TemperatureSensor characteristic: TargetTemperature`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
       assert.equal( log.errBuf, "", ` Cmd4Accessory Unexpected stderr: ${ log.errBuf }` );
 
    });

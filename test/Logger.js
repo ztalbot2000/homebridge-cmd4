@@ -141,8 +141,8 @@ describe('A simple logger Test', ( ) =>
       let accessory = new Cmd4Accessory( log, config, _api, [ ] );
 
       assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory. Found %s" , accessory );
-      assert.equal( log.logBuf , "", `Expected no logs to stdout for a simple instance of Cmd4Accessory` );
-      assert.equal( log.logLineCount, 0 , `unexpected number of lines to stdout` );
+      assert.include( log.logBuf , `[39m Creating new Priority Polled Queue "Q:Test Switch" with QueueType of: "StandarD" QueueInterval: 60000 QueueMsg: false QueueStatMsgInterval: 1000`, `unexpected logs to stdout for a simple instance of Cmd4Accessory` );
+      assert.equal( log.logLineCount, 1 , `unexpected number of lines to stdout` );
       assert.equal( log.errBuf , "", `Expected no logs to stderr for a simple instance of Cmd4Accessory` );
       assert.equal( log.errLineCount, 0 , `unexpected number of lines to stderr` );
 
@@ -152,7 +152,7 @@ describe('A simple logger Test', ( ) =>
    it( "Test can create an instance of Cmd4Accessory with a debug log", ( ) =>
    {
       let log = new Logger( );
-      log.setDebugEnabled();
+      log.setDebugEnabled( );
       log.setOutputEnabled( false );
       log.setBufferEnabled( true );
 
@@ -171,25 +171,6 @@ describe('A simple logger Test', ( ) =>
       log.reset();
    });
 
-   it( "Test can create an instance of Cmd4Accessory with an warn log", ( ) =>
-   {
-      const log = new Logger( );
-      log.setOutputEnabled( false );
-      log.setBufferEnabled( true );
-
-      let config={ name:      "Test Switch",
-                   type:      "Switch",
-                   Fetch:     "Demo",
-                   on:         false
-                 };
-      new Cmd4Accessory( log, config, _api, [ ] );
-
-      assert.equal( log.logBuf , "", `Expected no logs to stdout for a simple instance of Cmd4Accessory` );
-      assert.equal( log.logLineCount, 0 , `unexpected number of lines to stdout` );
-      assert.include( log.errBuf , "Warning: Fetch:Demo is changing to Cmd4_Mode:Demo to reflect its affect on both Set and Get", `Expected warb logs to stderr ` );
-      assert.equal( log.errLineCount, 2 , `unexpected number of lines to stderr` );
-
-   });
    it( "Test logger performance of NOT enabled message", ( ) =>
    {
       const log = new Logger( );

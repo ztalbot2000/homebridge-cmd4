@@ -65,6 +65,12 @@ class Cmd4PriorityPollingQueue
       // - Not a const so it can be manipulated during unit testing
       this.pauseTimerTimeout = constants.DEFAULT_QUEUE_PAUSE_TIMEOUT;
 
+      // The WoRm queue needs error messages to be silenced as
+      // they are inevitable, but are handled through retries
+      // By default non WoRm queues are allowed to echo errors
+      this.echoE = true;
+
+      this.changeQueueType( this, queueType );
    }
 
    prioritySetValue( accTypeEnumIndex, characteristicString, timeout, stateChangeResponseTime,  value, callback )
@@ -110,7 +116,7 @@ class Cmd4PriorityPollingQueue
          }
       }
 
-      self.queue.processQueue( HIGH_PRIORITY_SET, self.queue );
+      self.queue.processQueueFunc( HIGH_PRIORITY_SET, self.queue );
    }
 
    priorityGetValue( accTypeEnumIndex, characteristicString, timeout, callback )
@@ -124,7 +130,7 @@ class Cmd4PriorityPollingQueue
       // When the value is returned, it will update homebridge
       self.queue.highPriorityQueue.push( { [ constants.IS_SET_lv ]: false, [ constants.QUEUE_GET_IS_UPDATE_lv ]: true, [ constants.ACCESSORY_lv ]: self, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: null, [ constants.VALUE_lv ]: null, [ constants.CALLBACK_lv ]: callback } );
 
-      self.queue.processQueue( HIGH_PRIORITY_GET, self.queue );
+      self.queue.processQueueFunc( HIGH_PRIORITY_GET, self.queue );
    }
 
    addLowPriorityGetPolledQueueEntry( accessory, accTypeEnumIndex, characteristicString, interval, timeout )
@@ -167,7 +173,7 @@ class Cmd4PriorityPollingQueue
                // The "Set" is now complete after its stateChangeResponseTime.
                queue.inProgressSets --;
 
-               setTimeout( ( ) => { queue.processQueue( HIGH_PRIORITY_GET, queue ); }, 0 );
+               setTimeout( ( ) => { queue.processQueueFunc( HIGH_PRIORITY_GET, queue ); }, 0 );
 
                return;
 
@@ -230,7 +236,7 @@ class Cmd4PriorityPollingQueue
          }
 
          queue.inProgressGets --;
-         setTimeout( ( ) => { queue.processQueue( HIGH_PRIORITY_GET, queue ); }, 0 );
+         setTimeout( ( ) => { queue.processQueueFunc( HIGH_PRIORITY_GET, queue ); }, 0 );
 
       });
    }
@@ -288,6 +294,7 @@ class Cmd4PriorityPollingQueue
    qGetValue( accessory, accTypeEnumIndex, characteristicString, timeout, callback )
    {
       let self = accessory;
+      let queue = accessory.queue;
 
       let cmd = self.state_cmd_prefix + self.state_cmd + " Get '" + self.displayName + "' '" + characteristicString  + "'" + self.state_cmd_suffix;
 
@@ -301,11 +308,11 @@ class Cmd4PriorityPollingQueue
       let child = exec( cmd, { timeout: timeout }, function ( error, stdout, stderr )
       {
          if ( stderr )
-            if ( cmd4Dbg) self.log.error( "X" + `getValue: ${ characteristicString } function for ${ self.displayName } streamed to stderr: ${ stderr }` );
+            if ( queue.echoE ) self.log.error( `getValue: ${ characteristicString } function for ${ self.displayName } streamed to stderr: ${ stderr }` );
 
          // Handle errors when process closes
          if ( error )
-            if ( cmd4Dbg) self.log.error( "X" + chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  generated Error: ${ error }` ) );
+            if ( queue.echoE ) self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  generated Error: ${ error }` ) );
 
          reply = stdout;
 
@@ -317,12 +324,12 @@ class Cmd4PriorityPollingQueue
             // Commands that time out have "null" return codes. So get the real one.
             if ( child.killed == true )
             {
-               if ( cmd4Dbg ) self.log.error( "X" + chalk.red( `getValue ${ characteristicString } function timed out ${ timeout }ms for ${ self.displayName } cmd: ${ cmd } Failed` ) );
+               if ( queue.echoE  ) self.log.error( chalk.red( `getValue ${ characteristicString } function timed out ${ timeout }ms for ${ self.displayName } cmd: ${ cmd } Failed` ) );
                callback( constants.ERROR_TIMER_EXPIRED );
 
                return;
             }
-            if ( cmd4Dbg ) self.log.error( "X" + chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed. Error: ${ code }. ${ constants.DBUSY }` ) );
+            if ( queue.echoE  ) self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed. Error: ${ code }. ${ constants.DBUSY }` ) );
 
             callback( code );
 
@@ -331,7 +338,7 @@ class Cmd4PriorityPollingQueue
 
          if ( reply == "NxN" )
          {
-            if ( cmd4Dbg ) self.log.error( "X" + `getValue: nothing returned from stdout for ${ characteristicString } ${ self.displayName }. ${ constants.DBUSY }` );
+            if ( queue.echoE  ) self.log.error( `getValue: nothing returned from stdout for ${ characteristicString } ${ self.displayName }. ${ constants.DBUSY }` );
 
             callback( constants.ERROR_NO_DATA_REPLY );
 
@@ -340,14 +347,13 @@ class Cmd4PriorityPollingQueue
 
          if ( reply == null )
          {
-            if ( cmd4Dbg ) self.log.error( "X" + `getValue: null returned from stdout for ${ characteristicString } ${ self.displayName }. ${ constants.DBUSY }` );
+            if ( queue.echoE  ) self.log.error( `getValue: null returned from stdout for ${ characteristicString } ${ self.displayName }. ${ constants.DBUSY }` );
 
             // We can call our callback though ;-)
             callback( constants.ERROR_NULL_REPLY );
 
             return;
          }
-
 
          // Coerce to string for manipulation
          reply += '';
@@ -360,7 +366,7 @@ class Cmd4PriorityPollingQueue
          // to catch this before much string manipulation was done.
          if ( trimmedReply.toUpperCase( ) == "NULL" )
          {
-            if ( cmd4Dbg ) self.log.error( "X" + `getValue: "${ trimmedReply }" returned from stdout for ${ characteristicString } ${ self.displayName }. ${ constants.DBUSY }` );
+            if ( queue.echoE  ) self.log.error( `getValue: "${ trimmedReply }" returned from stdout for ${ characteristicString } ${ self.displayName }. ${ constants.DBUSY }` );
             callback( constants.ERROR_NULL_STRING_REPLY );
 
             return;
@@ -374,7 +380,7 @@ class Cmd4PriorityPollingQueue
 
          if ( unQuotedReply == "" )
          {
-            if ( cmd4Dbg ) self.log.error( "X" + `getValue: ${ characteristicString } function for: ${ self.displayName } returned an empty string "${ trimmedReply }". ${ constants.DBUSY }` );
+            if ( queue.echoE  ) self.log.error( `getValue: ${ characteristicString } function for: ${ self.displayName } returned an empty string "${ trimmedReply }". ${ constants.DBUSY }` );
 
             callback( constants.ERROR_EMPTY_STRING_REPLY );
 
@@ -386,7 +392,7 @@ class Cmd4PriorityPollingQueue
          // things I must do for bad data ....
          if ( unQuotedReply.toUpperCase( ) == "NULL" )
          {
-            if ( cmd4Dbg ) self.log.error( "X" + `getValue: ${ characteristicString } function for ${ self.displayName } returned the string "${ trimmedReply }". ${ constants.DBUSY }` );
+            if ( queue.echoE  ) self.log.error( `getValue: ${ characteristicString } function for ${ self.displayName } returned the string "${ trimmedReply }". ${ constants.DBUSY }` );
 
             callback( constants.ERROR_2ND_NULL_STRING_REPLY );
 
@@ -458,6 +464,7 @@ class Cmd4PriorityPollingQueue
    qSetValue( accessory, accTypeEnumIndex, characteristicString, timeout, stateChangeResponseTime, value, callback )
    {
       let self = accessory;
+      let queue = accessory.queue;
 
       if ( self.outputConstants == true )
       {
@@ -473,16 +480,16 @@ class Cmd4PriorityPollingQueue
       if ( accessory.statusMsg == "TRUE" )
          self.log.info( chalk.blue( `Setting ${ self.displayName } ${ characteristicString }` ) + ` ${ value }` );
 
-      if ( cmd4Dbg ) self.log.debug( `setValue: accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } ${ value }  cmd: ${ cmd }` );
+      if ( cmd4Dbg ) self.log.debug( `setValue: accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } ${ value }  cmd: ${ cmd } timeout: ${ timeout }` );
 
       // Execute command to Set a characteristic value for an accessory
       let child = exec( cmd, { timeout: timeout }, function ( error, stdout, stderr )
       {
          if ( stderr )
-            if ( cmd4Dbg) self.log.error( "X" + `setValue: ${ characteristicString } function for ${ self.displayName } streamed to stderr: ${ stderr }` );
+            if ( queue.echoE ) self.log.error( `setValue: ${ characteristicString } function for ${ self.displayName } streamed to stderr: ${ stderr }` );
 
          if ( error )
-            if ( cmd4Dbg ) self.log.error( chalk.red( "X" + `setValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  Error: ${ error.message }` ) );
+            if ( queue.echoE  ) self.log.error( chalk.red( `setValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  Error: ${ error.message }` ) );
 
       }).on( "close", ( code ) =>
       {
@@ -490,7 +497,7 @@ class Cmd4PriorityPollingQueue
          {
             if ( child.killed == true )
             {
-               if ( cmd4Dbg ) self.log.error( "X" + chalk.red( `setValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  Error: ${ code } ${ constants.DBUSY }` ) );
+               if ( queue.echoE  ) self.log.error( chalk.red( `setValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  Error: ${ code } ${ constants.DBUSY }` ) );
 
                callback( constants.ERROR_TIMER_EXPIRED );
 
@@ -510,17 +517,16 @@ class Cmd4PriorityPollingQueue
    // The queue is self maintaining, except for lowPriorityEntries
    // which if passed in, must be rescheduled as they go by their own
    // intervals and thus must handle the return code.
-   processQueue( lastTransactionType, queue, lowPriorityEntry = null )
+   processWormQueue( lastTransactionType, queue, lowPriorityEntry = null )
    {
-      // Set, No matter what, only one allowed
+      // "WoRm", No matter what, only one "Set" allowed
       if ( queue.inProgressSets > 0 )
-      {
-         // wait until transaction is done and calls this function
+         // We are *NOT* processing the low prioirity queue entry
          return false;
-      }
 
-      // It is not a good time to do a "Get", so skip it
+      // It is not a good time to do a anything, so skip it
       if ( queue.lastGoodTransactionTime == 0 )
+         // We are *NOT* processing the low prioirity queue entry
          return false;
 
       if ( queue.highPriorityQueue.length > 0 )
@@ -534,45 +540,35 @@ class Cmd4PriorityPollingQueue
             // cannot be run with an entry already in progress.
             if ( nextEntry.accessory.queue.inProgressSets > 0 ||
                  nextEntry.accessory.queue.inProgressGets > 0 )
+               // Return as queue is busy.
+               // Return false as we are *NOT* processing the low prioirity queue entry
                return false;
 
             queue.processHighPrioritySetQueue( queue.highPriorityQueue.shift( ) );
 
+            // Return false as we are *NOT* processing the low prioirity queue entry
             return false;
-
-         } // HIGH PRIORITY GET SEQUENTIAL && WORM
-         else if ( nextEntry.isSet == false &&
-                   ( ( queue.queueType == constants.QUEUETYPE_SEQUENTIAL && queue.inProgressGets == 0 ) ||
-                     queue.queueType == constants.QUEUETYPE_WORM
-                   )
-                 )
-         {
-
-            // Process all the "Gets" based on the Queue Type
-            let max = 1;
-            if ( queue.queueType == constants.QUEUETYPE_WORM )
-               max = queue.highPriorityQueue.length;
-
-            while( queue.highPriorityQueue.length > 0 &&
-                   nextEntry.isSet == false &&
-                   max >= 1 )
-            {
-               queue.processHighPriorityGetQueue( queue.highPriorityQueue.shift( ) );
-               nextEntry = queue.highPriorityQueue[ 0 ];
-               max--;
-            }
-
-            return false;
-
          }
-         // if ( cmd4Dbg ) this.log.debug( `RETURNING lastTransactionType: ${ lastTransactionType } inProgressSets: ${  queue.inProgressSets } inProgressGets: ${  queue.inProgressGets } queueStarted: ${ queue.queueStarted } lowQueueLen: ${ queue.lowPriorityQueue.length } hiQueueLen: ${ queue.highPriorityQueue.length }` );
 
-         // wait until transaction is done and calls this function
+         // This must be a "Get". Process them all.
+         let max = queue.highPriorityQueue.length;
+
+         while( queue.highPriorityQueue.length > 0 &&
+                nextEntry.isSet == false &&
+                max >= 1 )
+         {
+            queue.processHighPriorityGetQueue( queue.highPriorityQueue.shift( ) );
+            nextEntry = queue.highPriorityQueue[ 0 ];
+            max--;
+         }
+
+         // Return false as we are *NOT* processing the low prioirity queue entry
          return false;
 
       } else  if ( lastTransactionType == HIGH_PRIORITY_SET ||
                    lastTransactionType == HIGH_PRIORITY_GET )
       {
+         // Return false as we are *NOT* processing the low prioirity queue entry
          return false;
       }
       // This is self evident, until their are other types of Prioritys
@@ -580,33 +576,120 @@ class Cmd4PriorityPollingQueue
            lowPriorityEntry != null &&
            queue.queueStarted == true )
       {
-         // We had to be called by Polling because it is the only one
-         // who sets the last transaction type to LOW_PRIORITY
-         if ( queue.queueType == constants.QUEUETYPE_SEQUENTIAL && queue.inProgressGets == 0 ||
-              queue.queueType == constants.QUEUETYPE_WORM ||
-              queue.queueType == constants.QUEUETYPE_STANDARD )
-         {
-            queue.processEntryFromLowPriorityQueue( lowPriorityEntry );
+         queue.processEntryFromLowPriorityQueue( lowPriorityEntry );
 
-            // We are processing the low priority queue entry.
-            return true;
-         }
-         return false;
+         // We are processing the low priority queue entry.
+         return true;
+
       } else {
           if ( lastTransactionType == LOW_PRIORITY_GET &&
                queue.queueStarted == false )
           {
+             // Return false as we are *NOT* processing the low prioirity queue entry
              return false;
 
           } if ( queue.inProgressGets == 0 &&
                  queue.inProgressSets == 0 )
           {
+             // Return false as we are *NOT* processing the low prioirity queue entry
              return false;
 
           } else {
              if ( cmd4Dbg ) this.log.debug( `Unhandled lastTransactionType: ${ lastTransactionType } inProgressSets: ${  queue.inProgressSets } inProgressGets: ${  queue.inProgressGets } queueStarted: ${ queue.queueStarted } lowQueueLen: ${ queue.lowPriorityQueue.length } hiQueueLen: ${ queue.highPriorityQueue.length }` );
 
           }
+      }
+   }
+
+   // The queue is self maintaining, except for lowPriorityEntries
+   // which if passed in, must be rescheduled as they go by their own
+   // intervals and thus must handle the return code.
+   processSequentialQueue( lastTransactionType, queue, lowPriorityEntry = null )
+   {
+      // Sequential, No matter what, only one transaction allowed
+      if ( queue.inProgressSets > 0 ||
+           queue.inProgressGets > 0 )
+         // Return false as we are *NOT* processing the low prioirity queue entry
+         return false;
+
+      // It is not a good time to do a anything, so skip it
+      if ( queue.lastGoodTransactionTime == 0 )
+         // Return false as we are *NOT* processing the low prioirity queue entry
+         return false;
+
+      if ( queue.highPriorityQueue.length > 0 )
+      {
+         let nextEntry = queue.highPriorityQueue[ 0 ];
+
+         if ( nextEntry.isSet == true )
+         {
+            queue.processHighPrioritySetQueue( queue.highPriorityQueue.shift( ) );
+
+            // Return false as we are *NOT* processing the low prioirity queue entry
+            return false;
+
+         }
+
+         // Has to be a High Priority "Get" entry. Process just this one.
+         queue.processHighPriorityGetQueue( queue.highPriorityQueue.shift( ) );
+
+         // Return false as we are *NOT* processing the low prioirity queue entry
+         return false;
+
+      } else  if ( lastTransactionType == HIGH_PRIORITY_SET ||
+                   lastTransactionType == HIGH_PRIORITY_GET )
+      {
+         // Return false as we are *NOT* processing the low prioirity queue entry
+         return false;
+      }
+      // This is self evident, until their are other types of Prioritys
+      if ( lastTransactionType == LOW_PRIORITY_GET &&
+           lowPriorityEntry != null &&
+           queue.queueStarted == true )
+      {
+         queue.processEntryFromLowPriorityQueue( lowPriorityEntry );
+
+         // We are processing the low priority queue entry.
+         return true;
+
+      } else {
+          if ( lastTransactionType == LOW_PRIORITY_GET &&
+               queue.queueStarted == false )
+          {
+             // Return false as we are *NOT* processing the low prioirity queue entry
+             return false;
+
+          } if ( queue.inProgressGets == 0 &&
+                 queue.inProgressSets == 0 )
+          {
+             // Return false as we are *NOT* processing the low prioirity queue entry
+             return false;
+
+          } else {
+             if ( cmd4Dbg ) this.log.debug( `Unhandled lastTransactionType: ${ lastTransactionType } inProgressSets: ${  queue.inProgressSets } inProgressGets: ${  queue.inProgressGets } queueStarted: ${ queue.queueStarted } lowQueueLen: ${ queue.lowPriorityQueue.length } hiQueueLen: ${ queue.highPriorityQueue.length }` );
+
+          }
+      }
+   }
+
+   // The standard queue is just free running, except if the queue has not
+   // been started yet.
+   processPassThruQueue( lastTransactionType, queue, lowPriorityEntry = null )
+   {
+      if ( lastTransactionType == LOW_PRIORITY_GET &&
+           lowPriorityEntry != null &&
+           queue.queueStarted == true )
+         queue.processEntryFromLowPriorityQueue( lowPriorityEntry );
+
+      if ( queue.highPriorityQueue.length > 0 )
+      {
+         let nextEntry = queue.highPriorityQueue[ 0 ];
+
+         if ( nextEntry.isSet == true )
+
+            queue.processHighPrioritySetQueue( queue.highPriorityQueue.shift( ) );
+         else
+            queue.processHighPriorityGetQueue( queue.highPriorityQueue.shift( ) );
       }
    }
 
@@ -625,7 +708,7 @@ class Cmd4PriorityPollingQueue
       queue.listOfRunningPolls[ self.displayName + entry.accTypeEnumIndex ] = setTimeout( ( ) =>
       {
          // If the queue was busy/not available, schedule the entry at a later time
-         if ( queue.processQueue( LOW_PRIORITY_GET, queue, entry ) == false )
+         if ( queue.processQueueFunc( LOW_PRIORITY_GET, queue, entry ) == false )
          {
             if ( cmd4Dbg ) self.log.debug( `processsQueue returned false` );
 
@@ -683,6 +766,9 @@ class Cmd4PriorityPollingQueue
 
    pauseQueue( queue )
    {
+      if ( queue.queueType == constants.QUEUETYPE_STANDARD )
+         return;
+
       queue.lastGoodTransactionTime = 0;
 
       if ( queue.pauseTimer == null )
@@ -693,7 +779,7 @@ class Cmd4PriorityPollingQueue
              queue.lastGoodTransactionTime = Date.now( );
              queue.pauseTimer = null;
 
-             queue.processQueue( HIGH_PRIORITY_GET, queue );
+             queue.processQueueFunc( HIGH_PRIORITY_GET, queue );
 
           }, queue.pauseTimerTimeout );
       }
@@ -724,6 +810,46 @@ class Cmd4PriorityPollingQueue
       queue.enablePollingFirstTime( queue );
       queue.queueStarted = true;
    }
+
+   changeQueueType( queue, queueType )
+   {
+      if ( queue.queueStarted )
+      {
+         this.log.error( `Cannot change queueType when queue is running` );
+         process.exit( 118 );
+      }
+
+      // The WoRm queue needs error messages to be silenced as
+      // they are inevitable, but are handled through retries
+      // By default non WoRm queus are allowed to echo errors
+      this.echoE = true;
+
+      // Default
+      this.processQueueFunc = this.processWormQueue;
+      switch ( queueType )
+      {
+         case constants.QUEUETYPE_SEQUENTIAL:
+            this.processQueueFunc = this.processSequentialQueue;
+            break;
+         case constants.QUEUETYPE_WORM:
+            this.processQueueFunc = this.processWormQueue;
+            // When not in debug mode, do not echo errors for the WoRm queue
+            // as errors are handled through retries.
+            if ( ! cmd4Dbg )
+               this.echoE = false;
+            break;
+         case constants.QUEUETYPE_STANDARD:
+            // only polled entries go straight through the queue
+            this.processQueueFunc = this.processPassThruQueue;
+            break;
+         case constants.QUEUETYPE_PASSTHRU:
+            // entries go straight through the queue
+            this.processQueueFunc = this.processPassThruQueue;
+            break;
+         default:
+            this.log.error( `Error: Invalid queue type: ${ queueType }` );
+      }
+   }
 }
 
 var queueExists = function( queueName )
@@ -737,8 +863,7 @@ var addQueue = function( log, queueName, queueType = constants.DEFAULT_QUEUE_TYP
    if ( queue != undefined )
       return queue;
 
-   if ( queueType != constants.QUEUETYPE_STANDARD )
-      log.info( `Creating new Priority Polled Queue "${ queueName }" with QueueType of: "${ queueType }" QueueInterval: ${ queueInterval } QueueMsg: ${ queueMsg } QueueStatMsgInterval: ${ queueStatMsgInterval }` );
+   log.info( `Creating new Priority Polled Queue "${ queueName }" with QueueType of: "${ queueType }" QueueInterval: ${ queueInterval } QueueMsg: ${ queueMsg } QueueStatMsgInterval: ${ queueStatMsgInterval }` );
 
    queue = new Cmd4PriorityPollingQueue( log, queueName, queueType, queueInterval, queueMsg, queueStatMsgInterval );
    settings.listOfCreatedPriorityQueues[ queueName ] = queue;
@@ -758,7 +883,7 @@ var parseAddQueueTypes = function ( log, entrys, options )
    }
    entrys.forEach( ( entry, entryIndex ) =>
    {
-      let queueName = constants.DEFAULT_QUEUE_NAME;
+      let queueName = null;
       let queueType = constants.DEFAULT_QUEUE_TYPE;
       let queueMsg = options.queueMsg;
       let queueStatMsgInterval = options.queueStatMsgInterval;
@@ -820,7 +945,7 @@ var parseAddQueueTypes = function ( log, entrys, options )
       }
 
       // At least a Queue name must be defined, the rest are defaulted
-      if ( queueName == constants.DEFAULT_QUEUE_NAME )
+      if ( queueName == null )
       {
          log.error( chalk.red( `Error: "${ constants.QUEUE }"  not provided at index ${ entryIndex }` ) );
          process.exit( 448 ) ;

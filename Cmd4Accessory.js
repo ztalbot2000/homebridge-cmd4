@@ -1,8 +1,5 @@
 'use strict';
 
-// 3rd Party includes
-const exec = require( "child_process" ).exec;
-//const spawn = require( "child_process" ).spawn;
 const moment = require( "moment" );
 const fs = require( "fs" );
 const commandExistsSync = require( "command-exists" ).sync;
@@ -34,8 +31,6 @@ Object.defineProperty( exports, "indexOfEnum", { enumerable: true, get: function
 
 // For changing validValue Constants to Values and back again
 var { transposeConstantToValidValue,
-      transposeValueToValidConstant,
-      transposeBoolToValue
     } = require( "./utils/transposeCMD4Props" );
 
 let isJSON = require( "./utils/isJSON" );
@@ -148,7 +143,6 @@ class Cmd4Accessory
       this.queueMsg = ( parentInfo && parentInfo.queueMsg ) ? parentInfo.queueMsg : constants.DEFAULT_QUEUEMSG;
       this.queueStatMsgInterval = ( parentInfo && parentInfo.queueStatMsgInterval ) ? parentInfo.queueStatMsgInterval : constants.DEFAULT_QUEUE_STAT_MSG_INTERVAL;
       this.queue = null;
-      this.queueName = constants.DEFAULT_QUEUE_NAME;
 
       // undefined is acceptable.  It can be overwritten by parseConfig
       this.state_cmd = parentInfo && parentInfo.state_cmd;
@@ -157,6 +151,9 @@ class Cmd4Accessory
 
       // Define cmd4Mode up front.  It can be overwritten by parseConfig.
       this.cmd4Mode = ( parentInfo && parentInfo.cmd4Mode ) ? parentInfo.cmd4Mode : constants.CMD4_MODE_ALWAYS;
+
+      // Everything that needs to talk to the device now goes through the queue
+      this.queue = null;
 
       // TLV8 causes a lot of issues if defined and trying to parse.
       // Omit them by default.
@@ -630,147 +627,6 @@ class Cmd4Accessory
       callback( null );
    }
 
-
-   // ***********************************************
-   //
-   // setValue: Method to call an external script
-   //           that sets an accessories status
-   //           for a given characteristic.
-   //
-   //
-   //   The script will be passed:
-   //      Set < Device Name > < accTypeEnumIndex > < Value >
-   //
-   //
-   //      Where:
-   //         - Device name is the name in your
-   //           config.json file.
-   //         - accTypeEnumIndex represents
-   //           the characteristic to get as in index into
-   //           the CMD4_ACC_TYPE_ENUM.
-   //         - Characteristic is the accTypeEnumIndex
-   //           in HAP form.
-   //         - Value is new characteristic value.
-   //
-   //  Notes:
-   //    ( 1 ) In the special TARGET set characteristics, getValue
-   //        is called to update HomeKit.
-   //          Example: Set My_Door < TargetDoorState > 1
-   //            calls: Get My_Door < CurrentDoorState >
-   //
-   //       - Where he value in <> is an one of CMD4_ACC_TYPE_ENUM
-   // ***********************************************
-   setValue( accTypeEnumIndex, characteristicString, timeout, stateChangeResponseTime, value, callback, qCallback = null )
-   {
-      let self = this;
-
-      if ( self.outputConstants == true )
-      {
-         value = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value );
-
-      } else
-      {
-         value = transposeBoolToValue( value );
-      }
-
-      let cmd = self.state_cmd_prefix + self.state_cmd + " Set '" + self.displayName + "' '" + characteristicString  + "' '" + value  + "'" + self.state_cmd_suffix;
-
-      if ( self.statusMsg == "TRUE" )
-         self.log.info( chalk.blue( `Setting ${ self.displayName } ${ characteristicString }` ) + ` ${ value }` );
-
-      if ( cmd4Dbg ) self.log.debug( `setValue: accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } ${ value }  cmd: ${ cmd }` );
-
-      // Execute command to Set a characteristic value for an accessory
-      let child = exec( cmd, { timeout: timeout }, function ( error, stdout, stderr )
-      {
-         if ( stderr )
-            self.log.error( `setValue: ${ characteristicString } function for ${ self.displayName } streamed to stderr: ${ stderr }` );
-
-         if ( error )
-            self.log.error( chalk.red( `setValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  Error: ${ error.message }` ) );
-
-      }).on( "close", ( code ) =>
-      {
-         if ( code != 0 )
-         {
-            if ( child.killed == true )
-            {
-               self.log.error( chalk.red( `setValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  Error: ${ code } ${ constants.DBUSY }` ) );
-
-               callback( constants.ERROR_TIMER_EXPIRED );
-               if ( qCallback) qCallback( constants.ERROR_TIMER_EXPIRED );
-
-               return;
-            }
-
-            callback( code );
-            if ( qCallback) qCallback( code );
-
-            return;
-         }
-
-         let responded = false;
-
-         if ( qCallback == null )
-         {
-           let relatedCurrentAccTypeEnumIndex = self.getDevicesRelatedCurrentAccTypeEnumIndex( accTypeEnumIndex );
-           if ( relatedCurrentAccTypeEnumIndex != null &&
-                self.listOfPollingCharacteristics[ relatedCurrentAccTypeEnumIndex ]
-              )
-
-           {
-               responded = true;
-
-               let relatedCurrentCharacteristic = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].characteristic;
-               let relatedCurrentCharacteristicString = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].type;
-
-               setTimeout( ( ) =>
-               {
-                  if ( cmd4Dbg ) self.log.debug( `Proccessing related characteristic ${ relatedCurrentCharacteristicString }` );
-
-                  self.getValue( relatedCurrentAccTypeEnumIndex, relatedCurrentCharacteristicString, timeout, function ( error, properValue ) {
-                  {
-                     if ( error == 0 )
-                     {
-                        if ( cmd4Dbg ) self.log.debug( chalk.blue( `characteristicPolling Updating ${ self.displayName } ${ relatedCurrentCharacteristicString }` ) + ` ${ properValue }, responseTime: ${ stateChangeResponseTime }` );
-
-                        self.service.getCharacteristic( relatedCurrentCharacteristic ).updateValue( properValue );
-                     }
-
-                  }});
-               }, stateChangeResponseTime );
-
-               callback( 0 );
-               return;
-            }
-         }
-
-         // The "Set" of the characteristic value was successful.
-         // In the case where the "Get" is a long time off, then the
-         // internal state value is incorrect.  Does it matter since
-         // the "Get" that would occur SHOULD be to the device and
-         // not for the cached value?
-         // I say SHOULD as the "Set" was to the device then so
-         // should the next "Get" be as well.
-         // The better thing to do is just set the internal state so that
-         // trying to determine the above is not a possability.
-         // That being said, the possability cannot happen when cmd4Mode is
-         // "Cached" or "Always", so do not change their behaviour.
-         if ( self.cmd4Mode == constants.CMD4_MODE_POLLED || constants.CMD4_MODE_FULLYPOLLED )
-            self.setStoredValueForIndex( accTypeEnumIndex, value );
-
-         if ( responded == false )
-         {
-            callback( code );
-            if ( qCallback)
-            {
-               qCallback( code );
-            }
-         }
-
-      });
-   }
-
    // ***********************************************
    //
    // GetCachedValue:
@@ -792,213 +648,10 @@ class Cmd4Accessory
 
       if ( cmd4Dbg ) self.log.debug( `getCachedValue ${ characteristicString } for: ${ self.displayName } returned (CACHED) value: ${ storedValue }` );
 
-      // Just in case the cached value needs to be converted from
-      // a Constant to its valid value.
-      // I can't see this happening, but who knows between upgrades
-      // or restarts.
-      //var transposed = { [ constants.VALUE_lv ]: storedValue, [ constants.RC_lv ]: true, [ constants.MSG_lv ]: "" };
-      //let transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, storedValue );
-      //if ( transposed.rc == false )
-      //   self.log.warn( `${ self.displayName }: ${ transposed.msg }` );
-
-      // let transposedValue = transposed.value;
-
-      // Return the appropriate type, by seeing what it is defined as
-      // in Homebridge,
-      //let result = self.characteristicValueToItsProperType( self, accTypeEnumIndex, transposedValue );
-      //let properValue = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( transposedValue  );
-      //let properValue = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( transposed  );
-      //if ( properValue == undefined )
-      //{
-         // If the value is not convertable, just return it.
-      //   self.log.warn( `${ self.displayName } ` + chalk.red( `Cannot convert value: ${ transposedValue } to ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].properties.format } for ${ characteristicString }`  ) );
-
-      //   callback( 20, null );
-
-      //   return;
-      //}
-
-      //callback( 0, properValue );
       callback( 0, storedValue );
 
       // Store history using fakegato if set up
-      //self.updateAccessoryAttribute( accTypeEnumIndex, properValue );
       self.updateAccessoryAttribute( accTypeEnumIndex, storedValue );
-   }
-
-   // ***********************************************
-   //
-   // GetValue: Method to call an external script
-   //           that returns an accessories status
-   //           for a given characteristic.
-   //
-   //   The script will be passed:
-   //      Get <Device Name> <accTypeEnumIndex>
-   //
-   //      Where:
-   //         - Device name is the name in your
-   //           config.json file.
-   //         - accTypeEnumIndex represents
-   //           the characteristic to get as in index into
-   //           the CMD4_ACC_TYPE_ENUM.
-   //
-   // ***********************************************
-   getValue( accTypeEnumIndex, characteristicString, timeout, callback, isLowPriority = false,  qCallback = null )
-   {
-      let self = this;
-
-      // Ignore lowPriority queue messages that could be caused by the device being busy.
-      let nDbg = true;
-      if ( cmd4Dbg && isLowPriority )
-         nDbg = false;
-
-      let cmd = this.state_cmd_prefix + this.state_cmd + " Get '" + this.displayName + "' '" + characteristicString  + "'" + this.state_cmd_suffix;
-
-      if ( cmd4Dbg ) self.log.debug( `getValue: accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } cmd: ${ cmd }` );
-
-      let reply = "NxN";
-
-      // Execute command to Get a characteristics value for an accessory
-      // exec( cmd, { timeout: timeout }, function ( error, stdout, stderr )
-      //let child = spawn( cmd, { shell:true } );
-      let child = exec( cmd, { timeout:self.timeout }, function ( error, stdout, stderr )
-      {
-         if ( stderr )
-            self.log.error( `getValue: ${ characteristicString } function for ${ self.displayName } streamed to stderr: ${ stderr }` );
-
-         // Handle errors when process closes
-         if ( error )
-            self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  generated Error: ${ error }` ) );
-
-         reply = stdout;
-
-
-      }).on('close', ( code ) =>
-      {
-
-         // Was the return code successful ?
-         if ( code != 0 )
-         {
-            // Commands that time out have "null" return codes. So get the real one.
-            if ( child.killed == true )
-            {
-               self.log.error( chalk.red( `getValue ${ characteristicString } function timed out ${ timeout }ms for ${ self.displayName } cmd: ${ cmd } Failed` ) );
-               callback( constants.ERROR_TIMER_EXPIRED );
-
-               return;
-            }
-            if ( nDbg ) self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed. Error: ${ code }. ${ constants.DBUSY }` ) );
-
-            callback( code );
-            if ( typeof qCallback == "function" ) qCallback( code );
-
-            return;
-         }
-
-         if ( reply == "NxN" )
-         {
-            if ( nDbg ) self.log.error( `getValue: nothing returned from stdout for ${ characteristicString } ${ self.displayName }. ${ constants.DBUSY }` );
-
-            // We can call our callback though ;-)
-            callback( constants.ERROR_NO_DATA_REPLY );
-            if ( typeof qCallback == "function" ) qCallback( constants.ERROR_NO_DATA_REPLY );
-
-            return;
-         }
-
-         if ( reply == null )
-         {
-            if ( nDbg ) self.log.error( `getValue: null returned from stdout for ${ characteristicString } ${ self.displayName }. ${ constants.DBUSY }` );
-
-            // We can call our callback though ;-)
-            callback( constants.ERROR_NULL_REPLY );
-            if ( typeof qCallback == "function" ) qCallback( constants.ERROR_NULL_REPLY );
-
-            return;
-         }
-
-
-         // Coerce to string for manipulation
-         reply += '';
-
-         // Remove trailing newline or carriage return, then
-         // Remove leading and trailing spaces, carriage returns ...
-         let trimmedReply = reply.replace(/\n|\r$/,"").trim( );
-
-         // Theoretically not needed as this is caught below, but I wanted
-         // to catch this before much string manipulation was done.
-         if ( trimmedReply.toUpperCase( ) == "NULL" )
-         {
-            if ( nDbg ) self.log.error( `getValue: "${ trimmedReply }" returned from stdout for ${ characteristicString } ${ self.displayName }. ${ constants.DBUSY }` );
-            callback( constants.ERROR_NULL_STRING_REPLY );
-            if ( typeof qCallback == "function" ) qCallback( constants.ERROR_NULL_STRING_REPLY );
-
-            return;
-         }
-
-         // Handle beginning and ending matched single or double quotes. Previous version too heavy duty.
-         // - Remove matched double quotes at begining and end, then
-         // - Remove matched single quotes at beginning and end, then
-         // - remove leading and trailing spaces.
-         let unQuotedReply = trimmedReply.replace(/^"(.+)"$/,"$1").replace(/^'(.+)'$/,"$1").trim( );
-
-         if ( unQuotedReply == "" )
-         {
-            if ( nDbg ) self.log.error( `getValue: ${ characteristicString } function for: ${ self.displayName } returned an empty string "${ trimmedReply }". ${ constants.DBUSY }` );
-
-            callback( constants.ERROR_EMPTY_STRING_REPLY );
-            if ( typeof qCallback == "function" ) qCallback( constants.ERROR_EMPTY_STRING_REPLY );
-
-            return;
-         }
-
-         // The above "null" checked could possibly have quotes around it.
-         // Now that the quotes are removed, I must check again.  The
-         // things I must do for bad data ....
-         if ( unQuotedReply.toUpperCase( ) == "NULL" )
-         {
-            if ( nDbg ) self.log.error( `getValue: ${ characteristicString } function for ${ self.displayName } returned the string "${ trimmedReply }". ${ constants.DBUSY }` );
-
-            callback( constants.ERROR_2ND_NULL_STRING_REPLY );
-            if ( typeof qCallback == "function" ) qCallback( constants.ERROR_2ND_NULL_STRING_REPLY );
-
-            return;
-         }
-
-         let words = unQuotedReply.split( " " ).length;
-         if ( words > 1 && CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.allowedWordCount == 1 )
-         {
-            self.log.warn( `getValue: Warning, Retrieving ${ characteristicString }, expected only one word value for: ${ self.displayName } of: ${ trimmedReply }` );
-         }
-
-         if ( cmd4Dbg ) self.log.debug( `getValue: ${ characteristicString } function for: ${ self.displayName } returned: ${ unQuotedReply }` );
-
-
-         var transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, unQuotedReply )
-
-
-         // Return the appropriate type, by seeing what it is
-         // defined as in Homebridge,
-         let properValue = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( transposed );
-         if ( properValue == undefined )
-         {
-            self.log.warn( `${ self.displayName } ` + chalk.red( `Cannot convert value: ${ unQuotedReply } to ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format } for ${ characteristicString }` ) );
-
-            callback( constants.ERROR_NON_CONVERTABLE_REPLY );
-            if ( typeof qCallback == "function" ) qCallback( constants.ERROR_NON_CONVERTABLE_REPLY );
-
-            return;
-         }
-
-         // Success !!!!
-         callback( 0, properValue );
-
-         if ( typeof qCallback == "function" ) qCallback( 0, properValue );
-
-         // Store history using fakegato if set up
-         self.updateAccessoryAttribute( accTypeEnumIndex, properValue );
-
-      });
    }
 
    // Check props to see if any characteristic properties
@@ -1210,28 +863,16 @@ class Cmd4Accessory
                             .on( "get", accessory.getCachedValue.bind( accessory, accTypeEnumIndex, characteristicString ) );
                   } else
                   {
-                      let details = this.lookupDetailsForPollingCharacteristic( accessory, accTypeEnumIndex );
-                      let queueName = details.queueName;
-                      // If the queue is the default queue or a queue was defined but there is
-                      // no parent as in the case of Standalone, use default setValue
-                      if ( queueName == constants.DEFAULT_QUEUE_NAME || this.CMD4 == constants.STANDALONE )
-                      {
-                         if ( cmd4Dbg ) this.log.debug( chalk.yellow( `Adding getValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` ) );
-                         accessory.service.getCharacteristic(
-                            CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
-                            .characteristic )
-                               .on( "get", accessory.getValue.bind( accessory, accTypeEnumIndex, characteristicString, details.timeout ) );
-                      } else
-                      {
-                         if ( cmd4Dbg ) this.log.debug( chalk.yellow( `Adding priorityGetValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` ) );
+                      if ( cmd4Dbg ) this.log.debug( chalk.yellow( `Adding priorityGetValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` ) );
 
-                         // Set parms are accTypeEnumIndex, value, callback
-                         // Get parms are accTypeEnumIndex, callback
-                         accessory.service.getCharacteristic(
-                            CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
-                            .characteristic )
-                               .on( "get", accessory.queue.priorityGetValue.bind( accessory, accTypeEnumIndex, characteristicString, details.timeout ) );
-                      }
+                      let details = this.lookupDetailsForPollingCharacteristic( accessory, accTypeEnumIndex );
+
+                      // Set parms are accTypeEnumIndex, value, callback
+                      // Get parms are accTypeEnumIndex, callback
+                      accessory.service.getCharacteristic(
+                         CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
+                         .characteristic )
+                            .on( "get", accessory.queue.priorityGetValue.bind( accessory, accTypeEnumIndex, characteristicString, details.timeout ) );
                    }
                 }
              }
@@ -1274,35 +915,17 @@ class Cmd4Accessory
                       });
 
                    } else {
-                      let details = this.lookupDetailsForPollingCharacteristic( accessory, accTypeEnumIndex );
-                      let queueName = details.queueName;
-                      // If the queue is the default queue or a queue was defined but there is
-                      // no parent as in the case of Standalone, use default setValue
-                      if ( queueName == constants.DEFAULT_QUEUE_NAME || this.CMD4 == constants.STANDALONE )
-                      {
-                         if ( cmd4Dbg ) this.log.debug( chalk.yellow( `Adding setValue for ${ accessory.displayName } characteristic: ${ characteristicString }` ) );
-                         // setValue has parameters:
-                         // accTypeEnumIndex, value, callback
-                         // The first bound value though is "this"
-                         let boundSetValue = accessory.setValue.bind( this, accTypeEnumIndex, characteristicString, details.timeout, details.stateChangeResponseTime );
-                         accessory.service.getCharacteristic(
-                            CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
-                            .characteristic ).on( "set", ( value, callback ) => {
-                                boundSetValue( value, callback );
-                         });
-                      } else
-                      {
-                         if ( cmd4Dbg ) this.log.debug( chalk.yellow( `Adding prioritySetValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ` ) );
+                      if ( cmd4Dbg ) this.log.debug( chalk.yellow( `Adding prioritySetValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ` ) );
 
-                         // Set parms are accTypeEnumIndex, value, callback
-                         // Get parms are accTypeEnumIndex, callback
-                         let boundSetValue = accessory.queue.prioritySetValue.bind( this, accTypeEnumIndex, characteristicString, details.timeout, details.stateChangeResponseTime );
+                      let details = this.lookupDetailsForPollingCharacteristic( accessory, accTypeEnumIndex );
+                      // Set parms are accTypeEnumIndex, value, callback
+                      // Get parms are accTypeEnumIndex, callback
+                      let boundSetValue = accessory.queue.prioritySetValue.bind( this, accTypeEnumIndex, characteristicString, details.timeout, details.stateChangeResponseTime );
                          accessory.service.getCharacteristic(
-                            CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
-                            .characteristic ).on( "set", ( value, callback ) => {
-                                boundSetValue( value, callback );
-                         });
-                      }
+                         CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
+                         .characteristic ).on( "set", ( value, callback ) => {
+                             boundSetValue( value, callback );
+                      });
                    }
                 }
              }
@@ -2059,7 +1682,6 @@ class Cmd4Accessory
                   process.exit( 261 ) ;
                }
                this.queue = queue;
-               this.queueName = queue.queueName;
 
                break;
             }
@@ -2068,7 +1690,7 @@ class Cmd4Accessory
                this.timeout = parseInt( value, 10 );
                if ( this.timeout < 500 )
                {
-                  this.log.warn( `Timeout for: ${ config.displayName } is in milliseconds. A value of "${ this.timeout }" seems pretty low` );
+                  this.log.warn( `Timeout for: ${ this.displayName } is in milliseconds. A value of "${ this.timeout }" seems pretty low` );
                }
 
                break;
@@ -2076,10 +1698,6 @@ class Cmd4Accessory
                // Do not parse it yet as characteristics must be set first.
                this.polling = value;
                break;
-            case constants.FETCH:
-               this.log.warn( `Warning: ${ constants.FETCH }:${ value } is changing to ${ constants.CMD4_MODE }:${ value } to reflect its affect on both Set and Get.` );
-               this.log.warn( `To remove this message, change to ${ constants.CMD4_MODE }` );
-               // break omitted
             case constants.CMD4_MODE:
                switch( value )
                {
@@ -2311,14 +1929,17 @@ class Cmd4Accessory
       if ( ! accessory.stateChangeResponseTime )
          stateChangeResponseTime = CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ].devicesStateChangeDefaultTime;
 
-      let queueName = accessory.queueName;
+      // For testing purposes where there is no queue
+      let queueName = null;
+      if ( accessory.queue )
+          queueName = accessory.queue.queueName;
 
       // Secondly the accessories definition
       if ( accessory.timeout )
          timeout = accessory.timeout;
 
       if ( accessory.interval )
-         timeout = accessory.interval;
+         interval = accessory.interval;
 
       // Finally the polled setting
       let pollingEntry = accessory.listOfPollingCharacteristics[ accTypeEnumIndex ];
@@ -2379,23 +2000,13 @@ class Cmd4Accessory
    {
       // Polling cannot be done if there is no state_cmd
       if ( ! accessory.state_cmd )
-         return;
-
-
-      // Now that polling calls updateValue and is not dependant on getValue, which was possibly cached,
-      // Any accessories characteristic can be polled, regardless of cmd4Mode.
-
-      let warningDisplayed = false;
-      switch ( typeof accessory.polling )
       {
-         case "object":
-         {
-            if ( cmd4Dbg ) this.log.debug( `Characteristic polling for: ${ accessory.displayName }` );
+         // We need a Standard queue though
+         if ( this.queue == null )
+            this.queue = addQueue( this.log, "Q:" + this.displayName, constants.QUEUETYPE_STANDARD, this.interval, this.queueMsg, this.queueStatMsgInterval );
 
-            accessory.polling.forEach( ( jsonPollingConfig ) =>
-            {
-               // Characteristic polling is a json type
-               // let jsonPollingConfig = accessory.polling[ jsonIndex ];
+         return;
+      }
 
                // The default timeout is defined first by the accessory, and if not defined,
                // then the default 1 minute. Timeouts are in milliseconds
@@ -2409,9 +2020,19 @@ class Cmd4Accessory
                // then the default 3 seconds. stateChangeResponseTime is in seconds
                let stateChangeResponseTime = ( this.stateChangeResponseTime ) ? this.stateChangeResponseTime : constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME;
 
-               // By default, polled characteristics are not in any queue
-               // The queue of the accessory is used for any polled characteristics.
-               let queueName = ( this.queueName ) ? this.queueName : constants.DEFAULT_QUEUE_NAME;
+      // Now that polling calls updateValue and is not dependant on getValue, which was possibly cached,
+      // Any accessories characteristic can be polled, regardless of cmd4Mode.
+
+      switch ( typeof accessory.polling )
+      {
+         case "object":
+         {
+            if ( cmd4Dbg ) this.log.debug( `Characteristic polling for: ${ accessory.displayName }` );
+
+            accessory.polling.forEach( ( jsonPollingConfig ) =>
+            {
+               // Characteristic polling is a json type
+               // let jsonPollingConfig = accessory.polling[ jsonIndex ];
 
 
                let value;
@@ -2444,26 +2065,15 @@ class Cmd4Accessory
                         break;
                      case constants.QUEUE:
                      {
-                        if ( this.cmd4Mode == constants.CMD4_MODE_POLLED ||
-                             this.cmd4Mode == constants.CMD4_MODE_FULLYPOLLED )
+                        if ( this.queue && this.queue.queueName != value )
                         {
-                           if ( this.queue && this.queue.queueName != value )
-                           {
-                               this.log.error( chalk.red( `Already defined Priority Polling Queue "${ this.queue.queueName }" for ${ this.displayName } cannot be redefined.` ) );
-                               throw new Error('Already defined Priority Polling Queue' );
-                               // process.exit( 208 );
-                           }
-
-                           // The default queue type will be used if not defined in the platform section
-                           queueName = value;
-                           this.queueName = value;
-                           this.queue = addQueue( this.log, this.queueName, constants.DEFAULT_QUEUE_TYPE, this.interval, this.queueMsg, this.queueStatMsgInterval );
-
-                        } else
-                        {
-                          this.log.error( chalk.red( `Priority Queued Polling is only available with ${ constants.CMD4_MODE } set to: ${ constants.CMD4_MODE_POLLED } or ${ constants.CMD4_MODE_FULLYPOLLED }` ) );
-                           process.exit( 209 );
+                            this.log.error( chalk.red( `Already defined Priority Polling Queue "${ this.queue.queueName }" for ${ this.displayName } cannot be redefined.` ) );
+                            throw new Error('Already defined Priority Polling Queue' );
+                            // process.exit( 208 );
                         }
+
+                        this.queue = addQueue( this.log, value, constants.QUEUETYPE_WORM, this.interval, this.queueMsg, this.queueStatMsgInterval );
+
                         break;
                      }
                      case constants.CHARACTERISTIC:
@@ -2508,43 +2118,30 @@ class Cmd4Accessory
                            this.log.error( chalk.red( `Error` ) + ` No such polling characteristic: ${ key } for: ${ accessory.displayName }` );
                            process.exit( 264 );
                         }
-                        if ( warningDisplayed == false )
-                        {
-                           this.log.warn( `Characteristic polling has changed` )
-                           this.log.warn( `from: <characteristic>:<default value>` )
-                           this.log.warn( `to: "Characteristic": <characteristic>` );
-                           this.log.warn( `Please update your config.json for ${ accessory.displayName } accordingly to` );
-                           this.log.warn( `remove this message; As in the future, this warning will be an error.` );
-                           this.log.warn( `Sorry for the inconvenience.` );
-                           warningDisplayed = true;
-                        }
                      }
                   }
                }
 
-               if ( queueName != this.queueName )
+               // Everything now goes through the queue
+               if ( this.queue == null )
                {
-                  this.log.error( chalk.red( `Error` ) + `: For Priority Queue Polling all polled characteristics must be in the same polling queue: "${ this.queueName }". Missing ${ characteristicString }` );
-                  process.exit( 401 );
+                  if ( this.cmd4Mode == constants.CMD4_MODE_POLLED )
+                     this.queue = addQueue( this.log, "Q:" + this.displayName, constants.QUEUETYPE_STANDARD, this.interval, this.queueMsg, this.queueStatMsgInterval );
+                  else
+                     // While some Cmd4Modes will not use a Queue i.e. Demo
+                     // We create a queue anyway for Unit testing
+                     this.queue = addQueue( this.log, "Q:" + this.displayName, constants.QUEUETYPE_PASSTHRU, this.interval, this.queueMsg, this.queueStatMsgInterval );
                }
 
-               if ( cmd4Dbg ) this.log.debug( `Setting up accessory: ${ accessory.displayName } for polling of: ${ characteristicString } timeout: ${ timeout } interval: ${ interval } queueName: "${ queueName }"` );
+               if ( cmd4Dbg ) this.log.debug( `Setting up accessory: ${ accessory.displayName } for polling of: ${ characteristicString } timeout: ${ timeout } interval: ${ interval } queueName: "${ this.queue.queueName }"` );
 
-               let record = { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: interval, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.QUEUE_NAME_lv ]: this.queueName };
+               let record = { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: interval, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.QUEUE_NAME_lv ]: this.queue.queueName };
 
                // Used to determine missing related characteristics and
                // to determine if the related characteristic is also polled.
                this.listOfPollingCharacteristics[ accTypeEnumIndex ] = record;
 
-               if ( this.queueName == constants.DEFAULT_QUEUE_NAME )
-               {
-                  if ( settings.defaultQueue == null )
-                     settings.defaultQueue = addQueue( this.log, constants.DEFAULT_QUEUE_NAME, constants.QUEUETYPE_STANDARD );
-
-                  this.queue = settings.defaultQueue;
-               }
-               let queue = settings.listOfCreatedPriorityQueues[ `${ record.queueName }` ];
-               queue.addLowPriorityGetPolledQueueEntry(
+               this.queue.addLowPriorityGetPolledQueueEntry(
                   record.accessory,
                   record.accTypeEnumIndex,
                   record.characteristicString,
@@ -2569,26 +2166,28 @@ class Cmd4Accessory
                // Make sure the defined characteristics will be polled
                CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ].defaultPollingCharacteristics.forEach( defaultPollingAccTypeEnumIndex =>
                {
+                  if ( this.queue == null )
+                  {
+                     this.queue = addQueue( this.log, "Q:" + this.displayName, this.queueType );
+                     if ( this.cmd4Mode == constants.CMD4_MODE_POLLED )
+                        this.queue = addQueue( this.log, "Q:" + this.displayName, constants.QUEUETYPE_STANDARD, this.interval, this.queueMsg, this.queueStatMsgInterval );
+                     else
+                        // While some Cmd4Modes will not use a Queue i.e. Demo
+                        // We create a queue anyway for Unit testing
+                        this.queue = addQueue( this.log, "Q:" + this.displayName, constants.QUEUETYPE_PASSTHRU, this.interval, this.queueMsg, this.queueStatMsgInterval );
+                  }
+
                   let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ defaultPollingAccTypeEnumIndex ].type;
-                  let record = { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: defaultPollingAccTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: accessory.interval, [ constants.TIMEOUT_lv ]: accessory.timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: accessory.stateChangeResponseTime, [ constants.QUEUE_NAME_lv ]: accessory.queueName };
+                  let record = { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: defaultPollingAccTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: accessory.interval, [ constants.TIMEOUT_lv ]: accessory.timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: accessory.stateChangeResponseTime, [ constants.QUEUE_NAME_lv ]: this.queue.queueName };
 
                   // Used to determine missing related characteristics and
                   // to determine if the related characteristic is also polled.
                   this.listOfPollingCharacteristics[ record.accTypeEnumIndex ] = record;
 
-                  if ( this.queueName == constants.DEFAULT_QUEUE_NAME )
-                  {
-                     if ( settings.defaultQueue == null )
-                        settings.defaultQueue = addQueue( this.log, constants.DEFAULT_QUEUE_NAME, constants.QUEUETYPE_STANDARD );
-
-                     this.queue = settings.defaultQueue;
-                  }
-
-                  let queue = settings.listOfCreatedPriorityQueues[ `${ record.queueName }` ];
 
                   if ( cmd4Dbg ) this.log.debug( `Adding ${ record.accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ record.accTypeEnumIndex ].type }  record.timeout: ${ record.timeout } record.interval: ${ record.interval }  to Polled Queue ${ record.queueName }` );
 
-                  queue.addLowPriorityGetPolledQueueEntry(
+                  this.queue.addLowPriorityGetPolledQueueEntry(
                      record.accessory,
                      record.accTypeEnumIndex,
                      record.characteristicString,
@@ -2605,6 +2204,11 @@ class Cmd4Accessory
             process.exit( 262 );
          }
       }
+
+      // We need a Standard queue if none is there ( Usually because of Unit testing
+      if ( this.queue == null )
+         this.queue = addQueue( this.log, "Q:" + this.displayName, constants.QUEUETYPE_STANDARD, this.interval, this.queueMsg, this.queueStatMsgInterval );
+
 
       for( let accTypeEnumIndex in this.listOfPollingCharacteristics )
       {

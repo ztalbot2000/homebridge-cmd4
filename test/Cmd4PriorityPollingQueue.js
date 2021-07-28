@@ -10,6 +10,7 @@ let Cmd4Platform = require( "../Cmd4Platform" ).Cmd4Platform;
 let Cmd4PriorityPollingQueue = require( "../Cmd4PriorityPollingQueue" ).Cmd4PriorityPollingQueue;
 
 
+// Duplicated from Cmd4PriorityPollingQueue.js
 let HIGH_PRIORITY_SET = 0;
 let HIGH_PRIORITY_GET = 1;
 //let LOW_PRIORITY_GET = 2;
@@ -1031,7 +1032,7 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
 
       cmd4PriorityPollingQueue.highPriorityQueue.push( { [ constants.IS_SET_lv ]: false, [ constants.QUEUE_GET_IS_UPDATE_lv ]: false, [ constants.ACCESSORY_lv ]: cmd4SwitchAccessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: CMD4_ACC_TYPE_ENUM.On, [ constants.CHARACTERISTIC_STRING_lv ]: "On", [ constants.TIMEOUT_lv ]: cmd4SwitchAccessory.timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: null, [ constants.VALUE_lv ]: null, [ constants.CALLBACK_lv ]: dummyCallback } );
 
-      cmd4PriorityPollingQueue.processQueue( HIGH_PRIORITY_GET, cmd4PriorityPollingQueue );
+      cmd4PriorityPollingQueue.processQueueFunc( HIGH_PRIORITY_GET, cmd4PriorityPollingQueue );
 
       // Wait for the Queue to be processed
       setTimeout( ( ) =>
@@ -1104,7 +1105,7 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
 
       cmd4PriorityPollingQueue.highPriorityQueue.push( { [ constants.IS_SET_lv ]: true, [ constants.QUEUE_GET_IS_UPDATE_lv ]: false, [ constants.ACCESSORY_lv ]: cmd4SwitchAccessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: CMD4_ACC_TYPE_ENUM.On, [ constants.CHARACTERISTIC_STRING_lv ]: "On", [ constants.TIMEOUT_lv ]: cmd4SwitchAccessory.timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: null, [ constants.VALUE_lv ]: true, [ constants.CALLBACK_lv ]: dummyCallback } );
 
-      cmd4PriorityPollingQueue.processQueue( HIGH_PRIORITY_GET, cmd4PriorityPollingQueue );
+      cmd4PriorityPollingQueue.processQueueFunc( HIGH_PRIORITY_GET, cmd4PriorityPollingQueue );
 
       // Wait for the Queue to be processed
       setTimeout( ( ) =>
@@ -1185,7 +1186,7 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       //log.setOutputEnabled( false );
       //log.setDebugEnabled( true );
 
-      cmd4PriorityPollingQueue.processQueue( HIGH_PRIORITY_SET, cmd4PriorityPollingQueue );
+      cmd4PriorityPollingQueue.processQueueFunc( HIGH_PRIORITY_SET, cmd4PriorityPollingQueue );
 
       // Wait for the Queue to be processed
       setTimeout( ( ) =>

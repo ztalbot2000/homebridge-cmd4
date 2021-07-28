@@ -77,7 +77,6 @@ describe( "Testing cmd4Constants", function( )
        assert.equal( constants.CHARACTERISTIC, "Characteristic", `Incorrect global value` );
        assert.equal( constants.TIMEOUT, "Timeout", `Incorrect global value` );
        assert.equal( constants.QUEUE, "Queue", `Incorrect global value` );
-       assert.equal( constants.DEFAULT_QUEUE_NAME, "No_Queue", `Incorrect global value` );
        assert.equal( constants.QUEUE_STAT_MSG_INTERVAL, "QueueStatMsgInterval", `Incorrect global value` );
        assert.equal( constants.POLLING, "Polling", `Incorrect global value` );
        assert.equal( constants.CMD4_MODE_ALWAYS, "Always", `Incorrect global value` );

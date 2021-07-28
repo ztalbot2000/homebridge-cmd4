@@ -5,7 +5,7 @@
 
 let { Cmd4Accessory } = require( "../Cmd4Accessory" );
 let { Cmd4Platform } = require( "../Cmd4Platform" );
-let constants = require( "../cmd4Constants" );
+//let constants = require( "../cmd4Constants" );
 
 
 
@@ -96,7 +96,7 @@ describe( "Testing Cmd4Accessory", function( )
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
 
-      assert.isFunction( cmd4Accessory.setValue, "Cmd4Accessory.setValue is not a function" );
+      assert.isFunction( cmd4Accessory.queue.prioritySetValue, "Cmd4Accessory.queue.prioritySetValue is not a function" );
 
       done( );
    });
@@ -124,6 +124,7 @@ describe( "Testing Cmd4Accessory", function( )
             SleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
             Brightness:                8,
             ClosedCaptions:           "DISABLED",
+            polling: [{ characteristic: "ClosedCaptions" }],
             CurrentMediaState:        "STOP",
             TargetMediaState:         "STOP",
             PictureMode:              "STANDARD",
@@ -156,28 +157,27 @@ describe( "Testing Cmd4Accessory", function( )
 
       let value = Characteristic.ClosedCaptions.ENABLED;
       let acc = CMD4_ACC_TYPE_ENUM.ClosedCaptions;
-      let DEVICE = cmd4Accessory.displayName;
-      let CHARACTERISTIC = CMD4_ACC_TYPE_ENUM.properties[ acc ].type;
-
 
       cmd4Accessory.log.reset( );
       cmd4Accessory.log.setDebugEnabled( false );
-      cmd4Accessory.setValue( acc, "ClosedCaptions", constants.DEFAULT_TIMEOUT, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, value,  function( )
-      {
-         let newfn = `${ fn }_${ DEVICE }_${ CHARACTERISTIC }`;
-         let INPUTS=require( `${ newfn }` );
-         let sentResult = INPUTS.VALUE;
 
+
+      // Call the setValue bound function, which is priorritySetValue
+      cmd4Accessory.service.getCharacteristic(
+         CMD4_ACC_TYPE_ENUM.properties[ acc ]
+             .characteristic ).setValue( value, function dummyCallback( ) { } );
+
+      setTimeout( ( ) =>
+      {
          assert.include( log.logBuf, `Setting Television ClosedCaptions\u001b[39m 1`, ` setValue incorrect stdout: ${ log.logBuf }` );
          assert.equal( 1, log.logLineCount, ` setCachedValue logged lines than one: ${ log.logBuf }` );
          assert.equal( "", log.errBuf, ` setCachedValue unexpected stderr: ${ log.errBuf }` );
          assert.equal( 0, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
 
-
-         assert.equal( sentResult, value, " setValue incorrect value" );
-
          done( );
-      });
+
+      }, 1000 );
+
    });
 
    it( `setValue 1, aka ENABLED should send "ENABLED" to script for constant request`, function ( done )
@@ -204,6 +204,7 @@ describe( "Testing Cmd4Accessory", function( )
              SleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
              Brightness:                8,
              ClosedCaptions:           "DISABLED",
+             polling: [{ characteristic: "ClosedCaptions" }],
              CurrentMediaState:        "STOP",
              TargetMediaState:         "STOP",
              PictureMode:              "STANDARD",
@@ -235,30 +236,27 @@ describe( "Testing Cmd4Accessory", function( )
       // Note: We need a characteristic that does not have a verify characteristic
       // because the getSetValueScript can't seem to handle it. At least not yet.
       let acc = CMD4_ACC_TYPE_ENUM.ClosedCaptions;
-      let DEVICE = cmd4Accessory.displayName;
-      let CHARACTERISTIC = CMD4_ACC_TYPE_ENUM.properties[ acc ].type;
-
 
       let value = Characteristic.ClosedCaptions.ENABLED;
 
       cmd4Accessory.log.reset( );
       cmd4Accessory.log.setDebugEnabled( false );
-      cmd4Accessory.setValue( acc, "ClosedCaptions", constants.DEFAULT_TIMEOUT, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, value,  function( )
+
+      // Call the setValue bound function, which is priorritySetValue
+      cmd4Accessory.service.getCharacteristic(
+         CMD4_ACC_TYPE_ENUM.properties[ acc ]
+             .characteristic ).setValue( value, function dummyCallback( ) { } );
+
+      setTimeout( ( ) =>
       {
-
-         let newfn = `${ fn }_${ DEVICE }_${ CHARACTERISTIC }`;
-         let INPUTS=require( `${ newfn }` );
-         let sentResult = INPUTS.VALUE;
-
-         assert.include( log.logBuf, `Setting Television ClosedCaptions\u001b[39m ENABLED`, ` setValue incorrect stdout: ${ log.logBuf}` );
+         assert.include( log.logBuf, `[34mSetting Television ClosedCaptions\u001b[39m ENABLED`, `incorrect stdout: ${ log.logBuf }` );
          assert.equal( 1, log.logLineCount, ` setValue logged lines than one: ${ log.logBuf }` );
          assert.equal( "", log.errBuf, ` setValue unexpected error output received: ${ log.errBuf }` );
          assert.equal( 0, log.errLineCount, ` setValue logged Error lines more than one: ${ log.errBuf }` );
 
-         assert.equal( sentResult, "ENABLED", " setValue incorrect result" );
-
          done( );
-      });
+
+      }, 1000 );
    });
 
    it( `Cmd4Accessory should generate warning for publishExternally`, function ( done )
@@ -374,28 +372,26 @@ describe( "Testing Cmd4Accessory", function( )
 
 
       let acc = CMD4_ACC_TYPE_ENUM.Mute;
-      let DEVICE = cmd4Accessory.displayName;
-      let CHARACTERISTIC = CMD4_ACC_TYPE_ENUM.properties[ acc ].type;
-
       let value = true;
 
       cmd4Accessory.log.reset( );
       cmd4Accessory.log.setDebugEnabled( false );
-      cmd4Accessory.setValue( acc, "Mute", constants.DEFAULT_TIMEOUT, constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME, value,  function( )
-      {
-         let newfn = `${ fn }_${ DEVICE }_${ CHARACTERISTIC }`;
-         let INPUTS=require( `${ newfn }` );
-         let sentResult = INPUTS.VALUE;
 
-         assert.include( log.logBuf, `Setting Television Mute\u001b[39m 1`, ` setValue incorrect output. received: ${ log.logBuf }` );
+      // Call the setValue bound function, which is priorritySetValue
+      cmd4Accessory.service.getCharacteristic(
+         CMD4_ACC_TYPE_ENUM.properties[ acc ]
+             .characteristic ).setValue( value, function dummyCallback( ) { } );
+
+      setTimeout( ( ) =>
+      {
+         assert.include( log.logBuf, `[34mSetting (Cached) Television Mute\u001b[39m true`, ` setValue incorrect output. received: ${ log.logBuf }` );
          assert.equal( 1, log.logLineCount, ` setValue logged lines than one: ${ log.stdout }` );
          assert.equal( "", log.errBuf, ` setValue unexpected error output received: ${ log.errBuf }` );
          assert.equal( 0, log.errLineCount, ` setValue logged Error lines more than one: ${ log.errBuf }` );
 
-         assert.equal( sentResult, 1, " setValue incorrect result" );
-
          done( );
-      });
+
+      }, 1000 );
    });
 
    it( `setValue of cached "Target*" characteristic, should set "Current*" characteristic`, function ( done )
@@ -411,7 +407,6 @@ describe( "Testing Cmd4Accessory", function( )
          Active:                     "INACTIVE",
          CurrentTemperature:          20.0,
          TargetTemperature:           20.0,
-         CurrentHeatingCoolingState:  0,
          TargetHeatingCoolingState:   0,
          StateChangeResponseTime:     3
       };
@@ -421,14 +416,20 @@ describe( "Testing Cmd4Accessory", function( )
       const log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
-      log.setDebugEnabled( false );
+      log.setDebugEnabled( true );
 
       let cmd4Accessory = new Cmd4Accessory( log, ThermostatConfig, _api, [ ], null );
 
       let value = 12.3;
 
       cmd4Accessory.log.reset( );
-      cmd4Accessory.setCachedValue( acc, "TargetTemperature", value,  function( )
+
+      // Call the setValue bound function, which is priorritySetValue
+      cmd4Accessory.service.getCharacteristic(
+         CMD4_ACC_TYPE_ENUM.properties[ acc ]
+             .characteristic ).setValue( value, function dummyCallback( ) { } );
+
+      setTimeout( ( ) =>
       {
          let result = cmd4Accessory.getStoredValueForIndex( acc );
 
@@ -446,7 +447,9 @@ describe( "Testing Cmd4Accessory", function( )
          assert.equal(result, value, " setValue relatedCurrentAccTypeEnumIndex incorrect stored value " );
 
          done( );
-      });
+
+      }, 1000 );
+
    });
 
    it( `setValue of cached "Target*" characteristic, should set ALSO "Current*" characteristic`, function ( done )
@@ -479,7 +482,13 @@ describe( "Testing Cmd4Accessory", function( )
       let value = 12.3;
 
       cmd4Accessory.log.reset( );
-      cmd4Accessory.setCachedValue( acc, "TargetTemperature", value,  function( )
+
+      // Call the setValue bound function, which is priorritySetValue
+      cmd4Accessory.service.getCharacteristic(
+         CMD4_ACC_TYPE_ENUM.properties[ acc ]
+             .characteristic ).setValue( value, function dummyCallback( ) { } );
+
+      setTimeout( ( ) =>
       {
          let result = cmd4Accessory.getStoredValueForIndex( acc );
 
@@ -497,7 +506,9 @@ describe( "Testing Cmd4Accessory", function( )
          assert.equal(result, value, " setValue relatedCurrentAccTypeEnum incorrect value" );
 
          done( );
-      });
+
+      }, 1000 );
+
    });
 
    it( `Missing required characteristic should generate a warning and add the characteristic`, function ( done )
@@ -594,24 +605,31 @@ describe( "Testing Cmd4Accessory", function( )
       const log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
-      log.setDebugEnabled( false );
+      log.setDebugEnabled( true );
 
       let cmd4Accessory = new Cmd4Accessory( log, TempSensorConfig, _api, [ ], null );
 
       let value = 12.3;
 
       cmd4Accessory.log.reset( );
-      cmd4Accessory.setCachedValue( acc, "CurrentTemperature", value,  function( )
+
+      // Call the setValue bound function, which is priorritySetValue
+      cmd4Accessory.service.getCharacteristic(
+         CMD4_ACC_TYPE_ENUM.properties[ acc ]
+             .characteristic ).setValue( value, function dummyCallback( ) { } );
+
+      setTimeout( ( ) =>
       {
          let result = cmd4Accessory.getStoredValueForIndex( acc );
 
 
-         assert.include( log.logBuf, `Setting (Cached) TemperatureSensor CurrentTemperature\u001b[39m 12.3`, ` setCachedValue incorrect stdout: ${ log.logBuf }` );
-         assert.equal( 1, log.logLineCount, ` setCachedValue logged lines than one: ${ log.logBuf }` );
+         // You cannot set a read only value for a Sensor
+         assert.equal( log.logBuf, ``, ` setCachedValue should not occur, incorrect stdout: ${ log.logBuf }` );
+         assert.equal( 0, log.logLineCount, ` setCachedValue logged lines than one: ${ log.logBuf }` );
          assert.equal( "", log.errBuf, ` setCachedValue logged an error: ${ log.errBuf }` );
          assert.equal( 0, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
 
-         assert.equal(result, value, " setValue incorrect value" );
+         assert.equal(result, 20.0, " setValue incorrect value" );
 
          let relatedTargetAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ acc ].relatedTargetAccTypeEnumIndex;
 
@@ -619,21 +637,22 @@ describe( "Testing Cmd4Accessory", function( )
          assert.isNull(result, ` getValue TargetAccTypeEnumIndex expected null to be stored.` );
 
          done( );
-      });
+      }, 1000 );
    });
 
    it( "setValue of timeout response should fail correctly", function ( done )
    {
       const log = new Logger( );
-      log.setOutputEnabled( false );
       log.setBufferEnabled( true );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
 
       // A config file to play with.
       let TVConfig =
       {
           name:                     "My_Television",
           type:                     "Television",
-          Cmd4_Mode:                "Demo",
+          Cmd4_Mode:                "Always",
           category:                 "TELEVISION",
           publishExternally:        true,
           active:                   "ACTIVE",
@@ -646,25 +665,26 @@ describe( "Testing Cmd4Accessory", function( )
           currentMediaState:        "STOP",
           targetMediaState:         "STOP",
           pictureMode:              "STANDARD",
-          remoteKey:                "SELECT"
+          remoteKey:                "SELECT",
+          timeout:  401,
+          state_cmd: "./test/echoScripts/runToTimeoutRcOf0"
       };
 
-      let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
-
-      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], parentInfo );
-      cmd4Accessory.state_cmd = "./test/echoScripts/runToTimeoutRcOf0";
+      let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], null );
       cmd4Accessory.timeout = 400;
 
-      cmd4Accessory.setValue( CMD4_ACC_TYPE_ENUM.Mute, "Mute", cmd4Accessory.timeout, cmd4Accessory.stateChangeResponseTime, 0, function( rc, result )
-      {
-         assert.equal( rc, constants.ERROR_TIMER_EXPIRED, ` setValue incorrect rc: ${ rc }` );
-         expect( result, ` getValue incorrect result: ${ result }` ).to.not.exist;
+      // Call the setValue bound function, which is priorritySetValue
+      cmd4Accessory.service.getCharacteristic(
+         CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM.Mute ]
+             .characteristic ).setValue( "Mute", function dummyCallback( ) { } );
 
+      setTimeout( ( ) =>
+      {
          assert.include( log.logBuf, `[34mSetting My_Television Mute\u001b[39m 0`, ` setValue output something to stdout: ${ log.logBuf }` );
          assert.include( log.errBuf, `[31m\u001b[31msetValue Mute function failed for My_Television cmd: ./test/echoScripts/runToTimeoutRcOf0 Set 'My_Television' 'Mute' '0' Failed`, ` setValue incorrect stderr: ${ log.errBuf }` );
 
          done( );
-      });
+      }, 1000 );
    });
 
 });

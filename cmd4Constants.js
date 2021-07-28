@@ -83,9 +83,14 @@ exports.QUEUEMSG                 = "QueueMsg";
 exports.QUEUETYPE                = "QueueType";
 exports.QUEUETYPES               = "QueueTypes";
 exports.QUEUE_INTERVAL           = "QueueInterval";
+
+// Queue Types
 exports.QUEUETYPE_SEQUENTIAL     = "Sequential";
 exports.QUEUETYPE_WORM           = "WoRm";
+// Used internally to mean only polled entries go straight through the queue
 exports.QUEUETYPE_STANDARD       = "StandarD";
+// Used internally to mean entries go straight through the queue
+exports.QUEUETYPE_PASSTHRU       = "None";
 
 
 // Platform Config Constnts
@@ -104,7 +109,6 @@ exports.FIRMWAREREVISION         = "FirmwareRevision";
 exports.CHARACTERISTIC           = "Characteristic";
 exports.TIMEOUT                  = "Timeout";
 exports.QUEUE                    = "Queue";
-exports.DEFAULT_QUEUE_NAME       = "No_Queue";
 exports.QUEUE_STAT_MSG_INTERVAL  = "QueueStatMsgInterval";
 exports.POLLING                  = "Polling";
 exports.CMD4_MODE_ALWAYS         = "Always";

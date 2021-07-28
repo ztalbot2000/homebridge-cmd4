@@ -98,9 +98,12 @@ describe( "Testing Cmd4Accessory", function( )
    {
       const log = new Logger( );
       log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
       let cmd4Accessory = new Cmd4Accessory( log, thermostatConfig, _api, [ ], parentInfo );
 
-      assert.equal( log.logBuf, "", ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[39m Creating new Priority Polled Queue "Q:Thermostat" with QueueType of: "StandarD" QueueInterval: 60000 QueueMsg: false QueueStatMsgInterval: 1000`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
       assert.equal( log.errBuf, "", ` Cmd4Accessory Unexpected stderr: ${ log.errBuf }` );
 
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "Cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -110,10 +113,13 @@ describe( "Testing Cmd4Accessory", function( )
    {
       const log = new Logger( );
       log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
       let cmd4Accessory = new Cmd4Accessory( log, thermostatConfig, _api, [ ], parentInfo );
 
-      assert.equal( log.logBuf, "", ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
-      assert.equal( log.errBuf, "", ` Cmd4Accessory Unexpected stderr: ${ log.errBuf }` );
+      assert.include( log.logBuf, `[39m Creating new Priority Polled Queue "Q:Thermostat" with QueueType of: "StandarD" QueueInterval: 60000 QueueMsg: false QueueStatMsgInterval: 1000`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.equal( log.errBuf, ``, ` Cmd4Accessory Unexpected stderr: ${ log.errBuf }` );
 
       assert.isFunction( cmd4Accessory.addAllServiceCharacteristicsForAccessory, "Cmd4Accessory.addAllServiceCharacteristicsForAccessory is not a function" );
 
@@ -127,10 +133,13 @@ describe( "Testing Cmd4Accessory", function( )
 
       const log = new Logger( );
       log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
       new Cmd4Accessory( log, thermostatConfig, _api, [ ], parentInfo );
 
-      assert.equal( log.logBuf, "", ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
-      assert.equal( log.errBuf, "", ` Cmd4Accessory Unexpected stderr: ${ log.errBuf }` );
+      assert.include( log.logBuf, `[39m Creating new Priority Polled Queue "Q:Thermostat" with QueueType of: "StandarD" QueueInterval: 60000 QueueMsg: false QueueStatMsgInterval: 1000`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.equal( log.errBuf, ``, ` Cmd4Accessory Unexpected stderr: ${ log.errBuf }` );
 
    });
 });
