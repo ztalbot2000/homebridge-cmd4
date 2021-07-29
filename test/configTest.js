@@ -107,7 +107,6 @@ function testAccessoryConfig ( accessoryConfig )
 
                break;
             case constants.CMD4_MODE:
-            case constants.FETCH:
                testCmd4_Mode( value );
               break;
             case constants.INTERVAL:
@@ -315,16 +314,10 @@ function testInterval( interval )
 }
 function testCmd4_Mode( cmd4Mode )
 {
-   it( "Cmd4_Mode:" + cmd4Mode + " should be a valid Boolean", ( ) =>
+   it( "Cmd4_Mode:" + cmd4Mode + " should be a valid string", ( ) =>
    {
-      let rc = false;
       let ucCmd4Mode = ucFirst( cmd4Mode );
-      if ( ucCmd4Mode == "Always" ) rc = true;
-      if ( ucCmd4Mode == "Cached" ) rc = true;
-      if ( ucCmd4Mode == "Demo"   ) rc = true;
-      if ( ucCmd4Mode == "Polled" ) rc = true;
-      if ( ucCmd4Mode == "FullyPolled" ) rc = true;
-      assert.isTrue( rc, "Invalid Cmd4_Mode: %s", cmd4Mode );
+      assert.equal( ucCmd4Mode, "Demo", "Invalid Cmd4_Mode: %s", cmd4Mode );
    });
 }
 function testTimeout( timeout )

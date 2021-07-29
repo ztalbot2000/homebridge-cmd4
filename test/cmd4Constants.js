@@ -79,13 +79,8 @@ describe( "Testing cmd4Constants", function( )
        assert.equal( constants.QUEUE, "Queue", `Incorrect global value` );
        assert.equal( constants.QUEUE_STAT_MSG_INTERVAL, "QueueStatMsgInterval", `Incorrect global value` );
        assert.equal( constants.POLLING, "Polling", `Incorrect global value` );
-       assert.equal( constants.CMD4_MODE_ALWAYS, "Always", `Incorrect global value` );
-       assert.equal( constants.CMD4_MODE_CACHED, "Cached", `Incorrect global value` );
-       assert.equal( constants.CMD4_MODE_POLLED, "Polled", `Incorrect global value` );
-       assert.equal( constants.CMD4_MODE_FULLYPOLLED, "FullyPolled", `Incorrect global value` );
        assert.equal( constants.CMD4_MODE_DEMO, "Demo", `Incorrect global value` );
        assert.equal( constants.CMD4_MODE, "Cmd4_Mode", `Incorrect global value` );
-       assert.equal( constants.FETCH, "Fetch", `Incorrect global value` );
        assert.equal( constants.INTERVAL, "Interval", `Incorrect global value` );
        assert.equal( constants.STATECHANGERESPONSETIME, "StateChangeResponseTime", `Incorrect global value` );
        assert.equal( constants.STATE_CMD_PREFIX, "State_cmd_prefix", `Incorrect global value` );

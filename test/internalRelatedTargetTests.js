@@ -67,15 +67,13 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
       {
          accessories: [
          {
-            Cmd4_Mode: "Polled",
-            StatusMsg: true,
-            Type: "TemperatureSensor",
-            DisplayName: "TemperatureSensor",
-            Name: "TemperatureSensor",
-            CurrentTemperature: "22.2",
-            Polling: [ { characteristic: "CurrentTemperature" }
-                    ],
-            State_cmd: "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            StatusMsg:                  true,
+            Type:                      "TemperatureSensor",
+            DisplayName:               "TemperatureSensor",
+            Name:                      "TemperatureSensor",
+            CurrentTemperature:        "22.2",
+            Polling:                   [ { characteristic: "CurrentTemperature" }],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -83,6 +81,7 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -115,16 +114,14 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
       {
          accessories: [
          {
-            Cmd4_Mode: "Polled",
-            StatusMsg: true,
-            Type: "CameraControl",
-            DisplayName: "CameraControl",
-            Name: "CameraControl",
-            On: "1",
+            StatusMsg:                 true,
+            Type:                      "CameraControl",
+            DisplayName:               "CameraControl",
+            Name:                      "CameraControl",
+            On:                        "1",
             CurrentHorizontalTiltAngle: 12,
-            Polling: [ { characteristic: "CurrentHorizontalTiltAngle" }
-                     ],
-            State_cmd: "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            Polling:                   [ { characteristic: "CurrentHorizontalTiltAngle" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -132,6 +129,7 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -164,17 +162,15 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
       {
          accessories: [
          {
-            Cmd4_Mode: "Polled",
-            StatusMsg: true,
-            Type: "TemperatureSensor",
-            DisplayName: "TemperatureSensor",
-            Name: "TemperatureSensor",
-            QueueTypes: [{ queue: "A", queueType: "WoRm" }],
-            Queue: "A",
-            CurrentTemperature: "22.2",
-            Polling: [ { characteristic: "CurrentTemperature" }
-                    ],
-            State_cmd: "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            StatusMsg:                  true,
+            Type:                      "TemperatureSensor",
+            DisplayName:               "TemperatureSensor",
+            Name:                      "TemperatureSensor",
+            QueueTypes:                [{ queue: "A", queueType: "WoRm" }],
+            Queue:                     "A",
+            CurrentTemperature:        "22.2",
+            Polling:                   [ { characteristic: "CurrentTemperature" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -182,6 +178,7 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -214,18 +211,16 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
       {
          accessories: [
          {
-            Cmd4_Mode: "Polled",
-            StatusMsg: true,
-            Type: "CameraControl",
-            DisplayName: "CameraControl",
-            Name: "CameraControl",
-            On: "1",
-            QueueTypes: [{ queue: "A", queueType: "WoRm" }],
-            Queue: "A",
+            StatusMsg:                  true,
+            Type:                      "CameraControl",
+            DisplayName:               "CameraControl",
+            Name:                      "CameraControl",
+            On:                        "1",
+            QueueTypes:                [{ queue: "A", queueType: "WoRm" }],
+            Queue:                     "A",
             CurrentHorizontalTiltAngle: 12,
-            Polling: [ { characteristic: "CurrentHorizontalTiltAngle" }
-                     ],
-            State_cmd: "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            Polling:                   [ { characteristic: "CurrentHorizontalTiltAngle" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -233,6 +228,7 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -262,28 +258,26 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
       let platformConfig =
       {
          accessories: [
-            {
-               Name:         "Door",
-               DisplayName:  "Door",
-               StatusMsg:    true,
-               Type:         "Door",
-               Cmd4_Mode:    "Polled",
-               CurrentPosition:          0,
-               TargetPosition:           0,
-               PositionState:            0,
-               polling:      [ { "characteristic": "CurrentPosition" },
-                            // { "characteristic": "TargetPosition" },
-                               { "characteristic": "PositionState" }
-                             ],
-               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
-            }
-         ]
+         {
+            Name:                      "Door",
+            DisplayName:               "Door",
+            StatusMsg:                 true,
+            Type:                      "Door",
+            CurrentPosition:            0,
+            TargetPosition:             0,
+            PositionState:              0,
+            polling:                   [ { "characteristic": "CurrentPosition" },
+                                       // { "characteristic": "TargetPosition" },
+                                         { "characteristic": "PositionState" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         }]
       };
 
       let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -298,10 +292,9 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
       assert.include( log.logBuf, `[33mAdding getCachedValue for Door characteristic: Name`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
       assert.include( log.logBuf, `[33mAdding priorityGetValue for Door characteristic: CurrentPosition`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
 
-      assert.include( log.errBuf, `[33mWarning, With Cmd4_Mode set to "Polled" and polling for "CurrentPosition" requested, you also must do polling of "TargetPosition" or things will not function properl` , `Incorrect stderr: ${ log.errBuf }` );
+      assert.include( log.errBuf, `[33mWarning, With polling for "CurrentPosition" requested, you also must do polling of "TargetPosition" or things will not function properl` , `Incorrect stderr: ${ log.errBuf }` );
       assert.notInclude( log.logBuf, `[33mAdding prioritySetValue for Door characteristic: TargetPosition`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
 
       done( );
    });
 });
-

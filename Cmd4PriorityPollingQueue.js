@@ -180,13 +180,14 @@ class Cmd4PriorityPollingQueue
             }, entry.stateChangeResponseTime );
 
          } else {
-            // Set failed. We need to keep trying
-            queue.highPriorityQueue.push( entry );
+            // Set failed. We need to keep trying (WoRm queue only )
+            if ( queue.queueType == constants.QUEUETYPE_WORM )
+               queue.highPriorityQueue.push( entry );
 
             queue.errorCountSinceLastGoodTransaction++;
             let count = queue.errorCountSinceLastGoodTransaction;
             if ( count != 0 && count % 50 == 0 )
-               this.log.warn( `More than ${ count } errors were encountered in a row for ${ entry.accessory.displayName }. Last error found Setting: ${ entry.characteristicString} value: ${ entry.value }. Perhaps you should run in debug mode to find out what the problem might be.` );
+               this.log.warn( `More than ${ count } errors were encountered in a row for ${ entry.accessory.displayName } setValue. Last error found Setting: ${ entry.characteristicString} value: ${ entry.value }. Perhaps you should run in debug mode to find out what the problem might be.` );
          }
 
          // Note 1.
@@ -224,13 +225,14 @@ class Cmd4PriorityPollingQueue
 
          } else
          {
-            // High Priority Get failed. We need to keep trying
-            queue.highPriorityQueue.push( entry );
+            // High Priority Get failed. We need to keep trying (WoRm queue only )
+            if ( queue.queueType == constants.QUEUETYPE_WORM )
+               queue.highPriorityQueue.push( entry );
 
             queue.errorCountSinceLastGoodTransaction++;
             let count = queue.errorCountSinceLastGoodTransaction;
             if ( count != 0 && count % 50 == 0 )
-               this.log.warn( `More than ${ count } errors were encountered in a row for ${ entry.accessory.displayName }. Last error found Getting: ${ entry.characteristicString}. Perhaps you should run in debug mode to find out what the problem might be.` );
+               this.log.warn( `More than ${ count } errors were encountered in a row for ${ entry.accessory.displayName } getValue. Last error found Getting: ${ entry.characteristicString}. Perhaps you should run in debug mode to find out what the problem might be.` );
 
             entry.accessory.queue.pauseQueue( entry.accessory.queue );
          }
@@ -312,7 +314,7 @@ class Cmd4PriorityPollingQueue
 
          // Handle errors when process closes
          if ( error )
-            if ( queue.echoE ) self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  generated Error: ${ error }` ) );
+            if ( queue.echoE ) self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed.  Generated Error: ${ error }` ) );
 
          reply = stdout;
 
@@ -409,6 +411,7 @@ class Cmd4PriorityPollingQueue
 
 
          var transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, unQuotedReply )
+         if ( cmd4Dbg && transposed != unQuotedReply ) self.log.debug( `getValue: ${ characteristicString } for: ${ self.displayName } transposed: ${ transposed }` );
 
 
          // Return the appropriate type, by seeing what it is
@@ -422,6 +425,8 @@ class Cmd4PriorityPollingQueue
 
             return;
          }
+
+         if ( cmd4Dbg && properValue != transposed ) self.log.debug( `getValue: ${ characteristicString } for: ${ self.displayName } properValue: ${ properValue }` );
 
          // Success !!!!
          callback( 0, properValue );
@@ -863,7 +868,7 @@ var addQueue = function( log, queueName, queueType = constants.DEFAULT_QUEUE_TYP
    if ( queue != undefined )
       return queue;
 
-   log.info( `Creating new Priority Polled Queue "${ queueName }" with QueueType of: "${ queueType }" QueueInterval: ${ queueInterval } QueueMsg: ${ queueMsg } QueueStatMsgInterval: ${ queueStatMsgInterval }` );
+   log.debug( `Creating new Priority Polled Queue "${ queueName }" with QueueType of: "${ queueType }" QueueInterval: ${ queueInterval } QueueMsg: ${ queueMsg } QueueStatMsgInterval: ${ queueStatMsgInterval }` );
 
    queue = new Cmd4PriorityPollingQueue( log, queueName, queueType, queueInterval, queueMsg, queueStatMsgInterval );
    settings.listOfCreatedPriorityQueues[ queueName ] = queue;

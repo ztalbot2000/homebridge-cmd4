@@ -7,7 +7,6 @@ let { Cmd4Accessory } = require( "../Cmd4Accessory" );
 
 // Settings, Globals and Constants
 let settings = require( "../cmd4Settings" );
-const constants = require( "../cmd4Constants" );
 
 
 var _api = new HomebridgeAPI( ); // object we feed to Plugins
@@ -23,7 +22,6 @@ let thermostatConfig =
 {
    Type:                        "Thermostat",
    Name:                        "Thermostat",
-   Cmd4_Mode:                   "Always",
    DisplayName:                 "Thermostat",
    TemperatureDisplayUnits:     "CELSIUS",
    Active:                      "Inactive",
@@ -103,7 +101,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       let cmd4Accessory = new Cmd4Accessory( log, thermostatConfig, _api, [ ], parentInfo );
 
-      assert.include( log.logBuf, `[39m Creating new Priority Polled Queue "Q:Thermostat" with QueueType of: "StandarD" QueueInterval: 60000 QueueMsg: false QueueStatMsgInterval: 1000`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.equal( log.logBuf, "", ` Cmd4Accessory Unencorrect stdout: ${ log.logBuf }` );
       assert.equal( log.errBuf, "", ` Cmd4Accessory Unexpected stderr: ${ log.errBuf }` );
 
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "Cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -118,7 +116,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       let cmd4Accessory = new Cmd4Accessory( log, thermostatConfig, _api, [ ], parentInfo );
 
-      assert.include( log.logBuf, `[39m Creating new Priority Polled Queue "Q:Thermostat" with QueueType of: "StandarD" QueueInterval: 60000 QueueMsg: false QueueStatMsgInterval: 1000`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.equal( log.logBuf, "", ` Cmd4Accessory Unencorrect stdout: ${ log.logBuf }` );
       assert.equal( log.errBuf, ``, ` Cmd4Accessory Unexpected stderr: ${ log.errBuf }` );
 
       assert.isFunction( cmd4Accessory.addAllServiceCharacteristicsForAccessory, "Cmd4Accessory.addAllServiceCharacteristicsForAccessory is not a function" );
@@ -127,7 +125,6 @@ describe( "Testing Cmd4Accessory", function( )
 
    it( "Test Cmd4Accessory.Cmd4ModePolled should not generate a log", function( )
    {
-      thermostatConfig.Cmd4_Mode = constants.CMD4_MODE_POLLED;
       thermostatConfig.Polling = [{"characteristic": "currentTemperature", "interval": 60, "timeout":2000},
                                   {"characteristic": "targetTemperature", "interval": 60, "timeout":2000}];
 
@@ -138,7 +135,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       new Cmd4Accessory( log, thermostatConfig, _api, [ ], parentInfo );
 
-      assert.include( log.logBuf, `[39m Creating new Priority Polled Queue "Q:Thermostat" with QueueType of: "StandarD" QueueInterval: 60000 QueueMsg: false QueueStatMsgInterval: 1000`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.equal( log.logBuf, "", ` Cmd4Accessory Unencorrect stdout: ${ log.logBuf }` );
       assert.equal( log.errBuf, ``, ` Cmd4Accessory Unexpected stderr: ${ log.errBuf }` );
 
    });

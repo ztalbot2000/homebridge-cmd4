@@ -269,21 +269,21 @@ class Cmd4Platform
             case constants.CMD4_MODE:
                switch( value )
                {
-                  case constants.CMD4_MODE_CACHED:
-                     this.log.warn( `Warning: ${ constants.CMD4_MODE_CACHED } is changing to ${ constants.CMD4_MODE_DEMO } as it should only be used for demonstartion with no state_cmd needed.` );
+                  // break omitted
+                  case "Cached":
+                  case "Always":
+                  case "Polled":
+                  case "FullyPolled":
+                     this.log.warn( `Warning: ${ value } has been deprecated. Cmd4 is now optimized for the best possible configuration as per: https://git.io/JtMGR.` );
                      this.log.warn( `To remove this message, change to ${ constants.CMD4_MODE_DEMO }` );
-                     // break omitted
+                     break;
                   case constants.CMD4_MODE_DEMO:
-                  case constants.CMD4_MODE_ALWAYS:
-                  case constants.CMD4_MODE_POLLED:
-                  case constants.CMD4_MODE_FULLYPOLLED:
-
                      this.cmd4Mode = value;
+                     if ( cmd4Dbg ) this.log.debug( `Cmd4 Get/Set mode set to: ${ value }` );
 
                      break;
                   default:
                      this.log.error( chalk.red( `Invalid value: ${ value } for ${ constants.CMD4_MODE }` ) );
-                     this.log.error( `Must be: [ ${ constants.CMD4_MODE_DEMO } | ${ constants.CMD4_MODE_ALWAYS } | ${ constants.CMD4_MODE_POLLED } | ${ constants.MODE_FULLYPOLLED }` );
                      process.exit( 261 ) ;
                }
                break;

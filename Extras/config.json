@@ -15,7 +15,7 @@
          "allowTLV8":                       false,
          "outputConstants":                 false,
          "restartRecover":                  true,
-         "Cmd4_Mode":                      "Polled",
+         "Cmd4_Mode":                      "Demo",
          "accessories" :
          [
             {
@@ -26,8 +26,7 @@
                "Manufacturer":             "Somebody",
                "Model":                    "Anything",
                "SerialNumber":             "12345",
-               "StateChangeResponseTime":   3,
-               "Cmd4_Mode":                "Polled"
+               "StateChangeResponseTime":   3
             },
             {
                "Type":                     "Fan",

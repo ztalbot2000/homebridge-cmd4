@@ -99,7 +99,6 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
                DisplayName:  "My_Light",
                StatusMsg:    true,
                Type:         "Lightbulb",
-               Cmd4_Mode:    "Polled",
                On:           0,
                Brightness:   100,
                polling:      [ { "characteristic": "on", "interval": 310, "queue": "A" },
@@ -112,7 +111,6 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
                DisplayName:  "My_Switch",
                StatusMsg:    true,
                Type:         "Switch",
-               Cmd4_Mode:    "Polled",
                On:           0,
                Active:       0,
                polling: [{ "characteristic": "On", "queue": "A" },
@@ -148,7 +146,6 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
                DisplayName:  "My_Door",
                StatusMsg:    true,
                Type:         "Door",
-               Cmd4_Mode:    "Polled",
                CurrentPosition:          0,
                TargetPosition:           0,
                PositionState:            0,
@@ -189,23 +186,20 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
    {
       let platformConfig =
       {
-         Cmd4_Mode:    "Polled",
          accessories: [
-            {
-               Name:         "My_Door",
-               DisplayName:  "My_Door",
-               StatusMsg:    true,
-               Type:         "Door",
-               CurrentPosition:          0,
-               TargetPosition:           0,
-               PositionState:            0,
-               polling:      [ { "characteristic": "CurrentPosition", "queue": "A" },
-                               { "characteristic": "TargetPosition", "queue": "A" },
-                               { "characteristic": "PositionState", "queue": "A" }
-                             ],
-               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
-            }
-         ]
+         {
+            Name:                      "My_Door",
+            DisplayName:               "My_Door",
+            StatusMsg:                  true,
+            Type:                      "Door",
+            CurrentPosition:            0,
+            TargetPosition:             0,
+            PositionState:              0,
+            polling:                   [ { "characteristic": "CurrentPosition", "queue": "A" },
+                                         { "characteristic": "TargetPosition", "queue": "A" },
+                                         { "characteristic": "PositionState", "queue": "A" } ],
+            State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         } ]
       }
 
 
@@ -222,7 +216,7 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
 
-      assert.equal( cmd4Accessory.cmd4Mode, constants.CMD4_MODE_POLLED, ` Created accessory has incorrect CMD4_MODE` );
+      assert.equal( cmd4Accessory.cmd4Mode, constants.CMD4_MODE_STANDARD, ` Created accessory has incorrect CMD4_MODE` );
 
       done( );
    });
@@ -231,32 +225,29 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
    {
       let platformConfig =
       {
-         Cmd4_Mode:    "Polled",
-         QueueMsg:      true,
-         QueueStatMsgInterval:  1200,
+         QueueMsg:                     true,
+         QueueStatMsgInterval:         1200,
          accessories: [
-            {
-               Name:         "My_Door",
-               DisplayName:  "My_Door",
-               StatusMsg:    true,
-               Type:         "Door",
-               CurrentPosition:          0,
-               TargetPosition:           0,
-               PositionState:            0,
-               polling:      [ { "characteristic": "CurrentPosition", "queue": "A" },
-                               { "characteristic": "TargetPosition", "queue": "A" },
-                               { "characteristic": "PositionState", "queue": "A" }
-                             ],
-               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
-            }
-         ]
+         {
+            Name:                      "My_Door",
+            DisplayName:               "My_Door",
+            StatusMsg:                 true,
+            Type:                      "Door",
+            CurrentPosition:            0,
+            TargetPosition:             0,
+            PositionState:              0,
+            polling:                   [ { "characteristic": "CurrentPosition", "queue": "A" },
+                                         { "characteristic": "TargetPosition", "queue": "A" },
+                                         { "characteristic": "PositionState", "queue": "A" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         } ]
       }
-
 
       let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( false );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -291,33 +282,31 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
    {
       let platformConfig =
       {
-         Cmd4_Mode:    "Polled",
-         OutputConstants:    true,
+         OutputConstants:               true,
          accessories: [
-            {
-               Name:         "My_Door",
-               DisplayName:  "My_Door",
-               StatusMsg:    true,
-               Type:         "Door",
-               QueueMsg:      true,
-               QueueStatMsgInterval:  1400,
-               CurrentPosition:          0,
-               TargetPosition:           0,
-               PositionState:            0,
-               polling:      [ { "characteristic": "CurrentPosition", "queue": "A" },
-                               { "characteristic": "TargetPosition", "queue": "A" },
-                               { "characteristic": "PositionState", "queue": "A" }
-                             ],
-               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         {
+            Name:                      "My_Door",
+            DisplayName:               "My_Door",
+            StatusMsg:                  true,
+            Type:                      "Door",
+            QueueMsg:                   true,
+            QueueStatMsgInterval:      1400,
+            CurrentPosition:           0,
+            TargetPosition:            0,
+            PositionState:             0,
+            polling:                   [ { "characteristic": "CurrentPosition", "queue": "A" },
+                                         { "characteristic": "TargetPosition", "queue": "A" },
+                                         { "characteristic": "PositionState", "queue": "A" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
             }
          ]
       }
-
 
       let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( false );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -340,36 +329,33 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
    {
       let platformConfig =
       {
-         Cmd4_Mode:    "Polled",
-         timeout:    12345,
-         interval:    12,
-         stateChangeResponseTime:    18,
-         outputConstants:    true,
+         timeout:                       12345,
+         interval:                      12,
+         stateChangeResponseTime:       18,
+         outputConstants:               true,
          accessories: [
-            {
-               Name:         "My_Door",
-               DisplayName:  "My_Door",
-               StatusMsg:    true,
-               Type:         "Door",
-               QueueMsg:      true,
-               QueueStatMsgInterval:  1400,
-               CurrentPosition:          0,
-               TargetPosition:           0,
-               PositionState:            0,
-               polling:      [ { "characteristic": "CurrentPosition", "queue": "A" },
-                               { "characteristic": "TargetPosition", "queue": "A" },
-                               { "characteristic": "PositionState", "queue": "A" }
-                             ],
-               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
-            }
-         ]
+         {
+            Name:                      "My_Door",
+            DisplayName:               "My_Door",
+            StatusMsg:                  true,
+            Type:                      "Door",
+            QueueMsg:                   true,
+            QueueStatMsgInterval:       1400,
+            CurrentPosition:            0,
+            TargetPosition:             0,
+            PositionState:              0,
+            polling:                    [ { "characteristic": "CurrentPosition", "queue": "A" },
+                                          { "characteristic": "TargetPosition", "queue": "A" },
+                                          { "characteristic": "PositionState", "queue": "A" } ],
+            State_cmd:                  "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         }]
       }
-
 
       let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( false );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -401,35 +387,32 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
    {
       let platformConfig =
       {
-         Cmd4_Mode:    "Polled",
-         timeout:    12345,
-         interval:    12,
+         timeout:                       12345,
+         interval:                      12,
          accessories: [
-            {
-               Name:         "My_Door",
-               DisplayName:  "My_Door",
-               StatusMsg:    true,
-               Type:         "Door",
-               OutputConstants: true,
-               QueueMsg:      true,
-               QueueStatMsgInterval:  1400,
-               CurrentPosition:          0,
-               TargetPosition:           0,
-               PositionState:            0,
-               polling:      [ { "characteristic": "CurrentPosition", "queue": "A" },
-                               { "characteristic": "TargetPosition", "queue": "A" },
-                               { "characteristic": "PositionState", "queue": "A" }
-                             ],
-               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
-            }
-         ]
+         {
+            Name:                      "My_Door",
+            DisplayName:               "My_Door",
+            StatusMsg:                 true,
+            Type:                      "Door",
+            OutputConstants:              true,
+            QueueMsg:                   true,
+            QueueStatMsgInterval:       1400,
+            CurrentPosition:            0,
+            TargetPosition:             0,
+            PositionState:              0,
+            polling:                   [ { "characteristic": "CurrentPosition", "queue": "A" },
+                                         { "characteristic": "TargetPosition", "queue": "A" },
+                                         { "characteristic": "PositionState", "queue": "A" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         } ]
       }
-
 
       let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( false );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -463,27 +446,24 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
    {
       let platformConfig =
       {
-         Cmd4_Mode:    "Polled",
-         timeout:    12345,
-         interval:    12,
+         timeout:                       12345,
+         interval:                      12,
          accessories: [
-            {
-               Name:         "My_Door",
-               DisplayName:  "My_Door",
-               StatusMsg:    true,
-               Type:         "Door",
-               QueueMsg:      true,
-               QueueStatMsgInterval:  1400,
-               CurrentPosition:          0,
-               TargetPosition:           0,
-               PositionState:            0,
-               polling:      [ { "characteristic": "CurrentPosition", "queue": "A" },
-                               { "characteristic": "TargetPosition", "queue": "A" },
-                               { "characteristic": "PositionState", "queue": "A" }
-                             ],
-               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
-            }
-         ]
+         {
+            Name:                      "My_Door",
+            DisplayName:               "My_Door",
+            StatusMsg:                  true,
+            Type:                      "Door",
+            QueueMsg:                   true,
+            QueueStatMsgInterval:       1400,
+            CurrentPosition:            0,
+            TargetPosition:             0,
+            PositionState:              0,
+            polling:                   [ { "characteristic": "CurrentPosition", "queue": "A" },
+                                         { "characteristic": "TargetPosition", "queue": "A" },
+                                         { "characteristic": "PositionState", "queue": "A" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         } ]
       }
 
 
@@ -521,43 +501,39 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
    {
       let platformConfig =
       {
-         Cmd4_Mode:    "Polled",
-         timeout:    12345,
-         interval:    12,
+         timeout:                      12345,
+         interval:                      12,
          accessories: [
-            {
-               Name:         "My_Switch",
-               DisplayName:  "My_Switch",
-               Type:         "Switch",
-               On:            0,
-               polling:      [ { "characteristic": "On" }
-                             ],
-               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
-            },
-            {
-               Name:         "My_Door",
-               DisplayName:  "My_Door",
-               StatusMsg:    true,
-               Type:         "Door",
-               QueueMsg:      true,
-               QueueStatMsgInterval:  1400,
-               CurrentPosition:          0,
-               TargetPosition:           0,
-               PositionState:            0,
-               polling:      [ { "characteristic": "CurrentPosition", "queue": "A" },
-                               { "characteristic": "TargetPosition", "queue": "A" },
-                               { "characteristic": "PositionState", "queue": "A" }
-                             ],
-               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
-            }
-         ]
+         {
+            Name:                      "My_Switch",
+            DisplayName:               "My_Switch",
+            Type:                      "Switch",
+            On:                         0,
+            polling:                   [ { "characteristic": "On" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         },
+         {
+            Name:                      "My_Door",
+            DisplayName:               "My_Door",
+            StatusMsg:                 true,
+            Type:                      "Door",
+            QueueMsg:                   true,
+            QueueStatMsgInterval:       1400,
+            CurrentPosition:            0,
+            TargetPosition:             0,
+            PositionState:              0,
+            polling:                   [ { "characteristic": "CurrentPosition", "queue": "A" },
+                                         { "characteristic": "TargetPosition", "queue": "A" },
+                                         { "characteristic": "PositionState", "queue": "A" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         } ]
       }
-
 
       let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( false );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 

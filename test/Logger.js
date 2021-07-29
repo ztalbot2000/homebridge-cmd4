@@ -128,21 +128,25 @@ describe('A simple logger Test', ( ) =>
 
    it( "Test can create an instance of Cmd4Accessory with new logger", ( ) =>
    {
+      let config =
+      {
+         name:                         "Test Switch",
+         type:                         "Switch",
+         Cmd4_Mode:                     "Demo",
+         on:                            false
+      };
+
       const log = new Logger( );
       log.setOutputEnabled( false );
       log.setBufferEnabled( true );
       log.setDebugEnabled( false );
 
-      let config={ name:      "Test Switch",
-                   type:      "Switch",
-                   Cmd4_Mode:  "Demo",
-                   on:         false
-                 };
+
       let accessory = new Cmd4Accessory( log, config, _api, [ ] );
 
       assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory. Found %s" , accessory );
-      assert.include( log.logBuf , `[39m Creating new Priority Polled Queue "Q:Test Switch" with QueueType of: "StandarD" QueueInterval: 60000 QueueMsg: false QueueStatMsgInterval: 1000`, `unexpected logs to stdout for a simple instance of Cmd4Accessory` );
-      assert.equal( log.logLineCount, 1 , `unexpected number of lines to stdout` );
+      assert.equal( log.logBuf , "", `unexpected logs to stdout for a simple instance of Cmd4Accessory` );
+      assert.equal( log.logLineCount, 0 , `unexpected number of lines to stdout` );
       assert.equal( log.errBuf , "", `Expected no logs to stderr for a simple instance of Cmd4Accessory` );
       assert.equal( log.errLineCount, 0 , `unexpected number of lines to stderr` );
 
@@ -151,16 +155,20 @@ describe('A simple logger Test', ( ) =>
 
    it( "Test can create an instance of Cmd4Accessory with a debug log", ( ) =>
    {
-      let log = new Logger( );
-      log.setDebugEnabled( );
-      log.setOutputEnabled( false );
-      log.setBufferEnabled( true );
+      let config =
+      {
+         name:                         "Test Switch",
+         type:                         "Switch",
+         Cmd4_Mode:                     "Demo",
+         on:                            false
+      };
 
-      let config={ name:      "Test Switch",
-                   type:      "Switch",
-                   Cmd4_Mode:  "Demo",
-                   on:         false
-                 };
+      let log = new Logger( );
+      log.setOutputEnabled( true );
+      log.setBufferEnabled( true );
+      log.setDebugEnabled( true );
+
+
       new Cmd4Accessory( log, config, _api, [ ] );
 
       assert.include( log.logBuf, "Creating Standalone Accessory type for ", `Expected debug logs to stdout with setDebugEnabled` );
@@ -177,7 +185,7 @@ describe('A simple logger Test', ( ) =>
       log.setOutputEnabled( true );
       log.setBufferEnabled( false );
       log.setDebugEnabled( false );
-      let entry = { characteristicString: "testCraracteristic",
+      let entry = { characteristicString: "testCharacteristic",
                     accessory:
                     { displayName: "testDevice",
                       queue:

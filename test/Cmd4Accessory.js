@@ -68,18 +68,21 @@ describe('Quick Test of Setup', ( ) =>
 // ******** TEST Cmd4Accessory *************
 describe('A simple Cmd4Accessory Test', ( ) =>
 {
-   let config={ name:      "Test Switch",
-                type:      "Switch",
-                Cmd4_Mode:  constants.CMD4_MODE_DEMO,
-                on:         false
-              };
+   let config =
+   {
+      name:                            "Test Switch",
+      type:                            "Switch",
+      Cmd4_Mode:                        constants.CMD4_MODE_DEMO,
+      on:                               false
+   };
+
    it( "Test can create an instance of Cmd4Accessory", ( ) =>
    {
-      let parentInfo = undefined;
-
       let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
+
+      let parentInfo = undefined;
       let accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
       assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory. Found %s" , accessory );
@@ -89,20 +92,22 @@ describe('A simple Cmd4Accessory Test', ( ) =>
 
 describe('A simple Cmd4Accessory Test Debbuging enabled', ( ) =>
 {
-   let config={ name:      "Test Switch",
-                type:      "Switch",
-                Cmd4_Mode:  constants.CMD4_MODE_DEMO,
-                on:         false
-              };
+   let config =
+   {
+      name:                            "Test Switch",
+      type:                            "Switch",
+      Cmd4_Mode:                        constants.CMD4_MODE_DEMO,
+      on:                               false
+   };
+
    it( "Test can create an instance of Cmd4Accessory with Debug Enabled", ( ) =>
    {
-      let parentInfo = undefined;
-
-
       let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( );
+
+      let parentInfo = undefined;
       let accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
       assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory. Found %s" , accessory );
@@ -114,18 +119,21 @@ describe('A simple Cmd4Accessory Test Debbuging enabled', ( ) =>
 
 describe('Test Cmd4Accessory variables ', ( ) =>
 {
-   let config={ name:      "Test Switch",
-                type:      "Switch",
-                Cmd4_Mode:  constants.CMD4_MODE_DEMO,
-                on:         false
-              };
+   let config =
+   {
+      name:                            "Test Switch",
+      type:                            "Switch",
+      Cmd4_Mode:                        constants.CMD4_MODE_DEMO,
+      on:                               false
+   };
+
    it( "Test typeIndex of a Switch set correctly ", ( ) =>
    {
-      let parentInfo = undefined;
-
       let log = new Logger( );
       log.setOutputEnabled( false );
       log.setBufferEnabled( );
+
+      let parentInfo = undefined;
       let accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
       assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory. Found %s" , accessory );
@@ -164,30 +172,35 @@ describe('Test Cmd4Accessory variables ', ( ) =>
 
 describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
 {
-   let config={ name:      "Test Switch",
-                type:      "Switch",
-                Cmd4_Mode:  constants.CMD4_MODE_DEMO,
-                on:         false
-              };
+   let config =
+   {
+      name:                            "Test Switch",
+      type:                            "Switch",
+      Cmd4_Mode:                        constants.CMD4_MODE_DEMO,
+      on:                               false
+   };
+
    it( "Check that STORED_DATA_ARRAY is created", ( ) =>
    {
-      let STORED_DATA_ARRAY = [ ];
-
       let log = new Logger( );
       log.setOutputEnabled( false );
       log.setBufferEnabled( );
+
+      let STORED_DATA_ARRAY = [ ];
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       assert.isArray( accessory.STORED_DATA_ARRAY, "Expected accessory.STORED_DATA_ARRAY to be an Array. Found %s" , typeof accessory.STORED_DATA_ARRAY );
 
    });
+
    it( "Check that Array STORED_DATA_ARRAY.storedValuesPerCharacteristic is created", ( ) =>
    {
-      let STORED_DATA_ARRAY = [ ];
-
       let log = new Logger( );
       log.setOutputEnabled( false );
       log.setBufferEnabled( );
+
+
+      let STORED_DATA_ARRAY = [ ];
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       assert.isArray( accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic, "Expected accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic to be an Array. Found %s" , typeof accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic );
@@ -196,11 +209,12 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
 
    it( "Check that storedValuesPerCharacteristic Array size is:  " + ACC_EOL, ( ) =>
    {
-      let STORED_DATA_ARRAY = [ ];
-
       let log = new Logger( );
       log.setOutputEnabled( false );
       log.setBufferEnabled( );
+
+
+      let STORED_DATA_ARRAY = [ ];
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       assert.equal( accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic.length, ACC_EOL, "Expected storedValuesPerCharacteristic to size: %s. Found %s" , ACC_EOL, accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic.length );
@@ -208,11 +222,12 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
    });
    it( "Check that storedValuesPerCharacteristic is set correctly for a switch", ( ) =>
    {
-      let STORED_DATA_ARRAY = [ ];
-
       let log = new Logger( );
       log.setOutputEnabled( false );
       log.setBufferEnabled( );
+
+
+      let STORED_DATA_ARRAY = [ ];
       new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       let accIndex = CMD4_ACC_TYPE_ENUM.On;
@@ -227,13 +242,15 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       }
 
    });
+
    it( "Check that setStoredValueForIndex works correctly for a switch", ( ) =>
    {
-      let STORED_DATA_ARRAY = [ ];
-
       let log = new Logger( );
       log.setOutputEnabled( false );
       log.setBufferEnabled( );
+
+
+      let STORED_DATA_ARRAY = [ ];
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       let accIndex = CMD4_ACC_TYPE_ENUM.On;
@@ -253,11 +270,12 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
 
    it( "Check getStoredValueForIndex works correctly for a switch", ( ) =>
    {
-      let STORED_DATA_ARRAY = [ ];
-
       let log = new Logger( );
       log.setOutputEnabled( false );
       log.setBufferEnabled( );
+
+
+      let STORED_DATA_ARRAY = [ ];
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       let accIndex = CMD4_ACC_TYPE_ENUM.On;
@@ -276,13 +294,15 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       assert.equal( result, config.On, "Expected getStoredValueForIndex to return: %s. Found %s" , config.On, result );
 
    });
+
    it( "Check testStoredValueForIndex works correctly for a switch", ( ) =>
    {
-      let STORED_DATA_ARRAY = [ ];
-
       let log = new Logger( );
       log.setOutputEnabled( false );
       log.setBufferEnabled( );
+
+
+      let STORED_DATA_ARRAY = [ ];
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       let accIndex = CMD4_ACC_TYPE_ENUM.On;
@@ -299,13 +319,15 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       }
 
    });
+
    it( "Check testStoredValueForIndex limits returns undefined", ( ) =>
    {
-      let STORED_DATA_ARRAY = [ ];
-
       let log = new Logger( );
       log.setOutputEnabled( false );
       log.setBufferEnabled( );
+
+
+      let STORED_DATA_ARRAY = [ ];
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       let index = -1;
@@ -346,21 +368,25 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
 
    it( "Check that storedValuesPerCharacteristic gets created", function( done )
    {
-      let config={ name: "Test Switch",
-                   type: "Switch",
-                   on:   false,
-                   state_cmd: `node ${ home }/.homebridge/Cmd4Scripts/State.js`,
-                   interval: 10,                // seconds
-                   StateChangeResponseTime: 1,  // seconds
-                   timeout: 6000,               // msec
-                   polling: true
-                 };
-      let STORED_DATA_ARRAY = [ ];
+      let config =
+      {
+         name:                         "Test Switch",
+         type:                         "Switch",
+         on:                            false,
+         state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`,
+         interval:                      10,                // seconds
+         StateChangeResponseTime:       1,                 // seconds
+         timeout:                       6000,              // msec
+         polling:                       true
+      };
 
       let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
+
+      let STORED_DATA_ARRAY = [ ];
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       assert.isArray( accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic, Cmd4Accessory, "Expected accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic to be an Array. Found %s" , typeof accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic );
@@ -370,21 +396,25 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
 
    it( "Check that storedValuesPer Array size is:  " + ACC_EOL, ( ) =>
    {
-      let config={ name: "Test Switch",
-                   type: "Switch",
-                   on:   false,
-                   state_cmd: `node ${ home }/.homebridge/Cmd4Scripts/State.js`,
-                   interval: 10,                // seconds
-                   StateChangeResponseTime: 1,  // seconds
-                   timeout: 6000,               // msec
-                   polling: true
-                 };
-      let STORED_DATA_ARRAY = [ ];
+      let config =
+      {
+         name:                         "Test Switch",
+         type:                         "Switch",
+         on:                            false,
+         state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`,
+         interval:                      10,                // seconds
+         StateChangeResponseTime:       1,                 // seconds
+         timeout:                       6000,              // msec
+         polling:                       true
+      };
 
       let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
+
+      let STORED_DATA_ARRAY = [ ];
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
       assert.equal( accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic.length, ACC_EOL, "Expected accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic to size: %s. Found %s" , ACC_EOL, accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic.length );
@@ -396,27 +426,25 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
       let platformConfig =
       {
          accessories: [
-            {
-               Name:         "My_Door",
-               DisplayName:  "My_Door",
-               StatusMsg:    true,
-               Type:         "Door",
-               Cmd4_Mode:    "Polled",
-               CurrentPosition:          0,
-               TargetPosition:           0,
-               PositionState:            0,
-               polling:      [ { "characteristic": "CurrentPosition" },
-                               { "characteristic": "PositionState" }
-                             ],
-               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
-            }
-         ]
+         {
+            Name:                      "My_Door",
+            DisplayName:               "My_Door",
+            StatusMsg:                 true,
+            Type:                      "Door",
+            CurrentPosition:            0,
+            TargetPosition:             0,
+            PositionState:              0,
+            polling:                   [ { "characteristic": "CurrentPosition" },
+                                         { "characteristic": "PositionState" } ],
+            State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         }]
       }
 
       let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -425,7 +453,7 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
       this.config = platformConfig.accessories;
       cmd4Platform.discoverDevices( );
 
-      assert.include( log.errBuf, `[33mWarning, With Cmd4_Mode set to "Polled" and polling for "CurrentPosition" requested, you also must do polling of "TargetPosition" or things will not function properl` , `expected stderr: ${ log.errBuf }` );
+      assert.include( log.errBuf, `[33mWarning, With polling for "CurrentPosition" requested, you also must do polling of "TargetPosition" or things will not function properly` , `expected stderr: ${ log.errBuf }` );
 
       done( );
    });
@@ -434,29 +462,29 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
    {
       let thermostatConfig =
       {
-         Type:                        "Thermostat",
-         Name:                        "Thermostat",
-         Cmd4_Mode:                   "Polled",
-         DisplayName:                 "Thermostat",
-         TemperatureDisplayUnits:     "CELSIUS",
-         Active:                      "Inactive",
-         CurrentTemperature:           20.0,
-         TargetTemperature:            20.0,
-         CurrentHeatingCoolingState:   0,
-         TargetHeatingCoolingState:    0,
-         Polling: [{"characteristic": "currentTemperature", "interval": 60, "timeout":2000}],
-         State_cmd: "./test/echoScripts/echo_quoted0"
+         Type:                         "Thermostat",
+         Name:                         "Thermostat",
+         DisplayName:                  "Thermostat",
+         TemperatureDisplayUnits:      "CELSIUS",
+         Active:                       "Inactive",
+         CurrentTemperature:            20.0,
+         TargetTemperature:             20.0,
+         CurrentHeatingCoolingState:    0,
+         TargetHeatingCoolingState:     0,
+         Polling:                      [{"characteristic": "currentTemperature", "interval": 60, "timeout":2000}],
+         State_cmd:                    "./test/echoScripts/echo_quoted0"
       };
-      let parentInfo = { };
-
 
       let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
+
+
+      let parentInfo = { };
       new Cmd4Accessory( log, thermostatConfig, _api, [ ], parentInfo );
 
       assert.equal( log.logBuf, "", ` Cmd4Accessory Unexpected stdout: ${ log.logBuf }` );
-      assert.include( log.errBuf, `[33mWarning, With Cmd4_Mode set to "Polled" and polling for "CurrentTemperature" requested, you also must do polling of "TargetTemperature" or things will not function properly`, ` Cmd4Accessory Incorrect stderr: ${ log.errBuf }` );
+      assert.include( log.errBuf, `[33mWarning, With polling for "CurrentTemperature" requested, you also must do polling of "TargetTemperature" or things will not function properly`, ` Cmd4Accessory Incorrect stderr: ${ log.errBuf }` );
 
    });
 
@@ -464,45 +492,48 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
    {
       let thermostatConfig =
       {
-         Type:                        "Thermostat",
-         Name:                        "Thermostat",
-         Cmd4_Mode:                   "Polled",
-         DisplayName:                 "Thermostat",
-         TemperatureDisplayUnits:     "CELSIUS",
-         Active:                      "Inactive",
-         CurrentTemperature:           20.0,
-         TargetTemperature:            20.0,
+         Type:                         "Thermostat",
+         Name:                         "Thermostat",
+         DisplayName:                  "Thermostat",
+         TemperatureDisplayUnits:      "CELSIUS",
+         Active:                       "Inactive",
+         CurrentTemperature:            20.0,
+         TargetTemperature:             20.0,
          LinkedTypes:
          {
-            Type:                        "Thermostat",
-            Name:                        "Linked_Thermostat",
-            Cmd4_Mode:                   "Polled",
-            DisplayName:                 "Linked_Thermostat",
-            TemperatureDisplayUnits:     "CELSIUS",
-            Active:                      "Inactive",
-            CurrentTemperature:           20.0,
-            TargetTemperature:            20.0,
-            CurrentHeatingCoolingState:   0,
-            TargetHeatingCoolingState:    0,
-            Polling: [{"characteristic": "currentTemperature", "interval": 60, "timeout":2000}],
-            State_cmd: "./test/echoScripts/echo_quoted0"
+            Type:                      "Thermostat",
+            Name:                      "Linked_Thermostat",
+            DisplayName:               "Linked_Thermostat",
+            TemperatureDisplayUnits:   "CELSIUS",
+            Active:                    "Inactive",
+            CurrentTemperature:         20.0,
+            TargetTemperature:          20.0,
+            CurrentHeatingCoolingState: 0,
+            TargetHeatingCoolingState:  0,
+            Polling:                   [{"characteristic": "currentTemperature", "interval": 60, "timeout":2000}],
+            State_cmd:                   "./test/echoScripts/echo_quoted0"
          },
          CurrentHeatingCoolingState:   0,
          TargetHeatingCoolingState:    0,
-         Polling: [{"characteristic": "currentTemperature", "interval": 60, "timeout":2000},
-                   {"characteristic": "targetTemperature", "interval": 60, "timeout":2000}],
-         State_cmd: "./test/echoScripts/echo_quoted0"
+         Polling:                     [{"characteristic": "currentTemperature",
+                                        "interval": 60,
+                                        "timeout":  2000},
+                                       {"characteristic": "targetTemperature",
+                                         "interval": 60,
+                                         "timeout":  2000}],
+         State_cmd:                     "./test/echoScripts/echo_quoted0"
       };
-      let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
-
       let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( false );
+
+
+      let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
       new Cmd4Accessory( log, thermostatConfig, _api, [ ], parentInfo );
 
       assert.include( log.logBuf, `Creating linked accessories for: Thermostat`, ` Cmd4Accessory output expected. received: ${ log.logBuf }` );
-      assert.include( log.errBuf, `[33mWarning, With Cmd4_Mode set to "Polled" and polling for "CurrentTemperature" requested, you also must do polling of "TargetTemperature" or things will not function properly`, ` Cmd4Accessory Incorrect stderr:: ${ log.errBuf }` );
+      assert.include( log.errBuf, `[33mWarning, With polling for "CurrentTemperature" requested, you also must do polling of "TargetTemperature" or things will not function properly`, ` Cmd4Accessory Incorrect stderr:: ${ log.errBuf }` );
 
    });
 
@@ -510,44 +541,40 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
    {
       let platformConfig=
       {
-         Type:                        "Thermostat",
-         Name:                        "Thermostat",
-         Cmd4_Mode:                   "Polled",
-         DisplayName:                 "Thermostat",
-         TemperatureDisplayUnits:     "CELSIUS",
-         Active:                      "Inactive",
-         CurrentTemperature:           20.0,
-         TargetTemperature:            20.0,
-         CurrentHeatingCoolingState:   0,
-         TargetHeatingCoolingState:    0,
-         Polling: [{ characteristic: "CurrentTemperature" },
-                   { characteristic: "TargetTemperature" }
-                  ],
-         State_cmd: "./test/echoScripts/echo_quoted0",
+         Type:                         "Thermostat",
+         Name:                         "Thermostat",
+         DisplayName:                  "Thermostat",
+         TemperatureDisplayUnits:      "CELSIUS",
+         Active:                       "Inactive",
+         CurrentTemperature:            20.0,
+         TargetTemperature:             20.0,
+         CurrentHeatingCoolingState:    0,
+         TargetHeatingCoolingState:     0,
+         Polling:                      [{ characteristic:   "CurrentTemperature" },
+                                        { characteristic:   "TargetTemperature" } ],
+         State_cmd:                      "./test/echoScripts/echo_quoted0",
          accessories: [
          {
-            Accessory: "Cmd4",
-            Cmd4_Mode: "Polled",
-            StatusMsg: true,
-            Type: "GarageDoorOpener",
-            DisplayName: "StandaloneDoorOpener",
-            Name: "StandaloneDoorOpener",
-            CurrentDoorState: "CLOSED",
-            TargetDoorState: "CLOSED",
-            ObstructionDetected: "1",
-            Polling: [ { characteristic: "CurrentDoorState" },
-                    // { characteristic: "TargetDoorState" },
-                       { characteristic: "ObstructionDetected" }
-                     ],
-            State_cmd: "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            Accessory:                 "Cmd4",
+            StatusMsg:                  true,
+            Type:                      "GarageDoorOpener",
+            DisplayName:               "StandaloneDoorOpener",
+            Name:                      "StandaloneDoorOpener",
+            CurrentDoorState:          "CLOSED",
+            TargetDoorState:           "CLOSED",
+            ObstructionDetected:       "1",
+            Polling:                   [ { characteristic: "CurrentDoorState" },
+                                      // { characteristic: "TargetDoorState" },
+                                         { characteristic: "ObstructionDetected" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
-
 
       let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -560,7 +587,7 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
       assert.include( log.logBuf, `[90mCharacteristic polling for: StandaloneDoorOpener`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
       assert.include( log.logBuf, `[90mCreated platformAccessory: StandaloneDoorOpener`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
 
-      assert.include( log.errBuf, `[33mWarning, With Cmd4_Mode set to "Polled" and polling for "CurrentDoorState" requested, you also must do polling of "TargetDoorState" or things will not function properly`, ` Cmd4Accessory Incorrect stderr:: ${ log.errBuf }` );
+      assert.include( log.errBuf, `[33mWarning, With polling for "CurrentDoorState" requested, you also must do polling of "TargetDoorState" or things will not function properly`, ` Cmd4Accessory Incorrect stderr:: ${ log.errBuf }` );
 
    });
 
@@ -571,32 +598,29 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
       {
          accessories: [
          {
-            Accessory: "Cmd4",
-            Cmd4_Mode: "Polled",
-            StatusMsg: true,
-            Type: "GarageDoorOpener",
-            DisplayName: "StandaloneDoorOpener",
-            Name: "StandaloneDoorOpener",
-            CurrentDoorState: "CLOSED",
-            TargetDoorState: "CLOSED",
-            ObstructionDetected: "1",
-            Polling: [ { characteristic: "CurrentDoorState" },
-                    // { characteristic: "TargetDoorState" },
-                       { characteristic: "ObstructionDetected" }
+            Accessory:                 "Cmd4",
+            StatusMsg:                  true,
+            Type:                      "GarageDoorOpener",
+            DisplayName:               "StandaloneDoorOpener",
+            Name:                      "StandaloneDoorOpener",
+            CurrentDoorState:          "CLOSED",
+            TargetDoorState:           "CLOSED",
+            ObstructionDetected:       "1",
+            Polling:                   [ { characteristic: "CurrentDoorState" },
+                                      // { characteristic: "TargetDoorState" },
+                                         { characteristic: "ObstructionDetected" }
                      ],
-            State_cmd: "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            State_cmd:                   "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }],
          platforms: [
          {
-            Platform: "Cmd4",
-            OutputConstants: false,
-            RestartRecover: true,
-            Cmd4_Mode: "Always",
+            Platform:                  "Cmd4",
+            OutputConstants:            false,
+            RestartRecover:            true,
             Accessories: [
             {
                Type:                        "Thermostat",
                Name:                        "Thermostat",
-               Cmd4_Mode:                   "Polled",
                DisplayName:                 "Thermostat",
                TemperatureDisplayUnits:     "CELSIUS",
                Active:                      "Inactive",
@@ -604,19 +628,18 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
                TargetTemperature:            20.0,
                CurrentHeatingCoolingState:   0,
                TargetHeatingCoolingState:    0,
-               Polling: [{ characteristic: "CurrentTemperature" },
-                         { characteristic: "TargetTemperature" }
-                        ],
-               State_cmd: "./test/echoScripts/echo_quoted0"
+               Polling:                      [{ characteristic: "CurrentTemperature" },
+                                              { characteristic: "TargetTemperature" }],
+               State_cmd:                    "./test/echoScripts/echo_quoted0"
            }]
          }]
       };
-
 
       let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -628,38 +651,36 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
       assert.include( log.logBuf, `[34mCreating Platform Accessory type for : StandaloneDoorOpener`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
       assert.include( log.logBuf, `[90mCharacteristic polling for: StandaloneDoorOpener`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
       assert.include( log.logBuf, `[90mCreated platformAccessory: StandaloneDoorOpener`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.errBuf, `[33mWarning, With Cmd4_Mode set to "Polled" and polling for "CurrentDoorState" requested, you also must do polling of "TargetDoorState" or things will not function properly`, ` Cmd4Accessory Incorrect stderr: ${ log.errBuf }` );
+      assert.include( log.errBuf, `[33mWarning, With polling for "CurrentDoorState" requested, you also must do polling of "TargetDoorState" or things will not function properly`, ` Cmd4Accessory Incorrect stderr: ${ log.errBuf }` );
 
    });
 
-   it( `Test that adding Target message is generated for related "Polled"`, function( )
+   it( `Test that adding Target message is generated for related characteristics `, function( )
    {
       let platformConfig =
       {
          accessories: [
          {
-            Accessory: "Cmd4",
-            Cmd4_Mode: "Polled",
-            StatusMsg: true,
-            Type: "GarageDoorOpener",
-            DisplayName: "StandaloneDoorOpener",
-            Name: "StandaloneDoorOpener",
-            CurrentDoorState: "CLOSED",
-            TargetDoorState: "CLOSED",
-            ObstructionDetected: "1",
-            Polling: [ { characteristic: "CurrentDoorState" },
-                       { characteristic: "TargetDoorState" },
-                       { characteristic: "ObstructionDetected" }
-                     ],
-            State_cmd: "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            Accessory:                 "Cmd4",
+            StatusMsg:                 true,
+            Type:                      "GarageDoorOpener",
+            DisplayName:               "StandaloneDoorOpener",
+            Name:                      "StandaloneDoorOpener",
+            CurrentDoorState:          "CLOSED",
+            TargetDoorState:           "CLOSED",
+            ObstructionDetected:       "1",
+            Polling:                   [ { characteristic: "CurrentDoorState" },
+                                         { characteristic: "TargetDoorState" },
+                                         { characteristic: "ObstructionDetected" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
-
 
       let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -680,30 +701,28 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
 
    });
 
-   it( `Test that adding Target message is *NOT* generated for related "Polled" TemperatureSensors`, function( )
+   it( `Test that adding Target message is *NOT* generated for related characteristic TemperatureSensors`, function( )
    {
       let platformConfig =
       {
          accessories: [
          {
-            Accessory: "Cmd4",
-            Cmd4_Mode: "Polled",
-            StatusMsg: true,
-            Type: "TemperatureSensor",
-            DisplayName: "TemperatureSensor",
-            Name: "TemperatureSensor",
-            CurrentTemperature: "22.2",
-            Polling: [ { characteristic: "CurrentTemperature" }
-                     ],
-            State_cmd: "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            Accessory:                 "Cmd4",
+            StatusMsg:                  true,
+            Type:                      "TemperatureSensor",
+            DisplayName:               "TemperatureSensor",
+            Name:                      "TemperatureSensor",
+            CurrentTemperature:        "22.2",
+            Polling:                   [ { characteristic: "CurrentTemperature" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
-
 
       let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -723,7 +742,7 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
    });
 
 
-   it( `Test that adding "queued" Target message is generated for related "Polled"`, function( )
+   it( `Test that adding "queued" Target message is generated for related characteristics`, function( )
    {
       let platformConfig =
       {
@@ -731,29 +750,27 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
          {
             Type:                        "Thermostat",
             Name:                        "Thermostat",
-            Cmd4_Mode:                   "Polled",
             DisplayName:                 "Thermostat",
             TemperatureDisplayUnits:     "CELSIUS",
             CurrentTemperature:           20.0,
             TargetTemperature:            20.0,
             CurrentHeatingCoolingState:   0,
             TargetHeatingCoolingState:    0,
-            QueueTypes: [{ queue: "A", queueType: "WoRm" }],
-            Queue:        "A",
-            Polling: [{ characteristic: "CurrentTemperature" },
-                      { characteristic: "TargetTemperature" },
-                      { characteristic: "CurrentHeatingCoolingState" },
-                      { characteristic: "TargetHeatingCoolingState" }
-                     ],
-            State_cmd: "./test/echoScripts/echo_quoted0"
+            QueueTypes:                  [{ queue: "A", queueType: "WoRm" }],
+            Queue:                       "A",
+            Polling:                     [{ characteristic: "CurrentTemperature" },
+                                          { characteristic: "TargetTemperature" },
+                                          { characteristic: "CurrentHeatingCoolingState" },
+                                          { characteristic: "TargetHeatingCoolingState" } ],
+            State_cmd:                   "./test/echoScripts/echo_quoted0"
         }]
       };
-
 
       let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -778,4 +795,3 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
    });
 
 });
-

@@ -5,7 +5,6 @@
 
 let { Cmd4Accessory } = require( "../Cmd4Accessory" );
 let { Cmd4Platform } = require( "../Cmd4Platform" );
-//let constants = require( "../cmd4Constants" );
 
 
 
@@ -52,8 +51,6 @@ describe( "Testing Cmd4Accessory", function( )
    it( "Test init Cmd4Accessory", function( done )
    {
       // A config file to play with.
-      // Setting Cmd4_Mode to Demo or Polled with no polled characteristics
-      // makes polling not run and thus not having outstanding processes.
       let platformConfig =
       {
          accessories:
@@ -77,7 +74,6 @@ describe( "Testing Cmd4Accessory", function( )
              RemoteKey:                "SELECT"
          }]
       };
-
 
       let log = new Logger( );
       log.setBufferEnabled( );
@@ -104,8 +100,6 @@ describe( "Testing Cmd4Accessory", function( )
    it( "setValue 1 should send 1 to script for ClosedCaption non constant request", function ( done )
    {
       // A config file to play with.
-      // Setting Cmd4_Mode to Cached or Polled with no polled characteristics
-      // makes polling not run and thus not having outstanding processes.
       let fn = `/tmp/fn1`;
       let platformConfig =
       {
@@ -113,7 +107,6 @@ describe( "Testing Cmd4Accessory", function( )
          [{
             Name:                     "Television",
             Type:                     "Television",
-            Cmd4_Mode:                "Polled",
             DisplayName:              "Television",
             Category:                 "TELEVISION",
             PublishExternally:        true,
@@ -183,8 +176,6 @@ describe( "Testing Cmd4Accessory", function( )
    it( `setValue 1, aka ENABLED should send "ENABLED" to script for constant request`, function ( done )
    {
       // A config file to play with.
-      // Setting Cmd4_Mode to Cached or Polled with no polled characteristics
-      // makes polling not run and thus not having outstanding processes.
       let fn = `/tmp/fn2`;
       let platformConfig =
       {
@@ -192,7 +183,6 @@ describe( "Testing Cmd4Accessory", function( )
          [{
              Name:                     "Television",
              Type:                     "Television",
-             Cmd4_Mode:                "Polled",
              OutputConstants:          true,
              DisplayName:              "Television",
              Category:                 "TELEVISION",
@@ -209,16 +199,16 @@ describe( "Testing Cmd4Accessory", function( )
              TargetMediaState:         "STOP",
              PictureMode:              "STANDARD",
              RemoteKey:                "SELECT",
-             State_cmd:  `node ${ process.cwd( ) }/${ getSetValueScript }`,
+             State_cmd:                `node ${ process.cwd( ) }/${ getSetValueScript }`,
              State_cmd_suffix:          fn
          }]
       };
-
 
       let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -262,8 +252,6 @@ describe( "Testing Cmd4Accessory", function( )
    it( `Cmd4Accessory should generate warning for publishExternally`, function ( done )
    {
       // A config file to play with.
-      // Setting Cmd4_Mode to Cached or Polled with no polled characteristics
-      // makes polling not run and thus not having outstanding processes.
       let fn = `/tmp/fn2`;
       let platformConfig =
       {
@@ -271,7 +259,6 @@ describe( "Testing Cmd4Accessory", function( )
          [{
              Name:                     "Television",
              Type:                     "Television",
-             Cmd4_Mode:                "Polled",
              OutputConstants:          true,
              DisplayName:              "Television",
              Category:                 "TELEVISION",
@@ -323,8 +310,6 @@ describe( "Testing Cmd4Accessory", function( )
    it( "setValue true should send 0 to script for Mute request", function ( done )
    {
       // A config file to play with.
-      // Setting Cmd4_Mode to Cached or Polled with no polled characteristics
-      // makes polling not run and thus not having outstanding processes.
       let fn = `/tmp/fn3`;
       let platformConfig =
       {
@@ -332,7 +317,6 @@ describe( "Testing Cmd4Accessory", function( )
          [{
             Name:                     "Television",
             Type:                     "Television",
-            Cmd4_Mode:                "Demo",
             DisplayName:              "Television",
             Active:                   true,
             Category:                 "TELEVISION",
@@ -348,15 +332,15 @@ describe( "Testing Cmd4Accessory", function( )
             PictureMode:              "STANDARD",
             RemoteKey:                "SELECT",
             State_cmd_suffix:         fn,
-            State_cmd: `node ${ process.cwd( ) }/${ getSetValueScript }`
+            State_cmd:                `node ${ process.cwd( ) }/${ getSetValueScript }`
          }]
       };
-
 
       let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -397,29 +381,40 @@ describe( "Testing Cmd4Accessory", function( )
    it( `setValue of cached "Target*" characteristic, should set "Current*" characteristic`, function ( done )
    {
       // A config file to play with.
-      let ThermostatConfig =
+      let platformConfig =
       {
-         Type:                       "Thermostat",
-         Name:                       "Thermostat",
-         Cmd4_Mode:                  "Demo",
-         DisplayName:                "Thermostat",
-         TemperatureDisplayUnits:    "CELSIUS",
-         Active:                     "INACTIVE",
-         CurrentTemperature:          20.0,
-         TargetTemperature:           20.0,
-         TargetHeatingCoolingState:   0,
-         StateChangeResponseTime:     3
+         accessories: [
+         {
+            Type:                      "Thermostat",
+            Name:                      "Thermostat",
+            Cmd4_Mode:                 "Demo",
+            DisplayName:               "Thermostat",
+            TemperatureDisplayUnits:   "CELSIUS",
+            Active:                    "INACTIVE",
+            CurrentTemperature:         20.0,
+            TargetTemperature:          20.0,
+            TargetHeatingCoolingState:  0,
+            StateChangeResponseTime:    3
+         }]
       };
-
-      let acc = CMD4_ACC_TYPE_ENUM.TargetTemperature;
 
       const log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
-      log.setDebugEnabled( true );
+      log.setDebugEnabled( false );
 
-      let cmd4Accessory = new Cmd4Accessory( log, ThermostatConfig, _api, [ ], null );
 
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
+
+      assert.equal( cmd4Platform.createdCmd4Accessories.length, 1, `Incorrect number of created accessories` );
+
+      let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
+
+      let acc = CMD4_ACC_TYPE_ENUM.TargetTemperature;
       let value = 12.3;
 
       cmd4Accessory.log.reset( );
@@ -448,37 +443,37 @@ describe( "Testing Cmd4Accessory", function( )
 
          done( );
 
-      }, 1000 );
+      }, 2000 );
 
-   });
+   }).timeout(3000);
 
    it( `setValue of cached "Target*" characteristic, should set ALSO "Current*" characteristic`, function ( done )
    {
       // A config file to play with.
       let ThermostatConfig =
       {
-         type:                       "Thermostat",
-         Name:                       "Thermostat",
-         Cmd4_Mode:                  "Demo",
-         DisplayName:                "Thermostat",
-         TemperatureDisplayUnits:    "CELSIUS",
-         Active:                     "INACTIVE",
-         CurrentTemperature:          20.0,
-         TargetTemperature:           20.0,
-         CurrentHeatingCoolingState:  0,
-         TargetHeatingCoolingState:   0,
-         StateChangeResponseTime:     3
+         type:                         "Thermostat",
+         Name:                         "Thermostat",
+         Cmd4_Mode:                    "Demo",
+         DisplayName:                  "Thermostat",
+         TemperatureDisplayUnits:      "CELSIUS",
+         Active:                       "INACTIVE",
+         CurrentTemperature:            20.0,
+         TargetTemperature:             20.0,
+         CurrentHeatingCoolingState:    0,
+         TargetHeatingCoolingState:     0,
+         StateChangeResponseTime:       3
       };
-
-      let acc = CMD4_ACC_TYPE_ENUM.TargetTemperature;
 
       const log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( false );
 
+
       let cmd4Accessory = new Cmd4Accessory( log, ThermostatConfig, _api, [ ], null );
 
+      let acc = CMD4_ACC_TYPE_ENUM.TargetTemperature;
       let value = 12.3;
 
       cmd4Accessory.log.reset( );
@@ -516,32 +511,34 @@ describe( "Testing Cmd4Accessory", function( )
       // A config file to play with.
       let ThermostatConfig =
       {
-         Type:                        "Thermostat",
-         Name:                        "Thermostat",
-         Cmd4_Mode:                   "Demo",
-         DisplayName:                 "Thermostat",
-         TemperatureDisplayUnits:     "CELSIUS",
-         Active:                      "INACTIVE",
-         CurrentTemperature:           20.0,
-         CurrentHeatingCoolingState:   0,
-         TargetHeatingCoolingState:    0,
-         StateChangeResponseTime:      3
+         Type:                         "Thermostat",
+         Name:                         "Thermostat",
+         Cmd4_Mode:                    "Demo",
+         DisplayName:                  "Thermostat",
+         TemperatureDisplayUnits:      "CELSIUS",
+         Active:                       "INACTIVE",
+         CurrentTemperature:            20.0,
+         CurrentHeatingCoolingState:    0,
+         TargetHeatingCoolingState:     0,
+         StateChangeResponseTime:       3
       };
-
-      let acc = CMD4_ACC_TYPE_ENUM.TargetTemperature;
 
       const log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( false );
 
+
       let cmd4Accessory = new Cmd4Accessory( log, ThermostatConfig, _api, [ ], null );
+
+      let acc = CMD4_ACC_TYPE_ENUM.TargetTemperature;
 
       assert.equal( log.logBuf, "", ` setCachedValue output expected nothing to stdout` );
       assert.equal( 0, log.logLineCount, ` setCachedValue logged lines than one: ${ log.logBuf }` );
       assert.include( log.errBuf, `m**** Adding required characteristic TargetTemperature for Thermostat`, ` setCachedValue incorrect stdout:${ log.errBuf }` );
       assert.include( log.errBuf, `Not defining a required characteristic can be problematic`, ` setCachedValue incorrect stdout: ${ log.errBuf }` );
-      assert.equal( 2, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
+      // Hmmmmmm was 2
+      assert.equal( 3, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
 
       let defaultValue = CMD4_DEVICE_TYPE_ENUM.properties[ cmd4Accessory.typeIndex ].requiredCharacteristics.find( key => key.type ===  acc ).defaultValue;
 
@@ -574,13 +571,15 @@ describe( "Testing Cmd4Accessory", function( )
       log.setOutputEnabled( false );
       log.setDebugEnabled( false );
 
+
       new Cmd4Accessory( log, ThermostatConfig, _api, [ ], null );
 
       assert.equal( log.logBuf, "", ` setCachedValue logged some output. received: ${ log.logBuf }` );
       assert.equal( 0, log.logLineCount, ` setCachedValue logged lines than one: ${ log.logBuf }` );
       assert.include( log.errBuf, `**** Adding required characteristic TargetHeatingCoolingState for Thermostat`, ` setCachedValue incorrect stderr: ${ log.errBuf }` );
       assert.include( log.errBuf, `Not defining a required characteristic can be problematic`, ` setCachedValue incorrect stderr: ${ log.errBuf }` );
-      assert.equal( 2, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
+      // Hmmmmmm was 2
+      assert.equal( 3, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
 
       done( );
    });
@@ -591,24 +590,24 @@ describe( "Testing Cmd4Accessory", function( )
       // A config file to play with.
       let TempSensorConfig =
       {
-         Type:                     "TemperatureSensor",
-         Name:                     "TemperatureSensor",
-         Cmd4_Mode:                "Demo",
-         DisplayName:              "TemperatureSensor",
-         TemperatureDisplayUnits:  "CELSIUS",
-         Active:                   "INACTIVE",
-         CurrentTemperature:        20.0
+         Type:                         "TemperatureSensor",
+         Name:                         "TemperatureSensor",
+         Cmd4_Mode:                    "Demo",
+         DisplayName:                  "TemperatureSensor",
+         TemperatureDisplayUnits:      "CELSIUS",
+         Active:                       "INACTIVE",
+         CurrentTemperature:            20.0
       };
-
-      let acc = CMD4_ACC_TYPE_ENUM.CurrentTemperature;
 
       const log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
 
+
       let cmd4Accessory = new Cmd4Accessory( log, TempSensorConfig, _api, [ ], null );
 
+      let acc = CMD4_ACC_TYPE_ENUM.CurrentTemperature;
       let value = 12.3;
 
       cmd4Accessory.log.reset( );
@@ -642,17 +641,11 @@ describe( "Testing Cmd4Accessory", function( )
 
    it( "setValue of timeout response should fail correctly", function ( done )
    {
-      const log = new Logger( );
-      log.setBufferEnabled( true );
-      log.setOutputEnabled( false );
-      log.setDebugEnabled( true );
-
       // A config file to play with.
       let TVConfig =
       {
           name:                     "My_Television",
           type:                     "Television",
-          Cmd4_Mode:                "Always",
           category:                 "TELEVISION",
           publishExternally:        true,
           active:                   "ACTIVE",
@@ -667,8 +660,15 @@ describe( "Testing Cmd4Accessory", function( )
           pictureMode:              "STANDARD",
           remoteKey:                "SELECT",
           timeout:  401,
+          polling:                  [{ characteristic: "Mute" }],
           state_cmd: "./test/echoScripts/runToTimeoutRcOf0"
       };
+
+      const log = new Logger( );
+      log.setBufferEnabled( true );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
 
       let cmd4Accessory = new Cmd4Accessory( log, TVConfig, _api, [ ], null );
       cmd4Accessory.timeout = 400;

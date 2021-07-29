@@ -123,20 +123,18 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
 
    it( "Test existance of prioritySetValue", function( )
    {
-
       let queueName = "Queue A";
 
       let platformConfig =
       {
          accessories: [
          {
-            Name:         "My_Switch",
-            DisplayName:  "My_Switch",
-            StatusMsg:    true,
-            Type:         "Switch",
-            Cmd4_Mode:    "Polled",
-            On:           0,
-            State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            Name:                      "My_Switch",
+            DisplayName:               "My_Switch",
+            StatusMsg:                 true,
+            Type:                      "Switch",
+            On:                        0,
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -144,6 +142,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -166,15 +165,14 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       {
          accessories: [
          {
-            Name:         "My_Switch",
-            DisplayName:  "My_Switch",
-            StatusMsg:    true,
-            Type:         "Switch",
-            QueueTypes: [{ Queue: "A", QueueType: "WoRm" }],
-            Queue:        "A",
-            Cmd4_Mode:    "Polled",
-            On:           0,
-            State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            Name:                      "My_Switch",
+            DisplayName:               "My_Switch",
+            StatusMsg:                  true,
+            Type:                      "Switch",
+            QueueTypes:                [{ Queue: "A", QueueType: "WoRm" }],
+            Queue:                     "A",
+            On:                         0,
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -182,6 +180,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( false );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -207,15 +206,14 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       {
          accessories: [
          {
-            Name:         "My_Switch",
-            DisplayName:  "My_Switch",
-            StatusMsg:    true,
-            Type:         "Switch",
-            Cmd4_Mode:    "Polled",
-            QueueTypes: [{ Queue: "A", QueueType: "WoRm" }],
-            Queue:        "A",
-            On:           0,
-            State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            Name:                      "My_Switch",
+            DisplayName:               "My_Switch",
+            StatusMsg:                  true,
+            Type:                      "Switch",
+            QueueTypes:                [{ Queue: "A", QueueType: "WoRm" }],
+            Queue:                     "A",
+            On:                         0,
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -223,6 +221,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( false );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -258,18 +257,16 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       {
          accessories: [
          {
-            Name:         "My_Switch",
-            DisplayName:  "My_Switch",
-            StatusMsg:    true,
-            Type:         "Switch",
-            Cmd4_Mode:    "Polled",
-            On:           0,
-            Active:       0,
-            QueueTypes: [{ queue: "A", queueInterval: 4 }],
-            Polling: [{ Characteristic: "On", Queue: "A", Interval: 4 },
-                      { Characteristic: "Active", Queue: "A", Interval: 3 }
-                     ],
-            State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            Name:                      "My_Switch",
+            DisplayName:               "My_Switch",
+            StatusMsg:                 true,
+            Type:                      "Switch",
+            On:                         0,
+            Active:                     0,
+            QueueTypes:                [{ queue: "A", queueInterval: 4 }],
+            Polling:                   [{ Characteristic: "On", Queue: "A", Interval: 4 },
+                                        { Characteristic: "Active", Queue: "A", Interval: 3 }],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -277,6 +274,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -303,17 +301,15 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       {
          accessories: [
          {
-            Name:         "My_Switch",
-            DisplayName:  "My_Switch",
-            StatusMsg:    true,
-            Type:         "Switch",
-            Cmd4_Mode:    "Polled",
-            On:           0,
-            Active:       0,
-            Polling: [{ Characteristic: "On", Queue: "A" },
-                      { Characteristic: "Active", Queue: "A" }
-                     ],
-            State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            Name:                      "My_Switch",
+            DisplayName:               "My_Switch",
+            StatusMsg:                  true,
+            Type:                      "Switch",
+            On:                         0,
+            Active:                     0,
+            Polling:                   [{ Characteristic: "On", Queue: "A" },
+                                        { Characteristic: "Active", Queue: "A" }],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -321,6 +317,7 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -379,39 +376,35 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       let platformConfig =
       {
          accessories: [
-            {
-               Name:         "My_Light",
-               DisplayName:  "My_Light",
-               StatusMsg:    true,
-               Type:         "Lightbulb",
-               Cmd4_Mode:    "Polled",
-               On:           0,
-               Brightness:   100,
-               Polling:      [ { Characteristic: "On", Interval: 310, Queue: "A" },
-                               { Characteristic: "Brightness", Queue: "A" }
-                             ],
-               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
-            },
-            {
-               Name:         "My_Switch",
-               DisplayName:  "My_Switch",
-               StatusMsg:    true,
-               Type:         "Switch",
-               Cmd4_Mode:    "Polled",
-               On:           0,
-               Active:       0,
-               Polling: [{ Characteristic: "On", Queue: "A" },
-                         { Characteristic: "Active", Queue: "A" }
-                        ],
-               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
-            }
-         ]
+         {
+            Name:                      "My_Light",
+            DisplayName:               "My_Light",
+            StatusMsg:                  true,
+            Type:                      "Lightbulb",
+            On:                         0,
+            Brightness:                 100,
+            Polling:                   [ { Characteristic: "On", Interval: 310, Queue: "A" },
+                                       { Characteristic: "Brightness", Queue: "A" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         },
+         {
+            Name:                      "My_Switch",
+            DisplayName:               "My_Switch",
+            StatusMsg:                 true,
+            Type:                      "Switch",
+            On:                         0,
+            Active:                     0,
+            Polling:                    [{ Characteristic: "On", Queue: "A" },
+                                         { Characteristic: "Active", Queue: "A" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         }]
       };
 
       let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -465,33 +458,28 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       let platformConfig =
       {
          accessories: [
-            {
-               Name:         "My_Light",
-               DisplayName:  "My_Light",
-               StatusMsg:    true,
-               Type:         "Lightbulb",
-               Cmd4_Mode:    "Polled",
-               On:           0,
-               Brightness:   100,
-               Polling:      [ { Characteristic: "On", Interval: 310, Queue: "A" },
-                               { Characteristic: "Brightness", Queue: "A" }
-                             ],
-               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
-            },
-            {
-               Name:         "My_Switch",
-               DisplayName:  "My_Switch",
-               StatusMsg:    true,
-               Type:         "Switch",
-               Cmd4_Mode:    "Polled",
-               On:           0,
-               Active:       0,
-               Polling: [{ Characteristic: "On", Queue: "A" },
-                         { Characteristic: "Active", Queue: "A" }
-                        ],
-               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
-            }
-         ]
+         {
+            Name:                      "My_Light",
+            DisplayName:               "My_Light",
+            StatusMsg:                  true,
+            Type:                      "Lightbulb",
+            On:                         0,
+            Brightness:                 100,
+            Polling:                   [ { Characteristic: "On", Interval: 310, Queue: "A" },
+                                         { Characteristic: "Brightness", Queue: "A" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         },
+         {
+            Name:                      "My_Switch",
+            DisplayName:               "My_Switch",
+            StatusMsg:                  true,
+            Type:                      "Switch",
+            On:                         0,
+            Active:                     0,
+            Polling:                   [{ Characteristic: "On", Queue: "A" },
+                                        { Characteristic: "Active", Queue: "A" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         }]
       };
 
       let log = new Logger( );
@@ -603,27 +591,25 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       let platformConfig =
       {
          accessories: [
-            {
-               Name:         "My_Light",
-               DisplayName:  "My_Light",
-               StatusMsg:    true,
-               Type:         "Lightbulb",
-               Cmd4_Mode:    "Polled",
-               On:           0,
-               Brightness:   100,
-               Polling:      [ { Characteristic: "On", Interval: 310, Queue: "A" },
-                               { Characteristic: "Brightness", Queue: "A" }
-                             ],
-               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
-            }
-         ]
+         {
+            Name:                      "My_Light",
+            DisplayName:               "My_Light",
+            StatusMsg:                  true,
+            Type:                      "Lightbulb",
+            On:                         0,
+            Brightness:                 100,
+            Polling:                   [ { Characteristic: "On", Interval: 310, Queue: "A" },
+                                         { Characteristic: "Brightness", Queue: "A" }
+                                       ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         } ]
       };
-
 
       let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -671,27 +657,24 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       let platformConfig =
       {
          accessories: [
-            {
-               Name:         "My_Light",
-               DisplayName:  "My_Light",
-               StatusMsg:    true,
-               Type:         "Lightbulb",
-               Cmd4_Mode:    "Polled",
-               On:           0,
-               Brightness:   100,
-               Polling:      [ { Characteristic: "On", Interval: 310, Queue: "A" },
-                               { Characteristic: "Brightness", Queue: "A" }
-                             ],
-               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
-            }
-         ]
+         {
+            Name:                      "My_Light",
+            DisplayName:               "My_Light",
+            StatusMsg:                  true,
+            Type:                      "Lightbulb",
+            On:                         0,
+            Brightness:                 100,
+            Polling:                   [ { Characteristic: "On", Interval: 310, Queue: "A" },
+                                         { Characteristic: "Brightness", Queue: "A" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         } ]
       };
-
 
       let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -744,27 +727,24 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       let platformConfig =
       {
          accessories: [
-            {
-               Name:         "My_Light",
-               DisplayName:  "My_Light",
-               StatusMsg:    true,
-               Type:         "Lightbulb",
-               Cmd4_Mode:    "Polled",
-               On:           0,
-               Brightness:   100,
-               Polling:      [ { Characteristic: "On", Interval: 310, Queue: "A" },
-                               { Characteristic: "Brightness", Queue: "A" }
-                             ],
-               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
-            }
-         ]
+         {
+            Name:                      "My_Light",
+            DisplayName:               "My_Light",
+            StatusMsg:                  true,
+            Type:                      "Lightbulb",
+            On:                         0,
+            Brightness:                 100,
+            Polling:                   [ { Characteristic: "On", Interval: 310, Queue: "A" },
+                                         { Characteristic: "Brightness", Queue: "A" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         } ]
       };
-
 
       let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -817,27 +797,24 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       let platformConfig =
       {
          accessories: [
-            {
-               Name:         "My_Light",
-               DisplayName:  "My_Light",
-               StatusMsg:    true,
-               Type:         "Lightbulb",
-               Cmd4_Mode:    "Polled",
-               On:           0,
-               Brightness:   100,
-               Polling:      [ { Characteristic: "On", Interval: 310, Queue: "A" },
-                               { Characteristic: "Brightness", Queue: "A" }
-                             ],
-               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
-            }
-         ]
+         {
+            Name:                      "My_Light",
+            DisplayName:               "My_Light",
+            StatusMsg:                 true,
+            Type:                      "Lightbulb",
+            On:                         0,
+            Brightness:                 100,
+            Polling:                   [ { Characteristic: "On", Interval: 310, Queue: "A" },
+                                         { Characteristic: "Brightness", Queue: "A" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         } ]
       };
-
 
       let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -890,27 +867,24 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       let platformConfig =
       {
          accessories: [
-            {
-               Name:         "My_Light",
-               DisplayName:  "My_Light",
-               StatusMsg:    true,
-               Type:         "Lightbulb",
-               Cmd4_Mode:    "Polled",
-               On:           0,
-               Brightness:   100,
-               Polling:      [ { Characteristic: "On", Interval: 310, Queue: "A" },
-                               { Characteristic: "Brightness", Queue: "A" }
-                             ],
-               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
-            }
-         ]
+         {
+            Name:                      "My_Light",
+            DisplayName:               "My_Light",
+            StatusMsg:                 true,
+            Type:                      "Lightbulb",
+            On:                         0,
+            Brightness:                 100,
+            Polling:                   [ { Characteristic: "On", Interval: 310, Queue: "A" },
+                                         { Characteristic: "Brightness", Queue: "A" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         } ]
       };
-
 
       let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -978,17 +952,15 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       {
          accessories: [
          {
-            Name:         "My_Switch",
-            DisplayName:  "My_Switch",
-            StatusMsg:    true,
-            Type:         "Switch",
-            Cmd4_Mode:    "Polled",
-            On:           0,
-            Active:       0,
-            Polling: [{ Characteristic: "On", Queue: "A" },
-                      { Characteristic: "Active", Queue: "A" }
-                     ],
-            State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            Name:                      "My_Switch",
+            DisplayName:               "My_Switch",
+            StatusMsg:                  true,
+            Type:                      "Switch",
+            On:                         0,
+            Active:                     0,
+            Polling:              [{ Characteristic: "On", Queue: "A" },
+                                   { Characteristic: "Active", Queue: "A" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -996,6 +968,7 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -1052,17 +1025,15 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       {
          accessories: [
          {
-            Name:         "My_Switch",
-            DisplayName:  "My_Switch",
-            StatusMsg:    true,
-            Type:         "Switch",
-            Cmd4_Mode:    "Polled",
-            On:           0,
-            Active:       0,
-            Polling: [{ Characteristic: "On", Queue: "A" },
-                      { Characteristic: "Active", Queue: "A" }
-                     ],
-            State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            Name:                      "My_Switch",
+            DisplayName:               "My_Switch",
+            StatusMsg:                  true,
+            Type:                      "Switch",
+            On:                         0,
+            Active:                     0,
+            Polling:                   [{ Characteristic: "On", Queue: "A" },
+                                        { Characteristic: "Active", Queue: "A" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -1070,6 +1041,7 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
@@ -1124,19 +1096,17 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       {
          accessories: [
          {
-            Name:         "My_Door",
-            DisplayName:  "My_Door",
-            StatusMsg:    true,
-            Type:         "Door",
-            Cmd4_Mode:    "Polled",
-            CurrentPosition:      0,
-            TargetPosition:       0,
-            PositionState:       "STOPPED",
-            StateChangeResponseTime: 0,
-            Polling: [{ Characteristic: "CurrentPosition", Queue: "A" },
-                      { Characteristic: "TargetPosition", Queue: "A" }
-                     ],
-            State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            Name:                      "My_Door",
+            DisplayName:               "My_Door",
+            StatusMsg:                 true,
+            Type:                      "Door",
+            CurrentPosition:            0,
+            TargetPosition:             0,
+            PositionState:             "STOPPED",
+            StateChangeResponseTime:    0,
+            Polling:                   [{ Characteristic: "CurrentPosition", Queue: "A" },
+                                        { Characteristic: "TargetPosition", Queue: "A" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -1144,6 +1114,7 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( true );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 

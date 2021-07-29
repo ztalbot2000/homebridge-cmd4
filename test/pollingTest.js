@@ -77,21 +77,20 @@ describe('Testing Cmd4Accessory polling', ( ) =>
    {
       let config =
       {
-         Name:         "My_Switch",
-         DisplayName:  "My_Switch",
-         StatusMsg:    true,
-         Type:         "Switch",
-         Cmd4_Mode:    "Polled",
-         On:           0,
-         State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         Name:                         "My_Switch",
+         DisplayName:                  "My_Switch",
+         StatusMsg:                     true,
+         Type:                         "Switch",
+         On:                            0,
+         State_cmd:                    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
       }
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
-
 
       const log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( );
+
 
       cmd4Accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
@@ -109,13 +108,12 @@ describe('Testing Cmd4Accessory polling', ( ) =>
    {
       let config =
       {
-         Name:         "My_Switch",
-         DisplayName:  "My_Switch",
-         StatusMsg:    true,
-         Type:         "Switch",
-         Cmd4_Mode:    "Polled",
-         On:           0,
-         State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         Name:                         "My_Switch",
+         DisplayName:                  "My_Switch",
+         StatusMsg:                    true,
+         Type:                         "Switch",
+         On:                           0,
+         State_cmd:                    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
       }
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
 
@@ -123,6 +121,7 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( );
+
 
       cmd4Accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
@@ -146,13 +145,12 @@ describe('Testing Cmd4Accessory polling', ( ) =>
    {
       let config =
       {
-         Name:         "My_Switch",
-         DisplayName:  "My_Switch",
-         StatusMsg:    true,
-         Type:         "Switch",
-         Cmd4_Mode:    "Polled",
-         On:           0,
-         State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         Name:                         "My_Switch",
+         DisplayName:                  "My_Switch",
+         StatusMsg:                    true,
+         Type:                         "Switch",
+         On:                           0,
+         State_cmd:                    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
       }
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
 
@@ -160,6 +158,7 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( );
+
 
       cmd4Accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
@@ -178,23 +177,22 @@ describe('Testing Cmd4Accessory polling', ( ) =>
    {
       let config =
       {
-         Name:         "My_Switch",
-         DisplayName:  "My_Switch",
-         StatusMsg:    true,
-         Type:         "Switch",
-         Cmd4_Mode:    "Polled",
-         Timeout:      5500,
-         Interval:     44,
-         On:           0,
-         State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         Name:                         "My_Switch",
+         DisplayName:                  "My_Switch",
+         StatusMsg:                    true,
+         Type:                         "Switch",
+         Timeout:                      5500,
+         Interval:                     44,
+         On:                           0,
+         State_cmd:                    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
       }
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
-
 
       const log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( );
+
 
       cmd4Accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
@@ -213,21 +211,20 @@ describe('Testing Cmd4Accessory polling', ( ) =>
    {
       let config =
       {
-         Name:         "My_Switch",
-         DisplayName:  "My_Switch",
-         StatusMsg:    true,
-         Type:         "Switch",
-         Cmd4_Mode:    "Polled",
-         On:           0,
-         State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         Name:                         "My_Switch",
+         DisplayName:                  "My_Switch",
+         StatusMsg:                    true,
+         Type:                         "Switch",
+         On:                           0,
+         State_cmd:                    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
       }
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1, "timeout": 77000, "interval": 22000 };
-
 
       const log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( );
+
 
       cmd4Accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
@@ -246,25 +243,23 @@ describe('Testing Cmd4Accessory polling', ( ) =>
    {
       let config =
       {
-         Name:         "My_Switch",
-         DisplayName:  "My_Switch",
-         StatusMsg:    true,
-         Type:         "Switch",
-         Cmd4_Mode:    "Polled",
-         On:           0,
-         polling: [ { "characteristic": "on", "timeout":2, "interval": 99 } ],
-         State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         Name:                         "My_Switch",
+         DisplayName:                  "My_Switch",
+         StatusMsg:                    true,
+         Type:                         "Switch",
+         On:                           0,
+         polling:                      [ { "characteristic": "on", "timeout":2, "interval": 99 } ],
+         State_cmd:                    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
       }
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
-
 
       const log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( );
 
-      cmd4Accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
+      cmd4Accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
       assert.include( log.logBuf, `[90mSetting up accessory: My_Switch for polling of: On timeout: 2 interval: 99000 queueName: "Q:My_Switch"` , `Incorrect stdout: ${ log.logBuf }` );
       assert.include( log.errBuf, `[33mTimeout for: My_Switch is in milliseconds. A value of: 2 seems pretty low.\u001b[39m` , `Incorrect stderr: ${ log.errBuf }` );
@@ -277,24 +272,22 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       let platformConfig =
       {
          accessories: [
-            {
-               Name:         "My_Switch",
-               DisplayName:  "My_Switch",
-               StatusMsg:    true,
-               Type:         "Switch",
-               Cmd4_Mode:    "Polled",
-               On:           0,
-               polling:      [ { "characteristic": "on", "interval": 310 } ],
-               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
-            }
-         ]
+         {
+            Name:                      "My_Switch",
+            DisplayName:               "My_Switch",
+            StatusMsg:                 true,
+            Type:                      "Switch",
+            On:                        0,
+            polling:                   [ { "characteristic": "on", "interval": 310 } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         }]
       }
-
 
       let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
       log.setDebugEnabled( );
+
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
