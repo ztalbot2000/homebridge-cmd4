@@ -261,31 +261,16 @@ class Cmd4Platform
                     [ constants.QUEUEMSG_lv ]: this.queueMsg } );
 
                break;
-            case constants.FETCH:
-               this.log.warn( `Warning: ${ constants.FETCH }:${ value } is changing to ${ constants.CMD4_MODE }:${ value } to reflect its affect on both Set and Get.` );
-               this.log.warn( `To remove this message, change to ${ constants.CMD4_MODE }` );
-
-               // break omitted
             case constants.CMD4_MODE:
-               switch( value )
+               this.log.warn( `Warning: ${ key } has been deprecated.` );
+               if ( value == "Demo" )
                {
-                  // break omitted
-                  case "Cached":
-                  case "Always":
-                  case "Polled":
-                  case "FullyPolled":
-                     this.log.warn( `Warning: ${ value } has been deprecated. Cmd4 is now optimized for the best possible configuration as per: https://git.io/JtMGR.` );
-                     this.log.warn( `To remove this message, change to ${ constants.CMD4_MODE_DEMO }` );
-                     break;
-                  case constants.CMD4_MODE_DEMO:
-                     this.cmd4Mode = value;
-                     if ( cmd4Dbg ) this.log.debug( `Cmd4 Get/Set mode set to: ${ value }` );
-
-                     break;
-                  default:
-                     this.log.error( chalk.red( `Invalid value: ${ value } for ${ constants.CMD4_MODE }` ) );
-                     process.exit( 261 ) ;
+                  this.log.warn( `Demo mode is achieved when there is not any polling entries in your config.json.` );
+               } else
+               {
+                  this.log.warn( `Cmd4 has been simplified and optimized as per: https://git.io/JtMGR.` );
                }
+               this.log.warn( `To remove this message, just remove ${ constants.CMD4_MODE } from your config.json` );
                break;
             case constants.STORAGE:
                if ( value == constants.FS_l || value == constants.GOOGLEDRIVE_l )

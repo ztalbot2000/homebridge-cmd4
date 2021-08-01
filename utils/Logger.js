@@ -33,10 +33,13 @@ class Logger
 {
    constructor( )
    {
+      // Note: log.info goes to logBuf
       this.logLineCount = 0;
       this.logBuf = "";
+      // Note: log.warn goes to errBuf
       this.errLineCount = 0;
       this.errBuf = "";
+
       this.outputEnabled = true;
       this.bufferEnabled = false;
       this.debugEnabled = false;

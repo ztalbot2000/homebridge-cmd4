@@ -57,8 +57,9 @@ describe('A simple logger Test', ( ) =>
    it( "Test info log to stdout gets captured and mothing else", ( ) =>
    {
       const log = new Logger( );
-      log.setOutputEnabled( false );
       log.setBufferEnabled( true );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
 
       let STDOUT_DATA="stdout_data";
       log.info( STDOUT_DATA );
@@ -74,8 +75,9 @@ describe('A simple logger Test', ( ) =>
    it( "Test warn log to stderr gets captured and mothing else", ( ) =>
    {
       const log = new Logger( );
-      log.setOutputEnabled( false );
       log.setBufferEnabled( true );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
 
       let STDERR_DATA="stderr_data";
       log.warn( STDERR_DATA );
@@ -91,8 +93,9 @@ describe('A simple logger Test', ( ) =>
    it( "Test log to stderr gets captured and mothing else", ( ) =>
    {
       const log = new Logger( );
-      log.setOutputEnabled( false );
       log.setBufferEnabled( true );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
 
       let STDERR_DATA="stderr_data";
       log.error( STDERR_DATA );
@@ -108,8 +111,9 @@ describe('A simple logger Test', ( ) =>
    it( "Test log to stderr and different to stdout", ( ) =>
    {
       const log = new Logger( );
-      log.setOutputEnabled( false );
       log.setBufferEnabled( true );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
 
       let STDERR_DATA="stderr_data";
       let STDOUT_DATA="stdout_data";
@@ -132,13 +136,14 @@ describe('A simple logger Test', ( ) =>
       {
          name:                         "Test Switch",
          type:                         "Switch",
-         Cmd4_Mode:                     "Demo",
-         on:                            false
+         on:                            false,
+         polling:                       true,
+         state_cmd:                    "./test/echoScripts/echo_1"
       };
 
       const log = new Logger( );
-      log.setOutputEnabled( false );
       log.setBufferEnabled( true );
+      log.setOutputEnabled( false );
       log.setDebugEnabled( false );
 
 
@@ -159,13 +164,14 @@ describe('A simple logger Test', ( ) =>
       {
          name:                         "Test Switch",
          type:                         "Switch",
-         Cmd4_Mode:                     "Demo",
-         on:                            false
+         on:                            false,
+         polling:                       true,
+         state_cmd:                    "./test/echoScripts/echo_1"
       };
 
       let log = new Logger( );
-      log.setOutputEnabled( true );
       log.setBufferEnabled( true );
+      log.setOutputEnabled( false );
       log.setDebugEnabled( true );
 
 
@@ -182,8 +188,8 @@ describe('A simple logger Test', ( ) =>
    it( "Test logger performance of NOT enabled message", ( ) =>
    {
       const log = new Logger( );
-      log.setOutputEnabled( true );
       log.setBufferEnabled( false );
+      log.setOutputEnabled( false );
       log.setDebugEnabled( false );
       let entry = { characteristicString: "testCharacteristic",
                     accessory:

@@ -115,7 +115,6 @@ class Cmd4PriorityPollingQueue
             self.queue.highPriorityQueue[ index ] = newEntry;
          }
       }
-
       self.queue.processQueueFunc( HIGH_PRIORITY_SET, self.queue );
    }
 
@@ -834,9 +833,11 @@ class Cmd4PriorityPollingQueue
       switch ( queueType )
       {
          case constants.QUEUETYPE_SEQUENTIAL:
+            this.log.debug("AAAAAASetting to SEQUENTIAL QUEUE");
             this.processQueueFunc = this.processSequentialQueue;
             break;
          case constants.QUEUETYPE_WORM:
+            this.log.debug("AAAAAASetting to WORM QUEUE");
             this.processQueueFunc = this.processWormQueue;
             // When not in debug mode, do not echo errors for the WoRm queue
             // as errors are handled through retries.
@@ -844,10 +845,12 @@ class Cmd4PriorityPollingQueue
                this.echoE = false;
             break;
          case constants.QUEUETYPE_STANDARD:
+            this.log.debug("AAAAAASetting to PASSTHRU QUEUE");
             // only polled entries go straight through the queue
             this.processQueueFunc = this.processPassThruQueue;
             break;
          case constants.QUEUETYPE_PASSTHRU:
+            this.log.debug("AAAAAASetting to PASSTHRU QUEUE");
             // entries go straight through the queue
             this.processQueueFunc = this.processPassThruQueue;
             break;

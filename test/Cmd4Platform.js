@@ -60,7 +60,6 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
 
    beforeEach( function( )
    {
-      settings.defaultQueue = null;
       settings.listOfCreatedPriorityQueues = { };
    });
    afterEach(function( )
@@ -79,7 +78,6 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
       });
 
       // Put back the polling queues
-      settings.defaultQueue = null;
       settings.listOfCreatedPriorityQueues = { };
 
    });

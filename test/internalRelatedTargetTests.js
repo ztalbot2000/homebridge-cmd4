@@ -38,7 +38,6 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
 {
    afterEach( function( )
    {
-      settings.defaultQueue = null;
       settings.listOfCreatedPriorityQueues = { };
    });
    afterEach( function( )
@@ -57,7 +56,6 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
       });
 
       // Put back the polling queues
-      settings.defaultQueue = null;
       settings.listOfCreatedPriorityQueues = { };
    });
 
@@ -275,7 +273,7 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
 
       let log = new Logger( );
       log.setBufferEnabled( );
-      log.setOutputEnabled( false );
+      log.setOutputEnabled( true );
       log.setDebugEnabled( true );
 
 

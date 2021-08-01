@@ -68,7 +68,6 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
    });
    beforeEach( function( )
    {
-      settings.defaultQueue = null;
       settings.listOfCreatedPriorityQueues = { };
    });
 
@@ -86,7 +85,6 @@ describe('Testing Cmd4PriorityPollingQueue polling', ( ) =>
       });
 
       // Put back the polling queues
-      settings.defaultQueue = null;
       settings.listOfCreatedPriorityQueues = { };
    });
 
@@ -559,7 +557,6 @@ describe('Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       });
 
       // Put back the polling queues
-      settings.defaultQueue = null;
       settings.listOfCreatedPriorityQueues = { };
 
    });

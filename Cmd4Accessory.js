@@ -142,18 +142,13 @@ class Cmd4Accessory
       this.statusMsg = ( parentInfo && parentInfo.statusMsg ) ? parentInfo.statusMsg : constants.DEFAULT_STATUSMSG;
       this.queueMsg = ( parentInfo && parentInfo.queueMsg ) ? parentInfo.queueMsg : constants.DEFAULT_QUEUEMSG;
       this.queueStatMsgInterval = ( parentInfo && parentInfo.queueStatMsgInterval ) ? parentInfo.queueStatMsgInterval : constants.DEFAULT_QUEUE_STAT_MSG_INTERVAL;
+      // Everything that needs to talk to the device now goes through the queue
       this.queue = null;
 
       // undefined is acceptable.  It can be overwritten by parseConfig
       this.state_cmd = parentInfo && parentInfo.state_cmd;
       this.state_cmd_prefix = parentInfo && parentInfo.state_cmd_prefix;
       this.state_cmd_suffix = parentInfo && parentInfo.state_cmd_suffix;
-
-      // Define cmd4Mode up front.  It can be overwritten by parseConfig.
-      this.cmd4Mode = ( parentInfo && parentInfo.cmd4Mode ) ? parentInfo.cmd4Mode : constants.CMD4_MODE_STANDARD;
-
-      // Everything that needs to talk to the device now goes through the queue
-      this.queue = null;
 
       // TLV8 causes a lot of issues if defined and trying to parse.
       // Omit them by default.
@@ -204,7 +199,7 @@ class Cmd4Accessory
       // You cannot copy polling from the parent because you would be copying the array
       // of polled characteristics that the child does not have, or turning on polling
       // for linked accessories too.
-      this.polling = false;
+      //this.polling = false;
 
 
       // Init the Global Fakegato service once !
@@ -287,7 +282,7 @@ class Cmd4Accessory
             if ( cmd4Dbg ) this.log.debug( `Setting up which characteristics will be polled for Added Accessories of ${ this.displayName }` );
             this.accessories.forEach( ( addedAccessory ) =>
             {
-               if ( addedAccessory.polling != false )
+               if ( addedAccessory.polling )
                {
                   addedAccessory.determineCharacteristicsToPollForAccessory( addedAccessory );
                }
@@ -827,8 +822,8 @@ class Cmd4Accessory
                 {
 
                    // getCachedValue or getValue
-                   if ( accessory.cmd4Mode == constants.CMD4_MODE_DEMO ||
-                        accessory.listOfPollingCharacteristics[ accTypeEnumIndex ] == undefined
+                   if (   ! accessory.polling ||
+                          accessory.listOfPollingCharacteristics[ accTypeEnumIndex ] == undefined
                       )
                    {
                       if ( cmd4Dbg ) this.log.debug( chalk.yellow( `Adding getCachedValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ` ) );
@@ -862,7 +857,7 @@ class Cmd4Accessory
                 if ( perms.indexOf( this.api.hap.Characteristic.Perms.WRITE ) != -1 )
                 {
                    // setCachedValue or setValue
-                   if ( accessory.cmd4Mode == constants.CMD4_MODE_DEMO ||
+                   if ( ! accessory.polling ||
                         accessory.listOfPollingCharacteristics[ accTypeEnumIndex ] == undefined)
                    {
                       if ( cmd4Dbg ) this.log.debug( chalk.yellow( `Adding setCachedValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ` ) );
@@ -1222,8 +1217,7 @@ class Cmd4Accessory
 
       if ( this.loggingService )
       {
-         if ( this.polling == undefined ||
-             this.polling == false )
+         if ( ! this.polling )
          {
             this.log.warn( `config.storage: ${ this.storage } for: ${ this.displayName } set but polling is not enabled.` );
             this.log.warn( `      History will not be updated continiously.` );
@@ -1523,6 +1517,7 @@ class Cmd4Accessory
 
    parseConfig( config, parseConfigShouldUseCharacteristicValues  )
    {
+      let cmd4Mode = null;
       for ( let key in config )
       {
          let value = config[ key ];
@@ -1662,26 +1657,8 @@ class Cmd4Accessory
                this.polling = value;
                break;
             case constants.CMD4_MODE:
-               switch( value )
-               {
-                  // break omitted
-                  case "Cached":
-                  case "Always":
-                  case "Polled":
-                  case "FullyPolled":
-                     this.log.warn( `Warning: ${ value } has been deprecated. Cmd4 is now optimized for the best possible configuration as per: https://git.io/JtMGR.` );
-                     this.log.warn( `To remove this message, change to ${ constants.CMD4_MODE_DEMO }` );
-                     break;
-                  case constants.CMD4_MODE_DEMO:
-
-                     this.cmd4Mode = value;
-                     if ( cmd4Dbg ) this.log.debug( `Cmd4 Get/Set mode set to: ${ value }` );
-
-                     break;
-                  default:
-                     this.log.error( chalk.red( `Invalid value: ${ value } for ${ constants.CMD4_MODE }` ) );
-                     process.exit( 261 ) ;
-               }
+               this.log.warn( `Warning: ${ key } has been deprecated.` );
+               cmd4Mode = value;
                break;
             case constants.INTERVAL:
                // Intervals are in seconds
@@ -1766,6 +1743,17 @@ class Cmd4Accessory
          }
       }
 
+      if ( cmd4Mode != null && this.polling )
+      {
+         if ( cmd4Mode == "Demo" )
+         {
+            //process.exit(123);
+            throw new Error("Demo mode is achieved when there are no polling entries in your config.json");
+         }
+         this.log.warn( `Cmd4 has been simplified and optimized as per: https://git.io/JtMGR.` );
+         this.log.warn( `To remove this message, just remove ${ constants.CMD4_MODE } from your config.json` );
+      }
+
       if ( trueTypeOf( this.type ) != String )
       {
           this.log.error( chalk.red( `Error` ) + `: No device type given for: ${ this.displayName }` );
@@ -1792,11 +1780,15 @@ class Cmd4Accessory
       // only available from shell expansion.
 
       // State_cmd is only required when polling is enabled.
-      if ( this.polling && ! this.validateStateCmd( this.state_cmd ) )
+      if ( this.polling )
       {
-         this.log.error( chalk.red( `Error` ) + `: state_cmd: "${ this.state_cmd }" is invalid for: ${ this.displayName }` );
-         process.exit( 264 );
-      }
+         if ( ! this.validateStateCmd( this.state_cmd ) )
+         {
+            this.log.error( chalk.red( `Error` ) + `: state_cmd: "${ this.state_cmd }" is invalid for: ${ this.displayName }` );
+            process.exit( 264 );
+         }
+      } else
+         this.log.info( chalk.blue( `Cmd4 is running in Demo Mode` ) );
 
       // Handle seperation of strings of state_cmd for a prefix
       if ( this.state_cmd_prefix )
@@ -1809,13 +1801,6 @@ class Cmd4Accessory
          this.state_cmd_suffix = " " + this.state_cmd_suffix;
       else
          this.state_cmd_suffix = "";
-
-      // Check that retrieving can be done in current environment..
-      if ( this.cmd4Mode != constants.CMD4_MODE_DEMO && ! this.validateStateCmd( this.state_cmd ) )
-      {
-         this.log.error(chalk.red(`There is no valid state_cmd to use.` ) );
-         process.exit( 265 );
-      }
 
       if ( this.typeIndex == CMD4_DEVICE_TYPE_ENUM.Television )
       {
@@ -2082,7 +2067,7 @@ class Cmd4Accessory
             let record = { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: interval, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.QUEUE_NAME_lv ]: this.queue.queueName };
 
             // Used to determine missing related characteristics and
-            // to determine if the related characteristic is also polled.
+            // to determine if the related characteristic is enabled.
             this.listOfPollingCharacteristics[ accTypeEnumIndex ] = record;
 
             this.queue.addLowPriorityGetPolledQueueEntry(
@@ -2103,39 +2088,31 @@ class Cmd4Accessory
          if ( this.queue == null )
             this.queue = addQueue( this.log, "Q:" + this.displayName, constants.QUEUETYPE_STANDARD, this.interval, this.queueMsg, this.queueStatMsgInterval );
 
-         if ( accessory.cmd4Mode != constants.CMD4_MODE_DEMO )
-         {
-            if ( cmd4Dbg ) this.log.debug( `State polling for: ${ accessory.displayName }` );
-         }
-
-         if ( accessory.polling == true || accessory.cmd4Mode == constants.CMD4_MODE_DEMO )
+         // Make sure the defined characteristics will be polled
+         CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ].defaultPollingCharacteristics.forEach( defaultPollingAccTypeEnumIndex =>
          {
 
-            // Make sure the defined characteristics will be polled
-            CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ].defaultPollingCharacteristics.forEach( defaultPollingAccTypeEnumIndex =>
+            let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ defaultPollingAccTypeEnumIndex ].type;
+            let record = { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: defaultPollingAccTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: accessory.interval, [ constants.TIMEOUT_lv ]: accessory.timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: accessory.stateChangeResponseTime, [ constants.QUEUE_NAME_lv ]: this.queue.queueName };
+
+            // Used to determine missing related characteristics and
+            // to determine if the related characteristic is also polled.
+            this.listOfPollingCharacteristics[ record.accTypeEnumIndex ] = record;
+
+            // Do not create the polling record or it will start polling
+            if ( accessory.polling == true )
             {
 
-               let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ defaultPollingAccTypeEnumIndex ].type;
-               let record = { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: defaultPollingAccTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: accessory.interval, [ constants.TIMEOUT_lv ]: accessory.timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: accessory.stateChangeResponseTime, [ constants.QUEUE_NAME_lv ]: this.queue.queueName };
+               if ( cmd4Dbg ) this.log.debug( `Adding ${ record.accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ record.accTypeEnumIndex ].type }  record.timeout: ${ record.timeout } record.interval: ${ record.interval }  to Polled Queue ${ record.queueName }` );
 
-               // Used to determine missing related characteristics and
-               // to determine if the related characteristic is also polled.
-               this.listOfPollingCharacteristics[ record.accTypeEnumIndex ] = record;
-
-               if ( accessory.polling == true && accessory.cmd4Mode != constants.CMD4_MODE_DEMO && accessory.state_cmd )
-               {
-
-                  if ( cmd4Dbg ) this.log.debug( `Adding ${ record.accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ record.accTypeEnumIndex ].type }  record.timeout: ${ record.timeout } record.interval: ${ record.interval }  to Polled Queue ${ record.queueName }` );
-
-                  this.queue.addLowPriorityGetPolledQueueEntry(
-                        record.accessory,
-                        record.accTypeEnumIndex,
-                        record.characteristicString,
-                        record.interval,
-                        record.timeout )
-               }
-            });
-         }
+               this.queue.addLowPriorityGetPolledQueueEntry(
+                     record.accessory,
+                     record.accTypeEnumIndex,
+                     record.characteristicString,
+                     record.interval,
+                     record.timeout )
+            }
+         });
       }
 
       for( let accTypeEnumIndex in this.listOfPollingCharacteristics )

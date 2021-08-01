@@ -44,7 +44,6 @@ describe('Testing Cmd4Accessory polling', ( ) =>
 {
    beforeEach(function( )
    {
-      settings.defaultQueue = null;
       settings.listOfCreatedPriorityQueues = { };
    });
    afterEach(function( )
@@ -63,7 +62,6 @@ describe('Testing Cmd4Accessory polling', ( ) =>
          });
       }
       // Put back the polling queues
-      settings.defaultQueue = null;
       settings.listOfCreatedPriorityQueues = { };
    });
    let cmd4Accessory;
@@ -82,6 +80,7 @@ describe('Testing Cmd4Accessory polling', ( ) =>
          StatusMsg:                     true,
          Type:                         "Switch",
          On:                            0,
+         Polling:                       true,
          State_cmd:                    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
       }
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
@@ -131,7 +130,7 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       assert.equal( Object.keys(cmd4Accessory.listOfPollingCharacteristics).length, 1, `Incorrect number of listOfPollingCharacteristics` );
 
       let queue = settings.listOfCreatedPriorityQueues[ "Q:My_Switch" ];
-      expect( queue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "defaultQueue is not an instance of Cmd4PriorityPollingQueue" );
+      expect( queue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PriorityPollingQueue" );
       assert.equal( queue.lowPriorityQueue.length, 1, `Incorrect number of lowPriorityQueue Entries` );
 
 
@@ -298,7 +297,7 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       assert.equal( Object.keys(settings.listOfCreatedPriorityQueues).length, 1, `Incorrect number of listOfCreatedPriorityPollingQueues` );
 
       let queue = settings.listOfCreatedPriorityQueues[ "Q:My_Switch" ];
-      expect( queue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "defaultQueue is not an instance of Cmd4PriorityPollingQueue" );
+      expect( queue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PriorityPollingQueue" );
       assert.equal( queue.lowPriorityQueue.length, 1, `Incorrect number of lowPriorityQueue Entries` );
 
 
