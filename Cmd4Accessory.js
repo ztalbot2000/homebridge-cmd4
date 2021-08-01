@@ -140,8 +140,6 @@ class Cmd4Accessory
       this.interval = ( parentInfo && parentInfo.interval ) ? parentInfo.interval : constants.DEFAULT_INTERVAL;
       this.timeout = ( parentInfo && parentInfo.timeout ) ? parentInfo.timeout : constants.DEFAULT_TIMEOUT;
       this.statusMsg = ( parentInfo && parentInfo.statusMsg ) ? parentInfo.statusMsg : constants.DEFAULT_STATUSMSG;
-      this.queueMsg = ( parentInfo && parentInfo.queueMsg ) ? parentInfo.queueMsg : constants.DEFAULT_QUEUEMSG;
-      this.queueStatMsgInterval = ( parentInfo && parentInfo.queueStatMsgInterval ) ? parentInfo.queueStatMsgInterval : constants.DEFAULT_QUEUE_STAT_MSG_INTERVAL;
       // Everything that needs to talk to the device now goes through the queue
       this.queue = null;
 
@@ -1617,17 +1615,17 @@ class Cmd4Accessory
 
                break;
             case constants.QUEUE_STAT_MSG_INTERVAL:
-               this.queueStatMsgInterval = value;
+
+               // No longer applicable
 
                break;
             case constants.QUEUEMSG:
-               this.queueMsg = value;
+
+               // No longer applicable
 
                break;
             case constants.QUEUETYPES:
-               parseAddQueueTypes( this.log, value,
-                  { [ constants.QUEUE_STAT_MSG_INTERVAL_lv ]: this.queueStatMsgInterval,
-                    [ constants.QUEUEMSG_lv ]: this.queueMsg } );
+               parseAddQueueTypes( this.log, value );
 
                break;
             case constants.QUEUE:
@@ -2008,7 +2006,7 @@ class Cmd4Accessory
                          // process.exit( 208 );
                      }
 
-                     this.queue = addQueue( this.log, value, constants.QUEUETYPE_WORM, this.interval, this.queueMsg, this.queueStatMsgInterval );
+                     this.queue = addQueue( this.log, value, constants.QUEUETYPE_WORM );
 
                      break;
                   }
@@ -2060,7 +2058,9 @@ class Cmd4Accessory
 
             // Everything now goes through the queue
             if ( this.queue == null )
-               this.queue = addQueue( this.log, "Q:" + this.displayName, constants.QUEUETYPE_STANDARD, this.interval, this.queueMsg, this.queueStatMsgInterval );
+            {
+               this.queue = addQueue( this.log, "Q:" + this.displayName, constants.QUEUETYPE_STANDARD );
+            }
 
             if ( cmd4Dbg ) this.log.debug( `Setting up accessory: ${ accessory.displayName } for polling of: ${ characteristicString } timeout: ${ timeout } interval: ${ interval } queueName: "${ this.queue.queueName }"` );
 
@@ -2086,7 +2086,9 @@ class Cmd4Accessory
          // This list is also used to determine if the related characteristic should be set
          // which happens in the Demo mode without polling.
          if ( this.queue == null )
-            this.queue = addQueue( this.log, "Q:" + this.displayName, constants.QUEUETYPE_STANDARD, this.interval, this.queueMsg, this.queueStatMsgInterval );
+         {
+            this.queue = addQueue( this.log, "Q:" + this.displayName, constants.QUEUETYPE_STANDARD );
+         }
 
          // Make sure the defined characteristics will be polled
          CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ].defaultPollingCharacteristics.forEach( defaultPollingAccTypeEnumIndex =>

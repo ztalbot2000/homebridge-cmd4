@@ -100,10 +100,6 @@ class Cmd4Platform
       this.outputConstants = constants.DEFAULT_OUTPUTCONSTANTS;
       this.statusMsg = constants.DEFAULT_STATUSMSG;
 
-      // Every X polls, output the queue status information.
-      this.queueStatMsgInterval = constants.DEFAULT_QUEUE_STAT_MSG_INTERVAL;
-      this.queueMsg = constants.DEFAULT_QUEUEMSG;
-
       // Track the polling timers only so that unit testing can cancel them.
       this.pollingTimers = [ ];
 
@@ -248,17 +244,17 @@ class Cmd4Platform
 
                break;
             case constants.QUEUE_STAT_MSG_INTERVAL:
-               this.queueStatMsgInterval = value;
+
+               // No longer applicable
 
                break;
             case constants.QUEUEMSG:
-               this.queueMsg = value;
+
+               // No longer applicable
 
                break;
             case constants.QUEUETYPES:
-               parseAddQueueTypes( this.log, value,
-                  { [ constants.QUEUE_STAT_MSG_INTERVAL_lv ]: this.queueStatMsgInterval,
-                    [ constants.QUEUEMSG_lv ]: this.queueMsg } );
+               parseAddQueueTypes( this.log, value );
 
                break;
             case constants.CMD4_MODE:

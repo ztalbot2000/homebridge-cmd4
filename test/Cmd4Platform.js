@@ -219,64 +219,7 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
       done( );
    });
 
-   it('Test if QueueMsg, QueueStatMsgInterval gets passed down to the accessory', ( done ) =>
-   {
-      let platformConfig =
-      {
-         QueueMsg:                     true,
-         QueueStatMsgInterval:         1200,
-         accessories: [
-         {
-            Name:                      "My_Door",
-            DisplayName:               "My_Door",
-            StatusMsg:                 true,
-            Type:                      "Door",
-            CurrentPosition:            0,
-            TargetPosition:             0,
-            PositionState:              0,
-            polling:                   [ { "characteristic": "CurrentPosition", "queue": "A" },
-                                         { "characteristic": "TargetPosition", "queue": "A" },
-                                         { "characteristic": "PositionState", "queue": "A" } ],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
-         } ]
-      }
-
-      let log = new Logger( );
-      log.setBufferEnabled( );
-      log.setOutputEnabled( false );
-      log.setDebugEnabled( false );
-
-
-      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
-
-      cmd4Platform.discoverDevices( );
-
-      assert.equal( cmd4Platform.createdCmd4Accessories.length, 1, ` Cmd4Platform did not create the cmd4Accessory` );
-
-      let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
-
-      assert.equal( cmd4Accessory.queueMsg, true, ` Created accessory has incorrect QueueMsg` );
-      assert.equal( cmd4Accessory.queueStatMsgInterval, 1200, ` Created accessory has incorrect QueueStatMsgInterval` );
-
-      cmd4Platform.startPolling( 5000, 5000 );
-
-      cmd4Platform.pollingTimers.forEach( ( timer ) =>
-      {
-         clearTimeout( timer );
-      });
-
-      let numberOfQueues = Object.keys( settings.listOfCreatedPriorityQueues ).length;
-
-      assert.equal( numberOfQueues, 1, `Incorrect number of polling queues` );
-
-      let queue = settings.listOfCreatedPriorityQueues[ "A" ];
-
-      expect( queue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PriorityPollingQueue" );
-
-      done( );
-   });
-
-   it('Test if OutputConstants, QueueMsg, QueueStatMsgInterval are used from the accessory', ( done ) =>
+   it('Test if OutputConstants are used from the accessory', ( done ) =>
    {
       let platformConfig =
       {
@@ -316,8 +259,6 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
 
-      assert.equal( cmd4Accessory.queueMsg, true, ` Created accessory has incorrect QueueMsg` );
-      assert.equal( cmd4Accessory.queueStatMsgInterval, 1400, ` Created accessory has incorrect QueueStatMsgInterval` );
       assert.equal( cmd4Accessory.outputConstants, true, ` Created Accessory has incorrect OutputConstants` );
 
       done( );

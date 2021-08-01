@@ -33,7 +33,7 @@ let cmd4Dbg = settings.cmd4Dbg;
 
 class Cmd4PriorityPollingQueue
 {
-   constructor( log, queueName, queueType = constants.DEFAULT_QUEUE_TYPE, queueMsg = constants.DEFAULT_QUEUEMSG, queueStatMsgInterval = constants.DEFAULT_QUEUE_STAT_MSG_INTERVAL )
+   constructor( log, queueName, queueType = constants.DEFAULT_QUEUE_TYPE )
    {
       this.log = log;
 
@@ -42,8 +42,6 @@ class Cmd4PriorityPollingQueue
 
       this.queueName = queueName;
       this.queueType = queueType;
-      this.queueMsg = queueMsg;
-      this.queueStatMsgInterval = queueStatMsgInterval;
       this.queueStarted = false;
       this.highPriorityQueue = [ ];
       this.lowPriorityQueue = [ ];
@@ -833,11 +831,9 @@ class Cmd4PriorityPollingQueue
       switch ( queueType )
       {
          case constants.QUEUETYPE_SEQUENTIAL:
-            this.log.debug("AAAAAASetting to SEQUENTIAL QUEUE");
             this.processQueueFunc = this.processSequentialQueue;
             break;
          case constants.QUEUETYPE_WORM:
-            this.log.debug("AAAAAASetting to WORM QUEUE");
             this.processQueueFunc = this.processWormQueue;
             // When not in debug mode, do not echo errors for the WoRm queue
             // as errors are handled through retries.
@@ -845,12 +841,10 @@ class Cmd4PriorityPollingQueue
                this.echoE = false;
             break;
          case constants.QUEUETYPE_STANDARD:
-            this.log.debug("AAAAAASetting to PASSTHRU QUEUE");
             // only polled entries go straight through the queue
             this.processQueueFunc = this.processPassThruQueue;
             break;
          case constants.QUEUETYPE_PASSTHRU:
-            this.log.debug("AAAAAASetting to PASSTHRU QUEUE");
             // entries go straight through the queue
             this.processQueueFunc = this.processPassThruQueue;
             break;
@@ -865,15 +859,15 @@ var queueExists = function( queueName )
    return settings.listOfCreatedPriorityQueues[ queueName ];
 }
 
-var addQueue = function( log, queueName, queueType = constants.DEFAULT_QUEUE_TYPE, queueInterval = constants.DEFAULT_QUEUE_INTERVAL, queueMsg = constants.DEFAULT_QUEUEMSG, queueStatMsgInterval = constants.DEFAULT_QUEUE_STAT_MSG_INTERVAL )
+var addQueue = function( log, queueName, queueType = constants.DEFAULT_QUEUE_TYPE )
 {
    let queue = queueExists( queueName );
    if ( queue != undefined )
       return queue;
 
-   log.debug( `Creating new Priority Polled Queue "${ queueName }" with QueueType of: "${ queueType }" QueueInterval: ${ queueInterval } QueueMsg: ${ queueMsg } QueueStatMsgInterval: ${ queueStatMsgInterval }` );
+   log.debug( `Creating new Priority Polled Queue "${ queueName }" with QueueType of: "${ queueType }"` );
 
-   queue = new Cmd4PriorityPollingQueue( log, queueName, queueType, queueInterval, queueMsg, queueStatMsgInterval );
+   queue = new Cmd4PriorityPollingQueue( log, queueName, queueType );
    settings.listOfCreatedPriorityQueues[ queueName ] = queue;
 
    return queue;
@@ -882,7 +876,7 @@ var addQueue = function( log, queueName, queueType = constants.DEFAULT_QUEUE_TYP
 
 
 
-var parseAddQueueTypes = function ( log, entrys, options )
+var parseAddQueueTypes = function ( log, entrys )
 {
    if ( trueTypeOf( entrys ) != Array )
    {
@@ -893,8 +887,6 @@ var parseAddQueueTypes = function ( log, entrys, options )
    {
       let queueName = null;
       let queueType = constants.DEFAULT_QUEUE_TYPE;
-      let queueMsg = options.queueMsg;
-      let queueStatMsgInterval = options.queueStatMsgInterval;
 
       for ( let key in entry )
       {
@@ -929,21 +921,13 @@ var parseAddQueueTypes = function ( log, entrys, options )
 
                break;
             case constants.QUEUEMSG:
-              if ( typeof value != "boolean" )
-              {
-                 log.error( chalk.red( `Error: ${ constants.QUEUEMSG }: ${ value } is invalid at index: ${ entryIndex }. Expected: true/false` ) );
-                 process.exit( 448 ) ;
-              }
-              queueMsg = value;
+
+              // No Longer applicable
 
               break;
             case constants.QUEUE_STAT_MSG_INTERVAL:
-              if ( typeof value != "number" && value < 5 )
-              {
-                 log.error( chalk.red( `Error: ${ constants.QUEUE_STAT_MSG_INTERVAL }: ${ value } is not a valid number index: ${ entryIndex }. Expected: number >= 5` ) );
-                 process.exit( 448 );
-              }
-              queueStatMsgInterval = value;
+
+              // No Longer applicable
 
               break;
             default:
@@ -958,8 +942,8 @@ var parseAddQueueTypes = function ( log, entrys, options )
          log.error( chalk.red( `Error: "${ constants.QUEUE }"  not provided at index ${ entryIndex }` ) );
          process.exit( 448 ) ;
       }
-      if ( cmd4Dbg ) log.debug( `calling addQueue: ${ queueName } type: ${ queueType } queueMsg: ${ queueMsg } queueStatMsgInterval: ${ queueStatMsgInterval }` );
-      addQueue( log, queueName, queueType, queueMsg, queueStatMsgInterval );
+      if ( cmd4Dbg ) log.debug( `calling addQueue: ${ queueName } type: ${ queueType }` );
+      addQueue( log, queueName, queueType );
    } );
 }
 
