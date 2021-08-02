@@ -96,7 +96,6 @@ class Cmd4Platform
 
 
       // Defaults before parse
-      this.restartRecover = true;
       this.outputConstants = constants.DEFAULT_OUTPUTCONSTANTS;
       this.statusMsg = constants.DEFAULT_STATUSMSG;
 
@@ -113,14 +112,6 @@ class Cmd4Platform
       api.on( "didFinishLaunching", ( ) =>
       {
          this.log.info( chalk.blue( "Cmd4Platform didFinishLaunching" ) );
-
-         if ( this.restartRecover == false &&
-              this.toBeRestoredPlatforms.length > 0  )
-         {
-            this.log.info( chalk.yellow( `Removing ` ) + chalk.red( `*ALL* ` ) + chalk.yellow( `cached accessories as: ${ constants.RESTART_RECOVER } is set to false` ) );
-            this.api.unregisterPlatformAccessories(  settings.PLUGIN_NAME, settings.PLATFORM_NAME, this.toBeRestoredPlatforms );
-            this.toBeRestoredPlatforms = [ ];
-         }
 
          this.discoverDevices( this.log );
 
@@ -234,23 +225,27 @@ class Cmd4Platform
                this.outputConstants = value;
 
                break;
-            case constants.RESTART_RECOVER:
-               this.restartRecover = value;
-
+            case "RestartRecover":
+               this.log.warn( `Warning: ${ key } has been deprecated. Not having restart recovery could mean your device would turn on/off over a restart; Therefore ${ key } is now always enabled.` );
+               this.log.warn( `To remove this message, just remove ${ key } from your config.json` );
                break;
             case constants.STATUSMSG:
               if ( value === false )
                  this.statusMsg = "FALSE";
 
                break;
-            case constants.QUEUE_STAT_MSG_INTERVAL:
+            case "QueueStatMsgInterval":
 
-               // No longer applicable
+               // Never put into production
+               this.log.warn( `Warning: ${ key } has been deprecated. It was never even used.` );
+               this.log.warn( `To remove this message, just remove ${ key } from your config.json` );
 
                break;
-            case constants.QUEUEMSG:
+            case "QueueMsg":
 
-               // No longer applicable
+               // Never put into production
+               this.log.warn( `Warning: ${ key } has been deprecated. It was never even used.` );
+               this.log.warn( `To remove this message, just remove ${ key } from your config.json` );
 
                break;
             case constants.QUEUETYPES:

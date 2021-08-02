@@ -915,19 +915,25 @@ var parseAddQueueTypes = function ( log, entrys )
                queueType = value;
 
                break;
-            case constants.QUEUE_INTERVAL:
+            case "QueueInterval":
 
-               // No Longer applicable
+               // Never put into production
+               log.warn( `Warning: ${ key } has been deprecated. It was never really used anyway.` );
+               log.warn( `To remove this message, just remove ${ key } from your config.json` );
 
                break;
-            case constants.QUEUEMSG:
+            case "QueueMsg":
 
-              // No Longer applicable
+               // Never put into production
+               log.warn( `Warning: ${ key } has been deprecated. It was never really used anyway.` );
+               log.warn( `To remove this message, just remove ${ key } from your config.json` );
 
               break;
-            case constants.QUEUE_STAT_MSG_INTERVAL:
+            case "QueueStatMsgInterval":
 
-              // No Longer applicable
+               // Never put into production
+               log.warn( `Warning: ${ key } has been deprecated. It was never really used anyway.` );
+               log.warn( `To remove this message, just remove ${ key } from your config.json` );
 
               break;
             default:

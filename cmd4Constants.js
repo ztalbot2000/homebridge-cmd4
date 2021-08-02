@@ -18,18 +18,13 @@ exports.FAST_STATE_CHANGE_RESPONSE_TIME      = 1000;   // 1 second
 
 exports.DEFAULT_TIMEOUT          = 60000; // 1 minute
 exports.DEFAULT_INTERVAL         = 60000; // 1 minute
-exports.DEFAULT_QUEUE_INTERVAL   = 60000; // 1 minute
 
 // Not a Bool, otherwise conditional check fails
 exports.DEFAULT_STATUSMSG        = "TRUE";
 
 exports.DEFAULT_OUTPUTCONSTANTS  = false;
-exports.DEFAULT_QUEUEMSG         = false;
 exports.DEFAULT_QUEUE_TYPE       = "WoRm";
 exports.DEFAULT_QUEUE_PAUSE_TIMEOUT = 10000; // 10 seconds
-
-// How many polls before output of queue status information
-exports.DEFAULT_QUEUE_STAT_MSG_INTERVAL = 1000;
 
 
 // Fakegato Constants
@@ -79,10 +74,8 @@ exports.DEBUG_l                  = "debug";
 exports.OUTPUTCONSTANTS          = "OutputConstants";
 exports.RESTART_RECOVER          = "RestartRecover";
 exports.STATUSMSG                = "StatusMsg";
-exports.QUEUEMSG                 = "QueueMsg";
 exports.QUEUETYPE                = "QueueType";
 exports.QUEUETYPES               = "QueueTypes";
-exports.QUEUE_INTERVAL           = "QueueInterval";
 
 // Queue Types
 exports.QUEUETYPE_SEQUENTIAL     = "Sequential";
@@ -109,7 +102,6 @@ exports.FIRMWAREREVISION         = "FirmwareRevision";
 exports.CHARACTERISTIC           = "Characteristic";
 exports.TIMEOUT                  = "Timeout";
 exports.QUEUE                    = "Queue";
-exports.QUEUE_STAT_MSG_INTERVAL  = "QueueStatMsgInterval";
 exports.POLLING                  = "Polling";
 exports.CMD4_MODE                = "Cmd4_Mode";
 exports.CMD4_MODE_DEMO           = "Demo";

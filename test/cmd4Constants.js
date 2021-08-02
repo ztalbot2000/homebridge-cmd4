@@ -17,7 +17,6 @@ describe( "Testing cmd4Constants", function( )
        assert.equal( constants.DEFAULT_INTERVAL, 60000, `Incorrect global value` );
 
        assert.equal( constants.DEFAULT_STATUSMSG, "TRUE", `Incorrect global value` );
-       assert.equal( constants.DEFAULT_QUEUE_STAT_MSG_INTERVAL, 1000, `Incorrect global value` );
 
        assert.equal( constants.FAKEGATO_TYPE_ENERGY_l, "energy", `Incorrect global value` );
        assert.equal( constants.FAKEGATO_TYPE_ROOM_l, "room", `Incorrect global value` );
@@ -77,7 +76,6 @@ describe( "Testing cmd4Constants", function( )
        assert.equal( constants.CHARACTERISTIC, "Characteristic", `Incorrect global value` );
        assert.equal( constants.TIMEOUT, "Timeout", `Incorrect global value` );
        assert.equal( constants.QUEUE, "Queue", `Incorrect global value` );
-       assert.equal( constants.QUEUE_STAT_MSG_INTERVAL, "QueueStatMsgInterval", `Incorrect global value` );
        assert.equal( constants.POLLING, "Polling", `Incorrect global value` );
        assert.equal( constants.CMD4_MODE_DEMO, "Demo", `Incorrect global value` );
        assert.equal( constants.CMD4_MODE, "Cmd4_Mode", `Incorrect global value` );

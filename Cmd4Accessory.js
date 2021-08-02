@@ -1614,14 +1614,18 @@ class Cmd4Accessory
                   this.statusMsg = "FALSE";
 
                break;
-            case constants.QUEUE_STAT_MSG_INTERVAL:
+            case "QueueStatMsgInterval":
 
-               // No longer applicable
+               // Never put into production
+               this.log.warn( `Warning: ${ key } has been deprecated. It was never even used.` );
+               this.log.warn( `To remove this message, just remove ${ key } from your config.json` );
 
                break;
-            case constants.QUEUEMSG:
+            case "QueueMsg":
 
-               // No longer applicable
+               // Never put into production
+               this.log.warn( `Warning: ${ key } has been deprecated. It was never even used.` );
+               this.log.warn( `To remove this message, just remove ${ key } from your config.json` );
 
                break;
             case constants.QUEUETYPES:
@@ -1786,7 +1790,12 @@ class Cmd4Accessory
             process.exit( 264 );
          }
       } else
-         this.log.info( chalk.blue( `Cmd4 is running in Demo Mode` ) );
+      {
+         // Added accessories like input have no polled configuristics and therefore don't
+         // deserve this message
+         if ( this.level != 1)
+            this.log.info( chalk.blue( `Cmd4 is running in Demo Mode for ${ this.displayName }` ) );
+      }
 
       // Handle seperation of strings of state_cmd for a prefix
       if ( this.state_cmd_prefix )
