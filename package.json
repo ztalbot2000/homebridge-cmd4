@@ -1,7 +1,7 @@
 {
    "name": "homebridge-cmd4",
    "description": "Exec Plugin for Homebridge supporting all accessorys and characteristics",
-   "version": "4.2.2",
+   "version": "5.0.0-beta0",
    "license": "MIT",
    "author": {
       "name": "John Talbot"
