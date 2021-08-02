@@ -721,51 +721,6 @@ class Cmd4PriorityPollingQueue
    }
 
 
-   enablePollingFirstTime( queue )
-   {
-      let delay = 0;
-      let staggeredDelays = [ 3000, 6000, 9000, 12000 ];
-      let staggeredDelaysLength = staggeredDelays.length;
-      let staggeredDelayIndex = 0;
-      let lastAccessoryUUID = ""
-
-      if ( cmd4Dbg ) this.log.debug( `enablePolling for the first time` );
-
-      queue.lowPriorityQueue.forEach( ( entry, entryIndex ) =>
-      {
-         setTimeout( ( ) =>
-         {
-            if ( entryIndex == 0 )
-               if ( queue.queueType != constants.QUEUETYPE_STANDARD )
-                  entry.accessory.log.info( `Started staggered kick off of ${ queue.lowPriorityQueue.length } polled characteristics for queue: "${ queue.queueName }"` );
-               else
-                  entry.accessory.log.info( `Started staggered kick off of ${ queue.lowPriorityQueue.length } polled characteristics` );
-
-            if ( cmd4Dbg ) entry.accessory.log.debug( `Kicking off polling for: ${ entry.accessory.displayName } ${ entry.characteristicString } interval:${ entry.interval }, staggered:${ staggeredDelays[ staggeredDelayIndex ] }` );
-
-            queue.scheduleLowPriorityEntry( entry );
-
-            if ( entryIndex == queue.lowPriorityQueue.length -1 )
-               if ( queue.queueType != constants.QUEUETYPE_STANDARD )
-                  entry.accessory.log.info( `All characteristics are now being polled for queue: "${ queue.queueName }"` );
-               else
-                  entry.accessory.log.info( `All characteristics are now being polled` );
-
-         }, delay );
-
-         if ( staggeredDelayIndex++ >= staggeredDelaysLength )
-            staggeredDelayIndex = 0;
-
-         if ( lastAccessoryUUID != entry.accessory.UUID )
-            staggeredDelayIndex = 0;
-
-         lastAccessoryUUID = entry.accessory.UUID;
-
-         delay += staggeredDelays[ staggeredDelayIndex ];
-
-      });
-   }
-
    pauseQueue( queue )
    {
       if ( queue.queueType == constants.QUEUETYPE_STANDARD )
@@ -805,11 +760,56 @@ class Cmd4PriorityPollingQueue
       } );
    }
 
-   startQueue( queue )
+   startQueue( queue, allDoneCallback )
    {
       queue.lowPriorityQueueIndex = 0 ;
 
-      queue.enablePollingFirstTime( queue );
+      let delay = 0;
+      let staggeredDelays = [ 3000, 6000, 9000, 12000 ];
+      let staggeredDelaysLength = staggeredDelays.length;
+      let staggeredDelayIndex = 0;
+      let lastAccessoryUUID = ""
+
+      if ( cmd4Dbg ) this.log.debug( `enablePolling for the first time` );
+
+      queue.lowPriorityQueue.forEach( ( entry, entryIndex ) =>
+      {
+         setTimeout( ( ) =>
+         {
+            if ( entryIndex == 0 && cmd4Dbg )
+               if ( queue.queueType == constants.QUEUETYPE_WORM )
+                  entry.accessory.log.debug( `Started staggered kick off of ${ queue.lowPriorityQueue.length } polled characteristics for queue: "${ entry.accessory.queue.queueName }"` );
+               else
+                  entry.accessory.log.debug( `Started staggered kick off of ${ queue.lowPriorityQueue.length } polled characteristics for "${ entry.accessory.displayName }"` );
+
+            if ( cmd4Dbg ) entry.accessory.log.debug( `Kicking off polling for: ${ entry.accessory.displayName } ${ entry.characteristicString } interval:${ entry.interval }, staggered:${ staggeredDelays[ staggeredDelayIndex ] }` );
+
+            queue.scheduleLowPriorityEntry( entry );
+
+            if ( entryIndex == queue.lowPriorityQueue.length -1 )
+            {
+               if ( cmd4Dbg )
+                  if ( queue.queueType == constants.QUEUETYPE_WORM )
+                     entry.accessory.log.debug( `All characteristics are now being polled for queue: "${ queue.queueName }"` );
+                  else
+                     entry.accessory.log.debug( `All characteristics are now being polled for "${ entry.accessory.displayName }"` );
+               allDoneCallback( );
+            }
+
+         }, delay );
+
+         if ( staggeredDelayIndex++ >= staggeredDelaysLength )
+            staggeredDelayIndex = 0;
+
+         if ( lastAccessoryUUID != entry.accessory.UUID )
+            staggeredDelayIndex = 0;
+
+         lastAccessoryUUID = entry.accessory.UUID;
+
+         delay += staggeredDelays[ staggeredDelayIndex ];
+
+      });
+
       queue.queueStarted = true;
    }
 

@@ -756,17 +756,20 @@ class Cmd4Platform
       }
 
       // Start polling of each queue of characteristics
-      Object.keys( settings.listOfCreatedPriorityQueues ).forEach( ( queueName ) =>
+      let lastIndex = Object.keys( settings.listOfCreatedPriorityQueues ).length;
+      Object.keys( settings.listOfCreatedPriorityQueues ).forEach( ( queueName, index ) =>
       {
          let queue = settings.listOfCreatedPriorityQueues[ queueName ];
          let queuedPollingTimer = setTimeout( ( ) =>
          {
-            if ( queue.queueType == constants.QUEUETYPE_STANDARD )
-               this.log.info( `*** Starting Polling` );
-            else
-               this.log.info( `*** Starting Priority Polling Queue "${ queue.queueName }"` );
+            if ( index == lastIndex -1 )
+              this.log.info( chalk.magenta( `*** Starting Polling` ) );
+            queue.startQueue( queue, ( ) =>
+            {
+               if ( index == 0 )
+                  this.log.info( chalk.magenta( `*** All characteristics are now being polled` ) );
+            });
 
-            queue.startQueue( queue );
          }, queuedStartDelay );
 
          this.pollingTimers.push( queuedPollingTimer );
