@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-4-2-3">**Whats new in 4.2.3**</a>
 * <a href="#Whats-new-in-4-2-2">**Whats new in 4.2.2**</a>
 * <a href="#Whats-new-in-4-2-1">**Whats new in 4.2.1**</a>
 * <a href="#Whats-new-in-4-2-0">**Whats new in 4.2.0**</a>
@@ -66,6 +67,14 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-4-2-3">## Whats new in 4.2.3</a>
+#### 4.2.3 (2021-08-03)
+
+##### Bug Fixes
+
+*  For WoRm Queue if setValue script fails, lockup can occur ([c3abf782](https://github.com/ztalbot2000/homebridge-cmd4/commit/c3abf7827626cfd89786d767fd153d4f18ea6462))
+
 
 <a name="Whats-new-in-4-2-2">## Whats new in 4.2.2</a>
 #### 4.2.2 (2021-07-27)

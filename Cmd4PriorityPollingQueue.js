@@ -142,30 +142,34 @@ class Cmd4PriorityPollingQueue
       if ( cmd4Dbg ) this.log.debug( `Processing high priority queue "Set" entry: ${ entry.accTypeEnumIndex } length: ${ this.highPriorityQueue.length }` );
 
       this.inProgressSets ++;
-      this.qSetValue( entry.accessory, entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, entry.stateChangeResponseTime, entry.value, function ( error )
+      this.qSetValue( entry.accessory, entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, entry.value, function ( error )
       {
-         let relatedCurrentAccTypeEnumIndex = entry.accessory.getDevicesRelatedCurrentAccTypeEnumIndex( entry.accTypeEnumIndex );
 
          let queue = entry.accessory.queue;
 
-         if ( error == 0 &&
-              relatedCurrentAccTypeEnumIndex != null )
+         if ( error == 0 )
          {
-            let relatedCurrentCharacteristicString = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].type;
-
-            // A set with no error means the queue is sane to do reading
-            queue.lastGoodTransactionTime = Date.now( );
-            queue.errorCountSinceLastGoodTransaction = 0;
-
+            // Since the "Set" passed, do the stateChangeResponseTime
             setTimeout( ( ) =>
             {
-               // Change the entry to a get and set queueGetIsUpdate to true
-               // Use unshift to make it next in line
-               entry.isSet = false;
-               entry.accTypeEnumIndex = relatedCurrentAccTypeEnumIndex;
-               entry.characteristicString = relatedCurrentCharacteristicString;
-               entry.queueGetIsUpdate = true;
-               queue.highPriorityQueue.unshift( entry );
+               // A set with no error means the queue is sane to do reading
+               queue.lastGoodTransactionTime = Date.now( );
+               queue.errorCountSinceLastGoodTransaction = 0;
+
+               // After the stateChangeResponseTime, do the related characteristic ( if any )
+               let relatedCurrentAccTypeEnumIndex = entry.accessory.getDevicesRelatedCurrentAccTypeEnumIndex( entry.accTypeEnumIndex );
+
+               if ( relatedCurrentAccTypeEnumIndex != null )
+               {
+                  let relatedCurrentCharacteristicString = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].type;
+                  // Change the entry to a get and set queueGetIsUpdate to true
+                  // Use unshift to make it next in line
+                  entry.isSet = false;
+                  entry.accTypeEnumIndex = relatedCurrentAccTypeEnumIndex;
+                  entry.characteristicString = relatedCurrentCharacteristicString;
+                  entry.queueGetIsUpdate = true;
+                  queue.highPriorityQueue.unshift( entry );
+               }
 
                // The "Set" is now complete after its stateChangeResponseTime.
                queue.inProgressSets --;
@@ -176,15 +180,20 @@ class Cmd4PriorityPollingQueue
 
             }, entry.stateChangeResponseTime );
 
-         } else {
-            // Set failed. We need to keep trying (WoRm queue only )
-            if ( queue.queueType == constants.QUEUETYPE_WORM )
-               queue.highPriorityQueue.push( entry );
+         } else  // setValue failed
+         {
+
+            // The "Set" is complete, even if it failed.
+            queue.inProgressSets --;
+
+            // Set failed. We need to keep trying
+            queue.highPriorityQueue.push( entry );
 
             queue.errorCountSinceLastGoodTransaction++;
             let count = queue.errorCountSinceLastGoodTransaction;
+
             if ( count != 0 && count % 50 == 0 )
-               this.log.warn( `More than ${ count } errors were encountered in a row for ${ entry.accessory.displayName } setValue. Last error found Setting: ${ entry.characteristicString} value: ${ entry.value }. Perhaps you should run in debug mode to find out what the problem might be.` );
+               this.log.warn( `More than ${ count } errors were encountered in a row for ${ entry.accessory.displayName }. Last error found Setting: ${ entry.characteristicString} value: ${ entry.value }. Perhaps you should run in debug mode to find out what the problem might be.` );
          }
 
          // Note 1.
@@ -297,7 +306,7 @@ class Cmd4PriorityPollingQueue
 
       let cmd = self.state_cmd_prefix + self.state_cmd + " Get '" + self.displayName + "' '" + characteristicString  + "'" + self.state_cmd_suffix;
 
-      if ( cmd4Dbg ) self.log.debug( `getValue: accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } cmd: ${ cmd }` );
+      if ( cmd4Dbg ) self.log.debug( `getValue: accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } cmd: ${ cmd } timeout: ${ timeout }` );
 
       let reply = "NxN";
 
@@ -463,7 +472,7 @@ class Cmd4PriorityPollingQueue
    //
    //       - Where he value in <> is an one of CMD4_ACC_TYPE_ENUM
    // ***********************************************
-   qSetValue( accessory, accTypeEnumIndex, characteristicString, timeout, stateChangeResponseTime, value, callback )
+   qSetValue( accessory, accTypeEnumIndex, characteristicString, timeout, value, callback )
    {
       let self = accessory;
       let queue = accessory.queue;
