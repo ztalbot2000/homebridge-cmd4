@@ -1658,9 +1658,10 @@ class Cmd4Accessory
                // Do not parse it yet as characteristics must be set first.
                this.polling = value;
                break;
-            case constants.CMD4_MODE:
+            case "Cmd4_Mode":
                this.log.warn( `Warning: ${ key } has been deprecated.` );
                cmd4Mode = value;
+
                break;
             case constants.INTERVAL:
                // Intervals are in seconds
@@ -1753,7 +1754,7 @@ class Cmd4Accessory
             throw new Error("Demo mode is achieved when there are no polling entries in your config.json");
          }
          this.log.warn( `Cmd4 has been simplified and optimized as per: https://git.io/JtMGR.` );
-         this.log.warn( `To remove this message, just remove ${ constants.CMD4_MODE } from your config.json` );
+         this.log.warn( `To remove this message, just remove "Cmd4_Mode" from your config.json` );
       }
 
       if ( trueTypeOf( this.type ) != String )

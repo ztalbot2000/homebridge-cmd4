@@ -13,9 +13,9 @@
 * [**ChangeLog**](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/CHANGELOG.md)
 * [**Screenshots**](#screenshots)
 * [**Installation Details**](#installation-details)
+* [**Demo Mode**](#demo-mode)
 * [**Basic Troubleshooting**](#basic-troubleshooting)
    * [***Error: Command failed***](#error-command-failed)
-   * [***Removing Cached Information***](#removing-cached-information)
    * [***Debug Steps***](#debug-steps)
 * [**Advanced Troubleshooting For Developers**](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/AdvancedTroubleShooting.md)
 * [**Developers Guide**](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/Developers.md)
@@ -40,12 +40,10 @@
 ## Features
 &nbsp;&nbsp;&nbsp; Cmd4 supports, Lights, Garage Door Openers, Outlets, Switches, Lock Maintenance Systems, Lock Management Systems, Humidity Sensors, Doors, Light Sensors, Temperature Sensors, Contact Sensors, Motion Sensors, Thermostats, Security Systems, Battery Services, Filter Maintenance Systems, Air Purifiers, Television, Television Speaker, Input Sources, Irrigation Systems,  ... everything but Camera Streaming since it is not pliable to a command line Interface.
 
-&nbsp;&nbsp;&nbsp; Cmd4 also supports three types of polling, modified by the "Cmd4_Mode" directive.
+&nbsp;&nbsp;&nbsp; Cmd4 Polling is a way to in the background update the state of devices via the 'polling' dirctive.
 <UL>
-<LI> { "Cmd4_Mode": "Always" } - As before, All characteristic are sent/retrieved from the device. ( Default )
-<LI> { "Cmd4_Mode": "Polled" } - Polled characteristics are retrieved from the device. Non polled characteristic values are sent/retrieved from cache.
-<LI> { "Cmd4_Mode": "FullyPolled" } - All characteristics are retrieved from cache. Polled characteristics are sent to the device. Expect any characteristic to be updated via configuring polling.
-<LI> { "Cmd4_Mode": "Demo" } - All characteristics are sent/retrieved from cache.
+<LI> "polling": "on" - Implements polling of the default characteristics of the defined "timeout" and "stateChangeResponseTime".
+<LI> "polling": [{ "characteristic": "<characteristic">", [ "timeout": <timeout in msec>, "stateChangeResponseTime": <stateChangeResponseTime in sec> ] }] - implements per characteristic polling.
 </UL>
 
 &nbsp;&nbsp;&nbsp; Cmd4 supports Fakegato History and retaining previous state over restarts.
@@ -98,6 +96,10 @@ See [homebridge](https://github.com/homebridge/homebridge) for complete details.
 ### That's it! Enjoy all your new Virtual Accessories!. ✅
 
 <BR><BR>
+## Demo Mode
+&nbsp;&nbsp;&nbsp; The config.json provided has no polling defined. Demo mode is achieved when no polling of any kind for that accessory is defined. In this way all values are retrieved and set from cache.
+
+<BR><BR>
 ## Basic Troubleshooting
 
 ### Error: Command failed
@@ -118,18 +120,6 @@ See [homebridge](https://github.com/homebridge/homebridge) for complete details.
 ```
 
 Check that the command exists, but also that the timeout value in your config.json for that accessory is not too low.
-
-### Removing Cached Information
-&nbsp;&nbsp;&nbsp; Starting with Cmd4 Version 3 the *restartRecover* option, defaulted to true, will mean that sometimes changing the config.json accessory options will have no affect. There are two ways to resolve this.<BR>
-Note: As of version 3.0.4, Cmd4 directives like polling, state_cmd, etc will try to be restored from the config.json. 
-<UL>
-<LI> Restart with { restartRecover: false } set in your config.json.
-<LI> Remove Homebridges cached information.
-
-```bash
-   ^Shell*> rm -rf $HOME/.homebridge/accessories $HOME/.homebridge/persist
-```
-</UL>
 
 ### Debug Steps
    New in Cmd4 v4.0.0 is how to enable Debug mode. The logs are 100% the same, except that now that Cmd4 has its own logging system ( Copied from Homebridge for compatability ); Enabling Debug logs will not enable Debug logs in other plugins. <BR>

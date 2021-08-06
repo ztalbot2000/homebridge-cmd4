@@ -146,16 +146,19 @@ describe( "Testing Cmd4Accessory", function( )
       done( );
    });
 
-   it( "Test that Cmd4_Mode Demo with polling throws an error", function( done )
+   it( "Test that Cmd4_Mode Polled with polling generates proper warnings", function( done )
    {
-      let switchConfig =
+      let platformConfig =
       {
-         cmd4_Mode:                    "Demo",
-         name:                         "Test Switch",
-         type:                         "Switch",
-         on:                            false,
-         polling:                       true,
-         state_cmd:                    "./test/echoScripts/echo_1"
+         accessories:
+         [{
+            cmd4_Mode:                    "Polled",
+            name:                         "Test Switch",
+            type:                         "Switch",
+            on:                            false,
+            polling:                       true,
+            state_cmd:                    "./test/echoScripts/echo_1"
+         }]
       };
 
       const log = new Logger( );
@@ -163,19 +166,54 @@ describe( "Testing Cmd4Accessory", function( )
       log.setOutputEnabled( false );
       log.setDebugEnabled( false );
 
-      expect( ( ) => new Cmd4Accessory( log, switchConfig, _api, [ ], null )).to.throw(/Demo mode is achieved when there are no polling entries in your config.json/);
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
 
       assert.include( log.errBuf, `[33mWarning: cmd4_Mode has been deprecated.`, ` Cmd4Accessory: incorrect stderr: ${ log.errBuf }` );
-      //assert.include( log.errBuf, `[33mDemo mode is achieved when there are no polling entries in your config.json`, ` Cmd4Accessory: incorrect stderr: ${ log.errBuf }` );
-      assert.equal( log.errLineCount, 1, ` Cmd4Accessory: incorrect number of lines to stderr: ${ log.errBuf }` );
+      assert.include( log.errBuf, `[33mTo remove this message, just remove "Cmd4_Mode" from your config.json`, ` Cmd4Accessory: incorrect stderr: ${ log.errBuf }` );
+
+      assert.include( log.errBuf, `[33mCmd4 has been simplified and optimized as per: https://git.io/JtMGR`, ` Cmd4Accessory: incorrect stderr: ${ log.errBuf }` );
+      assert.equal( log.errLineCount, 3, ` Cmd4Accessory: incorrect number of lines to stderr: ${ log.errBuf }` );
 
 
       done( );
 
    });
 
-   it( "Test Cmd4Mode=Demo geberates a warning", ( done ) =>
+   it( "Test that Cmd4_Mode Demo with polling throws an error", function( done )
+   {
+      let platformConfig =
+      {
+         accessories:
+         [{
+            cmd4_Mode:                    "Demo",
+            name:                         "Test Switch",
+            type:                         "Switch",
+            on:                            false,
+            polling:                       true,
+            state_cmd:                    "./test/echoScripts/echo_1"
+         }]
+      };
+
+      const log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      expect ( ( ) => cmd4Platform.discoverDevices( ) ).to.throw(/Demo mode is achieved when there are no polling entries in your config.json/);
+
+      done( );
+
+   });
+
+   it( "Test Cmd4Mode=Demo generates a warning", ( done ) =>
    {
       let config =
       {

@@ -252,7 +252,7 @@ class Cmd4Platform
                parseAddQueueTypes( this.log, value );
 
                break;
-            case constants.CMD4_MODE:
+            case "Cmd4_Mode":
                this.log.warn( `Warning: ${ key } has been deprecated.` );
                if ( value == "Demo" )
                {
@@ -261,7 +261,7 @@ class Cmd4Platform
                {
                   this.log.warn( `Cmd4 has been simplified and optimized as per: https://git.io/JtMGR.` );
                }
-               this.log.warn( `To remove this message, just remove ${ constants.CMD4_MODE } from your config.json` );
+               this.log.warn( `To remove this message, just remove "${ key }" from your config.json` );
                break;
             case constants.STORAGE:
                if ( value == constants.FS_l || value == constants.GOOGLEDRIVE_l )

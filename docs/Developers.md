@@ -7,8 +7,8 @@
 * [**Where to Begin**](#where-to-begin)
 * [**Homebridge API**](#homebridge-api)
 * [**Platform Accessories**](#platform-accessories)
+* [***Television Accessories***](#television-accessories)
 * [**Standard Accessories**](#standard-accessories)
-* [***New Cmd4 3.0 Directives***](#new-cmd4-30-directives)
 * [**Cmd4 Directives**](#cmd4-directives)
 * [**Cmd4 Devices and Characteristics**](#cmd4-devices-and-characteristics)
 * [**Priority Queued Polling**](#priority-queued-polling)
@@ -74,7 +74,6 @@
                      "VolumeSelector":         10,
                      "VolumeControlType":      "ABSOLUTE",
                      "State_cmd": "node .homebridge/YourScriptHere.js",
-                     "Cmd4_Mode":              "Polled",
                      "Polling": [
                         {"Characteristic": "Active",         "interval": 50,  "timeout": 5000},
                         {"Characteristic": "VolumeSelector", "interval": 50,  "timeout": 5000}
@@ -133,8 +132,8 @@
 }
 ```
 
-### New Cmd4 3.0 Directives
-&nbsp;&nbsp;&nbsp;There are a few new important Cmd4 designations in Homebridge 3.0.
+### Television Accessories
+&nbsp;&nbsp;&nbsp;There are a few special Cmd4 designations for Televisions, implemented since Cmd4 3.0
 <UL>
 <LI> The first is "category"<BR>
 
@@ -150,13 +149,6 @@ This is the hint to homekit of which icon to use and for Televisions, a TV icon 
    "PublishExternally": true (Default is false)
 ```
 As per the Homebridge API, this allows the Platform Accessory to be published separately from the bridge and is a requirement for multiple TV's.
-<BR><BR>
-<LI> The third new designation is "restartRecover"<BR>
-
-```json
-   "restartRecover": true (Default)
-```
-Cmd4 allows Homebridge to use saved state information over restarts. This is not completely falable, so you can disable this as well.
 </UL>
 
 See the [Cmd4 Developers Guide](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/Developers.md) for further information.
@@ -210,43 +202,47 @@ Notice that there is no Platform definition. Otherwise everything is the same. Y
 
 &nbsp;&nbsp;&nbsp; Typically polling is pretty much a free for all.  While Cmd4 tries to eleviate this with staggered polling, Cmd4 supports two kinds of Priority Queued Polling; that being "Sequential" and "WoRm" ( Write Once Read Many).  If configured correctly, only one Set characteristic value can be sent or either one or multiple Gets from a device at a time. The priority given to requests from IOS first and background polling second.<BR>
 <BR>
-  Priority Queued Polling is only available for Cmd4_Mode(s) of "Polled" or "FullyPolled" by the shear nature of the feature. To configure Priority Queued Polling every characteristic to the device must be configured with characteristic polling and in the same queue. as an Example of the default WoRm is:
+  Priority Queued Polling is only available when a queue is defined. The default "QueueType" being "WoRm". To configure Priority Queued Polling every characteristic to the device must be configured to be in the same queue. as an Example of the default WoRm is:
 
-```
+```json
 "Interval": 5,
 "Polling": [ { "Characteristic": "CurrentTemperature", "queue": "A" },
              { "Characteristic": "TargetTemperature", "Queue": "A" }
            ]
 ```
-  The interval of the queue would be the first Interval defined of where the queue is first seen, as in the example above.<BR>
-  A simpler solution would be topre define the queues and the queue characteristics ahead of time and then just specify which accessory is going to use Priority Queue Polling. Example 2:
+  The interval of the characteristic is defined through the heirarch of the Platform/Accessory and then the Characteristic, as always.<BR>
+  A simpler solution would be to re-define the queues and the queue characteristics ahead of time and then just specify which accessory is going to use Priority Queue Polling. Example 2:
 
-```
-"QueueTypes: [ { "Queue": "A" : "QueueType": "WoRm", "QueueInterval": 10 }
+```json
+"QueueTypes: [ { "Queue": "A" : "QueueType": "WoRm"  }
              ],
 "Queue": "A",
+"Interval": 10,
 "Polling": [ { "Characteristic": "CurrentTemperature" },
-             { "Characteristic": "TargetTemperature" }
+             { "Characteristic": "TargetTemperature", "Interval": 15 }
            ]
 ```
 Example 3:
 
-```
+```json
+"QueueTypes: [ { "Queue": "A" : "QueueType": "WoRm"  }
 "platforms":
  [ { "platform": "Cmd4",
-     "QueueTypes: [ { "Queue": "A" : "QueueType": "WoRm", "QueueInterval": 22 }
-                    { "Queue": "B" : "QueueType": "Sequentail", "QueueInterval": 30 }
-                    { "Queue": "C" } // Defaults to "WoRm", "QueueInterval": 25
+     "interval": "10",
+     "QueueTypes: [ { "Queue": "A" : "QueueType": "WoRm" }
+                    { "Queue": "B" : "QueueType": "Sequential" }
+                    { "Queue": "C" } // Defaults to "WoRm"
                   ],
 
      "accessories": [
      {
         "Name": "My_Thermostat",
         "Type": "Thermostatwitch",
+        "Interval": 15,
         "Queue": "A",
         "Polling": [ { "Characteristic": "CurrentTemperature" },
                      { "Characteristic": "TargetTemperature" },
-                     { "Characteristic": "CurrentHeatingCoolingState" }
+                     { "Characteristic": "CurrentHeatingCoolingState", "interval": 25 }
                    ],
         ...
      },
@@ -272,43 +268,20 @@ Example 3:
      }
 
 ```
-   Note 1. The interval is dynamically changed and will never drop below the defined interval. The rule is simple, the interval is calculated by seven times the actual time of the request +/- 10%.<BR>
-<BR>
-Priority Queued Polling statistics can be viewed with the following Cmd4 Platform directives.<BR>
-
-```
-   "QueueMsg": true,
-   "QueueStatMsgInterval": 1000,
-
-    or
-
-   "QueueTypes: [ { "Queue": "A" : "QueueType": "WoRm", "QueueInterval": 10, "QueueMsg": true, "QueueStatMsgInterval": 1000 }
-                ],
-```
-  The "QueueStatMsgInterval" is the counted number of background polls modded by this interval.<BR>
 <BR>
 
-## Priority Queue Burst Polling
-&nbsp;&nbsp;&nbsp; The whole purpose of Priority Queued Polling is to provide as many options possible where you can successfully talk to your device. WoRm and Sequential are the previous examples.  For WorM there is a further option in that all Polls ( which are all reads, of course ) can be scheduled at once. This option is called Burst Polling. Both the number of characteristics that are sent between each burst and the burst interval can be defined.
-```
-
-     "QueueTypes: [ { "Queue": "A" : "QueueType": "WoRm", "BurstGroupSize": 1, "BurstInterval": 15000 }]
-```
-The number of Burst Groups is calculated as the number of polled characteristics in the queue, divided by the BurstGroupSize.  A burstGroupSize of 1, means that they will all be sent at the same interval defined by the burstInterval, which defaults to 5 seconds.
 
 ## Priority Queue Polling Across Multiple accessories ( Same Device )
 &nbsp;&nbsp;&nbsp; In the case of a device like the My Air Smart Thermostat which has multiple accessories of Switches, Sensors and a Thermostat; Cmd4 Priority Queued Polling is essential. This device is actually why this feature was created. There was previously no possible configuration of Cmd4 staggered polling that would not result in the device locking up as it was hammered with requests at the same time. An example of configuring Cmd4 for this device is:
-```
+```json
     "platforms": [
         {
             "platform": "Cmd4",
             "debug": false,
             "outputConstants": false,
-            "restartRecover": true,
-            "Cmd4_Mode": "FullyPolled",
             "timeout": 4000,
             "stateChangeResponseTime": 3,
-            "QueueTypes:[ { "Queue": "A", "QueueType": "WoRm", "QueueInterval":20 } ],
+            "QueueTypes:[ { "Queue": "A", "QueueType": "WoRm" } ],
             "accessories": [
                 {
                     "type": "TemperatureSensor",

@@ -57,7 +57,6 @@ describe( "Testing cmd4Constants", function( )
        assert.equal( constants.GOOGLE_DRIVE_l, "googleDrive", `Incorrect global value` );
 
        assert.equal( constants.OUTPUTCONSTANTS, "OutputConstants", `Incorrect global value` );
-       assert.equal( constants.RESTART_RECOVER, "RestartRecover", `Incorrect global value` );
        assert.equal( constants.STATUSMSG, "StatusMsg", `Incorrect global value` );
 
        assert.equal( constants.TYPE, "Type", `Incorrect global value` );
@@ -77,8 +76,6 @@ describe( "Testing cmd4Constants", function( )
        assert.equal( constants.TIMEOUT, "Timeout", `Incorrect global value` );
        assert.equal( constants.QUEUE, "Queue", `Incorrect global value` );
        assert.equal( constants.POLLING, "Polling", `Incorrect global value` );
-       assert.equal( constants.CMD4_MODE_DEMO, "Demo", `Incorrect global value` );
-       assert.equal( constants.CMD4_MODE, "Cmd4_Mode", `Incorrect global value` );
        assert.equal( constants.INTERVAL, "Interval", `Incorrect global value` );
        assert.equal( constants.STATECHANGERESPONSETIME, "StateChangeResponseTime", `Incorrect global value` );
        assert.equal( constants.STATE_CMD_PREFIX, "State_cmd_prefix", `Incorrect global value` );

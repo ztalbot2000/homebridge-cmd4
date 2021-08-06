@@ -309,7 +309,7 @@ describe('WoRm - Testing Cmd4PriorityPollingQueue polling', ( ) =>
 
       setTimeout( () =>
       {
-         assert.include( log.logBuf, `[90mgetValue: accTypeEnumIndex:( 105 )-"On" function for: My_Switch cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Switch' 'On'\u001b[39m` , `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: accTypeEnumIndex:( 105 )-"On" function for: My_Switch cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Switch' 'On' timeout: 60000` , `expected stdout: ${ log.logBuf }` );
          assert.include( log.logBuf, `[90mgetValue: On function for: My_Switch returned: 1` , `expected stdout: ${ log.logBuf }` );
          // Low priority queues are continious, make sure it is still the same
          assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 4, `After poll, low priority queue length should atill be the same size` );
@@ -738,7 +738,7 @@ describe('QUEUETYPE: STANDARD (Passthru ) -  Testing Cmd4PriorityPollingQueue po
 
       setTimeout( () =>
       {
-         assert.include( log.logBuf, `[90mgetValue: accTypeEnumIndex:( 105 )-"On" function for: My_Switch cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Switch' 'On'\u001b[39m` , `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: accTypeEnumIndex:( 105 )-"On" function for: My_Switch cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Switch' 'On' timeout: 60000` , `expected stdout: ${ log.logBuf }` );
          assert.include( log.logBuf, `[90mgetValue: On function for: My_Switch returned: 1` , `expected stdout: ${ log.logBuf }` );
          // Low priority queues are continious, make sure it is still the same
          assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 4, `After poll, low priority queue length should atill be the same size` );
@@ -1422,7 +1422,7 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       setTimeout( ( ) =>
       {
          assert.include( log.logBuf, `[90mProcessing high priority queue "Get" entry: 105 isUpdate: false length: 0` , `expected stdout: ${ log.logBuf }` );
-         assert.include( log.logBuf, `[90mgetValue: accTypeEnumIndex:( 105 )-"On" function for: My_Switch cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Switch' 'On'\u001b[39m` , `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: accTypeEnumIndex:( 105 )-"On" function for: My_Switch cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Switch' 'On' timeout: 60000` , `expected stdout: ${ log.logBuf }` );
          assert.include( log.logBuf, `[90mgetValue: On function for: My_Switch returned: 1` , `expected stdout: ${ log.logBuf }` );
 
          done( );
@@ -1712,7 +1712,7 @@ describe('Standard - Testing Cmd4PriorityPollingQueue recovery correction', ( ) 
       setTimeout( ( ) =>
       {
          assert.include( log.logBuf, `[90mProcessing high priority queue "Get" entry: 105 isUpdate: false length: 0` , `expected stdout: ${ log.logBuf }` );
-         assert.include( log.logBuf, `[90mgetValue: accTypeEnumIndex:( 105 )-"On" function for: My_Switch cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Switch' 'On'\u001b[39m` , `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: accTypeEnumIndex:( 105 )-"On" function for: My_Switch cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Switch' 'On' timeout: 60000` , `expected stdout: ${ log.logBuf }` );
          assert.include( log.logBuf, `[90mgetValue: On function for: My_Switch returned: 1` , `expected stdout: ${ log.logBuf }` );
 
          done( );

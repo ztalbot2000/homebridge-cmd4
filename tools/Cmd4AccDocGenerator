@@ -670,9 +670,7 @@ function addSideNavCmd4DirectivesLinks_WithinSideNav( )
    wf( "+", `<div class="panel">\n` );
       wfs( `<a href="#${ constants.DEBUG }_D" onclick="toggleVisibility( 'Directives');">${ constants.DEBUG }</a>\n` );
       wfs( `<a href="#${ constants.OUTPUTCONSTANTS }_D" onclick="toggleVisibility( 'Directives');">${ constants.OUTPUTCONSTANTS }</a>\n` );
-      wfs( `<a href="#${ constants.RESTART_RECOVER }_D" onclick="toggleVisibility( 'Directives');">${ constants.RESTART_RECOVER }</a>\n` );
       wfs( `<a href="#${ constants.STATUSMSG }_D" onclick="toggleVisibility( 'Directives');">${ constants.STATUSMSG }</a>\n` );
-      wfs( `<a href="#${ constants.CMD4_MODE }_D" onclick="toggleVisibility( 'Directives');">${ constants.CMD4_MODE }</a>\n` );
       wfs( `<a href="#${ constants.INTERVAL }_D" onclick="toggleVisibility( 'Directives');">${ constants.INTERVAL }</a>\n` );
       wfs( `<a href="#${ constants.TIMEOUT }_D" onclick="toggleVisibility( 'Directives');">${ constants.TIMEOUT }</a>\n` );
       wfs( `<a href="#${ constants.QUEUETYPES }_D" onclick="toggleVisibility( 'Directives');">${ constants.QUEUETYPES }</a>\n` );
@@ -691,7 +689,6 @@ function addSideNavCmd4AccessoryDirectivesLinks_WithinSideNav( )
 
    wf( "+", `<div class="panel">\n` );
       wfs( `<a href="#${ constants.SUBTYPE }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.SUBTYPE }</a>\n` );
-      wfs( `<a href="#${ constants.CMD4_MODE }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.CMD4_MODE }</a>\n` );
       wfs( `<a href="#${ constants.FAKEGATO }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.FAKEGATO }</a>\n` );
       wfs( `<a href="#${ constants.PUBLISHEXTERNALLY }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.PUBLISHEXTERNALLY }</a>\n` );
       wfs( `<a href="#${ constants.STATE_CMD_PREFIX }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.STATE_CMD_PREFIX }</a>\n` );
@@ -796,15 +793,12 @@ function addSingleDeviceContent(device_type_enum, deviceName )
          let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ characteristic.type ].type;
          let defaultValue = characteristic.defaultValue;
 
-         let constant = "";
          let transposed = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, characteristic.type, defaultValue );
-         if ( transposed.rc == true )
-            constant = transposed.value;
 
-         if ( transposed.value == defaultValue )
-            constant = "n/a";
+         if ( transposed == defaultValue )
+            transposed = "n/a";
 
-         wfs( `<tr><TD><UL><LI><a href="#${ characteristicString }">${ characteristicString }</a></UL></TD><TD> ${ defaultValue } </TD><TD> ${ constant } </TD>\n` );
+         wfs( `<tr><TD><UL><LI><a href="#${ characteristicString }">${ characteristicString }</a></UL></TD><TD> ${ defaultValue } </TD><TD> ${ transposed } </TD>\n` );
       });
       wf( "-", `</Table>\n` );
    }
@@ -1077,16 +1071,10 @@ function addCmd4DirectivePages_WithinMain( )
    // outputConstants - CMD4 Directives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.OUTPUTCONSTANTS }_D">${ constants.OUTPUTCONSTANTS }</a><TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1 for all Accessories</TR>\n` );
 
-   // restartRecover - CMD4 Directives
-   wfs( `<TR ALIGN="left"><TD><a name="${ constants.RESTART_RECOVER }_D"> ${ constants.RESTART_RECOVER }</a><TD> < Bool > <TD> true <TD> If Cmd4 will use previous cached state information </TR>\n` );
-
    // statusMsg - CMD4 Directives - See cmd4Constants as why we do this
    let  defaultStatusMsg = constants.DEFAULT_STATUSMSG;
    let  defaultStatusMsg_l = defaultStatusMsg.toLowerCase();
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATUSMSG }_D"> ${ constants.STATUSMSG }</a><TD> < Bool > <TD> ${ defaultStatusMsg_l } <TD> Cmd4 will log a Set Status Message for all Accessories.</TR>\n` );
-
-   // Cmd4_Mode - CMD4 Directives
-   wfs( `<TR ALIGN="left"><TD><a name="${ constants.CMD4_MODE }_D"> ${ constants.CMD4_MODE }</a><TD> "${ constants.CMD4_MODE_DEMO }" | "${ constants.CMD4_MODE_ALWAYS }" | "${ constants.CMD4_MODE_POLLED }" | "${ constants.CMD4_MODE_FULLYPOLLED }" <TD> ${ constants.CMD4_MODE_ALWAYS } <TD> Determines what and when characteristics are updated from the device. See <a href="#${ constants.CMD4_MODE }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.CMD4_MODE }</a> in Accessory Directives for full description as it can also be set per accessory.</TR>\n` );
 
    // Interval - CMD4 Directives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.INTERVAL }_D"> ${ constants.INTERVAL }</a><TD> ${ constants.INTERVAL } <TD> ${ constants.DEFAULT_INTERVAL * .001 } < seconds > <TD> How long before killing the state command of all polled characteristics. See <a href="#${ constants.INTERVAL }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.INTERVAL }</a> in Accessory Directives for full description as it can also be set per accessory or per characteristic.</TR>\n` );
@@ -1132,26 +1120,6 @@ function addCmd4AccessoryDirectivePages_WithinMain( )
 
    // publishExternally - AccessoryDirectives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.PUBLISHEXTERNALLY }">${ constants.PUBLISHEXTERNALLY }</a><TD>  < Bool >  <TD>    false     <TD> Tell Homebridge to publish the device as its own bridge. </TR>\n` );
-
-   // Cmd4_Mode - AccessoryDirectives
-   wfs( `<TR ALIGN="left"><TD><a name="${ constants.CMD4_MODE }">${ constants.CMD4_MODE }</a><TD> < "${ constants.CMD4_MODE_DEMO }" | "${ constants.CMD4_MODE_ALWAYS }" | "${ constants.CMD4_MODE_POLLED }" | "${ constants.CMD4_MODE_FULLYPOLLED } > <TD> "${ constants.CMD4_MODE_ALWAYS }" <TD> Determines what and when characteristics are updated from the device.</TR>\n` );
-
-   wfs( `<TR ALIGN="left"><TD COLSPAN=4>\n` );
-   wfs( `   i.e.<BR>\n` );
-   wfs( `   <UL>\n` );
-   // CMD4_MODE Always - AccessoryDirectives
-   wfs( `      <LI> { "${constants.CMD4_MODE}": "<a name="${ constants.CMD4_MODE_ALWAYS }">${ constants.CMD4_MODE_ALWAYS }</a>" } - All characteristic are sent/retrieved from the device. ( Default )\n` );
-   // CMD4_MODE Polled - AccessoryDirectives
-   wfs( `      <LI> { "${constants.CMD4_MODE}": "<a name="${ constants.CMD4_MODE_POLLED }">${ constants.CMD4_MODE_POLLED }</a>" } - Polled characteristics are retrieved from the device. Non polled characteristic values are sent/retrieved from cache.\n` );
-   // CMD4_MODE FullyPolled - AccessoryDirectives
-   wfs( `      <LI> { "${constants.CMD4_MODE}": "<a name="${ constants.CMD4_MODE_FULLYPOLLED }">${ constants.CMD4_MODE_FULLYPOLLED }</a>" } - All characteristics are retrieved from cache. Polled characteristics are sent to the device. Expect any characteristic to be updated via configuring polling.\n` );
-   // CMD4_MODE Demo ( Formerly Cached ) - AccessoryDirectives
-   wfs( `      <LI> { "${constants.CMD4_MODE}": "<a name="${ constants.CMD4_MODE_DEMO }">${ constants.CMD4_MODE_DEMO }</a>" } - All characteristics are sent/retrieved from cache.\n` );
-   wfs( `  </UL>\n` );
-   wfs( `</TR>\n` );
-   wfs( `<TR ALIGN="left"><TD COLSPAN=4>\n` );
-      wfs( `<img src="../images/Cmd4ModeDiagram.png" alt="Cmd4ModeDiagram.png">\n` );
-   wfs( `</TR>\n` );
 
    // stateChangeResponseTime - AccessoryDirectives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATECHANGERESPONSETIME }">${ constants.STATECHANGERESPONSETIME }</a><TD> < seconds > <TD> 60 <TD> How long to wait between a Set and Get command.</TR>\n` );
@@ -1218,10 +1186,7 @@ function addCustomCharacteristicPages_withinMain( )
    wfs( `{\n` );
    wfs( `   "platform": "Cmd4",\n` );
    wfs( `   "outputConstants": false,\n` );
-   wfs( `   "restartRecover": true,\n` );
-   wfs( `   "Cmd4_Mode": "FullyPolled",\n` );
    wfs( `   "statusMsg": true,\n` );
-   wfs( `   "QueueStatMsgInterval": 100,\n` );
    wfs( `   "Definitions": [\n` );
    wfs( `      { "type": "PointX",\n` );
    wfs( `        "description": "An X Coordinate",\n` );
@@ -1235,7 +1200,6 @@ function addCustomCharacteristicPages_withinMain( )
    wfs( `   "accessories": [\n` );
    wfs( `      { "type": "Switch",\n` );
    wfs( `        "name": "PS_4",\n` );
-   wfs( `        "Cmd4_Mode": "Always",\n` );
    wfs( `        "PointX": 3267,\n` );
    wfs( `        "on": false,\n` );
    wfs( `        "polling": [ { "characteristic": "On", "interval": 50 },\n` );

@@ -548,15 +548,9 @@ block-warning a {
       <div class="panel">
          <a href="#Debug_D" onclick="toggleVisibility( 'Directives');">Debug</a>
          <a href="#OutputConstants_D" onclick="toggleVisibility( 'Directives');">OutputConstants</a>
-         <a href="#RestartRecover_D" onclick="toggleVisibility( 'Directives');">RestartRecover</a>
          <a href="#StatusMsg_D" onclick="toggleVisibility( 'Directives');">StatusMsg</a>
-         <a href="#Cmd4_Mode_D" onclick="toggleVisibility( 'Directives');">Cmd4_Mode</a>
          <a href="#Interval_D" onclick="toggleVisibility( 'Directives');">Interval</a>
          <a href="#Timeout_D" onclick="toggleVisibility( 'Directives');">Timeout</a>
-         <a href="#QueueMsg_D" onclick="toggleVisibility( 'Directives');">QueueMsg</a>
-         <a href="#QueueInterval_D" onclick="toggleVisibility( 'Directives');">QueueInterval</a>
-         <a href="#QueueStatMsgInterval_D" onclick="toggleVisibility( 'Directives');">QueueStatMsgInterval</a>
-         <a href="#QueueStatMsgInterval_D" onclick="toggleVisibility( 'Directives');">QueueStatMsgInterval</a>
          <a href="#QueueTypes_D" onclick="toggleVisibility( 'Directives');">QueueTypes</a>
          <a href="#Definitions_D" onclick="toggleVisibility( 'Directives');">Definitions</a>
       </DIV>   <!-- panel -->
@@ -565,7 +559,6 @@ block-warning a {
       </button>
       <div class="panel">
          <a href="#SubType" onclick="toggleVisibility( 'AccessoryDirectives');">SubType</a>
-         <a href="#Cmd4_Mode" onclick="toggleVisibility( 'AccessoryDirectives');">Cmd4_Mode</a>
          <a href="#Fakegato" onclick="toggleVisibility( 'AccessoryDirectives');">Fakegato</a>
          <a href="#PublishExternally" onclick="toggleVisibility( 'AccessoryDirectives');">PublishExternally</a>
          <a href="#State_cmd_prefix" onclick="toggleVisibility( 'AccessoryDirectives');">State_cmd_prefix</a>
@@ -574,9 +567,6 @@ block-warning a {
          <a href="#Polling" onclick="toggleVisibility( 'AccessoryDirectives');">Polling</a>
          <a href="#Interval" onclick="toggleVisibility( 'AccessoryDirectives');">Interval</a>
          <a href="#Timeout" onclick="toggleVisibility( 'AccessoryDirectives');">Timeout</a>
-         <a href="#QueueMsg" onclick="toggleVisibility( 'AccessoryDirectives');">QueueMsg</a>
-         <a href="#QueueInterval" onclick="toggleVisibility( 'AccessoryDirectives');">QueueInterval</a>
-         <a href="#QueueStatMsgInterval" onclick="toggleVisibility( 'AccessoryDirectives');">QueueStatMsgInterval</a>
          <a href="#QueueTypes" onclick="toggleVisibility( 'AccessoryDirectives');">QueueTypes</a>
          <a href="#Queue" onclick="toggleVisibility( 'AccessoryDirectives');">Queue</a>
          <a href="#StateChangeResponseTime" onclick="toggleVisibility( 'AccessoryDirectives');">StateChangeResponseTime</a>
@@ -2832,6 +2822,7 @@ block-warning a {
          <note> Default polling characteristics are characteristics that would automatically be polled if Accessory Polling is configured ( polling:true ) instead of characteristic polling where each characteristic is set individually.
          <UL>
             <LI><a href="#CurrentTemperature">CurrentTemperature</a>
+            <LI><a href="#TargetTemperature">TargetTemperature</a>
          </UL>
          <H3>Example config.json entry</H3>
          <pre>
@@ -6495,14 +6486,9 @@ block-warning a {
             <TR ALIGN="left"><TH>Cmd4Directive<TH>Type<TH PADDING="50px">Default<TH>Description</TR>
             <TR ALIGN="left"><TD><a name="Debug_D">Debug</a><TD>  < Bool >  <TD>    false    <TD> Output Debug messages. Can also be accomplished with setenv DEBUG=Cmd4</TR>
             <TR ALIGN="left"><TD><a name="OutputConstants_D">OutputConstants</a><TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1 for all Accessories</TR>
-            <TR ALIGN="left"><TD><a name="RestartRecover_D"> RestartRecover</a><TD> < Bool > <TD> true <TD> If Cmd4 will use previous cached state information </TR>
             <TR ALIGN="left"><TD><a name="StatusMsg_D"> StatusMsg</a><TD> < Bool > <TD> true <TD> Cmd4 will log a Set Status Message for all Accessories.</TR>
-            <TR ALIGN="left"><TD><a name="Cmd4_Mode_D"> Cmd4_Mode</a><TD> "Demo" | "Always" | "Polled" | "FullyPolled" <TD> Always <TD> Determines what and when characteristics are updated from the device. See <a href="#Cmd4_Mode" onclick="toggleVisibility( 'AccessoryDirectives');">Cmd4_Mode</a> in Accessory Directives for full description as it can also be set per accessory.</TR>
             <TR ALIGN="left"><TD><a name="Interval_D"> Interval</a><TD> Interval <TD> 60 < seconds > <TD> How long before killing the state command of all polled characteristics. See <a href="#Interval" onclick="toggleVisibility( 'AccessoryDirectives');">Interval</a> in Accessory Directives for full description as it can also be set per accessory or per characteristic.</TR>
             <TR ALIGN="left"><TD><a name="Timeout_D"> Timeout</a><TD> Timeout <TD> 60000 < msec > <TD> How long before killing the state command of all polled characteristics. See <a href="#Timeout" onclick="toggleVisibility( 'AccessoryDirectives');">Timeout</a> in Accessory Directives for full description as it can also be set per accessory or per characteristic.</TR>
-            <TR ALIGN="left"><TD><a name="QueueMsg_D"> QueueMsg</a><TD> QueueMsg <TD> false < Bool > <TD> Enable Priority Queued Polling statistics. This Directive can also be per queue as noted by its presence as an accessory directive.</TR>
-            <TR ALIGN="left"><TD><a name="QueueInterval_D"> QueueInterval</a><TD> QueueInterval <TD> 60000 < Number > <TD> Sets the Queue Polling Interval. This Directive can also be per queue as noted by its presence as an accessory directive.</TR>
-            <TR ALIGN="left"><TD><a name="QueueStatMsgInterval_D"> QueueStatMsgInterval</a><TD> QueueStatMsgInterval <TD> 1000 < mod count > <TD> How many counted polls before displaying the Priority Queue Polling Statistics. This Directive can also be per queue as noted by its presence as an accessory directive.</TR>
             <TR ALIGN="left"><TD><a name="QueueTypes_D"> QueueTypes</a><TD> < Array of < Queue: < "name" >, QueueType: < Sequential | WoRm > <TD> none <TD> Pre-defines Queue types. This Directive can also be per queue as noted by its presence as an accessory directive.</TR>
             <TR ALIGN="left"><TD><a name="Definitions_D"> Definitions</a><TD> < Array > <TD> <TD> An Array of new Characteristic Objects. See <a href="#CUSTOM_CHARACTERISTICS" onclick="toggleVisibility( 'CustomCharacteristics');">Custom Characteristics, around line 339</a> for more information</TR>
          </TABLE>
@@ -6516,27 +6502,11 @@ block-warning a {
             <TR ALIGN="left"><TD><a name="OutputConstants">OutputConstants</a><TD>  < Bool >  <TD>    false    <TD> If Cmd4 will send Strings like "TRUE" or "FALSE" instead of 0 | 1 </TR>
             <TR ALIGN="left"><TD><a name="StatusMsg">StatusMsg</a><TD>  < Bool >  <TD>  true <TD>Cmd4 will log a Set Status Message</TR>
             <TR ALIGN="left"><TD><a name="PublishExternally">PublishExternally</a><TD>  < Bool >  <TD>    false     <TD> Tell Homebridge to publish the device as its own bridge. </TR>
-            <TR ALIGN="left"><TD><a name="Cmd4_Mode">Cmd4_Mode</a><TD> < "Demo" | "Always" | "Polled" | "FullyPolled > <TD> "Always" <TD> Determines what and when characteristics are updated from the device.</TR>
-            <TR ALIGN="left"><TD COLSPAN=4>
-               i.e.<BR>
-               <UL>
-                  <LI> { "Cmd4_Mode": "<a name="Always">Always</a>" } - All characteristic are sent/retrieved from the device. ( Default )
-                  <LI> { "Cmd4_Mode": "<a name="Polled">Polled</a>" } - Polled characteristics are retrieved from the device. Non polled characteristic values are sent/retrieved from cache.
-                  <LI> { "Cmd4_Mode": "<a name="FullyPolled">FullyPolled</a>" } - All characteristics are retrieved from cache. Polled characteristics are sent to the device. Expect any characteristic to be updated via configuring polling.
-                  <LI> { "Cmd4_Mode": "<a name="Demo">Demo</a>" } - All characteristics are sent/retrieved from cache.
-              </UL>
-            </TR>
-            <TR ALIGN="left"><TD COLSPAN=4>
-            <img src="../images/Cmd4ModeDiagram.png" alt="Cmd4ModeDiagram.png">
-            </TR>
             <TR ALIGN="left"><TD><a name="StateChangeResponseTime">StateChangeResponseTime</a><TD> < seconds > <TD> 60 <TD> How long to wait between a Set and Get command.</TR>
             <TR ALIGN="left"><TD><a name="Interval">Interval</a><TD> < seconds > <TD> 60 < seconds > <TD> How long between polls of all polled characteristics.</TR>
             <TR ALIGN="left"><TD><a name="Timeout">Timeout</a><TD> < msec > <TD> 60000 < msec > <TD> How long before killing the state command of all polled characteristics.</TR>
             <TR ALIGN="left"><TD><a name="Polling">Polling</a><TD> < Bool > <TD> false <TD> If the characteristics should be polled for state change.</TR>
             <TR><TD><TD COLSPAN=3> or  [{"characteristic" < characteristic >, [ "interval": < sec >, "timeout": < msec > ] }] The timeout and interval override any higher directive.</TR>
-            <TR ALIGN="left"><TD><a name="QueueMsg"> QueueMsg</a><TD> QueueMsg <TD> false < Bool > <TD> Enable Priority Queued Polling statistics.</TR>
-            <TR ALIGN="left"><TD><a name="QueueInterval"> QueueInterval</a><TD> QueueInterval <TD> 60000 < Number > <TD> Sets the queue Polling Interval.</TR>
-            <TR ALIGN="left"><TD><a name="QueueStatMsgInterval"> QueueStatMsgInterval</a><TD> QueueStatMsgInterval <TD> 1000 < mod count > <TD> How many counted polls before displaying the Priority Queue Polling Statistics.</TR>
             <TR ALIGN="left"><TD><a name="QueueTypes"> QueueTypes</a><TD> none <TD> < Array of < Queue: < "name" >, QueueType: < Sequential | WoRm <TD> none <TD> Pre-defines the Queue types.</TR>
             <TR ALIGN="left"><TD><a name="Queue"> Queue</a><TD> Queue <TD> < String > <TD> Defines which Queue polled characteristics will be placed.</TR>
             <TR ALIGN="left"><TD><a name="State_cmd">State_cmd</a><TD>  < State_cmd > <TD> See Description <TD> The command used to Get/Set Device characteristic State.</TR>
@@ -6563,10 +6533,7 @@ block-warning a {
             {
                "platform": "Cmd4",
                "outputConstants": false,
-               "restartRecover": true,
-               "Cmd4_Mode": "FullyPolled",
                "statusMsg": true,
-               "QueueStatMsgInterval": 100,
                "Definitions": [
                   { "type": "PointX",
                     "description": "An X Coordinate",
@@ -6580,7 +6547,6 @@ block-warning a {
                "accessories": [
                   { "type": "Switch",
                     "name": "PS_4",
-                    "Cmd4_Mode": "Always",
                     "PointX": 3267,
                     "on": false,
                     "polling": [ { "characteristic": "On", "interval": 50 },

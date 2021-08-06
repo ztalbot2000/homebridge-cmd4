@@ -14,8 +14,6 @@
          "debug":                           false,
          "allowTLV8":                       false,
          "outputConstants":                 false,
-         "restartRecover":                  true,
-         "Cmd4_Mode":                      "Demo",
          "accessories" :
          [
             {
