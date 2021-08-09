@@ -80,6 +80,7 @@ describe('WoRm - Testing Cmd4PriorityPollingQueue polling', ( ) =>
             let timer = queue.listOfRunningPolls[ key ];
             clearTimeout( timer );
          });
+         clearTimeout( queue.pauseTimer );
       });
 
       // Put back the polling queues
@@ -514,6 +515,8 @@ describe('QUEUETYPE: STANDARD (Passthru ) -  Testing Cmd4PriorityPollingQueue po
             let timer = queue.listOfRunningPolls[ key ];
             clearTimeout( timer );
          });
+
+         clearTimeout( queue.pauseTimer );
       });
 
       // Put back the polling queues
@@ -987,7 +990,13 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       cmd4PriorityPollingQueue = new Cmd4PriorityPollingQueue( log, queueName );
       expect( cmd4PriorityPollingQueue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "cmd4PollingQueues is not an instance of Cmd4PollingQueues" );
 
-      cmd4PriorityPollingQueue.startQueue( cmd4PriorityPollingQueue );
+      var allDoneCallback = function( allDoneCount )
+      {
+         assert.equal( allDoneCount, 0, ` startQueue incorrect allDoneCount` );
+         log.debug( "Test Cmd4PriorityQueue startQueue - allDone called" );
+      };
+
+      cmd4PriorityPollingQueue.startQueue( cmd4PriorityPollingQueue, allDoneCallback );
 
 
       assert.include( log.logBuf, `[90menablePolling for the first time`, `Cmd4PriorityPollingQueue expected stdout received: ${ log.logBuf }` );
@@ -1430,6 +1439,102 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       }, 1000 );
    });
 
+   it( `WoRM - Test "Get" Entry From High Priority Queue Failure >50 times`, ( done  ) =>
+   {
+      let platformConfig =
+      {
+         accessories: [
+         {
+            Name:                      "My_Switch",
+            DisplayName:               "My_Switch",
+            StatusMsg:                  true,
+            Type:                      "Switch",
+            On:                         0,
+            Active:                     0,
+            Polling:              [{ Characteristic: "On", Queue: "A" },
+                                   { Characteristic: "Active", Queue: "A" } ],
+            State_cmd:                 "./test/echoScripts/echo_true_withRcOf1"
+         }]
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
+
+      assert.equal( Object.keys(settings.listOfCreatedPriorityQueues).length, 1, `Incorrect number of polling queues created` );
+
+      let queue = settings.listOfCreatedPriorityQueues[ "A" ];
+
+      expect( queue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PollingQueue" );
+
+      assert.equal( queue.lowPriorityQueue.length, 2, `Incorrect number of low level polling characteristics` );
+      queue.lowPriorityQueue = [];
+
+      //Make sure no polling happens
+      assert.equal( queue.lowPriorityQueue.length, 0, `Incorrect number of low level polling characteristics` );
+      Object.keys(queue.listOfRunningPolls).forEach( (key) =>
+      {
+         let timer = queue.listOfRunningPolls[ key ];
+         clearTimeout( timer );
+      });
+
+      clearTimeout( queue.pauseTimer );
+      queue.pauseTimerTimeout = 0;
+
+
+
+      let cmd4SwitchAccessory = cmd4Platform.createdCmd4Accessories[0];
+
+      let cmd4PriorityPollingQueue = cmd4SwitchAccessory.queue;
+      expect( cmd4PriorityPollingQueue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "Cmd4PriorityPollingQueue is not an instance of Cmd4Accessory" );
+
+      log.reset( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+      // The queue getValue will just return the cached value
+      // and call updateValue later
+      var dummyCallback = function( rc, result )
+      {
+         assert.equal( rc, 0, ` getValue incorrect rc: ${ rc }` );
+         assert.equal( result, true, ` getValue incorrect result: ${ result }` );
+      };
+
+      var allDoneCallback = function( allDoneCount )
+      {
+         assert.equal( allDoneCount, 0, ` startQueue incorrect allDoneCount` );
+         log.debug( "Test Cmd4PriorityQueue startQueue - allDone called" );
+      };
+
+      cmd4PriorityPollingQueue.highPriorityQueue.push( { [ constants.IS_SET_lv ]: false, [ constants.QUEUE_GET_IS_UPDATE_lv ]: false, [ constants.ACCESSORY_lv ]: cmd4SwitchAccessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: CMD4_ACC_TYPE_ENUM.On, [ constants.CHARACTERISTIC_STRING_lv ]: "On", [ constants.TIMEOUT_lv ]: cmd4SwitchAccessory.timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: null, [ constants.VALUE_lv ]: null, [ constants.CALLBACK_lv ]: dummyCallback } );
+
+      //cmd4PriorityPollingQueue.processQueueFunc( HIGH_PRIORITY_GET, cmd4PriorityPollingQueue );
+      cmd4PriorityPollingQueue.startQueue( cmd4PriorityPollingQueue, allDoneCallback );
+
+      // Wait for the Queue to be processed
+      setTimeout( ( ) =>
+      {
+
+         assert.include( log.errBuf, `More than *50* errors were encountered in a row for "My_Switch" getValue. Last error found Getting: "On". Perhaps you should run in debug mode to find out what the problem might be` , `expected stdout: ${ log.errBuf }` );
+
+         // A quick way to stop the queue. For whatever reason, if the above fails,
+         // the testcase will not do this command and the testcase runs forever
+         cmd4SwitchAccessory.queue.inProgressSets = 10;
+
+         done( );
+
+      }, 1500 );
+
+   }).timeout( 2000 );
+
    it( `WoRM - Test "Set" Entry From High Priority Queue`, ( done  ) =>
    {
       let platformConfig =
@@ -1500,6 +1605,99 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
 
       }, 1000 );
    });
+
+   it( `WoRM - Test "Set" Entry From High Priority Queue Failure >50 times`, ( done  ) =>
+   {
+      let platformConfig =
+      {
+         accessories: [
+         {
+            Name:                      "My_Switch",
+            DisplayName:               "My_Switch",
+            StatusMsg:                  true,
+            Type:                      "Switch",
+            On:                         0,
+            Active:                     0,
+            Polling:              [{ Characteristic: "On", Queue: "A" },
+                                   { Characteristic: "Active", Queue: "A" } ],
+            State_cmd:                 "./test/echoScripts/echo_true_withRcOf1"
+         }]
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
+
+      assert.equal( Object.keys(settings.listOfCreatedPriorityQueues).length, 1, `Incorrect number of polling queues created` );
+
+      let queue = settings.listOfCreatedPriorityQueues[ "A" ];
+
+      expect( queue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PollingQueue" );
+
+      assert.equal( queue.lowPriorityQueue.length, 2, `Incorrect number of low level polling characteristics` );
+      queue.lowPriorityQueue = [];
+
+      //Make sure no polling happens
+      assert.equal( queue.lowPriorityQueue.length, 0, `Incorrect number of low level polling characteristics` );
+      Object.keys(queue.listOfRunningPolls).forEach( (key) =>
+      {
+         let timer = queue.listOfRunningPolls[ key ];
+         clearTimeout( timer );
+      });
+
+      clearTimeout( queue.pauseTimer );
+      queue.pauseTimerTimeout = 0;
+
+      let cmd4SwitchAccessory = cmd4Platform.createdCmd4Accessories[0];
+
+      let cmd4PriorityPollingQueue = cmd4SwitchAccessory.queue;
+      expect( cmd4PriorityPollingQueue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "Cmd4PriorityPollingQueue is not an instance of Cmd4Accessory" );
+
+      log.reset( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+      // The queue getValue will just return the cached value
+      // and call updateValue later
+      var dummyCallback = function( rc, result )
+      {
+         assert.equal( rc, 0, ` getValue incorrect rc: ${ rc }` );
+         assert.equal( result, true, ` getValue incorrect result: ${ result }` );
+      };
+
+      var allDoneCallback = function( allDoneCount )
+      {
+         assert.equal( allDoneCount, 0, ` startQueue incorrect allDoneCount` );
+         log.debug( "Test Cmd4PriorityQueue startQueue - allDone called" );
+      };
+
+      cmd4PriorityPollingQueue.highPriorityQueue.push( { [ constants.IS_SET_lv ]: true, [ constants.QUEUE_GET_IS_UPDATE_lv ]: false, [ constants.ACCESSORY_lv ]: cmd4SwitchAccessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: CMD4_ACC_TYPE_ENUM.On, [ constants.CHARACTERISTIC_STRING_lv ]: "On", [ constants.TIMEOUT_lv ]: cmd4SwitchAccessory.timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: null, [ constants.VALUE_lv ]: true, [ constants.CALLBACK_lv ]: dummyCallback } );
+
+      //cmd4PriorityPollingQueue.processQueueFunc( HIGH_PRIORITY_GET, cmd4PriorityPollingQueue );
+      cmd4PriorityPollingQueue.startQueue( cmd4PriorityPollingQueue, allDoneCallback );
+
+      // Wait for the Queue to be processed
+      setTimeout( ( ) =>
+      {
+         assert.include( log.errBuf, `More than *50* errors were encountered in a row for "My_Switch" setValue. Last error found Setting: "On". Perhaps you should run in debug mode to find out what the problem might be` , `expected stdout: ` );
+
+         // A quick way to stop the queue. For whatever reason, if the above fails,
+         // the testcase will not do this command and the testcase runs forever
+         cmd4SwitchAccessory.queue.inProgressSets = 10;
+
+         done( );
+
+      }, 1500 );
+
+   }).timeout( 2000 );
 
    it( `WoRM - Test "Set" Entry With Related CharacteristicFrom High Priority Queue`, ( done  ) =>
    {
@@ -1640,7 +1838,13 @@ describe('Standard - Testing Cmd4PriorityPollingQueue recovery correction', ( ) 
       cmd4PriorityPollingQueue = new Cmd4PriorityPollingQueue( log, queueName, constants.QUEUETYPE_STANDARD );
       expect( cmd4PriorityPollingQueue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "cmd4PollingQueues is not an instance of Cmd4PollingQueues" );
 
-      cmd4PriorityPollingQueue.startQueue( cmd4PriorityPollingQueue );
+      var allDoneCallback = function( allDoneCount )
+      {
+         assert.equal( allDoneCount, 0, ` startQueue incorrect allDoneCount` );
+         log.debug( "Test Cmd4PriorityQueue startQueue - allDone called" );
+      };
+
+      cmd4PriorityPollingQueue.startQueue( cmd4PriorityPollingQueue, allDoneCallback );
 
 
       assert.include( log.logBuf, `[90menablePolling for the first time`, `Cmd4PriorityPollingQueue expected stdout received: ${ log.logBuf }` );
