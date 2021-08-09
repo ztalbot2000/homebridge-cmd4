@@ -58,7 +58,7 @@ class Cmd4PriorityPollingQueue
       // this timer.
       this.pauseTimer = null;
       this.lastGoodTransactionTime =  Date.now( );
-      this.errorCountSinceLastGoodTransaction;
+      this.errorCountSinceLastGoodTransaction = 0;
 
       // - Not a const so it can be manipulated during unit testing
       this.pauseTimerTimeout = constants.DEFAULT_QUEUE_PAUSE_TIMEOUT;
@@ -193,7 +193,9 @@ class Cmd4PriorityPollingQueue
             let count = queue.errorCountSinceLastGoodTransaction;
 
             if ( count != 0 && count % 50 == 0 )
-               this.log.warn( `More than ${ count } errors were encountered in a row for ${ entry.accessory.displayName }. Last error found Setting: ${ entry.characteristicString} value: ${ entry.value }. Perhaps you should run in debug mode to find out what the problem might be.` );
+               queue.log.warn( `More than *${ count }* errors were encountered in a row for "${ entry.accessory.displayName }" setValue. Last error found Setting: "${ entry.characteristicString}". Perhaps you should run in debug mode to find out what the problem might be.` );
+
+            entry.accessory.queue.pauseQueue( entry.accessory.queue );
          }
 
          // Note 1.
@@ -229,7 +231,7 @@ class Cmd4PriorityPollingQueue
             queue.lastGoodTransactionTime = Date.now( );
             queue.errorCountSinceLastGoodTransaction = 0;
 
-         } else
+         } else  // getValue failed
          {
             // High Priority Get failed. We need to keep trying (WoRm queue only )
             if ( queue.queueType == constants.QUEUETYPE_WORM )
@@ -238,7 +240,7 @@ class Cmd4PriorityPollingQueue
             queue.errorCountSinceLastGoodTransaction++;
             let count = queue.errorCountSinceLastGoodTransaction;
             if ( count != 0 && count % 50 == 0 )
-               this.log.warn( `More than ${ count } errors were encountered in a row for ${ entry.accessory.displayName } getValue. Last error found Getting: ${ entry.characteristicString}. Perhaps you should run in debug mode to find out what the problem might be.` );
+               queue.log.warn( `More than *${ count }* errors were encountered in a row for "${ entry.accessory.displayName }" getValue. Last error found Getting: "${ entry.characteristicString}". Perhaps you should run in debug mode to find out what the problem might be.` );
 
             entry.accessory.queue.pauseQueue( entry.accessory.queue );
          }
@@ -778,46 +780,59 @@ class Cmd4PriorityPollingQueue
       let staggeredDelaysLength = staggeredDelays.length;
       let staggeredDelayIndex = 0;
       let lastAccessoryUUID = ""
+      let allDoneCount = 0;
 
       if ( cmd4Dbg ) this.log.debug( `enablePolling for the first time` );
 
-      queue.lowPriorityQueue.forEach( ( entry, entryIndex ) =>
+      // If there is nothing in the lowPriorityQueue, we are dome.
+      // Demo mode or Unit testing.
+      if ( queue.lowPriorityQueue.length == 0 )
       {
-         setTimeout( ( ) =>
+
+         allDoneCallback( allDoneCount );
+         setTimeout( ( ) => { queue.processQueueFunc( HIGH_PRIORITY_GET, queue ); }, 0 );
+
+      } else
+      {
+         queue.lowPriorityQueue.forEach( ( entry, entryIndex ) =>
          {
-            if ( entryIndex == 0 && cmd4Dbg )
-               if ( queue.queueType == constants.QUEUETYPE_WORM )
-                  entry.accessory.log.debug( `Started staggered kick off of ${ queue.lowPriorityQueue.length } polled characteristics for queue: "${ entry.accessory.queue.queueName }"` );
-               else
-                  entry.accessory.log.debug( `Started staggered kick off of ${ queue.lowPriorityQueue.length } polled characteristics for "${ entry.accessory.displayName }"` );
-
-            if ( cmd4Dbg ) entry.accessory.log.debug( `Kicking off polling for: ${ entry.accessory.displayName } ${ entry.characteristicString } interval:${ entry.interval }, staggered:${ staggeredDelays[ staggeredDelayIndex ] }` );
-
-            queue.scheduleLowPriorityEntry( entry );
-
-            if ( entryIndex == queue.lowPriorityQueue.length -1 )
+            allDoneCount ++;
+            setTimeout( ( ) =>
             {
-               if ( cmd4Dbg )
+               if ( entryIndex == 0 && cmd4Dbg )
                   if ( queue.queueType == constants.QUEUETYPE_WORM )
-                     entry.accessory.log.debug( `All characteristics are now being polled for queue: "${ queue.queueName }"` );
+                     entry.accessory.log.debug( `Started staggered kick off of ${ queue.lowPriorityQueue.length } polled characteristics for queue: "${ entry.accessory.queue.queueName }"` );
                   else
-                     entry.accessory.log.debug( `All characteristics are now being polled for "${ entry.accessory.displayName }"` );
-               allDoneCallback( );
-            }
+                     entry.accessory.log.debug( `Started staggered kick off of ${ queue.lowPriorityQueue.length } polled characteristics for "${ entry.accessory.displayName }"` );
 
-         }, delay );
+               if ( cmd4Dbg ) entry.accessory.log.debug( `Kicking off polling for: ${ entry.accessory.displayName } ${ entry.characteristicString } interval:${ entry.interval }, staggered:${ staggeredDelays[ staggeredDelayIndex ] }` );
 
-         if ( staggeredDelayIndex++ >= staggeredDelaysLength )
-            staggeredDelayIndex = 0;
+               queue.scheduleLowPriorityEntry( entry );
 
-         if ( lastAccessoryUUID != entry.accessory.UUID )
-            staggeredDelayIndex = 0;
+               if ( entryIndex == queue.lowPriorityQueue.length -1 )
+               {
+                  if ( cmd4Dbg )
+                     if ( queue.queueType == constants.QUEUETYPE_WORM )
+                        entry.accessory.log.debug( `All characteristics are now being polled for queue: "${ queue.queueName }"` );
+                     else
+                        entry.accessory.log.debug( `All characteristics are now being polled for "${ entry.accessory.displayName }"` );
+                  allDoneCallback( allDoneCount );
+               }
 
-         lastAccessoryUUID = entry.accessory.UUID;
+            }, delay );
 
-         delay += staggeredDelays[ staggeredDelayIndex ];
+            if ( staggeredDelayIndex++ >= staggeredDelaysLength )
+               staggeredDelayIndex = 0;
 
-      });
+            if ( lastAccessoryUUID != entry.accessory.UUID )
+               staggeredDelayIndex = 0;
+
+            lastAccessoryUUID = entry.accessory.UUID;
+
+            delay += staggeredDelays[ staggeredDelayIndex ];
+
+         });
+      }
 
       queue.queueStarted = true;
    }
