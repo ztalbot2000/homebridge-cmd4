@@ -1,4 +1,14 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
+#### 5.0.1 (2021-08-09)
+
+##### Bug Fixes
+
+*  Drastic failure of wormQueue traps on incorrect use of this ([ccaf185d](https://github.com/ztalbot2000/homebridge-cmd4/commit/ccaf185dbe6dded7b2e82c6bde5b6267122b27e5))
+
+##### Tests
+
+*  Test drastic failure of WoRm queue ([82b3ab9c](https://github.com/ztalbot2000/homebridge-cmd4/commit/82b3ab9cef9b224d116511246a0b21ac0e8483e1))
+
 #### 5.0.0 (2021-08-07)
 
 ##### New Features
@@ -16,3 +26,5 @@
 *  v5.0 Deprecate Cmd4Mode ([58d8323](https://github.com/ztalbot2000/homebridge-cmd4/commit/58d832301fc58a054646ae87ecf178a5d83aab83))
 
 *  v5.0 Optimize ([e41eca2](https://github.com/ztalbot2000/homebridge-cmd4/commit/e41eca2eaaf56a2605f564085f6df11111eecf82))
+
+

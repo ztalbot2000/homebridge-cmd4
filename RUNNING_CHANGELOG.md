@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-5-0-1">**Whats new in 5.0.1**</a>
 * <a href="#Whats-new-in-5-0-0">**Whats new in 5.0.0**</a>
 * <a href="#Whats-new-in-4-2-3">**Whats new in 4.2.3**</a>
 * <a href="#Whats-new-in-4-2-2">**Whats new in 4.2.2**</a>
@@ -68,6 +69,18 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-5-0-1">## Whats new in 5.0.1</a>
+#### 5.0.1 (2021-08-09)
+
+##### Bug Fixes
+
+*  Drastic failure of wormQueue traps on incorrect use of this ([ccaf185d](https://github.com/ztalbot2000/homebridge-cmd4/commit/ccaf185dbe6dded7b2e82c6bde5b6267122b27e5))
+
+##### Tests
+
+*  Test drastic failure of WoRm queue ([82b3ab9c](https://github.com/ztalbot2000/homebridge-cmd4/commit/82b3ab9cef9b224d116511246a0b21ac0e8483e1))
+
 
 <a name="Whats-new-in-5-0-0">## Whats new in 5.0.0</a>
 #### 5.0.0 (2021-08-07)
