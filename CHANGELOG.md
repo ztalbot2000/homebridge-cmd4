@@ -1,4 +1,10 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
+#### 5.0.2 (2021-08-14)
+
+##### Bug Fixes
+
+*  For bug [#112](https://github.com/ztalbot2000/homebridge-cmd4/pull/112) where configured fakegato can cause Cmd4 to not run ([53992de4](https://github.com/ztalbot2000/homebridge-cmd4/commit/53992de45b17aa94c367506868a90965ebb71f0d))
+
 #### 5.0.1 (2021-08-09)
 
 ##### Bug Fixes

@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-5-0-2">**Whats new in 5.0.2**</a>
 * <a href="#Whats-new-in-5-0-1">**Whats new in 5.0.1**</a>
 * <a href="#Whats-new-in-5-0-0">**Whats new in 5.0.0**</a>
 * <a href="#Whats-new-in-4-2-3">**Whats new in 4.2.3**</a>
@@ -69,6 +70,14 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-5-0-2">## Whats new in 5.0.2</a>
+#### 5.0.2 (2021-08-14)
+
+##### Bug Fixes
+
+*  For bug [#112](https://github.com/ztalbot2000/homebridge-cmd4/pull/112) where configured fakegato can cause Cmd4 to not run ([53992de4](https://github.com/ztalbot2000/homebridge-cmd4/commit/53992de45b17aa94c367506868a90965ebb71f0d))
+
 
 <a name="Whats-new-in-5-0-1">## Whats new in 5.0.1</a>
 #### 5.0.1 (2021-08-09)
