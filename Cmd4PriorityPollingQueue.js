@@ -876,6 +876,19 @@ class Cmd4PriorityPollingQueue
             this.log.error( `Error: Invalid queue type: ${ queueType }` );
       }
    }
+
+   isCharacteristicPolled( accTypeEnumIndex, queue, accessory )
+   {
+       if ( queue.lowPriorityQueue.filter(
+               entry => entry.accessory.UUID == accessory.UUID &&
+               entry.accTypeEnumIndex == accTypeEnumIndex
+            ).length == 0 )
+       {
+          return false;
+       }
+
+       return true;
+   }
 }
 
 var queueExists = function( queueName )

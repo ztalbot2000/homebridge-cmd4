@@ -1153,24 +1153,16 @@ class Cmd4Accessory
                 // and if it is not 0 for not used.
                 if ( ucValue != "0" )
                 {
-                   if ( accTypeEnumIndex <0 )
+                   if ( accTypeEnumIndex < 0 )
                    {
-                      this.log.error( chalk.red( `Error` ) + `Invalid characteristic: ${ value } for` +
-                                      ` fakegato to log of: ${ key }` );
-                      process.exit( 216 );
+                      throw new Error( `Invalid characteristic "${ value }" for fakegato to log of "${ key }".` );
                    }
 
                    // Make sure the characteristic is being polled so I do not get any more tickets
                    // as to why the value is not changing.
-                   if ( settings.arrayOfPollingCharacteristics.filter( entry => entry.accessory.UUID == this.UUID &&
-                                                                       entry.accTypeEnumIndex == accTypeEnumIndex
-                                                                     ).length == 0
-                      )
+                   if ( this.queue.isCharacteristicPolled( accTypeEnumIndex, this.queue, this ) == false )
                    {
-                       this.log.error( chalk.red( 'Error' ) + `: Characteristic: ${ value } for fakegato` +
-                                       ` to log of: ${ key } is not being polled.\n` );
-                       this.log.error( `History can not be updated continiously.` );
-                       process.exit( 217 );
+                       throw new Error(`Characteristic: "${ value }" for fakegato to log of "${ key }" is not being polled.\nHistory can not be updated continiously.` );
                    }
                 }
                 break;
