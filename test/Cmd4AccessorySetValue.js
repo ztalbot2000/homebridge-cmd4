@@ -754,7 +754,7 @@ describe( "Testing Cmd4Accessory", function( )
          Active:                       "INACTIVE",
          CurrentTemperature:            20.0,
          polling: true,
-         state_cmd: "./Extras/Cmd4Scripts/AnyDevice"
+         state_cmd: "./Extras/Cmd4Scripts/Examples/AnyDevice"
       };
 
       const log = new Logger( );

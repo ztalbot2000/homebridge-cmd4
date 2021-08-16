@@ -129,7 +129,6 @@ exports.INTERVAL_lv                    = "interval";
 exports.IS_SET_lv                      = "isSet";
 exports.QUEUE_NAME_lv                  = "queueName";
 exports.QUEUE_GET_IS_UPDATE_lv         = "queueGetIsUpdate";
-exports.RC_lv                          = "rc";
 exports.STATE_CHANGE_RESPONSE_TIME_lv  = "stateChangeResponseTime";
 exports.TIMEOUT_lv                     = "timeout";
 exports.VALUE_lv                       = "value";

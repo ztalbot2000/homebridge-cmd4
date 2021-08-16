@@ -4,48 +4,68 @@
 // ***************** TEST LOADING **********************
 
 
-let _api = new HomebridgeAPI(); // object we feed to Plugins
-let pluginModule = require( "../index" );
-let cmd4 = pluginModule.default(_api);
-let CMD4_ACC_TYPE_ENUM = cmd4.CMD4_ACC_TYPE_ENUM;
 
-let configHasCharacteristicProps = require("../utils/configHasCharacteristicProps");
+let { Cmd4Accessory } = require( "../Cmd4Accessory" );
 
-describe('Quick Testing load of index.js', ( ) =>
+
+var _api = new HomebridgeAPI( ); // object we feed to Plugins
+
+
+
+// Init the library for all to use
+let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
+let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, _api.hap.Service, _api.hap.Characteristic, _api.hap.Categories );
+
+
+
+
+// ******** QUICK TEST CMD4_ACC_TYPE_ENUM *************
+describe( "Quick Test load of CMD4_ACC_TYPE_ENUM", ( ) =>
 {
-   it('index.js loaded should not be null', ( ) =>
+   it( "CMD4_ACC_TYPE_ENUM.EOL =" + ACC_EOL, ( ) =>
    {
-      assert.isNotNull(pluginModule, 'loading resulted in null' );
-   });
-
-   var t = typeof pluginModule.default;
-   it('index.js default initializer should be found', ( ) =>
-   {
-      assert.equal(t, "function" );
+     expect( CMD4_ACC_TYPE_ENUM.EOL ).to.equal( ACC_EOL );
    });
 });
-// ***************** Quick TEST Plugin Initialized Variables ***************
+
+
+
+// ******** QUICK TEST CMD4_DEVICE_TYPE_ENUM *************
+describe( "Quick Test load of CMD4_DEVICE_TYPE_ENUM", ( ) =>
+{
+   it( "CMD4_DEVICE_TYPE_ENUM.EOL =" + DEVICE_EOL, ( ) =>
+  {
+     expect( CMD4_DEVICE_TYPE_ENUM.EOL ).to.equal( DEVICE_EOL );
+  });
+});
+
 
 // *** TEST configHasCharacteristicProps *******
-describe('Quick Testing index.js plugin initialized variables.', ( ) =>
-{
-    it('Plugin CMD4_ACC_TYPE_ENUM should be a object', ( ) =>
-   {
-      assert.isObject(CMD4_ACC_TYPE_ENUM, "CMD4_ACC_TYPE_ENUM is not an object" );
-   });
-
-});
-
-describe('Quick Testing configHasCharacteristicProps definition.', ( ) =>
-{
-   it('configHasCharacteristicProps should be a function', ( ) =>
-   {
-      assert.isFunction(configHasCharacteristicProps, "configHasCharacteristicProps is not a function" );
-   });
-});
-
 describe('Test configHasCharacteristicProps.', ( ) =>
 {
+   let config =
+   {
+      Type:                            "TemperatureSensor",
+      DisplayName:                     "My_TemperatureSensor",
+      Name:                            "My_TemperatureSensor",
+      CurrentTemperature:               25,
+      StatusFault:                     "NO_FAULT",
+   };
+
+
+
+   let log = new Logger( );
+   log.setBufferEnabled( );
+   log.setOutputEnabled( false );
+
+   let parentInfo = undefined;
+   let accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
+
+   it('configHasCharacteristicProps should be a function', ( ) =>
+   {
+      assert.isFunction(accessory.configHasCharacteristicProps, "configHasCharacteristicProps is not a function" );
+   });
+
    it('configHasCharaceristicProps should work with full props.', ( ) =>
    {
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetTemperature;
@@ -56,7 +76,7 @@ describe('Test configHasCharacteristicProps.', ( ) =>
                    };
 
 
-      let result = configHasCharacteristicProps(accTypeEnumIndex, props, CMD4_ACC_TYPE_ENUM  );
+      let result = accessory.configHasCharacteristicProps(accTypeEnumIndex, props, CMD4_ACC_TYPE_ENUM  );
 
       assert.isObject(CMD4_ACC_TYPE_ENUM, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
    });
@@ -71,7 +91,7 @@ describe('Test configHasCharacteristicProps.', ( ) =>
                    };
 
 
-      let result = configHasCharacteristicProps(accTypeEnumIndex, props, CMD4_ACC_TYPE_ENUM  );
+      let result = accessory.configHasCharacteristicProps(accTypeEnumIndex, props, CMD4_ACC_TYPE_ENUM  );
 
       assert.isObject(CMD4_ACC_TYPE_ENUM, "configHasCharacteristicProps of valid data in small Caps returned incorrect result: " + result );
    });
@@ -79,10 +99,9 @@ describe('Test configHasCharacteristicProps.', ( ) =>
    it('configHasCharaceristicProps should work with one property.', ( ) =>
    {
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetTemperature;
-      let props = { TargetTemperature: { maxValue: +100
-                                       }
-                   };
-      let result = configHasCharacteristicProps(accTypeEnumIndex, props, CMD4_ACC_TYPE_ENUM  );
+      accessory.props = { TargetTemperature: { maxValue: +100 } };
+
+      let result = accessory.configHasCharacteristicProps( accTypeEnumIndex );
 
       assert.isObject(result, "configHasCharacteristicProps of valid data with one propertyreturned incorrect result: " + result );
    });
@@ -90,29 +109,41 @@ describe('Test configHasCharacteristicProps.', ( ) =>
    it('configHasCharaceristicProps should work with two characteristics.', ( ) =>
    {
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetTemperature;
-      let props = { CurrentTemperature: { maxValue: +100
-                                        },
-                    TargetTemperature: { maxValue: +100
-                                       },
-                   };
-      let result = configHasCharacteristicProps(accTypeEnumIndex, props, CMD4_ACC_TYPE_ENUM  );
+      accessory.props = { CurrentTemperature: { maxValue: +100 },
+                          TargetTemperature: { maxValue: +100 },
+                        };
+      let result = accessory.configHasCharacteristicProps( accTypeEnumIndex );
 
       assert.isObject(result, "configHasCharacteristicProps of valid data with two characteristicsreturned incorrect result: " + result );
    });
 
-   it('configHasCharaceristicProps should fail with a bad prop', ( ) =>
+   it('configHasCharaceristicProps should fail with a unknown prop', ( ) =>
    {
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetTemperature;
-      let props = { TargetTemperature: { maxValue: +100,
-                                         minValue: -100,
-                                         uhoh: 0.1,
-                                        }
-                  };
+      accessory.props = { TargetTemperature: { maxValue: +100,
+                                               minValue: -100,
+                                               uhoh: 0.1
+                                              }
+                        };
 
-      let result = configHasCharacteristicProps(accTypeEnumIndex, props, CMD4_ACC_TYPE_ENUM  );
+      expect ( ( ) => accessory.configHasCharacteristicProps( accTypeEnumIndex  ) ).to.throw(/props for key "uhoh" not in definition of "TargetTemperature"/);
 
-      assert.isUndefined(result, "configHasCharacteristicProps should fail with a bad property, result: " + result );
+
    });
 
+   it('configHasCharaceristicProps should fail with a unknown prop type', ( ) =>
+   {
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetTemperature;
+      accessory.props = { TargetTemperature: { maxValue: +100,
+                                               minValue: -100,
+                                               // Perms should be an object
+                                               perms: 0.1
+                                              }
+                        };
+
+      expect ( ( ) => accessory.configHasCharacteristicProps( accTypeEnumIndex  ) ).to.throw(/props for key "perms" type "number" Not equal to definition of "object"/);
+
+
+   });
 });
 

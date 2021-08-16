@@ -10,9 +10,6 @@ let Cmd4Platform = require( "../Cmd4Platform" ).Cmd4Platform;
 let Cmd4PriorityPollingQueue = require( "../Cmd4PriorityPollingQueue" ).Cmd4PriorityPollingQueue;
 
 
-let Logger = require( "../utils/Logger" );
-
-
 
 var _api = new HomebridgeAPI( ); // object we feed to Plugins
 
@@ -176,45 +173,6 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, `cmd4Platform did not create an instance of Cmd4Accessory` );
 
       assert.equal( cmd4Accessory.CMD4, constants.PLATFORM, ` Created accessory was not a PLATFORM accessory` );
-
-      done( );
-   });
-
-   it('Test if Cmd4Mode gets passed down to the accessory', ( done ) =>
-   {
-      let platformConfig =
-      {
-         accessories: [
-         {
-            Name:                      "My_Door",
-            DisplayName:               "My_Door",
-            StatusMsg:                  true,
-            Type:                      "Door",
-            CurrentPosition:            0,
-            TargetPosition:             0,
-            PositionState:              0,
-            polling:                   [ { "characteristic": "CurrentPosition", "queue": "A" },
-                                         { "characteristic": "TargetPosition", "queue": "A" },
-                                         { "characteristic": "PositionState", "queue": "A" } ],
-            State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
-         } ]
-      }
-
-
-      let log = new Logger( );
-      log.setBufferEnabled( );
-      log.setOutputEnabled( false );
-      log.setDebugEnabled( false );
-
-      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
-
-      cmd4Platform.discoverDevices( );
-
-      assert.equal( cmd4Platform.createdCmd4Accessories.length, 1, ` Cmd4Platform did not create the cmd4Accessory` );
-
-      let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
-
-      assert.equal( cmd4Accessory.cmd4Mode, constants.CMD4_MODE_STANDARD, ` Created accessory has incorrect CMD4_MODE` );
 
       done( );
    });
@@ -456,8 +414,6 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
             DisplayName:               "My_Door",
             StatusMsg:                 true,
             Type:                      "Door",
-            QueueMsg:                   true,
-            QueueStatMsgInterval:       1400,
             CurrentPosition:            0,
             TargetPosition:             0,
             PositionState:              0,

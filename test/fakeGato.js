@@ -322,7 +322,7 @@ describe('Testing FakeGato gets created', ( ) =>
                            folder:       "folderName",
                            keyPath:      "/place/to/store/my/keys/"
                           },
-               state_cmd: "node .homebridge/Cmd4Scripts/State.js"
+               state_cmd:                      "./test/echoScripts/echo_ACTIVE"
              }
          ]
       }
@@ -384,7 +384,7 @@ describe('Testing FakeGato gets created', ( ) =>
                            folder:       "folderName",
                            keyPath:      "/place/to/store/my/keys/"
                           },
-               state_cmd: "node .homebridge/Cmd4Scripts/State.js"
+               state_cmd:                      "./test/echoScripts/echo_ACTIVE"
              }
          ]
       }
@@ -436,7 +436,7 @@ describe('Testing FakeGato gets created', ( ) =>
                            folder:       "folderName",
                            keyPath:      "/place/to/store/my/keys/"
                           },
-               state_cmd: "node .homebridge/Cmd4Scripts/State.js"
+               state_cmd:                      "./test/echoScripts/echo_ACTIVE"
              }
          ]
       }
@@ -453,4 +453,86 @@ describe('Testing FakeGato gets created', ( ) =>
       done( );
    });
 
+   it( "Test invalid Eve type throws error ", function( done )
+   {
+      let platformConfig =
+      {
+         accessories: [
+            {
+               type:                         "Fan",
+               name:                         "My_v1Fan",
+               rotationDirection:             1,
+               rotationSpeed:                 100,
+               stateChangeResponseTime:       1,
+               polling:                      [ { characteristic: "rotationDirection" },
+                                               { characteristic: "RotationSpeed" },
+                                               { characteristic: "On" }
+                                             ],
+               fakegato: { eve:          "BadType",
+                           // rotationSpeed used as an example.
+                           // Not really power characteristic
+                           power:        "rotationSpeed",
+                           storage:      "fs",
+                           storagePath:  ".homebridge/FakegatoStorage",
+                           folder:       "folderName",
+                           keyPath:      "/place/to/store/my/keys/"
+                          },
+               state_cmd:                      "./test/echoScripts/echo_ACTIVE"
+             }
+         ]
+      }
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect ( ( ) => cmd4Platform.discoverDevices( ) ).to.throw(/Invalid fakegato eve type: "BadType". It must be one of \( energy, room, weather, door, motion, thermo, aqua \). Check the Cmd4 README at: "https:\/\/github.com\/simont77\/fakegato-history"/);
+
+      done( );
+   });
+
+   it( "Test invalid fakegato key throws error ", function( done )
+   {
+      let platformConfig =
+      {
+         accessories: [
+            {
+               type:                         "Fan",
+               name:                         "My_v1Fan",
+               rotationDirection:             1,
+               rotationSpeed:                 100,
+               stateChangeResponseTime:       1,
+               polling:                      [ { characteristic: "rotationDirection" },
+                                               { characteristic: "RotationSpeed" },
+                                               { characteristic: "On" }
+                                             ],
+               fakegato: { eve:          "energy",
+                           badKey:       "badValue",
+                           // rotationSpeed used as an example.
+                           // Not really power characteristic
+                           power:        "rotationSpeed",
+                           storage:      "fs",
+                           storagePath:  ".homebridge/FakegatoStorage",
+                           folder:       "folderName",
+                           keyPath:      "/place/to/store/my/keys/"
+                          },
+               state_cmd:                      "./test/echoScripts/echo_ACTIVE"
+             }
+         ]
+      }
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect ( ( ) => cmd4Platform.discoverDevices( ) ).to.throw(/Invalid fakegato key: "badKey" in json.config for: "My_v1Fan"./);
+
+      done( );
+   });
 });

@@ -320,11 +320,9 @@ class Cmd4Accessory
 
    setStoredValueForIndex( accTypeEnumIndex, value )
    {
-      if ( accTypeEnumIndex < 0 || accTypeEnumIndex > CMD4_ACC_TYPE_ENUM.EOL )
+      if ( accTypeEnumIndex < 0 || accTypeEnumIndex >= CMD4_ACC_TYPE_ENUM.EOL )
       {
-         this.log.error ( chalk.red( `Error` ) + `: setStoredValue - Characteristic: ${ accTypeEnumIndex } for: ${ this.displayName } not known` );
-         this.log.error ( `Check your config.json file for this error` );
-         process.exit( 200 );
+         throw new Error( `setStoredValue - Characteristic index: ${ accTypeEnumIndex } not between 0 and ${ CMD4_ACC_TYPE_ENUM.EOL } for "${ this.displayName }"\nCheck your config.json file for unknown characteristic.` );
       }
 
       this.storedValuesPerCharacteristic[ accTypeEnumIndex ] = value;
@@ -332,11 +330,9 @@ class Cmd4Accessory
 
    getStoredValueForIndex( accTypeEnumIndex )
    {
-      if ( accTypeEnumIndex < 0 || accTypeEnumIndex > CMD4_ACC_TYPE_ENUM.EOL )
+      if ( accTypeEnumIndex < 0 || accTypeEnumIndex >= CMD4_ACC_TYPE_ENUM.EOL )
       {
-         this.log.error( `CMD4 Warning: getStoredValue - Characteristic: ${ accTypeEnumIndex } for: ${ this.displayName }` );
-         this.log.error( `Check your config.json file for this error` );
-         process.exit( 205 );
+         throw new Error( `getStoredValue - Characteristic index: ${ accTypeEnumIndex } not between 0 and ${ CMD4_ACC_TYPE_ENUM.EOL } for "${ this.displayName }"\nCheck your config.json file for unknown characteristic.` );
       }
       return this.storedValuesPerCharacteristic[ accTypeEnumIndex ];
    }
@@ -445,16 +441,13 @@ class Cmd4Accessory
                   accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucValue );
                   if ( accTypeEnumIndex < 0 )
                   {
-                     this.log.error( chalk.red( `No such polling characteristic: ${ value } for: ${ this.displayName }` ) );
-                     process.exit( 210 );
+                     throw new Error( `No such polling characteristic: "${ value }" for: "${ this.displayName }".` );
                   }
                   // We can do this as this is a new way to do things.
                   let storedValue = this.getStoredValueForIndex( accTypeEnumIndex );
                   if ( storedValue == undefined )
                   {
-                     this.log.error( `Polling for: "${ value }" requested, but characteristic` +
-                                     `is not in your config.json file for: ${ this.displayName }` );
-                     process.exit( 211 );
+                     throw new Error( `Polling for: "${ value }" requested, but characteristic is not in your config.json file for: "${ this.displayName }".` );
                   }
                   // This makes thinks nice down below.
                   valueToStore = storedValue;
@@ -462,12 +455,12 @@ class Cmd4Accessory
                }
                default:
                {
+                  // Is this still useful?
                   accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucKey );
 
                   if ( accTypeEnumIndex < 0  )
                   {
-                    this.log.error( `OOPS: "${ key }" not found while parsing for characteristic polling. There something wrong with your config.json file?` );
-                    process.exit( 212 );
+                    throw new Error( `OOPS: "${ key }" not found while parsing for characteristic polling. There something wrong with your config.json file?` );
                   }
                   valueToStore = value;
                }
@@ -475,8 +468,7 @@ class Cmd4Accessory
          }
          if ( accTypeEnumIndex == -1 )
          {
-            this.log.error( `No characteristic found while parsing for characteristic polling. There something wrong with your config.json file?` );
-            process.exit( 213 );
+            throw new Error( `No characteristic found while parsing for characteristic polling of: "${ this.displayName }". There something wrong with your config.json file?` );
          }
          if ( this.getStoredValueForIndex( accTypeEnumIndex ) == undefined )
          {
@@ -663,14 +655,12 @@ class Cmd4Accessory
       {
          if ( characteristicProps[ key ] == undefined )
          {
-            this.log.error( chalk.red( `Error` ) + `: props for key: ${ key } not in definition of: ${ type }` );
-            process.exit( 220 );
+            throw new Error( `props for key "${ key }" not in definition of "${ type }"` );
          }
 
          if ( typeof characteristicProps[ key ] !=  typeof definitions[ key ] )
          {
-            this.log.error( chalk.red( `Error` ) + `: props for key: ${ key } type: ${ typeof definitions[ key ] }  not equal to definition of: ${ typeof characteristicProps[ key ] }` );
-            process.exit( 221 );
+            throw new Error( `props for key "${ key }" type "${ typeof definitions[ key ] }" Not equal to definition of "${ typeof characteristicProps[ key ] }"` );
          }
       }
 
@@ -1110,18 +1100,7 @@ class Cmd4Accessory
                     case constants.FAKEGATO_TYPE_AQUA_l:
                        break;
                     default:
-                       this.log.error( `Invalid fakegato eve type: ${ value }` );
-                       this.log.error( "It must be one of ( %s, %s, %s, %s, %s, %s, %s )",
-                          constants.FAKEGATO_TYPE_ENERGY_l,
-                          constants.FAKEGATO_TYPE_ROOM_l,
-                          constants.FAKEGATO_TYPE_WEATHER_l,
-                          constants.FAKEGATO_TYPE_DOOR_l,
-                          constants.FAKEGATO_TYPE_MOTION_l,
-                          constants.FAKEGATO_TYPE_THERMO_l,
-                          constants.FAKEGATO_TYPE_AQUA_l );
-                        this.log.error( `Check the Cmd4 README at ` );
-                        this.log.error( `https://github.com/simont77/fakegato-history` );
-                        process.exit( 225 );
+                       throw new Error( `Invalid fakegato eve type: "${ value }". It must be one of ( ${ constants.FAKEGATO_TYPE_ENERGY_l }, ${ constants.FAKEGATO_TYPE_ROOM_l }, ${ constants.FAKEGATO_TYPE_WEATHER_l }, ${ constants.FAKEGATO_TYPE_DOOR_l }, ${ constants.FAKEGATO_TYPE_MOTION_l }, ${ constants.FAKEGATO_TYPE_THERMO_l }, ${ constants.FAKEGATO_TYPE_AQUA_l } ). Check the Cmd4 README at: "https://github.com/simont77/fakegato-history".` );
                 }
                 break;
              case constants.STORAGE:
@@ -1168,8 +1147,7 @@ class Cmd4Accessory
                 break;
              }
              default:
-                this.log.error( `Invalid fakegato key: ${ key } in json.config for: ${ this.displayName }` );
-                process.exit( 218 );
+                throw new Error( `Invalid fakegato key: "${ key }" in json.config for: "${ this.displayName }".` );
           }
       }
 
@@ -1217,10 +1195,9 @@ class Cmd4Accessory
 
    validateStateCmd( state_cmd )
    {
-      if ( ! state_cmd )
+      if ( typeof state_cmd != "string" )
       {
-         this.log.error( chalk.red( `No state_cmd for: ${ this.displayName }` ) );
-         process.exit( 230 );
+         throw new Error( `No state_cmd for: "${ this.displayName }".` );
       }
 
       // Split the state_cmd into words.
@@ -1252,7 +1229,7 @@ class Cmd4Accessory
 
             } catch ( e ) {
                // It isn't accessible
-               this.log.warn( `The script ${ checkFile } does not exist, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell.` );
+               throw new Error( `The file: "${ checkFile }" does not exist, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell.` );
             }
          }
          // Purposely fall through to check the command as well
@@ -1274,12 +1251,12 @@ class Cmd4Accessory
                   fs.accessSync( checkCmd, fs.F_OK );
                   // File exists - OK
                } catch ( e ) {
-                  this.log.warn( `The file ${ checkCmd } does not exist, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell.` );
+                  throw new Error( `The file: "${ checkCmd }" does not exist, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell.` );
                }
             } else
             {
                if ( ! commandExistsSync( checkCmd ) )
-                  this.log.warn( `The command ${ checkCmd } does not exist or is not in your path, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell.` );
+                  throw new Error( `The file: "${ checkCmd }" does not exist, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell.` );
             }
             break;
          }
@@ -1296,8 +1273,7 @@ class Cmd4Accessory
 
       if ( accTypeEnumIndex < 0 )
       {
-         this.log.error( `OOPS: "${ key }" not found for parsing key for Characteristics. There something wrong with your config.json file?` );
-         process.exit( 235 );
+         throw new Error( `OOPS: "${ key }" not found for parsing characteristics in: "${ this.displayName }".` );
       }
 
       // Do not update the stored values as it is being restored from cache
@@ -1307,17 +1283,10 @@ class Cmd4Accessory
       if ( Object.keys( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].validValues ).length > 0 )
       {
          // Even if outputConsts is not set, just in case, transpose it anyway.
-         //var transposed = { [ constants.VALUE_lv ]: value, [ constants.RC_lv ]: true, [ constants.MSG_lv ]: "" };
          value = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value ) ;
-
-         //if ( transposed.rc == false )
-         //   this.log.warn( `${ this.displayName }: ${ transposed.msg }` );
-
-         //value = transposed.value;
       }
 
       // Return the appropriate type, by seeing what it is defined as in Homebridge,
-      //value = this.characteristicValueToItsProperType( this, accTypeEnumIndex, value );
       let properValue = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( value );
       if ( properValue == undefined )
       {
@@ -1350,8 +1319,7 @@ class Cmd4Accessory
 
             if ( typeof required != "string" )
             {
-               this.log.error( `Requires definition: ${ required }  must be a string` );
-               process.exit( 240 );
+               throw new Error( `Requires definition: "${ required }"  must be a string.` );
             }
 
             if ( cmd4Dbg ) this.log.debug( `Requiring ${ required }` );
@@ -1360,8 +1328,7 @@ class Cmd4Accessory
          }
          return;
       }
-      this.log.error( `Requires must be an array of/or list of key/value pairs: ${ requires }` );
-      process.exit( 241 );
+      throw new Error( `Requires must be an array of/or list of key/value pairs: "${ requires }".` );
    }
 
    processConstants( constantArg )
@@ -1370,7 +1337,7 @@ class Cmd4Accessory
       {
          for ( let constant in constantArg )
             this.processConstants( constantArg[ constant ] );
- 
+
          return;
       }
       if ( isJSON( constantArg ) )
@@ -1382,14 +1349,12 @@ class Cmd4Accessory
             let valueToAdd = constantArg[ key ] ;
             if ( ! keyToAdd.startsWith( "${" ) )
             {
-               this.log.error( `Constant definition for: ${ keyToAdd } must start with "\${" for clarity.` );
-               process.exit( 245 );
+               throw new Error( `Constant definition for: "${ keyToAdd }" must start with "\${" for clarity.` );
             }
 
             if ( ! keyToAdd.endsWith( "}" ) )
             {
-               this.log.error( `Constant definition for: ${ keyToAdd } must end with "}" for clarity.` );
-               process.exit( 246 );
+               throw new Error( `Constant definition for: "${ keyToAdd }" must end with "}" for clarity.` );
             }
 
             // remove any leading and trailing single quotes
@@ -1402,8 +1367,7 @@ class Cmd4Accessory
         return;
      }
 
-     this.log.error( `Constants must be an array of/or list of key/value pairs: ${ constantArg }` );
-     process.exit( 247 );
+     throw new Error( `Constants must be an array of/or list of key/value pairs: "${ constantArg }".` );
    }
 
    processVariables( variables )
@@ -1424,14 +1388,12 @@ class Cmd4Accessory
             let valueToAdd = variables[ key ] ;
             if ( ! keyToAdd.startsWith( "${" ) )
             {
-               this.log.error( `Variable definition for: ${ keyToAdd } must start with "\${" for clarity.` );
-               process.exit( 250 );
+               throw new Error( `Variable definition for: "${ keyToAdd }" must start with "\${" for clarity.` );
             }
 
             if ( ! keyToAdd.endsWith( "}" ) )
             {
-               this.log.error( `Variable definition for: ${ keyToAdd } must end with "}" for clarity.` );
-               process.exit( 251 );
+               throw new Error( `Variable definition for: "${ keyToAdd }" must end with "}" for clarity.` );
             }
 
             // remove any leading and trailing single quotes
@@ -1447,8 +1409,7 @@ class Cmd4Accessory
          return;
       }
 
-      this.log.error( `Variables must be an array of/or list of key/value pairs: ${ variables }` );
-      process.exit( 252 );
+      throw new Error( `Variables must be an array of/or list of key/value pairs: "${ variables }".` );
    }
 
    accessoryTypeConfigToCmd4Accessories( config, parentInfo )
@@ -1480,14 +1441,7 @@ class Cmd4Accessory
    {
       if ( typeof url != "string" )
       {
-         this.log.error( `url must be a string: ${ url }` );
-         process.exit( 255 );
-      }
-
-      if ( this.url !== undefined )
-      {
-         this.log.error( `url is already defined as: ${ this.url } for: ${ url }` );
-         process.exit( 256 );
+         throw new Error( `url must be a string: "${ url }".` );
       }
 
       this.url = this.replaceConstantsInString( url );
@@ -1550,8 +1504,7 @@ class Cmd4Accessory
 
                if ( ! this.category )
                {
-                  this.log.error( `Category specified: ${ value } is not a valid homebridge category.` );
-                  process.exit( 260 );
+                  throw new Error( `Category specified: "${ value }" is not a valid homebridge category for: "${ this.displayName }".` );
                }
 
                break;
@@ -1629,9 +1582,7 @@ class Cmd4Accessory
                let queue = queueExists( value );
                if ( queue == undefined )
                {
-                  this.log.error( chalk.red( `"QueueType" must be defined first for: "queue"` ) );
-
-                  process.exit( 261 ) ;
+                  throw new Error( `"QueueType" must be defined first for queue "${ value }" in: "${ this.displayName }"` );
                }
                this.queue = queue;
 
@@ -1742,7 +1693,6 @@ class Cmd4Accessory
       {
          if ( cmd4Mode == "Demo" )
          {
-            //process.exit(123);
             throw new Error("Demo mode is achieved when there are no polling entries in your config.json");
          }
          this.log.warn( `Cmd4 has been simplified and optimized as per: https://git.io/JtMGR.` );
@@ -1751,16 +1701,14 @@ class Cmd4Accessory
 
       if ( trueTypeOf( this.type ) != String )
       {
-          this.log.error( chalk.red( `Error` ) + `: No device type given for: ${ this.displayName }` );
-         process.exit( 262 );
+          throw new Error( `No device type given in: "${ this.displayName }"` );
       }
 
       this.ucType = ucFirst( this.type );
       this.typeIndex = CMD4_DEVICE_TYPE_ENUM.properties.indexOfEnum( i => i.deviceName === this.ucType );
       if ( this.typeIndex < 0 )
       {
-          this.log.error( chalk.red( `Error` ) + `: Unknown device type: ${ this.type } for: ${ this.displayName }` );
-         process.exit( 263 );
+          throw new Error( `Unknown device type: "${ this.type }" given in: "${ this.displayName }".` );
       }
 
       // Create a subType to delimit services with multiple accessories of
@@ -1777,11 +1725,8 @@ class Cmd4Accessory
       // State_cmd is only required when polling is enabled.
       if ( this.polling )
       {
-         if ( ! this.validateStateCmd( this.state_cmd ) )
-         {
-            this.log.error( chalk.red( `Error` ) + `: state_cmd: "${ this.state_cmd }" is invalid for: ${ this.displayName }` );
-            process.exit( 264 );
-         }
+         // throws its own exceptio if it fails
+         this.validateStateCmd( this.state_cmd );
       } else
       {
          // Added accessories like input have no polled configuristics and therefore don't
@@ -1828,9 +1773,7 @@ class Cmd4Accessory
             if ( cmd4Dbg ) this.log.debug( `Polling config is Default Polling. Nothing to check for unset polling characteristics` );
             return;
          case String:
-            this.log.error( `Unknown type for Polling ${ pollingType }` );
-            process.exit( 266 );
-            return;
+            throw new Error( `Unknown type for Polling "${ this.polling }" given in: "${ this.displayName }".` );
          case Array:
             break;
          case Object:
@@ -1840,9 +1783,7 @@ class Cmd4Accessory
             this.polling = [ this.polling ];
             return;
          default:
-            this.log.error( `Do not know how to handle polling type of: ${ pollingType }` );
-            process.exit( 267 );
-            return;
+            throw new Error( `Do not know how to handle polling type of: "${ pollingType }" for: "${ this.displayName }".` );
       }
 
       // We need to check for removed characteristics in the config
@@ -2003,9 +1944,7 @@ class Cmd4Accessory
                   {
                      if ( this.queue && this.queue.queueName != value )
                      {
-                         this.log.error( chalk.red( `Already defined Priority Polling Queue "${ this.queue.queueName }" for ${ this.displayName } cannot be redefined.` ) );
-                         throw new Error('Already defined Priority Polling Queue' );
-                         // process.exit( 208 );
+                         throw new Error( chalk.red( `Already defined Priority Polling Queue "${ this.queue.queueName }" for ${ this.displayName } cannot be redefined.` ) );
                      }
 
                      this.queue = addQueue( this.log, value, constants.QUEUETYPE_WORM );
@@ -2019,16 +1958,13 @@ class Cmd4Accessory
                      accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucValue );
                      if ( accTypeEnumIndex < 0 )
                      {
-                        this.log.error( chalk.red( `No such polling characteristic: ${ value } for: ${ accessory.displayName }` ) );
-                        process.exit( 261 );
+                        throw new Error( `No such polling characteristic: "${ value }" for: "${ this.displayName }".` );
                      }
                      characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
                      // We can do this as this is a new way to do things.
                      if ( this.getStoredValueForIndex( accTypeEnumIndex ) == undefined )
                      {
-                        this.log.error( `Polling for: "${ value }" requested, but characteristic` +
-                                        ` is not in your config.json file for: ${ this.displayName }` );
-                        process.exit( 262 );
+                        throw new Error( `Polling for: "${ value }" requested, but characteristic is not in your config.json file for: "${ this.displayName }".` );
                      }
                      break;
                   }
@@ -2045,14 +1981,12 @@ class Cmd4Accessory
                      // but first check if one has already been defined as we can only handle one at a time.
                      if ( accTypeEnumIndex != -1 )
                      {
-                        this.log.error( chalk.red( `Error` ) + `: For charateristic polling, you can only define one characteristic per array item.\nCannot add "${ ucKey }" as "${ characteristicString }" is already defined for: ${ accessory.displayName }` );
-                        process.exit( 263 );
+                        throw new Error( `For charateristic polling, you can only define one characteristic per array item.\nCannot add "${ ucKey }" as "${ characteristicString }" is already defined for: ${ accessory.displayName }` );
                      }
                      accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucKey );
                      if ( accTypeEnumIndex < 0 )
                      {
-                        this.log.error( chalk.red( `Error` ) + ` No such polling characteristic: ${ key } for: ${ accessory.displayName }` );
-                        process.exit( 264 );
+                        throw new Error( `No such polling characteristic: "${ key }" for: "${ accessory.displayName }".` );
                      }
                   }
                }
@@ -2168,9 +2102,7 @@ function checkAccessoryForDuplicateUUID( accessory, UUID )
             if ( accessory.name == existingAccessory.name )
                accessory.log.error( chalk.red( `Duplicate accessory names can cause this issue.` ) );
 
-            accessory.log.error( chalk.red( `It is wiser to define the second accessory in a different bridge.` ) );
-
-            process.exit( 270 );
+            throw new Error( `It is wiser to define the second accessory in a different bridge.` );
          }
       }
       // Check for duplicates in Added accessories.

@@ -119,7 +119,7 @@ describe( "Testing Cmd4Accessory", function( )
             pictureMode:              "STANDARD",
             remoteKey:                "SELECT",
             polling:                  true,
-            state_cmd:                "./echoScripts/echo_ACTIVE"
+            state_cmd:                "./test/echoScripts/echo_ACTIVE"
          }]
       };
 

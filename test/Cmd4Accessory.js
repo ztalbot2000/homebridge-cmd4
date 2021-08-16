@@ -72,7 +72,6 @@ describe('A simple Cmd4Accessory Test', ( ) =>
    {
       name:                            "Test Switch",
       type:                            "Switch",
-      Cmd4_Mode:                        constants.CMD4_MODE_DEMO,
       on:                               false
    };
 
@@ -85,7 +84,7 @@ describe('A simple Cmd4Accessory Test', ( ) =>
       let parentInfo = undefined;
       let accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
-      assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory. Found %s" , accessory );
+      assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory." );
 
    });
 });
@@ -96,7 +95,6 @@ describe('A simple Cmd4Accessory Test Debbuging enabled', ( ) =>
    {
       name:                            "Test Switch",
       type:                            "Switch",
-      Cmd4_Mode:                        constants.CMD4_MODE_DEMO,
       on:                               false
    };
 
@@ -110,7 +108,7 @@ describe('A simple Cmd4Accessory Test Debbuging enabled', ( ) =>
       let parentInfo = undefined;
       let accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
-      assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory. Found %s" , accessory );
+      assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory." );
 
 
    });
@@ -123,7 +121,6 @@ describe('Test Cmd4Accessory variables ', ( ) =>
    {
       name:                            "Test Switch",
       type:                            "Switch",
-      Cmd4_Mode:                        constants.CMD4_MODE_DEMO,
       on:                               false
    };
 
@@ -136,7 +133,7 @@ describe('Test Cmd4Accessory variables ', ( ) =>
       let parentInfo = undefined;
       let accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
-      assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory. Found %s" , accessory );
+      assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory." );
 
       assert.equal( accessory.typeIndex , CMD4_DEVICE_TYPE_ENUM.Switch, "Expected typeIndex: %s Found: %s" , CMD4_DEVICE_TYPE_ENUM.Switch, accessory.typeIndex );
    });
@@ -162,7 +159,7 @@ describe('Test Cmd4Accessory variables ', ( ) =>
          log.setBufferEnabled( );
          let accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
-         assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory. Found %s" , accessory );
+         assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory." );
 
          assert.equal( accessory.typeIndex , index, "Expected typeIndex: %s for: %s. Found: %s" , index, config.type, accessory.typeIndex );
 
@@ -176,7 +173,6 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
    {
       name:                            "Test Switch",
       type:                            "Switch",
-      Cmd4_Mode:                        constants.CMD4_MODE_DEMO,
       on:                               false
    };
 
@@ -268,6 +264,32 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
 
    });
 
+   it( "Check setStoredValueForIndex throws error with accTypeEnumIndex < 0", ( ) =>
+   {
+      let log = new Logger( );
+      log.setOutputEnabled( false );
+      log.setBufferEnabled( );
+
+      let STORED_DATA_ARRAY = [ ];
+      let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
+
+      expect ( ( ) => accessory.setStoredValueForIndex( -1, 0 ) ).to.throw(/setStoredValue - Characteristic index: -1 not between 0 and 222 for "Test Switch"\nCheck your config.json file for unknown characteristic./);
+
+   });
+
+   it( "Check setStoredValueForIndex throws error with accTypeEnumIndex >= EOL", ( ) =>
+   {
+      let log = new Logger( );
+      log.setOutputEnabled( false );
+      log.setBufferEnabled( );
+
+      let STORED_DATA_ARRAY = [ ];
+      let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
+
+      expect ( ( ) => accessory.setStoredValueForIndex( CMD4_ACC_TYPE_ENUM.EOL, 0 ) ).to.throw(/setStoredValue - Characteristic index: 222 not between 0 and 222 for "Test Switch"\nCheck your config.json file for unknown characteristic./);
+
+   });
+
    it( "Check getStoredValueForIndex works correctly for a switch", ( ) =>
    {
       let log = new Logger( );
@@ -292,6 +314,32 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       }
       let result = accessory.getStoredValueForIndex( CMD4_ACC_TYPE_ENUM.On );
       assert.equal( result, config.On, "Expected getStoredValueForIndex to return: %s. Found %s" , config.On, result );
+
+   });
+
+   it( "Check getStoredValueForIndex throws error with accTypeEnumIndex < 0", ( ) =>
+   {
+      let log = new Logger( );
+      log.setOutputEnabled( false );
+      log.setBufferEnabled( );
+
+      let STORED_DATA_ARRAY = [ ];
+      let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
+
+      expect ( ( ) => accessory.getStoredValueForIndex( -1 ) ).to.throw(/getStoredValue - Characteristic index: -1 not between 0 and 222 for "Test Switch"\nCheck your config.json file for unknown characteristic./);
+
+   });
+
+   it( "Check getStoredValueForIndex throws error with accTypeEnumIndex >= EOL", ( ) =>
+   {
+      let log = new Logger( );
+      log.setOutputEnabled( false );
+      log.setBufferEnabled( );
+
+      let STORED_DATA_ARRAY = [ ];
+      let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
+
+      expect ( ( ) => accessory.getStoredValueForIndex( CMD4_ACC_TYPE_ENUM.EOL ) ).to.throw(/getStoredValue - Characteristic index: 222 not between 0 and 222 for "Test Switch"\nCheck your config.json file for unknown characteristic./);
 
    });
 
@@ -340,6 +388,548 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       assert.isUndefined( value, "Expected accessory.testStoredValueForIndex[%s] is: Null. Found %s" , index, value );
 
    });
+
+   it( "Check that Array STORED_DATA_ARRAY.storedValuesPerCharacteristic is created", ( ) =>
+   {
+      let log = new Logger( );
+      log.setOutputEnabled( false );
+      log.setBufferEnabled( );
+
+
+      let STORED_DATA_ARRAY = [ ];
+      let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
+
+      assert.isArray( accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic, "Expected accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic to be an Array. Found %s" , typeof accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic );
+
+   });
+
+});
+
+describe('Cmd4Accessory Test parseConfig', ( ) =>
+{
+   it( "Check that invalid category throws an error", ( ) =>
+   {
+      let config =
+      {
+         Name:                            "Test Switch",
+         Type:                            "Switch",
+         On:                               false,
+         Category:                        "Bad"
+      };
+
+      let log = new Logger( );
+      log.setOutputEnabled( false );
+      log.setBufferEnabled( );
+
+      let STORED_DATA_ARRAY = [ ];
+
+      expect ( ( ) => new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY ) ).to.throw(/Category specified: "Bad" is not a valid homebridge category for: "Test Switch"./);
+   });
+
+   it( "Check that queue is already defined before use throws an error", ( ) =>
+   {
+      let config =
+      {
+         Name:                            "Test Switch",
+         Type:                            "Switch",
+         On:                               false,
+         Queue:                            "A"
+      };
+
+      let log = new Logger( );
+      log.setOutputEnabled( false );
+      log.setBufferEnabled( );
+
+      let STORED_DATA_ARRAY = [ ];
+
+      expect ( ( ) => new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY ) ).to.throw(/"QueueType" must be defined first for queue "A" in: "Test Switch"/);
+   });
+
+   it( "Check that type is defined for an accessory  throws an error", ( ) =>
+   {
+      let config =
+      {
+         Name:                            "Test Switch",
+         On:                               false
+      };
+
+      let log = new Logger( );
+      log.setOutputEnabled( false );
+      log.setBufferEnabled( );
+
+      let STORED_DATA_ARRAY = [ ];
+
+      expect ( ( ) => new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY ) ).to.throw(/No device type given in: "Test Switch"/);
+   });
+
+   it( "Check that unknown type is defined for an accessory  throws an error", ( ) =>
+   {
+      let config =
+      {
+         Name:                            "Test Switch",
+         Type:                            "Sink",
+         On:                               false
+      };
+
+      let log = new Logger( );
+      log.setOutputEnabled( false );
+      log.setBufferEnabled( );
+
+      let STORED_DATA_ARRAY = [ ];
+
+      expect ( ( ) => new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY ) ).to.throw(/Unknown device type: "Sink" given in: "Test Switch"./);
+   });
+
+   it( "Check that empty state_cmd for an accessory  throws an error", ( ) =>
+   {
+      let config =
+      {
+         Name:                            "Test Switch",
+         Type:                            "Switch",
+         On:                               false,
+         Polling:                          true,
+         State_cmd:                       false
+      };
+
+      let log = new Logger( );
+      log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
+
+      let STORED_DATA_ARRAY = [ ];
+
+      expect ( ( ) => new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY ) ).to.throw(/No state_cmd for: "Test Switch"./);
+   });
+
+   it( "Check that invalid state_cmd for an accessory  throws an error", ( ) =>
+   {
+      let config =
+      {
+         Name:                            "Test Switch",
+         Type:                            "Switch",
+         On:                               false,
+         Polling:                          true,
+         State_cmd:                       "/tmp/noFile"
+      };
+
+      let log = new Logger( );
+      log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
+
+      let STORED_DATA_ARRAY = [ ];
+
+      expect ( ( ) => new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY ) ).to.throw(/The file: "\/tmp\/noFile" does not exist, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell./);
+   });
+
+   it( "Check that invalid characteristic for an accessory  throws an error", ( ) =>
+   {
+      let config =
+      {
+         Name:                            "Test Switch",
+         Type:                            "Switch",
+         XOn:                               false
+      };
+
+      let log = new Logger( );
+      log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
+
+      let STORED_DATA_ARRAY = [ ];
+
+      expect ( ( ) => new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY ) ).to.throw(/OOPS: "XOn" not found for parsing characteristics in: "Test Switch"./);
+   });
+
+   it( "Check that invalid polling type (string throws an error", ( ) =>
+   {
+      let config =
+      {
+         Name:                            "Test Switch",
+         Type:                            "Switch",
+         On:                               false,
+         polling:                         "yes",
+         state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( true );
+      log.setOutputEnabled( false );
+
+      let STORED_DATA_ARRAY = [ ];
+
+      expect ( ( ) => new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY ) ).to.throw(/Unknown type for Polling "yes" given in: "Test Switch"./);
+   });
+
+   it( "Check that invalid polling characteristic for an accessory  throws an error", ( ) =>
+   {
+      let config =
+      {
+         Name:                            "Test Switch",
+         Type:                            "Switch",
+         On:                               false,
+         polling:                         [{ characteristic: "XOn"}],
+         state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
+      };
+
+      let log = new Logger( );
+      log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
+
+      let STORED_DATA_ARRAY = [ ];
+
+      expect ( ( ) => new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY ) ).to.throw(/No such polling characteristic: "XOn" for: "Test Switch"./);
+   });
+
+   it( "Check that polling characteristic is also defined throws an error", ( ) =>
+   {
+      let config =
+      {
+         Name:                            "Test Switch",
+         Type:                            "Switch",
+         On:                               false,
+         polling:                         [{ characteristic: "Active"}],
+         state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
+      };
+
+      let log = new Logger( );
+      log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
+
+      let STORED_DATA_ARRAY = [ ];
+
+      expect ( ( ) => new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY ) ).to.throw(/Polling for: "Active" requested, but characteristic is not in your config.json file for: "Test Switch"./);
+   });
+
+   it( "Check that polling characteristic is invalid throws an error", ( ) =>
+   {
+      let config =
+      {
+         Name:                            "Test Switch",
+         Type:                            "Switch",
+         On:                               false,
+         polling:                         [{ "XOn": 15 }],
+         state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
+      };
+
+      let log = new Logger( );
+      log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
+
+      let STORED_DATA_ARRAY = [ ];
+
+      expect ( ( ) => new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY ) ).to.throw(/OOPS: "XOn" not found while parsing for characteristic polling. There something wrong with your config.json file?/);
+   });
+
+   it( "Check that no polling characteristic defined throws an error", ( ) =>
+   {
+      let config =
+      {
+         Name:                            "Test Switch",
+         Type:                            "Switch",
+         On:                               false,
+         polling:                         [{ interval: 15 }],
+         state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
+      };
+
+      let log = new Logger( );
+      log.setOutputEnabled( false );
+      log.setBufferEnabled( true );
+
+      let STORED_DATA_ARRAY = [ ];
+
+      expect ( ( ) => new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY ) ).to.throw(/No characteristic found while parsing for characteristic polling of: "Test Switch". There something wrong with your config.json file?/);
+   });
+
+   it( "Check that Constant definitions work", ( ) =>
+   {
+      let config =
+      {
+         Name:                            "Test Switch",
+         Type:                            "Switch",
+         On:                               false,
+         Polling:                         true,
+         "constants": {
+                  "${psk}": "123456",
+                  "${ipaddress}": "12Aa34bbcc",
+                  "${port}": "8091"
+              },
+         state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+      let STORED_DATA_ARRAY = [ ];
+
+      new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
+
+      assert.equal( log.logBuf, "", ` Cmd4Accessory Unxexpected stdout: ${ log.logBuf }` );
+      assert.equal( log.errBuf, "", ` Cmd4Accessory Unxexpected stderr: ${ log.errBuf }` );
+   });
+
+   it( "Check that Constant key starts with ${ works or throws error", ( ) =>
+   {
+      let config =
+      {
+         Name:                            "Test Switch",
+         Type:                            "Switch",
+         On:                               false,
+         Polling:                         true,
+         "constants":                     { "{psk}": "123456", },
+         state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+      let STORED_DATA_ARRAY = [ ];
+
+      expect ( ( ) => new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY ) ).to.throw(/Constant definition for: "{psk}" must start with "\${" for clarity./);
+
+   });
+
+   it( "Check that Constant key ends with } works or throws error", ( ) =>
+   {
+      let config =
+      {
+         Name:                            "Test Switch",
+         Type:                            "Switch",
+         On:                               false,
+         Polling:                         true,
+         "constants":                     { "${psk": "123456", },
+         state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+      let STORED_DATA_ARRAY = [ ];
+
+      expect ( ( ) => new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY ) ).to.throw(/Constant definition for: "\${psk" must end with "}" for clarity./);
+
+   });
+
+   it( "Check that Constant is an array/list or throws error", ( ) =>
+   {
+      let config =
+      {
+         Name:                            "Test Switch",
+         Type:                            "Switch",
+         On:                               false,
+         Polling:                         true,
+         "constants":                     "${psk}:1",
+         state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+      let STORED_DATA_ARRAY = [ ];
+
+      expect ( ( ) => new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY ) ).to.throw(/Constants must be an array of\/or list of key\/value pairs: "\${psk}:1"./);
+
+   });
+
+   it( "Check that variable definitions work", ( ) =>
+   {
+      let config =
+      {
+         Name:                            "Test Switch",
+         Type:                            "Switch",
+         On:                               false,
+         Polling:                         true,
+         "variables": {
+                  "${psk}": "123456",
+                  "${ipaddress}": "12Aa34bbcc",
+                  "${port}": "8091"
+              },
+         state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+      let STORED_DATA_ARRAY = [ ];
+
+      new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
+
+      assert.equal( log.logBuf, "", ` Cmd4Accessory Unxexpected stdout: ${ log.logBuf }` );
+      assert.equal( log.errBuf, "", ` Cmd4Accessory Unxexpected stderr: ${ log.errBuf }` );
+   });
+
+   it( "Check that variable key starts with ${ works or throws error", ( ) =>
+   {
+      let config =
+      {
+         Name:                            "Test Switch",
+         Type:                            "Switch",
+         On:                               false,
+         Polling:                         true,
+         "variables":                     { "{psk}": "123456", },
+         state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+      let STORED_DATA_ARRAY = [ ];
+
+      expect ( ( ) => new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY ) ).to.throw(/Variable definition for: "{psk}" must start with "\${" for clarity./);
+
+   });
+
+   it( "Check that variable key ends with } works or throws error", ( ) =>
+   {
+      let config =
+      {
+         Name:                            "Test Switch",
+         Type:                            "Switch",
+         On:                               false,
+         Polling:                         true,
+         "variables":                     { "${psk": "123456", },
+         state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+      let STORED_DATA_ARRAY = [ ];
+
+      expect ( ( ) => new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY ) ).to.throw(/Variable definition for: "\${psk" must end with "}" for clarity./);
+
+   });
+
+   it( "Check that Variables is an array/list or throws error", ( ) =>
+   {
+      let config =
+      {
+         Name:                            "Test Switch",
+         Type:                            "Switch",
+         On:                               false,
+         Polling:                         true,
+         "Variables":                     "${psk}:1",
+         state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+      let STORED_DATA_ARRAY = [ ];
+
+      expect ( ( ) => new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY ) ).to.throw(/Variables must be an array of\/or list of key\/value pairs: "\${psk}:1"./);
+
+   });
+
+   it( "Check that url definitions work", ( ) =>
+   {
+      let config =
+      {
+         Name:                            "Test Switch",
+         Type:                            "Switch",
+         On:                               false,
+         Polling:                         true,
+         Url:                         "http:blah",
+         state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+      let STORED_DATA_ARRAY = [ ];
+
+      new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
+
+      assert.equal( log.logBuf, "", ` Cmd4Accessory Unxexpected stdout: ${ log.logBuf }` );
+      assert.equal( log.errBuf, "", ` Cmd4Accessory Unxexpected stderr: ${ log.errBuf }` );
+   });
+
+   it( "Check that url is a string or throws error", ( ) =>
+   {
+      let config =
+      {
+         Name:                            "Test Switch",
+         Type:                            "Switch",
+         On:                               false,
+         Polling:                         true,
+         Url:                             15,
+         state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+      let STORED_DATA_ARRAY = [ ];
+
+      expect ( ( ) => new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY ) ).to.throw(/url must be a string: "15"./);
+
+   });
+
+   it( "Check that requires definitions work", ( ) =>
+   {
+      let config =
+      {
+         Name:                            "Test Switch",
+         Type:                            "Switch",
+         On:                               false,
+         Polling:                         true,
+         "requires":                      [{"${bravia}": "http"}],
+         state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+      let STORED_DATA_ARRAY = [ ];
+
+      new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
+
+      assert.equal( log.logBuf, "", ` Cmd4Accessory Unxexpected stdout: ${ log.logBuf }` );
+      assert.equal( log.errBuf, "", ` Cmd4Accessory Unxexpected stderr: ${ log.errBuf }` );
+   });
+
+   it( "Check that requires is aarray  or throws error", ( ) =>
+   {
+      let config =
+      {
+         Name:                            "Test Switch",
+         Type:                            "Switch",
+         On:                               false,
+         Polling:                         true,
+         requires:                             15,
+         state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+      let STORED_DATA_ARRAY = [ ];
+
+      expect ( ( ) => new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY ) ).to.throw(/Requires must be an array of\/or list of key\/value pairs: "15"./);
+
+   });
+
 });
 describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChildren', ( ) =>
 {
@@ -794,4 +1384,49 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
 
    });
 
+});
+
+
+describe('Test Cmd4Accessory change characteristic Props', ( ) =>
+{
+   it('Test successful change Props definition ', ( done ) =>
+   {
+      let platformConfig =
+      {
+         accessories: [
+         {
+            Type:                            "TemperatureSensor",
+            DisplayName:                     "My_TemperatureSensor",
+            Name:                            "My_TemperatureSensor",
+            CurrentTemperature:               25,
+            StatusFault:                     "NO_FAULT",
+            Props: { CurrentTemperature: { maxValue: 100,
+                                           minValue: -100,
+                                           minStep: 0.1
+                                         }
+                   },
+            Polling:                         [ { Characteristic: "currentTemperature" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         } ]
+      };
+
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      cmd4Platform.discoverDevices( );
+
+      assert.equal( cmd4Platform.createdCmd4Accessories.length, 1, ` Cmd4Platform did not create the cmd4Accessory` );
+
+      let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
+      assert.instanceOf( cmd4Accessory , Cmd4Accessory, "Expected cmd4Accessory to be instance of Cmd4Accessory." );
+
+      assert.include( log.logBuf, `[90mOverriding characteristic CurrentTemperature props for: My_TemperatureSensor`, `Incorrect stdout: ${ log.logBuf }` );
+
+      done( );
+   });
 });
