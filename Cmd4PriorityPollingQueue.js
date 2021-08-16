@@ -840,10 +840,7 @@ class Cmd4PriorityPollingQueue
    changeQueueType( queue, queueType )
    {
       if ( queue.queueStarted )
-      {
-         this.log.error( `Cannot change queueType when queue is running` );
-         process.exit( 118 );
-      }
+         throw new Error( `Cannot change queueType when queue is running` );
 
       // The WoRm queue needs error messages to be silenced as
       // they are inevitable, but are handled through retries
@@ -916,10 +913,8 @@ var addQueue = function( log, queueName, queueType = constants.DEFAULT_QUEUE_TYP
 var parseAddQueueTypes = function ( log, entrys )
 {
    if ( trueTypeOf( entrys ) != Array )
-   {
-      log.error( chalk.red( `Error: ${ constants.QUEUETYPES } is not an Array of { "Queue Name": "QueueType" }. found: ${ entrys }` ) );
-      process.exit( 446 ) ;
-   }
+      throw new Error( `${ constants.QUEUETYPES } is not an Array of { "Queue Name": "QueueType" }. found: ${ entrys }` );
+
    entrys.forEach( ( entry, entryIndex ) =>
    {
       let queueName = null;
@@ -934,10 +929,8 @@ var parseAddQueueTypes = function ( log, entrys )
          {
             case constants.QUEUE:
                if ( settings.listOfCreatedPriorityQueues[ entry.queue ] )
-               {
-                  log.error( `QueueName: ${ entry.queue } was added twice` );
-                  process.exit( 447 ) ;
-               }
+                  throw new Error( `QueueName: ${ entry.queue } was added twice` );
+
                queueName = value;
 
                break;
@@ -945,8 +938,7 @@ var parseAddQueueTypes = function ( log, entrys )
                if ( value != constants.QUEUETYPE_WORM &&
                     value != constants.QUEUETYPE_SEQUENTIAL )
                {
-                  log.error( chalk.red( `Error: QueueType: ${ entry.queueType } is not valid at index: ${ entryIndex }. Expected: ${ constants.QUEUETYPE_WORM } or ${ constants.QUEUETYPE_SEQUENTIAL }` ) );
-                  process.exit( 448 ) ;
+                  throw new Error( `QueueType: ${ entry.queueType } is not valid at index: ${ entryIndex }. Expected: ${ constants.QUEUETYPE_WORM } or ${ constants.QUEUETYPE_SEQUENTIAL }` );
                }
 
                queueType = value;
@@ -974,17 +966,14 @@ var parseAddQueueTypes = function ( log, entrys )
 
               break;
             default:
-               log.error( chalk.red( `Error: Unknown Queue option"${ key }  not provided at index ${ entryIndex }` ) );
-               process.exit( 448 ) ;
+               throw new Error( `Unknown Queue option"${ key }  not provided at index ${ entryIndex }` );
          }
       }
 
       // At least a Queue name must be defined, the rest are defaulted
       if ( queueName == null )
-      {
-         log.error( chalk.red( `Error: "${ constants.QUEUE }"  not provided at index ${ entryIndex }` ) );
-         process.exit( 448 ) ;
-      }
+         throw new Error( `"${ constants.QUEUE }"  not provided at index ${ entryIndex }` );
+
       if ( cmd4Dbg ) log.debug( `calling addQueue: ${ queueName } type: ${ queueType }` );
       addQueue( log, queueName, queueType );
    } );

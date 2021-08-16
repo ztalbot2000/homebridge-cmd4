@@ -311,107 +311,79 @@ class Cmd4Platform
          return;
 
       if ( trueTypeOf( this.definitions ) != Array )
-      {
-         this.log.error( `Error: ${ constants.DEFINITIONS } is not an array` );
-         process.exit( 270 );
-      }
+         throw new Error( `${ constants.DEFINITIONS } is not a array.` );
 
       this.definitions.forEach( ( definition, definitionIndex ) =>
       {
          if ( cmd4Dbg ) this.log.debug( `Processing definition index: ${ definitionIndex }` );
 
          if ( trueTypeOf( definition.type ) != String )
-         {
-            this.log.error( `Error: definition.type at index: ${ definitionIndex } is not an String` );
-            process.exit( 270 );
-         }
+            throw new Error( `definition.type at index: ${ definitionIndex } is not a String.` );
+
          if ( trueTypeOf( definition.description ) != String )
-         {
-            this.log.error( `Error: definition.description at index: ${ definitionIndex } is not an String` );
-            process.exit( 270 );
-         }
+            throw new Error( `definition.description at index: ${ definitionIndex } is not a String.` );
+
          if ( trueTypeOf( definition.props ) != Object )
-         {
-            this.log.error( `Error: definition.props at index: ${ definitionIndex } is not an Oobject` );
-            process.exit( 270 );
-         }
+            throw new Error( `definition.props at index: ${ definitionIndex } is not an Object.` );
+
          if ( trueTypeOf( definition.props.format ) != String )
-         {
-            this.log.error( `Error: definition.props.format at index: ${ definitionIndex } is not an String` );
-            process.exit( 270 );
-         }
+            throw new Error( `definition.props.format at index: ${ definitionIndex } is not a String.` );
+
          // Need to check if format is correct
          let formatIndex = CMD4_FORMAT_TYPE_ENUM.properties.indexOfEnum( i => i.type === definition.props.format );
          if ( formatIndex < 0 )
-         {
-            this.log.error( `Error: definition.props.format at index: ${ definitionIndex } is not a valid format` );
-            process.exit( 270 );
-         }
+            throw new Error( `definition.props.format at index: ${ definitionIndex } is not a valid format.` );
+
 
          if ( definition.props.units )
          {
             if ( trueTypeOf( definition.props.units ) != String )
-            {
-               this.log.error( `Error: definition.props.units at index: ${ definitionIndex } is not an String` );
-               process.exit( 270 );
-            }
+               throw new Error( `definition.props.units at index: ${ definitionIndex } is not a String.` );
+
             // Need to check if units is correct
             let unitsIndex = CMD4_UNITS_TYPE_ENUM.properties.indexOfEnum( i => i.type === definition.props.units );
             if ( unitsIndex < 0 )
-            {
-               this.log.error( `Error: definition.props.format at index: ${ definitionIndex } is not a valid format` );
-               process.exit( 270 );
-            }
+               throw new Error( `definition.props.units at index: ${ definitionIndex } is not a valid unit.` );
+
          }
 
          if ( definition.props.maxValue &&
               isNumeric( definition.props.maxValue ) != true )
-         {
-            this.log.error( `Error: definition.props.maxValue at index: ${ definitionIndex } is not numeric` );
-            process.exit( 270 );
-         }
+            throw new Error( `definition.props.maxValue at index: ${ definitionIndex } is not numeric.` );
+
          if ( definition.props.minValue &&
               ! Number.isFinite( definition.props.minValue ) )
-         {
-            this.log.error( `Error: definition.props.minValue at index: ${ definitionIndex } is not finite` );
-            process.exit( 270 );
-         }
+            throw new Error( `definition.props.minValue at index: ${ definitionIndex } is not finite.` );
+
          if ( definition.props.minStep &&
               isNumeric( definition.props.minStep ) != true )
-         {
-            this.log.error( `Error: definition.props.minStep at index: ${ definitionIndex } is not numeric` );
-            process.exit( 270 );
-         }
+            throw new Error( `definition.props.minStep at index: ${ definitionIndex } is not numeric.` );
+
          if ( trueTypeOf( definition.props.perms ) != Array )
-         {
-            this.log.error( `Error: definition.props.perms at index: ${ definitionIndex } is not an Array` );
-            process.exit( 270 );
-         }
+            throw new Error( `definition.props.perms at index: ${ definitionIndex } is not an Array.` );
+
          if ( definition.props.perms.length == 0 )
-         {
-            this.log.error( `Error: definition.props.perms at index: ${ definitionIndex } cannot be an empty Array` );
-            process.exit( 270 );
-         }
+            throw new Error( `definition.props.perms at index: ${ definitionIndex } cannot be an empty Array.` );
+
          definition.props.perms.forEach( ( perm ) =>
          {
             let permIndex = CMD4_PERMS_TYPE_ENUM.properties.indexOfEnum( i => i.type === perm );
             if ( permIndex < 0 )
-            {
-               this.log.error( `Error: definition.props.perms at index: ${ definitionIndex } ${ perm } is not a valid perm` );
-               process.exit( 270 );
-            }
+               throw new Error( `definition.props.perms at index: ${ definitionIndex } ${ perm } is not a valid perm.` );
+
          });
 
-         if ( definition.validValues &&
-              trueTypeOf( definition.validValues ) != Object )
+         if ( definition.validValues )
          {
-            this.log.error( `Error: definition.validValues at index: ${ definitionIndex } is not an Object` );
-            process.exit( 270 );
-         } else {
+            if ( trueTypeOf( definition.validValues ) != Object )
+               throw new Error( `definition.validValues at index: ${ definitionIndex } is not an Object.` );
+         } else
+         {
             definition.validValues = { };
          }
 
          CMD4_ACC_TYPE_ENUM.add( this.api, definition.type, definition.description, definition.props, definition.validValues );
+         if ( cmd4Dbg ) this.log.debug( `Created definition type: "${ definition.type }".` );
 
       });
    }
@@ -549,10 +521,7 @@ class Cmd4Platform
                let category = this.api.hap.Categories[ String( device.category ).toUpperCase( ) ];
 
                if ( ! category )
-               {
-                  this.log.error( `Category specified: ${ device.category } is not a valid homebridge category.` );
-                  process.exit( 666 );
-               }
+                  throw new Error( `Category specified: ${ device.category } is not a valid homebridge category.` );
 
                if ( cmd4Dbg ) this.log.debug( `Step 1. platformAccessory = new platformAccessory( ${ displayName }, ${ UUID }, ${ category } )` );
 

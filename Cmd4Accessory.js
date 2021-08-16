@@ -321,9 +321,8 @@ class Cmd4Accessory
    setStoredValueForIndex( accTypeEnumIndex, value )
    {
       if ( accTypeEnumIndex < 0 || accTypeEnumIndex >= CMD4_ACC_TYPE_ENUM.EOL )
-      {
          throw new Error( `setStoredValue - Characteristic index: ${ accTypeEnumIndex } not between 0 and ${ CMD4_ACC_TYPE_ENUM.EOL } for "${ this.displayName }"\nCheck your config.json file for unknown characteristic.` );
-      }
+
 
       this.storedValuesPerCharacteristic[ accTypeEnumIndex ] = value;
    }
@@ -331,9 +330,8 @@ class Cmd4Accessory
    getStoredValueForIndex( accTypeEnumIndex )
    {
       if ( accTypeEnumIndex < 0 || accTypeEnumIndex >= CMD4_ACC_TYPE_ENUM.EOL )
-      {
          throw new Error( `getStoredValue - Characteristic index: ${ accTypeEnumIndex } not between 0 and ${ CMD4_ACC_TYPE_ENUM.EOL } for "${ this.displayName }"\nCheck your config.json file for unknown characteristic.` );
-      }
+
       return this.storedValuesPerCharacteristic[ accTypeEnumIndex ];
    }
 
@@ -440,15 +438,13 @@ class Cmd4Accessory
                   let ucValue = ucFirst( value );
                   accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucValue );
                   if ( accTypeEnumIndex < 0 )
-                  {
                      throw new Error( `No such polling characteristic: "${ value }" for: "${ this.displayName }".` );
-                  }
+
                   // We can do this as this is a new way to do things.
                   let storedValue = this.getStoredValueForIndex( accTypeEnumIndex );
                   if ( storedValue == undefined )
-                  {
                      throw new Error( `Polling for: "${ value }" requested, but characteristic is not in your config.json file for: "${ this.displayName }".` );
-                  }
+
                   // This makes thinks nice down below.
                   valueToStore = storedValue;
                   break;
@@ -459,17 +455,16 @@ class Cmd4Accessory
                   accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucKey );
 
                   if ( accTypeEnumIndex < 0  )
-                  {
-                    throw new Error( `OOPS: "${ key }" not found while parsing for characteristic polling. There something wrong with your config.json file?` );
-                  }
+                     throw new Error( `OOPS: "${ key }" not found while parsing for characteristic polling. There something wrong with your config.json file?` );
+
                   valueToStore = value;
                }
             }
          }
+
          if ( accTypeEnumIndex == -1 )
-         {
             throw new Error( `No characteristic found while parsing for characteristic polling of: "${ this.displayName }". There something wrong with your config.json file?` );
-         }
+
          if ( this.getStoredValueForIndex( accTypeEnumIndex ) == undefined )
          {
             this.log.warn( `Polling for: "${ key }" requested, but characteristic` );
@@ -654,14 +649,12 @@ class Cmd4Accessory
       for ( let key in definitions )
       {
          if ( characteristicProps[ key ] == undefined )
-         {
             throw new Error( `props for key "${ key }" not in definition of "${ type }"` );
-         }
+
 
          if ( typeof characteristicProps[ key ] !=  typeof definitions[ key ] )
-         {
             throw new Error( `props for key "${ key }" type "${ typeof definitions[ key ] }" Not equal to definition of "${ typeof characteristicProps[ key ] }"` );
-         }
+
       }
 
       return rc;
@@ -1133,16 +1126,14 @@ class Cmd4Accessory
                 if ( ucValue != "0" )
                 {
                    if ( accTypeEnumIndex < 0 )
-                   {
                       throw new Error( `Invalid characteristic "${ value }" for fakegato to log of "${ key }".` );
-                   }
+
 
                    // Make sure the characteristic is being polled so I do not get any more tickets
                    // as to why the value is not changing.
                    if ( this.queue.isCharacteristicPolled( accTypeEnumIndex, this.queue, this ) == false )
-                   {
                        throw new Error(`Characteristic: "${ value }" for fakegato to log of "${ key }" is not being polled.\nHistory can not be updated continiously.` );
-                   }
+
                 }
                 break;
              }
@@ -1196,9 +1187,8 @@ class Cmd4Accessory
    validateStateCmd( state_cmd )
    {
       if ( typeof state_cmd != "string" )
-      {
          throw new Error( `No state_cmd for: "${ this.displayName }".` );
-      }
+
 
       // Split the state_cmd into words.
       let cmdArray = state_cmd.match(/\S+/gi);
@@ -1272,9 +1262,8 @@ class Cmd4Accessory
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucKey );
 
       if ( accTypeEnumIndex < 0 )
-      {
          throw new Error( `OOPS: "${ key }" not found for parsing characteristics in: "${ this.displayName }".` );
-      }
+
 
       // Do not update the stored values as it is being restored from cache
       if ( parseConfigShouldUseCharacteristicValues == false )
@@ -1318,9 +1307,8 @@ class Cmd4Accessory
             let required = requires[ key ] ;
 
             if ( typeof required != "string" )
-            {
                throw new Error( `Requires definition: "${ required }"  must be a string.` );
-            }
+
 
             if ( cmd4Dbg ) this.log.debug( `Requiring ${ required }` );
 
@@ -1348,14 +1336,12 @@ class Cmd4Accessory
             let keyToAdd = key ;
             let valueToAdd = constantArg[ key ] ;
             if ( ! keyToAdd.startsWith( "${" ) )
-            {
                throw new Error( `Constant definition for: "${ keyToAdd }" must start with "\${" for clarity.` );
-            }
+
 
             if ( ! keyToAdd.endsWith( "}" ) )
-            {
                throw new Error( `Constant definition for: "${ keyToAdd }" must end with "}" for clarity.` );
-            }
+
 
             // remove any leading and trailing single quotes
             // so that using it for replacement will be easier.
@@ -1387,14 +1373,10 @@ class Cmd4Accessory
             let keyToAdd = key ;
             let valueToAdd = variables[ key ] ;
             if ( ! keyToAdd.startsWith( "${" ) )
-            {
                throw new Error( `Variable definition for: "${ keyToAdd }" must start with "\${" for clarity.` );
-            }
 
             if ( ! keyToAdd.endsWith( "}" ) )
-            {
                throw new Error( `Variable definition for: "${ keyToAdd }" must end with "}" for clarity.` );
-            }
 
             // remove any leading and trailing single quotes
             // so that using it for replacement will be easier.
@@ -1440,9 +1422,7 @@ class Cmd4Accessory
    processURL( url )
    {
       if ( typeof url != "string" )
-      {
          throw new Error( `url must be a string: "${ url }".` );
-      }
 
       this.url = this.replaceConstantsInString( url );
    }
@@ -1503,9 +1483,7 @@ class Cmd4Accessory
                this.category = this.api.hap.Categories[ String( value ).toUpperCase( ) ];
 
                if ( ! this.category )
-               {
                   throw new Error( `Category specified: "${ value }" is not a valid homebridge category for: "${ this.displayName }".` );
-               }
 
                break;
             case constants.PUBLISHEXTERNALLY:
@@ -1581,9 +1559,8 @@ class Cmd4Accessory
             {
                let queue = queueExists( value );
                if ( queue == undefined )
-               {
                   throw new Error( `"QueueType" must be defined first for queue "${ value }" in: "${ this.displayName }"` );
-               }
+
                this.queue = queue;
 
                break;
@@ -1692,24 +1669,19 @@ class Cmd4Accessory
       if ( cmd4Mode != null && this.polling )
       {
          if ( cmd4Mode == "Demo" )
-         {
             throw new Error("Demo mode is achieved when there are no polling entries in your config.json");
-         }
+
          this.log.warn( `Cmd4 has been simplified and optimized as per: https://git.io/JtMGR.` );
          this.log.warn( `To remove this message, just remove "Cmd4_Mode" from your config.json` );
       }
 
       if ( trueTypeOf( this.type ) != String )
-      {
           throw new Error( `No device type given in: "${ this.displayName }"` );
-      }
 
       this.ucType = ucFirst( this.type );
       this.typeIndex = CMD4_DEVICE_TYPE_ENUM.properties.indexOfEnum( i => i.deviceName === this.ucType );
       if ( this.typeIndex < 0 )
-      {
           throw new Error( `Unknown device type: "${ this.type }" given in: "${ this.displayName }".` );
-      }
 
       // Create a subType to delimit services with multiple accessories of
       // the same type and possibly the same accessory.name.
@@ -1943,9 +1915,7 @@ class Cmd4Accessory
                   case constants.QUEUE:
                   {
                      if ( this.queue && this.queue.queueName != value )
-                     {
-                         throw new Error( chalk.red( `Already defined Priority Polling Queue "${ this.queue.queueName }" for ${ this.displayName } cannot be redefined.` ) );
-                     }
+                        throw new Error( chalk.red( `Already defined Priority Polling Queue "${ this.queue.queueName }" for ${ this.displayName } cannot be redefined.` ) );
 
                      this.queue = addQueue( this.log, value, constants.QUEUETYPE_WORM );
 
@@ -1957,15 +1927,13 @@ class Cmd4Accessory
                      let ucValue = ucFirst( value );
                      accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucValue );
                      if ( accTypeEnumIndex < 0 )
-                     {
                         throw new Error( `No such polling characteristic: "${ value }" for: "${ this.displayName }".` );
-                     }
+
                      characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
                      // We can do this as this is a new way to do things.
                      if ( this.getStoredValueForIndex( accTypeEnumIndex ) == undefined )
-                     {
                         throw new Error( `Polling for: "${ value }" requested, but characteristic is not in your config.json file for: "${ this.displayName }".` );
-                     }
+
                      break;
                   }
                   case constants.QUEUETYPES:
@@ -1980,14 +1948,12 @@ class Cmd4Accessory
                      // The key must be a characteristic property
                      // but first check if one has already been defined as we can only handle one at a time.
                      if ( accTypeEnumIndex != -1 )
-                     {
                         throw new Error( `For charateristic polling, you can only define one characteristic per array item.\nCannot add "${ ucKey }" as "${ characteristicString }" is already defined for: ${ accessory.displayName }` );
-                     }
+
                      accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucKey );
                      if ( accTypeEnumIndex < 0 )
-                     {
                         throw new Error( `No such polling characteristic: "${ key }" for: "${ accessory.displayName }".` );
-                     }
+
                   }
                }
             }

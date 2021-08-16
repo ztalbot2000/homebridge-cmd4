@@ -14,19 +14,18 @@
 
 function trueTypeOf( m )
 {
-
    switch( typeof m )
    {
       case "boolean":
          return Boolean;
       case "number":
          return Number;
-     case "string":
+      case "string":
          // If the string is actually a number, let the caller
          // deal with it as our intent is just to fix undefined
          // and null issues.
          return String;
-     case "object":
+      case "object":
          // null can be an object
          if ( m == null )
             return null;
@@ -34,20 +33,12 @@ function trueTypeOf( m )
             return Array;
 
          return Object;
-     case "undefined":
+      case "undefined":
          return undefined;
       default:
-         console.log("OOPS");
-         process.exit( 666);
+         throw new Error("OOPS");
    }
 
-   if ( m == undefined )
-   {
-      return undefined;
-   }
-
-   console.log("OOPS Again");
-   process.exit( 666);
 }
 
 module.exports = trueTypeOf;

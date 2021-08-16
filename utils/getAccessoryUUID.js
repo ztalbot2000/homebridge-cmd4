@@ -27,8 +27,7 @@ var getAccessoryUUID = function ( config, UUIDGen )
    if ( config.DisplayName )
       return UUIDGen.generate( config.DisplayName );
 
-   console.log( "You must either, 'displayName' and or 'name' per accessory." );
-   process.exit( 111 );
+   throw new Error( "You must either, 'displayName' and or 'name' per accessory." );
 }
 
 module.exports = getAccessoryUUID;

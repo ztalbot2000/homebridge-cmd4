@@ -16,8 +16,7 @@ var getAccessoryName = function ( config )
    if ( config.displayName ) return config.displayName;
    if ( config.DisplayName ) return config.DisplayName;
 
-   console.log( "You must have a 'Name' per accessory." );
-   process.exit( 333 );
+   throw new Error( "You must have a 'Name' per accessory." );
 }
 
 var getAccessoryDisplayName = function ( config )
@@ -28,8 +27,7 @@ var getAccessoryDisplayName = function ( config )
    if ( config.name ) return config.name;
    if ( config.Name ) return config.Name;
 
-   console.log( "You must either, 'displayName' and or 'name' per accessory." );
-   process.exit( 222 );
+   throw new Error( "You must either, 'displayName' and or 'name' per accessory." );
 }
 
 module.exports = { getAccessoryName,

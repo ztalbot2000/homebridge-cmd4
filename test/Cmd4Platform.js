@@ -15,6 +15,7 @@ var _api = new HomebridgeAPI( ); // object we feed to Plugins
 
 
 // Init the library for all to use
+let CMD4_CHAR_TYPE_ENUMS = CHAR_DATA.init( _api.hap.Characteristic );
 let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
 let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, _api.hap.Service, _api.hap.Characteristic, _api.hap.Categories );
 
@@ -39,6 +40,14 @@ describe( "Quick Test of CMD4_ACC_TYPE_ENUM", ( ) =>
    it( "CMD4_ACC_TYPE_ENUM.EOL =" + ACC_EOL, ( ) =>
    {
      expect( CMD4_ACC_TYPE_ENUM.EOL ).to.equal( ACC_EOL );
+   });
+});
+
+describe( "Quick Test of CMD4_CHAR_TYPE_ENUM", ( ) =>
+{
+   it( "CMD4_CHAR_TYPE_ENUMS should be defined ( required correctly )", ( ) =>
+   {
+      assert.isNotNull( CMD4_CHAR_TYPE_ENUMS, "CMD4_CHAR_TYPE_ENUMS is null" );
    });
 });
 
@@ -188,8 +197,6 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
             DisplayName:               "My_Door",
             StatusMsg:                  true,
             Type:                      "Door",
-            QueueMsg:                   true,
-            QueueStatMsgInterval:      1400,
             CurrentPosition:           0,
             TargetPosition:            0,
             PositionState:             0,
@@ -236,8 +243,6 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
             DisplayName:               "My_Door",
             StatusMsg:                  true,
             Type:                      "Door",
-            QueueMsg:                   true,
-            QueueStatMsgInterval:       1400,
             CurrentPosition:            0,
             TargetPosition:             0,
             PositionState:              0,
@@ -293,8 +298,6 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
             StatusMsg:                 true,
             Type:                      "Door",
             OutputConstants:              true,
-            QueueMsg:                   true,
-            QueueStatMsgInterval:       1400,
             CurrentPosition:            0,
             TargetPosition:             0,
             PositionState:              0,
@@ -351,8 +354,6 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
             DisplayName:               "My_Door",
             StatusMsg:                  true,
             Type:                      "Door",
-            QueueMsg:                   true,
-            QueueStatMsgInterval:       1400,
             CurrentPosition:            0,
             TargetPosition:             0,
             PositionState:              0,
@@ -454,4 +455,341 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
 
       done( );
    });
+
+   // Until we remove the successful add, it screw up other tests
+   it.skip('Test definition can be created successfully', ( done ) =>
+   {
+      let platformConfig =
+      {
+         definitions: [{ type: "PointX",
+                       description: "An X Coordinate",
+                       props: { format: "uint32",
+                                minValue: 0,
+                                minStep: 1,
+                                perms: [ "pr", "pw", "ev" ]
+                              },
+                       validValues: { }
+                     }],
+         accessories: [
+         {
+            Name:                      "My_Door",
+            DisplayName:               "My_Door",
+            StatusMsg:                  true,
+            Type:                      "Door",
+            CurrentPosition:            0,
+            TargetPosition:             0,
+            PositionState:              0,
+            polling:                   [ { "characteristic": "CurrentPosition", "queue": "A" },
+                                         { "characteristic": "TargetPosition", "queue": "A" },
+                                         { "characteristic": "PositionState", "queue": "A" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         } ]
+      }
+
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      cmd4Platform.discoverDevices( );
+
+      assert.equal( cmd4Platform.createdCmd4Accessories.length, 1, ` Cmd4Platform did not create the cmd4Accessory` );
+
+      let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
+      expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, `cmd4Platform did not create an instance of Cmd4Accessory` );
+
+      assert.include( log.logBuf, `Processing definition index: 0`, ` Cmd4Platform Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `Created definition type: "PointX".`, ` Cmd4Platform Incorrect stdout: ${ log.logBuf }` );
+
+      done( );
+   });
+
+   // Until we remove the successful add, it screw up other tests
+   it.skip('Test definition with no validValues can be created successfully', ( done ) =>
+   {
+      let platformConfig =
+      {
+         definitions: [{ type: "PointX",
+                       description: "An X Coordinate",
+                       props: { format: "uint32",
+                                minValue: 0,
+                                minStep: 1,
+                                perms: [ "pr", "pw", "ev" ]
+                              }
+                     }],
+         accessories: [
+         {
+            Name:                      "My_Door",
+            DisplayName:               "My_Door",
+            StatusMsg:                  true,
+            Type:                      "Door",
+            CurrentPosition:            0,
+            TargetPosition:             0,
+            PositionState:              0,
+            polling:                   [ { "characteristic": "CurrentPosition", "queue": "A" },
+                                         { "characteristic": "TargetPosition", "queue": "A" },
+                                         { "characteristic": "PositionState", "queue": "A" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         } ]
+      }
+
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      cmd4Platform.discoverDevices( );
+
+      assert.equal( cmd4Platform.createdCmd4Accessories.length, 1, ` Cmd4Platform did not create the cmd4Accessory` );
+
+      let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
+      expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, `cmd4Platform did not create an instance of Cmd4Accessory` );
+
+      assert.include( log.logBuf, `Processing definition index: 0`, ` Cmd4Platform Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `Created definition type: "PointX".`, ` Cmd4Platform Incorrect stdout: ${ log.logBuf }` );
+
+      done( );
+   });
+
+   it('Test definition type must be string or throws error', ( done ) =>
+   {
+      let platformConfig =
+      {
+         definitions: [{ type: true,
+                       description: "An X Coordinate",
+                       props: { format: "uint32",
+                                minValue: 0,
+                                minStep: 1,
+                                perms: [ "pr", "pw", "ev" ]
+                              },
+                       validValues: { }
+                     }],
+         accessories: [
+         {
+            Name:                      "My_Door",
+            DisplayName:               "My_Door",
+            StatusMsg:                  true,
+            Type:                      "Door",
+            CurrentPosition:            0,
+            TargetPosition:             0,
+            PositionState:              0,
+            polling:                   [ { "characteristic": "CurrentPosition", "queue": "A" },
+                                         { "characteristic": "TargetPosition", "queue": "A" },
+                                         { "characteristic": "PositionState", "queue": "A" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         } ]
+      }
+
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+      expect( ( ) => new Cmd4Platform( log, platformConfig, _api )).to.throw(/definition.type at index: 0 is not a String./);
+
+      done( );
+   });
+
+   it('Test definition description must be string or throws error', ( done ) =>
+   {
+      let platformConfig =
+      {
+         definitions: [{ type: "PointX",
+                       props: { format: "uint32",
+                                minValue: 0,
+                                minStep: 1,
+                                perms: [ "pr", "pw", "ev" ]
+                              },
+                       validValues: { }
+                     }],
+         accessories: [
+         {
+            Name:                      "My_Door",
+            DisplayName:               "My_Door",
+            StatusMsg:                  true,
+            Type:                      "Door",
+            CurrentPosition:            0,
+            TargetPosition:             0,
+            PositionState:              0,
+            polling:                   [ { "characteristic": "CurrentPosition", "queue": "A" },
+                                         { "characteristic": "TargetPosition", "queue": "A" },
+                                         { "characteristic": "PositionState", "queue": "A" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         } ]
+      }
+
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+      expect( ( ) => new Cmd4Platform( log, platformConfig, _api )).to.throw(/definition.description at index: 0 is not a String./);
+
+      done( );
+   });
+
+   it('Test definition props must be an Object or throws error', ( done ) =>
+   {
+      let platformConfig =
+      {
+         definitions: [{ type: "PointX",
+                        description: "A point on X axis",
+                        props: [],
+                       validValues: { }
+                     }],
+         accessories: [
+         {
+            Name:                      "My_Door",
+            DisplayName:               "My_Door",
+            StatusMsg:                  true,
+            Type:                      "Door",
+            CurrentPosition:            0,
+            TargetPosition:             0,
+            PositionState:              0,
+            polling:                   [ { "characteristic": "CurrentPosition", "queue": "A" },
+                                         { "characteristic": "TargetPosition", "queue": "A" },
+                                         { "characteristic": "PositionState", "queue": "A" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         } ]
+      }
+
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+      expect( ( ) => new Cmd4Platform( log, platformConfig, _api )).to.throw(/definition.props at index: 0 is not an Object./);
+
+      done( );
+   });
+
+   it('Test definition props.format must be string or throws error', ( done ) =>
+   {
+      let platformConfig =
+      {
+         definitions: [{ type: "PointX",
+                        description: "A point on X axis",
+                       props: { format: 0,
+                                minValue: 0,
+                                minStep: 1,
+                                perms: [ "pr", "pw", "ev" ]
+                              },
+                       validValues: { }
+                     }],
+         accessories: [
+         {
+            Name:                      "My_Door",
+            DisplayName:               "My_Door",
+            StatusMsg:                  true,
+            Type:                      "Door",
+            CurrentPosition:            0,
+            TargetPosition:             0,
+            PositionState:              0,
+            polling:                   [ { "characteristic": "CurrentPosition", "queue": "A" },
+                                         { "characteristic": "TargetPosition", "queue": "A" },
+                                         { "characteristic": "PositionState", "queue": "A" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         } ]
+      }
+
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+      expect( ( ) => new Cmd4Platform( log, platformConfig, _api )).to.throw(/definition.props.format at index: 0 is not a String./);
+
+      done( );
+   });
+
+   it('Test definition props.format must be valid or throws error', ( done ) =>
+   {
+      let platformConfig =
+      {
+         definitions: [{ type: "PointX",
+                        description: "A point on X axis",
+                       props: { format: "ZERO",
+                                minValue: 0,
+                                minStep: 1,
+                                perms: [ "pr", "pw", "ev" ]
+                              },
+                       validValues: { }
+                     }],
+         accessories: [
+         {
+            Name:                      "My_Door",
+            DisplayName:               "My_Door",
+            StatusMsg:                  true,
+            Type:                      "Door",
+            CurrentPosition:            0,
+            TargetPosition:             0,
+            PositionState:              0,
+            polling:                   [ { "characteristic": "CurrentPosition", "queue": "A" },
+                                         { "characteristic": "TargetPosition", "queue": "A" },
+                                         { "characteristic": "PositionState", "queue": "A" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         } ]
+      }
+
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+      expect( ( ) => new Cmd4Platform( log, platformConfig, _api )).to.throw(/definition.props.format at index: 0 is not a valid format./);
+
+      done( );
+   });
+
+   it('Test definition validValues must be an Object or throws error', ( done ) =>
+   {
+      let platformConfig =
+      {
+         definitions: [{ type: "PointX",
+                        description: "A point on X axis",
+                       props: { format: "uint32",
+                                minValue: 0,
+                                minStep: 1,
+                                perms: [ "pr", "pw", "ev" ]
+                              },
+                        validValues: 1
+                     }],
+         accessories: [
+         {
+            Name:                      "My_Door",
+            DisplayName:               "My_Door",
+            StatusMsg:                  true,
+            Type:                      "Door",
+            CurrentPosition:            0,
+            TargetPosition:             0,
+            PositionState:              0,
+            polling:                   [ { "characteristic": "CurrentPosition", "queue": "A" },
+                                         { "characteristic": "TargetPosition", "queue": "A" },
+                                         { "characteristic": "PositionState", "queue": "A" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         } ]
+      }
+
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+      expect( ( ) => new Cmd4Platform( log, platformConfig, _api )).to.throw(/definition.validValues at index: 0 is not an Object./);
+
+      done( );
+   });
+
 });
