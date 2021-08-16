@@ -1,23 +1,16 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
-#### 5.0.2 (2021-08-14)
-
-##### Bug Fixes
-
-*  For bug [#112](https://github.com/ztalbot2000/homebridge-cmd4/pull/112) where configured fakegato can cause Cmd4 to not run ([53992de4](https://github.com/ztalbot2000/homebridge-cmd4/commit/53992de45b17aa94c367506868a90965ebb71f0d))
-
-#### 5.0.1 (2021-08-09)
-
-##### Bug Fixes
-
-*  Drastic failure of wormQueue traps on incorrect use of this ([ccaf185d](https://github.com/ztalbot2000/homebridge-cmd4/commit/ccaf185dbe6dded7b2e82c6bde5b6267122b27e5))
-
-##### Tests
-
-*  Test drastic failure of WoRm queue ([82b3ab9c](https://github.com/ztalbot2000/homebridge-cmd4/commit/82b3ab9cef9b224d116511246a0b21ac0e8483e1))
-
-#### 5.0.0 (2021-08-07)
+### 5.1.0 (2021-08-16)
 
 ##### New Features
+
+As Part of V5 Performance/Optimization release, Cmd4 no longer calls process.exit that could take down the bridge if you had configured Cmd4 incorrectly.  Instead Cmd4 uses "throw" which is more widely acceptable.
+
+*  Change from process.exit to throw new Error ([0a058100](https://github.com/ztalbot2000/homebridge-cmd4/commit/0a058100b1e7db9a6b94517a9d3de43c6568099f))
+*  Change from process.exit to throw new Error ([203cc67a](https://github.com/ztalbot2000/homebridge-cmd4/commit/203cc67ad9305348e28aaef910966ac08776ff05))
+*  Add PS5.sh as an example script ([9921cd29](https://github.com/ztalbot2000/homebridge-cmd4/commit/9921cd296a040ec2257c867d689e32a2d045cf7b))
+
+
+#### 5.0.0 (2021-08-07)
 
 *  V5 Optimize features, found some older code still to remove ([c52884b](https://github.com/ztalbot2000/homebridge-cmd4/commit/c52884bee08352723debef95f0c5169ebb8cbabb))
 

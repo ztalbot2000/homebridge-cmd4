@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-5-1-0">**Whats new in 5.1.0**</a>
 * <a href="#Whats-new-in-5-0-2">**Whats new in 5.0.2**</a>
 * <a href="#Whats-new-in-5-0-1">**Whats new in 5.0.1**</a>
 * <a href="#Whats-new-in-5-0-0">**Whats new in 5.0.0**</a>
@@ -70,6 +71,19 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-5-1-0">## Whats new in 5.1.0</a>
+### 5.1.0 (2021-08-16)
+
+##### Chores
+
+*  Add PS5.sh as an example script ([9921cd29](https://github.com/ztalbot2000/homebridge-cmd4/commit/9921cd296a040ec2257c867d689e32a2d045cf7b))
+
+##### New Features
+
+*  Change process.exit to throw new Error ([0a058100](https://github.com/ztalbot2000/homebridge-cmd4/commit/0a058100b1e7db9a6b94517a9d3de43c6568099f))
+*  Change process.exit to throw new Error ([203cc67a](https://github.com/ztalbot2000/homebridge-cmd4/commit/203cc67ad9305348e28aaef910966ac08776ff05))
+
 
 <a name="Whats-new-in-5-0-2">## Whats new in 5.0.2</a>
 #### 5.0.2 (2021-08-14)
