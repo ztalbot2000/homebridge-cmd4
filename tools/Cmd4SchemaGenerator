@@ -219,19 +219,25 @@ function addNameDesignationDefinitionBlock( )
    commaRequired = true;
 }
 
-function addPollingDesignationDefinitionBlock( )
+function addPollingBoolDesignationDefinitionBlock( )
 {
    // add the comma always next time.
    if ( commaRequired == true )
       w( `,\n` );
 
-   wfs( `"$comment": "START OF POLLING DEFINITION",\n` );
+   wfs( `"$comment": "START OF POLLING BOOL DEFINITION",\n` );
    // *** Begin bracket Polling designation definition
    wf( "+", `"Polling_designation": {\n` );
       wfs( `"$id": "#Polling_designation",\n` );
       wfs( `"title": "${ constants.POLLING }",\n` );
-      wfs( `"type": "string",\n` );
-      wfs( `"required": false\n` );
+      wfs( `"type": "boolean",\n` );
+      wfs( `"required": false,\n` );
+      // *** Begin bracket condition
+      wf( "+", `"condition": {\n` );
+        wfs( `"functionBody": "return model.${ constants.TYPE } && model.${ constants.TYPE } !== 'null';"\n` );
+      // *** End bracket condition
+      wf( "-", `},\n` );
+      wfs( `"description": "If Polling should be done"\n` );
    // *** End bracket Polling designation definition
    wf( "-", `}` );
 
@@ -503,7 +509,7 @@ function addDefinitionsBlock( )
       // breaks homebridge
       //addRequiredCharacteristicDefinitionBlock( );
       addNameDesignationDefinitionBlock( );
-      addPollingDesignationDefinitionBlock( );
+      addPollingBoolDesignationDefinitionBlock( );
       addStateCmdDesignationDefinitionBlock( );
       addAccessoryTypeDesignationDefinitionBlock( );
       addDeviceDefinitionsBlock();
@@ -559,7 +565,8 @@ function addReferencesBlock( )
          let characteristicString = accRecord.type;
          wfs( `"${ characteristicString }": { "$ref": "#/definitions/${ characteristicString }"}` );
       });
-      w( `\n` );
+      w( `,\n` );
+      wfs( `"Polling_designation": { "$ref": "#/definitions/Polling_designation"}\n` );
 
 
    // *** End bracket type:
@@ -637,39 +644,6 @@ function addDevicesToLayout()
    commaRequired = true;
 }
 
-function XaddLayout( )
-{
-   // add the comma always next time.
-   if ( commaRequired == true )
-      w( `,\n` );
-
-   // * Begin square bracket layout:
-   wf( "+", `"layout": [\n` );
-      wf( "+", `"${ constants.TYPE }", {\n` );
-         wfs( `"key": "name",\n` );
-         wf( "+", `"condition": {\n` );
-            wfs( `"functionBody": "return model.Type && model.Type !== 'null';"\n` );
-         wf( "-", `}\n` );
-      // * End bracket Type:
-      wf( "-", `},\n` );
-      wf( "+", `{\n` );
-         wfs( `"type": "fieldset",\n` );
-         wfs( `"expandable": true,\n` );
-         wfs( `"title": "Required Characteristics",\n` );
-         wf( "+", `"condition": {\n` );
-            wfs( `"functionBody": "return model.Type && model.Type !== 'null';"\n` );
-         wf( "-", `},\n` );
-         wf( "+", `"items": [\n` );
-            wfs( `"On", \n` );
-            wfs( `"Brightness" \n` );
-         wf( "-", `]\n` );
-      wf( "-", `}\n` );
-   // * End square bracket layout:
-   wf( "-", `]\n` );
-
-   commaRequired = true;
-}
-
 function addLayout( )
 {
    // add the comma always next time.
@@ -688,6 +662,11 @@ function addLayout( )
       commaRequired = true;
 
       addDevicesToLayout();
+
+      if ( commaRequired == true )
+         w( ",\n" );
+
+      wfs( `"Polling_designation"` );
 
       if ( commaRequired == true )
          w( "\n" );
