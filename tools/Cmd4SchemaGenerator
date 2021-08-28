@@ -104,7 +104,7 @@ function createSchemaFile( )
 
    addDefinitionsBlock( );
 
-   addAccessorySchemaBlock( );
+   addReferencesBlock( );
 
    endBracketSchema( );
 
@@ -355,7 +355,7 @@ function addCharacteristicDefinitionBlock( )
       wf( "+", `"${ characteristicString }": {\n` );
          wfs( `"$id": "#${ characteristicString }",\n` );
          wfs( `"title": "${ characteristicString }",\n` );
-         switch ( accRecord.format )
+         switch ( accRecord.props.format )
          {
             case Formats.BOOL:
                wfs( `"type": "boolean",\n` );
@@ -370,7 +370,7 @@ function addCharacteristicDefinitionBlock( )
             case Formats.FLOAT:
               wfs( `"type": "number",\n` );
               break;
-            case Formats.String:
+            case Formats.STRING:
               wfs( `"type": "string",\n` );
               break;
             case Formats.DATA:
@@ -383,11 +383,11 @@ function addCharacteristicDefinitionBlock( )
                exit -1;
          }
 
-         if ( accRecord.maxValue != undefined )
-            wfs( `"maxumum": ${ accRecord.maxValue },\n` );
+         if ( accRecord.props.maxValue != undefined )
+            wfs( `"maximum": ${ accRecord.props.maxValue },\n` );
 
-         if ( accRecord.minValue != undefined )
-            wfs( `"minumum": ${ accRecord.minValue },\n` );
+         if ( accRecord.props.minValue != undefined )
+            wfs( `"minimum": ${ accRecord.props.minValue },\n` );
 
          // THIS MAY ALL NOT BE NEEDED AS WILL BE PART OF DEVICE LAYOUT
          let deviceCommaRequired  = false;
@@ -533,8 +533,13 @@ function startProperties( )
    commaRequired = false;
 }
 
-function addAccessorySchemaBlock( )
+function addReferencesBlock( )
 {
+   // IMPORTANT
+   // When an Layout Item references a definition, this is the cross
+   // reference between it and the actual definition. Providing this
+   // reference shows the min/max/format/description of the definition
+
    // add the comma always next time.
    if ( commaRequired == true )
       w( `,\n` );
@@ -542,10 +547,21 @@ function addAccessorySchemaBlock( )
    // ** Begin bracket properties
    wfs( `"type": "object",\n` );
    wf( "+", `"properties": {\n` );
-      wfs( `"${ constants.TYPE }": { "$ref": "#/definitions/Type_designation"}\n` );
-      //wfs( `"${ constants.NAME }": { "$ref": "#/definitions/Name_designation"},\n` );
-      //wfs( `"${ constants.POLLING }": { "$ref": "#/definitions/Polling_designation"},\n` );
-      //wfs( `"${ constants.STATE_CMD }": { "$ref": "#/definitions/State_cmd_designation"}\n` );
+      wfs( `"${ constants.TYPE }": { "$ref": "#/definitions/Type_designation"}` );
+
+      Object.keys( CMD4_ACC_TYPE_ENUM.properties).forEach( ( accKey ) =>
+      {
+         // add comma for this record.
+         w( `,\n` );
+
+         let accRecord = CMD4_ACC_TYPE_ENUM.properties[ accKey ];
+
+         let characteristicString = accRecord.type;
+         wfs( `"${ characteristicString }": { "$ref": "#/definitions/${ characteristicString }"}` );
+      });
+      w( `\n` );
+
+
    // *** End bracket type:
    wf( "-", `}\n` );
 
@@ -589,7 +605,7 @@ function addDevicesToLayout()
       wf( "+", `{\n` );
          wfs( `"type": "fieldset",\n` );
          wfs( `"expandable": true,\n` );
-         wfs( `"title": "Required Characteristics",\n` );
+         wfs( `"title": "Required (Initial Values)",\n` );
          wf( "+", `"condition": {\n` );
             wfs( `"functionBody": "return model.Type && model.Type === '${ deviceString }';"\n` );
          wf( "-", `},\n` );
