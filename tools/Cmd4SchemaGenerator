@@ -252,12 +252,18 @@ function addStateCmdDesignationDefinitionBlock( )
 
    wfs( `"$comment": "START OF STATE_CMD DEFINITION",\n` );
    // *** Begin bracket State_cmd designation definition
-   wf( "+", `"State_cmd_designation": {\n` );
-      wfs( `"$id": "#State_cmd_designation",\n` );
+   wf( "+", `"StateCmd_designation": {\n` );
+      wfs( `"$id": "#StateCmd_designation",\n` );
       wfs( `"title": "${ constants.STATE_CMD }",\n` );
+      // *** Begin bracket condition
+      wf( "+", `"condition": {\n` );
+        wfs( `"functionBody": "return model.Polling_designation && model.Polling_designation == true;"\n` );
+      // *** End bracket condition
+      wf( "-", `},\n` );
       wfs( `"type": "string",\n` );
-      wfs( `"required": false\n` );
-   // *** End bracket State_cmd designation definition
+      wfs( `"required": true,\n` );
+      wfs( `"description": "The command to query devices state"\n` );
+   // *** End bracket StateCmd designation definition
    wf( "-", `}` );
 
    commaRequired = true;
@@ -566,7 +572,8 @@ function addReferencesBlock( )
          wfs( `"${ characteristicString }": { "$ref": "#/definitions/${ characteristicString }"}` );
       });
       w( `,\n` );
-      wfs( `"Polling_designation": { "$ref": "#/definitions/Polling_designation"}\n` );
+      wfs( `"Polling_designation": { "$ref": "#/definitions/Polling_designation"},\n` );
+      wfs( `"StateCmd_designation": { "$ref": "#/definitions/StateCmd_designation"}\n` );
 
 
    // *** End bracket type:
@@ -666,7 +673,8 @@ function addLayout( )
       if ( commaRequired == true )
          w( ",\n" );
 
-      wfs( `"Polling_designation"` );
+      wfs( `"Polling_designation",\n` );
+      wfs( `"StateCmd_designation"` );
 
       if ( commaRequired == true )
          w( "\n" );
