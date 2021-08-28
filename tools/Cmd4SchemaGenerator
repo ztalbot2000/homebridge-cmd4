@@ -257,7 +257,7 @@ function addStateCmdDesignationDefinitionBlock( )
       wfs( `"title": "${ constants.STATE_CMD }",\n` );
       // *** Begin bracket condition
       wf( "+", `"condition": {\n` );
-        wfs( `"functionBody": "return model.Polling_designation && model.Polling_designation == true;"\n` );
+        wfs( `"functionBody": "return model.Polling&& model.Polling== true;"\n` );
       // *** End bracket condition
       wf( "-", `},\n` );
       wfs( `"type": "string",\n` );
@@ -572,8 +572,8 @@ function addReferencesBlock( )
          wfs( `"${ characteristicString }": { "$ref": "#/definitions/${ characteristicString }"}` );
       });
       w( `,\n` );
-      wfs( `"Polling_designation": { "$ref": "#/definitions/Polling_designation"},\n` );
-      wfs( `"StateCmd_designation": { "$ref": "#/definitions/StateCmd_designation"}\n` );
+      wfs( `"Polling": { "$ref": "#/definitions/Polling_designation"},\n` );
+      wfs( `"State_cmd": { "$ref": "#/definitions/StateCmd_designation"}\n` );
 
 
    // *** End bracket type:
@@ -673,8 +673,8 @@ function addLayout( )
       if ( commaRequired == true )
          w( ",\n" );
 
-      wfs( `"Polling_designation",\n` );
-      wfs( `"StateCmd_designation"` );
+      wfs( `"Polling",\n` );  // Became the Upper title
+      wfs( `"State_cmd"` );
 
       if ( commaRequired == true )
          w( "\n" );
