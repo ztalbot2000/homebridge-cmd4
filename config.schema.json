@@ -1,0 +1,20 @@
+{
+  "pluginAlias": "Cmd4",
+  "pluginType": "platform",
+  "singular": true,
+  "customUi": true,
+  "schema": {
+    "properties": {
+      "token": {
+        "title": "Token",
+        "type": "string",
+        "required": true
+      },
+      "username": {
+        "title": "Username",
+        "type": "string",
+        "required": true
+      }
+    }
+  }
+}

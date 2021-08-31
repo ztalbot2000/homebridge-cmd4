@@ -7,6 +7,9 @@
 // Angular Online test https://hamidihamza.com/ajsf/?framework=bootstrap-4
 // HomeBridge Example  https://github.com/AlexGustafsson/homebridge-wol/blob/master/config.schema.json
 
+// UI Plugin
+// https://github.com/homebridge/plugin-ui-utils#readme
+
 // Cmd4 Constants and Settings
 const constants = require( "../cmd4Constants" );
 const settings = require( "../cmd4Settings" );

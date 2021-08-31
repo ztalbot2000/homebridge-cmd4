@@ -7,6 +7,7 @@
 # My favorite temp backup
 *.[0-9]
 *.save*
+*.orig*
 *_save*
 *_bak*
 

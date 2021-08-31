@@ -1,0 +1,150 @@
+<link rel="stylesheet" href="css/style.css">
+
+<!-- header -->
+<div id="header" style="display:none; height: 50px;" class="w-100 p-0 m-0">
+  <div class="row m-0">
+    <div class="col-2 pl-1">
+      <button type="submit" class="btn btn-elegant back float-left">
+        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="col-10 pr-1">
+      <button id="refreshAccessory" type="submit" class="btn btn-primary float-right">
+        <i class="fas fa-sync-alt"></i>
+      </button>
+      <button id="removeAccessory" type="submit" class="btn btn-danger float-right">
+        <i class="fa fa-trash" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="main" class="card card-body pb-5">
+  
+  <!-- isConfigured -->
+  <div id="isConfigured" style="display:none;">
+    <img src="images/Cmd4_icon.svg" alt="Scripting with Cmd4 for Homebridge" width="150px" class="center-it cmd4Logo">
+    <h3 class="text-center"><span style="font-size: 20px">Welcome to</span> <br> <b style="font-weight: 800;">Cmd4 Platform</b></h3>
+    <h6 class="text-center">Cmd4 Homebridge plugin for Scripting</h6>
+    <div class="container mt-4" style="max-width: 360px;">
+      <div class="form-row">
+        <div class="col-10">
+          <select class="custom-select" id="accessorySelect"></select>
+        </div>
+        <div class="col-2">
+          <button id="editAccessory" type="submit" class="btn btn-elegant m-0">
+            <i class="fas fa-edit"></i>
+          </button>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center mt-4">
+        <a href="#" id="addCar" class="d-flex justify-content-center align-items-center btn-primary addBtn">
+          <i class="fas fa-plus"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- notConfigured -->
+  <div id="notConfigured" style="display:none;">
+    <img src="images/Cmd4_icon.svg" alt="Scripting with Cmd4 for Homebridge" width="150px" class="center-it cmd4Logo">
+    <h3 class="text-center">Welcome to <br> <b style="font-weight: 800;">Cmd4 Platform</b></h3>
+    <h6 class="text-center">Cmd4 Homebridge plugin for Scripting</h6>
+    <button id="start" type="submit" class="btn btn-primary center-it mt-3">Start</button> 
+  </div>
+  
+  <!-- configureAccessory -->
+  <div id="configureAccessory" style="display:none;">
+    <button type="submit" class="btn btn-elegant back" style="position: absolute;">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    </button>
+    <img src="images/Cmd4_icon.svg" alt="Scripting with Cmd4 for Homebridge" width="150px" class="center-it mt-4 cmd4Logo">
+    <h6 class="text-center">To start the process, we need some data for the accessory. <br> Please fill out all marked fields.</h6>
+    <div class="container mt-5">
+      <div class="form-group">
+        <label for="accessoryType">Type <span class="text-danger">*</span> </label>
+        <select name="accessoryType" class="form-control" id="accessoryType">
+          <option value="Switch">Switch</option>
+          <option value="Lightbulb">Lightbulb</option>
+          <option value="Door">Door</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="accessoryName">Name <span class="text-danger">*</span> </label>
+        <input type="text" class="form-control" id="accessoryName">
+      </div>
+      <div class="form-group">
+        <label for="pollingType">Polling <span class="text-danger">*</span> </label>
+        <input type="checkbox" class="form-control" id="pollingType">
+      </div>
+      <div class="form-group">
+        <label for="accessoryClientID">Client ID<span class="text-danger">*</span> </label>
+        <input type="text" class="form-control" id="accessoryClientID">
+      </div>
+      <div class="form-group">
+        <label for="accessoryClientSecret">Client Secret <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" id="accessoryClientSecret">
+      </div>
+      <div class="form-group">
+        <label for="accessoryVIN">VIN (Vehicle Identification Number) <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" id="accessoryVIN">
+      </div>
+      <button id="auth" type="submit" class="btn btn-primary float-right mt-3 mr-0">Next</button>
+    </div>
+  </div>
+  
+  <!-- authentication -->
+  <div id="authentication" style="display:none;">
+    <button type="submit" class="btn btn-elegant back" style="position: absolute;">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    </button>
+    <img src="images/Cmd4_icon.svg" alt="Scripting meets Homebridge" width="150px" class="center-it mt-4 cmd4Logo">
+    <h3 class="text-center">Authentication</b></h3>
+    <h6 class="text-center">After starting authentication process, a popup window should appear to generate an authentication code after successfull login.</h6>
+    <div class="container d-flex justify-content-center mt-4">
+      <button id="startAuth" type="submit" class="btn btn-primary">Start authentication</button>  
+    </div>
+    <div id="codeInput" class="container mt-5" style="display:none">
+      <div class="form-group">
+        <label for="authCode">Authorization Code</label>
+        <input type="text" class="form-control" id="authCode" readonly>
+      </div>
+      <button id="generateToken" type="submit" class="btn btn-primary float-right mt-3 mr-0">Next</button>
+    </div>
+    <div id="tokenInput" class="container mt-5" style="display:none;clear:both">
+      <div class="form-group">
+        <label for="authToken">Access Token</label>
+        <input type="text" class="form-control" id="authToken" readonly>
+      </div>
+      <div class="form-group">
+        <label for="authRefreshToken">Refresh Token</label>
+        <input type="text" class="form-control" id="authRefreshToken" readonly>
+      </div>
+      <div class="form-group">
+        <label for="authTokenType">Token Type</label>
+        <input type="text" class="form-control" id="authTokenType" readonly>
+      </div>
+      <div class="form-group">
+        <label for="authExpiresIn">Expires In</label>
+        <input type="text" class="form-control" id="authExpiresIn" readonly>
+      </div>
+      <div class="form-group">
+        <label for="authExpiresAt">Expires At</label>
+        <input type="text" class="form-control" id="authExpiresAt" readonly>
+      </div>
+      <button id="saveAuth" type="submit" class="btn btn-primary float-right mt-3 mr-0">Save Config</button>
+    </div>
+  </div>
+  
+  
+  
+</div>
+
+<!-- Modules -->
+<script type="text/javascript" src="js/modules/jquery.min.js"></script>
+
+<!-- Custom Schema -->
+<script type="text/javascript" src="js/schema.js?v=0.0.7"></script>
+ 
+<!-- Main -->
+<script type="text/javascript" src="js/main.js?v=0.0.7"></script>

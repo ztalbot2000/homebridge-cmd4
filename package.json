@@ -17,6 +17,7 @@
       "email": "ztalbot2000@gmail.com"
    },
    "dependencies": {
+      "@homebridge/plugin-ui-utils": "^0.0.19",
       "chalk": "^4.1.0",
       "command-exists": "^1.2.9",
       "fakegato-history": ">=0.6.1",
@@ -43,7 +44,8 @@
       "test": "test",
       "lib": "lib",
       "utils": "utils",
-      "docs": "docs"
+      "docs": "docs",
+      "homebridge-ui": "homebridge-ui"
    },
    "engines": {
       "homebridge": ">=1.2.5",
