@@ -58,8 +58,7 @@ class UiServer extends HomebridgePluginUiServer
 
        const params = {
          client: {
-           id: config.accessoryCharacteristics,
-           secret: config.clientSecret
+           id: config.accessoryCharacteristics
          },
          auth: {
            tokenHost: 'https://id.mercedes-benz.com',

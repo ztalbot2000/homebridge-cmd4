@@ -109,8 +109,7 @@ async function createCustomSchema( accessory )
    {
       name: accessory.name,
       accessoryCharacteristics: accessory.characteristics,
-      clientSecret: accessory.clientSecret,
-      vin: accessory.vin,
+      polling: accessory.polling,
       origin: location.origin
    };
 
@@ -169,8 +168,7 @@ function resetForm( )
 
    $('#accessoryName').val('');
    $('#accessoryCharacteristics').val('');
-   $('#accessoryClientSecret').val('');
-   $('#accessoryVIN').val('');
+   $('#accessoryPolling').val('');
    $('#authCode').val('');
    $('#authToken').val('');
    $('#authRefreshToken').val('');
@@ -231,8 +229,7 @@ async function addNewDeviceToConfig( accessory )
       {
          name: accessory.name,
          accessoryCharacteristics: accessory.characteristics,
-         clientSecret: accessory.clientSecret,
-         vin: accessory.vin,
+         polling: accessory.polling,
          electricVehicle: false,
          tankBatteryType: 'HUMIDITY',
          token:
@@ -420,8 +417,7 @@ $('#auth').on('click', () =>
       {
          name: $('#accessoryName').val(),
             accessoryCharacteristics: $('#accessoryCharacteristics').val(),
-            clientSecret: $('#accessoryClientSecret').val(),
-            vin: $('#accessoryVIN').val(),
+            polling: $('#accessoryPolling').val(),
             origin: location.origin
       };
 
@@ -439,13 +435,9 @@ $('#auth').on('click', () =>
       {
          return homebridge.toast.error('There is no client ID configured for this accessory!', 'Error');
       }
-      else if (!GLOBAL.accessoryOptions.clientSecret)
+      else if (!GLOBAL.accessoryOptions.polling)
       {
-         return homebridge.toast.error('There is no client secret configured for this accessory!', 'Error');
-      }
-      else if (!GLOBAL.accessoryOptions.vin)
-      {
-         return homebridge.toast.error('There is no VIN configured for this accessory!', 'Error');
+         return homebridge.toast.error('There is no Polling configured for this accessory!', 'Error');
       }
 
       transPage($('#configureAccessory'), $('#authentication'));

@@ -24,128 +24,120 @@ const schema =
          {
             'name':
             {
-               'title': 'Name',
+               'title': 'Accessory Name',
                   'description': 'The name of your accessory in HomeKit',
                   'type': 'string',
                   'required': true
             },
-               'accessoryCharacteristics':
+           'accessoryCharacteristics':
             {
                'title': 'Accessory Characteristics',
                   'description': 'The characteristics for the accessorys typen',
                   'type': 'string',
                   'required': true
             },
-               'clientSecret':
+           'polling':
             {
-               'title': 'Client Secret',
-                  'description': 'Client Secret from https://developer.mercedes-benz.com/',
+               'title': 'Accessory Polling',
+                  'description': 'Polling of a characteristics state',
                   'type': 'string',
                   'required': true
             },
-               'vin':
-            {
-               'title': 'Vehicle Identification Number (VIN)',
-                  'description': 'VIN of the accessory',
-                  'type': 'string',
-                  'required': true
-            },
-               'electricVehicle':
+            'electricVehicle':
             {
                'title': 'Electric Vehicle',
                   'type': 'boolean',
                   'description': 'Check if your accessory is an electric vehicle.'
             },
-               'hybridVehicle':
+           'hybridVehicle':
             {
                'title': 'Hybrid Vehicle',
-                  'type': 'boolean',
-                  'description': 'Check if your accessory is a hybrid vehicle.'
+               'type': 'boolean',
+               'description': 'Check if your accessory is a hybrid vehicle.'
             },
                'tankBatteryType':
             {
                'title': 'Tank load/Battery Accessory Type',
-                  'type': 'string',
-                  'description': 'You can choose between several accessory types for your tank load and/or electric vehicle battery. If \'none\' is choosen, only the tank load (for non electric vehicle) or battery level (electric vehicle) will be shown as a battery service within the accessory.',
+               'type': 'string',
+               'description': 'You can choose between several accessory types for your tank load and/or electric vehicle battery. If \'none\' is choosen, only the tank load (for non electric vehicle) or battery level (electric vehicle) will be shown as a battery service within the accessory.',
                   'oneOf': [
                {
                   'title': 'Humidity Sensor',
-                     'enum': [
+                  'enum': [
                      'HUMIDITY'
-                     ]
+                   ]
                },
                {
                   'title': 'Lighhtbulb',
-                     'enum': [
+                  'enum': [
                      'LIGHTBULB'
-                     ]
+                  ]
                }
                ]
             },
-               'manufacturer':
+           'manufacturer':
             {
                'name': 'Manufacturer',
-                  'type': 'string',
-                  'description': 'Set the manufacturer name for display in the Home app.'
+               'type': 'string',
+               'description': 'Set the manufacturer name for display in the Home app.'
             },
                'model':
             {
                'title': 'Model',
-                  'description': 'Accessory model',
-                  'type': 'string',
+               'description': 'Accessory model',
+               'type': 'string',
                   'required': false
             },
-               'maxRange':
+            'maxRange':
             {
                'title': 'Max Range',
-                  'description': 'Maximum distance after full tank load',
-                  'type': 'integer',
-                  'required': false
+               'description': 'Maximum distance after full tank load',
+               'type': 'integer',
+               'required': false
             },
                'polling':
             {
                'title': 'Polling',
-                  'description': 'Mercedes Me API Polling in seconds',
-                  'type': 'integer',
-                  'required': false,
-                  'placeholder': 60,
-                  'minimum': 60
+               'description': 'Mercedes Me API Polling in seconds',
+               'type': 'boolean',
+               'required': false,
+               'placeholder': false,
             },
-               'token':
+            'token':
             {
                'titel': 'Token',
-                  'type': 'object',
-                  'properties':
+               'type': 'object',
+               'properties':
                {
                   'access_token':
                   {
                      'title': 'Access Token',
-                        'type': 'string',
-                        'required': true
+                     'type': 'string',
+                     'required': true
                   },
-                     'refresh_token':
+                  'refresh_token':
                   {
                      'title': 'Refresh Token',
-                        'type': 'string',
-                        'required': true
+                     'type': 'string',
+                     'required': true
                   },
                      'token_type':
                   {
                      'title': 'Token Type',
-                        'type': 'string',
-                        'required': true
+                     'type': 'string',
+                     'required': true
                   },
                      'expires_in':
                   {
                      'title': 'Expires In',
-                        'type': 'integer',
-                        'required': true
+                     'type': 'integer',
+                     'required': true
                   },
                      'expires_at':
                   {
                      'title': 'Expires at',
-                        'type': 'string',
-                        'required': true
+                     'type': 'string',
+                     'required': true
                   }
                }
             }
@@ -153,53 +145,52 @@ const schema =
       }
    },
    'layout': [
-   'name',
-   'debug',
-   'accessories.name',
-   'accessories.clientID',
-   'accessories.clientSecret',
-   'accessories.vin',
-   'accessories.electricVehicle',
-   'accessories.hybridVehicle',
-   'accessories.tankBatteryType',
-   {
-      'key': 'accessories',
+      'name',
+      'debug',
+      'accessories.name',
+      'accessories.accessoryCharacteristics',
+      'accessories.polling',
+      'accessories.electricVehicle',
+      'accessories.hybridVehicle',
+      'accessories.tankBatteryType',
+       {
+         'key': 'accessories',
          'type': 'section',
          'title': 'Branding',
          'expandable': true,
          'expanded': false,
          'orderable': false,
          'items': [
-         'accessories.manufacturer',
-         'accessories.model'
+            'accessories.manufacturer',
+            'accessories.model'
          ]
-   },
-   {
-      'key': 'accessories',
+      },
+      {
+         'key': 'accessories',
          'type': 'section',
          'title': 'Extras',
          'expandable': true,
          'expanded': false,
          'orderable': false,
          'items': [
-         'accessories.maxRange',
-         'accessories.polling'
+            'accessories.maxRange',
+            'accessories.polling'
          ]
-   },
-   {
-      'key': 'accessories.token',
+      },
+      {
+         'key': 'accessories.token',
          'type': 'section',
          'title': 'Authorization',
          'expandable': true,
          'expanded': false,
          'orderable': false,
          'items': [
-         'accessories.token.access_token',
-         'accessories.token.refresh_token',
-         'accessories.token.token_type',
-         'accessories.token.expires_in',
-         'accessories.token.expires_at'
+            'accessories.token.access_token',
+            'accessories.token.refresh_token',
+            'accessories.token.token_type',
+            'accessories.token.expires_in',
+            'accessories.token.expires_at'
          ]
-   }
+      }
    ]
 };
