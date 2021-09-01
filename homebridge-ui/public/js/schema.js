@@ -29,10 +29,10 @@ const schema =
                   'type': 'string',
                   'required': true
             },
-               'clientID':
+               'accessoryCharacteristics':
             {
-               'title': 'Client ID',
-                  'description': 'Client ID from https://developer.mercedes-benz.com/',
+               'title': 'Accessory Characteristics',
+                  'description': 'The characteristics for the accessorys typen',
                   'type': 'string',
                   'required': true
             },

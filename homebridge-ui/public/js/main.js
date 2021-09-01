@@ -108,7 +108,7 @@ async function createCustomSchema( accessory )
    GLOBAL.accessoryOptions =
    {
       name: accessory.name,
-      clientID: accessory.clientID,
+      accessoryCharacteristics: accessory.characteristics,
       clientSecret: accessory.clientSecret,
       vin: accessory.vin,
       origin: location.origin
@@ -168,7 +168,7 @@ function resetForm( )
 {
 
    $('#accessoryName').val('');
-   $('#accessoryClientID').val('');
+   $('#accessoryCharacteristics').val('');
    $('#accessoryClientSecret').val('');
    $('#accessoryVIN').val('');
    $('#authCode').val('');
@@ -230,7 +230,7 @@ async function addNewDeviceToConfig( accessory )
       const config =
       {
          name: accessory.name,
-         clientID: accessory.clientID,
+         accessoryCharacteristics: accessory.characteristics,
          clientSecret: accessory.clientSecret,
          vin: accessory.vin,
          electricVehicle: false,
@@ -346,6 +346,10 @@ async function removeDeviceFromConfig( )
    {
 
       GLOBAL.pluginConfig = await homebridge.getPluginConfig();
+      GLOBAL.pluginConfig.forEach( ( elem, index ) =>
+      {
+         console.log("GLOBAL.pluginConfig[ %s ] returned by homebridge: %s", index, elem );
+      });
 
          if (!GLOBAL.pluginConfig.length)
       {
@@ -415,7 +419,7 @@ $('#auth').on('click', () =>
       GLOBAL.accessoryOptions =
       {
          name: $('#accessoryName').val(),
-            clientID: $('#accessoryClientID').val(),
+            accessoryCharacteristics: $('#accessoryCharacteristics').val(),
             clientSecret: $('#accessoryClientSecret').val(),
             vin: $('#accessoryVIN').val(),
             origin: location.origin
@@ -431,7 +435,7 @@ $('#auth').on('click', () =>
       {
          return homebridge.toast.error('There is no name configured for this accessory!', 'Error');
       }
-      else if (!GLOBAL.accessoryOptions.clientID)
+      else if (!GLOBAL.accessoryOptions.accessoryCharacteristics)
       {
          return homebridge.toast.error('There is no client ID configured for this accessory!', 'Error');
       }

@@ -58,7 +58,7 @@ class UiServer extends HomebridgePluginUiServer
 
        const params = {
          client: {
-           id: config.clientID,
+           id: config.accessoryCharacteristics,
            secret: config.clientSecret
          },
          auth: {
