@@ -1,5 +1,7 @@
 /*global $, window, location, homebridge, schema*/
 
+
+
 const GLOBAL =
 {
    pluginConfig: false,
@@ -50,10 +52,10 @@ function transPage( cur, next, removed, showSchema )
 
          next.fadeIn( 500 );
 
-            if ( !removed )
+         if ( !removed )
             GLOBAL.previousContent.push( cur );
 
-            GLOBAL.currentContent = next;
+         GLOBAL.currentContent = next;
 
       });
 
@@ -117,6 +119,11 @@ async function createCustomSchema( accessory )
    {
       name: GLOBAL.pluginConfig[0].name,
       debug: GLOBAL.pluginConfig[0].debug,
+      outputConstants: GLOBAL.pluginConfig[0].outputConstants,
+      statusMsg: GLOBAL.pluginConfig[0].statusMsg,
+      timeout: GLOBAL.pluginConfig[0].timeout,
+      stateChangeResponseTime: GLOBAL.pluginConfig[0].stateChangeResponseTime,
+      accessories: [],
       accessories: accessory
    });
 
@@ -125,6 +132,10 @@ async function createCustomSchema( accessory )
 
       GLOBAL.pluginConfig[0].name = config.name;
       GLOBAL.pluginConfig[0].debug = config.debug;
+      GLOBAL.pluginConfig[0].outputConstants = config.outputConstants;
+      GLOBAL.pluginConfig[0].statusMsg = config.statusMsg;
+      GLOBAL.pluginConfig[0].timeout = config.timeout;
+      GLOBAL.pluginConfig[0].stateChangeResponseTime = config.stateChangeResponseTime;
       GLOBAL.pluginConfig[0].accessories = GLOBAL.pluginConfig[0].accessories.map( accessory =>
       {
          if ( accessory.name === config.accessories.name )
@@ -348,17 +359,22 @@ async function removeDeviceFromConfig( )
          console.log("GLOBAL.pluginConfig[ %s ] returned by homebridge: %s", index, elem );
       });
 
-         if (!GLOBAL.pluginConfig.length)
+      if (!GLOBAL.pluginConfig.length)
       {
 
          GLOBAL.pluginConfig = [
          {
-            platform: 'MercedesPlatform',
-               name: 'MercedesPlatform',
-               accessories: []
+            platform: settings.PLATFORM_NAME,
+            name: settings.PLATFORM_NAME,
+            debug: false,
+            outputConstants: settings.DEFAULT_OUTPUTCONSTANTS,
+            statusMsg: settings.DEFAULT_STATUSMSG,
+            timeout: settings.DEFAULT_TIMEOUT,
+            stateChangeResponseTime: settings.DEFAULT_STATE_CHANGE_RESPONSE_TIME,
+            accessories: []
          }];
 
-            transPage(false, $('#notConfigured'));
+         transPage(false, $('#notConfigured'));
 
       }
       else
@@ -367,7 +383,7 @@ async function removeDeviceFromConfig( )
          if (!GLOBAL.pluginConfig[0].accessories || (GLOBAL.pluginConfig[0].accessories && !GLOBAL.pluginConfig[0].accessories.length))
          {
             GLOBAL.pluginConfig[0].accessories = [];
-               return transPage(false, $('#notConfigured'));
+            return transPage(false, $('#notConfigured'));
          }
 
          GLOBAL.pluginConfig[0].accessories.forEach(accessory =>
@@ -375,7 +391,7 @@ async function removeDeviceFromConfig( )
             $('#accessorySelect').append('<option value="' + accessory.name + '">'+ accessory.name + '</option>');
          });
 
-            transPage(false, $('#isConfigured'));
+         transPage(false, $('#isConfigured'));
 
       }
 
@@ -402,9 +418,9 @@ $('#addAccessory, #start').on('click', () =>
    resetUI();
 
 
-      let activeContent = $('#notConfigured').css('display') !== 'none' ? $('#notConfigured') : $('#isConfigured');
+   let activeContent = $('#notConfigured').css('display') !== 'none' ? $('#notConfigured') : $('#isConfigured');
 
-      transPage(activeContent, $('#configureAccessory'));
+   transPage(activeContent, $('#configureAccessory'));
 
 });
 
@@ -413,9 +429,9 @@ $('#globals, #start').on('click', () =>
 
    resetUI();
 
-      let activeContent = $('#notConfigured').css('display') !== 'none' ? $('#notConfigured') : $('#isConfigured');
+   let activeContent = $('#notConfigured').css('display') !== 'none' ? $('#notConfigured') : $('#isConfigured');
 
-      transPage(activeContent, $('#configureGlobals'));
+   transPage(activeContent, $('#configureGlobals'));
 
 });
 
@@ -428,14 +444,14 @@ $('#auth').on('click', () =>
       GLOBAL.accessoryOptions =
       {
          name: $('#accessoryName').val(),
-            accessoryCharacteristics: $('#accessoryCharacteristics').val(),
-            polling: $('#accessoryPolling').val(),
-            origin: location.origin
+         accessoryCharacteristics: $('#accessoryCharacteristics').val(),
+         polling: $('#accessoryPolling').val(),
+         origin: location.origin
       };
 
       let accessoryConfig = GLOBAL.pluginConfig[0].accessories.find(accessory => accessory && accessory.name === GLOBAL.accessoryOptions.name);
 
-         if (accessoryConfig)
+      if (accessoryConfig)
       {
          return homebridge.toast.error('There is already a accessory configured with the same name!', 'Error');
       }
@@ -472,20 +488,20 @@ $('#startAuth').on('click', async () =>
 
       homebridge.showSpinner();
 
-         GLOBAL.accessoryOptions.authorizationUri = await homebridge.request('/authCode', GLOBAL.accessoryOptions);
+      GLOBAL.accessoryOptions.authorizationUri = await homebridge.request('/authCode', GLOBAL.accessoryOptions);
 
-         const win = window.open(GLOBAL.accessoryOptions.authorizationUri, 'windowname1', 'width=800, height=600');
+      const win = window.open(GLOBAL.accessoryOptions.authorizationUri, 'windowname1', 'width=800, height=600');
 
-         const pollTimer = window.setInterval(function()
+      const pollTimer = window.setInterval(function()
       {
          if (win.document.URL.includes('?code='))
          {
             window.clearInterval(pollTimer);
-               GLOBAL.accessoryOptions.autherization_code = win.document.URL.split('?code=')[1];
-               $('#authCode').val(GLOBAL.accessoryOptions.autherization_code);
-               win.close();
-               homebridge.hideSpinner();
-               $('#codeInput').fadeIn();
+            GLOBAL.accessoryOptions.autherization_code = win.document.URL.split('?code=')[1];
+            $('#authCode').val(GLOBAL.accessoryOptions.autherization_code);
+            win.close();
+            homebridge.hideSpinner();
+            $('#codeInput').fadeIn();
          }
       }, 1000);
 
@@ -495,7 +511,7 @@ $('#startAuth').on('click', async () =>
 
       homebridge.hideSpinner();
 
-         homebridge.toast.error(err.message, 'Error');
+      homebridge.toast.error(err.message, 'Error');
 
    }
 
@@ -509,17 +525,17 @@ $('#generateToken').on('click', async () =>
 
       homebridge.showSpinner();
 
-         GLOBAL.accessoryOptions.token = await homebridge.request('/authToken', GLOBAL.accessoryOptions);
+      GLOBAL.accessoryOptions.token = await homebridge.request('/authToken', GLOBAL.accessoryOptions);
 
-         $('#authToken').val(GLOBAL.accessoryOptions.token.access_token);
-         $('#authRefreshToken').val(GLOBAL.accessoryOptions.token.refresh_token);
-         $('#authTokenType').val(GLOBAL.accessoryOptions.token.token_type);
-         $('#authExpiresIn').val(GLOBAL.accessoryOptions.token.expires_in);
-         $('#authExpiresAt').val(GLOBAL.accessoryOptions.token.expires_at);
+      $('#authToken').val(GLOBAL.accessoryOptions.token.access_token);
+      $('#authRefreshToken').val(GLOBAL.accessoryOptions.token.refresh_token);
+      $('#authTokenType').val(GLOBAL.accessoryOptions.token.token_type);
+      $('#authExpiresIn').val(GLOBAL.accessoryOptions.token.expires_in);
+      $('#authExpiresAt').val(GLOBAL.accessoryOptions.token.expires_at);
 
-         homebridge.hideSpinner();
+      homebridge.hideSpinner();
 
-         $('#tokenInput').fadeIn();
+      $('#tokenInput').fadeIn();
 
    }
    catch(err)
@@ -527,7 +543,7 @@ $('#generateToken').on('click', async () =>
 
       homebridge.hideSpinner();
 
-         homebridge.toast.error(err.message, 'Error');
+      homebridge.toast.error(err.message, 'Error');
 
    }
 
@@ -541,7 +557,7 @@ $('#saveAuth').on('click', async () =>
 
       await addNewDeviceToConfig(GLOBAL.accessoryOptions);
 
-         transPage($('#authentication'), $('#isConfigured'));
+      transPage($('#authentication'), $('#isConfigured'));
 
    }
    catch(err)
@@ -558,15 +574,15 @@ $('#editAccessory').on('click', () =>
 
    resetUI();
 
-      let selectedAccessory = $( '#accessorySelect option:selected' ).text();
-      let accessory = GLOBAL.pluginConfig[0].accessories.find(accessory => accessory.name === selectedAccessory);
+   let selectedAccessory = $( '#accessorySelect option:selected' ).text();
+   let accessory = GLOBAL.pluginConfig[0].accessories.find(accessory => accessory.name === selectedAccessory);
 
-      if (!accessory)
+   if (!accessory)
       return homebridge.toast.error('Can not find the accessory!', 'Error');
 
-      createCustomSchema(accessory);
+   createCustomSchema(accessory);
 
-      transPage($('#main, #isConfigured'), $('#header'), false, true);
+   transPage($('#main, #isConfigured'), $('#header'), false, true);
 
 });
 
@@ -578,12 +594,12 @@ $('#refreshAccessory').on('click', async () =>
 
       resetSchema();
 
-         let accessory = GLOBAL.pluginConfig[0].accessories.find(accessory => accessory.name === GLOBAL.accessoryOptions.name);
+      let accessory = GLOBAL.pluginConfig[0].accessories.find(accessory => accessory.name === GLOBAL.accessoryOptions.name);
 
-         if (!accessory)
+      if (!accessory)
          return homebridge.toast.error('Can not find accessory in config!', 'Error');
 
-         transPage($('#isConfigured'), $('#authentication'));
+      transPage($('#isConfigured'), $('#authentication'));
 
    }
 
@@ -597,9 +613,9 @@ $('#removeAccessory').on('click', async () =>
 
       await removeDeviceFromConfig();
 
-         resetUI();
+      resetUI();
 
-         transPage(false, GLOBAL.pluginConfig[0].accessories.length ? $('#isConfigured') : $('#notConfigured'));
+      transPage(false, GLOBAL.pluginConfig[0].accessories.length ? $('#isConfigured') : $('#notConfigured'));
 
    }
    catch (err)
