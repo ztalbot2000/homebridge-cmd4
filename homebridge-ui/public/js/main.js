@@ -6,7 +6,7 @@ const GLOBAL =
 {
    pluginConfig: false,
    customSchema: false,
-   accessoryOptions: false,
+   accessorySchema: false,
    currentContent: false,
    previousContent: [],
 };
@@ -107,7 +107,7 @@ function goBack( index )
 async function createCustomSchema( accessory )
 {
 
-   GLOBAL.accessoryOptions =
+   GLOBAL.accessorySchema =
    {
       name: accessory.name,
       accessoryCharacteristics: accessory.characteristics,
@@ -190,7 +190,7 @@ function resetForm( )
    $('#codeInput').hide();
    $('#tokenInput').hide();
 
-   GLOBAL.accessoryOptions = false;
+   GLOBAL.accessorySchema = false;
 
    return;
 
@@ -441,7 +441,7 @@ $('#auth').on('click', () =>
    try
    {
 
-      GLOBAL.accessoryOptions =
+      GLOBAL.accessorySchema =
       {
          name: $('#accessoryName').val(),
          accessoryCharacteristics: $('#accessoryCharacteristics').val(),
@@ -449,21 +449,21 @@ $('#auth').on('click', () =>
          origin: location.origin
       };
 
-      let accessoryConfig = GLOBAL.pluginConfig[0].accessories.find(accessory => accessory && accessory.name === GLOBAL.accessoryOptions.name);
+      let accessoryConfig = GLOBAL.pluginConfig[0].accessories.find(accessory => accessory && accessory.name === GLOBAL.accessorySchema.name);
 
       if (accessoryConfig)
       {
          return homebridge.toast.error('There is already a accessory configured with the same name!', 'Error');
       }
-      else if (!GLOBAL.accessoryOptions.name)
+      else if (!GLOBAL.accessorySchema.name)
       {
          return homebridge.toast.error('There is no name configured for this accessory!', 'Error');
       }
-      else if (!GLOBAL.accessoryOptions.accessoryCharacteristics)
+      else if (!GLOBAL.accessorySchema.accessoryCharacteristics)
       {
          return homebridge.toast.error('There is no client ID configured for this accessory!', 'Error');
       }
-      else if (!GLOBAL.accessoryOptions.polling)
+      else if (!GLOBAL.accessorySchema.polling)
       {
          return homebridge.toast.error('There is no Polling configured for this accessory!', 'Error');
       }
@@ -488,17 +488,17 @@ $('#startAuth').on('click', async () =>
 
       homebridge.showSpinner();
 
-      GLOBAL.accessoryOptions.authorizationUri = await homebridge.request('/authCode', GLOBAL.accessoryOptions);
+      GLOBAL.accessorySchema.authorizationUri = await homebridge.request('/authCode', GLOBAL.accessorySchema);
 
-      const win = window.open(GLOBAL.accessoryOptions.authorizationUri, 'windowname1', 'width=800, height=600');
+      const win = window.open(GLOBAL.accessorySchema.authorizationUri, 'windowname1', 'width=800, height=600');
 
       const pollTimer = window.setInterval(function()
       {
          if (win.document.URL.includes('?code='))
          {
             window.clearInterval(pollTimer);
-            GLOBAL.accessoryOptions.autherization_code = win.document.URL.split('?code=')[1];
-            $('#authCode').val(GLOBAL.accessoryOptions.autherization_code);
+            GLOBAL.accessorySchema.autherization_code = win.document.URL.split('?code=')[1];
+            $('#authCode').val(GLOBAL.accessorySchema.autherization_code);
             win.close();
             homebridge.hideSpinner();
             $('#codeInput').fadeIn();
@@ -525,13 +525,13 @@ $('#generateToken').on('click', async () =>
 
       homebridge.showSpinner();
 
-      GLOBAL.accessoryOptions.token = await homebridge.request('/authToken', GLOBAL.accessoryOptions);
+      GLOBAL.accessorySchema.token = await homebridge.request('/authToken', GLOBAL.accessorySchema);
 
-      $('#authToken').val(GLOBAL.accessoryOptions.token.access_token);
-      $('#authRefreshToken').val(GLOBAL.accessoryOptions.token.refresh_token);
-      $('#authTokenType').val(GLOBAL.accessoryOptions.token.token_type);
-      $('#authExpiresIn').val(GLOBAL.accessoryOptions.token.expires_in);
-      $('#authExpiresAt').val(GLOBAL.accessoryOptions.token.expires_at);
+      $('#authToken').val(GLOBAL.accessorySchema.token.access_token);
+      $('#authRefreshToken').val(GLOBAL.accessorySchema.token.refresh_token);
+      $('#authTokenType').val(GLOBAL.accessorySchema.token.token_type);
+      $('#authExpiresIn').val(GLOBAL.accessorySchema.token.expires_in);
+      $('#authExpiresAt').val(GLOBAL.accessorySchema.token.expires_at);
 
       homebridge.hideSpinner();
 
@@ -555,7 +555,7 @@ $('#saveAuth').on('click', async () =>
    try
    {
 
-      await addNewDeviceToConfig(GLOBAL.accessoryOptions);
+      await addNewDeviceToConfig(GLOBAL.accessorySchema);
 
       transPage($('#authentication'), $('#isConfigured'));
 
@@ -589,12 +589,12 @@ $('#editAccessory').on('click', () =>
 $('#refreshAccessory').on('click', async () =>
 {
 
-   if (GLOBAL.customSchema && GLOBAL.accessoryOptions)
+   if (GLOBAL.customSchema && GLOBAL.accessorySchema)
    {
 
       resetSchema();
 
-      let accessory = GLOBAL.pluginConfig[0].accessories.find(accessory => accessory.name === GLOBAL.accessoryOptions.name);
+      let accessory = GLOBAL.pluginConfig[0].accessories.find(accessory => accessory.name === GLOBAL.accessorySchema.name);
 
       if (!accessory)
          return homebridge.toast.error('Can not find accessory in config!', 'Error');
