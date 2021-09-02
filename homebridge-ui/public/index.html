@@ -4,7 +4,7 @@
 <div id="header" style="display:none; height: 50px;" class="w-100 p-0 m-0">
   <div class="row m-0">
     <div class="col-2 pl-1">
-      <button type="submit" class="btn btn-elegant back float-left">
+      <button id="back" type="submit" class="btn btn-elegant back float-left">
         <i class="fa fa-arrow-left" aria-hidden="true"></i>
       </button>
     </div>
@@ -14,6 +14,9 @@
       </button>
       <button id="removeAccessory" type="submit" class="btn btn-danger float-right">
         <i class="fa fa-trash" aria-hidden="true"></i>
+      <button id="globals" type="submit" class="btn btn-elegant Globals float-right">
+        <i class="fas fa-globe fa-border" aria-hidden="true"></i>
+      </button>
       </button>
     </div>
   </div>
@@ -38,7 +41,7 @@
         </div>
       </div>
       <div class="d-flex justify-content-center mt-4">
-        <a href="#" id="addCar" class="d-flex justify-content-center align-items-center btn-primary addBtn">
+        <a href="#" id="addAccessory" class="d-flex justify-content-center align-items-center btn-primary addBtn">
           <i class="fas fa-plus"></i>
         </a>
       </div>
@@ -84,7 +87,47 @@
       <button id="auth" type="submit" class="btn btn-primary float-right mt-3 mr-0">Next</button>
     </div>
   </div>
-  
+
+  <!-- configureGlobals -->
+  <div id="configureGlobals" style="display:none;">
+    <button type="submit" class="btn btn-elegant back" style="position: absolute;">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    </button>
+    <img src="images/Cmd4_icon.svg" alt="Cmd4 Globals" width="150px" class="center-it mt-4 cmd4Logo">
+    <h6 class="text-center">To start the process, we need will define options accross all Accessories. <br> The defaults are pre-defined. Press Next to continue.</h6>
+    <div class="container mt-5">
+      <div class="form-group">
+        <label for="debug">Debug <span class="text-danger">*</span> </label>
+        <input type="checkbox" class="form-control" id="debug">
+      </div>
+      <div class="form-group">
+        <label for="outputConstants">Output Constants<span class="text-danger">*</span> </label>
+        <input type="checkbox" class="form-control" id="outputConstants">
+      </div>
+      <div class="form-group">
+        <label for="allowTLV8">Allow TLV8 Characteristics<span class="text-danger">*</span> </label>
+        <input type="checkbox" class="form-control" id="allowTLV8">
+      </div>
+      <div class="form-group">
+        <label for="statusMsg">Show Status Messages in Logs<span class="text-danger">*</span> </label>
+        <input type="checkbox" class="form-control" id="statusMsg">
+      </div>
+      <div class="form-group">
+        <label for="timeout">Default polling timeout (sec)<span class="text-danger">*</span> </label>
+        <input type="range" min="1" class="form-control" id="timeout">
+      </div>
+      <div class="form-group">
+        <label for="stateChangeResponseTime">Default State Change Response Time (sec)<span class="text-danger">*</span> </label>
+        <input type="range" min="0" class="form-control" id="stateChangeResponseTime">
+      </div>
+      <div class="form-group">
+        <label for="globalQueuse">PreDefine Queues<span class="text-danger">*</span> </label>
+        <input type="checkbox" class="form-control" id="globalQueuese">
+      </div>
+      <button id="configureGlobals" type="submit" class="btn btn-primary float-right mt-3 mr-0">Next</button>
+    </div>
+  </div>
+
   <!-- authentication -->
   <div id="authentication" style="display:none;">
     <button type="submit" class="btn btn-elegant back" style="position: absolute;">

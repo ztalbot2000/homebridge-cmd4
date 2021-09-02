@@ -116,16 +116,16 @@ async function createCustomSchema( accessory )
    GLOBAL.customSchema = homebridge.createForm( schema,
    {
       name: GLOBAL.pluginConfig[0].name,
-         debug: GLOBAL.pluginConfig[0].debug,
-         accessories: accessory
+      debug: GLOBAL.pluginConfig[0].debug,
+      accessories: accessory
    });
 
    GLOBAL.customSchema.onChange( async config =>
    {
 
       GLOBAL.pluginConfig[0].name = config.name;
-         GLOBAL.pluginConfig[0].debug = config.debug;
-         GLOBAL.pluginConfig[0].accessories = GLOBAL.pluginConfig[0].accessories.map( accessory =>
+      GLOBAL.pluginConfig[0].debug = config.debug;
+      GLOBAL.pluginConfig[0].accessories = GLOBAL.pluginConfig[0].accessories.map( accessory =>
       {
          if ( accessory.name === config.accessories.name )
          {
@@ -134,7 +134,7 @@ async function createCustomSchema( accessory )
          return accessory;
       });
 
-         try
+      try
       {
 
          await homebridge.updatePluginConfig( GLOBAL.pluginConfig );
@@ -396,14 +396,26 @@ $('.back').on('click', () =>
    goBack();
 });
 
-$('#addCar, #start').on('click', () =>
+$('#addAccessory, #start').on('click', () =>
+{
+
+   resetUI();
+
+
+      let activeContent = $('#notConfigured').css('display') !== 'none' ? $('#notConfigured') : $('#isConfigured');
+
+      transPage(activeContent, $('#configureAccessory'));
+
+});
+
+$('#globals, #start').on('click', () =>
 {
 
    resetUI();
 
       let activeContent = $('#notConfigured').css('display') !== 'none' ? $('#notConfigured') : $('#isConfigured');
 
-      transPage(activeContent, $('#configureAccessory'));
+      transPage(activeContent, $('#configureGlobals'));
 
 });
 
