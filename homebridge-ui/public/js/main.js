@@ -106,6 +106,8 @@ function goBack( index )
 
 async function createCustomSchema( accessory )
 {
+   console.log("In CreateCustomSchema for:%s %s", accessory.name, accessory.displayName);
+   console.log("In CreateCustomSchema accessory:%s", accessory );
 
    GLOBAL.accessorySchema =
    {
@@ -231,6 +233,7 @@ function removeAccessoryFromList( accessory )
 
 async function addNewDeviceToConfig( accessory )
 {
+   console.log("In addNewDeviceToConfig for:%s %s", accessory.name, accessory.displayName);
 
    let found = false;
 

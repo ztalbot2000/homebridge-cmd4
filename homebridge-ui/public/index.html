@@ -110,15 +110,15 @@
       </div>
       <div class="form-group">
         <label for="statusMsg">Show Status Messages in Logs<span class="text-danger">*</span> </label>
-        <input type="checkbox" class="form-control" id="statusMsg">
+        <input type="checkbox" class="form-control" id="statusMsg" checked>
       </div>
       <div class="form-group">
         <label for="timeout">Default polling timeout (sec)<span class="text-danger">*</span> </label>
-        <input type="range" min="1" class="form-control" id="timeout">
+        <input type="number" class="form-control" id="timeout" name="timeout" min="5" max="20" value="3">
       </div>
       <div class="form-group">
-        <label for="stateChangeResponseTime">Default State Change Response Time (sec)<span class="text-danger">*</span> </label>
-        <input type="range" min="0" class="form-control" id="stateChangeResponseTime">
+         <label for="stateChangeResponseTime">Default State Change Response Time (sec)<span class="text-danger">*</span> </label>
+        <input type="number" class="form-control" id="stateChangeResponseTime" name="stateChangeResponseTime" min="0" max="20" value="3">
       </div>
       <div class="form-group">
         <label for="globalQueuse">PreDefine Queues<span class="text-danger">*</span> </label>
@@ -174,13 +174,6 @@
   
   
 </div>
-
-
-<--! Cmd4 Settings, Globals and Constants -->
-<script type="text/javascript" src="../cmd4Settings.js"></script>
-<script type="text/javascript" src="../cmd4Constants.js"></script>
-<script type="text/javascript" src="../lib/CMD4_DEVICE_TYPE_ENUM.js"></script>
-<script type="text/javascript" src="../lib/CMD4_ACC_TYPE_ENUM.js"></script>
 
 
 <!-- Modules -->

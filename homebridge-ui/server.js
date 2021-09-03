@@ -5,6 +5,16 @@ const { RequestError }
 const { createHash }
 = require('crypto');
 
+// Settings, Globals and Constants
+let settings = require( "../cmd4Settings" );
+//const constants = require( "../cmd4Constants" );
+
+
+// These would already be initialized by index.js
+//let CMD4_ACC_TYPE_ENUM = require( "../lib/CMD4_ACC_TYPE_ENUM" ).CMD4_ACC_TYPE_ENUM;
+//let CMD4_DEVICE_TYPE_ENUM = require( "../lib/CMD4_DEVICE_TYPE_ENUM" ).CMD4_DEVICE_TYPE_ENUM;
+
+
 //orig const { AuthorizationCode } = require('simple-oauth2');
 
 class UiServer extends HomebridgePluginUiServer
@@ -13,6 +23,7 @@ class UiServer extends HomebridgePluginUiServer
    {
 
       super();
+      //console.log("cons=%s", constants);
 
       //orig this.onRequest('/authCode', this.authCode.bind(this));
       //orig this.onRequest('/authToken', this.authToken.bind(this));
