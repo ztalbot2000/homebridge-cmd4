@@ -30,6 +30,10 @@ class UiServer extends HomebridgePluginUiServer
 
       //orig this.client = false;
 
+      // Allow main.js to access Cmd4 Static variables as html files cannot
+      // require Cmd4 javascript files
+      this.onRequest('/cmd4StaticVariable', this.cmd4StaticVariable.bind(this));
+
       // handle request for the /token route
       this.onRequest('/token', this.generateToken.bind(this));
 
@@ -116,6 +120,12 @@ class UiServer extends HomebridgePluginUiServer
 
      }
    */
+
+   // A method for main.js to access Static Cmd4 variables
+   async cmd4StaticVariable( variableString )
+   {
+      return eval( variableString );
+   }
 
 }
 

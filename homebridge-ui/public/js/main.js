@@ -108,6 +108,7 @@ async function createCustomSchema( accessory )
 {
    console.log("In CreateCustomSchema for:%s %s", accessory.name, accessory.displayName);
    console.log("In CreateCustomSchema accessory:%s", accessory );
+   let settings = await homebridge.request("/cmd4StaticVariable", "settings");
 
    GLOBAL.accessorySchema =
    {
@@ -131,6 +132,8 @@ async function createCustomSchema( accessory )
 
    GLOBAL.customSchema.onChange( async config =>
    {
+      console.log("In customSchema.onChange config:%s %s", config);
+      let settings = await homebridge.request("/cmd4StaticVariable", "settings");
 
       GLOBAL.pluginConfig[0].name = config.name;
       GLOBAL.pluginConfig[0].debug = config.debug;
@@ -168,6 +171,7 @@ async function createCustomSchema( accessory )
 
 function resetUI( )
 {
+   console.log("In resetUI");
 
    resetForm( );
    resetSchema( );
@@ -178,6 +182,7 @@ function resetUI( )
 
 function resetForm( )
 {
+   console.log("In resetForm");
 
    $('#accessoryName').val('');
    $('#accessoryCharacteristics').val('');
@@ -200,6 +205,7 @@ function resetForm( )
 
 function resetSchema( )
 {
+   console.log("In resetSchema");
 
    if ( GLOBAL.customSchema )
    {
@@ -213,6 +219,7 @@ function resetSchema( )
 
 function addAccessoryToList( accessory )
 {
+   console.log("In addAccessoryToList accessory.displayName:%s", accessory.displayName);
 
    let name = typeof accessory === 'string' ? accessory : accessory.name;
    $('#accessorySelect').append( '<option value="' + name + '">'+ name + '</option>' );
@@ -223,6 +230,7 @@ function addAccessoryToList( accessory )
 
 function removeAccessoryFromList( accessory )
 {
+   console.log("In removeAccessoryToList accessory.displayName:%s", accessory.displayName);
 
    let name = typeof accessory === 'string' ? accessory : accessory.name;
    $( '#accessorySelect option[value=\'' + name + '\']').remove( );
@@ -364,6 +372,7 @@ async function removeDeviceFromConfig( )
 
       if (!GLOBAL.pluginConfig.length)
       {
+         let settings = await homebridge.request('/cmd4StaticVariable', "settings");
 
          GLOBAL.pluginConfig = [
          {
