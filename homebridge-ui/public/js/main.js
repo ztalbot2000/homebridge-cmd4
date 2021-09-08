@@ -424,10 +424,29 @@ $('.back').on('click', () =>
    goBack();
 });
 
+async function populateSelect( )
+{
+   let select = document.getElementById("accessoryType");
+
+   console.log("In Cmd4.js select" );
+   let CMD4_DEVICE_TYPE_ENUM = await homebridge.request("/cmd4StaticVariable", "CMD4_DEVICE_TYPE_ENUM");
+   Object.keys( CMD4_DEVICE_TYPE_ENUM.properties).forEach(key => {
+      let defaultSelection = false;
+      if ( key == CMD4_DEVICE_TYPE_ENUM.Switch )
+      {
+         console.log(" Setting default selection to true at: %s", key );
+         defaultSelection = true;
+      }
+      select.appendChild(new Option( CMD4_DEVICE_TYPE_ENUM.properties[key].deviceName, CMD4_DEVICE_TYPE_ENUM.properties[key].deviceName, defaultSelection, defaultSelection));
+   });
+}
+
 $('#addAccessory, #start').on('click', () =>
 {
 
    resetUI();
+
+   populateSelect();
 
 
    let activeContent = $('#notConfigured').css('display') !== 'none' ? $('#notConfigured') : $('#isConfigured');
@@ -457,7 +476,7 @@ $('#auth').on('click', () =>
       {
          name: $('#accessoryName').val(),
          accessoryCharacteristics: $('#accessoryCharacteristics').val(),
-         polling: $('#accessoryPolling').val(),
+         polling: $('#polling').val(),
          origin: location.origin
       };
 
@@ -638,3 +657,4 @@ $('#removeAccessory').on('click', async () =>
    }
 
 });
+

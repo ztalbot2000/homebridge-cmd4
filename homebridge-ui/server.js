@@ -11,8 +11,8 @@ const constants = require( "../cmd4Constants" );
 
 
 // These would already be initialized by index.js
-let CMD4_ACC_TYPE_ENUM = require( "../lib/CMD4_ACC_TYPE_ENUM" ).CMD4_ACC_TYPE_ENUM;
-let CMD4_DEVICE_TYPE_ENUM = require( "../lib/CMD4_DEVICE_TYPE_ENUM" ).CMD4_DEVICE_TYPE_ENUM;
+let CMD4_ACC_TYPE_ENUM = require( "../lib/CMD4_ACC_TYPE_ENUM" );
+let CMD4_DEVICE_TYPE_ENUM = require( "../lib/CMD4_DEVICE_TYPE_ENUM" );
 
 
 //orig const { AuthorizationCode } = require('simple-oauth2');
@@ -33,6 +33,8 @@ class UiServer extends HomebridgePluginUiServer
       // Allow main.js to access Cmd4 Static variables as html files cannot
       // require Cmd4 javascript files
       this.onRequest('/cmd4StaticVariable', this.cmd4StaticVariable.bind(this));
+      this.onRequest('/ACC_Info', this.cmd4AccInfo.bind(this));
+      this.onRequest('/DEVICE_Info', this.cmd4DeviceInfo.bind(this));
 
       // handle request for the /token route
       this.onRequest('/token', this.generateToken.bind(this));
@@ -124,7 +126,16 @@ class UiServer extends HomebridgePluginUiServer
    // A method for main.js to access Static Cmd4 variables
    async cmd4StaticVariable( variableString )
    {
+      console.log("server.js for %s returning: %s", variableString, eval(variableString));
       return eval( variableString );
+   }
+   async cmd4AccInfo( accTypeEnumIndex )
+   {
+      return CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ];
+   }
+   async cmd4DeviceInfo( deviceTypeEnumIndex )
+   {
+      return CMD4_DEVICE_TYPE_ENUM.properties[ deviceTypeEnumIndex ];
    }
 
 }
