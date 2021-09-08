@@ -4,13 +4,15 @@
 const exec = require( "child_process" ).exec;
 
 
-// These would already be initialized by index.js
-let CMD4_ACC_TYPE_ENUM = require( "./lib/CMD4_ACC_TYPE_ENUM" ).CMD4_ACC_TYPE_ENUM;
-
 
 // Settings, Globals and Constants
 let settings = require( "./cmd4Settings" );
 const constants = require( "./cmd4Constants" );
+let cmd4Dbg = settings.cmd4Dbg;
+
+// These would already be initialized by index.js
+let CMD4_ACC_TYPE_ENUM = settings.CMD4_ACC_TYPE_ENUM;
+
 
 // Pretty Colors
 var chalk = require( "chalk" );
@@ -29,7 +31,6 @@ let HIGH_PRIORITY_SET = 0;
 let HIGH_PRIORITY_GET = 1;
 let LOW_PRIORITY_GET = 2;
 
-let cmd4Dbg = settings.cmd4Dbg;
 
 class Cmd4PriorityPollingQueue
 {

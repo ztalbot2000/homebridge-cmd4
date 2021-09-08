@@ -20,3 +20,13 @@ exports.listOfCreatedPriorityQueues = { };
 
 // By using our own Logger, we don't trigger others
 exports.cmd4Dbg = false;
+
+
+// These will be initialized in index.js ( If required )
+exports.clonedCharacteristic = require( "./lib/Cmd4_Characteristics" );
+exports.CMD4_ACC_TYPE_ENUM = require( "./lib/CMD4_ACC_TYPE_ENUM" );
+exports.CMD4_DEVICE_TYPE_ENUM = require( "./lib/CMD4_DEVICE_TYPE_ENUM" );
+
+
+
+

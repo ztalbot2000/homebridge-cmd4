@@ -10,6 +10,11 @@ const constants = require( "./cmd4Constants" );
 
 var cmd4Dbg = settings.cmd4Dbg;
 
+// These would already be initialized by index.js
+let CMD4_DEVICE_TYPE_ENUM = settings.CMD4_DEVICE_TYPE_ENUM;
+let CMD4_ACC_TYPE_ENUM = settings.CMD4_ACC_TYPE_ENUM;
+let clonedCharacteristic = settings.clonedCharacteristic;
+
 
 let Logger = require( "./utils/Logger" );
 const { getAccessoryName, getAccessoryDisplayName
@@ -38,9 +43,6 @@ let isJSON = require( "./utils/isJSON" );
 // Pretty Colors
 var chalk = require( "chalk" );
 
-// These would already be initialized by index.js
-let CMD4_ACC_TYPE_ENUM = require( "./lib/CMD4_ACC_TYPE_ENUM" ).CMD4_ACC_TYPE_ENUM;
-let CMD4_DEVICE_TYPE_ENUM = require( "./lib/CMD4_DEVICE_TYPE_ENUM" ).CMD4_DEVICE_TYPE_ENUM;
 
 let FakeGatoHistoryService = null;
 
@@ -366,7 +368,8 @@ class Cmd4Accessory
          let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
 
          // No matter what, remove it
-         if ( format == this.api.hap.Characteristic.Formats.TLV8 && this.allowTLV8 == false )
+         //if ( format == this.api.hap.Characteristic.Formats.TLV8 && this.allowTLV8 == false )
+         if ( format == clonedCharacteristic.Formats.TLV8 && this.allowTLV8 == false )
          {
             if ( this.getStoredValueForIndex( accTypeEnumIndex ) != null )
             {

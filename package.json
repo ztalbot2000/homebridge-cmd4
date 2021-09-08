@@ -22,6 +22,7 @@
       "command-exists": "^1.2.9",
       "fakegato-history": ">=0.6.1",
       "github-version-checker": ">=2.2.0",
+      "hap-nodejs": "^0.9.5",
       "latest-version": "^5.1.0",
       "moment": "*"
    },

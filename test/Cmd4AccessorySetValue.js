@@ -14,9 +14,7 @@ var _api = new HomebridgeAPI( ); // object we feed to Plugins
 // Init the library for all to use
 let Characteristic = _api.hap.Characteristic;
 let Service = _api.hap.Service;
-let Categories = _api.hap.Categories;
-let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( Characteristic );
-let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, Service, Characteristic, Categories );
+CMD4_DEVICE_TYPE_ENUM.init( Service );
 
 
 let getSetValueScript = "./test/echoScripts/testGetSetValues.js";

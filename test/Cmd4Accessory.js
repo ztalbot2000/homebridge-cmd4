@@ -9,8 +9,7 @@ const constants = require( "../cmd4Constants" );
 var _api = new HomebridgeAPI(); // object we feed to Plugins
 
 // Init the library for all to use
-let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
-let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, _api.hap.Service, _api.hap.Characteristic, _api.hap.Categories );
+CMD4_DEVICE_TYPE_ENUM.init( _api.hap.Service );
 
 var Cmd4Accessory = require( "../Cmd4Accessory" ).Cmd4Accessory;
 let Cmd4Platform = require( "../Cmd4Platform" ).Cmd4Platform;
@@ -35,11 +34,6 @@ const home = require( "os" ).homedir();
 // ******** QUICK TEST of SETUP *************
 describe('Quick Test of Setup', ( ) =>
 {
-   // it('log should be a function', ( ) =>
-   // {
-   //    assert.isFunction( log, "log is not an function" );
-   // });
-
    it('Plugin Characteristic should be a function', ( ) =>
    {
       assert.isFunction(_api.hap.Characteristic, "Characteristic is not an function" );
