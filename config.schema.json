@@ -5,15 +5,40 @@
   "customUi": true,
   "schema": {
     "properties": {
-      "token": {
-        "title": "Token",
-        "type": "string",
-        "required": true
+      "debug": {
+        "title": "debug",
+        "type": "boolean",
+        "default": false,
+        "required": false,
+        "description": "Enables additional output (debug) in the log."
       },
-      "username": {
-        "title": "Username",
-        "type": "string",
-        "required": true
+      "allowTlv8": {
+        "title": "allowTlv8",
+        "type": "boolean",
+        "default": false,
+        "required": false,
+        "description": "Allow TLV8 characteristics."
+      },
+      "statusMsg": {
+        "title": "statusMsg",
+        "type": "boolean",
+        "default": true,
+        "required": false,
+        "description": "Display status changes."
+      },
+      "timeout": {
+        "title": "timeout",
+        "type": "number",
+        "default": 6000,
+        "required": false,
+        "description": "Timeout for stateCmd (msec)."
+      },
+      "stateChangeResponseTime": {
+        "title": "stateChangeResponseTime",
+        "type": "number",
+        "default": 3,
+        "required": false,
+        "description": "Time for state change to occur (sec)."
       }
     }
   }

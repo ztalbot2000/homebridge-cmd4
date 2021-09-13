@@ -1,31 +1,56 @@
 <link rel="stylesheet" href="css/style.css">
 
-<!-- header -->
-<div id="header" style="display:none; height: 50px;" class="w-100 p-0 m-0">
-  <div class="row m-0">
-    <div class="col-2 pl-1">
-      <button id="back" type="submit" class="btn btn-elegant back float-left">
-        <i class="fa fa-arrow-left" aria-hidden="true"></i>
-      </button>
-    </div>
-    <div class="col-10 pr-1">
-      <button id="refreshAccessory" type="submit" class="btn btn-primary float-right">
-        <i class="fas fa-sync-alt"></i>
-      </button>
-      <button id="removeAccessory" type="submit" class="btn btn-danger float-right">
-        <i class="fa fa-trash" aria-hidden="true"></i>
-      <button id="globals" type="submit" class="btn btn-elegant Globals float-right">
-        <i class="fas fa-globe fa-border" aria-hidden="true"></i>
-      </button>
-      </button>
+<div id="main" class="card card-body pb-5">
+
+  <!-- start -->
+  <div id="start">
+    <img src="images/Cmd4_icon.svg" alt="Scripting with Cmd4 for Homebridge" width="150px" class="center-it cmd4Logo">
+    <h3 class="text-center">Welcome to <br> <b style="font-weight: 800;">Cmd4 Platform</b></h3>
+    <h6 class="text-center">Cmd4 Homebridge plugin for Scripting</h6>
+    <button id="startButton" type="submit" class="btn btn-primary center-it mt-3">Start</button>
+  </div>
+
+  <!-- newAccessory -->
+  <div id="newAccessory" style="display:none;">
+    <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    </button>
+    <button type="submit" class="btn btn-primary float-right globalsButton">
+       <i class="fa fa-globe fa-border" aria-hidden="true"></i>
+    </button>
+    <img src="images/Cmd4_icon.svg" alt="Scripting with Cmd4 for Homebridge" width="150px" class="center-it mt-4 cmd4Logo">
+    <h6 class="text-center">To start the process, we need some data for the accessory. <br> Please fill out all marked fields.</h6>
+    <div class="container mt-5">
+      <div class="form-group">
+        <label for="accessoryType">Type <span class="text-danger">*</span> </label>
+        <select name="accessoryTypeSelect" class="form-control" id="accessoryTypeSelect">
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="accessoryName">Name <span class="text-danger">*</span> </label>
+        <input type="text" class="form-control" id="accessoryName">
+      </div>
+      <div class="form-group">
+        <label for="polling">Polling <span class="text-danger">*</span> </label>
+        <input type="checkbox" class="form-control" id="polling">
+      </div>
+      <div class="form-group">
+        <label for="accessoryCharacteristics">Accessory Characteristics<span class="text-danger">*</span> </label>
+        <input type="text" class="form-control" id="accessoryCharacteristics">
+      </div>
+      <button id="auth" type="submit" class="btn btn-primary float-right mt-3 mr-0">Next</button>
     </div>
   </div>
-</div>
 
-<div id="main" class="card card-body pb-5">
-  <!-- isConfigured -->
-  <div id="isConfigured" style="display:none;">
-    <img src="images/Cmd4_icon.svg" alt="Scripting with Cmd4 for Homebridge" width="150px" class="center-it cmd4Logo">
+  <!-- selectExistingAccessory -->
+  <div id="selectExistingAccessory" style="display:none;">
+    <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    </button>
+    <button type="submit" class="btn btn-primary float-right globalsButton">
+       <i class="fa fa-globe fa-border" aria-hidden="true"></i>
+    </button>
+    <img src="images/HB_Cmd4.png" alt="Scripting with Cmd4 for Homebridge" width="150px" class="center-it cmd4Logo">
     <h3 class="text-center"><span style="font-size: 20px">Welcome to</span> <br> <b style="font-weight: 800;">Cmd4 Platform</b></h3>
     <h6 class="text-center">Cmd4 Homebridge plugin for Scripting</h6>
     <div class="container mt-4" style="max-width: 360px;">
@@ -46,47 +71,62 @@
       </div>
     </div>
   </div>
- 
-  <!-- notConfigured -->
-  <div id="notConfigured" style="display:none;">
-    <img src="images/Cmd4_icon.svg" alt="Scripting with Cmd4 for Homebridge" width="150px" class="center-it cmd4Logo">
-    <h3 class="text-center">Welcome to <br> <b style="font-weight: 800;">Cmd4 Platform</b></h3>
-    <h6 class="text-center">Cmd4 Homebridge plugin for Scripting</h6>
-    <button id="start" type="submit" class="btn btn-primary center-it mt-3">Start</button> 
-  </div>
-  
-  <!-- configureAccessory -->
-  <div id="configureAccessory" style="display:none;">
-    <button type="submit" class="btn btn-elegant back" style="position: absolute;">
+
+  <!-- accessoryGlobals -->
+  <div id="accessoryGlobals" style="display:none;">
+    <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
       <i class="fa fa-arrow-left" aria-hidden="true"></i>
     </button>
-    <img src="images/Cmd4_icon.svg" alt="Scripting with Cmd4 for Homebridge" width="150px" class="center-it mt-4 cmd4Logo">
-    <h6 class="text-center">To start the process, we need some data for the accessory. <br> Please fill out all marked fields.</h6>
+    <img src="images/Cmd4_icon.svg" alt="Cmd4 Globals" width="150px" class="center-it mt-4 cmd4Logo">
+    <h6 class="text-center">Required Characteristics<br> The defaults are pre-defined. Press back to continue.</h6>
     <div class="container mt-5">
-      <div class="form-group">
-        <label for="accessoryType">Type <span class="text-danger">*</span> </label>
-        <select name="accessoryType" class="form-control" id="accessoryType">
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="accessoryName">Name <span class="text-danger">*</span> </label>
-        <input type="text" class="form-control" id="accessoryName">
-      </div>
-      <div class="form-group">
-        <label for="polling">Polling <span class="text-danger">*</span> </label>
-        <input type="checkbox" class="form-control" id="polling">
-      </div>
-      <div class="form-group">
-        <label for="accessoryCharacteristics">Accessory Characteristics<span class="text-danger">*</span> </label>
-        <input type="text" class="form-control" id="accessoryCharacteristics">
-      </div>
-      <button id="auth" type="submit" class="btn btn-primary float-right mt-3 mr-0">Next</button>
     </div>
   </div>
 
+  <!-- requiredCharacteristics -->
+  <div id="requiredCharacteristics" style="display:none;">
+    <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    </button>
+    <button type="submit" class="btn btn-primary float-right globalsButton">
+       <i class="fa fa-globe fa-border" aria-hidden="true"></i>
+    </button>
+    <img src="images/Cmd4_icon.svg" alt="Cmd4 Globals" width="150px" class="center-it mt-4 cmd4Logo">
+    <h6 class="text-center">Required Characteristics<br> The defaults are pre-defined. Press back to continue.</h6>
+    <div class="container mt-5">
+    </div>
+  </div>
+
+  <!-- optionalCharacteristics -->
+  <div id="optionalCharacteristics" style="display:none;">
+    <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    </button>
+    <button type="submit" class="btn btn-primary float-right globalsButton">
+       <i class="fa fa-globe fa-border" aria-hidden="true"></i>
+    </button>
+    <img src="images/Cmd4_icon.svg" alt="Cmd4 Globals" width="150px" class="center-it mt-4 cmd4Logo">
+    <h6 class="text-center">Optional Characteristics<br> The defaults are pre-defined. Press back to continue.</h6>
+    <div class="container mt-5">
+    </div>
+  </div>
+
+  <!-- stateCmd -->
+  <div id="stateCmd" style="display:none;">
+    <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    </button>
+    <img src="images/Cmd4_icon.svg" alt="Cmd4 Globals" width="150px" class="center-it mt-4 cmd4Logo">
+    <h6 class="text-center">Optional Characteristics<br> The defaults are pre-defined. Press back to continue.</h6>
+    <div class="container mt-5">
+    </div>
+  </div>
+
+
+
   <!-- configureGlobals -->
   <div id="configureGlobals" style="display:none;">
-    <button type="submit" class="btn btn-elegant back" style="position: absolute;">
+    <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
       <i class="fa fa-arrow-left" aria-hidden="true"></i>
     </button>
     <img src="images/Cmd4_icon.svg" alt="Cmd4 Globals" width="150px" class="center-it mt-4 cmd4Logo">
@@ -114,7 +154,19 @@
       </div>
       <div class="form-group">
          <label for="stateChangeResponseTime">Default State Change Response Time (sec)<span class="text-danger">*</span> </label>
-        <input type="number" class="form-control" id="stateChangeResponseTime" name="stateChangeResponseTime" min="0" max="20" value="3">
+        <input type="number" class="form-control" id="globalStateChangeResponseTime" name="globalStateChangeResponseTime" min="0" max="20" value="3">
+      </div>
+      <div class="form-group">
+         <label for="stateCmdPrefix">Default State Command Prefix to use<span class="text-danger">*</span> </label>
+        <input type="string" class="form-control" id="globalStateCmdPrefix" name="globalStateCmdPrefix" value="">
+      </div>
+      <div class="form-group">
+         <label for="stateCmd">Default State Command to use<span class="text-danger">*</span> </label>
+        <input type="string" class="form-control" id="globalStateCmd" name="globalStateCmd" value="">
+      </div>
+      <div class="form-group">
+         <label for="stateCmdSuffix">Default State Command Suffix to use<span class="text-danger">*</span> </label>
+        <input type="string" class="form-control" id="globalStateCmdPrefix" name="globalStateCmdSuffix" value="">
       </div>
       <div class="form-group">
         <label for="globalQueuse">PreDefine Queues<span class="text-danger">*</span> </label>
@@ -124,53 +176,11 @@
     </div>
   </div>
 
-  <!-- authentication -->
-  <div id="authentication" style="display:none;">
-    <button type="submit" class="btn btn-elegant back" style="position: absolute;">
-      <i class="fa fa-arrow-left" aria-hidden="true"></i>
-    </button>
-    <img src="images/Cmd4_icon.svg" alt="Scripting meets Homebridge" width="150px" class="center-it mt-4 cmd4Logo">
-    <h3 class="text-center">Authentication</b></h3>
-    <h6 class="text-center">After starting authentication process, a popup window should appear to generate an authentication code after successfull login.</h6>
-    <div class="container d-flex justify-content-center mt-4">
-      <button id="startAuth" type="submit" class="btn btn-primary">Start authentication</button>  
-    </div>
-    <div id="codeInput" class="container mt-5" style="display:none">
-      <div class="form-group">
-        <label for="authCode">Authorization Code</label>
-        <input type="text" class="form-control" id="authCode" readonly>
-      </div>
-      <button id="generateToken" type="submit" class="btn btn-primary float-right mt-3 mr-0">Next</button>
-    </div>
-    <div id="tokenInput" class="container mt-5" style="display:none;clear:both">
-      <div class="form-group">
-        <label for="authToken">Access Token</label>
-        <input type="text" class="form-control" id="authToken" readonly>
-      </div>
-      <div class="form-group">
-        <label for="authRefreshToken">Refresh Token</label>
-        <input type="text" class="form-control" id="authRefreshToken" readonly>
-      </div>
-      <div class="form-group">
-        <label for="authTokenType">Token Type</label>
-        <input type="text" class="form-control" id="authTokenType" readonly>
-      </div>
-      <div class="form-group">
-        <label for="authExpiresIn">Expires In</label>
-        <input type="text" class="form-control" id="authExpiresIn" readonly>
-      </div>
-      <div class="form-group">
-        <label for="authExpiresAt">Expires At</label>
-        <input type="text" class="form-control" id="authExpiresAt" readonly>
-      </div>
-      <button id="saveAuth" type="submit" class="btn btn-primary float-right mt-3 mr-0">Save Config</button>
-    </div>
-  </div>
-  
-  
-  
 </div>
 
+
+
+</div>
 
 <!-- Modules -->
 <script type="text/javascript" src="js/modules/jquery.min.js"></script>
