@@ -14,7 +14,7 @@ async function createCustomSchema( accessory )
 {
    console.log( "In CreateCustomSchema for:%s %s", accessory.name, accessory.displayName );
    console.log( "In CreateCustomSchema accessory:%s", accessory );
-   let settings = await homebridge.request( "/cmd4StaticVariable", "settings" );
+   //let settings = await homebridge.request( "/cmd4StaticVariable", "settings" );
 
    GLOBAL.accessorySchema =
    {
@@ -45,7 +45,7 @@ async function createCustomSchema( accessory )
    GLOBAL.customSchema.onChange( async config =>
    {
       console.log( "In customSchema.onChange config:%s %s", config );
-      let settings = await homebridge.request( "/cmd4StaticVariable", "settings" );
+      //let settings = await homebridge.request( "/cmd4StaticVariable", "settings" );
 
       GLOBAL.pluginConfig[0].name = config.name;
       GLOBAL.pluginConfig[0].debug = config.debug;
@@ -331,10 +331,15 @@ async function backButtonPressed( )
    console.log("main.js async function back sending back");
    homebridge.request( "/backButtonPressed" );
 }
-async function globalsButtonPressed( )
+async function showConfigureGlobalsPageButtonPressed( )
 {
    console.log("main.js async function globals sending globals");
-   homebridge.request( "/globalsButtonPressed" );
+   homebridge.request( "/showConfigureGlobalsPage" );
+}
+async function showQueueGlobalsPageButtonPressed( )
+{
+   console.log("main.js async function globals sending globals");
+   homebridge.request( "/showQueueGlobalsPage" );
 }
 
 // STARTUP CODE
@@ -371,10 +376,10 @@ async function globalsButtonPressed( )
 
 
       GLOBAL.pluginConfig = await homebridge.getPluginConfig( );
-      GLOBAL.pluginConfig.forEach( ( elem, index ) =>
-      {
+      //GLOBAL.pluginConfig.forEach( ( elem, index ) =>
+      //{
          //console.log( "GLOBAL.pluginConfig[ %s ] returned by homebridge: %s", index, elem );
-      } );
+      //} );
 
       if ( !GLOBAL.pluginConfig.length )
       {
@@ -406,9 +411,30 @@ async function globalsButtonPressed( )
          {
             $( '#accessorySelect' ).append( '<option value="' + accessory.name + '">'+ accessory.name + '</option>' );
          } );
+         console.log("GLOBAL.pluginConfig[0]=%s", GLOBAL.pluginConfig[0] );
+         console.log("GLOBAL.pluginConfig[0].queueTypes=%s", GLOBAL.pluginConfig[0].queueTypes );
 
+         if ( GLOBAL.pluginConfig[0].queueTypes )
+         {
+            $( "#globalQueueMessage" ).hide( );
+
+            GLOBAL.pluginConfig[0].queueTypes.forEach( entry =>
+            {
+               console.log("Adding queue: %s", entry.queue );
+              $( '#globalQueuesForm' ).append(
+                   '<div class="row">' +
+                     '<button type="button" class="card card-body deleteQueueButton" value="' + entry.queue + '">' +
+                        '<i class="fa fa-trash" aria-hidden="true"></i>' +
+                     '</button>' +
+                     '<div class="card card-body">' + entry.queue + '</div>' +
+                     '<div class="card card-body">' + entry.queueInterval + '</div>' +
+                  '</div>'
+              );
+            });
+         } else {
+            $( "#globalQueueMessage" ).show( );
+         }
       }
-
    }
    catch( err )
    {
@@ -429,17 +455,26 @@ $( '.backButton' ).on( 'click', ( ) =>
 
 $( '#startButton' ).on( 'click', ( ) =>
 {
-   console.log("Click start");
+   console.log("Click startButton");
    startButtonPressed();
 });
 
-$( '.globalsButton' ).on( 'click', ( ) =>
+$( '.showConfigureGlobalsPageButton' ).on( 'click', ( ) =>
 {
+   console.log("Click showConfigureGlobalsPageButton");
+   showConfigureGlobalsPageButtonPressed();
+} );
 
-   //resetUI( );
-   console.log("Click globalsButton");
-   globalsButtonPressed();
+$( '.showQueueGlobalsPageButton' ).on( 'click', ( ) =>
+{
+   console.log("Click showQueueGlobalsPageButton");
+   showQueueGlobalsPageButtonPressed();
+} );
 
+$( '.configureNewQueuePageButton' ).on( 'click', ( ) =>
+{
+   console.log("Click configureNewQueuePageButton");
+   configureNewQueuePageButtonPressed();
 } );
 
 async function populateSelect( )
@@ -467,7 +502,7 @@ $( '#addAccessory, #Xstart' ).on( 'click', ( ) =>
    populateSelect( );
 
 
-   let activeContent = $( '#notConfigured' ).css( 'display' ) !== 'none' ? $( '#notConfigured' ) : $( '#isConfigured' );
+   //let activeContent = $( '#notConfigured' ).css( 'display' ) !== 'none' ? $( '#notConfigured' ) : $( '#isConfigured' );
 
 } );
 

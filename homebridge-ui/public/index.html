@@ -15,7 +15,7 @@
     <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
       <i class="fa fa-arrow-left" aria-hidden="true"></i>
     </button>
-    <button type="submit" class="btn btn-primary float-right globalsButton">
+    <button type="submit" class="btn btn-primary float-right showConfigureGlobalsPageButton">
        <i class="fa fa-globe fa-border" aria-hidden="true"></i>
     </button>
     <img src="images/Cmd4_icon.svg" alt="Scripting with Cmd4 for Homebridge" width="150px" class="center-it mt-4 cmd4Logo">
@@ -47,7 +47,7 @@
     <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
       <i class="fa fa-arrow-left" aria-hidden="true"></i>
     </button>
-    <button type="submit" class="btn btn-primary float-right globalsButton">
+    <button type="submit" class="btn btn-primary float-right showConfigureGlobalsPageButton">
        <i class="fa fa-globe fa-border" aria-hidden="true"></i>
     </button>
     <img src="images/HB_Cmd4.png" alt="Scripting with Cmd4 for Homebridge" width="150px" class="center-it cmd4Logo">
@@ -77,10 +77,27 @@
     <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
       <i class="fa fa-arrow-left" aria-hidden="true"></i>
     </button>
-    <img src="images/Cmd4_icon.svg" alt="Cmd4 Globals" width="150px" class="center-it mt-4 cmd4Logo">
-    <h6 class="text-center">Required Characteristics<br> The defaults are pre-defined. Press back to continue.</h6>
+    <img src="images/Cmd4_icon.svg" alt="Cmd4 Icon" width="150px" class="center-it mt-4 cmd4Logo">
+    <h6 class="text-center">Accessory Globals<br> The defaults are pre-defined. Press back to continue.</h6>
     <div class="container mt-5">
     </div>
+  </div>
+
+  <!-- queueGlobalsPage -->
+  <div id="queueGlobalsPage" style="display:none;">
+    <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    </button>
+    <img src="images/Cmd4_icon.svg" alt="Queue Globals Page" width="150px" class="center-it mt-4 cmd4Logo">
+    <h6 class="text-center">Queue Globals<br> Polling queues are done by default via interval. Queues allow finer controls like Worm or Sequential.</h6>
+    <div class="container mt-4" style="max-width: 360px;">
+      <div class="form-row">
+        <h4 id="globalQueueMessage" Queueclass="text-left">There are no defined global queues.</h4>
+      </div>
+    </div>
+    <a href="#" id="showQueueGlobalsPageButton" class="d-flex justify-content-center align-items-center btn-primary showQueueGlobalsPageButton">
+          <i class="fas fa-plus"></i>
+    </a>
   </div>
 
   <!-- requiredCharacteristics -->
@@ -88,7 +105,7 @@
     <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
       <i class="fa fa-arrow-left" aria-hidden="true"></i>
     </button>
-    <button type="submit" class="btn btn-primary float-right globalsButton">
+    <button type="submit" class="btn btn-primary float-right showConfigureGlobalsPageButton">
        <i class="fa fa-globe fa-border" aria-hidden="true"></i>
     </button>
     <img src="images/Cmd4_icon.svg" alt="Cmd4 Globals" width="150px" class="center-it mt-4 cmd4Logo">
@@ -102,7 +119,7 @@
     <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
       <i class="fa fa-arrow-left" aria-hidden="true"></i>
     </button>
-    <button type="submit" class="btn btn-primary float-right globalsButton">
+    <button type="submit" class="btn btn-primary float-right showConfigureGlobalsPageButton">
        <i class="fa fa-globe fa-border" aria-hidden="true"></i>
     </button>
     <img src="images/Cmd4_icon.svg" alt="Cmd4 Globals" width="150px" class="center-it mt-4 cmd4Logo">
@@ -116,7 +133,7 @@
     <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
       <i class="fa fa-arrow-left" aria-hidden="true"></i>
     </button>
-    <img src="images/Cmd4_icon.svg" alt="Cmd4 Globals" width="150px" class="center-it mt-4 cmd4Logo">
+    <img src="images/Cmd4_icon.svg" alt="Cmd4 Icon" width="150px" class="center-it mt-4 cmd4Logo">
     <h6 class="text-center">Optional Characteristics<br> The defaults are pre-defined. Press back to continue.</h6>
     <div class="container mt-5">
     </div>
@@ -137,40 +154,80 @@
         <input type="checkbox" class="form-control" id="debug">
       </div>
       <div class="form-group">
-        <label for="outputConstants">Output Constants<span class="text-danger">*</span> </label>
+        <label for="outputConstants">Output Constants<span class="text-danger">*</span>
+        </label>
         <input type="checkbox" class="form-control" id="outputConstants">
       </div>
       <div class="form-group">
-        <label for="allowTLV8">Allow TLV8 Characteristics<span class="text-danger">*</span> </label>
+        <label for="allowTLV8">Allow TLV8 Characteristics<span class="text-danger">*</span>
+        </label>
         <input type="checkbox" class="form-control" id="allowTLV8">
       </div>
       <div class="form-group">
-        <label for="statusMsg">Show Status Messages in Logs<span class="text-danger">*</span> </label>
+        <label for="statusMsg">Show Status Messages in Logs<span class="text-danger">*</span>
+        </label>
         <input type="checkbox" class="form-control" id="statusMsg" checked>
       </div>
       <div class="form-group">
-        <label for="timeout">Default polling timeout (sec)<span class="text-danger">*</span> </label>
+        <label for="timeout">Default polling timeout (sec)<span class="text-danger">*</span>
+        </label>
         <input type="number" class="form-control" id="timeout" name="timeout" min="5" max="20" value="3">
       </div>
       <div class="form-group">
-         <label for="stateChangeResponseTime">Default State Change Response Time (sec)<span class="text-danger">*</span> </label>
-        <input type="number" class="form-control" id="globalStateChangeResponseTime" name="globalStateChangeResponseTime" min="0" max="20" value="3">
+         <label for="stateChangeResponseTime">Default State Change Response Time (sec)<span class="text-danger">*</span>
+         </label>
+         <input type="number" class="form-control" id="globalStateChangeResponseTime" name="globalStateChangeResponseTime" min="0" max="20" value="3">
       </div>
       <div class="form-group">
-         <label for="stateCmdPrefix">Default State Command Prefix to use<span class="text-danger">*</span> </label>
+         <label for="stateCmdPrefix">Default State Command Prefix to use<span class="text-danger">*</span>
+         </label>
         <input type="string" class="form-control" id="globalStateCmdPrefix" name="globalStateCmdPrefix" value="">
       </div>
       <div class="form-group">
-         <label for="stateCmd">Default State Command to use<span class="text-danger">*</span> </label>
+         <label for="stateCmd">Default State Command to use<span class="text-danger">*</span>
+         </label>
         <input type="string" class="form-control" id="globalStateCmd" name="globalStateCmd" value="">
       </div>
       <div class="form-group">
-         <label for="stateCmdSuffix">Default State Command Suffix to use<span class="text-danger">*</span> </label>
+         <label for="stateCmdSuffix">Default State Command Suffix to use<span class="text-danger">*</span>
+         </label>
         <input type="string" class="form-control" id="globalStateCmdPrefix" name="globalStateCmdSuffix" value="">
       </div>
       <div class="form-group">
-        <label for="globalQueuse">PreDefine Queues<span class="text-danger">*</span> </label>
-        <input type="checkbox" class="form-control" id="globalQueuese">
+        <label for="globalQueuesLabel">Pre-Defined Queues<span class="text-danger">*</span>
+        </label>
+      </div>
+      <div class="container">
+         <div class="row">
+         <h3 id="globalQueueMessage" class="text-center">There are no defined global queues.</h3>
+         </div>
+         <div id="globalQueuesForm">
+            <div class="row">
+               <div class="card card-body">
+                  <h5 class="card-title">  </h5>
+               </div>
+               <div class="card card-body">
+                  <h5 class="card-title">Queue Name</h5>
+               </div>
+               <div class="card card-body">
+                  <h5 class="card-title">queue Interval</h5>
+               </div>
+            </div>
+
+            <div class="row">
+               <button type="button" class="card card-body deleteQueueButton" value="queue1">
+                  <i class="fa fa-trash" aria-hidden="true"></i>
+               </button>
+               <div class="card card-body">queue1</div>
+               <div class="card card-body">default</div>
+            </div>
+         </div>
+
+         <div class="d-flex justify-content-center mt-4">
+           <a href="#" id="configureNewQueuePageButton" class="d-flex justify-content-center align-items-center btn-primary configureNewQueuePageButton">
+             <i class="fas fa-plus"></i>
+           </a>
+         </div>
       </div>
       <button id="configureGlobals" type="submit" class="btn btn-primary float-right mt-3 mr-0">Update</button>
     </div>

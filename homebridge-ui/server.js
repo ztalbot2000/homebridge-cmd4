@@ -31,7 +31,10 @@ class UiServer extends HomebridgePluginUiServer
       // require Cmd4 javascript files
       this.onRequest('/startButtonPressed', this.startButtonPressed.bind(this));
       this.onRequest('/backButtonPressed', this.backButtonPressed.bind(this));
-      this.onRequest('/globalsButtonPressed', this.globalsButtonPressed.bind(this));
+      this.onRequest('/showConfigureGlobalsPage', this.showConfigureGlobalsPage.bind(this));
+      this.onRequest('/showQueueGlobalsPage', this.showQueueGlobalsPage.bind(this));
+
+
 
       this.onRequest('/getCachedAccessories', this.getCachedAccessories.bind(this));
 
@@ -133,7 +136,7 @@ class UiServer extends HomebridgePluginUiServer
              items: {
              }
           }
-          accessory.polling.forEach( entry, index )
+          accessory.polling.forEach( ( entry, index ) =>
           {
              schema.polling.items[ index ] =
              {
@@ -160,7 +163,7 @@ class UiServer extends HomebridgePluginUiServer
                 description: "Set the accessory's state chane response time (sec).",
                 required: false
              };
-          }
+          });
       }
    }
 
@@ -202,7 +205,8 @@ class UiServer extends HomebridgePluginUiServer
    // A method for main.js to access Static Cmd4 variables
    async cmd4StaticVariable( variableString )
    {
-      console.log("server.js for %s returning: %s", variableString, eval(variableString));
+      //console.log("server.js for %s returning: %s", variableString, eval(variableString));
+      console.log("server.js for %s", variableString );
       return eval( variableString );
    }
    async cmd4AccInfo( accTypeEnumIndex )
@@ -247,11 +251,22 @@ class UiServer extends HomebridgePluginUiServer
                                        to:   toPage }        // to:   is show
                     );
    }
-   async globalsButtonPressed( )
+   async showConfigureGlobalsPage( )
    {
       let fromPage = this.pages[ this.pages.length -1];
       let toPage = "#configureGlobals";
       console.log("Server.js in globals() toPage: %s fromPage", toPage, fromPage );
+
+      this.pages.push( toPage );
+      this.pushEvent('my-pageEvent', { from: fromPage,       // from: is hide
+                                       to:   toPage }        // to:   is show
+                    );
+   }
+   async showQueueGlobalsPage( )
+   {
+      let fromPage = this.pages[ this.pages.length -1];
+      let toPage = "#queueGlobalsPage";
+      console.log("Server.js toPage: %s fromPage", toPage, fromPage );
 
       this.pages.push( toPage );
       this.pushEvent('my-pageEvent', { from: fromPage,       // from: is hide
