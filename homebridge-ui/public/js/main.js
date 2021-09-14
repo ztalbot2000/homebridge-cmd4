@@ -6,7 +6,8 @@ const GLOBAL =
 {
    pluginConfig: false,
    customSchema: false,
-   accessoryOptions: false
+   accessoryOptions: false,
+   newGlobalQueueBeingAdded: false
 };
 
 
@@ -339,7 +340,41 @@ async function showConfigureGlobalsPageButtonPressed( )
 async function showQueueGlobalsPageButtonPressed( )
 {
    console.log("main.js async function globals sending globals");
+   // unused
    homebridge.request( "/showQueueGlobalsPage" );
+}
+async function configureNewQueuePageButtonPressed()
+{
+   console.log("main.js async function configureNewQueuePageButtonPressed");
+   if ( GLOBAL.newGlobalQueueBeingAdded == true )
+   {
+      homebridge.toast.error('A new queue has already been started.', 'Error');
+      return;
+   }
+   GLOBAL.newGlobalQueueBeingAdded = true;
+
+   console.log("Adding new queue");
+               $( '#globalQueuesForm' ).append(
+                  '<div class="row no-gutters">' +
+                     '<div class="col">' +
+                        '<div class="card card-body">' +
+                           '<button type="submit" class="btn btn-primary p-0 mt-0 mb-0 deleteQueueButton" value="TEMP_QUEUE_NAME">' +
+                              '<i class="fa fa-trash" aria-hidden="true"></i>' +
+                           '</button>' +
+                        '</div>' +
+                     '</div>' +
+                     '<div class="col">' +
+                        '<div class="card card-body">' +
+                           '<input type="text" class="input-group p-0 pt-0 pb-0 border-0" placeHolder="queueName">' +
+                        '</div>' +
+                     '</div>' +
+                     '<div class="col">' +
+                        '<div class="card card-body">' +
+                           '<input type="text" class="input-group p-0 pt-0 pb-0 border-0" placeHolder="WoRm">' +
+                        '</div>' +
+                     '</div>' +
+                  '</div>'
+               );
 }
 async function deleteQueueButtonPressed( value  )
 {
@@ -421,12 +456,14 @@ async function deleteQueueButtonPressed( value  )
          if ( GLOBAL.pluginConfig[0].queueTypes )
          {
             $( "#globalQueueMessage" ).hide( );
+            $( "#globalQueueContainer" ).show( );
+            //document.getElementById("globalQueueMessage").style.visibility = "hidden";
 
             GLOBAL.pluginConfig[0].queueTypes.forEach( entry =>
             {
                console.log("Adding queue: %s", entry.queue );
-              $( '#globalQueuesForm' ).append(
-                   '<div class="row no-gutters">' +
+               $( '#globalQueuesForm' ).append(
+                  '<div class="row no-gutters">' +
                      '<div class="col">' +
                         '<div class="card card-body">' +
                            '<button type="submit" class="btn btn-primary p-0 mt-0 mb-0 deleteQueueButton" value="' + entry.queue +'">' +
@@ -441,10 +478,11 @@ async function deleteQueueButtonPressed( value  )
                         '<div class="card card-body">' + entry.queueType + '</div>' +
                      '</div>' +
                   '</div>'
-              );
+               );
             });
          } else {
             $( "#globalQueueMessage" ).show( );
+            $( "#globalQueueContainer" ).hide( );
          }
       }
    }
@@ -480,6 +518,7 @@ $( '.showConfigureGlobalsPageButton' ).on( 'click', ( ) =>
 $( '.showQueueGlobalsPageButton' ).on( 'click', ( ) =>
 {
    console.log("Click showQueueGlobalsPageButton");
+   // unused
    showQueueGlobalsPageButtonPressed();
 } );
 
@@ -491,7 +530,7 @@ $( '.configureNewQueuePageButton' ).on( 'click', ( ) =>
 
 $( '.deleteQueueButton' ).on( 'click', ( value ) =>
 {
-   console.log("Click configureNewQueuePageButton value:%s", value );
+   console.log("Click deleteQueueButton value:%s", value );
    deleteQueueButtonPressed( value);
 } );
 
