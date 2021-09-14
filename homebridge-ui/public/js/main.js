@@ -358,7 +358,7 @@ async function configureNewQueuePageButtonPressed()
                   '<div class="row no-gutters">' +
                      '<div class="col">' +
                         '<div class="card card-body">' +
-                           '<button type="submit" class="btn btn-primary p-0 mt-0 mb-0 deleteQueueButton" value="TEMP_QUEUE_NAME">' +
+                           '<button type="submit" class="btn btn-primary p-0 mt-0 mb-0 deleteGlobalQueueButton" value="TEMP_QUEUE_NAME">' +
                               '<i class="fa fa-trash" aria-hidden="true"></i>' +
                            '</button>' +
                         '</div>' +
@@ -375,10 +375,16 @@ async function configureNewQueuePageButtonPressed()
                      '</div>' +
                   '</div>'
                );
+               $(document.body).on('click','.deleteGlobalQueueButton', deleteGlobalQueueButtonPressed);
 }
-async function deleteQueueButtonPressed( value  )
+
+async function deleteGlobalQueueButtonPressed( value )
 {
-   console.log("main.js async function deleteQueueButtonPressed :%s", value);
+   console.log("Click deleteGlobalQueueButtonPressed value:%s", value );
+   Object.keys( value ).forEach( key =>
+   {
+      console.log("value[ %s ] = %s", key, value[ key ] );
+   });
 }
 
 // STARTUP CODE
@@ -466,7 +472,7 @@ async function deleteQueueButtonPressed( value  )
                   '<div class="row no-gutters">' +
                      '<div class="col">' +
                         '<div class="card card-body">' +
-                           '<button type="submit" class="btn btn-primary p-0 mt-0 mb-0 deleteQueueButton" value="' + entry.queue +'">' +
+                           '<button type="submit" class="btn btn-primary p-0 mt-0 mb-0 deleteGlobalQueueButton" value="' + entry.queue +'">' +
                               '<i class="fa fa-trash" aria-hidden="true"></i>' +
                            '</button>' +
                         '</div>' +
@@ -528,11 +534,7 @@ $( '.configureNewQueuePageButton' ).on( 'click', ( ) =>
    configureNewQueuePageButtonPressed();
 } );
 
-$( '.deleteQueueButton' ).on( 'click', ( value ) =>
-{
-   console.log("Click deleteQueueButton value:%s", value );
-   deleteQueueButtonPressed( value);
-} );
+$(document.body).on('click','.deleteGlobalQueueButton', deleteGlobalQueueButtonPressed);
 
 async function populateSelect( )
 {
