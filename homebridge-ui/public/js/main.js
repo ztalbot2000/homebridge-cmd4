@@ -341,6 +341,10 @@ async function showQueueGlobalsPageButtonPressed( )
    console.log("main.js async function globals sending globals");
    homebridge.request( "/showQueueGlobalsPage" );
 }
+async function deleteQueueButtonPressed( value  )
+{
+   console.log("main.js async function deleteQueueButtonPressed :%s", value);
+}
 
 // STARTUP CODE
 ( async ( ) =>
@@ -422,12 +426,20 @@ async function showQueueGlobalsPageButtonPressed( )
             {
                console.log("Adding queue: %s", entry.queue );
               $( '#globalQueuesForm' ).append(
-                   '<div class="row">' +
-                     '<button type="button" class="card card-body deleteQueueButton" value="' + entry.queue + '">' +
-                        '<i class="fa fa-trash" aria-hidden="true"></i>' +
-                     '</button>' +
-                     '<div class="card card-body">' + entry.queue + '</div>' +
-                     '<div class="card card-body">' + entry.queueInterval + '</div>' +
+                   '<div class="row no-gutters">' +
+                     '<div class="col">' +
+                        '<div class="card card-body">' +
+                           '<button type="submit" class="btn btn-primary p-0 mt-0 mb-0 deleteQueueButton" value="' + entry.queue +'">' +
+                              '<i class="fa fa-trash" aria-hidden="true"></i>' +
+                           '</button>' +
+                        '</div>' +
+                     '</div>' +
+                     '<div class="col">' +
+                        '<div class="card card-body">' + entry.queue + '</div>' +
+                     '</div>' +
+                     '<div class="col">' +
+                        '<div class="card card-body">' + entry.queueType + '</div>' +
+                     '</div>' +
                   '</div>'
               );
             });
@@ -475,6 +487,12 @@ $( '.configureNewQueuePageButton' ).on( 'click', ( ) =>
 {
    console.log("Click configureNewQueuePageButton");
    configureNewQueuePageButtonPressed();
+} );
+
+$( '.deleteQueueButton' ).on( 'click', ( value ) =>
+{
+   console.log("Click configureNewQueuePageButton value:%s", value );
+   deleteQueueButtonPressed( value);
 } );
 
 async function populateSelect( )
