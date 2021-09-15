@@ -375,16 +375,14 @@ async function configureNewQueuePageButtonPressed()
                      '</div>' +
                   '</div>'
                );
+               // You need to rebind the newly created button
                $(document.body).on('click','.deleteGlobalQueueButton', deleteGlobalQueueButtonPressed);
 }
 
-async function deleteGlobalQueueButtonPressed( value )
+async function deleteGlobalQueueButtonPressed( event )
 {
-   console.log("Click deleteGlobalQueueButtonPressed value:%s", value );
-   Object.keys( value ).forEach( key =>
-   {
-      console.log("value[ %s ] = %s", key, value[ key ] );
-   });
+   console.log("Click deleteGlobalQueueButtonPressed event:%s", event );
+   console.log(" Value is %s", $(this).val() );
 }
 
 // STARTUP CODE
