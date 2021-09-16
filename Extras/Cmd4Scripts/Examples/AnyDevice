@@ -287,7 +287,7 @@ switch( io )
             writeData( device, characteristic, option );
 
             // Set to done
-            writeData( device,"SecuritySystemAlarmState", option );
+            writeData( device,"SecuritySystemCurrentState", option );
 
             break;
          }
