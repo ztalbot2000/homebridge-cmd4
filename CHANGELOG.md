@@ -1,4 +1,12 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
+#### 5.1.1 (2021-09-16)
+
+##### Bug Fixes
+
+*  Bug [#113](https://github.com/ztalbot2000/homebridge-cmd4/pull/113) Add example SecuritySystem script, fixing TargetState ([fc892370](https://github.com/ztalbot2000/homebridge-cmd4/commit/fc89237021e828831c3fef6b340fd9ae0211cfdf))
+
+
+# Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
 ### 5.1.0 (2021-08-16)
 
 ##### New Features

@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-5-1-1">**Whats new in 5.1.1**</a>
 * <a href="#Whats-new-in-5-1-0">**Whats new in 5.1.0**</a>
 * <a href="#Whats-new-in-5-0-2">**Whats new in 5.0.2**</a>
 * <a href="#Whats-new-in-5-0-1">**Whats new in 5.0.1**</a>
@@ -71,6 +72,14 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-5-1-1">## Whats new in 5.1.1</a>
+#### 5.1.1 (2021-09-16)
+
+##### Bug Fixes
+
+*  Bug [#113](https://github.com/ztalbot2000/homebridge-cmd4/pull/113) Add example SecuritySystem script, fixing TargetState ([fc892370](https://github.com/ztalbot2000/homebridge-cmd4/commit/fc89237021e828831c3fef6b340fd9ae0211cfdf))
+
 
 <a name="Whats-new-in-5-1-0">## Whats new in 5.1.0</a>
 ### 5.1.0 (2021-08-16)
