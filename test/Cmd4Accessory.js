@@ -273,7 +273,7 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       let STORED_DATA_ARRAY = [ ];
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
-      expect ( ( ) => accessory.setStoredValueForIndex( -1, 0 ) ).to.throw(/setStoredValue - Characteristic index: -1 not between 0 and 222 for "Test Switch"\nCheck your config.json file for unknown characteristic./);
+      expect ( ( ) => accessory.setStoredValueForIndex( -1, 0 ) ).to.throw(/setStoredValue - Characteristic index: -1 not between 0 and 223 for "Test Switch"\nCheck your config.json file for unknown characteristic./);
 
    });
 
@@ -286,7 +286,7 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       let STORED_DATA_ARRAY = [ ];
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
-      expect ( ( ) => accessory.setStoredValueForIndex( CMD4_ACC_TYPE_ENUM.EOL, 0 ) ).to.throw(/setStoredValue - Characteristic index: 222 not between 0 and 222 for "Test Switch"\nCheck your config.json file for unknown characteristic./);
+      expect ( ( ) => accessory.setStoredValueForIndex( CMD4_ACC_TYPE_ENUM.EOL, 0 ) ).to.throw(/setStoredValue - Characteristic index: 223 not between 0 and 223 for "Test Switch"\nCheck your config.json file for unknown characteristic./);
 
    });
 
@@ -326,7 +326,7 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       let STORED_DATA_ARRAY = [ ];
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
-      expect ( ( ) => accessory.getStoredValueForIndex( -1 ) ).to.throw(/getStoredValue - Characteristic index: -1 not between 0 and 222 for "Test Switch"\nCheck your config.json file for unknown characteristic./);
+      expect ( ( ) => accessory.getStoredValueForIndex( -1 ) ).to.throw(/getStoredValue - Characteristic index: -1 not between 0 and 223 for "Test Switch"\nCheck your config.json file for unknown characteristic./);
 
    });
 
@@ -339,7 +339,7 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       let STORED_DATA_ARRAY = [ ];
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
-      expect ( ( ) => accessory.getStoredValueForIndex( CMD4_ACC_TYPE_ENUM.EOL ) ).to.throw(/getStoredValue - Characteristic index: 222 not between 0 and 222 for "Test Switch"\nCheck your config.json file for unknown characteristic./);
+      expect ( ( ) => accessory.getStoredValueForIndex( CMD4_ACC_TYPE_ENUM.EOL ) ).to.throw(/getStoredValue - Characteristic index: 223 not between 0 and 223 for "Test Switch"\nCheck your config.json file for unknown characteristic./);
 
    });
 

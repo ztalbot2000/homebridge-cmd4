@@ -224,7 +224,53 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
 
-      assert.equal( cmd4Accessory.outputConstants, true, ` Created Accessory has incorrect OutputConstants` );
+      // it's a Hierarhy variable
+      assert.equal( cmd4Accessory.hV.outputConstants, true, ` Created Accessory has incorrect OutputConstants` );
+
+      done( );
+   });
+
+   it('Test if outputConstants are used from the accessory', ( done ) =>
+   {
+      let platformConfig =
+      {
+         outputConstants:              true,
+         accessories: [
+         {
+            outputConstants:           false,
+            Name:                      "My_Door",
+            DisplayName:               "My_Door",
+            StatusMsg:                  true,
+            Type:                      "Door",
+            CurrentPosition:           0,
+            TargetPosition:            0,
+            PositionState:             0,
+            polling:                   [ { "characteristic": "CurrentPosition", "queue": "A" },
+                                         { "characteristic": "TargetPosition", "queue": "A" },
+                                         { "characteristic": "PositionState", "queue": "A" } ],
+            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            }
+         ]
+      }
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      // Heirarchy variable
+      assert.equal( cmd4Platform.hV.outputConstants, true, ` Created Platform has incorrect OutputConstants` );
+
+      cmd4Platform.discoverDevices( );
+
+      assert.equal( cmd4Platform.createdCmd4Accessories.length, 1, ` Cmd4Platform did not create the cmd4Accessory` );
+
+      let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
+
+      // it's a Hierarhy variable
+      assert.equal( cmd4Accessory.hV.outputConstants, false, ` Created Accessory has incorrect outputConstants` );
 
       done( );
    });
@@ -269,10 +315,11 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
 
       assert.equal( Object.keys( cmd4Accessory.listOfPollingCharacteristics ).length, 3, `Incorret number of polling characteristics` );
 
-      assert.equal( cmd4Accessory.timeout, 12345, `Timeout was not passed down to accessory` );
-      assert.equal( cmd4Accessory.interval, 12000, `Interval was not passed down to accessory` );
-      assert.equal( cmd4Accessory.stateChangeResponseTime, 18000, `stateChangeResponseTime was not passed down to accessory` );
-      assert.equal( cmd4Accessory.outputConstants, true, `outputConstants was not passed down to accessory` );
+      // it's a Hierarhy variable
+      assert.equal( cmd4Accessory.hV.timeout, 12345, `Timeout was not passed down to accessory` );
+      assert.equal( cmd4Accessory.hV.interval, 12000, `Interval was not passed down to accessory` );
+      assert.equal( cmd4Accessory.hV.stateChangeResponseTime, 18000, `stateChangeResponseTime was not passed down to accessory` );
+      assert.equal( cmd4Accessory.hV.outputConstants, true, `outputConstants was not passed down to accessory` );
 
       Object.keys( cmd4Accessory.listOfPollingCharacteristics ).forEach( ( key ) =>
       {
@@ -284,6 +331,7 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
 
       done( );
    });
+
 
    it('Test outputConstants, stateChangeResponseTime are used from the accessory definition', ( done ) =>
    {
@@ -316,7 +364,8 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
-      assert.equal( cmd4Platform.outputConstants, false, ` Created Platform has incorrect OutputConstants` );
+      // it's a Hierarhy variable
+      assert.equal( cmd4Platform.hV.outputConstants, false, ` Created Platform has incorrect OutputConstants` );
 
       cmd4Platform.discoverDevices( );
 
@@ -326,10 +375,11 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
 
       assert.equal( Object.keys( cmd4Accessory.listOfPollingCharacteristics ).length, 3, `Incorret number of polling characteristics` );
 
-      assert.equal( cmd4Accessory.timeout, 12345, `Timeout was not passed down to accessory` );
-      assert.equal( cmd4Accessory.interval, 12000, `Interval was not passed down to accessory` );
-      assert.equal( cmd4Accessory.stateChangeResponseTime, constants.MEDIUM_STATE_CHANGE_RESPONSE_TIME, `stateChangeResponseTime was not passed from CMD4_DEVICE_TYPE_ENUM` );
-      assert.equal( cmd4Accessory.outputConstants, true, ` Created Accessory has incorrect OutputConstants` );
+      // it's a Hierarhy variable
+      assert.equal( cmd4Accessory.hV.timeout, 12345, `Timeout was not passed down to accessory` );
+      assert.equal( cmd4Accessory.hV.interval, 12000, `Interval was not passed down to accessory` );
+      assert.equal( cmd4Accessory.hV.stateChangeResponseTime, constants.MEDIUM_STATE_CHANGE_RESPONSE_TIME, `stateChangeResponseTime was not passed from CMD4_DEVICE_TYPE_ENUM` );
+      assert.equal( cmd4Accessory.hV.outputConstants, true, ` Created Accessory has incorrect OutputConstants` );
 
       Object.keys( cmd4Accessory.listOfPollingCharacteristics ).forEach( ( key ) =>
       {
@@ -380,9 +430,10 @@ describe('Testing Cmd4Platform Cmd4Mode gets passed to accessories', ( ) =>
 
       assert.equal( Object.keys( cmd4Accessory.listOfPollingCharacteristics ).length, 3, `Incorret number of polling characteristics` );
 
-      assert.equal( cmd4Accessory.timeout, 12345, `Timeout was not passed down to accessory` );
-      assert.equal( cmd4Accessory.interval, 12000, `Interval was not passed down to accessory` );
-      assert.equal( cmd4Accessory.stateChangeResponseTime, constants.MEDIUM_STATE_CHANGE_RESPONSE_TIME, `stateChangeResponseTime was not passed from CMD4_DEVICE_TYPE_ENUM` );
+      // it's a Hierarhy variable
+      assert.equal( cmd4Accessory.hV.timeout, 12345, `Timeout was not passed down to accessory` );
+      assert.equal( cmd4Accessory.hV.interval, 12000, `Interval was not passed down to accessory` );
+      assert.equal( cmd4Accessory.hV.stateChangeResponseTime, constants.MEDIUM_STATE_CHANGE_RESPONSE_TIME, `stateChangeResponseTime was not passed from CMD4_DEVICE_TYPE_ENUM` );
 
       Object.keys( cmd4Accessory.listOfPollingCharacteristics ).forEach( ( key ) =>
       {

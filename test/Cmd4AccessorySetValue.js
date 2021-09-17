@@ -360,8 +360,9 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Accessory.log.reset( );
       cmd4Accessory.log.setDebugEnabled( false );
+      cmd4Accessory.log.setOutputEnabled( false );
 
-      // Call the setValue bound function, which is priorritySetValue
+      // Call the setValue bound function, which is prioritySetValue
       cmd4Accessory.service.getCharacteristic(
          CMD4_ACC_TYPE_ENUM.properties[ acc ]
              .characteristic ).setValue( value, function dummyCallback( ) { } );

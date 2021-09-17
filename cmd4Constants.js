@@ -16,16 +16,18 @@ exports.MEDIUM_STATE_CHANGE_RESPONSE_TIME    = 3000;   // 3 seconds
 exports.DEFAULT_STATE_CHANGE_RESPONSE_TIME   = 3000;   // 3 seconds
 exports.FAST_STATE_CHANGE_RESPONSE_TIME      = 1000;   // 1 second
 
-exports.DEFAULT_TIMEOUT          = 60000; // 1 minute
 exports.DEFAULT_INTERVAL         = 60000; // 1 minute
+exports.DEFAULT_TIMEOUT          = 60000; // 1 minute
 
 // Not a Bool, otherwise conditional check fails
 exports.DEFAULT_STATUSMSG        = "TRUE";
 
-exports.DEFAULT_OUTPUTCONSTANTS  = false;
 exports.DEFAULT_QUEUE_TYPE       = "WoRm";
 exports.DEFAULT_QUEUE_PAUSE_TIMEOUT = 10000; // 10 seconds
 
+exports.DEFAULT_DEBUG            = false; // No debug
+exports.DEFAULT_ALLOW_TLV8       = false; // No funny TLV8 characteristics
+exports.DEFAULT_OUTPUTCONSTANTS  = false;
 
 // Fakegato Constants
 exports.FAKEGATO_TYPE_ENERGY_l   = "energy";

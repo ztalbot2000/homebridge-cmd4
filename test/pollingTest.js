@@ -10,7 +10,8 @@ let Cmd4Platform = require( "../Cmd4Platform" ).Cmd4Platform;
 let Cmd4PriorityPollingQueue = require( "../Cmd4PriorityPollingQueue" ).Cmd4PriorityPollingQueue;
 
 
-
+// Hierarchy variables
+let HV = require( "../utils/HV" );
 
 var _api = new HomebridgeAPI( ); // object we feed to Plugins
 
@@ -217,7 +218,10 @@ describe('Testing Cmd4Accessory polling', ( ) =>
          On:                           0,
          State_cmd:                    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
       }
-      let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1, "timeout": 77000, "interval": 22000 };
+      let hV = new HV();
+      hV.timeout = 77000;
+      hV.interval = 22000;
+      let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1, "hV": hV };
 
       const log = new Logger( );
       log.setBufferEnabled( );

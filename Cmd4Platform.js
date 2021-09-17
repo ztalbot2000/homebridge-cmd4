@@ -14,6 +14,9 @@ let ucFirst = require( "./utils/ucFirst" );
 let isNumeric = require( "./utils/isNumeric" );
 let trueTypeOf = require( "./utils/trueTypeOf" );
 
+// Hierarchy variables
+let HV = require( "./utils/HV" );
+
 let createAccessorysInformationService = require( "./utils/createAccessorysInformationService" );
 
 // Pretty Colors
@@ -94,15 +97,18 @@ class Cmd4Platform
       // These would be queues of Characteristics to be polled or get/set via IOS.
       settings.listOfCreatedPriorityQueues = { };
 
-
-      // Defaults before parse
-      this.outputConstants = constants.DEFAULT_OUTPUTCONSTANTS;
-      this.statusMsg = constants.DEFAULT_STATUSMSG;
-
       // Track the polling timers only so that unit testing can cancel them.
       this.pollingTimers = [ ];
 
+      // Create the hierarhy variables
+      this.hV = new HV();
+
       this.parseConfigForCmd4Directives( this.config );
+
+      // Update the namespace for stored variables
+      // like timeout, stateChangeResponseTime ... As it may require
+      // changes from parseConfig.
+      this.hV.update( this );
 
       this.processNewCharacteristicDefinitions( );
 

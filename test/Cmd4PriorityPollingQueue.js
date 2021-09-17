@@ -310,7 +310,7 @@ describe('WoRm - Testing Cmd4PriorityPollingQueue polling', ( ) =>
 
       setTimeout( () =>
       {
-         assert.include( log.logBuf, `[90mgetValue: accTypeEnumIndex:( 105 )-"On" function for: My_Switch cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Switch' 'On' timeout: 60000` , `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: accTypeEnumIndex:( ${ CMD4_ACC_TYPE_ENUM.On } )-"On" function for: My_Switch cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Switch' 'On' timeout: 60000` , `expected stdout: ${ log.logBuf }` );
          assert.include( log.logBuf, `[90mgetValue: On function for: My_Switch returned: 1` , `expected stdout: ${ log.logBuf }` );
          // Low priority queues are continious, make sure it is still the same
          assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 4, `After poll, low priority queue length should atill be the same size` );
@@ -741,7 +741,7 @@ describe('QUEUETYPE: STANDARD (Passthru ) -  Testing Cmd4PriorityPollingQueue po
 
       setTimeout( () =>
       {
-         assert.include( log.logBuf, `[90mgetValue: accTypeEnumIndex:( 105 )-"On" function for: My_Switch cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Switch' 'On' timeout: 60000` , `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: accTypeEnumIndex:( ${ CMD4_ACC_TYPE_ENUM.On } )-"On" function for: My_Switch cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Switch' 'On' timeout: 60000` , `expected stdout: ${ log.logBuf }` );
          assert.include( log.logBuf, `[90mgetValue: On function for: My_Switch returned: 1` , `expected stdout: ${ log.logBuf }` );
          // Low priority queues are continious, make sure it is still the same
          assert.equal( cmd4PriorityPollingQueue.lowPriorityQueue.length, 4, `After poll, low priority queue length should atill be the same size` );
@@ -1423,15 +1423,15 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
          assert.equal( result, true, ` getValue incorrect result: ${ result }` );
       };
 
-      cmd4PriorityPollingQueue.highPriorityQueue.push( { [ constants.IS_SET_lv ]: false, [ constants.QUEUE_GET_IS_UPDATE_lv ]: false, [ constants.ACCESSORY_lv ]: cmd4SwitchAccessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: CMD4_ACC_TYPE_ENUM.On, [ constants.CHARACTERISTIC_STRING_lv ]: "On", [ constants.TIMEOUT_lv ]: cmd4SwitchAccessory.timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: null, [ constants.VALUE_lv ]: null, [ constants.CALLBACK_lv ]: dummyCallback } );
+      cmd4PriorityPollingQueue.highPriorityQueue.push( { [ constants.IS_SET_lv ]: false, [ constants.QUEUE_GET_IS_UPDATE_lv ]: false, [ constants.ACCESSORY_lv ]: cmd4SwitchAccessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: CMD4_ACC_TYPE_ENUM.On, [ constants.CHARACTERISTIC_STRING_lv ]: "On", [ constants.TIMEOUT_lv ]: cmd4SwitchAccessory.hV.timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: null, [ constants.VALUE_lv ]: null, [ constants.CALLBACK_lv ]: dummyCallback } );
 
       cmd4PriorityPollingQueue.processQueueFunc( HIGH_PRIORITY_GET, cmd4PriorityPollingQueue );
 
       // Wait for the Queue to be processed
       setTimeout( ( ) =>
       {
-         assert.include( log.logBuf, `[90mProcessing high priority queue "Get" entry: 105 isUpdate: false length: 0` , `expected stdout: ${ log.logBuf }` );
-         assert.include( log.logBuf, `[90mgetValue: accTypeEnumIndex:( 105 )-"On" function for: My_Switch cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Switch' 'On' timeout: 60000` , `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mProcessing high priority queue "Get" entry: ${ CMD4_ACC_TYPE_ENUM.On } isUpdate: false length: 0` , `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: accTypeEnumIndex:( ${ CMD4_ACC_TYPE_ENUM.On } )-"On" function for: My_Switch cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Switch' 'On' timeout: 60000` , `expected stdout: ${ log.logBuf }` );
          assert.include( log.logBuf, `[90mgetValue: On function for: My_Switch returned: 1` , `expected stdout: ${ log.logBuf }` );
 
          done( );
@@ -1598,8 +1598,8 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       // Wait for the Queue to be processed
       setTimeout( ( ) =>
       {
-         assert.include( log.logBuf, `[90mProcessing high priority queue "Set" entry: 105 length: 0` , `expected stdout: ${ log.logBuf }` );
-         assert.include( log.logBuf, `[90msetValue: accTypeEnumIndex:( 105 )-"On" function for: My_Switch 1  cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Set 'My_Switch' 'On' '1'` , `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mProcessing high priority queue "Set" entry: ${ CMD4_ACC_TYPE_ENUM.On } length: 0` , `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90msetValue: accTypeEnumIndex:( ${ CMD4_ACC_TYPE_ENUM.On } )-"On" function for: My_Switch 1  cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Set 'My_Switch' 'On' '1'` , `expected stdout: ${ log.logBuf }` );
 
          done( );
 
@@ -1771,11 +1771,11 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       // Wait for the Queue to be processed
       setTimeout( ( ) =>
       {
-         assert.include( log.logBuf, `[90mProcessing high priority queue "Set" entry: 192 length: 0` , `expected stdout: ${ log.logBuf }` );
-         assert.include( log.logBuf, `[90msetValue: accTypeEnumIndex:( 192 )-"TargetPosition" function for: My_Door 100  cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Set 'My_Door' 'TargetPosition' '100'`, `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mProcessing high priority queue "Set" entry: ${ CMD4_ACC_TYPE_ENUM.TargetPosition} length: 0` , `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90msetValue: accTypeEnumIndex:( ${ CMD4_ACC_TYPE_ENUM.TargetPosition } )-"TargetPosition" function for: My_Door 100  cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Set 'My_Door' 'TargetPosition' '100'`, `expected stdout: ${ log.logBuf }` );
 
          assert.include( log.logBuf, `[90mProcessing high priority queue "Get" entry: 43 isUpdate: true length: ` , `expected stdout: ${ log.logBuf }` );
-         assert.include( log.logBuf, `[90mgetValue: accTypeEnumIndex:( 43 )-"CurrentPosition" function for: My_Door cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Door' 'CurrentPosition'`, `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: accTypeEnumIndex:( ${ CMD4_ACC_TYPE_ENUM.CurrentPosition } )-"CurrentPosition" function for: My_Door cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Door' 'CurrentPosition'`, `expected stdout: ${ log.logBuf }` );
          assert.include( log.logBuf, `[90mgetValue: CurrentPosition function for: My_Door returned: 100`, `expected stdout: ${ log.logBuf }` );
 
          done( );
@@ -1908,15 +1908,15 @@ describe('Standard - Testing Cmd4PriorityPollingQueue recovery correction', ( ) 
          assert.equal( result, true, ` getValue incorrect result: ${ result }` );
       };
 
-      cmd4PriorityPollingQueue.highPriorityQueue.push( { [ constants.IS_SET_lv ]: false, [ constants.QUEUE_GET_IS_UPDATE_lv ]: false, [ constants.ACCESSORY_lv ]: cmd4SwitchAccessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: CMD4_ACC_TYPE_ENUM.On, [ constants.CHARACTERISTIC_STRING_lv ]: "On", [ constants.TIMEOUT_lv ]: cmd4SwitchAccessory.timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: null, [ constants.VALUE_lv ]: null, [ constants.CALLBACK_lv ]: dummyCallback } );
+      cmd4PriorityPollingQueue.highPriorityQueue.push( { [ constants.IS_SET_lv ]: false, [ constants.QUEUE_GET_IS_UPDATE_lv ]: false, [ constants.ACCESSORY_lv ]: cmd4SwitchAccessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: CMD4_ACC_TYPE_ENUM.On, [ constants.CHARACTERISTIC_STRING_lv ]: "On", [ constants.TIMEOUT_lv ]: cmd4SwitchAccessory.hV.timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: null, [ constants.VALUE_lv ]: null, [ constants.CALLBACK_lv ]: dummyCallback } );
 
       cmd4PriorityPollingQueue.processQueueFunc( HIGH_PRIORITY_GET, cmd4PriorityPollingQueue );
 
       // Wait for the Queue to be processed
       setTimeout( ( ) =>
       {
-         assert.include( log.logBuf, `[90mProcessing high priority queue "Get" entry: 105 isUpdate: false length: 0` , `expected stdout: ${ log.logBuf }` );
-         assert.include( log.logBuf, `[90mgetValue: accTypeEnumIndex:( 105 )-"On" function for: My_Switch cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Switch' 'On' timeout: 60000` , `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mProcessing high priority queue "Get" entry: ${ CMD4_ACC_TYPE_ENUM.On } isUpdate: false length: 0` , `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: accTypeEnumIndex:( ${ CMD4_ACC_TYPE_ENUM.On } )-"On" function for: My_Switch cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Switch' 'On' timeout: 60000` , `expected stdout: ${ log.logBuf }` );
          assert.include( log.logBuf, `[90mgetValue: On function for: My_Switch returned: 1` , `expected stdout: ${ log.logBuf }` );
 
          done( );
@@ -1983,8 +1983,8 @@ describe('Standard - Testing Cmd4PriorityPollingQueue recovery correction', ( ) 
       // Wait for the Queue to be processed
       setTimeout( ( ) =>
       {
-         assert.include( log.logBuf, `[90mProcessing high priority queue "Set" entry: 105 length: 0` , `expected stdout: ${ log.logBuf }` );
-         assert.include( log.logBuf, `[90msetValue: accTypeEnumIndex:( 105 )-"On" function for: My_Switch 1  cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Set 'My_Switch' 'On' '1'` , `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mProcessing high priority queue "Set" entry: ${ CMD4_ACC_TYPE_ENUM.On } length: 0` , `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90msetValue: accTypeEnumIndex:( ${ CMD4_ACC_TYPE_ENUM.On } )-"On" function for: My_Switch 1  cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Set 'My_Switch' 'On' '1'` , `expected stdout: ${ log.logBuf }` );
 
          done( );
 
@@ -2059,11 +2059,11 @@ describe('Standard - Testing Cmd4PriorityPollingQueue recovery correction', ( ) 
       // Wait for the Queue to be processed
       setTimeout( ( ) =>
       {
-         assert.include( log.logBuf, `[90mProcessing high priority queue "Set" entry: 192 length: 0` , `expected stdout: ${ log.logBuf }` );
-         assert.include( log.logBuf, `[90msetValue: accTypeEnumIndex:( 192 )-"TargetPosition" function for: My_Door 100  cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Set 'My_Door' 'TargetPosition' '100'`, `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mProcessing high priority queue "Set" entry: ${ CMD4_ACC_TYPE_ENUM.TargetPosition } length: 0` , `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90msetValue: accTypeEnumIndex:( ${ CMD4_ACC_TYPE_ENUM.TargetPosition } )-"TargetPosition" function for: My_Door 100  cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Set 'My_Door' 'TargetPosition' '100'`, `expected stdout: ${ log.logBuf }` );
 
-         assert.include( log.logBuf, `[90mProcessing high priority queue "Get" entry: 43 isUpdate: true length: ` , `expected stdout: ${ log.logBuf }` );
-         assert.include( log.logBuf, `[90mgetValue: accTypeEnumIndex:( 43 )-"CurrentPosition" function for: My_Door cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Door' 'CurrentPosition'`, `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mProcessing high priority queue "Get" entry: ${ CMD4_ACC_TYPE_ENUM.CurrentPosition } isUpdate: true length: ` , `expected stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: accTypeEnumIndex:( ${ CMD4_ACC_TYPE_ENUM.CurrentPosition } )-"CurrentPosition" function for: My_Door cmd: node ./Extras/Cmd4Scripts/Examples/AnyDevice Get 'My_Door' 'CurrentPosition'`, `expected stdout: ${ log.logBuf }` );
          assert.include( log.logBuf, `[90mgetValue: CurrentPosition function for: My_Door returned: 100`, `expected stdout: ${ log.logBuf }` );
 
          done( );

@@ -1778,7 +1778,22 @@ switch( io )
 
             break;
          }
-         case "LockControlPoint":   // 82
+         case "ListPairings":   // 82
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            // UUID: 00000050-0000-1000-8000-0026BB765291
+            // Type: public.hap.characteristic.linkPairings
+            // Permissions: Paired Write, Paired Read
+            // Found in HomeKitTypes.js (Values ???)
+
+            // Format: TLV8
+
+            break;
+         }
+         case "LockControlPoint":   // 83
          {
             c = readData( device, characteristic );
 
@@ -1791,7 +1806,7 @@ switch( io )
 
             break;
          }
-         case "LockCurrentState":   // 83
+         case "LockCurrentState":   // 84
          {
             c = readData( device, characteristic );
 
@@ -1816,7 +1831,7 @@ switch( io )
 
             break;
          }
-         case "LockLastKnownAction":   // 84
+         case "LockLastKnownAction":   // 85
          {
             c = readData( device, characteristic );
 
@@ -1844,7 +1859,7 @@ switch( io )
 
             break;
          }
-         case "LockManagementAutoSecurityTimeout":   // 85
+         case "LockManagementAutoSecurityTimeout":   // 86
          {
             c = readData( device, characteristic );
 
@@ -1858,7 +1873,7 @@ switch( io )
 
             break;
          }
-         case "LockPhysicalControls":   // 86
+         case "LockPhysicalControls":   // 87
          {
             c = readData( device, characteristic );
 
@@ -1880,7 +1895,7 @@ switch( io )
 
             break;
          }
-         case "LockTargetState":   // 87
+         case "LockTargetState":   // 88
          {
             c = readData( device, characteristic );
 
@@ -1903,7 +1918,7 @@ switch( io )
 
             break;
          }
-         case "Logs":   // 88
+         case "Logs":   // 89
          {
             c = readData( device, characteristic );
 
@@ -1917,7 +1932,7 @@ switch( io )
 
             break;
          }
-         case "MACRetransmissionMaximum":   // 89
+         case "MACRetransmissionMaximum":   // 90
          {
             c = readData( device, characteristic );
 
@@ -1932,7 +1947,7 @@ switch( io )
 
             break;
          }
-         case "MACTransmissionCounters":   // 90
+         case "MACTransmissionCounters":   // 91
          {
             c = readData( device, characteristic );
 
@@ -1947,7 +1962,7 @@ switch( io )
 
             break;
          }
-         case "ManagedNetworkEnable":   // 91
+         case "ManagedNetworkEnable":   // 92
          {
             c = readData( device, characteristic );
 
@@ -1966,7 +1981,7 @@ switch( io )
 
             break;
          }
-         case "ManuallyDisabled":   // 92
+         case "ManuallyDisabled":   // 93
          {
             c = readData( device, characteristic );
 
@@ -1985,7 +2000,7 @@ switch( io )
 
             break;
          }
-         case "Manufacturer":   // 93
+         case "Manufacturer":   // 94
          {
             c = readData( device, characteristic );
 
@@ -2001,7 +2016,7 @@ switch( io )
 
             break;
          }
-         case "Model": // 94
+         case "Model": // 95
          {
             c = readData( device, characteristic );
 
@@ -2017,7 +2032,7 @@ switch( io )
 
             break;
          }
-         case "MotionDetected":   // 95
+         case "MotionDetected":   // 96
          {
             c = readData( device, characteristic );
 
@@ -2031,7 +2046,7 @@ switch( io )
 
             break;
          }
-         case "Mute":   // 96
+         case "Mute":   // 97
          {
             c = readData( device, characteristic );
 
@@ -2049,7 +2064,7 @@ switch( io )
 
             break;
          }
-         case "Name":   // 97
+         case "Name":   // 98
          {
             c = readData( device, characteristic );
 
@@ -2065,7 +2080,7 @@ switch( io )
 
             break;
          }
-         case "NetworkAccessViolationControl":   // 98
+         case "NetworkAccessViolationControl":   // 99
          {
             c = readData( device, characteristic );
 
@@ -2080,7 +2095,7 @@ switch( io )
 
             break;
          }
-         case "NetworkClientProfileControl":   // 99
+         case "NetworkClientProfileControl":   // 100
          {
             c = readData( device, characteristic );
 
@@ -2095,7 +2110,7 @@ switch( io )
 
             break;
          }
-         case "NetworkClientStatusControl":   // 100
+         case "NetworkClientStatusControl":   // 101
          {
             c = readData( device, characteristic );
 
@@ -2110,7 +2125,7 @@ switch( io )
 
             break;
          }
-         case "NightVision":   // 101
+         case "NightVision":   // 102
          {
             c = readData( device, characteristic );
 
@@ -2128,7 +2143,7 @@ switch( io )
 
             break;
          }
-         case "NitrogenDioxideDensity":   // 102
+         case "NitrogenDioxideDensity":   // 103
          {
             c = readData( device, characteristic );
 
@@ -2145,7 +2160,7 @@ switch( io )
 
             break;
          }
-         case "ObstructionDetected":   // 103
+         case "ObstructionDetected":   // 104
          {
             c = readData( device, characteristic );
 
@@ -2159,7 +2174,7 @@ switch( io )
 
             break;
          }
-         case "OccupancyDetected":   // 104
+         case "OccupancyDetected":   // 105
          {
             c = readData( device, characteristic );
 
@@ -2181,7 +2196,7 @@ switch( io )
 
             break;
          }
-         case "On":   // 105
+         case "On":   // 106
          {
             c = readData( device, characteristic );
 
@@ -2195,7 +2210,7 @@ switch( io )
 
             break;
          }
-         case "OperatingStateResponse":   // 106
+         case "OperatingStateResponse":   // 107
          {
             c = readData( device, characteristic );
 
@@ -2210,7 +2225,7 @@ switch( io )
 
             break;
          }
-         case "OpticalZoom":   // 107
+         case "OpticalZoom":   // 108
          {
             c = readData( device, characteristic );
 
@@ -2228,7 +2243,7 @@ switch( io )
 
             break;
          }
-         case "OutletInUse":   // 108
+         case "OutletInUse":   // 109
          {
             c = readData( device, characteristic );
 
@@ -2242,7 +2257,7 @@ switch( io )
 
             break;
          }
-         case "OzoneDensity":   // 109
+         case "OzoneDensity":   // 110
          {
             c = readData( device, characteristic );
 
@@ -2259,7 +2274,7 @@ switch( io )
 
             break;
          }
-         case "PM10Density":   // 110
+         case "PM10Density":   // 111
          {
             c = readData( device, characteristic );
 
@@ -2276,7 +2291,7 @@ switch( io )
 
             break;
          }
-         case "PM2_5Density":   // 111
+         case "PM2_5Density":   // 112
          {
             c = readData( device, characteristic );
 
@@ -2293,7 +2308,7 @@ switch( io )
 
             break;
          }
-         case "PairSetup":   // 112
+         case "PairSetup":   // 113
          {
             c = readData( device, characteristic );
 
@@ -2308,7 +2323,7 @@ switch( io )
 
             break;
          }
-         case "PairVerify":   // 113
+         case "PairVerify":   // 114
          {
             c = readData( device, characteristic );
 
@@ -2323,7 +2338,7 @@ switch( io )
 
             break;
          }
-         case "PairingFeatures":   // 114
+         case "PairingFeatures":   // 115
          {
             c = readData( device, characteristic );
 
@@ -2338,7 +2353,7 @@ switch( io )
 
             break;
          }
-         case "PairingPairings":   // 115
+         case "PairingPairings":   // 116
          {
             c = readData( device, characteristic );
 
@@ -2353,7 +2368,7 @@ switch( io )
 
             break;
          }
-         case "PasswordSetting":   // 116
+         case "PasswordSetting":   // 117
          {
             c = readData( device, characteristic );
 
@@ -2368,7 +2383,7 @@ switch( io )
 
             break;
          }
-         case "PeriodicSnapshotsActive":   // 117
+         case "PeriodicSnapshotsActive":   // 118
          {
             c = readData( device, characteristic );
 
@@ -2387,7 +2402,7 @@ switch( io )
 
             break;
          }
-         case "PictureMode":   // 118
+         case "PictureMode":   // 119
          {
             c = readData( device, characteristic );
 
@@ -2412,7 +2427,7 @@ switch( io )
 
             break;
          }
-         case "Ping":   // 119
+         case "Ping":   // 120
          {
             c = readData( device, characteristic );
 
@@ -2426,7 +2441,7 @@ switch( io )
 
             break;
          }
-         case "PositionState":   // 120
+         case "PositionState":   // 121
          {
             c = readData( device, characteristic );
 
@@ -2450,7 +2465,7 @@ switch( io )
 
             break;
          }
-         case "PowerModeSelection":   // 121
+         case "PowerModeSelection":   // 122
          {
             c = readData( device, characteristic );
 
@@ -2469,7 +2484,7 @@ switch( io )
 
             break;
          }
-         case "ProductData":   // 122
+         case "ProductData":   // 123
          {
             c = readData( device, characteristic );
 
@@ -2486,7 +2501,7 @@ switch( io )
 
             break;
          }
-         case "ProgramMode":   // 123
+         case "ProgramMode":   // 124
          {
             c = readData( device, characteristic );
 
@@ -2505,7 +2520,7 @@ switch( io )
 
             break;
          }
-         case "ProgrammableSwitchEvent":   // 124
+         case "ProgrammableSwitchEvent":   // 125
          {
             c = readData( device, characteristic );
 
@@ -2529,7 +2544,7 @@ switch( io )
 
             break;
          }
-         case "ProgrammableSwitchOutputState":   // 125
+         case "ProgrammableSwitchOutputState":   // 126
          {
             c = readData( device, characteristic );
 
@@ -2550,7 +2565,7 @@ switch( io )
 
             break;
          }
-         case "Reachable":   // 126
+         case "Reachable":   // 127
          {
             c = readData( device, characteristic );
 
@@ -2567,7 +2582,7 @@ switch( io )
 
             break;
          }
-         case "ReceivedSignalStrengthIndication":   // 127
+         case "ReceivedSignalStrengthIndication":   // 128
          {
             c = readData( device, characteristic );
 
@@ -2584,7 +2599,7 @@ switch( io )
 
             break;
          }
-         case "ReceiverSensitivity":   // 128
+         case "ReceiverSensitivity":   // 129
          {
             c = readData( device, characteristic );
 
@@ -2601,7 +2616,7 @@ switch( io )
 
             break;
          }
-         case "RecordingAudioActive":   // 129
+         case "RecordingAudioActive":   // 130
          {
             c = readData( device, characteristic );
 
@@ -2620,7 +2635,7 @@ switch( io )
 
             break;
          }
-         case "RelativeHumidityDehumidifierThreshold":   // 130
+         case "RelativeHumidityDehumidifierThreshold":   // 131
          {
             c = readData( device, characteristic );
 
@@ -2638,7 +2653,7 @@ switch( io )
 
             break;
          }
-         case "RelativeHumidityHumidifierThreshold":   // 131
+         case "RelativeHumidityHumidifierThreshold":   // 132
          {
             c = readData( device, characteristic );
 
@@ -2658,7 +2673,7 @@ switch( io )
 
             break;
          }
-         case "RelayControlPoint":   // 132
+         case "RelayControlPoint":   // 133
          {
             c = readData( device, characteristic );
 
@@ -2673,7 +2688,7 @@ switch( io )
 
             break;
          }
-         case "RelayEnabled":   // 133
+         case "RelayEnabled":   // 134
          {
             c = readData( device, characteristic );
 
@@ -2690,7 +2705,7 @@ switch( io )
 
             break;
          }
-         case "RelayState":   // 134
+         case "RelayState":   // 135
          {
             c = readData( device, characteristic );
 
@@ -2707,7 +2722,7 @@ switch( io )
 
             break;
          }
-         case "RemainingDuration":   // 135
+         case "RemainingDuration":   // 136
          {
             c = readData( device, characteristic );
 
@@ -2726,7 +2741,7 @@ switch( io )
 
             break;
          }
-         case "RemoteKey":   // 136
+         case "RemoteKey":   // 137
          {
             c = readData( device, characteristic );
 
@@ -2756,7 +2771,7 @@ switch( io )
 
             break;
          }
-         case "ResetFilterIndication":   // 137
+         case "ResetFilterIndication":   // 138
          {
             c = readData( device, characteristic );
 
@@ -2773,7 +2788,7 @@ switch( io )
 
             break;
          }
-         case "RotationDirection":   // 138
+         case "RotationDirection":   // 139
          {
             c = readData( device, characteristic );
 
@@ -2792,7 +2807,7 @@ switch( io )
 
             break;
          }
-         case "RotationSpeed":   // 139
+         case "RotationSpeed":   // 140
          {
             c = readData( device, characteristic );
 
@@ -2811,7 +2826,7 @@ switch( io )
 
             break;
          }
-         case "RouterStatus":   // 140
+         case "RouterStatus":   // 141
          {
             c = readData( device, characteristic );
 
@@ -2833,7 +2848,7 @@ switch( io )
 
             break;
          }
-         case "Saturation":   // 141
+         case "Saturation":   // 142
          {
             c = readData( device, characteristic );
 
@@ -2852,7 +2867,7 @@ switch( io )
 
             break;
          }
-         case "SecuritySystemAlarmType":   // 142
+         case "SecuritySystemAlarmType":   // 143
          {
             c = readData( device, characteristic );
 
@@ -2874,7 +2889,7 @@ switch( io )
 
             break;
          }
-         case "SecuritySystemCurrentState":   // 143
+         case "SecuritySystemCurrentState":   // 144
          {
             c = readData( device, characteristic );
 
@@ -2901,7 +2916,7 @@ switch( io )
 
             break;
          }
-         case "SecuritySystemTargetState":   // 144
+         case "SecuritySystemTargetState":   // 145
          {
             c = readData( device, characteristic );
 
@@ -2927,7 +2942,7 @@ switch( io )
 
             break;
          }
-         case "SelectedAudioStreamConfiguration":   // 145
+         case "SelectedAudioStreamConfiguration":   // 146
          {
             c = readData( device, characteristic );
 
@@ -2942,7 +2957,7 @@ switch( io )
 
             break;
          }
-         case "SelectedCameraRecordingConfiguration":   // 146
+         case "SelectedCameraRecordingConfiguration":   // 147
          {
             c = readData( device, characteristic );
 
@@ -2957,7 +2972,7 @@ switch( io )
 
             break;
          }
-         case "SelectedRTPStreamConfiguration":   // 147
+         case "SelectedRTPStreamConfiguration":   // 148
          {
             c = readData( device, characteristic );
 
@@ -2971,7 +2986,7 @@ switch( io )
 
             break;
          }
-         case "SerialNumber":   // 148
+         case "SerialNumber":   // 149
          {
             c = readData( device, characteristic );
 
@@ -2987,7 +3002,7 @@ switch( io )
 
             break;
          }
-         case "ServiceLabelIndex":   // 149
+         case "ServiceLabelIndex":   // 150
          {
             c = readData( device, characteristic );
 
@@ -3004,7 +3019,7 @@ switch( io )
 
             break;
          }
-         case "ServiceLabelNamespace":   // 150
+         case "ServiceLabelNamespace":   // 151
          {
             c = readData( device, characteristic );
 
@@ -3027,7 +3042,7 @@ switch( io )
 
             break;
          }
-         case "SetDuration":   // 151
+         case "SetDuration":   // 152
          {
             c = readData( device, characteristic );
 
@@ -3045,7 +3060,7 @@ switch( io )
 
             break;
          }
-         case "SetupDataStreamTransport":   // 152
+         case "SetupDataStreamTransport":   // 153
          {
             c = readData( device, characteristic );
 
@@ -3062,7 +3077,7 @@ switch( io )
 
             break;
          }
-         case "SetupEndpoints":   // 153
+         case "SetupEndpoints":   // 154
          {
             c = readData( device, characteristic );
 
@@ -3079,7 +3094,7 @@ switch( io )
 
             break;
          }
-         case "SetupTransferTransport":   // 154
+         case "SetupTransferTransport":   // 155
          {
             c = readData( device, characteristic );
 
@@ -3096,7 +3111,7 @@ switch( io )
 
             break;
          }
-         case "SignalToNoiseRatio":   // 155
+         case "SignalToNoiseRatio":   // 156
          {
             c = readData( device, characteristic );
 
@@ -3110,7 +3125,7 @@ switch( io )
 
             break;
          }
-         case "SiriInputType":   // 156
+         case "SiriInputType":   // 157
          {
             c = readData( device, characteristic );
 
@@ -3130,7 +3145,7 @@ switch( io )
 
             break;
          }
-         case "SlatType":   // 157
+         case "SlatType":   // 158
          {
             c = readData( device, characteristic );
 
@@ -3152,7 +3167,7 @@ switch( io )
 
             break;
          }
-         case "SleepDiscoveryMode":   // 158
+         case "SleepDiscoveryMode":   // 159
          {
             c = readData( device, characteristic );
 
@@ -3173,7 +3188,7 @@ switch( io )
 
             break;
          }
-         case "SleepInterval":   // 159
+         case "SleepInterval":   // 160
          {
             c = readData( device, characteristic );
 
@@ -3192,7 +3207,7 @@ switch( io )
 
             break;
          }
-         case "SmokeDetected":   // 160
+         case "SmokeDetected":   // 161
          {
             c = readData( device, characteristic );
 
@@ -3214,7 +3229,7 @@ switch( io )
 
             break;
          }
-         case "SoftwareRevision":   // 161
+         case "SoftwareRevision":   // 162
          {
             c = readData( device, characteristic );
 
@@ -3228,7 +3243,7 @@ switch( io )
 
             break;
          }
-         case "StatusActive":   // 162
+         case "StatusActive":   // 163
          {
             c = readData( device, characteristic );
 
@@ -3242,7 +3257,7 @@ switch( io )
 
             break;
          }
-         case "StatusFault":   // 163
+         case "StatusFault":   // 164
          {
             c = readData( device, characteristic );
 
@@ -3262,7 +3277,7 @@ switch( io )
 
             break;
          }
-         case "StatusJammed":   // 164
+         case "StatusJammed":   // 165
          {
             c = readData( device, characteristic );
 
@@ -3281,7 +3296,7 @@ switch( io )
 
             break;
          }
-         case "StatusLowBattery": // 165
+         case "StatusLowBattery": // 166
          {
             c = readData( device, characteristic );
 
@@ -3303,7 +3318,7 @@ switch( io )
 
             break;
          }
-         case "StatusTampered":   // 166
+         case "StatusTampered":   // 167
          {
             c = readData( device, characteristic );
 
@@ -3321,7 +3336,7 @@ switch( io )
 
             break;
          }
-         case "StreamingStatus":   // 167
+         case "StreamingStatus":   // 168
          {
             c = readData( device, characteristic );
 
@@ -3339,7 +3354,7 @@ switch( io )
 
             break;
          }
-         case "SulphurDioxideDensity":   // 168
+         case "SulphurDioxideDensity":   // 169
          {
             c = readData( device, characteristic );
 
@@ -3356,7 +3371,7 @@ switch( io )
 
             break;
          }
-         case "SupportedAudioRecordingConfiguration":   // 169
+         case "SupportedAudioRecordingConfiguration":   // 170
          {
             c = readData( device, characteristic );
 
@@ -3371,7 +3386,7 @@ switch( io )
 
             break;
          }
-         case "SupportedAudioStreamConfiguration":   // 170
+         case "SupportedAudioStreamConfiguration":   // 171
          {
             c = readData( device, characteristic );
 
@@ -3388,7 +3403,7 @@ switch( io )
 
             break;
          }
-         case "SupportedCameraRecordingConfiguration":   // 171
+         case "SupportedCameraRecordingConfiguration":   // 172
          {
             c = readData( device, characteristic );
 
@@ -3405,7 +3420,7 @@ switch( io )
 
             break;
          }
-         case "SupportedDataStreamTransportConfiguration":   // 172
+         case "SupportedDataStreamTransportConfiguration":   // 173
          {
             c = readData( device, characteristic );
 
@@ -3422,7 +3437,7 @@ switch( io )
 
             break;
          }
-         case "SupportedCharacteristicValueTransitionConfiguration":   // 173
+         case "SupportedCharacteristicValueTransitionConfiguration":   // 174
          {
             c = readData( device, characteristic );
 
@@ -3439,7 +3454,7 @@ switch( io )
 
             break;
          }
-         case "SupportedDiagnosticsSnapshot":   // 174
+         case "SupportedDiagnosticsSnapshot":   // 175
          {
             c = readData( device, characteristic );
 
@@ -3456,7 +3471,7 @@ switch( io )
 
             break;
          }
-         case "SupportedRTPConfiguration":   // 175
+         case "SupportedRTPConfiguration":   // 176
          {
             c = readData( device, characteristic );
 
@@ -3471,7 +3486,7 @@ switch( io )
 
             break;
          }
-         case "SupportedRouterConfiguration":   // 176
+         case "SupportedRouterConfiguration":   // 177
          {
             c = readData( device, characteristic );
 
@@ -3486,7 +3501,7 @@ switch( io )
 
             break;
          }
-         case "SupportedTransferTransportConfiguration":   // 177
+         case "SupportedTransferTransportConfiguration":   // 178
          {
             c = readData( device, characteristic );
 
@@ -3501,7 +3516,7 @@ switch( io )
 
             break;
          }
-         case "SupportedVideoRecordingConfiguration":   // 178
+         case "SupportedVideoRecordingConfiguration":   // 179
          {
             c = readData( device, characteristic );
 
@@ -3516,7 +3531,7 @@ switch( io )
 
             break;
          }
-         case "SupportedVideoStreamConfiguration":   // 179
+         case "SupportedVideoStreamConfiguration":   // 180
          {
             c = readData( device, characteristic );
 
@@ -3531,7 +3546,7 @@ switch( io )
 
             break;
          }
-         case "SwingMode":   // 180
+         case "SwingMode":   // 181
          {
             c = readData( device, characteristic );
 
@@ -3553,7 +3568,7 @@ switch( io )
 
             break;
          }
-         case "TargetAirPurifierState":   // 181
+         case "TargetAirPurifierState":   // 182
          {
             c = readData( device, characteristic );
 
@@ -3575,7 +3590,7 @@ switch( io )
 
             break;
          }
-         case "TargetAirQuality":   // 182
+         case "TargetAirQuality":   // 183
          {
             c = readData( device, characteristic );
 
@@ -3597,7 +3612,7 @@ switch( io )
 
             break;
          }
-         case "TargetControlList":   // 183
+         case "TargetControlList":   // 184
          {
             c = readData( device, characteristic );
 
@@ -3611,7 +3626,7 @@ switch( io )
 
             break;
          }
-         case "TargetControlSupportedConfiguration":   // 184
+         case "TargetControlSupportedConfiguration":   // 185
          {
             c = readData( device, characteristic );
 
@@ -3625,7 +3640,7 @@ switch( io )
 
             break;
          }
-         case "TargetDoorState":   // 185
+         case "TargetDoorState":   // 186
          {
             c = readData( device, characteristic );
 
@@ -3648,7 +3663,7 @@ switch( io )
 
             break;
          }
-         case "TargetFanState":   // 186
+         case "TargetFanState":   // 187
          {
             c = readData( device, characteristic );
 
@@ -3670,7 +3685,7 @@ switch( io )
 
             break;
          }
-         case "TargetHeaterCoolerState":   // 187
+         case "TargetHeaterCoolerState":   // 188
          {
             c = readData( device, characteristic );
 
@@ -3693,7 +3708,7 @@ switch( io )
 
             break;
          }
-         case "TargetHeatingCoolingState":   // 188
+         case "TargetHeatingCoolingState":   // 189
          {
             c = readData( device, characteristic );
 
@@ -3718,7 +3733,7 @@ switch( io )
 
             break;
          }
-         case "TargetHorizontalTiltAngle":   // 189
+         case "TargetHorizontalTiltAngle":   // 190
          {
             c = readData( device, characteristic );
 
@@ -3737,7 +3752,7 @@ switch( io )
 
             break;
          }
-         case "TargetHumidifierDehumidifierState":   // 190
+         case "TargetHumidifierDehumidifierState":   // 191
          {
             c = readData( device, characteristic );
 
@@ -3760,7 +3775,7 @@ switch( io )
 
             break;
          }
-         case "TargetMediaState":   // 191
+         case "TargetMediaState":   // 192
          {
             c = readData( device, characteristic );
 
@@ -3784,7 +3799,7 @@ switch( io )
 
             break;
          }
-         case "TargetPosition":   // 192
+         case "TargetPosition":   // 193
          {
 
             c = readData( device, characteristic );
@@ -3804,7 +3819,7 @@ switch( io )
 
             break;
          }
-         case "TargetRelativeHumidity":   // 193
+         case "TargetRelativeHumidity":   // 194
          {
             c = readData( device, characteristic );
 
@@ -3823,7 +3838,7 @@ switch( io )
 
             break;
          }
-         case "TargetSlatState":   // 194
+         case "TargetSlatState":   // 195
          {
             c = readData( device, characteristic );
 
@@ -3845,7 +3860,7 @@ switch( io )
 
             break;
          }
-         case "TargetTemperature":   // 195
+         case "TargetTemperature":   // 196
          {
             c = readData( device, characteristic );
 
@@ -3864,7 +3879,7 @@ switch( io )
 
             break;
          }
-         case "TargetTiltAngle":   // 196
+         case "TargetTiltAngle":   // 197
          {
             c = readData( device, characteristic );
 
@@ -3883,7 +3898,7 @@ switch( io )
 
             break;
          }
-         case "TargetVerticalTiltAngle":   // 197
+         case "TargetVerticalTiltAngle":   // 198
          {
             c = readData( device, characteristic );
 
@@ -3902,7 +3917,7 @@ switch( io )
 
             break;
          }
-         case "TargetVisibilityState":   // 198
+         case "TargetVisibilityState":   // 199
          {
             c = readData( device, characteristic );
 
@@ -3924,7 +3939,7 @@ switch( io )
 
             break;
          }
-         case "TemperatureDisplayUnits":   // 199
+         case "TemperatureDisplayUnits":   // 200
          {
             c = readData( device, characteristic );
 
@@ -3946,7 +3961,7 @@ switch( io )
 
             break;
          }
-         case "ThirdPartyCameraActive":   // 200
+         case "ThirdPartyCameraActive":   // 201
          {
             c = readData( device, characteristic );
 
@@ -3965,7 +3980,7 @@ switch( io )
 
             break;
          }
-         case "TimeUpdate":   // 201
+         case "TimeUpdate":   // 202
          {
             c = readData( device, characteristic );
 
@@ -3982,7 +3997,7 @@ switch( io )
 
             break;
          }
-         case "TransmitPower":   // 202
+         case "TransmitPower":   // 203
          {
             c = readData( device, characteristic );
 
@@ -3998,7 +4013,7 @@ switch( io )
 
             break;
          }
-         case "TransmitPowerMaximum":   // 203
+         case "TransmitPowerMaximum":   // 204
          {
             c = readData( device, characteristic );
 
@@ -4014,7 +4029,7 @@ switch( io )
 
             break;
          }
-         case "TunnelConnectionTimeout":   // 204
+         case "TunnelConnectionTimeout":   // 205
          {
             c = readData( device, characteristic );
 
@@ -4029,7 +4044,7 @@ switch( io )
 
             break;
          }
-         case "TunneledAccessoryAdvertising":   // 205
+         case "TunneledAccessoryAdvertising":   // 206
          {
             c = readData( device, characteristic );
 
@@ -4046,7 +4061,7 @@ switch( io )
 
             break;
          }
-         case "TunneledAccessoryConnected":   // 206
+         case "TunneledAccessoryConnected":   // 207
          {
             c = readData( device, characteristic );
 
@@ -4063,7 +4078,7 @@ switch( io )
 
             break;
          }
-         case "TunneledAccessoryStateNumber":   // 207
+         case "TunneledAccessoryStateNumber":   // 208
          {
             c = readData( device, characteristic );
 
@@ -4080,7 +4095,7 @@ switch( io )
 
             break;
          }
-         case "VOCDensity":   // 208
+         case "VOCDensity":   // 209
          {
             c = readData( device, characteristic );
 
@@ -4097,7 +4112,7 @@ switch( io )
 
             break;
          }
-         case "ValveType":   // 209
+         case "ValveType":   // 210
          {
             c = readData( device, characteristic );
 
@@ -4121,7 +4136,7 @@ switch( io )
 
             break;
          }
-         case "Version":   // 210
+         case "Version":   // 211
          {
             c = readData( device, characteristic );
 
@@ -4137,7 +4152,7 @@ switch( io )
 
             break;
          }
-         case "VideoAnalysisActive":   // 211
+         case "VideoAnalysisActive":   // 212
          {
             c = readData( device, characteristic );
 
@@ -4151,7 +4166,7 @@ switch( io )
 
             break;
          }
-         case "Volume":   // 212
+         case "Volume":   // 213
          {
             c = readData( device, characteristic );
 
@@ -4170,7 +4185,7 @@ switch( io )
 
             break;
          }
-         case "VolumeControlType":   // 213
+         case "VolumeControlType":   // 214
          {
             c = readData( device, characteristic );
 
@@ -4194,7 +4209,7 @@ switch( io )
 
             break;
          }
-         case "VolumeSelector":   // 214
+         case "VolumeSelector":   // 215
          {
             c = readData( device, characteristic );
 
@@ -4213,7 +4228,7 @@ switch( io )
 
             break;
          }
-         case "WANConfigurationList":   // 215
+         case "WANConfigurationList":   // 216
          {
             c = readData( device, characteristic );
 
@@ -4230,7 +4245,7 @@ switch( io )
 
             break;
          }
-         case "WANStatusList":   // 216
+         case "WANStatusList":   // 217
          {
             c = readData( device, characteristic );
 
@@ -4247,7 +4262,7 @@ switch( io )
 
             break;
          }
-         case "WakeConfiguration":   // 217
+         case "WakeConfiguration":   // 218
          {
             c = readData( device, characteristic );
 
@@ -4264,7 +4279,7 @@ switch( io )
 
             break;
          }
-         case "WaterLevel":  // 218
+         case "WaterLevel":  // 219
          {
             c = readData( device, characteristic );
 
@@ -4281,7 +4296,7 @@ switch( io )
 
             break;
          }
-         case "WiFiCapabilities":   // 219
+         case "WiFiCapabilities":   // 220
          {
             c = readData( device, characteristic );
 
@@ -4295,7 +4310,7 @@ switch( io )
 
             break;
          }
-         case "WiFiConfigurationControl":   // 220
+         case "WiFiConfigurationControl":   // 221
          {
             c = readData( device, characteristic );
 
@@ -4309,7 +4324,7 @@ switch( io )
 
             break;
          }
-         case "WiFiSatelliteStatus":  // 221
+         case "WiFiSatelliteStatus":  // 222
          {
             c = readData( device, characteristic );
 
@@ -4881,40 +4896,47 @@ switch( io )
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "LockControlPoint":   // 82
+         case "ListPairings":   // 82
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "LockCurrentState":   // 83
+         case "LockControlPoint":   // 83
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "LockLastKnownAction":   // 84
+         case "LockCurrentState":   // 84
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "LockManagementAutoSecurityTimeout":   // 85
+         case "LockLastKnownAction":   // 85
+         {
+            writeData( device, characteristic, option );
+
+            // Not settable in Hap Spec, here for debugging.
+            break;
+         }
+         case "LockManagementAutoSecurityTimeout":   // 86
          {
             writeData( device, characteristic, option );
 
             break;
          }
-         case "LockPhysicalControls":   // 86
+         case "LockPhysicalControls":   // 87
          {
             writeData( device, characteristic, option );
 
             break;
          }
-         case "LockTargetState":   // 87
+         case "LockTargetState":   // 88
          {
             writeData( device, characteristic, option );
 
@@ -4923,192 +4945,192 @@ switch( io )
 
             break;
          }
-         case "Logs":   // 88
+         case "Logs":   // 89
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "MACRetransmissionMaximum":   // 89
+         case "MACRetransmissionMaximum":   // 90
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "MACTransmissionCounters":   // 90
+         case "MACTransmissionCounters":   // 91
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "ManagedNetworkEnable":   // 91
+         case "ManagedNetworkEnable":   // 92
          {
             writeData( device, characteristic, option );
 
             break;
          }
-         case "ManuallyDisabled":   // 92
-         {
-            writeData( device, characteristic, option );
-
-            // Not settable in Hap Spec, here for debugging.
-            break;
-         }
-         case "Manufacturer":   // 93
+         case "ManuallyDisabled":   // 93
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "Model":   // 94
+         case "Manufacturer":   // 94
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "MotionDetected":   // 95
+         case "Model":   // 95
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "Mute":   // 96
-         {
-            writeData( device, characteristic, option );
-
-            break;
-         }
-         case "Name":   // 97
+         case "MotionDetected":   // 96
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "NetworkAccessViolationControl":   // 98
+         case "Mute":   // 97
          {
             writeData( device, characteristic, option );
 
             break;
          }
-         case "NetworkClientProfileControl":   // 99
-         {
-            writeData( device, characteristic, option );
-
-            break;
-         }
-         case "NetworkClientStatusControl":   // 100
-         {
-            writeData( device, characteristic, option );
-
-            break;
-         }
-         case "NightVision":   // 101
-         {
-            writeData( device, characteristic, option );
-
-            break;
-         }
-         case "NitrogenDioxideDensity":   // 102
+         case "Name":   // 98
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "ObstructionDetected":   // 103
+         case "NetworkAccessViolationControl":   // 99
+         {
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "NetworkClientProfileControl":   // 100
+         {
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "NetworkClientStatusControl":   // 101
+         {
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "NightVision":   // 102
+         {
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "NitrogenDioxideDensity":   // 103
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "OccupancyDetected":   // 104
+         case "ObstructionDetected":   // 104
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "On":  // 105
-         {
-            writeData( device, characteristic, option );
-
-            break;
-         }
-         case "OperatingStateResponse":  // 106
+         case "OccupancyDetected":   // 105
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "OpticalZoom":   // 107
+         case "On":  // 106
          {
             writeData( device, characteristic, option );
 
             break;
          }
-         case "OutletInUse":   // 108
-         {
-            writeData( device, characteristic, option );
-
-            // Not settable in Hap Spec, here for debugging.
-            break;
-         }
-         case "OzoneDensity":   // 109
+         case "OperatingStateResponse":  // 107
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "PM10Density":   // 110
+         case "OpticalZoom":   // 108
+         {
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "OutletInUse":   // 109
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "PM2_5Density":   // 111
+         case "OzoneDensity":   // 110
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "PairSetup":   // 112
-         {
-            writeData( device, characteristic, option );
-
-            break;
-         }
-         case "PairVerify":   // 113
-         {
-            writeData( device, characteristic, option );
-
-            break;
-         }
-         case "PairingFeatures":   // 114
+         case "PM10Density":   // 111
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "PairingPairings":   // 115
+         case "PM2_5Density":   // 112
+         {
+            writeData( device, characteristic, option );
+
+            // Not settable in Hap Spec, here for debugging.
+            break;
+         }
+         case "PairSetup":   // 113
          {
             writeData( device, characteristic, option );
 
             break;
          }
-         case "PasswordSetting":   // 116
+         case "PairVerify":   // 114
+         {
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "PairingFeatures":   // 115
+         {
+            writeData( device, characteristic, option );
+
+            // Not settable in Hap Spec, here for debugging.
+            break;
+         }
+         case "PairingPairings":   // 116
+         {
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "PasswordSetting":   // 117
          {
             writeData( device, characteristic, option );
 
@@ -5120,175 +5142,175 @@ switch( io )
 
             break;
          }
-         case "PictureMode":   // 118
+         case "PictureMode":   // 119
          {
             writeData( device, characteristic, option );
 
             break;
          }
-         case "Ping":   // 119
+         case "Ping":   // 120
          {
             writeData( device, characteristic, option );
 
             break;
          }
-         case "PositionState":   // 120
-         {
-            writeData( device, characteristic, option );
-
-            // Not settable in Hap Spec, here for debugging.
-            break;
-         }
-         case "PowerModeSelection":   // 121
-         {
-            writeData( device, characteristic, option );
-
-            break;
-         }
-         case "ProductData":   // 122
-         {
-            writeData( device, characteristic, option );
-
-            break;
-         }
-         case "ProgramMode":   // 123
+         case "PositionState":   // 121
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "ProgrammableSwitchEvent":   // 124
+         case "PowerModeSelection":   // 122
+         {
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "ProductData":   // 123
+         {
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "ProgramMode":   // 124
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "ProgrammableSwitchOutputState":   // 125
+         case "ProgrammableSwitchEvent":   // 125
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "Reachable":   // 126
+         case "ProgrammableSwitchOutputState":   // 126
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "ReceivedSignalStrengthIndication":   // 127
+         case "Reachable":   // 127
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "ReceiverSensitivity":   // 128
+         case "ReceivedSignalStrengthIndication":   // 128
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "RecordingAudioActive":   // 129
-         {
-            writeData( device, characteristic, option );
-
-            break;
-         }
-         case "RelativeHumidityDehumidifierThreshold":   // 130
-         {
-            writeData( device, characteristic, option );
-
-            break;
-         }
-         case "RelativeHumidityHumidifierThreshold":   // 131
-         {
-            writeData( device, characteristic, option );
-
-            break;
-         }
-         case "RelayControlPoint":   // 132
+         case "ReceiverSensitivity":   // 129
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "RelayEnabled":   // 133
+         case "RecordingAudioActive":   // 130
          {
             writeData( device, characteristic, option );
 
             break;
          }
-         case "RelayState":   // 134
-         {
-            writeData( device, characteristic, option );
-
-            // Not settable in Hap Spec, here for debugging.
-            break;
-         }
-         case "RemainingDuration":   // 135
-         {
-            writeData( device, characteristic, option );
-
-            // Not settable in Hap Spec, here for debugging.
-            break;
-         }
-         case "RemoteKey":   // 136
+         case "RelativeHumidityDehumidifierThreshold":   // 131
          {
             writeData( device, characteristic, option );
 
             break;
          }
-         case "ResetFilterIndication":   // 137
+         case "RelativeHumidityHumidifierThreshold":   // 132
          {
             writeData( device, characteristic, option );
 
             break;
          }
-         case "RotationDirection":   // 138
-         {
-            writeData( device, characteristic, option );
-
-            break;
-         }
-         case "RotationSpeed":   // 139
-         {
-            writeData( device, characteristic, option );
-
-            break;
-         }
-         case "RouterStatus":   // 140
-         {
-            writeData( device, characteristic, option );
-
-            break;
-         }
-         case "Saturation":   // 141
-         {
-            writeData( device, characteristic, option );
-
-            break;
-         }
-         case "SecuritySystemAlarmType":   // 142
+         case "RelayControlPoint":   // 133
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "SecuritySystemCurrentState":   // 143
+         case "RelayEnabled":   // 134
+         {
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "RelayState":   // 135
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "SecuritySystemTargetState":   // 144
+         case "RemainingDuration":   // 136
+         {
+            writeData( device, characteristic, option );
+
+            // Not settable in Hap Spec, here for debugging.
+            break;
+         }
+         case "RemoteKey":   // 137
+         {
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "ResetFilterIndication":   // 138
+         {
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "RotationDirection":   // 139
+         {
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "RotationSpeed":   // 140
+         {
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "RouterStatus":   // 141
+         {
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "Saturation":   // 142
+         {
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "SecuritySystemAlarmType":   // 143
+         {
+            writeData( device, characteristic, option );
+
+            // Not settable in Hap Spec, here for debugging.
+            break;
+         }
+         case "SecuritySystemCurrentState":   // 144
+         {
+            writeData( device, characteristic, option );
+
+            // Not settable in Hap Spec, here for debugging.
+            break;
+         }
+         case "SecuritySystemTargetState":   // 145
          {
             writeData( device, characteristic, option );
 
@@ -5297,248 +5319,248 @@ switch( io )
 
             break;
          }
-         case "SelectedAudioStreamConfiguration":   // 145
+         case "SelectedAudioStreamConfiguration":   // 146
          {
             writeData( device, characteristic, option );
 
             break;
          }
-         case "SelectedCameraRecordingConfiguration":   // 146
+         case "SelectedCameraRecordingConfiguration":   // 147
          {
             writeData( device, characteristic, option );
 
             break;
          }
-         case "SelectedRTPStreamConfiguration":   // 147
+         case "SelectedRTPStreamConfiguration":   // 148
          {
             writeData( device, characteristic, option );
 
             break;
          }
-         case "SerialNumber":   // 148
-         {
-            writeData( device, characteristic, option );
-
-            // Not settable in Hap Spec, here for debugging.
-            break;
-         }
-         case "ServiceLabelIndex":   // 149
+         case "SerialNumber":   // 149
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "ServiceLabelNamespace":   // 150
+         case "ServiceLabelIndex":   // 150
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "SetDuration":   // 151
-         {
-            writeData( device, characteristic, option );
-
-            break;
-         }
-         case "SetupDataStreamTransport":   // 152
-         {
-            writeData( device, characteristic, option );
-
-            break;
-         }
-         case "SetupEndpoints":   // 153
-         {
-            writeData( device, characteristic, option );
-
-            break;
-         }
-         case "SetupTransferTransport":   // 154
-         {
-            writeData( device, characteristic, option );
-
-            break;
-         }
-         case "SignalToNoiseRatio":   // 155
-         {
-            writeData( device, characteristic, option );
-
-            break;
-         }
-         case "SiriInputType":   // 156
-         {
-            writeData( device, characteristic, option );
-
-            break;
-         }
-         case "SlatType":   // 157
+         case "ServiceLabelNamespace":   // 151
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "SleepDiscoveryMode":   // 158
+         case "SetDuration":   // 152
          {
             writeData( device, characteristic, option );
 
             break;
          }
-         case "SleepInterval":   // 159
+         case "SetupDataStreamTransport":   // 153
          {
             writeData( device, characteristic, option );
 
-            // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "SmokeDetected":   // 160
+         case "SetupEndpoints":   // 154
          {
             writeData( device, characteristic, option );
 
-            // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "SoftwareRevision":   // 161
+         case "SetupTransferTransport":   // 155
          {
             writeData( device, characteristic, option );
 
-            // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "StatusActive":   // 162
+         case "SignalToNoiseRatio":   // 156
          {
             writeData( device, characteristic, option );
 
-            // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "StatusFault":   // 163
+         case "SiriInputType":   // 157
          {
             writeData( device, characteristic, option );
 
-            // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "StatusJammed":   // 164
+         case "SlatType":   // 158
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "StatusLowBattery":   // 165
+         case "SleepDiscoveryMode":   // 159
+         {
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "SleepInterval":   // 160
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "StatusTampered":   // 166
+         case "SmokeDetected":   // 161
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "StreamingStatus":   // 167
+         case "SoftwareRevision":   // 162
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "SulphurDioxideDensity":   // 168
+         case "StatusActive":   // 163
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "SupportedAudioRecordingConfiguration":   // 169
+         case "StatusFault":   // 164
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "SupportedAudioStreamConfiguration":   // 170
+         case "StatusJammed":   // 165
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "SupportedCameraRecordingConfiguration":   // 171
+         case "StatusLowBattery":   // 166
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "SupportedDataStreamTransportConfiguration":   // 172
+         case "StatusTampered":   // 167
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "SupportedCharacteristicValueTransitionConfiguration":   // 173
+         case "StreamingStatus":   // 168
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "SupportedDiagnosticsSnapshot":   // 174
+         case "SulphurDioxideDensity":   // 169
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "SupportedRTPConfiguration":   // 175
+         case "SupportedAudioRecordingConfiguration":   // 170
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "SupportedRouterConfiguration":   // 176
+         case "SupportedAudioStreamConfiguration":   // 171
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "SupportedTransferTransportConfiguration":   // 177
+         case "SupportedCameraRecordingConfiguration":   // 172
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "SupportedVideoRecordingConfiguration":   // 178
+         case "SupportedDataStreamTransportConfiguration":   // 173
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "SupportedVideoStreamConfiguration":   // 179
+         case "SupportedCharacteristicValueTransitionConfiguration":   // 174
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "SwingMode":   // 180
+         case "SupportedDiagnosticsSnapshot":   // 175
+         {
+            writeData( device, characteristic, option );
+
+            // Not settable in Hap Spec, here for debugging.
+            break;
+         }
+         case "SupportedRTPConfiguration":   // 176
+         {
+            writeData( device, characteristic, option );
+
+            // Not settable in Hap Spec, here for debugging.
+            break;
+         }
+         case "SupportedRouterConfiguration":   // 177
+         {
+            writeData( device, characteristic, option );
+
+            // Not settable in Hap Spec, here for debugging.
+            break;
+         }
+         case "SupportedTransferTransportConfiguration":   // 178
+         {
+            writeData( device, characteristic, option );
+
+            // Not settable in Hap Spec, here for debugging.
+            break;
+         }
+         case "SupportedVideoRecordingConfiguration":   // 179
+         {
+            writeData( device, characteristic, option );
+
+            // Not settable in Hap Spec, here for debugging.
+            break;
+         }
+         case "SupportedVideoStreamConfiguration":   // 180
+         {
+            writeData( device, characteristic, option );
+
+            // Not settable in Hap Spec, here for debugging.
+            break;
+         }
+         case "SwingMode":   // 181
          {
             writeData( device, characteristic, option );
 
             break;
          }
-         case "TargetAirPurifierState":   // 181
+         case "TargetAirPurifierState":   // 182
          {
             writeData( device, characteristic, option );
 
@@ -5547,7 +5569,7 @@ switch( io )
 
             break;
          }
-         case "TargetAirQuality":   // 182
+         case "TargetAirQuality":   // 183
          {
             writeData( device, characteristic, option );
 
@@ -5556,20 +5578,20 @@ switch( io )
 
             break;
          }
-         case "TargetControlList":   // 183
+         case "TargetControlList":   // 184
          {
             writeData( device, characteristic, option );
 
             break;
          }
-         case "TargetControlSupportedConfiguration":   // 184
+         case "TargetControlSupportedConfiguration":   // 185
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "TargetDoorState":   // 185
+         case "TargetDoorState":   // 186
          {
             writeData( device, characteristic, option );
 
@@ -5578,7 +5600,7 @@ switch( io )
 
             break;
          }
-         case "TargetFanState":   // 186
+         case "TargetFanState":   // 187
          {
             writeData( device, characteristic, option );
 
@@ -5587,7 +5609,7 @@ switch( io )
 
             break;
          }
-         case "TargetHeaterCoolerState":   // 187
+         case "TargetHeaterCoolerState":   // 188
          {
             writeData( device, characteristic, option );
 
@@ -5596,7 +5618,7 @@ switch( io )
 
             break;
          }
-         case "TargetHeatingCoolingState":   // 188
+         case "TargetHeatingCoolingState":   // 189
          {
             writeData( device, characteristic, option );
 
@@ -5605,7 +5627,7 @@ switch( io )
 
             break;
          }
-         case "TargetHorizontalTiltAngle":   // 189
+         case "TargetHorizontalTiltAngle":   // 190
          {
             writeData( device, characteristic, option );
 
@@ -5614,7 +5636,7 @@ switch( io )
 
             break;
          }
-         case "TargetHumidifierDehumidifierState":   // 190
+         case "TargetHumidifierDehumidifierState":   // 191
          {
             writeData( device, characteristic, option );
 
@@ -5623,7 +5645,7 @@ switch( io )
 
             break;
          }
-         case "TargetMediaState":   // 191
+         case "TargetMediaState":   // 192
          {
             writeData( device, characteristic, option );
 
@@ -5632,7 +5654,7 @@ switch( io )
 
             break;
          }
-         case "TargetPosition":   // 192
+         case "TargetPosition":   // 193
          {
             writeData( device, characteristic, option );
 
@@ -5641,7 +5663,7 @@ switch( io )
 
             break;
          }
-         case "TargetRelativeHumidity":   // 193
+         case "TargetRelativeHumidity":   // 194
          {
             writeData( device, characteristic, option );
 
@@ -5650,7 +5672,7 @@ switch( io )
 
             break;
          }
-         case "TargetSlatState":   // 194
+         case "TargetSlatState":   // 195
          {
             writeData( device, characteristic, option );
 
@@ -5659,7 +5681,7 @@ switch( io )
 
             break;
          }
-         case "TargetTemperature":   // 195
+         case "TargetTemperature":   // 196
          {
             writeData( device, characteristic, option );
 
@@ -5668,7 +5690,7 @@ switch( io )
 
             break;
          }
-         case "TargetTiltAngle":   // 196
+         case "TargetTiltAngle":   // 197
          {
             writeData( device, characteristic, option );
 
@@ -5677,7 +5699,7 @@ switch( io )
 
             break;
          }
-         case "TargetVerticalTiltAngle":   // 197
+         case "TargetVerticalTiltAngle":   // 198
          {
             writeData( device, characteristic, option );
 
@@ -5686,7 +5708,7 @@ switch( io )
 
             break;
          }
-         case "TargetVisibilityState":   // 198
+         case "TargetVisibilityState":   // 199
          {
             writeData( device, characteristic, option );
 
@@ -5695,155 +5717,155 @@ switch( io )
 
             break;
          }
-         case "TemperatureDisplayUnits":   // 199
+         case "TemperatureDisplayUnits":   // 200
          {
             writeData( device, characteristic, option );
 
             break;
          }
-         case "ThirdPartyCameraActive":   // 200
-         {
-            writeData( device, characteristic, option );
-
-            // Not settable in Hap Spec, here for debugging.
-            break;
-         }
-         case "TimeUpdate":   // 201
+         case "ThirdPartyCameraActive":   // 201
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "TransmitPower":   // 202
+         case "TimeUpdate":   // 202
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "TransmitPowerMaximum":   // 203
+         case "TransmitPower":   // 203
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "TunnelConnectionTimeout":   // 204
-         {
-            writeData( device, characteristic, option );
-
-            break;
-         }
-         case "TunneledAccessoryAdvertising":   // 205
+         case "TransmitPowerMaximum":   // 204
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "TunneledAccessoryConnected":   // 206
+         case "TunnelConnectionTimeout":   // 205
          {
             writeData( device, characteristic, option );
 
             break;
          }
-         case "TunneledAccessoryStateNumber":   // 207
-         {
-            writeData( device, characteristic, option );
-
-            // Not settable in Hap Spec, here for debugging.
-            break;
-         }
-         case "VOCDensity":   // 208
+         case "TunneledAccessoryAdvertising":   // 206
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "ValveType":   // 209
+         case "TunneledAccessoryConnected":   // 207
+         {
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "TunneledAccessoryStateNumber":   // 208
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "Version":   // 210
+         case "VOCDensity":   // 209
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "VideoAnalysisActive":   // 211
-         {
-            writeData( device, characteristic, option );
-
-            break;
-         }
-         case "Volume":   // 212
-         {
-            writeData( device, characteristic, option );
-
-            break;
-         }
-         case "VolumeControlType":   // 213
+         case "ValveType":   // 210
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "VolumeSelector":   // 214
-         {
-            writeData( device, characteristic, option );
-
-            break;
-         }
-         case "WANConfigurationList":   // 215
+         case "Version":   // 211
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "WANStatusList":   // 216
+         case "VideoAnalysisActive":   // 212
+         {
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "Volume":   // 213
+         {
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "VolumeControlType":   // 214
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "WakeConfiguration":   // 217
+         case "VolumeSelector":   // 215
+         {
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "WANConfigurationList":   // 216
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "WaterLevel":   // 218
+         case "WANStatusList":   // 217
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "WiFiCapabilities":   // 219
+         case "WakeConfiguration":   // 218
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "WiFiConfigurationControl":   // 220
+         case "WaterLevel":   // 219
          {
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "WiFiSatelliteStatus":   // 218
+         case "WiFiCapabilities":   // 220
+         {
+            writeData( device, characteristic, option );
+
+            // Not settable in Hap Spec, here for debugging.
+            break;
+         }
+         case "WiFiConfigurationControl":   // 221
+         {
+            writeData( device, characteristic, option );
+
+            // Not settable in Hap Spec, here for debugging.
+            break;
+         }
+         case "WiFiSatelliteStatus":   // 222
          {
             writeData( device, characteristic, option );
 

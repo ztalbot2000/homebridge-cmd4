@@ -479,7 +479,7 @@ class Cmd4PriorityPollingQueue
       let self = accessory;
       let queue = accessory.queue;
 
-      if ( self.outputConstants == true )
+      if ( self.hV.outputConstants == true )
       {
          value = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value );
 
@@ -490,7 +490,7 @@ class Cmd4PriorityPollingQueue
 
       let cmd = accessory.state_cmd_prefix + accessory.state_cmd + " Set '" + accessory.displayName + "' '" + characteristicString  + "' '" + value  + "'" + accessory.state_cmd_suffix;
 
-      if ( accessory.statusMsg == "TRUE" )
+      if ( accessory.hV.statusMsg == "TRUE" )
          self.log.info( chalk.blue( `Setting ${ self.displayName } ${ characteristicString }` ) + ` ${ value }` );
 
       if ( cmd4Dbg ) self.log.debug( `setValue: accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } ${ value }  cmd: ${ cmd } timeout: ${ timeout }` );

@@ -104,6 +104,7 @@ describe( "Testing cmd4Constants - unused", function( )
       var cmd4Files = [ "./Cmd4Platform.js",
                         "./Cmd4Accessory.js",
                         "./Cmd4PriorityPollingQueue.js",
+                        "./utils/HV.js",
                         "./index.js",
                         "./lib/CMD4_DEVICE_TYPE_ENUM.js",
                         "./tools/Cmd4AccDocGenerator"];
@@ -193,6 +194,7 @@ describe( "Testing source constants  -  are defined", function( )
       var cmd4Files = [ "./Cmd4Platform.js",
                         "./Cmd4Accessory.js",
                         "./Cmd4PriorityPollingQueue.js",
+                        "./utils/HV.js",
                         "./tools/Cmd4AccDocGenerator",
                         "./lib/CMD4_DEVICE_TYPE_ENUM.js",
                         "./tools/Cmd4AccDocGenerator"];

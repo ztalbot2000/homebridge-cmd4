@@ -40,7 +40,7 @@ global.assert = require( "chai" ).assert;
 global.expect = require( "chai" ).expect;
 global.sinon  = require( "sinon" );
 
-global.ACC_EOL = 222;
+global.ACC_EOL = 223;
 global.DEVICE_EOL = 66;
 global.FORMAT_EOL = 11;
 global.UNITS_EOL = 5;

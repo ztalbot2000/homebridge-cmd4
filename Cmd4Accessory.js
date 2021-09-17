@@ -17,6 +17,8 @@ const { getAccessoryName, getAccessoryDisplayName
 let getAccessoryUUID = require( "./utils/getAccessoryUUID" );
 const { addQueue, parseAddQueueTypes, queueExists } = require( "./Cmd4PriorityPollingQueue" );
 
+// Hierarchy variables
+let HV = require( "./utils/HV" );
 
 let createAccessorysInformationService = require( "./utils/createAccessorysInformationService" );
 
@@ -127,30 +129,16 @@ class Cmd4Accessory
       this.displayName = getAccessoryDisplayName( this.config );
 
 
-      // Bring the parent config variables forward.
-      // If they do not exist, they would still be undefined.
-      // For stateChangeResponseTime, if not the parentInfo, then
-      // it gets defined by the accessoryType devicesStateChangeDefaultTime
-      if ( parentInfo && parentInfo.stateChangeResponseTime )
-         this.stateChangeResponseTime = parentInfo.stateChangeResponseTime;
-
-      // Direct if Constants should be sent or their value.
-      this.outputConstants = ( parentInfo && parentInfo.outputConstants ) ? parentInfo.outputConstants : constants.DEFAULT_OUTPUTCONSTANTS;
-
-      this.interval = ( parentInfo && parentInfo.interval ) ? parentInfo.interval : constants.DEFAULT_INTERVAL;
-      this.timeout = ( parentInfo && parentInfo.timeout ) ? parentInfo.timeout : constants.DEFAULT_TIMEOUT;
-      this.statusMsg = ( parentInfo && parentInfo.statusMsg ) ? parentInfo.statusMsg : constants.DEFAULT_STATUSMSG;
       // Everything that needs to talk to the device now goes through the queue
       this.queue = null;
 
-      // undefined is acceptable.  It can be overwritten by parseConfig
-      this.state_cmd = parentInfo && parentInfo.state_cmd;
-      this.state_cmd_prefix = parentInfo && parentInfo.state_cmd_prefix;
-      this.state_cmd_suffix = parentInfo && parentInfo.state_cmd_suffix;
 
-      // TLV8 causes a lot of issues if defined and trying to parse.
-      // Omit them by default.
-      this.allowTLV8 = ( parentInfo && parentInfo.allowTLV8 ) ? parentInfo.TLV8 : false;
+      // Use the Hierarhy variables from the parent, if not create it.
+      this.hV = new HV( );
+      if ( parentInfo && parentInfo.hV )
+      {
+         this.hV.update( parentInfo.hV );
+      }
 
       // In case it is not passed in.
       if ( STORED_DATA_ARRAY == undefined || STORED_DATA_ARRAY == null )
@@ -204,15 +192,13 @@ class Cmd4Accessory
       if ( FakeGatoHistoryService == null )
          FakeGatoHistoryService = require( "fakegato-history" )( api );
 
-      // Fakegato-history definitions from parent, if any.
-      this.storage = parentInfo && parentInfo.storage;
-      this.storagePath = parentInfo && parentInfo.storagePath;
-      this.folder = parentInfo && parentInfo.folder;
-      this.keyPath = parentInfo && parentInfo.keyPath;
-
-
       // Get the supplied values from the accessory config.
       this.parseConfig( this.config, parseConfigShouldUseCharacteristicValues  );
+
+      // Update the accessories namespace for stored variables
+      // like timeout, stateChangeResponseTime ... As it may require
+      // changes from parseConfig.
+      this.hV.update( this );
 
       // Add any required characteristics of a device that are missing from
       // a users config.json file.
@@ -366,7 +352,7 @@ class Cmd4Accessory
          let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
 
          // No matter what, remove it
-         if ( format == this.api.hap.Characteristic.Formats.TLV8 && this.allowTLV8 == false )
+         if ( format == this.api.hap.Characteristic.Formats.TLV8 && this.hV.allowTLV8 == false )
          {
             if ( this.getStoredValueForIndex( accTypeEnumIndex ) != null )
             {
@@ -560,7 +546,7 @@ class Cmd4Accessory
    {
       let self = this;
 
-      if ( self.statusMsg == "TRUE" )
+      if ( self.hV.statusMsg == "TRUE" )
          self.log.info( chalk.blue( `Setting (Cached) ${ self.displayName } ${ characteristicString }` ) + ` ${ value }` );
       else
          if ( cmd4Dbg ) self.log.debug( `setCachedvalue accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } value: ${ value }` );
@@ -817,7 +803,7 @@ class Cmd4Accessory
                   {
                       if ( cmd4Dbg ) this.log.debug( chalk.yellow( `Adding priorityGetValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` ) );
 
-                      let details = this.lookupDetailsForPollingCharacteristic( accessory, accTypeEnumIndex );
+                      let details = accessory.lookupAccessoryHVForPollingCharacteristic( accessory, accTypeEnumIndex );
 
                       // Set parms are accTypeEnumIndex, value, callback
                       // Get parms are accTypeEnumIndex, callback
@@ -856,7 +842,8 @@ class Cmd4Accessory
                    } else {
                       if ( cmd4Dbg ) this.log.debug( chalk.yellow( `Adding prioritySetValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ` ) );
 
-                      let details = this.lookupDetailsForPollingCharacteristic( accessory, accTypeEnumIndex );
+                      let details = accessory.lookupAccessoryHVForPollingCharacteristic( accessory, accTypeEnumIndex );
+
                       // Set parms are accTypeEnumIndex, value, callback
                       // Get parms are accTypeEnumIndex, callback
                       let boundSetValue = accessory.queue.prioritySetValue.bind( this, accTypeEnumIndex, characteristicString, details.timeout, details.stateChangeResponseTime );
@@ -1524,9 +1511,7 @@ class Cmd4Accessory
                break;
             case constants.OUTPUTCONSTANTS:
                // Define if we should ouput constant strings
-               // instead of values
-               if ( value === true )
-                  this.outputConstants = value;
+               this.outputConstants = value;
 
                break;
             case constants.STATUSMSG:
@@ -1781,29 +1766,23 @@ class Cmd4Accessory
          }
       }
    }
-   lookupDetailsForPollingCharacteristic( accessory, accTypeEnumIndex )
+
+   // HV may change with polling characteristics
+   lookupAccessoryHVForPollingCharacteristic( accessory, accTypeEnumIndex )
    {
       // Heirarchy is first the default
-      let timeout = constants.DEFAULT_TIMEOUT;
-      let interval = constants.DEFAULT_INTERVAL;
-      let stateChangeResponseTime = constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME;
-      if ( ! accessory.stateChangeResponseTime )
-         stateChangeResponseTime = CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ].devicesStateChangeDefaultTime;
+      let timeout = accessory.hV.timeout;
+      let interval = accessory.hV.interval;
+      let stateChangeResponseTime = accessory.hV.stateChangeResponseTime;
 
       // For testing purposes where there is no queue
       let queueName = null;
       if ( accessory.queue )
           queueName = accessory.queue.queueName;
 
-      // Secondly the accessories definition
-      if ( accessory.timeout )
-         timeout = accessory.timeout;
 
-      if ( accessory.interval )
-         interval = accessory.interval;
-
-      // Finally the polled setting
       let pollingEntry = accessory.listOfPollingCharacteristics[ accTypeEnumIndex ];
+
       // There should only be one, if any
       if ( pollingEntry != undefined )
       {
@@ -1859,17 +1838,10 @@ class Cmd4Accessory
 
    determineCharacteristicsToPollForAccessory( accessory  )
    {
-      // The default timeout is defined first by the accessory, and if not defined,
-      // then the default 1 minute. Timeouts are in milliseconds
-      let timeout = ( this.timeout ) ? this.timeout : constants.DEFAULT_TIMEOUT;
-
-      // The default interval is defined first by the accessory, and if not defined,
-      // then the default 1 minute interval. Intervals are in seconds
-      let interval = ( this.interval ) ? this.interval : constants.DEFAULT_INTERVAL;
-
-      // The default stateChangeResponseTime is defined first by the accessory, and if not defined,
-      // then the default 3 seconds. stateChangeResponseTime is in seconds
-      let stateChangeResponseTime = ( this.stateChangeResponseTime ) ? this.stateChangeResponseTime : constants.DEFAULT_STATE_CHANGE_RESPONSE_TIME;
+      // Get the values based on their hierarchy.
+      let timeout = accessory.hV.timeout;
+      let interval = accessory.hV.interval;
+      let stateChangeResponseTime = accessory.hV.stateChangeResponseTime;
 
 
       // We need to create the listOfPollingCharacteristics, even in Demo mode because
