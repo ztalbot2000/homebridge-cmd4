@@ -45,7 +45,7 @@
       "interval": 30,
       "timeout": 4900,
       "polling": [
-          { "characteristic": "securitySystemCurrentState" },
+          { "characteristic": "SecuritySystemCurrentState" },
           { "characteristic": "SecuritySystemTargetState" }
       ],
       "stateChangeResponseTime": 1,

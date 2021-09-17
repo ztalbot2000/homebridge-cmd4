@@ -15,17 +15,17 @@
 #    "lockCurrentState": "SECURED",
 #    "lockTargetState": "SECURED",
 #    "name": "Front Door",
-#    "Manufacturer": "XYZ",
-#    "Model": "XYZ",
-#    "SerialNumber": "GPIO 24",
+#    "manufacturer": "XYZ",
+#    "model": "XYZ",
+#    "serialNumber": "GPIO 24",
 #    "polling": [
 #        {
-#            "characteristic": "lockCurrentState",
+#            "characteristic": "LockCurrentState",
 #            "interval": 5,
 #            "timeout": 4900
 #        },
 #        {
-#            "characteristic": "lockTargetState",
+#            "characteristic": "LockTargetState",
 #            "interval": 5,
 #            "timeout": 4900
 #        }

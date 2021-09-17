@@ -399,6 +399,12 @@ class Cmd4Accessory
 
          for ( key in jsonPollingConfig )
          {
+            // warn now
+            if ( key.charAt( 0 ) === key.charAt( 0 ).toUpperCase( ) )
+            {
+               this.log.warn( `The config.json Polling key: ${ key } is Upper Case.  In the near future this will be an Error so that Cmd4 can use homebridge-ui.\nTo remove this Warning, Please fix your config.json.` );
+            }
+
             let ucKey = ucFirst( key );
             value = jsonPollingConfig[ key ];
 
@@ -421,6 +427,13 @@ class Cmd4Accessory
                {
                   //2 checkPollingOfUnsetCharacteristics
                   valueToStore = null;
+
+                  // warn now
+                  if ( value.charAt( 0 ) === value.charAt( 0 ).toLowerCase( ) )
+                  {
+                     this.log.warn( `The config.json Polling value: ${ value } is Lower Case.  In the near future this will be an Error so that Cmd4 can use homebridge-ui.\nTo remove this Warning, Please fix your config.json.` );
+                  }
+
                   let ucValue = ucFirst( value );
                   accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucValue );
                   if ( accTypeEnumIndex < 0 )
@@ -1063,6 +1076,11 @@ class Cmd4Accessory
 
       for ( let key in fakegatoConfig )
       {
+         // warn now
+         if ( key.charAt( 0 ) === key.charAt( 0 ).toUpperCase() )
+         {
+            this.log.warn( `The config.json FakeGato key: ${ key } is Upper Case.  In the near future this will be an Error so that Cmd4 can use homebridge-ui.\nTo remove this Warning, Please fix your config.json.` );
+         }
           let ucKey = ucFirst ( key );
           let value = fakegatoConfig[ key ];
           switch ( ucKey )
@@ -1433,9 +1451,12 @@ class Cmd4Accessory
       {
          let value = config[ key ];
 
-         // I made the stupid mistake of not having all characteristics in the config.json
-         // file not upper case to match that in State.js. So instead of having everyone
-         // fix their scripts, fix it here.
+         // warn now
+         if ( key.charAt( 0 ) === key.charAt( 0 ).toUpperCase() )
+         {
+            this.log.warn( `The config.json key: ${ key } is Upper Case.  In the near future this will be an Error so that Cmd4 can use homebridge-ui.\nTo remove this Warning, Please fix your config.json.` );
+         }
+
          let ucKey = ucFirst( key );
 
          switch ( ucKey )
@@ -1564,6 +1585,7 @@ class Cmd4Accessory
                this.polling = value;
                break;
             case "Cmd4_Mode":
+            case "cmd4_Mode":
                this.log.warn( `Warning: ${ key } has been deprecated.` );
                cmd4Mode = value;
 
@@ -1661,7 +1683,13 @@ class Cmd4Accessory
       }
 
       if ( trueTypeOf( this.type ) != String )
-          throw new Error( `No device type given in: "${ this.displayName }"` );
+         throw new Error( `No device type given in: "${ this.displayName }"` );
+
+      // warn now
+      if ( this.type.charAt( 0 ) === this.type.charAt( 0 ).toLowerCase( ) )
+      {
+         this.log.warn( `The config.json value: ${ this.type } is Lower Case.  In the near future this will be an Error so that Cmd4 can use homebridge-ui.\nTo remove this Warning, Please fix your config.json.` );
+      }
 
       this.ucType = ucFirst( this.type );
       this.typeIndex = CMD4_DEVICE_TYPE_ENUM.properties.indexOfEnum( i => i.deviceName === this.ucType );
@@ -1752,6 +1780,7 @@ class Cmd4Accessory
          {
             // concert the accTypeEnumIndex to its characteristic string
             let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+            // This will not be a case warning
             let ucCharacteristicString = ucFirst( characteristicString );
             let lcCharacteristicString = lcFirst( characteristicString );
             if ( config[ characteristicString ] != undefined ||
@@ -1863,6 +1892,12 @@ class Cmd4Accessory
             // All this code disappears in the next major release.
             for ( let key in jsonPollingConfig )
             {
+               // warn now
+               if ( key.charAt( 0 ) === key.charAt( 0 ).toUpperCase( ) )
+               {
+                  this.log.warn( `The config.json Polling key: ${ key } is Upper Case.  In the near future this will be an Error so that Cmd4 can use homebridge-ui.\nTo remove this Warning, Please fix your config.json.` );
+               }
+
                let ucKey = ucFirst( key );
                value = jsonPollingConfig[ key ];
 
@@ -1895,6 +1930,12 @@ class Cmd4Accessory
                   }
                   case constants.CHARACTERISTIC:
                   {
+                     // Warn now
+                     if ( value.charAt( 0 ) === value.charAt( 0 ).toLowerCase( ) )
+                     {
+                        this.log.warn( `The Polling config.json value: ${ value } is Lower Case.  In the near future this will be an Error so that Cmd4 can use homebridge-ui.\nTo remove this Warning, Please fix your config.json.` );
+                     }
+
                      //1 DetermineCharacteristicsToPollAndItsChildren
                      let ucValue = ucFirst( value );
                      accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucValue );
@@ -1953,8 +1994,7 @@ class Cmd4Accessory
 
 
          });
-      } else if ( typeof accessory.polling == "boolean" &&
-                         accessory.polling == true )
+      } else
       {
          // Even though polling might == undefined, we need to create a list of
          // would be polled characteristics for "Demo" mode

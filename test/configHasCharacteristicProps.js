@@ -45,11 +45,11 @@ describe('Test configHasCharacteristicProps.', ( ) =>
 {
    let config =
    {
-      Type:                            "TemperatureSensor",
-      DisplayName:                     "My_TemperatureSensor",
-      Name:                            "My_TemperatureSensor",
-      CurrentTemperature:               25,
-      StatusFault:                     "NO_FAULT",
+      type:                            "TemperatureSensor",
+      displayName:                     "My_TemperatureSensor",
+      name:                            "My_TemperatureSensor",
+      currentTemperature:               25,
+      statusFault:                     "NO_FAULT",
    };
 
 
@@ -84,7 +84,7 @@ describe('Test configHasCharacteristicProps.', ( ) =>
    it('configHasCharaceristicProps should work with property in small Caps.', ( ) =>
    {
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.TargetTemperature;
-      let props = { targetTemperature: { maxValue: +100,
+      let props = { TargetTemperature: { maxValue: +100,
                                          minValue: -100,
                                          minStep: 0.1,
                                        }

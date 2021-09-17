@@ -76,13 +76,13 @@ describe('Testing Cmd4Accessory polling', ( ) =>
    {
       let config =
       {
-         Name:                         "My_Switch",
-         DisplayName:                  "My_Switch",
-         StatusMsg:                     true,
-         Type:                         "Switch",
-         On:                            0,
-         Polling:                       true,
-         State_cmd:                    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         name:                         "My_Switch",
+         displayName:                  "My_Switch",
+         statusMsg:                     true,
+         type:                         "Switch",
+         on:                            0,
+         polling:                       true,
+         state_cmd:                    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
       }
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
 
@@ -108,12 +108,12 @@ describe('Testing Cmd4Accessory polling', ( ) =>
    {
       let config =
       {
-         Name:                         "My_Switch",
-         DisplayName:                  "My_Switch",
-         StatusMsg:                    true,
-         Type:                         "Switch",
-         On:                           0,
-         State_cmd:                    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         name:                         "My_Switch",
+         displayName:                  "My_Switch",
+         statusMsg:                    true,
+         type:                         "Switch",
+         on:                           0,
+         state_cmd:                    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
       }
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
 
@@ -125,7 +125,7 @@ describe('Testing Cmd4Accessory polling', ( ) =>
 
       cmd4Accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
-      cmd4Accessory["polling"] = [ { "characteristic": "on", "timeout":3000, "interval": 1 } ];
+      cmd4Accessory["polling"] = [ { characteristic: "On", "timeout":3000, "interval": 1 } ];
 
       cmd4Accessory.determineCharacteristicsToPollForAccessory( cmd4Accessory );
       assert.equal( Object.keys(cmd4Accessory.listOfPollingCharacteristics).length, 1, `Incorrect number of listOfPollingCharacteristics` );
@@ -145,12 +145,12 @@ describe('Testing Cmd4Accessory polling', ( ) =>
    {
       let config =
       {
-         Name:                         "My_Switch",
-         DisplayName:                  "My_Switch",
-         StatusMsg:                    true,
-         Type:                         "Switch",
-         On:                           0,
-         State_cmd:                    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         name:                         "My_Switch",
+         displayName:                  "My_Switch",
+         statusMsg:                    true,
+         type:                         "Switch",
+         on:                           0,
+         state_cmd:                    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
       }
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
 
@@ -162,7 +162,7 @@ describe('Testing Cmd4Accessory polling', ( ) =>
 
       cmd4Accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
-      cmd4Accessory["polling"] = [ { "characteristic": "on", "timeout":1234, "interval": 99 } ];
+      cmd4Accessory["polling"] = [ { characteristic: "On", "timeout":1234, "interval": 99 } ];
 
       cmd4Accessory.determineCharacteristicsToPollForAccessory( cmd4Accessory );
 
@@ -177,14 +177,14 @@ describe('Testing Cmd4Accessory polling', ( ) =>
    {
       let config =
       {
-         Name:                         "My_Switch",
-         DisplayName:                  "My_Switch",
-         StatusMsg:                    true,
-         Type:                         "Switch",
-         Timeout:                      5500,
-         Interval:                     44,
-         On:                           0,
-         State_cmd:                    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         name:                         "My_Switch",
+         displayName:                  "My_Switch",
+         statusMsg:                    true,
+         type:                         "Switch",
+         timeout:                      5500,
+         interval:                     44,
+         on:                           0,
+         state_cmd:                    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
       }
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
 
@@ -196,7 +196,7 @@ describe('Testing Cmd4Accessory polling', ( ) =>
 
       cmd4Accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
-      cmd4Accessory["polling"] = [ { "characteristic": "on" } ];
+      cmd4Accessory["polling"] = [ { characteristic: "On" } ];
 
       cmd4Accessory.determineCharacteristicsToPollForAccessory( cmd4Accessory );
 
@@ -211,12 +211,12 @@ describe('Testing Cmd4Accessory polling', ( ) =>
    {
       let config =
       {
-         Name:                         "My_Switch",
-         DisplayName:                  "My_Switch",
-         StatusMsg:                    true,
-         Type:                         "Switch",
-         On:                           0,
-         State_cmd:                    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         name:                         "My_Switch",
+         displayName:                  "My_Switch",
+         statusMsg:                    true,
+         type:                         "Switch",
+         on:                           0,
+         state_cmd:                    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
       }
       let hV = new HV();
       hV.timeout = 77000;
@@ -231,7 +231,7 @@ describe('Testing Cmd4Accessory polling', ( ) =>
 
       cmd4Accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
-      cmd4Accessory["polling"] = [ { "characteristic": "on" } ];
+      cmd4Accessory["polling"] = [ { characteristic: "On" } ];
 
       cmd4Accessory.determineCharacteristicsToPollForAccessory( cmd4Accessory );
 
@@ -246,12 +246,12 @@ describe('Testing Cmd4Accessory polling', ( ) =>
    {
       let config =
       {
-         Name:                         "My_Switch",
-         DisplayName:                  "My_Switch",
-         StatusMsg:                    true,
-         Type:                         "Switch",
-         On:                           0,
-         State_cmd:                    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         name:                         "My_Switch",
+         displayName:                  "My_Switch",
+         statusMsg:                    true,
+         type:                         "Switch",
+         on:                           0,
+         state_cmd:                    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
       }
       let hV = new HV();
       hV.timeout = 88000;
@@ -281,13 +281,13 @@ describe('Testing Cmd4Accessory polling', ( ) =>
    {
       let config =
       {
-         Name:                         "My_Switch",
-         DisplayName:                  "My_Switch",
-         StatusMsg:                    true,
-         Type:                         "Switch",
-         On:                           0,
-         polling:                      [ { "characteristic": "on", "timeout":2, "interval": 99 } ],
-         State_cmd:                    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         name:                         "My_Switch",
+         displayName:                  "My_Switch",
+         statusMsg:                    true,
+         type:                         "Switch",
+         on:                           0,
+         polling:                      [ { characteristic: "On", timeout: 2, interval: 99 } ],
+         state_cmd:                    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
       }
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };
 
@@ -311,13 +311,13 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       {
          accessories: [
          {
-            Name:                      "My_Switch",
-            DisplayName:               "My_Switch",
-            StatusMsg:                 true,
-            Type:                      "Switch",
-            On:                        0,
-            polling:                   [ { "characteristic": "on", "interval": 310 } ],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            name:                      "My_Switch",
+            displayName:               "My_Switch",
+            statusMsg:                 true,
+            type:                      "Switch",
+            on:                        0,
+            polling:                   [ { characteristic: "On", interval: 310 } ],
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       }
 

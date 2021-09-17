@@ -922,6 +922,12 @@ var parseAddQueueTypes = function ( log, entrys )
 
       for ( let key in entry )
       {
+         // warn now
+         if ( key.charAt( 0 ) === key.charAt( 0 ).toUpperCase( ) )
+         {
+            log.warn( `The config.json queueTypes key: ${ key } is Upper Case.  In the near future this will be an Error so that Cmd4 can use homebridge-ui.\nTo remove this Warning, Please fix your config.json.` );
+         }
+
          let value = entry[ key ];
          let ucKey = ucFirst( key );
 

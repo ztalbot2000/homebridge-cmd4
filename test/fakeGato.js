@@ -89,35 +89,35 @@ describe('Testing FakeGato gets created', ( ) =>
       {
          accessories: [
             {
-               Name:                         "My_Light",
-               DisplayName:                  "My_Light",
-               StatusMsg:                    true,
-               Type:                         "Lightbulb",
-               On:                           0,
-               Brightness:                   100,
-               polling:                      [ { characteristic: "on" },
-                                               { characteristic: "brightness" }
+               name:                         "My_Light",
+               displayName:                  "My_Light",
+               statusMsg:                    true,
+               type:                         "Lightbulb",
+               on:                           0,
+               brightness:                   100,
+               polling:                      [ { characteristic: "On" },
+                                               { characteristic: "Brightness" }
                                              ],
-               State_cmd: "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+               state_cmd: "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
             },
             {
                type:                         "Thermostat",
-               Name:                         "Thermostat",
-               DisplayName:                  "Thermostat",
-               TemperatureDisplayUnits:      "CELSIUS",
-               Active:                       "INACTIVE",
-               CurrentTemperature:            20.0,
-               TargetTemperature:             20.0,
-               CurrentHeatingCoolingState:    0,
-               TargetHeatingCoolingState:     0,
-               StateChangeResponseTime:       1,
+               name:                         "Thermostat",
+               displayName:                  "Thermostat",
+               temperatureDisplayUnits:      "CELSIUS",
+               active:                       "INACTIVE",
+               currentTemperature:            20.0,
+               targetTemperature:             20.0,
+               currentHeatingCoolingState:    0,
+               targetHeatingCoolingState:     0,
+               stateChangeResponseTime:       1,
                polling:                       [ { characteristic: "CurrentTemperature" },
                                                 { characteristic: "TargetTemperature" }
                                               ],
-               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice",
+               state_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice",
                fakegato: { eve:          "thermo",
-                           currentTemp:  "currentTemperature",
-                           setTemp:      "targetTemperature",
+                           currentTemp:  "CurrentTemperature",
+                           setTemp:      "TargetTemperature",
                            valvePosition: 0,
                            storage:      "fs",
                            storagePath:  ".homebridge/FakegatoStorage",
@@ -158,34 +158,34 @@ describe('Testing FakeGato gets created', ( ) =>
       {
          accessories: [
             {
-               Name:                         "My_Light",
-               DisplayName:                  "My_Light",
-               StatusMsg:                    true,
-               Type:                         "Lightbulb",
-               On:                           0,
-               Brightness:                   100,
-               polling:                      [ { characteristic: "on" },
-                                               { characteristic: "brightness" }
+               name:                         "My_Light",
+               displayName:                  "My_Light",
+               statusMsg:                    true,
+               type:                         "Lightbulb",
+               on:                           0,
+               brightness:                   100,
+               polling:                      [ { characteristic: "On" },
+                                               { characteristic: "Brightness" }
                                              ],
-               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+               state_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
             },
             {
                type:                         "Thermostat",
-               Name:                         "Thermostat",
-               DisplayName:                  "Thermostat",
-               TemperatureDisplayUnits:      "CELSIUS",
-               Active:                       "INACTIVE",
-               CurrentTemperature:            20.0,
-               TargetTemperature:             20.0,
-               CurrentHeatingCoolingState:    0,
-               TargetHeatingCoolingState:     0,
-               CurrentRelativeHumidity:       44,
-               StateChangeResponseTime:       1,
+               name:                         "Thermostat",
+               displayName:                  "Thermostat",
+               temperatureDisplayUnits:      "CELSIUS",
+               active:                       "INACTIVE",
+               currentTemperature:            20.0,
+               targetTemperature:             20.0,
+               currentHeatingCoolingState:    0,
+               targetHeatingCoolingState:     0,
+               currentRelativeHumidity:       44,
+               stateChangeResponseTime:       1,
                polling:                       [ { characteristic: "CurrentTemperature" },
                                                 { characteristic: "TargetTemperature" },
                                                 { characteristic: "CurrentRelativeHumidity" }
                                               ],
-               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice",
+               state_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice",
                fakegato: { eve:          "room",
                            temp:         "CurrentTemperature",
                            humidity:     "CurrentRelativeHumidity",
@@ -226,16 +226,16 @@ describe('Testing FakeGato gets created', ( ) =>
       {
          accessories: [
             {
-               Name:                         "My_Light",
-               DisplayName:                  "My_Light",
-               StatusMsg:                    true,
-               Type:                         "Lightbulb",
-               On:                           0,
-               Brightness:                   100,
-               polling:                      [ { "characteristic": "on" },
-                                               { "characteristic": "brightness" }
+               name:                         "My_Light",
+               displayName:                  "My_Light",
+               statusMsg:                    true,
+               type:                         "Lightbulb",
+               on:                           0,
+               brightness:                   100,
+               polling:                      [ { characteristic: "On" },
+                                               { characteristic: "Brightness" }
                                              ],
-               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+               state_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
             },
             {
                  type:                       "Door",
@@ -247,18 +247,18 @@ describe('Testing FakeGato gets created', ( ) =>
                  obstructionDetected:        "FALSE",
                  statusActive:               0,
                  statusFault:                0,
-                 polling:                    [ { characteristic: "statusActive" },
-                                               { characteristic: "statusFault" }
+                 polling:                    [ { characteristic: "StatusActive" },
+                                               { characteristic: "StatusFault" }
                                              ],
                  fakegato: { eve:         "door",
-                             status:      "statusActive",
+                             status:      "StatusActive",
                              storage:     "fs",
                              storagePath: ".homebridge/FakegatoStorage",
                              folder:      "folderName",
                              keyPath:     "/place/to/store/my/keys/"
                            },
                  stateChangeResponseTime:     3,
-                 State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+                 state_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
               }
          ]
       }
@@ -292,16 +292,16 @@ describe('Testing FakeGato gets created', ( ) =>
       {
          accessories: [
             {
-               Name:                         "My_Light",
-               DisplayName:                  "My_Light",
-               StatusMsg:                    true,
-               Type:                         "Lightbulb",
-               On:                           0,
-               Brightness:                   100,
-               polling:                      [ { "characteristic": "on" },
-                                               { "characteristic": "brightness" }
+               name:                         "My_Light",
+               displayName:                  "My_Light",
+               statusMsg:                    true,
+               type:                         "Lightbulb",
+               on:                           0,
+               brightness:                   100,
+               polling:                      [ { characteristic: "On" },
+                                               { characteristic: "Brightness" }
                                              ],
-               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+               state_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
             },
             {
                type:                         "Fan",
@@ -309,14 +309,14 @@ describe('Testing FakeGato gets created', ( ) =>
                rotationDirection:             1,
                rotationSpeed:                 100,
                stateChangeResponseTime:       1,
-               polling:                      [ { characteristic: "rotationDirection" },
-                                               { characteristic: "rotationSpeed" },
+               polling:                      [ { characteristic: "RotationDirection" },
+                                               { characteristic: "RotationSpeed" },
                                                { characteristic: "On" }
                                              ],
                fakegato: { eve:          "energy",
                            // rotationSpeed used as an example.
                            // Not really power characteristic
-                           power:        "rotationSpeed",
+                           power:        "RotationSpeed",
                            storage:      "fs",
                            storagePath:  ".homebridge/FakegatoStorage",
                            folder:       "folderName",
@@ -356,16 +356,16 @@ describe('Testing FakeGato gets created', ( ) =>
       {
          accessories: [
             {
-               Name:                         "My_Light",
-               DisplayName:                  "My_Light",
-               StatusMsg:                    true,
-               Type:                         "Lightbulb",
-               On:                           0,
-               Brightness:                   100,
-               polling:                      [ { "characteristic": "on" },
-                                               { "characteristic": "brightness" }
+               name:                         "My_Light",
+               displayName:                  "My_Light",
+               statusMsg:                    true,
+               type:                         "Lightbulb",
+               on:                           0,
+               brightness:                   100,
+               polling:                      [ { characteristic: "On" },
+                                               { characteristic: "Brightness" }
                                              ],
-               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+               state_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
             },
             {
                type:                         "Fan",
@@ -373,7 +373,7 @@ describe('Testing FakeGato gets created', ( ) =>
                rotationDirection:             1,
                rotationSpeed:                 100,
                stateChangeResponseTime:       1,
-               polling:                      [ { characteristic: "rotationDirection" },
+               polling:                      [ { characteristic: "RotationDirection" },
                                                { characteristic: "On" }
                                              ],
                fakegato: { eve:          "energy",
@@ -407,16 +407,16 @@ describe('Testing FakeGato gets created', ( ) =>
       {
          accessories: [
             {
-               Name:                         "My_Light",
-               DisplayName:                  "My_Light",
-               StatusMsg:                    true,
-               Type:                         "Lightbulb",
-               On:                           0,
-               Brightness:                   100,
-               polling:                      [ { "characteristic": "on" },
-                                               { "characteristic": "brightness" }
+               name:                         "My_Light",
+               displayName:                  "My_Light",
+               statusMsg:                    true,
+               type:                         "Lightbulb",
+               on:                           0,
+               brightness:                   100,
+               polling:                      [ { characteristic: "On" },
+                                               { characteristic: "Brightness" }
                                              ],
-               State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+               state_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
             },
             {
                type:                         "Fan",
@@ -424,7 +424,7 @@ describe('Testing FakeGato gets created', ( ) =>
                rotationDirection:             1,
                rotationSpeed:                 100,
                stateChangeResponseTime:       1,
-               polling:                      [ { characteristic: "rotationDirection" },
+               polling:                      [ { characteristic: "RotationDirection" },
                                                { characteristic: "On" }
                                              ],
                fakegato: { eve:          "energy",
@@ -464,14 +464,14 @@ describe('Testing FakeGato gets created', ( ) =>
                rotationDirection:             1,
                rotationSpeed:                 100,
                stateChangeResponseTime:       1,
-               polling:                      [ { characteristic: "rotationDirection" },
+               polling:                      [ { characteristic: "RotationDirection" },
                                                { characteristic: "RotationSpeed" },
                                                { characteristic: "On" }
                                              ],
                fakegato: { eve:          "BadType",
                            // rotationSpeed used as an example.
                            // Not really power characteristic
-                           power:        "rotationSpeed",
+                           power:        "RotationSpeed",
                            storage:      "fs",
                            storagePath:  ".homebridge/FakegatoStorage",
                            folder:       "folderName",
@@ -505,7 +505,7 @@ describe('Testing FakeGato gets created', ( ) =>
                rotationDirection:             1,
                rotationSpeed:                 100,
                stateChangeResponseTime:       1,
-               polling:                      [ { characteristic: "rotationDirection" },
+               polling:                      [ { characteristic: "RotationDirection" },
                                                { characteristic: "RotationSpeed" },
                                                { characteristic: "On" }
                                              ],
@@ -513,7 +513,7 @@ describe('Testing FakeGato gets created', ( ) =>
                            badKey:       "badValue",
                            // rotationSpeed used as an example.
                            // Not really power characteristic
-                           power:        "rotationSpeed",
+                           power:        "RotationSpeed",
                            storage:      "fs",
                            storagePath:  ".homebridge/FakegatoStorage",
                            folder:       "folderName",

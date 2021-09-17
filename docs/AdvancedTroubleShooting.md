@@ -105,9 +105,9 @@ See [fakegato-history](https://github.com/simont77/fakegato-history)
 ### Step 1.  Check that the characteristic is polled.
 &nbsp;&nbsp;&nbsp; Only polled characteristics are recorded. For history to be collected you will have to enable polling and interval for the accessory, and according to the fakegato-history documents it should be less than 10 minutes (600 seconds). The new polling config section allows for each characteristic to be polled at their individual times. Check your config.json for this setup. An example of polling is:
 ```json
-"polling": [{"currentHeatingCoolingState": 0,
+"polling": [{"characteristic": "CurrentHeatingCoolingState",
              "interval": 540,  "timeout": 4000},
-            {"currentTemperature": 50.0,
+            {"characteristic": "CurrentTemperature",
              "interval": 60,   "timeout": 4000}
            ],
 ```
@@ -120,8 +120,8 @@ See [fakegato-history](https://github.com/simont77/fakegato-history)
 
 ```json
 "fakegato":{"eve":"thermo",
-            "currentTemp": "currentTemperature",
-            "setTemp": "targetTemperature",
+            "currentTemp": "CurrentTemperature",
+            "setTemp": "TargetTemperature",
             "valvePosition": "0",
             "storage": "fs",
             "storagePath": ".homebridge/FakegatoStorage",

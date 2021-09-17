@@ -184,6 +184,12 @@ class Cmd4Platform
    {
       for ( let key in config )
       {
+         // warn now
+         if ( key.charAt( 0 ) === key.charAt( 0 ).toUpperCase( ) )
+         {
+            this.log.warn( `The config.json Platform key: ${ key } is Upper Case.  In the near future this will be an Error so that Cmd4 can use homebridge-ui.\nTo remove this Warning, Please fix your config.json.` );
+         }
+
          let value = config[ key ];
 
          // I made the stupid mistake of not having all characteristics in

@@ -220,7 +220,7 @@ describe( "Testing Cmd4Accessory", function( )
          name:                         "Test Switch",
          type:                         "Switch",
          on:                            false,
-         Cmd4_Mode:                    "Demo"
+         cmd4_Mode:                    "Demo"
       };
 
       const log = new Logger( );
@@ -236,7 +236,7 @@ describe( "Testing Cmd4Accessory", function( )
       assert.include( log.logBuf, `[34mCmd4 is running in Demo Mode`, ` Cmd4Accessory: incorrect stdout: ${ log.logBuf }` );
       assert.equal( log.logLineCount, 1 , `Cmd4Accessory: unexpected number of lines to stdout ${ log.logBuf }` );
 
-      assert.include( log.errBuf, `[33mWarning: Cmd4_Mode has been deprecated.`, ` Cmd4Accessory: incorrect stderr: ${ log.errBuf }` );
+      assert.include( log.errBuf, `[33mWarning: cmd4_Mode has been deprecated.`, ` Cmd4Accessory: incorrect stderr: ${ log.errBuf }` );
       assert.equal( log.errLineCount, 1 , `Cmd4Accessory: unexpected number of lines to stderr ${ log.errBuf }` );
 
       done( );
@@ -246,22 +246,22 @@ describe( "Testing Cmd4Accessory", function( )
    {
       let thermostatConfig =
       {
-         Type:                         "Thermostat",
-         Name:                         "Thermostat",
-         DisplayName:                  "Thermostat",
-         TemperatureDisplayUnits:      "CELSIUS",
-         Active:                       "Inactive",
-         CurrentTemperature:            20.0,
-         TargetTemperature:             20.0,
-         CurrentHeatingCoolingState:    0,
-         TargetHeatingCoolingState:     0,
-         polling:                      [{"characteristic": "currentTemperature",
-                                         "interval": 60,
-                                         "timeout":2000},
-                                        {"characteristic": "targetTemperature",
-                                         "interval": 60,
-                                         "timeout":2000}],
-         State_cmd:                    "./test/echoScripts/echo_quoted0"
+         type:                         "Thermostat",
+         name:                         "Thermostat",
+         displayName:                  "Thermostat",
+         temperatureDisplayUnits:      "CELSIUS",
+         active:                       "Inactive",
+         currentTemperature:            20.0,
+         targetTemperature:             20.0,
+         currentHeatingCoolingState:    0,
+         targetHeatingCoolingState:     0,
+         polling:                      [{characteristic: "CurrentTemperature",
+                                         interval: 60,
+                                         timeout:2000},
+                                        {characteristic: "TargetTemperature",
+                                         interval: 60,
+                                         timeout:2000}],
+         state_cmd:                    "./test/echoScripts/echo_quoted0"
       };
 
 

@@ -411,10 +411,10 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
    {
       let config =
       {
-         Name:                            "Test Switch",
-         Type:                            "Switch",
-         On:                               false,
-         Category:                        "Bad"
+         name:                            "Test Switch",
+         type:                            "Switch",
+         on:                               false,
+         category:                        "Bad"
       };
 
       let log = new Logger( );
@@ -430,10 +430,10 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
    {
       let config =
       {
-         Name:                            "Test Switch",
-         Type:                            "Switch",
-         On:                               false,
-         Queue:                            "A"
+         name:                            "Test Switch",
+         type:                            "Switch",
+         on:                               false,
+         queue:                            "A"
       };
 
       let log = new Logger( );
@@ -449,8 +449,8 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
    {
       let config =
       {
-         Name:                            "Test Switch",
-         On:                               false
+         name:                            "Test Switch",
+         on:                               false
       };
 
       let log = new Logger( );
@@ -466,9 +466,9 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
    {
       let config =
       {
-         Name:                            "Test Switch",
-         Type:                            "Sink",
-         On:                               false
+         name:                            "Test Switch",
+         type:                            "Sink",
+         on:                               false
       };
 
       let log = new Logger( );
@@ -484,11 +484,11 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
    {
       let config =
       {
-         Name:                            "Test Switch",
-         Type:                            "Switch",
-         On:                               false,
-         Polling:                          true,
-         State_cmd:                       false
+         name:                            "Test Switch",
+         type:                            "Switch",
+         on:                               false,
+         polling:                          true,
+         state_cmd:                       false
       };
 
       let log = new Logger( );
@@ -504,11 +504,11 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
    {
       let config =
       {
-         Name:                            "Test Switch",
-         Type:                            "Switch",
-         On:                               false,
-         Polling:                          true,
-         State_cmd:                       "/tmp/noFile"
+         name:                            "Test Switch",
+         type:                            "Switch",
+         on:                               false,
+         polling:                          true,
+         state_cmd:                       "/tmp/noFile"
       };
 
       let log = new Logger( );
@@ -524,8 +524,8 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
    {
       let config =
       {
-         Name:                            "Test Switch",
-         Type:                            "Switch",
+         name:                            "Test Switch",
+         type:                            "Switch",
          XOn:                               false
       };
 
@@ -542,11 +542,11 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
    {
       let config =
       {
-         Name:                            "Test Switch",
-         Type:                            "Switch",
-         On:                               false,
-         polling:                         "yes",
-         state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
+         name:                   "Test Switch",
+         type:                   "Switch",
+         on:                     false,
+         polling:                "yes",
+         state_cmd:              `node ${ home }/.homebridge/Cmd4Scripts/State.js`
       };
 
       let log = new Logger( );
@@ -562,9 +562,9 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
    {
       let config =
       {
-         Name:                            "Test Switch",
-         Type:                            "Switch",
-         On:                               false,
+         name:                            "Test Switch",
+         type:                            "Switch",
+         on:                               false,
          polling:                         [{ characteristic: "XOn"}],
          state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
       };
@@ -582,9 +582,9 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
    {
       let config =
       {
-         Name:                            "Test Switch",
-         Type:                            "Switch",
-         On:                               false,
+         name:                            "Test Switch",
+         type:                            "Switch",
+         on:                               false,
          polling:                         [{ characteristic: "Active"}],
          state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
       };
@@ -602,9 +602,9 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
    {
       let config =
       {
-         Name:                            "Test Switch",
-         Type:                            "Switch",
-         On:                               false,
+         name:                            "Test Switch",
+         type:                            "Switch",
+         on:                               false,
          polling:                         [{ "XOn": 15 }],
          state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
       };
@@ -622,9 +622,9 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
    {
       let config =
       {
-         Name:                            "Test Switch",
-         Type:                            "Switch",
-         On:                               false,
+         name:                            "Test Switch",
+         type:                            "Switch",
+         on:                               false,
          polling:                         [{ interval: 15 }],
          state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
       };
@@ -642,11 +642,11 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
    {
       let config =
       {
-         Name:                            "Test Switch",
-         Type:                            "Switch",
-         On:                               false,
-         Polling:                         true,
-         "constants": {
+         name:                            "Test Switch",
+         type:                            "Switch",
+         on:                               false,
+         polling:                         true,
+         constants: {
                   "${psk}": "123456",
                   "${ipaddress}": "12Aa34bbcc",
                   "${port}": "8091"
@@ -671,11 +671,11 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
    {
       let config =
       {
-         Name:                            "Test Switch",
-         Type:                            "Switch",
-         On:                               false,
-         Polling:                         true,
-         "constants":                     { "{psk}": "123456", },
+         name:                            "Test Switch",
+         type:                            "Switch",
+         on:                               false,
+         polling:                         true,
+         constants:                     { "{psk}": "123456", },
          state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
       };
 
@@ -694,11 +694,11 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
    {
       let config =
       {
-         Name:                            "Test Switch",
-         Type:                            "Switch",
-         On:                               false,
-         Polling:                         true,
-         "constants":                     { "${psk": "123456", },
+         name:                            "Test Switch",
+         type:                            "Switch",
+         on:                               false,
+         polling:                         true,
+         constants:                     { "${psk": "123456", },
          state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
       };
 
@@ -717,11 +717,11 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
    {
       let config =
       {
-         Name:                            "Test Switch",
-         Type:                            "Switch",
-         On:                               false,
-         Polling:                         true,
-         "constants":                     "${psk}:1",
+         name:                            "Test Switch",
+         type:                            "Switch",
+         on:                               false,
+         polling:                         true,
+         constants:                     "${psk}:1",
          state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
       };
 
@@ -740,11 +740,11 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
    {
       let config =
       {
-         Name:                            "Test Switch",
-         Type:                            "Switch",
-         On:                               false,
-         Polling:                         true,
-         "variables": {
+         name:                            "Test Switch",
+         type:                            "Switch",
+         on:                               false,
+         polling:                         true,
+         variables: {
                   "${psk}": "123456",
                   "${ipaddress}": "12Aa34bbcc",
                   "${port}": "8091"
@@ -769,11 +769,11 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
    {
       let config =
       {
-         Name:                            "Test Switch",
-         Type:                            "Switch",
-         On:                               false,
-         Polling:                         true,
-         "variables":                     { "{psk}": "123456", },
+         name:                            "Test Switch",
+         type:                            "Switch",
+         on:                               false,
+         polling:                         true,
+         variables:                     { "{psk}": "123456", },
          state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
       };
 
@@ -792,11 +792,11 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
    {
       let config =
       {
-         Name:                            "Test Switch",
-         Type:                            "Switch",
-         On:                               false,
-         Polling:                         true,
-         "variables":                     { "${psk": "123456", },
+         name:                            "Test Switch",
+         type:                            "Switch",
+         on:                               false,
+         polling:                         true,
+         variables:                     { "${psk": "123456", },
          state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
       };
 
@@ -815,11 +815,11 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
    {
       let config =
       {
-         Name:                            "Test Switch",
-         Type:                            "Switch",
-         On:                               false,
-         Polling:                         true,
-         "Variables":                     "${psk}:1",
+         name:                            "Test Switch",
+         type:                            "Switch",
+         on:                               false,
+         polling:                         true,
+         variables:                     "${psk}:1",
          state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
       };
 
@@ -838,11 +838,11 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
    {
       let config =
       {
-         Name:                            "Test Switch",
-         Type:                            "Switch",
-         On:                               false,
-         Polling:                         true,
-         Url:                         "http:blah",
+         name:                            "Test Switch",
+         type:                            "Switch",
+         on:                               false,
+         polling:                         true,
+         url:                         "http:blah",
          state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
       };
 
@@ -863,11 +863,11 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
    {
       let config =
       {
-         Name:                            "Test Switch",
-         Type:                            "Switch",
-         On:                               false,
-         Polling:                         true,
-         Url:                             15,
+         name:                            "Test Switch",
+         type:                            "Switch",
+         on:                               false,
+         polling:                         true,
+         url:                             15,
          state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
       };
 
@@ -886,11 +886,11 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
    {
       let config =
       {
-         Name:                            "Test Switch",
-         Type:                            "Switch",
-         On:                               false,
-         Polling:                         true,
-         "requires":                      [{"${bravia}": "http"}],
+         name:                            "Test Switch",
+         type:                            "Switch",
+         on:                               false,
+         polling:                         true,
+         requires:                      [{"${bravia}": "http"}],
          state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
       };
 
@@ -911,10 +911,10 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
    {
       let config =
       {
-         Name:                            "Test Switch",
-         Type:                            "Switch",
-         On:                               false,
-         Polling:                         true,
+         name:                            "Test Switch",
+         type:                            "Switch",
+         on:                               false,
+         polling:                         true,
          requires:                             15,
          state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
       };
@@ -965,7 +965,7 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
          on:                            false,
          state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`,
          interval:                      10,                // seconds
-         StateChangeResponseTime:       1,                 // seconds
+         stateChangeResponseTime:       1,                 // seconds
          timeout:                       6000,              // msec
          polling:                       true
       };
@@ -993,7 +993,7 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
          on:                            false,
          state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`,
          interval:                      10,                // seconds
-         StateChangeResponseTime:       1,                 // seconds
+         stateChangeResponseTime:       1,                 // seconds
          timeout:                       6000,              // msec
          polling:                       true
       };
@@ -1017,16 +1017,16 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
       {
          accessories: [
          {
-            Name:                      "My_Door",
-            DisplayName:               "My_Door",
-            StatusMsg:                 true,
-            Type:                      "Door",
-            CurrentPosition:            0,
-            TargetPosition:             0,
-            PositionState:              0,
-            polling:                   [ { "characteristic": "CurrentPosition" },
+            name:                      "My_Door",
+            displayName:               "My_Door",
+            statusMsg:                 true,
+            type:                      "Door",
+            currentPosition:            0,
+            targetPosition:             0,
+            positionState:              0,
+            Polling:                   [ { "characteristic": "CurrentPosition" },
                                          { "characteristic": "PositionState" } ],
-            State_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            state_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       }
 
@@ -1052,17 +1052,17 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
    {
       let thermostatConfig =
       {
-         Type:                         "Thermostat",
-         Name:                         "Thermostat",
-         DisplayName:                  "Thermostat",
-         TemperatureDisplayUnits:      "CELSIUS",
-         Active:                       "Inactive",
-         CurrentTemperature:            20.0,
-         TargetTemperature:             20.0,
-         CurrentHeatingCoolingState:    0,
-         TargetHeatingCoolingState:     0,
-         Polling:                      [{"characteristic": "currentTemperature", "interval": 60, "timeout":2000}],
-         State_cmd:                    "./test/echoScripts/echo_quoted0"
+         type:                         "Thermostat",
+         name:                         "Thermostat",
+         displayName:                  "Thermostat",
+         temperatureDisplayUnits:      "CELSIUS",
+         active:                       "Inactive",
+         currentTemperature:            20.0,
+         targetTemperature:             20.0,
+         currentHeatingCoolingState:    0,
+         targetHeatingCoolingState:     0,
+         polling:                      [{characteristic: "CurrentTemperature", interval: 60, timeout:2000}],
+         state_cmd:                    "./test/echoScripts/echo_quoted0"
       };
 
       let log = new Logger( );
@@ -1082,35 +1082,35 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
    {
       let thermostatConfig =
       {
-         Type:                         "Thermostat",
-         Name:                         "Thermostat",
-         DisplayName:                  "Thermostat",
-         TemperatureDisplayUnits:      "CELSIUS",
-         Active:                       "Inactive",
-         CurrentTemperature:            20.0,
-         TargetTemperature:             20.0,
-         LinkedTypes:
+         type:                         "Thermostat",
+         name:                         "Thermostat",
+         displayName:                  "Thermostat",
+         temperatureDisplayUnits:      "CELSIUS",
+         active:                       "Inactive",
+         currentTemperature:            20.0,
+         targetTemperature:             20.0,
+         linkedTypes:
          {
-            Type:                      "Thermostat",
-            Name:                      "Linked_Thermostat",
-            DisplayName:               "Linked_Thermostat",
-            TemperatureDisplayUnits:   "CELSIUS",
-            Active:                    "Inactive",
-            CurrentTemperature:         20.0,
-            TargetTemperature:          20.0,
-            CurrentHeatingCoolingState: 0,
-            TargetHeatingCoolingState:  0,
-            Polling:                   [{"characteristic": "currentTemperature", "interval": 60, "timeout":2000}],
-            State_cmd:                   "./test/echoScripts/echo_quoted0"
+            type:                      "Thermostat",
+            name:                      "Linked_Thermostat",
+            displayName:               "Linked_Thermostat",
+            temperatureDisplayUnits:   "CELSIUS",
+            active:                    "Inactive",
+            currentTemperature:         20.0,
+            targetTemperature:          20.0,
+            currentHeatingCoolingState: 0,
+            targetHeatingCoolingState:  0,
+            polling:                   [{characteristic: "CurrentTemperature", interval: 60, timeout:2000}],
+            state_cmd:                   "./test/echoScripts/echo_quoted0"
          },
-         CurrentHeatingCoolingState:   0,
-         TargetHeatingCoolingState:    0,
-         Polling:                     [{"characteristic": "currentTemperature",
-                                        "interval": 60,
-                                        "timeout":  2000},
-                                       {"characteristic": "targetTemperature",
-                                         "interval": 60,
-                                         "timeout":  2000}],
+         currentHeatingCoolingState:   0,
+         targetHeatingCoolingState:    0,
+         polling:                     [{characteristic: "CurrentTemperature",
+                                        interval: 60,
+                                        timeout:  2000},
+                                       {characteristic: "TargetTemperature",
+                                         interval: 60,
+                                         timeout:  2000}],
          State_cmd:                     "./test/echoScripts/echo_quoted0"
       };
       let log = new Logger( );
@@ -1131,32 +1131,32 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
    {
       let platformConfig=
       {
-         Type:                         "Thermostat",
-         Name:                         "Thermostat",
-         DisplayName:                  "Thermostat",
-         TemperatureDisplayUnits:      "CELSIUS",
-         Active:                       "Inactive",
-         CurrentTemperature:            20.0,
-         TargetTemperature:             20.0,
-         CurrentHeatingCoolingState:    0,
-         TargetHeatingCoolingState:     0,
-         Polling:                      [{ characteristic:   "CurrentTemperature" },
+         type:                         "Thermostat",
+         name:                         "Thermostat",
+         displayName:                  "Thermostat",
+         temperatureDisplayUnits:      "CELSIUS",
+         active:                       "Inactive",
+         currentTemperature:            20.0,
+         targetTemperature:             20.0,
+         currentHeatingCoolingState:    0,
+         targetHeatingCoolingState:     0,
+         polling:                      [{ characteristic:   "CurrentTemperature" },
                                         { characteristic:   "TargetTemperature" } ],
-         State_cmd:                      "./test/echoScripts/echo_quoted0",
+         state_cmd:                      "./test/echoScripts/echo_quoted0",
          accessories: [
          {
-            Accessory:                 "Cmd4",
-            StatusMsg:                  true,
-            Type:                      "GarageDoorOpener",
-            DisplayName:               "StandaloneDoorOpener",
-            Name:                      "StandaloneDoorOpener",
-            CurrentDoorState:          "CLOSED",
-            TargetDoorState:           "CLOSED",
-            ObstructionDetected:       "1",
-            Polling:                   [ { characteristic: "CurrentDoorState" },
+            accessory:                 "Cmd4",
+            statusMsg:                  true,
+            type:                      "GarageDoorOpener",
+            displayName:               "StandaloneDoorOpener",
+            name:                      "StandaloneDoorOpener",
+            currentDoorState:          "CLOSED",
+            targetDoorState:           "CLOSED",
+            obstructionDetected:       "1",
+            polling:                   [ { characteristic: "CurrentDoorState" },
                                       // { characteristic: "TargetDoorState" },
                                          { characteristic: "ObstructionDetected" } ],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -1188,39 +1188,39 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
       {
          accessories: [
          {
-            Accessory:                 "Cmd4",
-            StatusMsg:                  true,
-            Type:                      "GarageDoorOpener",
-            DisplayName:               "StandaloneDoorOpener",
-            Name:                      "StandaloneDoorOpener",
-            CurrentDoorState:          "CLOSED",
-            TargetDoorState:           "CLOSED",
-            ObstructionDetected:       "1",
-            Polling:                   [ { characteristic: "CurrentDoorState" },
+            accessory:                 "Cmd4",
+            statusMsg:                  true,
+            type:                      "GarageDoorOpener",
+            displayName:               "StandaloneDoorOpener",
+            name:                      "StandaloneDoorOpener",
+            currentDoorState:          "CLOSED",
+            targetDoorState:           "CLOSED",
+            obstructionDetected:       "1",
+            polling:                   [ { characteristic: "CurrentDoorState" },
                                       // { characteristic: "TargetDoorState" },
                                          { characteristic: "ObstructionDetected" }
                      ],
-            State_cmd:                   "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            state_cmd:                   "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }],
          platforms: [
          {
-            Platform:                  "Cmd4",
-            OutputConstants:            false,
-            RestartRecover:            true,
-            Accessories: [
+            platform:                  "Cmd4",
+            outputConstants:            false,
+            restartRecover:            true,
+            accessories: [
             {
-               Type:                        "Thermostat",
-               Name:                        "Thermostat",
-               DisplayName:                 "Thermostat",
-               TemperatureDisplayUnits:     "CELSIUS",
-               Active:                      "Inactive",
-               CurrentTemperature:           20.0,
-               TargetTemperature:            20.0,
-               CurrentHeatingCoolingState:   0,
-               TargetHeatingCoolingState:    0,
-               Polling:                      [{ characteristic: "CurrentTemperature" },
+               type:                        "Thermostat",
+               name:                        "Thermostat",
+               displayName:                 "Thermostat",
+               temperatureDisplayUnits:     "CELSIUS",
+               active:                      "Inactive",
+               currentTemperature:           20.0,
+               targetTemperature:            20.0,
+               currentHeatingCoolingState:   0,
+               targetHeatingCoolingState:    0,
+               polling:                      [{ characteristic: "CurrentTemperature" },
                                               { characteristic: "TargetTemperature" }],
-               State_cmd:                    "./test/echoScripts/echo_quoted0"
+               state_cmd:                    "./test/echoScripts/echo_quoted0"
            }]
          }]
       };
@@ -1251,18 +1251,18 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
       {
          accessories: [
          {
-            Accessory:                 "Cmd4",
-            StatusMsg:                 true,
-            Type:                      "GarageDoorOpener",
-            DisplayName:               "StandaloneDoorOpener",
-            Name:                      "StandaloneDoorOpener",
-            CurrentDoorState:          "CLOSED",
-            TargetDoorState:           "CLOSED",
-            ObstructionDetected:       "1",
-            Polling:                   [ { characteristic: "CurrentDoorState" },
+            accessory:                 "Cmd4",
+            statusMsg:                 true,
+            type:                      "GarageDoorOpener",
+            displayName:               "StandaloneDoorOpener",
+            name:                      "StandaloneDoorOpener",
+            currentDoorState:          "CLOSED",
+            targetDoorState:           "CLOSED",
+            obstructionDetected:       "1",
+            polling:                   [ { characteristic: "CurrentDoorState" },
                                          { characteristic: "TargetDoorState" },
                                          { characteristic: "ObstructionDetected" } ],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -1297,14 +1297,14 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
       {
          accessories: [
          {
-            Accessory:                 "Cmd4",
-            StatusMsg:                  true,
-            Type:                      "TemperatureSensor",
-            DisplayName:               "TemperatureSensor",
-            Name:                      "TemperatureSensor",
-            CurrentTemperature:        "22.2",
-            Polling:                   [ { characteristic: "CurrentTemperature" } ],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            accessory:                 "Cmd4",
+            statusMsg:                  true,
+            type:                      "TemperatureSensor",
+            displayName:               "TemperatureSensor",
+            name:                      "TemperatureSensor",
+            currentTemperature:        "22.2",
+            polling:                   [ { characteristic: "CurrentTemperature" } ],
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -1338,21 +1338,21 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
       {
          accessories: [
          {
-            Type:                        "Thermostat",
-            Name:                        "Thermostat",
-            DisplayName:                 "Thermostat",
-            TemperatureDisplayUnits:     "CELSIUS",
-            CurrentTemperature:           20.0,
-            TargetTemperature:            20.0,
-            CurrentHeatingCoolingState:   0,
-            TargetHeatingCoolingState:    0,
-            QueueTypes:                  [{ queue: "A", queueType: "WoRm" }],
-            Queue:                       "A",
-            Polling:                     [{ characteristic: "CurrentTemperature" },
+            type:                        "Thermostat",
+            name:                        "Thermostat",
+            displayName:                 "Thermostat",
+            temperatureDisplayUnits:     "CELSIUS",
+            currentTemperature:           20.0,
+            targetTemperature:            20.0,
+            currentHeatingCoolingState:   0,
+            targetHeatingCoolingState:    0,
+            queueTypes:                  [{ queue: "A", queueType: "WoRm" }],
+            queue:                       "A",
+            polling:                     [{ characteristic: "CurrentTemperature" },
                                           { characteristic: "TargetTemperature" },
                                           { characteristic: "CurrentHeatingCoolingState" },
                                           { characteristic: "TargetHeatingCoolingState" } ],
-            State_cmd:                   "./test/echoScripts/echo_quoted0"
+            state_cmd:                   "./test/echoScripts/echo_quoted0"
         }]
       };
 
@@ -1395,18 +1395,18 @@ describe('Test Cmd4Accessory change characteristic Props', ( ) =>
       {
          accessories: [
          {
-            Type:                            "TemperatureSensor",
-            DisplayName:                     "My_TemperatureSensor",
-            Name:                            "My_TemperatureSensor",
-            CurrentTemperature:               25,
-            StatusFault:                     "NO_FAULT",
-            Props: { CurrentTemperature: { maxValue: 100,
+            type:                            "TemperatureSensor",
+            displayName:                     "My_TemperatureSensor",
+            name:                            "My_TemperatureSensor",
+            currentTemperature:               25,
+            statusFault:                     "NO_FAULT",
+            props: { CurrentTemperature: { maxValue: 100,
                                            minValue: -100,
                                            minStep: 0.1
                                          }
                    },
-            Polling:                         [ { Characteristic: "currentTemperature" } ],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            polling:                         [ { characteristic: "CurrentTemperature" } ],
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          } ]
       };
 

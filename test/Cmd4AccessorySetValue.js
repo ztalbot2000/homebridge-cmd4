@@ -55,23 +55,23 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories:
          [{
-             Name:                     "Television",
-             Type:                     "Television",
-             Cmd4_Mode:                "Demo",
-             DisplayName:              "Television",
-             Category:                 "TELEVISION",
-             PublishExternally:        true,
-             Active:                   "ACTIVE",
-             ActiveIdentifier:          1234,
-             Mute:                     true,
-             ConfiguredName:           "Television",
-             SleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
-             Brightness:                8,
-             ClosedCaptions:           "DISABLED",
-             CurrentMediaState:        "STOP",
-             TargetMediaState:         "STOP",
-             PictureMode:              "STANDARD",
-             RemoteKey:                "SELECT"
+             name:                     "Television",
+             type:                     "Television",
+             cmd4_Mode:                "Demo",
+             displayName:              "Television",
+             category:                 "TELEVISION",
+             publishExternally:        true,
+             active:                   "ACTIVE",
+             activeIdentifier:          1234,
+             mute:                     true,
+             configuredName:           "Television",
+             sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
+             brightness:                8,
+             closedCaptions:           "DISABLED",
+             currentMediaState:        "STOP",
+             targetMediaState:         "STOP",
+             pictureMode:              "STANDARD",
+             remoteKey:                "SELECT"
          }]
       };
 
@@ -92,8 +92,6 @@ describe( "Testing Cmd4Accessory", function( )
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
 
-      assert.isFunction( cmd4Accessory.queue.prioritySetValue, "Cmd4Accessory.queue.prioritySetValue is not a function" );
-
       done( );
    });
 
@@ -105,25 +103,25 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories:
          [{
-            Name:                     "Television",
-            Type:                     "Television",
-            DisplayName:              "Television",
-            Category:                 "TELEVISION",
-            PublishExternally:        true,
-            Active:                   "ACTIVE",
-            ActiveIdentifier:          1234,
-            Mute:                     true,
-            ConfiguredName:           "Television",
-            SleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
-            Brightness:                8,
-            ClosedCaptions:           "DISABLED",
+            name:                     "Television",
+            type:                     "Television",
+            displayName:              "Television",
+            category:                 "TELEVISION",
+            publishExternally:        true,
+            active:                   "ACTIVE",
+            activeIdentifier:          1234,
+            mute:                     true,
+            configuredName:           "Television",
+            sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
+            brightness:                8,
+            closedCaptions:           "DISABLED",
             polling: [{ characteristic: "ClosedCaptions" }],
-            CurrentMediaState:        "STOP",
-            TargetMediaState:         "STOP",
-            PictureMode:              "STANDARD",
-            RemoteKey:                "SELECT",
-            State_cmd_suffix:         fn,
-            State_cmd:  `node ${ process.cwd( ) }/${ getSetValueScript }`
+            currentMediaState:        "STOP",
+            targetMediaState:         "STOP",
+            pictureMode:              "STANDARD",
+            remoteKey:                "SELECT",
+            state_cmd_suffix:         fn,
+            state_cmd:  `node ${ process.cwd( ) }/${ getSetValueScript }`
          }]
       };
 
@@ -181,26 +179,26 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories:
          [{
-             Name:                     "Television",
-             Type:                     "Television",
-             OutputConstants:          true,
-             DisplayName:              "Television",
-             Category:                 "TELEVISION",
-             PublishExternally:        true,
-             Active:                   "ACTIVE",
-             ActiveIdentifier:          1234,
-             Mute:                     true,
-             ConfiguredName:           "Television",
-             SleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
-             Brightness:                8,
-             ClosedCaptions:           "DISABLED",
+             name:                     "Television",
+             type:                     "Television",
+             outputConstants:          true,
+             displayName:              "Television",
+             category:                 "TELEVISION",
+             publishExternally:        true,
+             active:                   "ACTIVE",
+             activeIdentifier:          1234,
+             mute:                     true,
+             configuredName:           "Television",
+             sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
+             brightness:                8,
+             closedCaptions:           "DISABLED",
              polling: [{ characteristic: "ClosedCaptions" }],
-             CurrentMediaState:        "STOP",
-             TargetMediaState:         "STOP",
-             PictureMode:              "STANDARD",
-             RemoteKey:                "SELECT",
-             State_cmd:                `node ${ process.cwd( ) }/${ getSetValueScript }`,
-             State_cmd_suffix:          fn
+             currentMediaState:        "STOP",
+             targetMediaState:         "STOP",
+             pictureMode:              "STANDARD",
+             remoteKey:                "SELECT",
+             state_cmd:                `node ${ process.cwd( ) }/${ getSetValueScript }`,
+             state_cmd_suffix:          fn
          }]
       };
 
@@ -257,24 +255,24 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories:
          [{
-             Name:                     "Television",
-             Type:                     "Television",
-             OutputConstants:          true,
-             DisplayName:              "Television",
-             Category:                 "TELEVISION",
-             Active:                   "ACTIVE",
-             ActiveIdentifier:          1234,
-             Mute:                     true,
-             ConfiguredName:           "Television",
-             SleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
-             Brightness:                8,
-             ClosedCaptions:           "DISABLED",
-             CurrentMediaState:        "STOP",
-             TargetMediaState:         "STOP",
-             PictureMode:              "STANDARD",
-             RemoteKey:                "SELECT",
-             State_cmd: `node ${ process.cwd( ) }/${ getSetValueScript }`,
-             State_cmd_suffix:         fn
+             name:                     "Television",
+             type:                     "Television",
+             outputConstants:          true,
+             displayName:              "Television",
+             category:                 "TELEVISION",
+             active:                   "ACTIVE",
+             activeIdentifier:          1234,
+             mute:                     true,
+             configuredName:           "Television",
+             sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
+             brightness:                8,
+             closedCaptions:           "DISABLED",
+             currentMediaState:        "STOP",
+             targetMediaState:         "STOP",
+             pictureMode:              "STANDARD",
+             remoteKey:                "SELECT",
+             state_cmd: `node ${ process.cwd( ) }/${ getSetValueScript }`,
+             state_cmd_suffix:         fn
          }]
       };
 
@@ -315,24 +313,24 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories:
          [{
-            Name:                     "Television",
-            Type:                     "Television",
-            DisplayName:              "Television",
-            Active:                   true,
-            Category:                 "TELEVISION",
-            PublishExternally:        true,
-            ActiveIdentifier:          1234,
-            Mute:                     1,
-            ConfiguredName:           "Television",
-            SleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
-            Brightness:                8,
-            ClosedCaptions:           "DISABLED",
-            CurrentMediaState:        "STOP",
-            TargetMediaState:         "STOP",
-            PictureMode:              "STANDARD",
-            RemoteKey:                "SELECT",
-            State_cmd_suffix:         fn,
-            State_cmd:                `node ${ process.cwd( ) }/${ getSetValueScript }`
+            name:                     "Television",
+            type:                     "Television",
+            displayName:              "Television",
+            active:                   true,
+            category:                 "TELEVISION",
+            publishExternally:        true,
+            activeIdentifier:          1234,
+            mute:                     1,
+            configuredName:           "Television",
+            sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
+            brightness:                8,
+            closedCaptions:           "DISABLED",
+            currentMediaState:        "STOP",
+            targetMediaState:         "STOP",
+            pictureMode:              "STANDARD",
+            remoteKey:                "SELECT",
+            state_cmd_suffix:         fn,
+            state_cmd:                `node ${ process.cwd( ) }/${ getSetValueScript }`
          }]
       };
 
@@ -386,16 +384,16 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories: [
          {
-            Type:                      "Thermostat",
-            Name:                      "Thermostat",
-            Cmd4_Mode:                 "Demo",
-            DisplayName:               "Thermostat",
-            TemperatureDisplayUnits:   "CELSIUS",
-            Active:                    "INACTIVE",
-            CurrentTemperature:         20.0,
-            TargetTemperature:          20.0,
-            TargetHeatingCoolingState:  0,
-            StateChangeResponseTime:    3
+            type:                      "Thermostat",
+            name:                      "Thermostat",
+            cmd4_Mode:                 "Demo",
+            displayName:               "Thermostat",
+            temperatureDisplayUnits:   "CELSIUS",
+            active:                    "INACTIVE",
+            currentTemperature:         20.0,
+            targetTemperature:          20.0,
+            targetHeatingCoolingState:  0,
+            stateChangeResponseTime:    3
          }]
       };
 
@@ -454,16 +452,16 @@ describe( "Testing Cmd4Accessory", function( )
       let ThermostatConfig =
       {
          type:                         "Thermostat",
-         Name:                         "Thermostat",
-         Cmd4_Mode:                    "Demo",
-         DisplayName:                  "Thermostat",
-         TemperatureDisplayUnits:      "CELSIUS",
-         Active:                       "INACTIVE",
-         CurrentTemperature:            20.0,
-         TargetTemperature:             20.0,
-         CurrentHeatingCoolingState:    0,
-         TargetHeatingCoolingState:     0,
-         StateChangeResponseTime:       3
+         name:                         "Thermostat",
+         cmd4_Mode:                    "Demo",
+         displayName:                  "Thermostat",
+         temperatureDisplayUnits:      "CELSIUS",
+         active:                       "INACTIVE",
+         currentTemperature:            20.0,
+         targetTemperature:             20.0,
+         currentHeatingCoolingState:    0,
+         targetHeatingCoolingState:     0,
+         stateChangeResponseTime:       3
       };
 
       const log = new Logger( );
@@ -515,15 +513,15 @@ describe( "Testing Cmd4Accessory", function( )
       let ThermostatConfig =
       {
          type:                         "Thermostat",
-         Name:                         "Thermostat",
-         DisplayName:                  "Thermostat",
-         TemperatureDisplayUnits:      "CELSIUS",
-         Active:                       "INACTIVE",
-         CurrentTemperature:            20.0,
-         TargetTemperature:             20.0,
-         CurrentHeatingCoolingState:    0,
-         TargetHeatingCoolingState:     0,
-         StateChangeResponseTime:       1,
+         name:                         "Thermostat",
+         displayName:                  "Thermostat",
+         temperatureDisplayUnits:      "CELSIUS",
+         active:                       "INACTIVE",
+         currentTemperature:            20.0,
+         targetTemperature:             20.0,
+         currentHeatingCoolingState:    0,
+         targetHeatingCoolingState:     0,
+         stateChangeResponseTime:       1,
          polling: true,
          state_cmd: "./Extras/Cmd4Scripts/Examples/AnyDevice"
       };
@@ -576,16 +574,16 @@ describe( "Testing Cmd4Accessory", function( )
       // A config file to play with.
       let ThermostatConfig =
       {
-         Type:                         "Thermostat",
-         Name:                         "Thermostat",
-         Cmd4_Mode:                    "Demo",
-         DisplayName:                  "Thermostat",
-         TemperatureDisplayUnits:      "CELSIUS",
-         Active:                       "INACTIVE",
-         CurrentTemperature:            20.0,
-         CurrentHeatingCoolingState:    0,
-         TargetHeatingCoolingState:     0,
-         StateChangeResponseTime:       3
+         type:                         "Thermostat",
+         name:                         "Thermostat",
+         cmd4_Mode:                    "Demo",
+         displayName:                  "Thermostat",
+         temperatureDisplayUnits:      "CELSIUS",
+         active:                       "INACTIVE",
+         currentTemperature:            20.0,
+         currentHeatingCoolingState:    0,
+         targetHeatingCoolingState:     0,
+         stateChangeResponseTime:       3
       };
 
       const log = new Logger( );
@@ -618,17 +616,17 @@ describe( "Testing Cmd4Accessory", function( )
       // A config file to play with.
       let ThermostatConfig =
       {
-         Type:                         "Thermostat",
-         Name:                         "Thermostat",
-         Cmd4_Mode:                    "Demo",
-         DisplayName:                  "Thermostat",
-         TemperatureDisplayUnits:      "CELSIUS",
-         Active:                       "INACTIVE",
-         CurrentTemperature:            20.0,
-         TargetTemperature:             20.0,
-         CurrentHeatingCoolingState:    0,
+         type:                         "Thermostat",
+         name:                         "Thermostat",
+         cmd4_Mode:                    "Demo",
+         displayName:                  "Thermostat",
+         temperatureDisplayUnits:      "CELSIUS",
+         active:                       "INACTIVE",
+         currentTemperature:            20.0,
+         targetTemperature:             20.0,
+         currentHeatingCoolingState:    0,
          // targetHeatingCoolingState:  0,
-         StateChangeResponseTime:       3
+         stateChangeResponseTime:       3
       };
 
       const log = new Logger( );
@@ -644,7 +642,7 @@ describe( "Testing Cmd4Accessory", function( )
       assert.equal( 1, log.logLineCount, ` setCachedValue logged lines than one: ${ log.logBuf }` );
       assert.include( log.errBuf, `**** Adding required characteristic TargetHeatingCoolingState for Thermostat`, ` setCachedValue incorrect stderr: ${ log.errBuf }` );
       assert.include( log.errBuf, `Not defining a required characteristic can be problematic`, ` setCachedValue incorrect stderr: ${ log.errBuf }` );
-      assert.include( log.errBuf, `[33mWarning: Cmd4_Mode has been deprecated.`, ` Cmd4Accessory: incorrect stderr: ${ log.errBuf }` );
+      assert.include( log.errBuf, `[33mWarning: cmd4_Mode has been deprecated.`, ` Cmd4Accessory: incorrect stderr: ${ log.errBuf }` );
 
       assert.equal( 3, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
       done( );
@@ -655,16 +653,16 @@ describe( "Testing Cmd4Accessory", function( )
       // A config file to play with.
       let ThermostatConfig =
       {
-         Type:                         "Thermostat",
-         Name:                         "Thermostat",
-         DisplayName:                  "Thermostat",
-         TemperatureDisplayUnits:      "CELSIUS",
-         Active:                       "INACTIVE",
-         CurrentTemperature:            20.0,
-         TargetTemperature:             20.0,
-         CurrentHeatingCoolingState:    0,
+         type:                         "Thermostat",
+         name:                         "Thermostat",
+         displayName:                  "Thermostat",
+         temperatureDisplayUnits:      "CELSIUS",
+         active:                       "INACTIVE",
+         currentTemperature:            20.0,
+         targetTemperature:             20.0,
+         currentHeatingCoolingState:    0,
          // targetHeatingCoolingState:  0,
-         StateChangeResponseTime:       3,
+         stateChangeResponseTime:       3,
          polling:                       true,
          state_cmd:                    "./test/echoScripts/echo_1"
       };
@@ -693,13 +691,13 @@ describe( "Testing Cmd4Accessory", function( )
       // A config file to play with.
       let TempSensorConfig =
       {
-         Type:                         "TemperatureSensor",
-         Name:                         "TemperatureSensor",
-         Cmd4_Mode:                    "Demo",
-         DisplayName:                  "TemperatureSensor",
-         TemperatureDisplayUnits:      "CELSIUS",
-         Active:                       "INACTIVE",
-         CurrentTemperature:            20.0
+         type:                         "TemperatureSensor",
+         name:                         "TemperatureSensor",
+         cmd4_Mode:                    "Demo",
+         displayName:                  "TemperatureSensor",
+         temperatureDisplayUnits:      "CELSIUS",
+         active:                       "INACTIVE",
+         currentTemperature:            20.0
       };
 
       const log = new Logger( );
@@ -748,12 +746,12 @@ describe( "Testing Cmd4Accessory", function( )
       // A config file to play with.
       let TempSensorConfig =
       {
-         Type:                         "TemperatureSensor",
-         Name:                         "TemperatureSensor",
-         DisplayName:                  "TemperatureSensor",
-         TemperatureDisplayUnits:      "CELSIUS",
-         Active:                       "INACTIVE",
-         CurrentTemperature:            20.0,
+         type:                         "TemperatureSensor",
+         name:                         "TemperatureSensor",
+         displayName:                  "TemperatureSensor",
+         temperatureDisplayUnits:      "CELSIUS",
+         active:                       "INACTIVE",
+         currentTemperature:            20.0,
          polling: true,
          state_cmd: "./Extras/Cmd4Scripts/Examples/AnyDevice"
       };

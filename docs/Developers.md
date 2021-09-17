@@ -53,7 +53,6 @@
          "platform": "Cmd4",
          "debug":                          false,
          "outputConstants":                false,
-         "restartRecover":                 true,
          "accessories" :
          [
             {
@@ -67,64 +66,64 @@
               "sleepDiscoveryMode":        "ALWAYS_DISCOVERABLE",
               "accessories":
               [
-                 {   "Type":                   "televisionSpeaker",
-                     "DisplayName":            "My_TelevisionSpeaker",
-                     "Name":                   "My_TelevisionSpeaker",
-                     "Active":                 "ENABLED",
-                     "VolumeSelector":         10,
-                     "VolumeControlType":      "ABSOLUTE",
-                     "State_cmd": "node .homebridge/YourScriptHere.js",
-                     "Polling": [
-                        {"Characteristic": "Active",         "interval": 50,  "timeout": 5000},
-                        {"Characteristic": "VolumeSelector", "interval": 50,  "timeout": 5000}
+                 {   "type":                   "TelevisionSpeaker",
+                     "displayName":            "My_TelevisionSpeaker",
+                     "name":                   "My_TelevisionSpeaker",
+                     "active":                 "ENABLED",
+                     "volumeSelector":         10,
+                     "volumeControlType":      "ABSOLUTE",
+                     "state_cmd": "node .homebridge/YourScriptHere.js",
+                     "polling": [
+                        {"characteristic": "Active",         "interval": 50,  "timeout": 5000},
+                        {"characteristic": "VolumeSelector", "interval": 50,  "timeout": 5000}
                      ]
                   }
               ],
               "LinkedTypes":
               [
-                 {"Type":                   "InputSource",
-                  "DisplayName":            "HDMI1",
-                  "ConfiguredName":         "HDMI 1",
-                  "CurrentVisibilityState": "SHOWN",
-                  "InputSourceType":        "HDMI",
-                  "IsConfigured":           "CONFIGURED",
-                  "Identifier":              1,
-                  "TargetVisibilityState":    "SHOWN",
-                  "Name":                     "HDMI 1"
+                 {"type":                   "InputSource",
+                  "displayName":            "HDMI1",
+                  "configuredName":         "HDMI 1",
+                  "currentVisibilityState": "SHOWN",
+                  "inputSourceType":        "HDMI",
+                  "isConfigured":           "CONFIGURED",
+                  "identifier":              1,
+                  "targetVisibilityState":    "SHOWN",
+                  "name":                     "HDMI 1"
                  },
-                 {"Type":                    "InputSource",
-                  "DisplayName":             "HDMI 2",
-                   "ConfiguredName":         "HDMI 2",
-                   "CurrentVisibilityState": "SHOWN",
-                   "InputSourceType":        "HDMI",
-                   "IsConfigured":           "CONFIGURED",
-                   "Identifier":              2,
-                   "TargetVisibilityState":   "SHOWN",
-                   "Name":                    "HDMI 2"
+                 {"type":                    "InputSource",
+                  "displayName":             "HDMI 2",
+                   "configuredName":         "HDMI 2",
+                   "currentVisibilityState": "SHOWN",
+                   "inputSourceType":        "HDMI",
+                   "isConfigured":           "CONFIGURED",
+                   "identifier":              2,
+                   "targetVisibilityState":   "SHOWN",
+                   "name":                    "HDMI 2"
                   },
-                  {"Type":                    "InputSource",
-                   "DisplayName":             "Netflix",
-                   "ConfiguredName":          "Netflix",
-                   "CurrentVisibilityState":  "SHOWN",
-                   "InputSourceType":         "HDMI",
-                   "IsConfigured":            "CONFIGURED",
-                   "Identifier":               3,
-                   "TargetVisibilityState":    "SHOWN",
-                   "Name":                     "Netflix"
+                  {"type":                    "InputSource",
+                   "displayName":             "Netflix",
+                   "configuredName":          "Netflix",
+                   "currentVisibilityState":  "SHOWN",
+                   "inputSourceType":         "HDMI",
+                   "isConfigured":            "CONFIGURED",
+                   "identifier":               3,
+                   "targetVisibilityState":    "SHOWN",
+                   "name":                     "Netflix"
                   }
                ],
-               "DisplayOrder":              0,
-               "CurrentMediaState":         "STOP",
-               "TargetMediaState":          "STOP",
-               "PictureMode":               "STANDARD",
-               "RemoteKey":                 "SELECT",
-               "Polling": [
-                  {"Characteristic": "Active",            "interval": 50,  "timeout": 5000},
-                  {"Characteristic": "ActiveIdentifier",  "interval": 50,  "timeout": 5000},
-                  {"Characteristic": "CurrentMediaState", "interval": 540, "timeout": 5000}
+               "displayOrder":              0,
+               "currentMediaState":         "STOP",
+               "targetMediaState":          "STOP",
+               "pictureMode":               "STANDARD",
+               "remoteKey":                 "SELECT",
+               "polling": [
+                  {"characteristic": "Active",            "interval": 50,  "timeout": 5000},
+                  {"characteristic": "ActiveIdentifier",  "interval": 50,  "timeout": 5000},
+                  {"characteristic": "CurrentMediaState", "interval": 540, "timeout": 5000}
                ],
-               "StateChangeResponseTime":    3,
-               "State_cmd": "node .homebridge/YourScriptHere.js"
+               "stateChangeResponseTime":    3,
+               "state_cmd": "node .homebridge/YourScriptHere.js"
              }
           ]
        }
@@ -138,7 +137,7 @@
 <LI> The first is "category"<BR>
 
 ```json
-   "Category": "TELEVISION"
+   "category": "TELEVISION"
 ```
 
 This is the hint to homekit of which icon to use and for Televisions, a TV icon will not show without it.
@@ -146,7 +145,7 @@ This is the hint to homekit of which icon to use and for Televisions, a TV icon 
 <LI>The second new designation is "publishExternally"<BR>
 
 ```json
-   "PublishExternally": true (Default is false)
+   "publishExternally": true (Default is false)
 ```
 As per the Homebridge API, this allows the Platform Accessory to be published separately from the bridge and is a requirement for multiple TV's.
 </UL>
@@ -167,15 +166,15 @@ See the [Cmd4 Developers Guide](https://github.com/ztalbot2000/homebridge-cmd4/b
     "accessories": [
        {
           "accessory":                "Cmd4",
-          "Type":                     "Switch",
-          "OutputConstants":          false,
-          "DisplayName":              "My_Switch",
-          "Name":                     "My_Switch",
-          "On":                       "FALSE",
-          "Manufacturer":             "Custom Manufacturer",
-          "Model":                    "Custom Model",
-          "StateChangeResponseTime":   3,
-          "State_cmd": "node .homebridge/YourScriptHere.js"
+          "type":                     "Switch",
+          "outputConstants":          false,
+          "displayName":              "My_Switch",
+          "name":                     "My_Switch",
+          "on":                       "FALSE",
+          "manufacturer":             "Custom Manufacturer",
+          "model":                    "Custom Model",
+          "stateChangeResponseTime":   3,
+          "state_cmd": "node .homebridge/YourScriptHere.js"
        }
     ]
 }
@@ -205,65 +204,65 @@ Notice that there is no Platform definition. Otherwise everything is the same. Y
   Priority Queued Polling is only available when a queue is defined. The default "QueueType" being "WoRm". To configure Priority Queued Polling every characteristic to the device must be configured to be in the same queue. as an Example of the default WoRm is:
 
 ```json
-"Interval": 5,
-"Polling": [ { "Characteristic": "CurrentTemperature", "queue": "A" },
-             { "Characteristic": "TargetTemperature", "Queue": "A" }
+"interval": 5,
+"polling": [ { "characteristic": "CurrentTemperature", "queue": "A" },
+             { "characteristic": "TargetTemperature", "queue": "A" }
            ]
 ```
   The interval of the characteristic is defined through the heirarch of the Platform/Accessory and then the Characteristic, as always.<BR>
   A simpler solution would be to re-define the queues and the queue characteristics ahead of time and then just specify which accessory is going to use Priority Queue Polling. Example 2:
 
 ```json
-"QueueTypes: [ { "Queue": "A" : "QueueType": "WoRm"  }
+"queueTypes: [ { "queue": "A" : "queueType": "WoRm"  }
              ],
-"Queue": "A",
-"Interval": 10,
-"Polling": [ { "Characteristic": "CurrentTemperature" },
-             { "Characteristic": "TargetTemperature", "Interval": 15 }
+"queue": "A",
+"interval": 10,
+"polling": [ { "characteristic": "CurrentTemperature" },
+             { "characteristic": "TargetTemperature", "interval": 15 }
            ]
 ```
 Example 3:
 
 ```json
-"QueueTypes: [ { "Queue": "A" : "QueueType": "WoRm"  }
+"queueTypes: [ { "queue": "A" : "queueType": "WoRm"  }
 "platforms":
  [ { "platform": "Cmd4",
      "interval": "10",
-     "QueueTypes: [ { "Queue": "A" : "QueueType": "WoRm" }
-                    { "Queue": "B" : "QueueType": "Sequential" }
-                    { "Queue": "C" } // Defaults to "WoRm"
+     "queueTypes: [ { "queue": "A" : "queueType": "WoRm" }
+                    { "queue": "B" : "queueType": "Sequential" }
+                    { "queue": "C" } // Defaults to "WoRm"
                   ],
 
      "accessories": [
      {
-        "Name": "My_Thermostat",
-        "Type": "Thermostatwitch",
-        "Interval": 15,
-        "Queue": "A",
-        "Polling": [ { "Characteristic": "CurrentTemperature" },
-                     { "Characteristic": "TargetTemperature" },
-                     { "Characteristic": "CurrentHeatingCoolingState", "interval": 25 }
+        "name": "My_Thermostat",
+        "type": "Thermostatwitch",
+        "interval": 15,
+        "queue": "A",
+        "polling": [ { "characteristic": "CurrentTemperature" },
+                     { "characteristic": "TargetTemperature" },
+                     { "characteristic": "CurrentHeatingCoolingState", "interval": 25 }
                    ],
         ...
      },
      {
-        "Name": "My_Switch",
-        "Type": "Switch",
-        "Queue": "B",
-        "Polling": [ { "Characteristic": "On" } ],
+        "name": "My_Switch",
+        "type": "Switch",
+        "queue": "B",
+        "polling": [ { "characteristic": "On" } ],
         ...
      },
      {
-        "Name": "My_Door",
-        "Type": "Door",
-        "Queue": "C",
-        "Polling": true,
+        "name": "My_Door",
+        "type": "Door",
+        "queue": "C",
+        "polling": true,
         ...
      },
      {
-        "Name": "Switch2",
-        "Type": "Switch",
-        "Polling": [ { "Characteristic": "On", "Queue": "D" } ],   // Defaults to "WoRm"
+        "name": "Switch2",
+        "type": "Switch",
+        "polling": [ { "characteristic": "On", "queue": "D" } ],   // Defaults to "WoRm"
         ...
      }
 
@@ -281,7 +280,7 @@ Example 3:
             "outputConstants": false,
             "timeout": 4000,
             "stateChangeResponseTime": 3,
-            "QueueTypes:[ { "Queue": "A", "QueueType": "WoRm" } ],
+            "queueTypes:[ { "queue": "A", "queueType": "WoRm" } ],
             "accessories": [
                 {
                     "type": "TemperatureSensor",
@@ -290,13 +289,13 @@ Example 3:
                     "name": "LRoom",
                     "currentTemperature": 25,
                     "statusFault": "NO_FAULT",
-                    "Manufacturer": "Advantage Air Australia",
-                    "Model": "e-zone",
-                    "SerialNumber": "Fujitsu e-zone2",
+                    "manufacturer": "Advantage Air Australia",
+                    "model": "e-zone",
+                    "serialNumber": "Fujitsu e-zone2",
                     "polling": [
-                        { "characteristic": "currentTemperature", "queue": "A"  }
+                        { "characteristic": "CurrentTemperature", "queue": "A"  }
                     ],
-                    "Props": {
+                    "props": {
                         "CurrentTemperature": {
                             "maxValue": 100,
                             "minValue": -100,
@@ -311,9 +310,9 @@ Example 3:
                     "displayName": "TSwitch",
                     "name": "TSwitch",
                     "on": "FALSE",
-                    "Manufacturer": "Advantage Air Australia",
-                    "Model": "e-zone",
-                    "SerialNumber": "Fujitsu e-zone2",
+                    "manufacturer": "Advantage Air Australia",
+                    "model": "e-zone",
+                    "serialNumber": "Fujitsu e-zone2",
                     "polling": [
                         { "characteristic": "On", "queue": "A" }
                     ],
@@ -325,9 +324,9 @@ Example 3:
                     "on": "FALSE",
                     "displayName": "Fan",
                     "name": "Fan",
-                    "Manufacturer": "Advantage Air Australia",
-                    "Model": "e-zone",
-                    "SerialNumber": "Fujitsu e-zone2",
+                    "manufacturer": "Advantage Air Australia",
+                    "model": "e-zone",
+                    "serialNumber": "Fujitsu e-zone2",
                     "polling": [
                         { "characteristic": "On", "queue": "A" }
                     ],
@@ -343,15 +342,15 @@ Example 3:
                     "currentTemperature": 25,
                     "targetTemperature": 25,
                     "temperatureDisplayUnits": "CELSIUS",
-                    "Manufacturer": "Advantage Air Australia",
-                    "Model": "e-zone",
-                    "SerialNumber": "Fujitsu e-zone2",
+                    "manufacturer": "Advantage Air Australia",
+                    "model": "e-zone",
+                    "serialNumber": "Fujitsu e-zone2",
                     "queue": "A",  // All characteristics would go to queue "A"
                     "polling": [
-                        { "characteristic": "currentHeatingCoolingState" },
-                        { "characteristic": "targetHeatingCoolingState" },
-                        { "characteristic": "currentTemperature" },
-                        { "characteristic": "targetTemperature" }
+                        { "characteristic": "CurrentHeatingCoolingState" },
+                        { "characteristic": "TargetHeatingCoolingState" },
+                        { "characteristic": "CurrentTemperature" },
+                        { "characteristic": "TargetTemperature" }
                     ],
                     "state_cmd": "bash /home/pi/ezone.sh"
                 }
@@ -405,8 +404,8 @@ See [fakegato-history](https://github.com/simont77/fakegato-history)
 
 ```json
 "fakegato":{"eve":"thermo",
-            "currentTemp": "currentTemperature",
-            "setTemp": "targetTemperature",
+            "currentTemp": "CurrentTemperature",
+            "setTemp": "TargetTemperature",
             "valvePosition": "0",
             "storage": "fs",
             "storagePath": ".homebridge/FakegatoStorage",
@@ -426,9 +425,9 @@ The value "0" should be used for any characteristics value which is not possible
 &nbsp;&nbsp;&nbsp; For history to be collected you will have to enable polling and interval for the accessory, and according to the fakegato-history documents it should be less than 10 minutes (600 seconds). The new polling config section allows for each characteristic to be polled at their individual times.
 
 ```json
-"polling": [{"Characteristic": "CurrentHeatingCoolingState",
+"polling": [{"characteristic": "CurrentHeatingCoolingState",
              "interval": 540,  "timeout": 4000},
-            {"Characteristic": "CurrentTemperature",
+            {"characteristic": "CurrentTemperature",
              "interval": 60,   "timeout": 4000}
            ],
 ```

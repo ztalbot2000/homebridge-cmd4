@@ -158,15 +158,15 @@ describe( `Testing index.js plugin Initialized variables.`, ( ) =>
       {
           "platform": "Cmd4",
           "name": "Cmd4",
-          "RestartRecover": true,
-          "Fetch": "Cached",
+          "restartRecover": true,
+          "fetch": "Cached",
           "accessories":
           [
              {
-                "Type": "Switch",
-                "Name": "PS_4",
-                "DisplayName": "PS_4",
-                "On": false,
+                "type": "Switch",
+                "name": "PS_4",
+                "displayName": "PS_4",
+                "on": false,
               }
            ]
        }

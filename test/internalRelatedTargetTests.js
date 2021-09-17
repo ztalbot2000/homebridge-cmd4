@@ -65,13 +65,13 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
       {
          accessories: [
          {
-            StatusMsg:                  true,
-            Type:                      "TemperatureSensor",
-            DisplayName:               "TemperatureSensor",
-            Name:                      "TemperatureSensor",
-            CurrentTemperature:        "22.2",
-            Polling:                   [ { characteristic: "CurrentTemperature" }],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            statusMsg:                  true,
+            type:                      "TemperatureSensor",
+            displayName:               "TemperatureSensor",
+            name:                      "TemperatureSensor",
+            currentTemperature:        "22.2",
+            polling:                   [ { characteristic: "CurrentTemperature" }],
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -112,14 +112,14 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
       {
          accessories: [
          {
-            StatusMsg:                 true,
-            Type:                      "CameraControl",
-            DisplayName:               "CameraControl",
-            Name:                      "CameraControl",
-            On:                        "1",
-            CurrentHorizontalTiltAngle: 12,
-            Polling:                   [ { characteristic: "CurrentHorizontalTiltAngle" } ],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            statusMsg:                 true,
+            type:                      "CameraControl",
+            displayName:               "CameraControl",
+            name:                      "CameraControl",
+            on:                        "1",
+            currentHorizontalTiltAngle: 12,
+            polling:                   [ { characteristic: "CurrentHorizontalTiltAngle" } ],
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -160,15 +160,15 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
       {
          accessories: [
          {
-            StatusMsg:                  true,
-            Type:                      "TemperatureSensor",
-            DisplayName:               "TemperatureSensor",
-            Name:                      "TemperatureSensor",
-            QueueTypes:                [{ queue: "A", queueType: "WoRm" }],
-            Queue:                     "A",
-            CurrentTemperature:        "22.2",
-            Polling:                   [ { characteristic: "CurrentTemperature" } ],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            statusMsg:                  true,
+            type:                      "TemperatureSensor",
+            displayName:               "TemperatureSensor",
+            name:                      "TemperatureSensor",
+            queueTypes:                [{ queue: "A", queueType: "WoRm" }],
+            queue:                     "A",
+            currentTemperature:        "22.2",
+            polling:                   [ { characteristic: "CurrentTemperature" } ],
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -209,16 +209,16 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
       {
          accessories: [
          {
-            StatusMsg:                  true,
-            Type:                      "CameraControl",
-            DisplayName:               "CameraControl",
-            Name:                      "CameraControl",
-            On:                        "1",
-            QueueTypes:                [{ queue: "A", queueType: "WoRm" }],
-            Queue:                     "A",
-            CurrentHorizontalTiltAngle: 12,
-            Polling:                   [ { characteristic: "CurrentHorizontalTiltAngle" } ],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            statusMsg:                  true,
+            type:                      "CameraControl",
+            displayName:               "CameraControl",
+            name:                      "CameraControl",
+            on:                        "1",
+            queueTypes:                [{ queue: "A", queueType: "WoRm" }],
+            queue:                     "A",
+            currentHorizontalTiltAngle: 12,
+            polling:                   [ { characteristic: "CurrentHorizontalTiltAngle" } ],
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -257,17 +257,17 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
       {
          accessories: [
          {
-            Name:                      "Door",
-            DisplayName:               "Door",
-            StatusMsg:                 true,
-            Type:                      "Door",
-            CurrentPosition:            0,
-            TargetPosition:             0,
-            PositionState:              0,
-            polling:                   [ { "characteristic": "CurrentPosition" },
-                                       // { "characteristic": "TargetPosition" },
-                                         { "characteristic": "PositionState" } ],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            name:                      "Door",
+            displayName:               "Door",
+            statusMsg:                 true,
+            type:                      "Door",
+            currentPosition:            0,
+            targetPosition:             0,
+            positionState:              0,
+            Polling:                   [ { characteristic: "CurrentPosition" },
+                                       // { characteristic: "TargetPosition" },
+                                         { characteristic: "PositionState" } ],
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 

@@ -125,14 +125,14 @@ describe('WoRm - Testing Cmd4PriorityPollingQueue polling', ( ) =>
       {
          accessories: [
          {
-            Name:                      "My_Switch",
-            DisplayName:               "My_Switch",
-            StatusMsg:                 true,
-            Type:                      "Switch",
-            On:                        0,
-            QueueTypes:                [ { Queue: "7", QueueType: "WoRm" } ],
+            name:                      "My_Switch",
+            displayName:               "My_Switch",
+            statusMsg:                 true,
+            type:                      "Switch",
+            on:                        0,
+            queueTypes:                [ { queue: "7", queueType: "WoRm" } ],
             queue:                     "7",
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -165,14 +165,14 @@ describe('WoRm - Testing Cmd4PriorityPollingQueue polling', ( ) =>
       {
          accessories: [
          {
-            Name:                      "My_Switch",
-            DisplayName:               "My_Switch",
-            StatusMsg:                  true,
-            Type:                      "Switch",
-            QueueTypes:                [{ Queue: "A", QueueType: "WoRm" }],
-            Queue:                     "A",
-            On:                         0,
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            name:                      "My_Switch",
+            displayName:               "My_Switch",
+            statusMsg:                  true,
+            type:                      "Switch",
+            queueTypes:                [{ queue: "A", queueType: "WoRm" }],
+            queue:                     "A",
+            on:                         0,
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -208,14 +208,14 @@ describe('WoRm - Testing Cmd4PriorityPollingQueue polling', ( ) =>
       {
          accessories: [
          {
-            Name:                      "My_Switch",
-            DisplayName:               "My_Switch",
-            StatusMsg:                  true,
-            Type:                      "Switch",
-            QueueTypes:                [{ Queue: "A", QueueType: "WoRm" }],
-            Queue:                     "A",
-            On:                         0,
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            name:                      "My_Switch",
+            displayName:               "My_Switch",
+            statusMsg:                  true,
+            type:                      "Switch",
+            queueTypes:                [{ queue: "A", queueType: "WoRm" }],
+            queue:                     "A",
+            on:                         0,
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -259,15 +259,15 @@ describe('WoRm - Testing Cmd4PriorityPollingQueue polling', ( ) =>
       {
          accessories: [
          {
-            Name:                      "My_Switch",
-            DisplayName:               "My_Switch",
-            StatusMsg:                  true,
-            Type:                      "Switch",
-            On:                         0,
-            Active:                     0,
-            Polling:                   [{ Characteristic: "On", Queue: "A" },
-                                        { Characteristic: "Active", Queue: "A" }],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            name:                      "My_Switch",
+            displayName:               "My_Switch",
+            statusMsg:                  true,
+            type:                      "Switch",
+            on:                         0,
+            active:                     0,
+            polling:                   [{ characteristic: "On", queue: "A" },
+                                        { characteristic: "Active", queue: "A" }],
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -335,26 +335,26 @@ describe('WoRm - Testing Cmd4PriorityPollingQueue polling', ( ) =>
       {
          accessories: [
          {
-            Name:                      "My_Light",
-            DisplayName:               "My_Light",
-            StatusMsg:                  true,
-            Type:                      "Lightbulb",
-            On:                         0,
-            Brightness:                 100,
-            Polling:                   [ { Characteristic: "On", Interval: 310, Queue: "A" },
-                                       { Characteristic: "Brightness", Queue: "A" } ],
+            name:                      "My_Light",
+            displayName:               "My_Light",
+            statusMsg:                  true,
+            type:                      "Lightbulb",
+            on:                         0,
+            brightness:                 100,
+            polling:                   [ { characteristic: "On", interval: 310, queue: "A" },
+                                       { characteristic: "Brightness", queue: "A" } ],
             State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          },
          {
-            Name:                      "My_Switch",
-            DisplayName:               "My_Switch",
-            StatusMsg:                 true,
-            Type:                      "Switch",
-            On:                         0,
-            Active:                     0,
-            Polling:                    [{ Characteristic: "On", Queue: "A" },
-                                         { Characteristic: "Active", Queue: "A" } ],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            name:                      "My_Switch",
+            displayName:               "My_Switch",
+            statusMsg:                 true,
+            type:                      "Switch",
+            on:                         0,
+            active:                     0,
+            polling:                    [{ characteristic: "On", queue: "A" },
+                                         { characteristic: "Active", queue: "A" } ],
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -421,26 +421,26 @@ describe('WoRm - Testing Cmd4PriorityPollingQueue polling', ( ) =>
       {
          accessories: [
          {
-            Name:                      "My_Light",
-            DisplayName:               "My_Light",
-            StatusMsg:                  true,
-            Type:                      "Lightbulb",
-            On:                         0,
-            Brightness:                 100,
-            Polling:                   [ { Characteristic: "On", Interval: 310, Queue: "A" },
-                                         { Characteristic: "Brightness", Queue: "A" } ],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            name:                      "My_Light",
+            displayName:               "My_Light",
+            statusMsg:                  true,
+            type:                      "Lightbulb",
+            on:                         0,
+            brightness:                 100,
+            polling:                   [ { characteristic: "On", interval: 310, queue: "A" },
+                                         { characteristic: "Brightness", queue: "A" } ],
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          },
          {
-            Name:                      "My_Switch",
-            DisplayName:               "My_Switch",
-            StatusMsg:                  true,
-            Type:                      "Switch",
-            On:                         0,
-            Active:                     0,
-            Polling:                   [{ Characteristic: "On", Queue: "A" },
-                                        { Characteristic: "Active", Queue: "A" } ],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            name:                      "My_Switch",
+            displayName:               "My_Switch",
+            statusMsg:                  true,
+            type:                      "Switch",
+            on:                         0,
+            active:                     0,
+            polling:                   [{ characteristic: "On", queue: "A" },
+                                        { characteristic: "Active", queue: "A" } ],
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -561,12 +561,12 @@ describe('QUEUETYPE: STANDARD (Passthru ) -  Testing Cmd4PriorityPollingQueue po
       {
          accessories: [
          {
-            Name:                      "My_Switch",
-            DisplayName:               "My_Switch",
-            StatusMsg:                 true,
-            Type:                      "Switch",
-            On:                        0,
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            name:                      "My_Switch",
+            displayName:               "My_Switch",
+            statusMsg:                 true,
+            type:                      "Switch",
+            on:                        0,
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -599,12 +599,12 @@ describe('QUEUETYPE: STANDARD (Passthru ) -  Testing Cmd4PriorityPollingQueue po
       {
          accessories: [
          {
-            Name:                      "My_Switch",
-            DisplayName:               "My_Switch",
-            StatusMsg:                  true,
-            Type:                      "Switch",
-            On:                         0,
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            name:                      "My_Switch",
+            displayName:               "My_Switch",
+            statusMsg:                  true,
+            type:                      "Switch",
+            on:                         0,
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -640,12 +640,12 @@ describe('QUEUETYPE: STANDARD (Passthru ) -  Testing Cmd4PriorityPollingQueue po
       {
          accessories: [
          {
-            Name:                      "My_Switch",
-            DisplayName:               "My_Switch",
-            StatusMsg:                  true,
-            Type:                      "Switch",
-            On:                         0,
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            name:                      "My_Switch",
+            displayName:               "My_Switch",
+            statusMsg:                  true,
+            type:                      "Switch",
+            on:                         0,
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -692,15 +692,15 @@ describe('QUEUETYPE: STANDARD (Passthru ) -  Testing Cmd4PriorityPollingQueue po
       {
          accessories: [
          {
-            Name:                      "My_Switch",
-            DisplayName:               "My_Switch",
-            StatusMsg:                  true,
-            Type:                      "Switch",
-            On:                         0,
-            Active:                     0,
-            Polling:                   [{ Characteristic: "On"  },
-                                        { Characteristic: "Active"  }],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            name:                      "My_Switch",
+            displayName:               "My_Switch",
+            statusMsg:                  true,
+            type:                      "Switch",
+            on:                         0,
+            active:                     0,
+            polling:                   [{ characteristic: "On"  },
+                                        { characteristic: "Active"  }],
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -766,26 +766,26 @@ describe('QUEUETYPE: STANDARD (Passthru ) -  Testing Cmd4PriorityPollingQueue po
       {
          accessories: [
          {
-            Name:                      "My_Light",
-            DisplayName:               "My_Light",
-            StatusMsg:                  true,
-            Type:                      "Lightbulb",
-            On:                         0,
-            Brightness:                 100,
-            Polling:                   [ { Characteristic: "On", Interval: 310  },
+            name:                      "My_Light",
+            displayName:               "My_Light",
+            statusMsg:                  true,
+            type:                      "Lightbulb",
+            on:                         0,
+            brightness:                 100,
+            polling:                   [ { Characteristic: "On", Interval: 310  },
                                        { Characteristic: "Brightness" } ],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          },
          {
-            Name:                      "My_Switch",
-            DisplayName:               "My_Switch",
-            StatusMsg:                 true,
-            Type:                      "Switch",
-            On:                         0,
-            Active:                     0,
-            Polling:                    [{ Characteristic: "On" },
-                                         { Characteristic: "Active" } ],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            name:                      "My_Switch",
+            displayName:               "My_Switch",
+            statusMsg:                 true,
+            type:                      "Switch",
+            on:                         0,
+            active:                     0,
+            polling:                    [{ characteristic: "On" },
+                                         { characteristic: "Active" } ],
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -851,26 +851,26 @@ describe('QUEUETYPE: STANDARD (Passthru ) -  Testing Cmd4PriorityPollingQueue po
       {
          accessories: [
          {
-            Name:                      "My_Light",
-            DisplayName:               "My_Light",
-            StatusMsg:                  true,
-            Type:                      "Lightbulb",
-            On:                         0,
-            Brightness:                 100,
-            Polling:                   [ { Characteristic: "On", Interval: 310 },
-                                         { Characteristic: "Brightness" } ],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            name:                      "My_Light",
+            displayName:               "My_Light",
+            statusMsg:                  true,
+            type:                      "Lightbulb",
+            on:                         0,
+            brightness:                 100,
+            polling:                   [ { characteristic: "On", interval: 310 },
+                                         { characteristic: "Brightness" } ],
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          },
          {
-            Name:                      "My_Switch",
-            DisplayName:               "My_Switch",
-            StatusMsg:                  true,
-            Type:                      "Switch",
-            On:                         0,
-            Active:                     0,
-            Polling:                   [{ Characteristic: "On" },
-                                        { Characteristic: "Active" } ],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            name:                      "My_Switch",
+            displayName:               "My_Switch",
+            statusMsg:                  true,
+            type:                      "Switch",
+            on:                         0,
+            active:                     0,
+            polling:                   [{ characteristic: "On" },
+                                        { characteristic: "Active" } ],
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -1012,16 +1012,16 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       {
          accessories: [
          {
-            Name:                      "My_Light",
-            DisplayName:               "My_Light",
-            StatusMsg:                  true,
-            Type:                      "Lightbulb",
-            On:                         0,
-            Brightness:                 100,
-            Polling:                   [ { Characteristic: "On", Interval: 310, Queue: "A" },
-                                         { Characteristic: "Brightness", Queue: "A" }
+            name:                      "My_Light",
+            displayName:               "My_Light",
+            statusMsg:                  true,
+            type:                      "Lightbulb",
+            on:                         0,
+            brightness:                 100,
+            polling:                   [ { characteristic: "On", interval: 310, queue: "A" },
+                                         { characteristic: "Brightness", queue: "A" }
                                        ],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          } ]
       };
 
@@ -1078,15 +1078,15 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       {
          accessories: [
          {
-            Name:                      "My_Light",
-            DisplayName:               "My_Light",
-            StatusMsg:                  true,
-            Type:                      "Lightbulb",
-            On:                         0,
-            Brightness:                 100,
-            Polling:                   [ { Characteristic: "On", Interval: 310, Queue: "A" },
-                                         { Characteristic: "Brightness", Queue: "A" } ],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            name:                      "My_Light",
+            displayName:               "My_Light",
+            statusMsg:                  true,
+            type:                      "Lightbulb",
+            on:                         0,
+            brightness:                 100,
+            polling:                   [ { characteristic: "On", interval: 310, queue: "A" },
+                                         { characteristic: "Brightness", queue: "A" } ],
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          } ]
       };
 
@@ -1148,15 +1148,15 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       {
          accessories: [
          {
-            Name:                      "My_Light",
-            DisplayName:               "My_Light",
-            StatusMsg:                  true,
-            Type:                      "Lightbulb",
-            On:                         0,
-            Brightness:                 100,
-            Polling:                   [ { Characteristic: "On", Interval: 310, Queue: "A" },
-                                         { Characteristic: "Brightness", Queue: "A" } ],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            name:                      "My_Light",
+            displayName:               "My_Light",
+            statusMsg:                  true,
+            type:                      "Lightbulb",
+            on:                         0,
+            brightness:                 100,
+            polling:                   [ { characteristic: "On", interval: 310, queue: "A" },
+                                         { characteristic: "Brightness", queue: "A" } ],
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          } ]
       };
 
@@ -1218,15 +1218,15 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       {
          accessories: [
          {
-            Name:                      "My_Light",
-            DisplayName:               "My_Light",
-            StatusMsg:                 true,
-            Type:                      "Lightbulb",
-            On:                         0,
-            Brightness:                 100,
-            Polling:                   [ { Characteristic: "On", Interval: 310, Queue: "A" },
-                                         { Characteristic: "Brightness", Queue: "A" } ],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            name:                      "My_Light",
+            displayName:               "My_Light",
+            statusMsg:                 true,
+            type:                      "Lightbulb",
+            on:                         0,
+            brightness:                 100,
+            polling:                   [ { characteristic: "On", interval: 310, queue: "A" },
+                                         { characteristic: "Brightness", queue: "A" } ],
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          } ]
       };
 
@@ -1288,15 +1288,15 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       {
          accessories: [
          {
-            Name:                      "My_Light",
-            DisplayName:               "My_Light",
-            StatusMsg:                 true,
-            Type:                      "Lightbulb",
-            On:                         0,
-            Brightness:                 100,
-            Polling:                   [ { Characteristic: "On", Interval: 310, Queue: "A" },
-                                         { Characteristic: "Brightness", Queue: "A" } ],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            name:                      "My_Light",
+            displayName:               "My_Light",
+            statusMsg:                 true,
+            type:                      "Lightbulb",
+            on:                         0,
+            brightness:                 100,
+            polling:                   [ { characteristic: "On", interval: 310, queue: "A" },
+                                         { characteristic: "Brightness", queue: "A" } ],
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          } ]
       };
 
@@ -1372,15 +1372,15 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       {
          accessories: [
          {
-            Name:                      "My_Switch",
-            DisplayName:               "My_Switch",
-            StatusMsg:                  true,
-            Type:                      "Switch",
-            On:                         0,
-            Active:                     0,
-            Polling:              [{ Characteristic: "On", Queue: "A" },
-                                   { Characteristic: "Active", Queue: "A" } ],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            name:                      "My_Switch",
+            displayName:               "My_Switch",
+            statusMsg:                  true,
+            type:                      "Switch",
+            on:                         0,
+            active:                     0,
+            polling:              [{ characteristic: "On", queue: "A" },
+                                   { characteristic: "Active", queue: "A" } ],
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -1445,15 +1445,15 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       {
          accessories: [
          {
-            Name:                      "My_Switch",
-            DisplayName:               "My_Switch",
-            StatusMsg:                  true,
-            Type:                      "Switch",
-            On:                         0,
-            Active:                     0,
-            Polling:              [{ Characteristic: "On", Queue: "A" },
-                                   { Characteristic: "Active", Queue: "A" } ],
-            State_cmd:                 "./test/echoScripts/echo_true_withRcOf1"
+            name:                      "My_Switch",
+            displayName:               "My_Switch",
+            statusMsg:                  true,
+            type:                      "Switch",
+            on:                         0,
+            active:                     0,
+            polling:              [{ characteristic: "On", queue: "A" },
+                                   { characteristic: "Active", queue: "A" } ],
+            state_cmd:                 "./test/echoScripts/echo_true_withRcOf1"
          }]
       };
 
@@ -1541,15 +1541,15 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       {
          accessories: [
          {
-            Name:                      "My_Switch",
-            DisplayName:               "My_Switch",
-            StatusMsg:                  true,
-            Type:                      "Switch",
-            On:                         0,
-            Active:                     0,
-            Polling:                   [{ Characteristic: "On", Queue: "A" },
-                                        { Characteristic: "Active", Queue: "A" } ],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            name:                      "My_Switch",
+            displayName:               "My_Switch",
+            statusMsg:                  true,
+            type:                      "Switch",
+            on:                         0,
+            active:                     0,
+            polling:                   [{ characteristic: "On", queue: "A" },
+                                        { characteristic: "Active", queue: "A" } ],
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -1612,15 +1612,15 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       {
          accessories: [
          {
-            Name:                      "My_Switch",
-            DisplayName:               "My_Switch",
-            StatusMsg:                  true,
-            Type:                      "Switch",
-            On:                         0,
-            Active:                     0,
-            Polling:              [{ Characteristic: "On", Queue: "A" },
-                                   { Characteristic: "Active", Queue: "A" } ],
-            State_cmd:                 "./test/echoScripts/echo_true_withRcOf1"
+            name:                      "My_Switch",
+            displayName:               "My_Switch",
+            statusMsg:                  true,
+            type:                      "Switch",
+            on:                         0,
+            active:                     0,
+            polling:              [{ characteristic: "On", queue: "A" },
+                                   { characteristic: "Active", queue: "A" } ],
+            state_cmd:                 "./test/echoScripts/echo_true_withRcOf1"
          }]
       };
 
@@ -1705,17 +1705,17 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       {
          accessories: [
          {
-            Name:                      "My_Door",
-            DisplayName:               "My_Door",
-            StatusMsg:                 true,
-            Type:                      "Door",
-            CurrentPosition:            0,
-            TargetPosition:             0,
-            PositionState:             "STOPPED",
-            StateChangeResponseTime:    0,
-            Polling:                   [{ Characteristic: "CurrentPosition", Queue: "A" },
-                                        { Characteristic: "TargetPosition", Queue: "A" } ],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            name:                      "My_Door",
+            displayName:               "My_Door",
+            statusMsg:                 true,
+            type:                      "Door",
+            currentPosition:            0,
+            targetPosition:             0,
+            positionState:             "STOPPED",
+            stateChangeResponseTime:    0,
+            polling:                   [{ characteristic: "CurrentPosition", queue: "A" },
+                                        { characteristic: "TargetPosition", queue: "A" } ],
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -1860,15 +1860,15 @@ describe('Standard - Testing Cmd4PriorityPollingQueue recovery correction', ( ) 
       {
          accessories: [
          {
-            Name:                      "My_Switch",
-            DisplayName:               "My_Switch",
-            StatusMsg:                  true,
-            Type:                      "Switch",
-            On:                         0,
-            Active:                     0,
-            Polling:              [{ Characteristic: "On" },
-                                   { Characteristic: "Active" } ],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            name:                      "My_Switch",
+            displayName:               "My_Switch",
+            statusMsg:                  true,
+            type:                      "Switch",
+            on:                         0,
+            active:                     0,
+            polling:              [{ characteristic: "On" },
+                                   { characteristic: "Active" } ],
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -1930,15 +1930,15 @@ describe('Standard - Testing Cmd4PriorityPollingQueue recovery correction', ( ) 
       {
          accessories: [
          {
-            Name:                      "My_Switch",
-            DisplayName:               "My_Switch",
-            StatusMsg:                  true,
-            Type:                      "Switch",
-            On:                         0,
-            Active:                     0,
-            Polling:                   [{ Characteristic: "On" },
-                                        { Characteristic: "Active" } ],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            name:                      "My_Switch",
+            displayName:               "My_Switch",
+            statusMsg:                  true,
+            type:                      "Switch",
+            on:                         0,
+            active:                     0,
+            polling:                   [{ characteristic: "On" },
+                                        { characteristic: "Active" } ],
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
@@ -1997,17 +1997,17 @@ describe('Standard - Testing Cmd4PriorityPollingQueue recovery correction', ( ) 
       {
          accessories: [
          {
-            Name:                      "My_Door",
-            DisplayName:               "My_Door",
-            StatusMsg:                 true,
-            Type:                      "Door",
-            CurrentPosition:            0,
-            TargetPosition:             0,
-            PositionState:             "STOPPED",
-            StateChangeResponseTime:    0,
-            Polling:                   [{ Characteristic: "CurrentPosition", Queue: "A" },
-                                        { Characteristic: "TargetPosition", Queue: "A" } ],
-            State_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            name:                      "My_Door",
+            displayName:               "My_Door",
+            statusMsg:                 true,
+            type:                      "Door",
+            currentPosition:            0,
+            targetPosition:             0,
+            positionState:             "STOPPED",
+            stateChangeResponseTime:    0,
+            polling:                   [{ characteristic: "CurrentPosition", queue: "A" },
+                                        { characteristic: "TargetPosition", queue: "A" } ],
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 

@@ -58,7 +58,7 @@ describe( "Testing Cmd4Accessory", function( )
          [{
             name:                        "My_Television",
             type:                        "Television",
-            Cmd4_Mode:                   "Demo",
+            cmd4_Mode:                   "Demo",
             category:                    "TELEVISION",
             publishExternally:           true,
             active:                      "ACTIVE",
@@ -92,8 +92,6 @@ describe( "Testing Cmd4Accessory", function( )
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
-
-      assert.isFunction( cmd4Accessory.queue.priorityGetValue, "Cmd4Accessory.queue.priorityGetValue is not a function" );
 
    });
 

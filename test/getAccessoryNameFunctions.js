@@ -69,8 +69,8 @@ describe( "Testing getAccessoryName UC", ( ) =>
 {
    it( "getAccessoryName should choose name first UC ", ( ) =>
    {
-      let config = {DisplayName: "Kodi",
-                    Name: "blah"
+      let config = {displayName: "Kodi",
+                    name: "blah"
       };
       let expectedResult = "blah";
       let result = getAccessoryName( config );
@@ -81,7 +81,7 @@ describe( "Testing getAccessoryName UC", ( ) =>
    it( "getAccessoryName should choose displayName second UC ", ( ) =>
    {
       let config = { NoName: "blah",
-                     DisplayName: "Kodi"
+                     displayName: "Kodi"
       };
       let expectedResult = "Kodi";
       let result = getAccessoryName( config );
@@ -100,8 +100,8 @@ describe( "Testing getAccessoryDisplayName.js", ( ) =>
 
    it( "getAccessoryDisplayName should choose displayName first UC ", ( ) =>
    {
-      let config = {DisplayName: "Kodi",
-                    Name: "blah"
+      let config = {displayName: "Kodi",
+                    name: "blah"
       };
       let expectedResult = "Kodi";
       let result = getAccessoryDisplayName( config );
@@ -111,8 +111,8 @@ describe( "Testing getAccessoryDisplayName.js", ( ) =>
 
    it( "getAccessoryDisplayName should choose name second UC ", ( ) =>
    {
-      let config = { Name: "Kodi",
-                     ConfiguredName: "blah"
+      let config = { name: "Kodi",
+                     configuredName: "blah"
       };
       let expectedResult = "Kodi";
       let result = getAccessoryDisplayName( config );
