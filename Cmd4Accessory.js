@@ -1969,7 +1969,7 @@ class Cmd4Accessory
          {
 
             let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ defaultPollingAccTypeEnumIndex ].type;
-            let record = { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: defaultPollingAccTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: accessory.interval, [ constants.TIMEOUT_lv ]: accessory.timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: accessory.stateChangeResponseTime, [ constants.QUEUE_NAME_lv ]: this.queue.queueName };
+            let record = { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: defaultPollingAccTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: interval, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.QUEUE_NAME_lv ]: this.queue.queueName };
 
             // Used to determine missing related characteristics and
             // to determine if the related characteristic is also polled.

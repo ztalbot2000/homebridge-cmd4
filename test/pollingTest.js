@@ -242,6 +242,41 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       done( );
    });
 
+   it('cmd4Accessory default polling recognizes parent interval/timeout.', ( done ) =>
+   {
+      let config =
+      {
+         Name:                         "My_Switch",
+         DisplayName:                  "My_Switch",
+         StatusMsg:                    true,
+         Type:                         "Switch",
+         On:                           0,
+         State_cmd:                    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+      }
+      let hV = new HV();
+      hV.timeout = 88000;
+      hV.interval = 41000;
+      let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1, "hV": hV };
+
+      const log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( );
+
+
+      cmd4Accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
+
+      cmd4Accessory["polling"] = true;
+
+      cmd4Accessory.determineCharacteristicsToPollForAccessory( cmd4Accessory );
+
+
+      assert.include( log.logBuf, `[90mAdding My_Switch On  record.timeout: 88000 record.interval: 41000  to Polled Queue Q:My_Switch\u001b` , `Incorrect stdout: ${ log.logBuf }` );
+      assert.equal( log.errBuf, "" , `Unexpected stderr: ${ log.errBuf }` );
+
+      done( );
+   });
+
    it('cmd4Accessory characteristic polling short timeout generates warning.', ( done ) =>
    {
       let config =
