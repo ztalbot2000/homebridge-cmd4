@@ -1953,7 +1953,8 @@ class Cmd4Accessory
 
 
          });
-      } else
+      } else if ( typeof accessory.polling == "boolean" &&
+                         accessory.polling == true )
       {
          // Even though polling might == undefined, we need to create a list of
          // would be polled characteristics for "Demo" mode
