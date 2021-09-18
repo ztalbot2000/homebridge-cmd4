@@ -925,7 +925,7 @@ var parseAddQueueTypes = function ( log, entrys )
          // warn now
          if ( key.charAt( 0 ) === key.charAt( 0 ).toUpperCase( ) )
          {
-            log.warn( `The config.json queueTypes key: ${ key } is Upper Case.  In the near future this will be an Error so that Cmd4 can use homebridge-ui.\nTo remove this Warning, Please fix your config.json.` );
+            log.warn( `The config.json queueTypes key: ${ key } is Capitalized.  All definitions, except CONSTANTS, in the near future will start with a lower case character for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
          }
 
          let value = entry[ key ];

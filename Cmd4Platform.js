@@ -187,7 +187,7 @@ class Cmd4Platform
          // warn now
          if ( key.charAt( 0 ) === key.charAt( 0 ).toUpperCase( ) )
          {
-            this.log.warn( `The config.json Platform key: ${ key } is Upper Case.  In the near future this will be an Error so that Cmd4 can use homebridge-ui.\nTo remove this Warning, Please fix your config.json.` );
+            this.log.warn( `The config.json Platform key: ${ key } is Capitalized.  All definitions, except CONSTANTS, in the near future will start with a lower case character for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
          }
 
          let value = config[ key ];
