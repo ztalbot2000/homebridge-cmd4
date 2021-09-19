@@ -865,7 +865,6 @@ class Cmd4Accessory
          let firstParm, secondParm, thirdParm;
          let ucFirstParm, ucSecondParm, ucThirdParm;
          let firstParmValue, secondParmValue, thirdParmValue = 0;
-         let firstParmIndex, secondParmIndex, thirdParmIndex;
 
          switch ( this.eve )
          {
@@ -874,10 +873,8 @@ class Cmd4Accessory
                firstParm   = this.fakegatoConfig[ constants.POWER_l ] || "0";
                ucFirstParm = ucFirst( firstParm )                     || "0";
 
-               firstParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucFirstParm );
-
-               firstParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForIndex( firstParmIndex ) == undefined ) ?
-                      firstParmValue : this.storedValuesPerCharacteristic.getStoredValueForIndex( firstParmIndex );
+               firstParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForCharacteristic( ucFirstParm ) == undefined ) ?
+                      firstParmValue : this.storedValuesPerCharacteristic.getStoredValueForCharacteristic( ucFirstParm );
 
                if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.POWER_l }: ${ firstParmValue }` );
                // Eve Energy ( Outlet service )
@@ -896,17 +893,12 @@ class Cmd4Accessory
                ucSecondParm    = ucFirst( secondParm ) || "0";
                ucThirdParm     = ucFirst( thirdParm )  || "0";
 
-               firstParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucFirstParm );
-               secondParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucSecondParm );
-               thirdParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucThirdParm );
-
-
-               firstParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForIndex( firstParmIndex ) == undefined ) ?
-                  firstParmValue : this.storedValuesPerCharacteristic.getStoredValueForIndex( firstParmIndex );
-               secondParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForIndex( secondParmIndex ) == undefined ) ?
-                  secondParmValue : this.storedValuesPerCharacteristic.getStoredValueForIndex( secondParmIndex );
-               thirdParmValue = ( this.testStoredValueForIndex( thirdParmIndex ) == undefined ) ?
-                  thirdParmValue : this.storedValuesPerCharacteristic.getStoredValueForIndex( thirdParmIndex );
+               firstParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForCharacteristic( ucFirstParm ) == undefined ) ?
+                      firstParmValue : this.storedValuesPerCharacteristic.getStoredValueForCharacteristic( ucFirstParm );
+               secondParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForCharacteristic( ucSecondParm ) == undefined ) ?
+                  secondParmValue : this.storedValuesPerCharacteristic.getStoredValueForCharacteristic( ucSecondParm );
+               thirdParmValue = ( this.storedValuesForCharacteristic.testStoredValueForCharacteristic( ucThirdParm ) == undefined ) ?
+                  thirdParmValue : this.storedValuesPerCharacteristic.getStoredValueForCharacteristic( ucThirdParm );
 
 
                if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.TEMP_l }:${ firstParmValue } ${constants.HUMIDITY_l }:${ secondParmValue } ${ constants.PPM_l }:${ thirdParmValue }` );
@@ -928,16 +920,12 @@ class Cmd4Accessory
                ucSecondParm    = ucFirst( secondParm ) || "0";
                ucThirdParm     = ucFirst( thirdParm )  || "0";
 
-               firstParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucFirstParm );
-               secondParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucSecondParm );
-               thirdParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucThirdParm );
-
-               firstParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForIndex( firstParmIndex ) == undefined ) ?
-                  firstParmValue : this.storedValuesPerCharacteristic.getStoredValueForIndex( firstParmIndex );
-               secondParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForIndex( secondParmIndex ) == undefined ) ?
-                  secondParmValue : this.storedValuesPerCharacteristic.getStoredValueForIndex( secondParmIndex );
-               thirdParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForIndex( thirdParmIndex ) == undefined ) ?
-                  thirdParmValue : this.storedValuesPerCharacteristic.getStoredValueForIndex( thirdParmIndex );
+               firstParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForCharacteristic( ucFirstParm ) == undefined ) ?
+                      firstParmValue : this.storedValuesPerCharacteristic.getStoredValueForCharacteristic( ucFirstParm );
+               secondParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForCharacteristic( ucSecondParm ) == undefined ) ?
+                  secondParmValue : this.storedValuesPerCharacteristic.getStoredValueForCharacteristic( ucSecondParm );
+               thirdParmValue = ( this.storedValuesForCharacteristic.testStoredValueForCharacteristic( ucThirdParm ) == undefined ) ?
+                  thirdParmValue : this.storedValuesPerCharacteristic.getStoredValueForCharacteristic( ucThirdParm );
 
                if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.TEMP_l }: ${ firstParmValue } ${ constants.PRESSURE_l }: ${ secondParmValue } ${ constants.HUMIDITY_l }: ${ thirdParmValue }` );
 
@@ -955,10 +943,8 @@ class Cmd4Accessory
                firstParm   = this.fakegatoConfig[ constants.STATUS_l ] || "0";
                ucFirstParm = ucFirst( firstParm )                      || "0";
 
-               firstParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucFirstParm );
-
-               firstParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForIndex( firstParmIndex ) == undefined ) ?
-                      firstParmValue : this.storedValuesPerCharacteristic.getStoredValueForIndex( firstParmIndex );
+               firstParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForCharacteristic( ucFirstParm ) == undefined ) ?
+                      firstParmValue : this.storedValuesPerCharacteristic.getStoredValueForCharacteristic( ucFirstParm );
 
                if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.STATUS_l } status: ${ firstParmValue }` );
 
@@ -972,12 +958,9 @@ class Cmd4Accessory
             {
                firstParm   = this.fakegatoConfig[ constants.STATUS_l ] || "0";
                ucFirstParm = ucFirst( firstParm )                      || "0";
-               firstParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucFirstParm );
 
-               firstParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucFirstParm );
-
-               firstParmValue = ( this.getStoredValueForIndex.testStoredValueForIndex( firstParmIndex ) == undefined ) ?
-                      firstParmValue : this.storedValuesPerCharacteristic.getStoredValueForIndex( firstParmIndex );
+               firstParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForCharacteristic( ucFirstParm ) == undefined ) ?
+                      firstParmValue : this.storedValuesPerCharacteristic.getStoredValueForCharacteristic( ucFirstParm );
 
                if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.STATUS_l }: ${ firstParmValue }` );
 
@@ -996,16 +979,12 @@ class Cmd4Accessory
                ucSecondParm    = ucFirst( secondParm ) || "0";
                ucThirdParm     = ucFirst( thirdParm )  || "0";
 
-               firstParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucFirstParm );
-               secondParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucSecondParm );
-               thirdParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucThirdParm );
-
-               firstParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForIndex( firstParmIndex ) == undefined ) ?
-                  firstParmValue : this.storedValuesPerCharacteristic.getStoredValueForIndex( firstParmIndex );
-               secondParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForIndex( secondParmIndex ) == undefined ) ?
-                  secondParmValue : this.storedValuesPerCharacteristic.getStoredValueForIndex( secondParmIndex );
-               thirdParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForIndex( thirdParmIndex ) == undefined ) ?
-                  thirdParmValue : this.storedValuesPerCharacteristic.getStoredValueForIndex( thirdParmIndex );
+               firstParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForCharacteristic( ucFirstParm ) == undefined ) ?
+                      firstParmValue : this.storedValuesPerCharacteristic.getStoredValueForCharacteristic( ucFirstParm );
+               secondParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForCharacteristic( ucSecondParm ) == undefined ) ?
+                  secondParmValue : this.storedValuesPerCharacteristic.getStoredValueForCharacteristic( ucSecondParm );
+               thirdParmValue = ( this.storedValuesForCharacteristic.testStoredValueForCharacteristic( ucThirdParm ) == undefined ) ?
+                  thirdParmValue : this.storedValuesPerCharacteristic.getStoredValueForCharacteristic( ucThirdParm );
 
                if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.CURRENTTEMP_l }: ${ firstParmValue } ${ constants.SETTEMP_l }:${ secondParmValue } ${constants.VALVEPOSITION_l }:${ thirdParmValue } ` );
 
@@ -1025,13 +1004,10 @@ class Cmd4Accessory
                ucFirstParm     = ucFirst( firstParm )  || "0";
                ucSecondParm    = ucFirst( secondParm ) || "0";
 
-               firstParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucFirstParm );
-               secondParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucSecondParm );
-
-               firstParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForIndex( firstParmIndex ) == undefined ) ?
-                  firstParmValue : this.storedValuesPerCharacteristic.getStoredValueForIndex( firstParmIndex );
-               secondParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForIndex( secondParmIndex ) == undefined ) ?
-                  secondParmValue : this.storedValuesPerCharacteristic.getStoredValueForIndex( secondParmIndex );
+               firstParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForCharacteristic( ucFirstParm ) == undefined ) ?
+                  firstParmValue : this.storedValuesPerCharacteristic.getStoredValueForCharacteristic( ucFirstParm );
+               secondParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForCharacteristic( ucSecondParm ) == undefined ) ?
+                  secondParmValue : this.storedValuesPerCharacteristic.getStoredValueForCharacteristic( ucSecondParm );
 
                if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.STATUS_l }: ${ firstParmValue } ${ constants.WATERAMOUNT_l }: ${ secondParmValue }` );
 
