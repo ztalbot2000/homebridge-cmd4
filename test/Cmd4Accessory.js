@@ -255,7 +255,6 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       let accIndex = CMD4_ACC_TYPE_ENUM.On;
 
       config.On = true;
-      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM.On ].type;
       accessory.storedValuesPerCharacteristic.setStoredValueForIndex( CMD4_ACC_TYPE_ENUM.On, config.On );
       for ( let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++)
       {

@@ -108,8 +108,6 @@ describe(`Init with Class data Tests`, ( ) =>
       let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM.On ].type;
       testData.setStoredValueForCharacteristic( characteristicString, 1 );
 
-      let cmd4Storage = new Cmd4Storage( testData );
-
       expect ( ( ) => new Cmd4Storage( 155 ) ).to.throw(/Do not know how to handle Cmd4_Storage parm: 155/);
 
       done( );
