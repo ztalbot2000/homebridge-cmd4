@@ -90,7 +90,7 @@ describe( "Testing cmd4Constants", function( )
        assert.equal( constants.URL, "Url", `Incorrect global value` );
        assert.equal( constants.ALLOWTLV8, "AllowTLV8", `Incorrect global value` );
 
-       assert.equal( constants.STORED_VALUES_PER_CHARACTERISTIC_lv, "storedValuesPerCharacteristic", `Incorrect global value` );
+       assert.equal( constants.CMD4_STORAGE_lv, "cmd4Storage", `Incorrect global value` );
 
        done( );
    });

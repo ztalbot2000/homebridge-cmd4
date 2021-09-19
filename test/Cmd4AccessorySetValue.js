@@ -425,7 +425,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout( ( ) =>
       {
-         let result = cmd4Accessory.storedValuesPerCharacteristic.getStoredValueForIndex( acc );
+         let result = cmd4Accessory.cmd4Storage.getStoredValueForIndex( acc );
 
          assert.include( log.logBuf, `Setting (Cached) Thermostat TargetTemperature\u001b[39m 12.3`, ` setCachedValue incorrect stdout: ${ log.logBuf }` );
          assert.include( log.logBuf, `Also Setting (Cached) Thermostat CurrentTemperature\u001b[39m 12.3`, ` setCachedValue incorrect stdout: ${ log.logBuf }` );
@@ -437,7 +437,7 @@ describe( "Testing Cmd4Accessory", function( )
 
          let relatedCurrentAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ acc ].relatedCurrentAccTypeEnumIndex;
 
-         result = cmd4Accessory.storedValuesPerCharacteristic.getStoredValueForIndex( relatedCurrentAccTypeEnumIndex );
+         result = cmd4Accessory.cmd4Storage.getStoredValueForIndex( relatedCurrentAccTypeEnumIndex );
          assert.equal(result, value, " setValue relatedCurrentAccTypeEnumIndex incorrect stored value " );
 
          done( );
@@ -486,7 +486,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout( ( ) =>
       {
-         let result = cmd4Accessory.storedValuesPerCharacteristic.getStoredValueForIndex( acc );
+         let result = cmd4Accessory.cmd4Storage.getStoredValueForIndex( acc );
 
          assert.include( log.logBuf, `Setting (Cached) Thermostat TargetTemperature\u001b[39m 12.3`, ` setCachedValue incorrect stdout: ${ log.logBuf }` );
          assert.include( log.logBuf, `Also Setting (Cached) Thermostat CurrentTemperature\u001b[39m 12.3`, ` setCachedValue incorrect stdout: ${ log.logBuf }` );
@@ -498,7 +498,7 @@ describe( "Testing Cmd4Accessory", function( )
 
          let relatedCurrentAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ acc ].relatedCurrentAccTypeEnumIndex;
 
-         result = cmd4Accessory.storedValuesPerCharacteristic.getStoredValueForIndex( relatedCurrentAccTypeEnumIndex );
+         result = cmd4Accessory.cmd4Storage.getStoredValueForIndex( relatedCurrentAccTypeEnumIndex );
          assert.equal(result, value, " setValue relatedCurrentAccTypeEnum incorrect value" );
 
          done( );
@@ -548,7 +548,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout( ( ) =>
       {
-         let result = cmd4Accessory.storedValuesPerCharacteristic.getStoredValueForIndex( acc );
+         let result = cmd4Accessory.cmd4Storage.getStoredValueForIndex( acc );
 
          assert.include( log.logBuf, `Setting Thermostat TargetTemperature\u001b[39m 12.3`, ` setCachedValue incorrect stdout: ${ log.logBuf }` );
          assert.include( log.logBuf, `[90mgetValue: CurrentTemperature function for: Thermostat returned: 12.3`, ` setValue incorrect stdout: ${ log.logBuf }` );
@@ -560,7 +560,7 @@ describe( "Testing Cmd4Accessory", function( )
 
          let relatedCurrentAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ acc ].relatedCurrentAccTypeEnumIndex;
 
-         result = cmd4Accessory.storedValuesPerCharacteristic.getStoredValueForIndex( relatedCurrentAccTypeEnumIndex );
+         result = cmd4Accessory.cmd4Storage.getStoredValueForIndex( relatedCurrentAccTypeEnumIndex );
          assert.equal(result, value, " setValue relatedCurrentAccTypeEnum incorrect value" );
 
          done( );
@@ -605,7 +605,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       let defaultValue = CMD4_DEVICE_TYPE_ENUM.properties[ cmd4Accessory.typeIndex ].requiredCharacteristics.find( key => key.type ===  acc ).defaultValue;
 
-      let result = cmd4Accessory.storedValuesPerCharacteristic.getStoredValueForIndex( acc );
+      let result = cmd4Accessory.cmd4Storage.getStoredValueForIndex( acc );
       assert.equal(result, defaultValue, ` setValue incorrect stored value` );
 
       done( );
@@ -720,7 +720,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout( ( ) =>
       {
-         let result = cmd4Accessory.storedValuesPerCharacteristic.getStoredValueForIndex( acc );
+         let result = cmd4Accessory.cmd4Storage.getStoredValueForIndex( acc );
 
 
          // You cannot set a read only value for a Sensor
@@ -734,7 +734,7 @@ describe( "Testing Cmd4Accessory", function( )
 
          let relatedTargetAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ acc ].relatedTargetAccTypeEnumIndex;
 
-         result = cmd4Accessory.storedValuesPerCharacteristic.getStoredValueForIndex( relatedTargetAccTypeEnumIndex );
+         result = cmd4Accessory.cmd4Storage.getStoredValueForIndex( relatedTargetAccTypeEnumIndex );
          assert.isNull(result, ` getValue TargetAccTypeEnumIndex expected null to be stored.` );
 
          done( );
@@ -776,7 +776,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout( ( ) =>
       {
-         let result = cmd4Accessory.storedValuesPerCharacteristic.getStoredValueForIndex( acc );
+         let result = cmd4Accessory.cmd4Storage.getStoredValueForIndex( acc );
 
 
          // You cannot set a read only value for a Sensor
@@ -790,7 +790,7 @@ describe( "Testing Cmd4Accessory", function( )
 
          let relatedTargetAccTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties[ acc ].relatedTargetAccTypeEnumIndex;
 
-         result = cmd4Accessory.storedValuesPerCharacteristic.getStoredValueForIndex( relatedTargetAccTypeEnumIndex );
+         result = cmd4Accessory.cmd4Storage.getStoredValueForIndex( relatedTargetAccTypeEnumIndex );
          assert.isNull(result, ` getValue TargetAccTypeEnumIndex expected null to be stored.` );
 
          done( );

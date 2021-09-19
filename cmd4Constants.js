@@ -134,7 +134,7 @@ exports.QUEUE_GET_IS_UPDATE_lv         = "queueGetIsUpdate";
 exports.STATE_CHANGE_RESPONSE_TIME_lv  = "stateChangeResponseTime";
 exports.TIMEOUT_lv                     = "timeout";
 exports.VALUE_lv                       = "value";
-exports.STORED_VALUES_PER_CHARACTERISTIC_lv = "storedValuesPerCharacteristic";
+exports.CMD4_STORAGE_lv                = "cmd4Storage";
 
 exports.ERROR_TIMER_EXPIRED           = -151;
 //Exports.ERROR_CMD_FAILED_REPLY        = -152;

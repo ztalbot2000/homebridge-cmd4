@@ -190,7 +190,7 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
 
    });
 
-   it( "Check that Array STORED_DATA_ARRAY.storedValuesPerCharacteristic is created", ( ) =>
+   it( "Check that Array STORED_DATA_ARRAY.cmd4Storage is created", ( ) =>
    {
       let log = new Logger( );
       log.setOutputEnabled( false );
@@ -200,11 +200,12 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       let STORED_DATA_ARRAY = [ ];
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
-      assert.instanceOf( accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic, Cmd4Storage, "Expected accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic to be an instance of Cmd4Storage. Found %s" , typeof accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic );
+      console.log("Accessory.STORED_DATA_ARRAY[0] is %s", accessory.STORED_DATA_ARRAY[0]);
+      assert.instanceOf( accessory.STORED_DATA_ARRAY[0].cmd4Storage, Cmd4Storage, "Expected accessory.STORED_DATA_ARRAY[0].cmd4Storage to be an instance of Cmd4Storage. Found %s" , typeof accessory.STORED_DATA_ARRAY[0].cmd4Storage );
 
    });
 
-   it( "Check that storedValuesPerCharacteristic Array size is:  " + ACC_EOL, ( ) =>
+   it( "Check that cmd4Storage Array size is:  " + ACC_EOL, ( ) =>
    {
       let log = new Logger( );
       log.setOutputEnabled( false );
@@ -214,10 +215,11 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       let STORED_DATA_ARRAY = [ ];
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
-      assert.equal( Object.keys(accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic.DATA).length, ACC_EOL, "Expected storedValuesPerCharacteristic to size: %s. Found %s" , ACC_EOL, Object.keys(accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic).length );
+      assert.equal( Object.keys(accessory.STORED_DATA_ARRAY[0].cmd4Storage.DATA).length, ACC_EOL, "Expected cmd4Storage to size: %s. Found %s" , ACC_EOL, Object.keys(accessory.STORED_DATA_ARRAY[0].cmd4Storage.DATA).length );
 
    });
-   it( "Check that storedValuesPerCharacteristic is set correctly for a switch", ( ) =>
+
+   it( "Check that cmd4Storage is set correctly for a switch", ( ) =>
    {
       let log = new Logger( );
       log.setOutputEnabled( false );
@@ -233,11 +235,11 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       {
          let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ index ].type;
 
-         let value = STORED_DATA_ARRAY[0].storedValuesPerCharacteristic.DATA[ characteristicString ];
+         let value = STORED_DATA_ARRAY[0].cmd4Storage.DATA[ characteristicString ];
          if ( index == accIndex )
-            assert.isFalse( value, "Expected accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic[%s] is: %s. Found %s" , index, config.On, value );
+            assert.isFalse( value, "Expected accessory.STORED_DATA_ARRAY[0].cmd4Storage[%s] is: %s. Found %s" , index, config.On, value );
          else
-            assert.isNull( value, "Expected accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic[%s] is: Null. Found %s" , index, value );
+            assert.isNull( value, "Expected accessory.STORED_DATA_ARRAY[0].cmd4Storage[%s] is: Null. Found %s" , index, value );
       }
 
    });
@@ -255,15 +257,15 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       let accIndex = CMD4_ACC_TYPE_ENUM.On;
 
       config.On = true;
-      accessory.storedValuesPerCharacteristic.setStoredValueForIndex( CMD4_ACC_TYPE_ENUM.On, config.On );
+      accessory.cmd4Storage.setStoredValueForIndex( CMD4_ACC_TYPE_ENUM.On, config.On );
       for ( let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++)
       {
          let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ index ].type;
-         let value = STORED_DATA_ARRAY[0].storedValuesPerCharacteristic.DATA[ characteristicString ];
+         let value = STORED_DATA_ARRAY[0].cmd4Storage.DATA[ characteristicString ];
          if ( index == accIndex )
-            assert.isFalse( value, "Expected accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic[%s] is: %s. Found %s" , index, config.On, value );
+            assert.isFalse( value, "Expected accessory.STORED_DATA_ARRAY[0].cmd4Storage[%s] is: %s. Found %s" , index, config.On, value );
          else
-            assert.isNull( value, "Expected accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic[%s] is: Null. Found %s" , index, value );
+            assert.isNull( value, "Expected accessory.STORED_DATA_ARRAY[0].cmd4Storage[%s] is: Null. Found %s" , index, value );
       }
 
    });
@@ -277,7 +279,7 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       let STORED_DATA_ARRAY = [ ];
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
-      expect ( ( ) => accessory.storedValuesPerCharacteristic.setStoredValueForIndex( -1, 0 ) ).to.throw(/setStoredValue - Characteristic index: -1 not between 0 and 223\nCheck your config.json file for unknown characteristic./);
+      expect ( ( ) => accessory.cmd4Storage.setStoredValueForIndex( -1, 0 ) ).to.throw(/setStoredValue - Characteristic index: -1 not between 0 and 223\nCheck your config.json file for unknown characteristic./);
 
    });
 
@@ -290,7 +292,7 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       let STORED_DATA_ARRAY = [ ];
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
-      expect ( ( ) => accessory.storedValuesPerCharacteristic.setStoredValueForIndex( CMD4_ACC_TYPE_ENUM.EOL, 0 ) ).to.throw(/setStoredValue - Characteristic index: 223 not between 0 and 223\nCheck your config.json file for unknown characteristic./);
+      expect ( ( ) => accessory.cmd4Storage.setStoredValueForIndex( CMD4_ACC_TYPE_ENUM.EOL, 0 ) ).to.throw(/setStoredValue - Characteristic index: 223 not between 0 and 223\nCheck your config.json file for unknown characteristic./);
 
    });
 
@@ -307,17 +309,17 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       let accIndex = CMD4_ACC_TYPE_ENUM.On;
 
       config.On = true;
-      accessory.storedValuesPerCharacteristic.setStoredValueForIndex( CMD4_ACC_TYPE_ENUM.On, config.On );
+      accessory.cmd4Storage.setStoredValueForIndex( CMD4_ACC_TYPE_ENUM.On, config.On );
       for ( let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++)
       {
          let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ index ].type;
-         let value = STORED_DATA_ARRAY[0].storedValuesPerCharacteristic.DATA[ characteristicString ];
+         let value = STORED_DATA_ARRAY[0].cmd4Storage.DATA[ characteristicString ];
          if ( index == accIndex )
-            assert.isFalse( value, "Expected accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic[%s] is: %s. Found %s" , index, config.On, value );
+            assert.isFalse( value, "Expected accessory.STORED_DATA_ARRAY[0].cmd4Storage[%s] is: %s. Found %s" , index, config.On, value );
          else
-            assert.isNull( value, "Expected accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic[%s] is: Null. Found %s" , index, value );
+            assert.isNull( value, "Expected accessory.STORED_DATA_ARRAY[0].cmd4Storage[%s] is: Null. Found %s" , index, value );
       }
-      let result = accessory.storedValuesPerCharacteristic.getStoredValueForIndex( CMD4_ACC_TYPE_ENUM.On );
+      let result = accessory.cmd4Storage.getStoredValueForIndex( CMD4_ACC_TYPE_ENUM.On );
       assert.equal( result, config.On, "Expected getStoredValueForIndex to return: %s. Found %s" , config.On, result );
 
    });
@@ -331,7 +333,7 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       let STORED_DATA_ARRAY = [ ];
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
-      expect ( ( ) => accessory.storedValuesPerCharacteristic.getStoredValueForIndex( -1 ) ).to.throw(/getStoredValue - Characteristic index: -1 not between 0 and 223\nCheck your config.json file for unknown characteristic./);
+      expect ( ( ) => accessory.cmd4Storage.getStoredValueForIndex( -1 ) ).to.throw(/getStoredValue - Characteristic index: -1 not between 0 and 223\nCheck your config.json file for unknown characteristic./);
 
    });
 
@@ -344,7 +346,7 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       let STORED_DATA_ARRAY = [ ];
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
-      expect ( ( ) => accessory.storedValuesPerCharacteristic.getStoredValueForIndex( CMD4_ACC_TYPE_ENUM.EOL ) ).to.throw(/getStoredValue - Characteristic index: 223 not between 0 and 223\nCheck your config.json file for unknown characteristic./);
+      expect ( ( ) => accessory.cmd4Storage.getStoredValueForIndex( CMD4_ACC_TYPE_ENUM.EOL ) ).to.throw(/getStoredValue - Characteristic index: 223 not between 0 and 223\nCheck your config.json file for unknown characteristic./);
 
    });
 
@@ -361,14 +363,14 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       let accIndex = CMD4_ACC_TYPE_ENUM.On;
 
       config.On = true;
-      accessory.storedValuesPerCharacteristic.setStoredValueForIndex( CMD4_ACC_TYPE_ENUM.On, config.On );
+      accessory.cmd4Storage.setStoredValueForIndex( CMD4_ACC_TYPE_ENUM.On, config.On );
       for ( let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++)
       {
-         let value = accessory.storedValuesPerCharacteristic.testStoredValueForIndex( index );
+         let value = accessory.cmd4Storage.testStoredValueForIndex( index );
          if ( index == accIndex )
             assert.equal( value, config.On, "Expected accessory.testStoredValueForIndex[%s] is: %s. Found %s" , index, config.On, value );
          else
-            assert.isNull( value, "Expected accessory.storedValuesPerCharacteristic.testStoredValueForIndex[%s] is: Null. Found %s" , index, value );
+            assert.isNull( value, "Expected accessory.cmd4Storage.testStoredValueForIndex[%s] is: Null. Found %s" , index, value );
       }
 
    });
@@ -385,16 +387,16 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
 
       let index = -1;
 
-      let value = accessory.storedValuesPerCharacteristic.testStoredValueForIndex( index );
+      let value = accessory.cmd4Storage.testStoredValueForIndex( index );
       assert.isUndefined( value, "Expected accessory.testStoredValueForIndex[%s] is: Null. Found %s" , index, value );
 
       index = ACC_EOL + 1;
-      value = accessory.storedValuesPerCharacteristic.testStoredValueForIndex( index );
+      value = accessory.cmd4Storage.testStoredValueForIndex( index );
       assert.isUndefined( value, "Expected accessory.testStoredValueForIndex[%s] is: Null. Found %s" , index, value );
 
    });
 
-   it( "Check that Array STORED_DATA_ARRAY.storedValuesPerCharacteristic is created", ( ) =>
+   it( "Check that Array STORED_DATA_ARRAY.cmd4Storage is created", ( ) =>
    {
       let log = new Logger( );
       log.setOutputEnabled( false );
@@ -404,7 +406,7 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
       let STORED_DATA_ARRAY = [ ];
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
-      assert.instanceOf( accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic, Cmd4Storage, "Expected accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic to be an instance of Cmd4Storage. Found %s" , typeof accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic );
+      assert.instanceOf( accessory.STORED_DATA_ARRAY[0].cmd4Storage, Cmd4Storage, "Expected accessory.STORED_DATA_ARRAY[0].cmd4Storage to be an instance of Cmd4Storage. Found %s" , typeof accessory.STORED_DATA_ARRAY[0].cmd4Storage );
 
    });
 
@@ -961,7 +963,7 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
       settings.listOfCreatedPriorityQueues = { };
    });
 
-   it( "Check that storedValuesPerCharacteristic gets created", function( done )
+   it( "Check that cmd4Storage gets created", function( done )
    {
       let config =
       {
@@ -984,7 +986,7 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
       let STORED_DATA_ARRAY = [ ];
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
-      assert.instanceOf( accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic, Cmd4Storage, "Expected accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic to be an instance of Cmd4Storage. Found %s" , typeof accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic );
+      assert.instanceOf( accessory.STORED_DATA_ARRAY[0].cmd4Storage, Cmd4Storage, "Expected accessory.STORED_DATA_ARRAY[0].cmd4Storage to be an instance of Cmd4Storage. Found %s" , typeof accessory.STORED_DATA_ARRAY[0].cmd4Storage );
 
       done( );
    });
@@ -1012,7 +1014,7 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
       let STORED_DATA_ARRAY = [ ];
       let accessory = new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY );
 
-      assert.equal( Object.keys(accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic.DATA).length, ACC_EOL, "Expected accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic to size: %s. Found %s" , ACC_EOL, Object.keys(accessory.STORED_DATA_ARRAY[0].storedValuesPerCharacteristic.DATA).length );
+      assert.equal( Object.keys(accessory.STORED_DATA_ARRAY[0].cmd4Storage.DATA).length, ACC_EOL, "Expected accessory.STORED_DATA_ARRAY[0].cmd4Storage to size: %s. Found %s" , ACC_EOL, Object.keys(accessory.STORED_DATA_ARRAY[0].cmd4Storage.DATA).length );
 
    });
 
@@ -1388,7 +1390,6 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
       assert.equal( log.errBuf, "", ` Cmd4Accessory Unexpected stderr: ${ log.errBuf }` );
 
    });
-
 });
 
 

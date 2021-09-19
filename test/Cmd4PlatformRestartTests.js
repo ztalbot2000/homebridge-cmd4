@@ -313,7 +313,7 @@ describe( "Testing Cmd4Platform", function( )
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[4];
 
       let acc = CMD4_ACC_TYPE_ENUM.ConfiguredName;
-      let foundConfiguredName = cmd4Accessory.storedValuesPerCharacteristic.getStoredValueForIndex( acc );
+      let foundConfiguredName = cmd4Accessory.cmd4Storage.getStoredValueForIndex( acc );
       assert.equal( foundConfiguredName, TVConfig.accessories[0].configuredName, `Incorrect configuredName: ${ foundConfiguredName }` );
 
       let newValue = "NEW_TV";
@@ -326,7 +326,7 @@ describe( "Testing Cmd4Platform", function( )
 
          assert.include( log.logBuf, `[34mSetting (Cached) Example TV ConfiguredName\u001b[39m NEW_TV`, `setCachedValue Incorrect stdout: ${ log.logBuf }` );
 
-         let result = cmd4Accessory.storedValuesPerCharacteristic.getStoredValueForIndex( acc );
+         let result = cmd4Accessory.cmd4Storage.getStoredValueForIndex( acc );
          assert.equal( result, newValue, " setCachedValue Incorrect result" );
 
          // Clear the log buffer for next time.
@@ -351,7 +351,7 @@ describe( "Testing Cmd4Platform", function( )
          cmd4Platform2.discoverDevices( );
 
          cmd4Accessory = cmd4Platform2.createdCmd4Accessories[4];
-         let newFoundConfiguredName = cmd4Accessory.storedValuesPerCharacteristic.getStoredValueForIndex( acc );
+         let newFoundConfiguredName = cmd4Accessory.cmd4Storage.getStoredValueForIndex( acc );
          assert.equal( newFoundConfiguredName, newValue, `Incorrect configuredName: ${  newFoundConfiguredName }` );
 
       });

@@ -455,8 +455,13 @@ class Cmd4Platform
             platform.Service = this.Service;
 
             // This is how we keep the device status information over restart.
+            // Version 0
             // Within STORED_DATA_ARRAY is a list of UUID identified objects
             // of storedValuesPerCharacteristic. 
+            // Version 1
+            // Within STORED_DATA_ARRAY is a list of UUID identified objects
+            // of Cmd4Storage.
+
             // If the accessory has linked accessories or standalone accessories,
             // there infomation gets put in this as well.  I'm pretty sure
             // that previosly these states were lost.
@@ -471,12 +476,6 @@ class Cmd4Platform
                if ( cmd4Dbg ) this.log.debug(`Cmd4Platform: Using context.STORED_DATA_ARRAY` );
                STORED_DATA_ARRAY = existingAccessory.context.STORED_DATA_ARRAY;
 
-               STORED_DATA_ARRAY.storedValuesPerCharacteristic =
-                  new Cmd4Storage( existingAccessory.context.STORED_DATA_ARRAY.storedValuesPerCharacteristc );
-            } else {
-               // A new Cmd4Storage
-               STORED_DATA_ARRAY = [ {[ constants.UUID ]: existingAccessory.UUID,
-                                      [ constants.STORED_VALUES_PER_CHARACTERISTIC_lv ]: new Cmd4Storage( ) } ];
             }
 
             let that = this;
