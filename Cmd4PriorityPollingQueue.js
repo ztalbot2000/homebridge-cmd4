@@ -76,7 +76,7 @@ class Cmd4PriorityPollingQueue
       let self = this;
 
       // Save the value to cache. The set will come later
-      self.setStoredValueForIndex( accTypeEnumIndex, value );
+      self.storedValuesPerCharacteristic.setStoredValueForCharacteristic( characteristicString, value );
       callback( 0 );
 
       let newEntry = { [ constants.IS_SET_lv ]: true, [ constants.ACCESSORY_lv ]: self, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.CALLBACK_lv ]: callback, [ constants.VALUE_lv ]: value };
@@ -121,7 +121,7 @@ class Cmd4PriorityPollingQueue
       let self = this;
 
       // return the cached value
-      let storedValue = self.getStoredValueForIndex( accTypeEnumIndex );
+      let storedValue = self.storedValuesPerCharacteristic.getStoredValueForCharacteristic( characteristicString );
       callback( 0, storedValue );
 
       // When the value is returned, it will update homebridge

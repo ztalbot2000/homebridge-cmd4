@@ -34,6 +34,8 @@ let CMD4_PERMS_TYPE_ENUM = CMD4_CHAR_TYPE_ENUMS.CMD4_PERMS_TYPE_ENUM;
 // The Cmd4 Classes
 const Cmd4Accessory = require( "./Cmd4Accessory" ).Cmd4Accessory;
 
+const Cmd4Storage = require( "./utils/Cmd4Storage" );
+
 // Settings, Globals and Constants
 let settings = require( "./cmd4Settings" );
 const constants = require( "./cmd4Constants" );
@@ -468,16 +470,13 @@ class Cmd4Platform
             {
                if ( cmd4Dbg ) this.log.debug(`Cmd4Platform: Using context.STORED_DATA_ARRAY` );
                STORED_DATA_ARRAY = existingAccessory.context.STORED_DATA_ARRAY;
-            } else if ( existingAccessory.context.device.storedValuesPerCharacteristic )
-            {
-               // If we have an old version of the stored status, convert it to our new format.
-               if ( cmd4Dbg ) this.log.debug(`Cmd4Platform: Creating STORED_DATA_ARRAY with existing storedValuesPerCharacteristic UUID:${ existingAccessory.UUID }` );
+
+               STORED_DATA_ARRAY.storedValuesPerCharacteristic =
+                  new Cmd4Storage( existingAccessory.context.STORED_DATA_ARRAY.storedValuesPerCharacteristc );
+            } else {
+               // A new Cmd4Storage
                STORED_DATA_ARRAY = [ {[ constants.UUID ]: existingAccessory.UUID,
-                                      [ constants.STORED_VALUES_PER_CHARACTERISTIC_lv ]: existingAccessory.context.device.storedValuesPerCharacteristic }
-                      ];
-               // Get rid of old persistance data
-               existingAccessory.context.device = undefined;
-               delete( existingAccessory.context.device );
+                                      [ constants.STORED_VALUES_PER_CHARACTERISTIC_lv ]: new Cmd4Storage( ) } ];
             }
 
             let that = this;

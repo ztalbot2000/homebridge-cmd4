@@ -44,6 +44,8 @@ var chalk = require( "chalk" );
 let CMD4_ACC_TYPE_ENUM = require( "./lib/CMD4_ACC_TYPE_ENUM" ).CMD4_ACC_TYPE_ENUM;
 let CMD4_DEVICE_TYPE_ENUM = require( "./lib/CMD4_DEVICE_TYPE_ENUM" ).CMD4_DEVICE_TYPE_ENUM;
 
+const Cmd4Storage = require( "./utils/Cmd4Storage" );
+
 let FakeGatoHistoryService = null;
 
 // Only one TV is allowed per bridge. Circumvented by
@@ -173,7 +175,7 @@ class Cmd4Accessory
          // hold values for  all characteristics based on the size of all possible
          // characteristics.  Placing them in .config will make them be cached over
          // restarts.
-         this.storedValuesPerCharacteristic = new Array( CMD4_ACC_TYPE_ENUM.EOL ).fill( null );
+         this.storedValuesPerCharacteristic = new Cmd4Storage( );
 
          this.STORED_DATA_ARRAY.push( { [ constants.UUID ]: UUID,
                                         [ constants.STORED_VALUES_PER_CHARACTERISTIC_lv ]: this.storedValuesPerCharacteristic
@@ -304,34 +306,6 @@ class Cmd4Accessory
       return this.services;
    }
 
-   setStoredValueForIndex( accTypeEnumIndex, value )
-   {
-      if ( accTypeEnumIndex < 0 || accTypeEnumIndex >= CMD4_ACC_TYPE_ENUM.EOL )
-         throw new Error( `setStoredValue - Characteristic index: ${ accTypeEnumIndex } not between 0 and ${ CMD4_ACC_TYPE_ENUM.EOL } for "${ this.displayName }"\nCheck your config.json file for unknown characteristic.` );
-
-
-      this.storedValuesPerCharacteristic[ accTypeEnumIndex ] = value;
-   }
-
-   getStoredValueForIndex( accTypeEnumIndex )
-   {
-      if ( accTypeEnumIndex < 0 || accTypeEnumIndex >= CMD4_ACC_TYPE_ENUM.EOL )
-         throw new Error( `getStoredValue - Characteristic index: ${ accTypeEnumIndex } not between 0 and ${ CMD4_ACC_TYPE_ENUM.EOL } for "${ this.displayName }"\nCheck your config.json file for unknown characteristic.` );
-
-      return this.storedValuesPerCharacteristic[ accTypeEnumIndex ];
-   }
-
-   // Unlike get/set, testStoredValueForIndex does not call process.exit,
-   // but undefined for an illegal range, in the case that rogue runtime data
-   // dies not take down CMD4.
-   testStoredValueForIndex( accTypeEnumIndex )
-   {
-      if ( accTypeEnumIndex < 0 || accTypeEnumIndex > CMD4_ACC_TYPE_ENUM.EOL )
-         return undefined;
-
-      return this.storedValuesPerCharacteristic[ accTypeEnumIndex ];
-   }
-
    // Any required characteristic of an accessory that is not in the accessories
    // config will be added later by the existance of its stored value, so
    // find the missing characteristics and add their value s here.
@@ -354,9 +328,9 @@ class Cmd4Accessory
          // No matter what, remove it
          if ( format == this.api.hap.Characteristic.Formats.TLV8 && this.hV.allowTLV8 == false )
          {
-            if ( this.getStoredValueForIndex( accTypeEnumIndex ) != null )
+            if ( this.storedValuesPerCharacteristic.getStoredValueForIndex( accTypeEnumIndex ) != null )
             {
-               this.setStoredValueForIndex( accTypeEnumIndex, null );
+               this.storedValuesPerCharacteristic.setStoredValueForIndex( accTypeEnumIndex, null );
 
                this.log.warn( `****** Removing TLV8 required characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
             }
@@ -364,7 +338,7 @@ class Cmd4Accessory
          }
 
          // if it is required and not stored, add it
-         if ( requiredIndex != -1 && this.getStoredValueForIndex( accTypeEnumIndex ) == null )
+         if ( requiredIndex != -1 && this.storedValuesPerCharacteristic.getStoredValueForIndex( accTypeEnumIndex ) == null )
          {
             this.log.warn( `**** Adding required characteristic ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } for ${ this.displayName }` );
             this.log.warn( `Not defining a required characteristic can be problematic` );
@@ -378,7 +352,7 @@ class Cmd4Accessory
 
             if ( cmd4Dbg ) this.log.debug( `*****Adding default value ${ defaultValue } for: ${ this.displayName }` );
 
-            this.setStoredValueForIndex( accTypeEnumIndex, defaultValue );
+            this.storedValuesPerCharacteristic.setStoredValueForIndex( accTypeEnumIndex, defaultValue );
          }
       }
    }
@@ -440,7 +414,7 @@ class Cmd4Accessory
                      throw new Error( `No such polling characteristic: "${ value }" for: "${ this.displayName }".` );
 
                   // We can do this as this is a new way to do things.
-                  let storedValue = this.getStoredValueForIndex( accTypeEnumIndex );
+                  let storedValue = this.storedValuesPerCharacteristic.getStoredValueForIndex( accTypeEnumIndex );
                   if ( storedValue == undefined )
                      throw new Error( `Polling for: "${ value }" requested, but characteristic is not in your config.json file for: "${ this.displayName }".` );
 
@@ -464,14 +438,14 @@ class Cmd4Accessory
          if ( accTypeEnumIndex == -1 )
             throw new Error( `No characteristic found while parsing for characteristic polling of: "${ this.displayName }". There something wrong with your config.json file?` );
 
-         if ( this.getStoredValueForIndex( accTypeEnumIndex ) == undefined )
+         if ( this.storedValuesPerCharacteristic.getStoredValueForIndex( accTypeEnumIndex ) == undefined )
          {
             this.log.warn( `Polling for: "${ key }" requested, but characteristic` );
             this.log.warn( `is not in your config.json file for: ${ this.displayName }` );
             this.log.warn( `This will be an error in the future.` );
          }
 
-         this.setStoredValueForIndex( accTypeEnumIndex, valueToStore );
+         this.storedValuesPerCharacteristic.setStoredValueForIndex( accTypeEnumIndex, valueToStore );
       });
    }
 
@@ -567,7 +541,7 @@ class Cmd4Accessory
 
       // Save the cached value.
       // Fakegato does not need to be updated as that is done on a "Get".
-      self.setStoredValueForIndex( accTypeEnumIndex, value );
+      self.storedValuesPerCharacteristic.setStoredValueForCharacteristic( characteristicString, value );
 
       let relatedCurrentAccTypeEnumIndex = this.getDevicesRelatedCurrentAccTypeEnumIndex( accTypeEnumIndex );
 
@@ -584,7 +558,7 @@ class Cmd4Accessory
          {
             let relatedCharacteristicString = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].type;
             self.log.info( chalk.blue( `Also Setting (Cached) ${ self.displayName } ${ relatedCharacteristicString }` ) + ` ${ value }` );
-            self.setStoredValueForIndex( relatedCurrentAccTypeEnumIndex, value );
+            self.storedValuesPerCharacteristic.setStoredValueForCharacteristic( relatedCharacteristicString, value );
          }
       }
 
@@ -602,7 +576,7 @@ class Cmd4Accessory
    {
       let self = this;
 
-      let storedValue = self.getStoredValueForIndex( accTypeEnumIndex );
+      let storedValue = self.storedValuesPerCharacteristic.getStoredValueForCharacteristic( characteristicString );
       if ( storedValue == null || storedValue == undefined )
       {
          self.log.warn( `getCachedValue ${ characteristicString } for: ${ self.displayName } has no cached value` );
@@ -714,20 +688,22 @@ class Cmd4Accessory
        if ( cmd4Dbg ) accessory.log.debug( `Adding All Service Characteristics for: ${ accessory.displayName }` );
 
        let perms = "";
-       let len = this.storedValuesPerCharacteristic.length;
 
        // Check every possible characteristic
-       for ( let accTypeEnumIndex = 0; accTypeEnumIndex < len; accTypeEnumIndex++ )
+       for ( let accTypeEnumIndex = 0; accTypeEnumIndex < CMD4_ACC_TYPE_ENUM.EOL; accTypeEnumIndex++ )
        {
           let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
 
           // If there is a stored value for this characteristic ( defined by the config file )
           // Then we need to add the characteristic too
-          if ( accessory.storedValuesPerCharacteristic[ accTypeEnumIndex ] != undefined )
+          let storedValue = accessory.storedValuesPerCharacteristic.getStoredValueForCharacteristic( characteristicString );
+
+          if ( storedValue != undefined )
           {
              if ( cmd4Dbg ) accessory.log.debug( "Found characteristic:%s value:%s for:%s",
                   CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type,
-                  this.getStoredValueForIndex( accTypeEnumIndex ),
+                  //this.getStoredValueForIndex( accTypeEnumIndex ),
+                  storedValue,
                   this.displayName );
 
              // Find out if the characteristic is not part of the service
@@ -735,7 +711,8 @@ class Cmd4Accessory
              if ( ! accessory.service.testCharacteristic(
                   CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic ) )
              {
-                if ( cmd4Dbg ) accessory.log.debug( "Adding optional characteristic:%s for: %s", CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, this.displayName );
+                //if ( cmd4Dbg ) accessory.log.debug( "Adding optional characteristic:%s for: %s", CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, this.displayName );
+                if ( cmd4Dbg ) accessory.log.debug( "Adding optional characteristic:%s for: %s", characteristicString, this.displayName );
 
                 accessory.service.addCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic );
              }
@@ -746,7 +723,8 @@ class Cmd4Accessory
              let props = accessory.configHasCharacteristicProps( accTypeEnumIndex );
              if ( props )
              {
-                if ( cmd4Dbg ) accessory.log.debug( "Overriding characteristic %s props for: %s ", CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, this.displayName );
+                //if ( cmd4Dbg ) accessory.log.debug( "Overriding characteristic %s props for: %s ", CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, this.displayName );
+                if ( cmd4Dbg ) accessory.log.debug( "Overriding characteristic %s props for: %s ", characteristicString, this.displayName );
                   accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].
                          characteristic )
                   .setProps(
@@ -788,7 +766,7 @@ class Cmd4Accessory
              {
              accessory.service.setCharacteristic(
                 CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic,
-                      this.getStoredValueForIndex( accTypeEnumIndex ) );
+                      this.storedValuesPerCharacteristic.getStoredValueForCharacteristic( characteristicString ) );
              }
 
 
@@ -806,7 +784,7 @@ class Cmd4Accessory
                           accessory.listOfPollingCharacteristics[ accTypeEnumIndex ] == undefined
                       )
                    {
-                      if ( cmd4Dbg ) this.log.debug( chalk.yellow( `Adding getCachedValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ` ) );
+                      if ( cmd4Dbg ) this.log.debug( chalk.yellow( `Adding getCachedValue for ${ accessory.displayName } characteristic: ${ characteristicString } ` ) );
                       //Get cachedValue
                       accessory.service.getCharacteristic(
                          CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
@@ -814,7 +792,7 @@ class Cmd4Accessory
                             .on( "get", accessory.getCachedValue.bind( accessory, accTypeEnumIndex, characteristicString ) );
                   } else
                   {
-                      if ( cmd4Dbg ) this.log.debug( chalk.yellow( `Adding priorityGetValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` ) );
+                      if ( cmd4Dbg ) this.log.debug( chalk.yellow( `Adding priorityGetValue for ${ accessory.displayName } characteristic: ${ characteristicString }` ) );
 
                       let details = accessory.lookupAccessoryHVForPollingCharacteristic( accessory, accTypeEnumIndex );
 
@@ -853,7 +831,7 @@ class Cmd4Accessory
                       });
 
                    } else {
-                      if ( cmd4Dbg ) this.log.debug( chalk.yellow( `Adding prioritySetValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ` ) );
+                      if ( cmd4Dbg ) this.log.debug( chalk.yellow( `Adding prioritySetValue for ${ accessory.displayName } characteristic: ${ characteristicString } ` ) );
 
                       let details = accessory.lookupAccessoryHVForPollingCharacteristic( accessory, accTypeEnumIndex );
 
@@ -880,7 +858,7 @@ class Cmd4Accessory
          return;
       }
 
-      this.setStoredValueForIndex( accTypeEnumIndex, value );
+      this.storedValuesPerCharacteristic.setStoredValueForIndex( accTypeEnumIndex, value );
 
       if ( this.loggingService )
       {
@@ -898,8 +876,8 @@ class Cmd4Accessory
 
                firstParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucFirstParm );
 
-               firstParmValue = ( this.testStoredValueForIndex( firstParmIndex ) == undefined ) ?
-                      firstParmValue : this.getStoredValueForIndex( firstParmIndex );
+               firstParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForIndex( firstParmIndex ) == undefined ) ?
+                      firstParmValue : this.storedValuesPerCharacteristic.getStoredValueForIndex( firstParmIndex );
 
                if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.POWER_l }: ${ firstParmValue }` );
                // Eve Energy ( Outlet service )
@@ -923,12 +901,12 @@ class Cmd4Accessory
                thirdParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucThirdParm );
 
 
-               firstParmValue = ( this.testStoredValueForIndex( firstParmIndex ) == undefined ) ?
-                  firstParmValue : this.getStoredValueForIndex( firstParmIndex );
-               secondParmValue = ( this.testStoredValueForIndex( secondParmIndex ) == undefined ) ?
-                  secondParmValue : this.getStoredValueForIndex( secondParmIndex );
+               firstParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForIndex( firstParmIndex ) == undefined ) ?
+                  firstParmValue : this.storedValuesPerCharacteristic.getStoredValueForIndex( firstParmIndex );
+               secondParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForIndex( secondParmIndex ) == undefined ) ?
+                  secondParmValue : this.storedValuesPerCharacteristic.getStoredValueForIndex( secondParmIndex );
                thirdParmValue = ( this.testStoredValueForIndex( thirdParmIndex ) == undefined ) ?
-                  thirdParmValue : this.getStoredValueForIndex( thirdParmIndex );
+                  thirdParmValue : this.storedValuesPerCharacteristic.getStoredValueForIndex( thirdParmIndex );
 
 
                if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.TEMP_l }:${ firstParmValue } ${constants.HUMIDITY_l }:${ secondParmValue } ${ constants.PPM_l }:${ thirdParmValue }` );
@@ -954,12 +932,12 @@ class Cmd4Accessory
                secondParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucSecondParm );
                thirdParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucThirdParm );
 
-               firstParmValue = ( this.testStoredValueForIndex( firstParmIndex ) == undefined ) ?
-                  firstParmValue : this.getStoredValueForIndex( firstParmIndex );
-               secondParmValue = ( this.testStoredValueForIndex( secondParmIndex ) == undefined ) ?
-                  secondParmValue : this.getStoredValueForIndex( secondParmIndex );
-               thirdParmValue = ( this.testStoredValueForIndex( thirdParmIndex ) == undefined ) ?
-                  thirdParmValue : this.getStoredValueForIndex( thirdParmIndex );
+               firstParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForIndex( firstParmIndex ) == undefined ) ?
+                  firstParmValue : this.storedValuesPerCharacteristic.getStoredValueForIndex( firstParmIndex );
+               secondParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForIndex( secondParmIndex ) == undefined ) ?
+                  secondParmValue : this.storedValuesPerCharacteristic.getStoredValueForIndex( secondParmIndex );
+               thirdParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForIndex( thirdParmIndex ) == undefined ) ?
+                  thirdParmValue : this.storedValuesPerCharacteristic.getStoredValueForIndex( thirdParmIndex );
 
                if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.TEMP_l }: ${ firstParmValue } ${ constants.PRESSURE_l }: ${ secondParmValue } ${ constants.HUMIDITY_l }: ${ thirdParmValue }` );
 
@@ -979,8 +957,8 @@ class Cmd4Accessory
 
                firstParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucFirstParm );
 
-               firstParmValue = ( this.testStoredValueForIndex( firstParmIndex ) == undefined ) ?
-                      firstParmValue : this.getStoredValueForIndex( firstParmIndex );
+               firstParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForIndex( firstParmIndex ) == undefined ) ?
+                      firstParmValue : this.storedValuesPerCharacteristic.getStoredValueForIndex( firstParmIndex );
 
                if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.STATUS_l } status: ${ firstParmValue }` );
 
@@ -998,8 +976,8 @@ class Cmd4Accessory
 
                firstParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucFirstParm );
 
-               firstParmValue = ( this.testStoredValueForIndex( firstParmIndex ) == undefined ) ?
-                      firstParmValue : this.getStoredValueForIndex( firstParmIndex );
+               firstParmValue = ( this.getStoredValueForIndex.testStoredValueForIndex( firstParmIndex ) == undefined ) ?
+                      firstParmValue : this.storedValuesPerCharacteristic.getStoredValueForIndex( firstParmIndex );
 
                if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.STATUS_l }: ${ firstParmValue }` );
 
@@ -1022,12 +1000,12 @@ class Cmd4Accessory
                secondParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucSecondParm );
                thirdParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucThirdParm );
 
-               firstParmValue = ( this.testStoredValueForIndex( firstParmIndex ) == undefined ) ?
-                  firstParmValue : this.getStoredValueForIndex( firstParmIndex );
-               secondParmValue = ( this.testStoredValueForIndex( secondParmIndex ) == undefined ) ?
-                  secondParmValue : this.getStoredValueForIndex( secondParmIndex );
-               thirdParmValue = ( this.testStoredValueForIndex( thirdParmIndex ) == undefined ) ?
-                  thirdParmValue : this.getStoredValueForIndex( thirdParmIndex );
+               firstParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForIndex( firstParmIndex ) == undefined ) ?
+                  firstParmValue : this.storedValuesPerCharacteristic.getStoredValueForIndex( firstParmIndex );
+               secondParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForIndex( secondParmIndex ) == undefined ) ?
+                  secondParmValue : this.storedValuesPerCharacteristic.getStoredValueForIndex( secondParmIndex );
+               thirdParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForIndex( thirdParmIndex ) == undefined ) ?
+                  thirdParmValue : this.storedValuesPerCharacteristic.getStoredValueForIndex( thirdParmIndex );
 
                if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.CURRENTTEMP_l }: ${ firstParmValue } ${ constants.SETTEMP_l }:${ secondParmValue } ${constants.VALVEPOSITION_l }:${ thirdParmValue } ` );
 
@@ -1050,10 +1028,10 @@ class Cmd4Accessory
                firstParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucFirstParm );
                secondParmIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucSecondParm );
 
-               firstParmValue = ( this.testStoredValueForIndex( firstParmIndex ) == undefined ) ?
-                  firstParmValue : this.getStoredValueForIndex( firstParmIndex );
-               secondParmValue = ( this.testStoredValueForIndex( secondParmIndex ) == undefined ) ?
-                  secondParmValue : this.getStoredValueForIndex( secondParmIndex );
+               firstParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForIndex( firstParmIndex ) == undefined ) ?
+                  firstParmValue : this.storedValuesPerCharacteristic.getStoredValueForIndex( firstParmIndex );
+               secondParmValue = ( this.storedValuesPerCharacteristic.testStoredValueForIndex( secondParmIndex ) == undefined ) ?
+                  secondParmValue : this.storedValuesPerCharacteristic.getStoredValueForIndex( secondParmIndex );
 
                if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.STATUS_l }: ${ firstParmValue } ${ constants.WATERAMOUNT_l }: ${ secondParmValue }` );
 
@@ -1269,10 +1247,12 @@ class Cmd4Accessory
       if ( accTypeEnumIndex < 0 )
          throw new Error( `OOPS: "${ key }" not found for parsing characteristics in: "${ this.displayName }".` );
 
+      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
 
       // Do not update the stored values as it is being restored from cache
       if ( parseConfigShouldUseCharacteristicValues == false )
          return;
+
 
       if ( Object.keys( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].validValues ).length > 0 )
       {
@@ -1280,11 +1260,11 @@ class Cmd4Accessory
          value = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, value ) ;
       }
 
+
       // Return the appropriate type, by seeing what it is defined as in Homebridge,
       let properValue = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].stringConversionFunction( value );
       if ( properValue == undefined )
       {
-         let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
          // If the value is not convertable, just return it.
          this.log.warn( `parseKeyForCharacterisitcs: ${ this.displayName } ` + chalk.red( `Cannot convert value: ${ value } to ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format } for ${ characteristicString }`  ) );
 
@@ -1292,7 +1272,7 @@ class Cmd4Accessory
       }
 
 
-      this.setStoredValueForIndex( accTypeEnumIndex, properValue );
+      this.storedValuesPerCharacteristic.setStoredValueForCharacteristic( characteristicString, properValue );
    }
 
    processRequires( requires )
@@ -1772,15 +1752,14 @@ class Cmd4Accessory
       }
 
       // We need to check for removed characteristics in the config
-      let len = this.storedValuesPerCharacteristic.length;
-      for ( let accTypeEnumIndex = 0; accTypeEnumIndex < len; accTypeEnumIndex ++ )
+      for ( let accTypeEnumIndex = 0; accTypeEnumIndex < CMD4_ACC_TYPE_ENUM.EOL; accTypeEnumIndex ++ )
       {
+         // concert the accTypeEnumIndex to its characteristic string
+         let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
          // There was a previously stored characteristic, if it was not initialized
-         if ( this.storedValuesPerCharacteristic[ accTypeEnumIndex ] != null )
+         let storedValue = this.storedValuesPerCharacteristic.getStoredValueForCharacteristic( characteristicString );
+         if ( storedValue != null )
          {
-            // concert the accTypeEnumIndex to its characteristic string
-            let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
-            // This will not be a case warning
             let ucCharacteristicString = ucFirst( characteristicString );
             let lcCharacteristicString = lcFirst( characteristicString );
             if ( config[ characteristicString ] != undefined ||
@@ -1790,7 +1769,7 @@ class Cmd4Accessory
                continue;
             } else {
                 this.log.warn( `Removing previously configured characteristic: ${ characteristicString }` );
-                this.storedValuesPerCharacteristic[ accTypeEnumIndex ] = null;
+                this.storedValuesPerCharacteristic.setStoredValueForCharacteristic( characteristicString, null );
             }
          }
       }
@@ -1944,7 +1923,7 @@ class Cmd4Accessory
 
                      characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
                      // We can do this as this is a new way to do things.
-                     if ( this.getStoredValueForIndex( accTypeEnumIndex ) == undefined )
+                     if ( this.storedValuesPerCharacteristic.getStoredValueForCharacteristic( characteristicString ) == undefined )
                         throw new Error( `Polling for: "${ value }" requested, but characteristic is not in your config.json file for: "${ this.displayName }".` );
 
                      break;
