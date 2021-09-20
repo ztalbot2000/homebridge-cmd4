@@ -24,7 +24,6 @@ test/loadPluginTest.js
 test/Cmd4Accessory.js
 test/internalRelatedTargetTests.js
 test/Cmd4Platform.js
-test/Cmd4PlatformRestartTests.js
 test/Cmd4AccessoryGetValue.js
 test/Cmd4AccessorySetValue.js
 test/Cmd4Mode.js
@@ -32,3 +31,4 @@ test/Cmd4PriorityPollingQueue.js
 test/initPluginTest.js
 test/fakeGato.js
 test/pollingTest.js
+test/Cmd4PlatformRestartTests.js
