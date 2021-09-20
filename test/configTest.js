@@ -9,6 +9,7 @@ Object.defineProperty(exports, "indexOfEnum", { enumerable: true, get: function 
 const cmd4Config = require( "../Extras/config.json" );
 const isJSON = require( "../utils/isJSON" );
 const ucFirst = require( "../utils/ucFirst" );
+const lcFirst = require( "../utils/lcFirst" );
 
 // Constants
 const constants = require( "../cmd4Constants" );
@@ -54,9 +55,10 @@ function testAccessoryConfig ( accessoryConfig )
       {
          let value = accessoryConfig[key];
 
-         let ucKey = ucFirst( key );
+         //let ucKey = ucFirst( key );
+         let lcKey = lcFirst( key );
 
-         switch ( ucKey )
+         switch ( lcKey )
          {
             case constants.TYPE:
                testType ( value );
@@ -155,7 +157,7 @@ function testAccessoryConfig ( accessoryConfig )
            default:
            {
               //console.log("1 %s Testing %s", accessoryConfig.displayName, value);
-              testCharacteristic( ucKey, value );
+              testCharacteristic( key, value );
            }
         }
       }

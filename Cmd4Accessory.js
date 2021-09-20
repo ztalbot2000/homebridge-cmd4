@@ -415,16 +415,17 @@ class Cmd4Accessory
 
          for ( key in jsonPollingConfig )
          {
-            // warn now
             if ( key.charAt( 0 ) === key.charAt( 0 ).toUpperCase( ) )
             {
                this.log.warn( `The config.json polling key: ${ key } is Capitalized.  All definitions, except CONSTANTS, in the near future will start with a lower case character for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
             }
 
-            let ucKey = ucFirst( key );
+            let lcKey = lcFirst( key );
+
+            // warn now
             value = jsonPollingConfig[ key ];
 
-            switch ( ucKey )
+            switch ( lcKey )
             {
                case constants.TIMEOUT:
                case constants.INTERVAL:
@@ -467,7 +468,7 @@ class Cmd4Accessory
                default:
                {
                   // Is this still useful?
-                  accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucKey );
+                  accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === key );
 
                   if ( accTypeEnumIndex < 0  )
                      throw new Error( `OOPS: "${ key }" not found while parsing for characteristic polling. There something wrong with your config.json file?` );
@@ -1449,15 +1450,20 @@ class Cmd4Accessory
       {
          let value = config[ key ];
 
-         // warn now
-         if ( key.charAt( 0 ) === key.charAt( 0 ).toUpperCase() )
+         let lcKey = lcFirst( key );
+         if ( key == "UUID" )
          {
-            this.log.warn( `The config.json key: ${ key } is Capitalized.  All definitions, except CONSTANTS, in the near future will start with a lower case character for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
+            lcKey = key;
+         } else {
+
+            // warn now
+            if ( key.charAt( 0 ) === key.charAt( 0 ).toUpperCase() )
+            {
+               this.log.warn( `The config.json key: ${ key } is Capitalized.  All definitions, except CONSTANTS, in the near future will start with a lower case character for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
+            }
          }
 
-         let ucKey = ucFirst( key );
-
-         switch ( ucKey )
+         switch ( lcKey )
          {
             case constants.TYPE:
                this.type = value;
@@ -1542,12 +1548,6 @@ class Cmd4Accessory
 
                break;
             case "QueueStatMsgInterval":
-
-               // Never put into production
-               this.log.warn( `Warning: ${ key } has been deprecated. It was never even used.` );
-               this.log.warn( `To remove this message, just remove ${ key } from your config.json` );
-
-               break;
             case "QueueMsg":
 
                // Never put into production
@@ -1686,7 +1686,7 @@ class Cmd4Accessory
       // warn now
       if ( this.type.charAt( 0 ) === this.type.charAt( 0 ).toLowerCase( ) )
       {
-         this.log.warn( `The config.json value: ${ this.type } is Lower Case.  In the near future this will be an Error so that Cmd4 can use homebridge-ui.\nTo remove this Warning, Please fix your config.json.` );
+         this.log.warn( `The config.json value: ${ this.type } is NOT Captalized.  In the near future this will be an Error so that Cmd4 can use homebridge-ui.\nTo remove this Warning, Please fix your config.json.` );
       }
 
       this.ucType = ucFirst( this.type );
@@ -1895,10 +1895,10 @@ class Cmd4Accessory
                   this.log.warn( `The config.json polling key: ${ key } is Capitalized.  All definitions, except CONSTANTS, in the near future will start with a lower case character for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
                }
 
-               let ucKey = ucFirst( key );
+               let lcKey = lcFirst( key );
                value = jsonPollingConfig[ key ];
 
-               switch ( ucKey )
+               switch ( lcKey )
                {
                   case constants.TIMEOUT:
                         // Timers are in milliseconds. A low value can result in failure to get/set values
@@ -1958,9 +1958,9 @@ class Cmd4Accessory
                      // The key must be a characteristic property
                      // but first check if one has already been defined as we can only handle one at a time.
                      if ( accTypeEnumIndex != -1 )
-                        throw new Error( `For charateristic polling, you can only define one characteristic per array item.\nCannot add "${ ucKey }" as "${ characteristicString }" is already defined for: ${ accessory.displayName }` );
+                        throw new Error( `For charateristic polling, you can only define one characteristic per array item.\nCannot add "${ key }" as "${ characteristicString }" is already defined for: ${ accessory.displayName }` );
 
-                     accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucKey );
+                     accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === key );
                      if ( accTypeEnumIndex < 0 )
                         throw new Error( `No such polling characteristic: "${ key }" for: "${ accessory.displayName }".` );
 

@@ -10,7 +10,7 @@ const { parseAddQueueTypes } = require( "./Cmd4PriorityPollingQueue" );
 
 let Logger = require( "./utils/Logger" );
 let getAccessoryUUID = require( "./utils/getAccessoryUUID" );
-let ucFirst = require( "./utils/ucFirst" );
+let lcFirst = require( "./utils/lcFirst" );
 let isNumeric = require( "./utils/isNumeric" );
 let trueTypeOf = require( "./utils/trueTypeOf" );
 
@@ -184,20 +184,22 @@ class Cmd4Platform
    {
       for ( let key in config )
       {
-         // warn now
-         if ( key.charAt( 0 ) === key.charAt( 0 ).toUpperCase( ) )
+         let lcKey = lcFirst( key );
+         if ( key == "UUID" )
          {
-            this.log.warn( `The config.json Platform key: ${ key } is Capitalized.  All definitions, except CONSTANTS, in the near future will start with a lower case character for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
+            lcKey = "UUID";
+         } else
+         {
+            // warn now
+            if ( key.charAt( 0 ) === key.charAt( 0 ).toUpperCase( ) )
+            {
+               this.log.warn( `The config.json Platform key: ${ key } is Capitalized.  All definitions, except CONSTANTS, in the near future will start with a lower case character for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
+            }
          }
 
          let value = config[ key ];
 
-         // I made the stupid mistake of not having all characteristics in
-         // the config.json file not upper case to match that in State.js.
-         // So instead of having everyone fix their scripts, fix it here.
-         let ucKey = ucFirst( key );
-
-         switch ( ucKey )
+         switch ( lcKey )
          {
             case constants.TIMEOUT:
                // Timers are in milliseconds. A low value can result in
@@ -247,12 +249,6 @@ class Cmd4Platform
 
                break;
             case "QueueStatMsgInterval":
-
-               // Never put into production
-               this.log.warn( `Warning: ${ key } has been deprecated. It was never even used.` );
-               this.log.warn( `To remove this message, just remove ${ key } from your config.json` );
-
-               break;
             case "QueueMsg":
 
                // Never put into production
@@ -265,6 +261,7 @@ class Cmd4Platform
 
                break;
             case "Cmd4_Mode":
+            case "cmd4_Mode":
                this.log.warn( `Warning: ${ key } has been deprecated.` );
                if ( value == "Demo" )
                {

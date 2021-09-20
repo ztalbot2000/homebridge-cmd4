@@ -16,7 +16,7 @@ const constants = require( "./cmd4Constants" );
 var chalk = require( "chalk" );
 
 let trueTypeOf = require( "./utils/trueTypeOf" );
-let ucFirst = require( "./utils/ucFirst" );
+let lcFirst = require( "./utils/lcFirst" );
 
 // For changing validValue Constants to Values and back again
 var { transposeConstantToValidValue,
@@ -922,6 +922,8 @@ var parseAddQueueTypes = function ( log, entrys )
 
       for ( let key in entry )
       {
+         let lcKey = lcFirst( key );
+
          // warn now
          if ( key.charAt( 0 ) === key.charAt( 0 ).toUpperCase( ) )
          {
@@ -929,9 +931,8 @@ var parseAddQueueTypes = function ( log, entrys )
          }
 
          let value = entry[ key ];
-         let ucKey = ucFirst( key );
 
-         switch( ucKey )
+         switch( lcKey )
          {
             case constants.QUEUE:
                if ( settings.listOfCreatedPriorityQueues[ entry.queue ] )
@@ -951,19 +952,7 @@ var parseAddQueueTypes = function ( log, entrys )
 
                break;
             case "QueueInterval":
-
-               // Never put into production
-               log.warn( `Warning: ${ key } has been deprecated. It was never really used anyway.` );
-               log.warn( `To remove this message, just remove ${ key } from your config.json` );
-
-               break;
             case "QueueMsg":
-
-               // Never put into production
-               log.warn( `Warning: ${ key } has been deprecated. It was never really used anyway.` );
-               log.warn( `To remove this message, just remove ${ key } from your config.json` );
-
-              break;
             case "QueueStatMsgInterval":
 
                // Never put into production

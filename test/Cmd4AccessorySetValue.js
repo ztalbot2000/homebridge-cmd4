@@ -299,7 +299,7 @@ describe( "Testing Cmd4Accessory", function( )
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
 
 
-      assert.include( log.errBuf, `Televisions should be Platform Accessories with "PublishExternally": true`, `Cmd4Accessory incorrect stderr: ${ log.logBuf }` );
+      assert.include( log.errBuf, `Televisions should be Platform Accessories with "publishExternally": true`, `Cmd4Accessory incorrect stderr: ${ log.logBuf }` );
       assert.equal( 1, log.errLineCount, ` Cmd4Accessory logged Error lines more than one: ${ log.errBuf }` );
 
       done( );
