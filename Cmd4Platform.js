@@ -59,7 +59,7 @@ class Cmd4Platform
          this.log = new Logger( );
 
          if ( config[ constants.DEBUG ]  == true ||
-              config[ constants.DEBUG_l ]  == true ||
+              config[ "Debug" ]  == true ||
               process.env.DEBUG == settings.PLATFORM_NAME )
          {
             settings.cmd4Dbg = true;
@@ -273,10 +273,10 @@ class Cmd4Platform
                this.log.warn( `To remove this message, just remove "${ key }" from your config.json` );
                break;
             case constants.STORAGE:
-               if ( value == constants.FS_l || value == constants.GOOGLEDRIVE_l )
+               if ( value == constants.FS || value == constants.GOOGLEDRIVEl )
                   this.storage = value;
                else
-                  this.log.warn( chalk.yellow( `WARNING` ) + `: Cmd4 Unknown platform.config.storage:{ this.storage } Expected:${ constants.FS_l } or ${ constants.GOOGLEDRIVE_l }` );
+                  this.log.warn( chalk.yellow( `WARNING` ) + `: Cmd4 Unknown platform.config.storage:{ this.storage } Expected:${ constants.FS } or ${ constants.GOOGLEDRIVE }` );
 
                break;
             case constants.STORAGEPATH:

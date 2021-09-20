@@ -99,7 +99,7 @@ class Cmd4Accessory
          this.log = new Logger( );
 
          if ( config[ constants.DEBUG ]  == true ||
-              config[ constants.DEBUG_l ]  == true ||
+              config[ "Debug" ]  == true ||
               process.env.DEBUG == settings.PLATFORM_NAME )
          {
             settings.cmd4Dbg = true;
@@ -911,27 +911,27 @@ class Cmd4Accessory
 
          switch ( this.eve )
          {
-            case constants.FAKEGATO_TYPE_ENERGY_l:
+            case constants.FAKEGATO_TYPE_ENERGY:
             {
-               firstParm   = this.fakegatoConfig[ constants.POWER_l ] || "0";
-               ucFirstParm = ucFirst( firstParm )                     || "0";
+               firstParm   = this.fakegatoConfig[ constants.POWER ] || "0";
+               ucFirstParm = ucFirst( firstParm )                   || "0";
 
                firstParmValue = ( this.cmd4Storage.testStoredValueForCharacteristic( ucFirstParm ) == undefined ) ?
                       firstParmValue : this.cmd4Storage.getStoredValueForCharacteristic( ucFirstParm );
 
-               if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.POWER_l }: ${ firstParmValue }` );
+               if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.POWER }: ${ firstParmValue }` );
                // Eve Energy ( Outlet service )
                this.loggingService.addEntry(
-                  { [ constants.TIME_l ]  :  moment( ).unix( ),
-                    [ constants.POWER_l ] : firstParmValue
+                  { [ constants.TIME ]  :  moment( ).unix( ),
+                    [ constants.POWER ] : firstParmValue
                   });
                break;
             }
-            case constants.FAKEGATO_TYPE_ROOM_l:
+            case constants.FAKEGATO_TYPE_ROOM:
             {
-               firstParm       = this.fakegatoConfig[ constants.TEMP_l ]     || "0";
-               secondParm      = this.fakegatoConfig[ constants.HUMIDITY_l ] || "0";
-               thirdParm       = this.fakegatoConfig[ constants.PPM_l ]      || "0";
+               firstParm       = this.fakegatoConfig[ constants.TEMP ]     || "0";
+               secondParm      = this.fakegatoConfig[ constants.HUMIDITY ] || "0";
+               thirdParm       = this.fakegatoConfig[ constants.PPM ]      || "0";
                ucFirstParm     = ucFirst( firstParm )  || "0";
                ucSecondParm    = ucFirst( secondParm ) || "0";
                ucThirdParm     = ucFirst( thirdParm )  || "0";
@@ -944,21 +944,21 @@ class Cmd4Accessory
                   thirdParmValue : this.cmd4Storage.getStoredValueForCharacteristic( ucThirdParm );
 
 
-               if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.TEMP_l }:${ firstParmValue } ${constants.HUMIDITY_l }:${ secondParmValue } ${ constants.PPM_l }:${ thirdParmValue }` );
+               if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.TEMP }:${ firstParmValue } ${constants.HUMIDITY }:${ secondParmValue } ${ constants.PPM }:${ thirdParmValue }` );
                // Eve Room ( TempSensor, HumiditySensor and AirQuality Services )
                this.loggingService.addEntry(
-                  { [ constants.TIME_l ]     : moment( ).unix( ),
-                    [ constants.TEMP_l ]     : firstParmValue,
-                    [ constants.HUMIDITY_l ] : secondParmValue,
-                    [ constants.PPM_l ]      : thirdParmValue
+                  { [ constants.TIME ]     : moment( ).unix( ),
+                    [ constants.TEMP ]     : firstParmValue,
+                    [ constants.HUMIDITY ] : secondParmValue,
+                    [ constants.PPM ]      : thirdParmValue
                   });
                break;
             }
-            case constants.FAKEGATO_TYPE_WEATHER_l:
+            case constants.FAKEGATO_TYPE_WEATHER:
             {
-               firstParm       = this.fakegatoConfig[ constants.TEMP_l ]     || "0";
-               secondParm      = this.fakegatoConfig[ constants.PRESSURE_l ] || "0";
-               thirdParm       = this.fakegatoConfig[ constants.HUMIDITY_l ] || "0";
+               firstParm       = this.fakegatoConfig[ constants.TEMP ]     || "0";
+               secondParm      = this.fakegatoConfig[ constants.PRESSURE ] || "0";
+               thirdParm       = this.fakegatoConfig[ constants.HUMIDITY ] || "0";
                ucFirstParm     = ucFirst( firstParm )  || "0";
                ucSecondParm    = ucFirst( secondParm ) || "0";
                ucThirdParm     = ucFirst( thirdParm )  || "0";
@@ -970,54 +970,54 @@ class Cmd4Accessory
                thirdParmValue = ( this.storedValuesForCharacteristic.testStoredValueForCharacteristic( ucThirdParm ) == undefined ) ?
                   thirdParmValue : this.cmd4Storage.getStoredValueForCharacteristic( ucThirdParm );
 
-               if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.TEMP_l }: ${ firstParmValue } ${ constants.PRESSURE_l }: ${ secondParmValue } ${ constants.HUMIDITY_l }: ${ thirdParmValue }` );
+               if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.TEMP }: ${ firstParmValue } ${ constants.PRESSURE }: ${ secondParmValue } ${ constants.HUMIDITY }: ${ thirdParmValue }` );
 
                // Eve Weather ( TempSensor Service )
                this.loggingService.addEntry(
-                  { [ constants.TIME_l ]     : moment( ).unix( ),
-                    [ constants.TEMP_l ]     : firstParmValue,
-                    [ constants.PRESSURE_l ] : secondParmValue,
-                    [ constants.HUMIDITY_l ] : thirdParmValue
+                  { [ constants.TIME ]     : moment( ).unix( ),
+                    [ constants.TEMP ]     : firstParmValue,
+                    [ constants.PRESSURE ] : secondParmValue,
+                    [ constants.HUMIDITY ] : thirdParmValue
                   });
                break;
             }
-            case constants.FAKEGATO_TYPE_DOOR_l:
+            case constants.FAKEGATO_TYPE_DOOR:
             {
-               firstParm   = this.fakegatoConfig[ constants.STATUS_l ] || "0";
+               firstParm   = this.fakegatoConfig[ constants.STATUS ] || "0";
                ucFirstParm = ucFirst( firstParm )                      || "0";
 
                firstParmValue = ( this.cmd4Storage.testStoredValueForCharacteristic( ucFirstParm ) == undefined ) ?
                       firstParmValue : this.cmd4Storage.getStoredValueForCharacteristic( ucFirstParm );
 
-               if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.STATUS_l } status: ${ firstParmValue }` );
+               if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.STATUS } status: ${ firstParmValue }` );
 
                this.loggingService.addEntry(
-                  { [ constants.TIME_l ]   : moment( ).unix( ),
-                    [ constants.STATUS_l ] : firstParmValue
+                  { [ constants.TIME ]   : moment( ).unix( ),
+                    [ constants.STATUS ] : firstParmValue
                   });
                break;
             }
-            case constants.FAKEGATO_TYPE_MOTION_l:
+            case constants.FAKEGATO_TYPE_MOTION:
             {
-               firstParm   = this.fakegatoConfig[ constants.STATUS_l ] || "0";
-               ucFirstParm = ucFirst( firstParm )                      || "0";
+               firstParm   = this.fakegatoConfig[ constants.STATUS ] || "0";
+               ucFirstParm = ucFirst( firstParm )                    || "0";
 
                firstParmValue = ( this.cmd4Storage.testStoredValueForCharacteristic( ucFirstParm ) == undefined ) ?
                       firstParmValue : this.cmd4Storage.getStoredValueForCharacteristic( ucFirstParm );
 
-               if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.STATUS_l }: ${ firstParmValue }` );
+               if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.STATUS }: ${ firstParmValue }` );
 
                this.loggingService.addEntry(
-                  { [ constants.TIME_l ]   : moment( ).unix( ),
-                    [ constants.STATUS_l ] : firstParmValue
+                  { [ constants.TIME ]   : moment( ).unix( ),
+                    [ constants.STATUS ] : firstParmValue
                   });
                break;
             }
-            case constants.FAKEGATO_TYPE_THERMO_l:
+            case constants.FAKEGATO_TYPE_THERMO:
             {
-               firstParm       = this.fakegatoConfig[ constants.CURRENTTEMP_l ]   || "0";
-               secondParm      = this.fakegatoConfig[ constants.SETTEMP_l ]       || "0";
-               thirdParm       = this.fakegatoConfig[ constants.VALVEPOSITION_l ] || "0";
+               firstParm       = this.fakegatoConfig[ constants.CURRENTTEMP ]   || "0";
+               secondParm      = this.fakegatoConfig[ constants.SETTEMP ]       || "0";
+               thirdParm       = this.fakegatoConfig[ constants.VALVEPOSITION ] || "0";
                ucFirstParm     = ucFirst( firstParm )  || "0";
                ucSecondParm    = ucFirst( secondParm ) || "0";
                ucThirdParm     = ucFirst( thirdParm )  || "0";
@@ -1029,21 +1029,21 @@ class Cmd4Accessory
                thirdParmValue = ( this.storedValuesForCharacteristic.testStoredValueForCharacteristic( ucThirdParm ) == undefined ) ?
                   thirdParmValue : this.cmd4Storage.getStoredValueForCharacteristic( ucThirdParm );
 
-               if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.CURRENTTEMP_l }: ${ firstParmValue } ${ constants.SETTEMP_l }:${ secondParmValue } ${constants.VALVEPOSITION_l }:${ thirdParmValue } ` );
+               if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.CURRENTTEMP }: ${ firstParmValue } ${ constants.SETTEMP }:${ secondParmValue } ${constants.VALVEPOSITION }:${ thirdParmValue } ` );
 
                // Eve Thermo ( Thermostat service )
                this.loggingService.addEntry(
-                  { [ constants.TIME_l ]          : moment( ).unix( ),
-                    [ constants.CURRENTTEMP_l ]   : firstParmValue,
-                    [ constants.SETTEMP_l ]       : secondParmValue,
-                    [ constants.VALVEPOSITION_l ] : thirdParmValue
+                  { [ constants.TIME ]          : moment( ).unix( ),
+                    [ constants.CURRENTTEMP ]   : firstParmValue,
+                    [ constants.SETTEMP ]       : secondParmValue,
+                    [ constants.VALVEPOSITION ] : thirdParmValue
                   });
                break;
             }
-            case constants.FAKEGATO_TYPE_AQUA_l:
+            case constants.FAKEGATO_TYPE_AQUA:
             {
-               firstParm       = this.fakegatoConfig[ constants.STATUS_l ]      || "0";
-               secondParm      = this.fakegatoConfig[ constants.WATERAMOUNT_l ] || "0";
+               firstParm       = this.fakegatoConfig[ constants.STATUS ]      || "0";
+               secondParm      = this.fakegatoConfig[ constants.WATERAMOUNT ] || "0";
                ucFirstParm     = ucFirst( firstParm )  || "0";
                ucSecondParm    = ucFirst( secondParm ) || "0";
 
@@ -1052,13 +1052,13 @@ class Cmd4Accessory
                secondParmValue = ( this.cmd4Storage.testStoredValueForCharacteristic( ucSecondParm ) == undefined ) ?
                   secondParmValue : this.cmd4Storage.getStoredValueForCharacteristic( ucSecondParm );
 
-               if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.STATUS_l }: ${ firstParmValue } ${ constants.WATERAMOUNT_l }: ${ secondParmValue }` );
+               if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.STATUS }: ${ firstParmValue } ${ constants.WATERAMOUNT }: ${ secondParmValue }` );
 
                // Eve Aqua ( Valve service set to Irrigation Type )
                this.LoggingService.addEntry(
-                  { [ constants.TIME_l ]        : moment( ).unix( ),
-                    [ constants.STATUS_l ]      : firstParmValue,
-                    [ constants.WATERAMOUNT_l ] : secondParmValue
+                  { [ constants.TIME ]        : moment( ).unix( ),
+                    [ constants.STATUS ]      : firstParmValue,
+                    [ constants.WATERAMOUNT ] : secondParmValue
                   });
                break;
             }
@@ -1078,24 +1078,24 @@ class Cmd4Accessory
          {
             this.log.warn( `The config.json FakeGato key: ${ key } is Capitalized.  All definitions, except CONSTANTS, in the near future will start with a lower case character for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
          }
-          let ucKey = ucFirst ( key );
+          let lcKey = lcFirst ( key );
           let value = fakegatoConfig[ key ];
-          switch ( ucKey )
+          switch ( lcKey )
           {
              case constants.EVE:
                 this.eve = fakegatoConfig[ key ];
                 switch( value )
                 {
-                    case constants.FAKEGATO_TYPE_ENERGY_l:
-                    case constants.FAKEGATO_TYPE_ROOM_l:
-                    case constants.FAKEGATO_TYPE_WEATHER_l:
-                    case constants.FAKEGATO_TYPE_DOOR_l:
-                    case constants.FAKEGATO_TYPE_MOTION_l:
-                    case constants.FAKEGATO_TYPE_THERMO_l:
-                    case constants.FAKEGATO_TYPE_AQUA_l:
+                    case constants.FAKEGATO_TYPE_ENERGY:
+                    case constants.FAKEGATO_TYPE_ROOM:
+                    case constants.FAKEGATO_TYPE_WEATHER:
+                    case constants.FAKEGATO_TYPE_DOOR:
+                    case constants.FAKEGATO_TYPE_MOTION:
+                    case constants.FAKEGATO_TYPE_THERMO:
+                    case constants.FAKEGATO_TYPE_AQUA:
                        break;
                     default:
-                       throw new Error( `Invalid fakegato eve type: "${ value }". It must be one of ( ${ constants.FAKEGATO_TYPE_ENERGY_l }, ${ constants.FAKEGATO_TYPE_ROOM_l }, ${ constants.FAKEGATO_TYPE_WEATHER_l }, ${ constants.FAKEGATO_TYPE_DOOR_l }, ${ constants.FAKEGATO_TYPE_MOTION_l }, ${ constants.FAKEGATO_TYPE_THERMO_l }, ${ constants.FAKEGATO_TYPE_AQUA_l } ). Check the Cmd4 README at: "https://github.com/simont77/fakegato-history".` );
+                       throw new Error( `Invalid fakegato eve type: "${ value }". It must be one of ( ${ constants.FAKEGATO_TYPE_ENERGY }, ${ constants.FAKEGATO_TYPE_ROOM }, ${ constants.FAKEGATO_TYPE_WEATHER }, ${ constants.FAKEGATO_TYPE_DOOR }, ${ constants.FAKEGATO_TYPE_MOTION }, ${ constants.FAKEGATO_TYPE_THERMO }, ${ constants.FAKEGATO_TYPE_AQUA } ). Check the Cmd4 README at: "https://github.com/simont77/fakegato-history".` );
                 }
                 break;
              case constants.STORAGE:
@@ -1147,32 +1147,32 @@ class Cmd4Accessory
       // Optional
       if ( this.storage != undefined )
       {
-         if ( this.storage == constants.FS_l )
+         if ( this.storage == constants.FS )
          {
             this.loggingService = new FakeGatoHistoryService
             (
                this.eve,
                this,
-               { [ constants.STORAGE_l ] : constants.FS_l,
-                 [ constants.PATH_l ]   : this.storagePath
+               { [ constants.STORAGE ] : constants.FS,
+                 [ constants.PATH ]   : this.storagePath
                }
             );
             this.services.push( this.loggingService );
 
-         } else if ( this.storage == constants.GOOGLE_DRIVE_l )
+         } else if ( this.storage == constants.GOOGLE_DRIVE )
          {
             this.loggingService = new FakeGatoHistoryService
             (
                this.eve,
                this,
-               { [ constants.STORAGE_l ] : constants.GOOGLE_DRIVE_l,
-                 [ constants.FOLDER_l ]  : this.folder,
-                 [ constants.KEYPATH_l ] : this.keyPath }
+               { [ constants.STORAGE ] : constants.GOOGLE_DRIVE,
+                 [ constants.FOLDER ]  : this.folder,
+                 [ constants.KEYPATH ] : this.keyPath }
             );
             this.services.push( this.loggingService );
          } else
          {
-            this.log.warn( chalk.yellow( "WARNING" ) + `: Cmd4 Unknown accessory config.storage:{ this.storage } Expected:${ constants.FS_l } or ${ constants.GOOGLEDRIVE_l } for: ${ this.displayName }` );
+            this.log.warn( chalk.yellow( "WARNING" ) + `: Cmd4 Unknown accessory config.storage:{ this.storage } Expected:${ constants.FS } or ${ constants.GOOGLEDRIVE } for: ${ this.displayName }` );
          }
       }
 

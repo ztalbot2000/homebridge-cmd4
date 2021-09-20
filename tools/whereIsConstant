@@ -68,7 +68,7 @@ if ( options.reverse )
       console.error( `Constant value: ${ options.constant } not defined in cmd4Constants.js` );
       process.exit( 1 );
    }
-   reg = `\w*.${ options.constant }.*$`;
+   reg = `\\w*.${ options.constant }.*$`;
    // My logic seems reversed, but that is not true
    console.log( `Looking for: <word>.${ lookingFor }` );
    if ( options.verbose )
