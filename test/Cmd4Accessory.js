@@ -57,14 +57,14 @@ describe('Quick Test of Setup', ( ) =>
 
    it( "CMD4_ACC_TYPE_ENUM.EOL =" + ACC_EOL, ( ) =>
    {
-     expect( CMD4_ACC_TYPE_ENUM.EOL ).to.equal( ACC_EOL );
+      expect( CMD4_ACC_TYPE_ENUM.EOL ).to.equal( ACC_EOL );
    });
 
    it( "CMD4_DEVICE_TYPE_ENUM.EOL =" + DEVICE_EOL, ( ) =>
-  {
-     expect( CMD4_DEVICE_TYPE_ENUM.EOL ).to.equal( DEVICE_EOL );
-  });
-});
+   {
+      expect( CMD4_DEVICE_TYPE_ENUM.EOL ).to.equal( DEVICE_EOL );
+   });
+})
 
 // ******** TEST Cmd4Accessory *************
 describe('A simple Cmd4Accessory Test', ( ) =>

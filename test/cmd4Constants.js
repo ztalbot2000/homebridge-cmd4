@@ -108,38 +108,24 @@ describe( "Testing cmd4Constants - unused", function( )
                         "./index.js",
                         "./lib/CMD4_DEVICE_TYPE_ENUM.js",
                         "./tools/Cmd4AccDocGenerator"];
-
-      let data = fs.readFileSync( "./cmd4Constants.js", "utf8" );
-
-      var exportMatches = data.toString().match(/exports.(\w).*\n/g);
-
-      // This is the array of defined constants
-      var constantsArray = exportMatches.map( ( s ) =>
-      {
-         // remove "exports."
-         s = s.slice(8);
-
-         // return "NAME"
-         return s.substr(0, s.indexOf(' ') );
-      });
-
       // This is the count of the found constants in result
       let foundCount=0;
+      let len = Object.keys( constants ).length;
 
-      // Over ever constant, find where they exist in our sources
-      for ( let cIndex = 0;
-                cIndex < constantsArray.length;
-                cIndex++)
+      Object.keys( constants ).forEach( ( key ) =>
       {
          // This one is not found yet
          let found = false;
 
          // This is the constant defind in cmd4Constants
-         let c = constantsArray[ cIndex ];
+         let c = key;
 
          // The regex to find the constant in the source files
-         const regex = new RegExp(`\\bconstants.${ c }[\\s|,|:|\\.|;]` ); // 115
-         //console.log("Looking for constant: %s ( %s of %s )", c, cIndex, result.length );
+         // A great regex site:
+         // https://regex101.com/r/bE3c0x/5
+         const regex = new RegExp( `.*constants.${ c}.*$` ); // 115
+
+         //console.log("Looking for constants.%s ( %s of %s )", c, index, len );
 
          // The constant must be in one of the Cmd4 source files
          for ( let fileIndex = 0;
@@ -165,7 +151,6 @@ describe( "Testing cmd4Constants - unused", function( )
                let t = regex.test( line );
                if ( t == true )
                {
-                  //console.log("Match found of %s on line: %s of file: %s", c, lineCount, cmd4File );
                   found = true;
                   foundCount++;
                   break;
@@ -176,12 +161,13 @@ describe( "Testing cmd4Constants - unused", function( )
          }
          if (found == false )
          {
-            console.log( "Not Found %s", c );
-            assert.isTrue( found, `Not found ${ c } in source files` );
+            console.log( "Not Found constants.%s", c );
+            assert.isTrue( found, `Not found constants.${ c } in source files` );
          }
-      }
-      console.log( "Total found was %s of %s ", foundCount, constantsArray.length );
-      assert.equal( foundCount, constantsArray.length, `Totals do not match` );
+      });
+
+      console.log( "Total found was %s of %s ", foundCount, len );
+      assert.equal( foundCount, len, `Totals do not match` );
 
       done( );
    }).timeout(20000);
@@ -201,25 +187,6 @@ describe( "Testing source constants  -  are defined", function( )
 
       let totalSourceConstants = 0;
       let foundCount = 0;
-
-      let data = fs.readFileSync( "./cmd4Constants.js", "utf8" );
-
-      var exportMatches = data.toString().match(/exports.(\w).*\n/g);
-
-      // This is the array of defined constants from cmd4Constants
-      var cmd4ConstantsArray = exportMatches.map( ( s ) =>
-      {
-         // remove "exports."
-         s = s.slice(8);
-
-         // return "NAME"
-         return s.substr(0, s.indexOf(' ') );
-      });
-
-      //cmd4ConstantsArray.forEach( (item, itemIndex) =>
-      //{
-      //   console.log( "cmd4ConstantsArray[%s] -->%s<--", itemIndex, item );
-      //});
 
       // The constant must be in one of the Cmd4 source files
       for ( let fileIndex = 0;
@@ -292,7 +259,8 @@ describe( "Testing source constants  -  are defined", function( )
          {
              let sourceConstant = sourceConstantsArray[ sIndex ];
 
-             if ( cmd4ConstantsArray.indexOf( sourceConstant ) == -1 )
+             //if ( cmd4ConstantsArray.indexOf( sourceConstant ) == -1 )
+             if ( constants[ sourceConstant ] == undefined )
              {
                 console.log( "Not Found from: %s -->%s<--", cmd4File, sourceConstant );
                 assert( "Not Found from: %s -->%s<--", cmd4File, sourceConstant );

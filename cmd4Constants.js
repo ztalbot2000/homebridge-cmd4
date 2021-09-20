@@ -7,145 +7,160 @@
 
 // Triggers which Array CMD4Accessory will be placed
 // Either cmd4Accessories or cmd4StandaloneAccessories
-exports.STANDALONE               = "Standalone";
-exports.PLATFORM                 = "Platform";
-
-// Default intervals
-exports.SLOW_STATE_CHANGE_RESPONSE_TIME      = 10000;  // 10 seconds
-exports.MEDIUM_STATE_CHANGE_RESPONSE_TIME    = 3000;   // 3 seconds
-exports.DEFAULT_STATE_CHANGE_RESPONSE_TIME   = 3000;   // 3 seconds
-exports.FAST_STATE_CHANGE_RESPONSE_TIME      = 1000;   // 1 second
-
-exports.DEFAULT_INTERVAL         = 60000; // 1 minute
-exports.DEFAULT_TIMEOUT          = 60000; // 1 minute
-
-// Not a Bool, otherwise conditional check fails
-exports.DEFAULT_STATUSMSG        = "TRUE";
-
-exports.DEFAULT_QUEUE_TYPE       = "WoRm";
-exports.DEFAULT_QUEUE_PAUSE_TIMEOUT = 10000; // 10 seconds
-
-exports.DEFAULT_DEBUG            = false; // No debug
-exports.DEFAULT_ALLOW_TLV8       = false; // No funny TLV8 characteristics
-exports.DEFAULT_OUTPUTCONSTANTS  = false;
-
-// Fakegato Constants
-exports.FAKEGATO_TYPE_ENERGY_l   = "energy";
-exports.FAKEGATO_TYPE_ROOM_l     = "room";
-exports.FAKEGATO_TYPE_WEATHER_l  = "weather";
-exports.FAKEGATO_TYPE_DOOR_l     = "door";
-exports.FAKEGATO_TYPE_MOTION_l   = "motion";
-exports.FAKEGATO_TYPE_THERMO_l   = "thermo";
-exports.FAKEGATO_TYPE_AQUA_l     = "aqua";
-exports.EVE                      = "Eve";
-exports.STORAGE                  = "Storage";
-exports.STORAGE_l                = "storage";
-exports.STORAGEPATH              = "StoragePath";
-exports.FOLDER                   = "Folder";
-exports.FOLDER_l                 = "folder";
-exports.KEYPATH                  = "KeyPath";
-exports.STATUS                   = "Status";
-exports.STATUS_l                 = "status";
-exports.TEMP                     = "Temp";
-exports.TEMP_l                   = "temp";
-exports.SETTEMP                  = "SetTemp";
-exports.SETTEMP_l                = "setTemp";
-exports.HUMIDITY                 = "Humidity";
-exports.HUMIDITY_l               = "humidity";
-exports.PPM                      = "Ppm";
-exports.PPM_l                    = "ppm";
-exports.POWER                    = "Power";
-exports.POWER_l                  = "power";
-exports.PRESSURE                 = "Pressure";
-exports.PRESSURE_l               = "pressure";
-exports.CURRENTTEMP              = "CurrentTemp";
-exports.CURRENTTEMP_l            = "currentTemp";
-exports.VALVEPOSITION            = "ValvePosition";
-exports.VALVEPOSITION_l          = "valvePosition";
-exports.WATERAMOUNT_l            = "waterAmount";
-exports.TIME_l                   = "time";
-exports.PATH_l                   = "path";
-exports.KEYPATH_l                = "keyPath";
-
-exports.FS_l                     = "fs";
-exports.GOOGLE_DRIVE_l           = "googleDrive";
-
-// Config Constnts
-exports.DEBUG                    = "Debug";
-exports.DEBUG_l                  = "debug";
-exports.OUTPUTCONSTANTS          = "OutputConstants";
-exports.STATUSMSG                = "StatusMsg";
-exports.QUEUETYPE                = "QueueType";
-exports.QUEUETYPES               = "QueueTypes";
-
-// Queue Types
-exports.QUEUETYPE_SEQUENTIAL     = "Sequential";
-exports.QUEUETYPE_WORM           = "WoRm";
-// Used internally to mean only polled entries go straight through the queue
-exports.QUEUETYPE_STANDARD       = "StandarD";
-// Used internally to mean entries go straight through the queue
-exports.QUEUETYPE_PASSTHRU       = "None";
+//
 
 
-// Platform Config Constnts
-exports.TYPE                     = "Type";
-exports.SUBTYPE                  = "SubType";
-exports.DISPLAYNAME              = "DisplayName";
-exports.UUID                     = "UUID";
-exports.ACCESSORY                = "Accessory";
-exports.CATEGORY                 = "Category";
-exports.PUBLISHEXTERNALLY        = "PublishExternally";
-exports.NAME                     = "Name";
-exports.MODEL                    = "Model";
-exports.MANUFACTURER             = "Manufacturer";
-exports.SERIALNUMBER             = "SerialNumber";
-exports.FIRMWAREREVISION         = "FirmwareRevision";
-exports.CHARACTERISTIC           = "Characteristic";
-exports.TIMEOUT                  = "Timeout";
-exports.QUEUE                    = "Queue";
-exports.POLLING                  = "Polling";
-exports.INTERVAL                 = "Interval";
-exports.STATECHANGERESPONSETIME  = "StateChangeResponseTime";
-exports.STATE_CMD_PREFIX         = "State_cmd_prefix";
-exports.STATE_CMD_SUFFIX         = "State_cmd_suffix";
-exports.STATE_CMD                = "State_cmd";
-exports.FAKEGATO                 = "Fakegato";
-exports.REQUIRES                 = "Requires";
-exports.CONSTANTS                = "Constants";
-exports.VARIABLES                = "Variables";
-exports.LINKEDTYPES              = "LinkedTypes";
-exports.ACCESSORIES              = "Accessories";
-exports.URL                      = "Url";
-exports.ALLOWTLV8                = "AllowTLV8";
+var cmd4Constants = {
+   STANDALONE:                "Standalone",
+   PLATFORM:                  "Platform",
 
-exports.DEFINITIONS             = "Definitions";
-exports.PROPS                   = "Props";
+   // Default intervals
+   // 10 seconds
+   SLOW_STATE_CHANGE_RESPONSE_TIME:       10000,
+   // 3 seconds
+   MEDIUM_STATE_CHANGE_RESPONSE_TIME:     3000,
+   // 3 seconds
+   DEFAULT_STATE_CHANGE_RESPONSE_TIME:    3000,
+   // 1 second
+   FAST_STATE_CHANGE_RESPONSE_TIME:       1000,
+
+   // 1 minute
+   DEFAULT_INTERVAL:          60000,
+   // 1 minute
+   DEFAULT_TIMEOUT:           60000,
+
+   // Not a Bool, otherwise conditional check fails
+   DEFAULT_STATUSMSG:         "TRUE",
+
+   DEFAULT_QUEUE_TYPE:        "WoRm",
+   // 10 seconds
+   DEFAULT_QUEUE_PAUSE_TIMEOUT:  10000,
+
+   // No debug
+   DEFAULT_DEBUG:             false,
+   // No funny TLV8 characteristics
+   DEFAULT_ALLOW_TLV8:        false,
+   DEFAULT_OUTPUTCONSTANTS:   false,
+
+   // Fakegato Constants
+   FAKEGATO_TYPE_ENERGY_l:    "energy",
+   FAKEGATO_TYPE_ROOM_l:      "room",
+   FAKEGATO_TYPE_WEATHER_l:   "weather",
+   FAKEGATO_TYPE_DOOR_l:      "door",
+   FAKEGATO_TYPE_MOTION_l:    "motion",
+   FAKEGATO_TYPE_THERMO_l:    "thermo",
+   FAKEGATO_TYPE_AQUA_l:      "aqua",
+   EVE:                       "Eve",
+   STORAGE:                   "Storage",
+   STORAGE_l:                 "storage",
+   STORAGEPATH:               "StoragePath",
+   FOLDER:                    "Folder",
+   FOLDER_l:                  "folder",
+   KEYPATH:                   "KeyPath",
+   STATUS:                    "Status",
+   STATUS_l:                  "status",
+   TEMP:                      "Temp",
+   TEMP_l:                    "temp",
+   SETTEMP:                   "SetTemp",
+   SETTEMP_l:                 "setTemp",
+   HUMIDITY:                  "Humidity",
+   HUMIDITY_l:                "humidity",
+   PPM:                       "Ppm",
+   PPM_l:                     "ppm",
+   POWER:                     "Power",
+   POWER_l:                   "power",
+   PRESSURE:                  "Pressure",
+   PRESSURE_l:                "pressure",
+   CURRENTTEMP:               "CurrentTemp",
+   CURRENTTEMP_l:             "currentTemp",
+   VALVEPOSITION:             "ValvePosition",
+   VALVEPOSITION_l:           "valvePosition",
+   WATERAMOUNT_l:             "waterAmount",
+   TIME_l:                    "time",
+   PATH_l:                    "path",
+   KEYPATH_l:                 "keyPath",
+
+   FS_l:                      "fs",
+   GOOGLE_DRIVE_l:            "googleDrive",
+
+   // Config Constnts
+   DEBUG:                     "Debug",
+   DEBUG_l:                   "debug",
+   OUTPUTCONSTANTS:           "OutputConstants",
+   STATUSMSG:                 "StatusMsg",
+   QUEUETYPE:                 "QueueType",
+   QUEUETYPES:                "QueueTypes",
+
+   // Queue Types
+   QUEUETYPE_SEQUENTIAL:      "Sequential",
+   QUEUETYPE_WORM:            "WoRm",
+   // Used internally to mean only polled entries go straight through the queue
+   QUEUETYPE_STANDARD:        "StandarD",
+   // Used internally to mean entries go straight through the queue
+   QUEUETYPE_PASSTHRU:        "None",
 
 
-// Internal list variables
-exports.ACCESSORY_lv                   = "accessory";
-exports.CHARACTERISTIC_STRING_lv       = "characteristicString";
-exports.CALLBACK_lv                    = "callback";
-exports.ACC_TYPE_ENUM_INDEX_lv         = "accTypeEnumIndex";
-exports.INTERVAL_lv                    = "interval";
-exports.IS_SET_lv                      = "isSet";
-exports.QUEUE_NAME_lv                  = "queueName";
-exports.QUEUE_GET_IS_UPDATE_lv         = "queueGetIsUpdate";
-exports.STATE_CHANGE_RESPONSE_TIME_lv  = "stateChangeResponseTime";
-exports.TIMEOUT_lv                     = "timeout";
-exports.VALUE_lv                       = "value";
-exports.CMD4_STORAGE_lv                = "cmd4Storage";
+   // Platform Config Constnts
+   TYPE:                      "Type",
+   SUBTYPE:                   "SubType",
+   DISPLAYNAME:               "DisplayName",
+   UUID:                      "UUID",
+   ACCESSORY:                 "Accessory",
+   CATEGORY:                  "Category",
+   PUBLISHEXTERNALLY:         "PublishExternally",
+   NAME:                      "Name",
+   MODEL:                     "Model",
+   MANUFACTURER:              "Manufacturer",
+   SERIALNUMBER:              "SerialNumber",
+   FIRMWAREREVISION:          "FirmwareRevision",
+   CHARACTERISTIC:            "Characteristic",
+   TIMEOUT:                   "Timeout",
+   QUEUE:                     "Queue",
+   POLLING:                   "Polling",
+   INTERVAL:                  "Interval",
+   STATECHANGERESPONSETIME:   "StateChangeResponseTime",
+   STATE_CMD_PREFIX:          "State_cmd_prefix",
+   STATE_CMD_SUFFIX:          "State_cmd_suffix",
+   STATE_CMD:                 "State_cmd",
+   FAKEGATO:                  "Fakegato",
+   REQUIRES:                  "Requires",
+   CONSTANTS:                 "Constants",
+   VARIABLES:                 "Variables",
+   LINKEDTYPES:               "LinkedTypes",
+   ACCESSORIES:               "Accessories",
+   URL:                       "Url",
+   ALLOWTLV8:                 "AllowTLV8",
 
-exports.ERROR_TIMER_EXPIRED           = -151;
-//Exports.ERROR_CMD_FAILED_REPLY        = -152;
-exports.ERROR_NULL_REPLY              = -153;
-exports.ERROR_NULL_STRING_REPLY       = -154;
-exports.ERROR_EMPTY_STRING_REPLY      = -155;
-exports.ERROR_2ND_NULL_STRING_REPLY   = -156;
-exports.ERROR_NON_CONVERTABLE_REPLY   = -157;
-exports.ERROR_NO_DATA_REPLY           = -158;
+   DEFINITIONS:              "Definitions",
+   PROPS:                    "Props",
+
+
+   // Internal list variables
+   ACCESSORY_lv:                    "accessory",
+   CHARACTERISTIC_STRING_lv:        "characteristicString",
+   CALLBACK_lv:                     "callback",
+   ACC_TYPE_ENUM_INDEX_lv:          "accTypeEnumIndex",
+   INTERVAL_lv:                     "interval",
+   IS_SET_lv:                       "isSet",
+   QUEUE_NAME_lv:                   "queueName",
+   QUEUE_GET_IS_UPDATE_lv:          "queueGetIsUpdate",
+   STATE_CHANGE_RESPONSE_TIME_lv:   "stateChangeResponseTime",
+   TIMEOUT_lv:                      "timeout",
+   VALUE_lv:                        "value",
+   CMD4_STORAGE_lv:                 "cmd4Storage",
+
+   ERROR_TIMER_EXPIRED:            -151,
+   //Exports.ERROR_CMD_FAILED_REPLY:         -152,
+   ERROR_NULL_REPLY:               -153,
+   ERROR_NULL_STRING_REPLY:        -154,
+   ERROR_EMPTY_STRING_REPLY:       -155,
+   ERROR_2ND_NULL_STRING_REPLY:    -156,
+   ERROR_NON_CONVERTABLE_REPLY:    -157,
+   ERROR_NO_DATA_REPLY:            -158,
 
 
 
-// Static Messages
-exports.DBUSY                         = "Perhaps your device is busy?";
+   // Static Messages
+   DBUSY:                          "Perhaps your device is busy?"
+};
+module.exports = cmd4Constants;

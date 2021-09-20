@@ -34,8 +34,6 @@ let CMD4_PERMS_TYPE_ENUM = CMD4_CHAR_TYPE_ENUMS.CMD4_PERMS_TYPE_ENUM;
 // The Cmd4 Classes
 const Cmd4Accessory = require( "./Cmd4Accessory" ).Cmd4Accessory;
 
-const Cmd4Storage = require( "./utils/Cmd4Storage" );
-
 // Settings, Globals and Constants
 let settings = require( "./cmd4Settings" );
 const constants = require( "./cmd4Constants" );

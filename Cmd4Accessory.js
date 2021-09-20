@@ -64,7 +64,7 @@ function removeFromArray( arr, val )
       }
    }
    return arr;
-};
+}
 
 // Accessory definitions - THE GOOD STUFF STARTs HERE
 //
