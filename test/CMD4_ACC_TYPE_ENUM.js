@@ -340,6 +340,36 @@ describe( `Testing INITIALIZED CMD4_ACC_TYPE_ENUM`, ( ) =>
        }
    });
 });
+
+describe( `Testing CMD4_ACC_TYPE_ENUM.indexOfEnum`, ( ) =>
+{
+   // Init the library for all to use
+   let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
+
+
+   it('CMD4_ACC_TYPE_ENUM.indexOfEnum should be a function', ( ) =>
+   {
+      assert.isFunction(CMD4_ACC_TYPE_ENUM.indexOfEnum, `CMD4_DEVICE_TYPE_ENUM.indexOfEnum is not a function` );
+   });
+
+   it(`Testing CMD4_ACC_TYPE_ENUM.indexOfEnum( "On" )`, ( ) =>
+   {
+      let result = CMD4_ACC_TYPE_ENUM.indexOfEnum( "On" );
+
+      assert.equal( result, CMD4_ACC_TYPE_ENUM.On,`Index is incorrect for "On"` );
+   });
+
+   it(`Testing CMD4_ACC_TYPE_ENUM.indexOfEnum( "on" )`, ( ) =>
+   {
+      let result = CMD4_ACC_TYPE_ENUM.indexOfEnum( "on" );
+
+      assert.equal( result, CMD4_ACC_TYPE_ENUM.On,`Index is incorrect for "on"` );
+   });
+
+});
+
+
+
 describe( `Testing CMD4_ACC_TYPE_ENUM stringConversionFunction`, ( ) =>
 {
    // Init the library for all to use

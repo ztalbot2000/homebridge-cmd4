@@ -14,6 +14,8 @@ var getAccessoryUUID = function ( config, UUIDGen )
 {
    if ( config.UUID )
       return config.UUID;
+   if ( config.uuid )
+      return config.uuid;
 
    if ( config.name )
       return UUIDGen.generate( config.name );

@@ -287,12 +287,12 @@ describe( "Testing Cmd4Platform", function( )
       loadCachedPlatformAccessoriesFromDisk( accessoryStorage );
    });
 
-   it( "Test reload of saved Platforms with value change to disk", function( )
+   it.skip( "Test reload of saved Platforms with value change to disk", function( )
    {
       let log = new Logger( );
       log.setBufferEnabled( );
-      log.setOutputEnabled( false );
-      log.setDebugEnabled( );
+      log.setOutputEnabled( true );
+      log.setDebugEnabled( true );
 
       // We need our own instance as emitting "didFinishLaunching" triggers other testcases
 
@@ -320,6 +320,8 @@ describe( "Testing Cmd4Platform", function( )
 
 
       log.reset( );
+      log.setOutputEnabled( true );
+      log.setDebugEnabled( true );
       cmd4Accessory.setCachedValue( acc, "ConfiguredName", newValue, function( rc )
       {
          assert.equal( rc, null, `setCachedValue expected: zero received: ${ rc }` );
@@ -364,8 +366,103 @@ describe( "Testing Cmd4Platform", function( )
 
    });
 
+   it( "Test reload of saved Platforms with value change to disk", function( )
+   {
+      let SwitchConfig =
+      {
+         platform:                     "Cmd4",
+         accessories :
+         [
+            {   type:                   "Switch",
+                name:                   "Example Switch",
+                configuredName:         "Example Switch",
+                on:                     0
+            }
+         ]
+      }
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( true );
+      log.setDebugEnabled( true );
+
+      // We need our own instance as emitting "didFinishLaunching" triggers other testcases
+
+      let cmd4Platform = new Cmd4Platform( log, SwitchConfig, _api );
+
+      // Instead of emitting didFinishLaunching which would cause other instances to
+      // also do the didFinishLaunching and start their polling as well,
+      // Call cmd4Platform.discoverDevices instead.
+      //apiInstance.emit("didFinishLaunching");
+      //let expectedOutput = `Cmd4Platform didFinishLaunching`;
+      //assert.include( log.logBuf, expectedOutput,
+      //                `didFinishLaunching not called result: ${ log.logBuf }` );
+      cmd4Platform.discoverDevices( );
+
+      assert.equal(cmd4Platform.createdCmd4Platforms.length, 1, `Incorrect number of Cmd4Platforms created. result: ${ cmd4Platform.createdCmd4Platforms.length }` );
+      assert.equal(cmd4Platform.createdCmd4Accessories.length, 1, `Incorrect number of Cmd4Accessories created. result: ${ cmd4Platform.createdCmd4Accessories.length }` );
+      // This would have been already tested in Cmd4AccessorySetValue.js
+      let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
+
+      let acc = CMD4_ACC_TYPE_ENUM.ConfiguredName;
+      let foundConfiguredName = cmd4Accessory.cmd4Storage.getStoredValueForIndex( acc );
+      assert.equal( foundConfiguredName, SwitchConfig.accessories[0].configuredName, `Incorrect configuredName: ${ foundConfiguredName }` );
+
+      let newValue = "NEW_Switch";
+
+
+      log.reset( );
+      log.setOutputEnabled( true );
+      log.setDebugEnabled( true );
+      cmd4Accessory.setCachedValue( acc, "ConfiguredName", newValue, function( rc )
+      {
+         cmd4Accessory.configuredName=newValue;
+         assert.equal( rc, null, `setCachedValue expected: zero received: ${ rc }` );
+
+         assert.include( log.logBuf, `[34mSetting (Cached) Example Switch ConfiguredName\u001b[39m NEW_Switch`, `setCachedValue Incorrect stdout: ${ log.logBuf }` );
+
+         let result = cmd4Accessory.cmd4Storage.getStoredValueForIndex( acc );
+         assert.equal( result, newValue, " setCachedValue Incorrect result" );
+
+         // Clear the log buffer for next time.
+         log.reset();
+
+         saveCachedPlatformAccessoriesOnDisk( cmd4Platform.createdCmd4Platforms, accessoryStorage  )
+
+         // Simulate a restart of homebridge with a new Cmd4Platform instance and the stored date reloaded.
+         let cachedPlatformAccessories = loadCachedPlatformAccessoriesFromDisk( accessoryStorage );
+
+         log.debug(" *****  RUNNING NEXT PLATFORM *****  " );
+         let cmd4Platform2 = new Cmd4Platform( log, SwitchConfig, _api );
+
+         cachedPlatformAccessories.forEach( ( entry ) =>
+         {
+            restoreCachedPlatformAccessories( cmd4Platform2, entry );
+         });
+
+         // Instead of emitting didFinishLaunching which would cause other instances to
+         // also do the didFinishLaunching and start their polling as well,
+         // Call cmd4Platform.discoverDevices instead.
+         // apiInstance2.emit("didFinishLaunching");
+         cmd4Platform2.discoverDevices( );
+
+         cmd4Accessory = cmd4Platform2.createdCmd4Accessories[0];
+         let newFoundConfiguredName = cmd4Accessory.cmd4Storage.getStoredValueForIndex( acc );
+         assert.equal( newFoundConfiguredName, newValue, `Incorrect configuredName: ${  newFoundConfiguredName }` );
+
+      });
+
+      //restoreCachedPlatformAccessories( cmd4Platform, cachedPlatformAccessories );
+
+      //cmd4Platform.configureAccessory( cachedPlatformAccessories );
+
+      //expect( cmd4Platform.createdCmd4Accessories.length ).to.equal( 1, "cmd4Platform.createdCmd4Accessories.length is not 1. Found:" + cmd4Platform.createdCmd4Accessories.length );
+
+   });
+
    // Next testcase
    // saveCachedPlatformAccessoriesOnDisk( cachedPlatformAccessories, accessoryStorage, cachedAccessoryPath, cachedAccessoriesFile = "cachedAccessories" )
+
 });
 
 

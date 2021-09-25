@@ -52,16 +52,11 @@ describe( "Testing cmd4Constants", function( )
        assert.equal( constants.TYPE, "type", `Incorrect global value` );
        assert.equal( constants.SUBTYPE, "subType", `Incorrect global value` );
        assert.equal( constants.DISPLAYNAME, "displayName", `Incorrect global value` );
-       assert.equal( constants.UUID, "UUID", `Incorrect global value` );
+       assert.equal( constants.UUID, "uuid", `Incorrect global value` );
        assert.equal( constants.ACCESSORY, "accessory", `Incorrect global value` );
        assert.equal( constants.CATEGORY, "category", `Incorrect global value` );
        assert.equal( constants.PUBLISHEXTERNALLY, "publishExternally", `Incorrect global value` );
        assert.equal( constants.PROPS, "props", `Incorrect global value` );
-       assert.equal( constants.NAME, "name", `Incorrect global value` );
-       assert.equal( constants.MODEL, "model", `Incorrect global value` );
-       assert.equal( constants.MANUFACTURER, "manufacturer", `Incorrect global value` );
-       assert.equal( constants.SERIALNUMBER, "serialNumber", `Incorrect global value` );
-       assert.equal( constants.FIRMWAREREVISION, "firmwareRevision", `Incorrect global value` );
        assert.equal( constants.CHARACTERISTIC, "characteristic", `Incorrect global value` );
        assert.equal( constants.TIMEOUT, "timeout", `Incorrect global value` );
        assert.equal( constants.QUEUE, "queue", `Incorrect global value` );

@@ -3,7 +3,7 @@
 var _api = new HomebridgeAPI( ); // object we feed to Plugins
 
 let indexOfEnum = require( "../utils/indexOfEnum" );
-Object.defineProperty(exports, "indexOfEnum", { enumerable: true, get: function () { return indexOfEnum.indexOfEnum; } });
+Object.defineProperty( exports, "indexOfEnum", { enumerable: true, get: function ( ) { return indexOfEnum.indexOfEnum; } });
 
 
 const cmd4Config = require( "../Extras/config.json" );
@@ -14,11 +14,11 @@ const lcFirst = require( "../utils/lcFirst" );
 // Constants
 const constants = require( "../cmd4Constants" );
 
-describe( "Testing our config.json", ( ) =>
+describe( `Testing our config.json`, ( ) =>
 {
-   it( "cmdConfig should be a JSON object", ( ) =>
+   it( `cmdConfig should be a JSON object`, ( ) =>
    {
-      assert.isObject( cmd4Config, "cmd4Config is not an object" );
+      assert.isObject( cmd4Config, `cmd4Config is not an object` );
    });
 
 })
@@ -28,7 +28,7 @@ describe( "Testing our config.json", ( ) =>
 // This would be the plugin un-initialized
 var pluginModule = require( "../index" );
 
-describe( "Initializing our plugin module", ( ) =>
+describe( `Initializing our plugin module`, ( ) =>
 {});
 
 var cmd4 = pluginModule.default( _api );
@@ -37,23 +37,23 @@ let CMD4_ACC_TYPE_ENUM = cmd4.CMD4_ACC_TYPE_ENUM;
 let CMD4_DEVICE_TYPE_ENUM = cmd4.CMD4_DEVICE_TYPE_ENUM;
 
 
-describe( "Testing our config.json", ( ) =>
+describe( `Testing our config.json`, ( ) =>
 {
-   const accessories = cmd4Config.platforms[0].accessories;
+   const accessories = cmd4Config.platforms[ 0 ].accessories;
    for ( let index=0; index < accessories.length; index ++ )
    {
-      testAccessoryConfig(   accessories[index]   );
+      testAccessoryConfig(   accessories[ index ]   );
    }
 });
 
 
 function testAccessoryConfig ( accessoryConfig )
 {
-   describe( "Testing Device Name:" + accessoryConfig.DisplayName, ( ) =>
+   describe( `Testing Device Name: ${ accessoryConfig.displayName }`, ( ) =>
    {
       for ( let key in accessoryConfig )
       {
-         let value = accessoryConfig[key];
+         let value = accessoryConfig[ key ];
 
          //let ucKey = ucFirst( key );
          let lcKey = lcFirst( key );
@@ -156,16 +156,16 @@ function testAccessoryConfig ( accessoryConfig )
               break;
            default:
            {
-              //console.log("1 %s Testing %s", accessoryConfig.displayName, value);
+              //console.log( "1 %s Testing %s", accessoryConfig.displayName, value);
               testCharacteristic( key, value );
            }
         }
       }
 
       // Test that we define displayName
-      it( "Testing for a displayName", ( ) =>
+      it( `Testing for a displayName`, ( ) =>
       {
-         assert.isNotNull( accessoryConfig.displayName , "displayName cannot be undefined" );
+         assert.isNotNull( accessoryConfig.displayName , `displayName cannot be undefined` );
       });
 
    });
@@ -173,13 +173,13 @@ function testAccessoryConfig ( accessoryConfig )
 
 function testConstantKey( key )
 {
-   it( "Constant key:" + key + " must start with '${'", ( ) =>
+   it( `Constant key: ${ key } must start with "\${"`, ( ) =>
    {
-      assert.isTrue( key!=null && key.startsWith( '${' ), "Constant:'" + key + "' does not start with '${'" );
+      assert.isTrue( key!=null && key.startsWith( '${' ), `Constant: "${ key }" does not start with "\${"` );
    });
-   it( "Constant key:" + key + " should end with '}'", ( ) =>
+   it( `Constant key: ${ key } should end with "}"`, ( ) =>
    {
-      assert.isTrue( key!=null && key.endsWith( "}" ), "Constant:'" + key + "' does not end with '}'" );
+      assert.isTrue( key!=null && key.endsWith( "}" ), `Constant: "${ key }" does not end with "}"` );
    });
 }
 
@@ -205,20 +205,20 @@ function processConstantsConfig( config )
       }
       return;
    }
-   it( "Constant Config must be valid", ( ) =>
+   it( `Constant Config must be valid`, ( ) =>
    {
-      assert.isTrue( isJSON( config ), "Constants:'" + config + "'  must be an array of/or list of key/value pairs" );
+      assert.isTrue( isJSON( config ), `Constants: "${ config }" must be an array of/or list of key/value pairs` );
    });
 }
 function testVariableKey( key )
 {
-   it( "Variable key:" + key + " must start with '${'", ( ) =>
+   it( `Variable key: "${ key }" must start with "\${"`, ( ) =>
    {
-      assert.isTrue( key!=null && key.startsWith( '${' ), "Variable:'" + key + "' does not start with '${'" );
+      assert.isTrue( key!=null && key.startsWith( '${' ), `Variable: "${ key }" does not start with "\${"` );
    });
-   it( 'Variable key:' + key + ' should end with \'}\'', ( ) =>
+   it( `Variable key: "${ key }" should end with "}"`, ( ) =>
    {
-      assert.isTrue( key!=null && key.endsWith( '}' ), "Variable '" + key + "' does not end with '}'" );
+      assert.isTrue( key!=null && key.endsWith( '}' ), `Variable "${ key }" does not end with "}"` );
    });
 }
 function processVariablesConfig( config )
@@ -251,7 +251,7 @@ function processVariablesConfig( config )
    }
    it( "Variable Config must be valid", ( ) =>
    {
-      assert.isTrue( isJSON( config ), "Variable:'" + config + "'  must be an array of/or list of key/value pairs" );
+      assert.isTrue( isJSON( config ), `Variable: "${ config }" must be an array of/or list of key/value pairs` );
    });
 }
 function processLinkedTypesConfig( config )
@@ -266,120 +266,125 @@ function processLinkedTypesConfig( config )
    }
    if ( isJSON ( config ) )
    {
-      describe( "Processing Linked accessory:"+ config.displayName, ( ) =>
+      describe( `Processing Linked accessory: ${ config.displayName }`, ( ) =>
       {});
 
       testAccessoryConfig( config );
       return;
    }
 
-   it( "Variable Config must be valid", ( ) =>
+   it( `Variable Config must be valid`, ( ) =>
    {
-      assert.isTrue( isJSON( config ), "LinkedTypes:'" + config + "'  must be an array of/or list of key/value pairs" );
+      assert.isTrue( isJSON( config ), `LinkedTypes: "${ config }" must be an array of/or list of key/value pairs` );
    });
 }
 function testType( type )
 {
    let ucKeyIndex = CMD4_DEVICE_TYPE_ENUM.properties.indexOfEnum( i => i.deviceName === type);
-   it( "Device Type:" + type + " should be valid", ( ) =>
+   it( `Device Type: "${ type }" should be valid`, ( ) =>
    {
-      assert.isAbove( ucKeyIndex, -1, "Invalid device type:" + type );
+      assert.isAbove( ucKeyIndex, -1, `Invalid device type: ${ type }` );
    });
 }
 function testName( name )
 {
-   it( "Device name:" + name + " should be valid", ( ) =>
+   it( `Device name: ${ name } should be valid`, ( ) =>
    {
-      assert.isString( name, "Invalid name:" + name );
+      assert.isString( name, `Invalid name: ${ name }` );
    });
 }
 function testModel ( model )
 {
-   it( "Device model:" + model + " should be valid", ( ) =>
+   it( `Device model: ${ model } should be valid`, ( ) =>
    {
-      assert.isString( model, "Invalid model:" + model );
+      assert.isString( model, `Invalid model: ${ model }` );
    });
 }
 function testStateChangeResponseTime ( stateChangeResponseTime )
 {
-   it( "Device stateChangeResponseTime:" + stateChangeResponseTime + " should be valid", ( ) =>
+   it( `Device stateChangeResponseTime: ${ stateChangeResponseTime } should be valid`, ( ) =>
    {
-      assert.isNumber( stateChangeResponseTime, "Invalid stateChangeResponseTime:" + stateChangeResponseTime );
+      assert.isNumber( stateChangeResponseTime, `Invalid stateChangeResponseTime: ${ stateChangeResponseTime }` );
    });
 }
 function testInterval( interval )
 {
-   it( "Device interval:" + interval + " should be valid", ( ) =>
+   it( `Device interval: ${ interval } should be valid`, ( ) =>
    {
-      assert.isNumber( interval, "Invalid interval:" + interval );
+      assert.isNumber( interval, `Invalid interval: ${ interval }` );
    });
 }
 function testCmd4_Mode( cmd4Mode )
 {
-   it( "Cmd4_Mode:" + cmd4Mode + " should be a valid string", ( ) =>
+   it( `Cmd4_Mode: ${ cmd4Mode } should be a valid string`, ( ) =>
    {
       let ucCmd4Mode = ucFirst( cmd4Mode );
-      assert.equal( ucCmd4Mode, "Demo", "Invalid Cmd4_Mode: %s", cmd4Mode );
+      assert.equal( ucCmd4Mode, "Demo", `Invalid Cmd4_Mode: ${ cmd4Mode }` );
    });
 }
 function testTimeout( timeout )
 {
-   it( "Device timeout:" + timeout + " should be a valid number", ( ) =>
+   it( `Device timeout: ${ timeout } should be a valid number`, ( ) =>
    {
       assert.isNumber( timeout, "Invalid timeout:" + timeout );
    });
 }
 function testStateCmd ( state_cmd )
 {
-   it( "Device state_cmd:" + state_cmd + " should be valid", ( ) =>
+   it( `Device state_cmd: ${ state_cmd } should be valid`, ( ) =>
    {
-      assert.isString( state_cmd, "Invalid state_cmd:" + state_cmd );
+      assert.isString( state_cmd, `Invalid state_cmd: ${ state_cmd }` );
    });
 }
 function testCharacteristicString ( characteristic )
 {
-   describe( "Testing characteristic string:" + characteristic, ( ) =>
+   describe( `Testing characteristic string: ${ characteristic }`, ( ) =>
    {
       let ucCharacteristic = ucFirst( characteristic );
       let characteristicIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucCharacteristic );
 
-      it( "Characteristic " + characteristic + " should be valid", ( ) =>
+      it( `Characteristic ${ characteristic } should be valid`, ( ) =>
       {
-         assert.isAbove( characteristicIndex, -1, "Invalid characteristic:" + characteristic );
+         assert.isAbove( characteristicIndex, -1, `Invalid characteristic: ${ characteristic }` );
       });
 
    });
 }
 function testCharacteristic ( characteristic, value )
 {
-   describe( "Testing characteristic:" + characteristic, ( ) =>
+   describe( `Testing characteristic: ${characteristic }`, ( ) =>
    {
-      let ucCharacteristic = ucFirst( characteristic );
-      let characteristicIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucCharacteristic );
+      let characteristicIndex = CMD4_ACC_TYPE_ENUM.indexOfEnum( characteristic );
 
-      it( "Characteristic  string: " + characteristic + " should be valid", ( ) =>
+      it( `Characteristic index: ${ characteristicIndex } should be valid`, ( ) =>
       {
-         assert.isAbove( characteristicIndex, -1, "Invalid characteristic string:" + characteristic );
+         assert.isAbove( characteristicIndex, -1, `Invalid characteristic index` );
+      });
+
+
+      it( `Characteristic ${ characteristic } should be valid`, ( ) =>
+      {
+         assert.isNumber( characteristicIndex, `Invalid characteristic : ${ characteristic }` );
       });
 
       // Check if properties is not null
-      it( "Characteristic " + characteristic + " properties should be valid", ( ) =>
+      it( `Characteristic  ${ characteristic } properties should be valid`, ( ) =>
       {
-         assert.isNotNull( CMD4_ACC_TYPE_ENUM.properties, "properties is null:" + characteristic );
+         assert.isNotNull( CMD4_ACC_TYPE_ENUM.properties, `properties is null: ${ characteristic }` );
       });
 
-      // Check if properties[charisticIndex] is not null
-      it( "Characteristic " + characteristic + " properties[" + characteristicIndex + "] should be valid", ( ) =>
+      // Check if properties[ charisticIndex ] is not null
+      it( `Characteristic  ${ characteristic } properties[ ${ characteristicIndex }  should be valid`, ( ) =>
       {
-         assert.isNotNull( CMD4_ACC_TYPE_ENUM.properties[characteristicIndex], "properties is null:" + characteristic );
+         assert.isNotNull( CMD4_ACC_TYPE_ENUM.properties[ characteristicIndex ], `properties is null: ${ characteristic }` );
       });
 
       // Check if the characteristic has constant values to test
-      if ( Object.keys( CMD4_ACC_TYPE_ENUM.properties[characteristicIndex].validValues).length > 0 )
+      if ( Object.keys( CMD4_ACC_TYPE_ENUM.properties[ characteristicIndex ].validValues).length > 0 )
       {
-         it( "Value: '" + value + "' should be valid characteristic value", ( ) =>
+         it( `Value: "${ value }" should be valid characteristic value`, ( ) =>
          {
-            assert.property( CMD4_ACC_TYPE_ENUM.properties[characteristicIndex].validValues, value, "Could not find '" + value + "' for characteristic: " + characteristic );
+            assert.property( CMD4_ACC_TYPE_ENUM.properties[ characteristicIndex ].validValues, value, `Could not find " ${ value }" for characteristic: ${ characteristic }` );
          });
       }
    });
@@ -390,47 +395,44 @@ function testPollingConfig( pollingConfig )
    {
       case "object":
       {
-         it( "Device polling:" + pollingConfig + " should be an array", ( ) =>
+         it( `Device polling: ${ pollingConfig } should be an array`, ( ) =>
          {
             assert.isArray( pollingConfig, "Invalid polling:" + pollingConfig );
          });
          for ( let cindex=0; cindex < pollingConfig.length; cindex ++)
          {
-            describe( "Testing polling object:", ( ) =>
+            describe( `Testing polling object:`, ( ) =>
             {
-               for ( let pollingKey in pollingConfig[cindex] )
+               for ( let pollingKey in pollingConfig[ cindex ] )
                {
 
-                  let ucPollingKey = ucFirst( pollingKey );
-
-                  switch ( ucPollingKey)
+                  switch ( pollingKey)
                   {
-                     case "Timeout":
+                     case constants.TIMEOUT:
                      {
-                        testTimeout ( pollingConfig[cindex].timeout );
+                        testTimeout ( pollingConfig[ cindex ].timeout );
                         break;
                      }
-                     case "Interval":
+                     case constants.INTERVAL:
 
-                        testInterval( pollingConfig[cindex].interval );
+                        testInterval( pollingConfig[ cindex ].interval );
 
                         break;
-                     case "Characteristic":
+                     case constants.CHARACTERISTIC:
                      {
-                        let value = pollingConfig[cindex].characteristic ||
-                                    pollingConfig[cindex].Characteristic;
-                        // console.log("2 Testing %s", value);
+                        let value = pollingConfig[ cindex ].characteristic;
+                        // console.log( "2 Testing %s", value);
                         testCharacteristicString( value );
 
                         break;
                      }
                      default:
                      {
-                        let value = pollingConfig[cindex][pollingKey];
-                        // console.log("3 Testing %s", value);
-                        describe( "Testing polling characteristic:" + pollingKey, ( ) =>
+                        let value = pollingConfig[ cindex ][ pollingKey ];
+                        // console.log( "3 Testing %s", value);
+                        describe( `Testing polling characteristic: ${ pollingKey }`, ( ) =>
                         {
-                           testCharacteristic ( ucPollingKey, value );
+                           testCharacteristic ( pollingKey, value );
                         });
                      }
                   }
@@ -441,17 +443,17 @@ function testPollingConfig( pollingConfig )
       }
       case "boolean":
       {
-         it( "Device polling:" + pollingConfig + " should be a boolean", ( ) =>
+         it( `Device polling: ${ pollingConfig } should be a boolean`, ( ) =>
          {
-            assert.isBoolean( pollingConfig, "Invalid polling:" + pollingConfig );
+            assert.isBoolean( pollingConfig, `Invalid polling: ${ pollingConfig }` );
          });
          break;
       }
       default:
       {
-         it( "Device polling:" + pollingConfig + " should be an array or string", ( ) =>
+         it( `Device polling: ${ pollingConfig } should be an array or string`, ( ) =>
          {
-            assert.typeOf( typeof pollingConfig, "number", "Invalid characteristic polling type:" + pollingConfig );
+            assert.typeOf( typeof pollingConfig, "number", `Invalid characteristic polling type: ${ pollingConfig }` );
          });
       }
    }
@@ -469,12 +471,12 @@ function testFakegatoConfig( fakegatoConfig )
 
             switch ( ucFakegatoKey )
             {
-               case "Eve":
-               case "Folder":
-               case "KeyPath":
-               case "Storage":
-               case "StoragePath":
-               case "Polling":
+               case constants.EVE:
+               case constants.FOLDER:
+               case constants.KEYPATH:
+               case constants.STORAGE:
+               case constants.STORAGEPATH:
+               case constants.POLLING:
                {
                   // console.log( "Found ucKey '%s'", ucFakegatoKey );
                   break;
@@ -489,9 +491,9 @@ function testFakegatoConfig( fakegatoConfig )
       }
       default:
       {
-         it( "fakegato:" + typeof fakegato + " should be an object", ( ) =>
+         it( `fakegato: ${ typeof fakegato } should be an object`, ( ) =>
          {
-            assert.typeOf( typeof fakegatoConfig, "number", "Invalid fakegato type:" + typeof fakegatoConfig );
+            assert.typeOf( typeof fakegatoConfig, "number", `Invalid fakegato type: ${ typeof fakegatoConfig }` );
          });
       }
    }

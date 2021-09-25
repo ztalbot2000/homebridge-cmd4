@@ -78,6 +78,7 @@
       "pretest": "printf ' test is only done in a development environment\n';sleep 2 ",
       "testDebug": "node_modules/.bin/mocha --require async-dump.js --file test/mocha-setup --ignore test/versionChecker.js",
       "test": "node_modules/.bin/mocha --file test/mocha-setup --ignore test/versionChecker.js",
+      "singleTest": "node_modules/.bin/mocha --bail --file test/mocha-setup --ignore test/versionChecker.js",
       "allTests": "node_modules/.bin/mocha --bail --file test/mocha-setup $( cat test/allTests )",
       "sanityTests": "node_modules/.bin/mocha --bail --file test/mocha-setup $( cat test/sanityTests )",
       "_Note0": "Excluded from commit as may fail for probing GitHub to much",

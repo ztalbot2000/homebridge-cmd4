@@ -172,9 +172,9 @@
                "ozoneDensity":              50,
                "nitrogenDioxideDensity":    50,
                "sulphurDioxideDensity":     50,
-               "pM2_5Density":              50,
-               "pM10Density":               50,
-               "vOCDensity":                50,
+               "pm2_5Density":              50,
+               "pm10Density":               50,
+               "vocDensity":                50,
                "statusActive":             "TRUE",
                "statusFault":              "NO_FAULT",
                "statusTampered":           "NOT_TAMPERED",
@@ -784,7 +784,7 @@
             {
                "type":                    "WiFiSatellite",
                "displayName":             "My_WiFiSatellite",
-               "wiFiSatelliteStatus":     "NOT_CONNECTED"
+               "wifiSatelliteStatus":     "NOT_CONNECTED"
             }
           ]
        }

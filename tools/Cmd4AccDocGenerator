@@ -841,7 +841,7 @@ function addSingleDeviceContent(device_type_enum, deviceName )
    // The stuff in the brace will be indented
    wf( "+", `{\n` );
    wfs( `${ constants.TYPE }: ${ definition.deviceName },\n` );
-   wfs( `${ constants.NAME }: "MY_${ definition.deviceName }",\n` );
+   wfs( `Name }: "MY_${ definition.deviceName }",\n` );
    wfs( `${ constants.DISPLAYNAME }: "MY_${ definition.deviceName }"` );
    if ( requiredCharacteristics && requiredCharacteristics.length > 0 )
    {

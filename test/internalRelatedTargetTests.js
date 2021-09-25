@@ -70,7 +70,7 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
             displayName:               "TemperatureSensor",
             name:                      "TemperatureSensor",
             currentTemperature:        "22.2",
-            polling:                   [ { characteristic: "CurrentTemperature" }],
+            polling:                   [ { characteristic: "currentTemperature" }],
             state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
@@ -118,7 +118,7 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
             name:                      "CameraControl",
             on:                        "1",
             currentHorizontalTiltAngle: 12,
-            polling:                   [ { characteristic: "CurrentHorizontalTiltAngle" } ],
+            polling:                   [ { characteristic: "currentHorizontalTiltAngle" } ],
             state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
@@ -167,7 +167,7 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
             queueTypes:                [{ queue: "A", queueType: "WoRm" }],
             queue:                     "A",
             currentTemperature:        "22.2",
-            polling:                   [ { characteristic: "CurrentTemperature" } ],
+            polling:                   [ { characteristic: "currentTemperature" } ],
             state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
@@ -217,7 +217,7 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
             queueTypes:                [{ queue: "A", queueType: "WoRm" }],
             queue:                     "A",
             currentHorizontalTiltAngle: 12,
-            polling:                   [ { characteristic: "CurrentHorizontalTiltAngle" } ],
+            polling:                   [ { characteristic: "currentHorizontalTiltAngle" } ],
             state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
@@ -264,16 +264,16 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
             currentPosition:            0,
             targetPosition:             0,
             positionState:              0,
-            Polling:                   [ { characteristic: "CurrentPosition" },
+            polling:                   [ { characteristic: "currentPosition" },
                                        // { characteristic: "TargetPosition" },
-                                         { characteristic: "PositionState" } ],
+                                         { characteristic: "positionState" } ],
             state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       };
 
       let log = new Logger( );
       log.setBufferEnabled( );
-      log.setOutputEnabled( true );
+      log.setOutputEnabled( false );
       log.setDebugEnabled( true );
 
 
@@ -290,7 +290,7 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
       assert.include( log.logBuf, `[33mAdding getCachedValue for Door characteristic: Name`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
       assert.include( log.logBuf, `[33mAdding priorityGetValue for Door characteristic: CurrentPosition`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
 
-      assert.include( log.errBuf, `[33mWarning, With polling for "CurrentPosition" requested, you also must do polling of "TargetPosition" or things will not function properl` , `Incorrect stderr: ${ log.errBuf }` );
+      assert.include( log.errBuf, `[33mWarning, With polling for "currentPosition" requested, you also must do polling of "targetPosition" or things will not function properl` , `Incorrect stderr: ${ log.errBuf }` );
       assert.notInclude( log.logBuf, `[33mAdding prioritySetValue for Door characteristic: TargetPosition`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
 
       done( );

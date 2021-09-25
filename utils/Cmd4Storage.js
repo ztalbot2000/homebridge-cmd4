@@ -5,43 +5,57 @@ let CMD4_ACC_TYPE_ENUM = require( "../lib/CMD4_ACC_TYPE_ENUM" ).CMD4_ACC_TYPE_EN
 
 class Cmd4Storage
 {
-   constructor( storedValuesPerCharacteristic )
+   constructor( log, cmd4Storage )
    {
       this.CLASS_VERSION = 1;
-      this.DATA = { };
+      this.DATA = [ ];
 
-      if ( storedValuesPerCharacteristic == undefined )
+      if ( cmd4Storage == undefined )
       {
+         log.debug("Init new cmd4Storage" );
+
          // init new
-         for ( let i = 0; i < CMD4_ACC_TYPE_ENUM.EOL; i++ )
-         {
-            let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ i ].type;
-            this.DATA[ `${ characteristicString }` ] = null;
-      }
-      } else if ( storedValuesPerCharacteristic instanceof Cmd4Storage )
+         this.DATA = new Array( CMD4_ACC_TYPE_ENUM.EOL ).fill( null );
+
+      } else if ( cmd4Storage instanceof Cmd4Storage )
       {
-         if ( storedValuesPerCharacteristic.CLASS_VERSION == this.CLASS_VERSION )
+         log.debug("Class is Cmd4Storage version: %s", cmd4Storage.version );
+         if ( cmd4Storage.CLASS_VERSION == this.CLASS_VERSION )
          {
             // The same. I can just load its data
-            this.loadLatestData( storedValuesPerCharacteristic.DATA );
+            this.loadLatestData( cmd4Storage.DATA );
          } else {
-            throw new Error( `Do not know how to handle Cmd4_Storage Class version: ${ storedValuesPerCharacteristic.CLASS_VERSION }` );
+            throw new Error( `Do not know how to handle Cmd4_Storage Class version: ${ cmd4Storage.CLASS_VERSION }` );
          }
-      } else if ( Array.isArray( storedValuesPerCharacteristic ) )
+      } else if ( Array.isArray( cmd4Storage ) )
       {
+         log.debug("Cmd4Storage is Array" );
          // Init original unversioned
-         let data = this.upgradeData( 0, storedValuesPerCharacteristic );
+         let data = this.upgradeDataArray( 0, cmd4Storage );
          this.loadLatestData( data );
+
+      } else if ( cmd4Storage.constructor === Object )
+      {
+         log.debug("Cmd4Storage is Object version %s", cmd4Storage.CLASS_VERSION );
+         if ( cmd4Storage.CLASS_VERSION == this.CLASS_VERSION )
+         {
+            // The same. I can just load its data
+            this.loadLatestData( cmd4Storage.DATA );
+         } else {
+            throw new Error( `Do not know how to handle Cmd4_Storage Class version: ${ cmd4Storage.CLASS_VERSION }` );
+         }
       } else
       {
          // Woops init new
-         throw new Error( `Do not know how to handle Cmd4_Storage parm: ${ storedValuesPerCharacteristic }` );
+         log.error( "cmd4Storage is %s", cmd4Storage );
+         console.error( "cmd4Storage.constructor.name is %s", cmd4Storage.constructor.name );
+         throw new Error( `Do not know how to handle typeof: ${ typeof cmd4Storage } Cmd4_Storage parm: ${ cmd4Storage }` );
       }
    }
 
-   upgradeData( fromVersion, fromData)
+   upgradeDataArray( fromVersion, fromData)
    {
-      let data = {};
+      let data = [ ];
 
       if ( fromVersion != 0 )
          throw new Error( `Do not know how to handle Cmd4_Storage version: ${ fromVersion }` );
@@ -53,15 +67,12 @@ class Cmd4Storage
       let i=0;
       for ( i=0; i < CMD4_ACC_TYPE_ENUM.ListPairings; i++ )
       {
-         let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ i ].type;
-         data[ `${ characteristicString }` ] = fromData[ i ];
+         data[ i ] = fromData[ i ];
       }
-      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM.ListPairings ].type;
-      data[ `${ characteristicString }` ] = null;
+      data[ CMD4_ACC_TYPE_ENUM.ListPairing ] = null;
       for ( i = CMD4_ACC_TYPE_ENUM.ListPairings +1; i < CMD4_ACC_TYPE_ENUM.EOL; i++ )
       {
-         let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ i ].type;
-         data[ `${ characteristicString }` ] = fromData[ i - 1 ];
+         data[ i ] = fromData[ i - 1 ];
       }
       return data;
    }
@@ -76,32 +87,28 @@ class Cmd4Storage
       if ( accTypeEnumIndex < 0 || accTypeEnumIndex >= CMD4_ACC_TYPE_ENUM.EOL )
          throw new Error( `getStoredValue - Characteristic index: ${ accTypeEnumIndex } not between 0 and ${ CMD4_ACC_TYPE_ENUM.EOL }\nCheck your config.json file for unknown characteristic.` );
 
-      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
 
-      // Because indexes may change, relative to assoc string keys
-      //console.log( "Warning. getStoredValueForIndex is dangerous" );
-      return this.getStoredValueForCharacteristic( characteristicString );
+      return this.DATA[ accTypeEnumIndex ];
    }
 
    getStoredValueForCharacteristic( characteristicString )
    {
-      return this.DATA[ `${ characteristicString }` ];
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.indexOfEnum( characteristicString );
+
+      return this.getStoredValueForIndex( accTypeEnumIndex );
    }
    setStoredValueForIndex( accTypeEnumIndex, value )
    {
       if ( accTypeEnumIndex < 0 || accTypeEnumIndex >= CMD4_ACC_TYPE_ENUM.EOL )
          throw new Error( `setStoredValue - Characteristic index: ${ accTypeEnumIndex } not between 0 and ${ CMD4_ACC_TYPE_ENUM.EOL }\nCheck your config.json file for unknown characteristic.` );
 
-      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
-
-      // Because indexes may change, relative to assoc string keys
-      //console.log( "Warning. setStoredValueForIndex is dangerous" );
-      this.setStoredValueForCharacteristic( characteristicString, value );
+      this.DATA[ accTypeEnumIndex  ] = value;
    }
    setStoredValueForCharacteristic( characteristicString, value )
    {
-      this.DATA[ `${ characteristicString }` ] = value;
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.indexOfEnum( characteristicString );
 
+      this.setStoredValueForIndex( accTypeEnumIndex, value );
    }
 
    // Unlike get/set, testStoredValueForIndex does not call process.exit,
@@ -112,15 +119,13 @@ class Cmd4Storage
       if ( accTypeEnumIndex < 0 || accTypeEnumIndex > CMD4_ACC_TYPE_ENUM.EOL )
          return undefined;
 
-      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
-
-      // Because indexes may change, relative to assoc string keys
-      //console.log( "Warning. testStoredValueForIndex is dangerous" );
-      return this.testStoredValueForCharacteristic( characteristicString );
+      return this.DATA[ accTypeEnumIndex ];
    }
    testStoredValueForCharacteristic( characteristicString )
    {
-      return this.DATA[ `${ characteristicString }` ];
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.indexOfEnum( characteristicString );
+
+      return this.testStoredValueForIndex( accTypeEnumIndex );
    }
 }
 

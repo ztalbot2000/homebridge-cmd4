@@ -255,10 +255,10 @@ describe( "Testing Cmd4Accessory", function( )
          targetTemperature:             20.0,
          currentHeatingCoolingState:    0,
          targetHeatingCoolingState:     0,
-         polling:                      [{characteristic: "CurrentTemperature",
+         polling:                      [{characteristic: "currentTemperature",
                                          interval: 60,
                                          timeout:2000},
-                                        {characteristic: "TargetTemperature",
+                                        {characteristic: "targetTemperature",
                                          interval: 60,
                                          timeout:2000}],
          state_cmd:                    "./test/echoScripts/echo_quoted0"

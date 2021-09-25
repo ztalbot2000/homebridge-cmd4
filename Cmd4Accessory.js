@@ -36,6 +36,8 @@ var { transposeConstantToValidValue,
     } = require( "./utils/transposeCMD4Props" );
 
 let isJSON = require( "./utils/isJSON" );
+let isCmd4Directive = require( "./utils/isCmd4Directive" );
+let isAccDirective = require( "./utils/isAccDirective" );
 
 // Pretty Colors
 var chalk = require( "chalk" );
@@ -171,17 +173,30 @@ class Cmd4Accessory
       // generate a unique id for the accessory this should be generated from
       // something globally unique, but constant, for example, the device serial
       // number or MAC address.
-      let UUID = getAccessoryUUID( config, this.api.hap.uuid );
+      let uuid = getAccessoryUUID( config, this.api.hap.uuid );
 
-      let existingData = this.STORED_DATA_ARRAY.find( data => data[ constants.UUID ] === UUID );
+      // Handle case change
+      let existingDataU = this.STORED_DATA_ARRAY.find( data => data[ "UUID" ] === uuid );
+      if ( existingDataU )
+      {
+            //Z this.log.info( chalk.blue ( `THIS MSG TO BE REMOVED. RENAMING UUID for: ${ config.displayName } LEVEL: ${ this.LEVEL }` ) );
+            existingDataU[ "uuid" ] = existingDataU[ "UUID" ];
+            delete existingDataU[ "UUID" ];
+      }
+
+      // NOTE: We saved the data via lower case uuid.
+      let existingData = this.STORED_DATA_ARRAY.find( data => data[ constants.UUID ] === uuid );
+
       if ( existingData )
       {
+         //Z this.log.info( chalk.blue ( `THIS MSG TO BE REMOVED. Found existing data for: ${ this.displayName }` ) );
          if ( cmd4Dbg ) this.log.debug(`Cmd4Accessory: found existingData for ${ this.displayName }` );
          if ( existingData.storedValuesPerCharacteristic )
          {
+            //Z this.log.info( chalk.blue ( `THIS MSG TO BE REMOVED. Found old storedValuesPerCharacteristic for: ${ this.displayName }` ) );
             if ( cmd4Dbg ) this.log.debug( `Upgrading to cmd4Storage` );
-            this.cmd4Storage = new Cmd4Storage( existingData.storedValuesPerCharacteristic );
-            this.STORED_DATA_ARRAY.push( { [ constants.UUID ]: UUID,
+            this.cmd4Storage = new Cmd4Storage( this.log, existingData.storedValuesPerCharacteristic );
+            this.STORED_DATA_ARRAY.push( { [ constants.UUID ]: uuid,
                                            [ constants.CMD4_STORAGE_lv ]: this.cmd4Storage
                                          }
                                         );
@@ -189,18 +204,20 @@ class Cmd4Accessory
             removeFromArray( this.STORED_DATA_ARRAY, existingData );
          } else if ( existingData.cmd4Storage )
          {
+            //Z this.log.info( chalk.blue ( `THIS MSG TO BE REMOVED. Using existing cmd4Storage for: ${ this.displayName }` ) );
             if ( cmd4Dbg ) this.log.debug( `Using existing cmd4Storage` );
-            this.cmd4Storage = new Cmd4Storage( existingData.cmd4Storage );
-            this.STORED_DATA_ARRAY.push( { [ constants.UUID ]: UUID,
+            this.cmd4Storage = new Cmd4Storage( this.log, existingData.cmd4Storage );
+            this.STORED_DATA_ARRAY.push( { [ constants.UUID ]: uuid,
                                            [ constants.CMD4_STORAGE_lv ]: this.cmd4Storage
                                          }
                                         );
             //this.STORED_DATA_ARRAY.remove( existingData );
             removeFromArray( this.STORED_DATA_ARRAY, existingData );
          } else {
+            //Z log.info( chalk.blue ( `THIS MSG TO BE REMOVED. Unexpected empty cmd4Storage for: ${ this.displayName }` ) );
             this.log.warn( `Unexpected empty cmd4Storage` );
-            this.cmd4Storage = new Cmd4Storage( );
-            this.STORED_DATA_ARRAY.push( { [ constants.UUID ]: UUID,
+            this.cmd4Storage = new Cmd4Storage( this.log );
+            this.STORED_DATA_ARRAY.push( { [ constants.UUID ]: uuid,
                                            [ constants.CMD4_STORAGE_lv ]: this.cmd4Storage
                                          }
                                         );
@@ -212,14 +229,15 @@ class Cmd4Accessory
          parseConfigShouldUseCharacteristicValues = false;
       } else
       {
+         //Z log.info( chalk.blue ( `THIS MSG TO BE REMOVED. Creating new cmd4Storage for: ${ this.displayName }` ) );
          if ( cmd4Dbg ) this.log.debug(`Cmd4Accessory: creating new cmd4Storage for ${ this.displayName }` );
          // Instead of local variables for every characteristic, create an array to
          // hold values for  all characteristics based on the size of all possible
          // characteristics.  Placing them in .config will make them be cached over
          // restarts.
-         this.cmd4Storage = new Cmd4Storage( );
+         this.cmd4Storage = new Cmd4Storage( this.log );
 
-         this.STORED_DATA_ARRAY.push( { [ constants.UUID ]: UUID,
+         this.STORED_DATA_ARRAY.push( { [ constants.UUID ]: uuid,
                                         [ constants.CMD4_STORAGE_lv ]: this.cmd4Storage
                                       }
                                     );
@@ -249,7 +267,7 @@ class Cmd4Accessory
       this.addRequiredCharacteristicStoredValues( );
 
       // The accessory cannot have the same UUID as any other
-      checkAccessoryForDuplicateUUID( this, this.UUID );
+      checkAccessoryForDuplicateUUID( this, this.uuid );
 
       // The default response time is in seconds
       if ( ! this.stateChangeResponseTime )
@@ -415,17 +433,23 @@ class Cmd4Accessory
 
          for ( key in jsonPollingConfig )
          {
-            if ( key.charAt( 0 ) === key.charAt( 0 ).toUpperCase( ) )
-            {
-               this.log.warn( `The config.json polling key: ${ key } is Capitalized.  All definitions, except CONSTANTS, in the near future will start with a lower case character for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
-            }
-
-            let lcKey = lcFirst( key );
-
-            // warn now
             value = jsonPollingConfig[ key ];
 
-            switch ( lcKey )
+            let rcDirective = isCmd4Directive( key );
+            if ( rcDirective == null )
+            {
+               rcDirective = isCmd4Directive( key, true );
+               if ( rcDirective != null )
+               {
+                  // warn now
+                  this.log.warn( `The config.json Cmd4 Polling Directive: ${ key } is Capitalized.  It should be: ${ rcDirective }. In the near future this will be an error for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
+                  key = rcDirective;
+               }
+            }
+            // Not finding the key is not an error as it could be a Characteristic
+
+
+            switch ( key )
             {
                case constants.TIMEOUT:
                case constants.INTERVAL:
@@ -445,16 +469,16 @@ class Cmd4Accessory
                   //2 checkPollingOfUnsetCharacteristics
                   valueToStore = null;
 
-                  // warn now
-                  if ( value.charAt( 0 ) === value.charAt( 0 ).toLowerCase( ) )
+                  let rcDirective = isAccDirective( value, false );
+                  if ( rcDirective == null )
                   {
-                     this.log.warn( `The config.json polling value: ${ value } is Capitalized.  All definitions, except CONSTANTS, in the near future will start with a lower case character for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
-                  }
+                     rcDirective = isAccDirective( value, true );
+                     if ( rcDirective == null )
+                        throw new Error( `No such polling characteristic: "${ value }" for: "${ this.displayName }".` );
 
-                  let ucValue = ucFirst( value );
-                  accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucValue );
-                  if ( accTypeEnumIndex < 0 )
-                     throw new Error( `No such polling characteristic: "${ value }" for: "${ this.displayName }".` );
+                     this.log.warn( `The config.json Polling characteristic: ${ value } is Capitalized it should be: ${ rcDirective.type }.  In the near future this will be an Error so that Cmd4 can use homebridge-ui.\nTo remove this Warning, Please fix your config.json.` );
+                  }
+                  accTypeEnumIndex = rcDirective.accTypeEnumIndex;
 
                   // We can do this as this is a new way to do things.
                   let storedValue = this.cmd4Storage.getStoredValueForIndex( accTypeEnumIndex );
@@ -468,10 +492,11 @@ class Cmd4Accessory
                default:
                {
                   // Is this still useful?
-                  accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === key );
+                  accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.indexOfEnum( key );
 
                   if ( accTypeEnumIndex < 0  )
-                     throw new Error( `OOPS: "${ key }" not found while parsing for characteristic polling. There something wrong with your config.json file?` );
+                     // throw new Error( `OOPS: "${ key }" not found while parsing for characteristic polling. There something wrong with your config.json file?` );
+                     throw new Error( `OOPS: "${ key }" not found while parsing for characteristic polling of "${ this.displayName }". There something wrong with your config.json file?` );
 
                   valueToStore = value;
                }
@@ -584,7 +609,7 @@ class Cmd4Accessory
 
       // Save the cached value.
       // Fakegato does not need to be updated as that is done on a "Get".
-      self.cmd4Storage.setStoredValueForCharacteristic( characteristicString, value );
+      self.cmd4Storage.setStoredValueForIndex( accTypeEnumIndex, value );
 
       let relatedCurrentAccTypeEnumIndex = this.getDevicesRelatedCurrentAccTypeEnumIndex( accTypeEnumIndex );
 
@@ -601,7 +626,7 @@ class Cmd4Accessory
          {
             let relatedCharacteristicString = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].type;
             self.log.info( chalk.blue( `Also Setting (Cached) ${ self.displayName } ${ relatedCharacteristicString }` ) + ` ${ value }` );
-            self.cmd4Storage.setStoredValueForCharacteristic( relatedCharacteristicString, value );
+            self.cmd4Storage.setStoredValueForIndex( relatedCurrentAccTypeEnumIndex, value );
          }
       }
 
@@ -619,7 +644,7 @@ class Cmd4Accessory
    {
       let self = this;
 
-      let storedValue = self.cmd4Storage.getStoredValueForCharacteristic( characteristicString );
+      let storedValue = self.cmd4Storage.getStoredValueForIndex( accTypeEnumIndex );
       if ( storedValue == null || storedValue == undefined )
       {
          self.log.warn( `getCachedValue ${ characteristicString } for: ${ self.displayName } has no cached value` );
@@ -647,8 +672,8 @@ class Cmd4Accessory
          return undefined;
 
       let characteristicProps = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props;
-      let type = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
-      let ucType = ucFirst( type );
+      let type = CMD4_ACC_TYPE_ENUM.accEnumIndexToLC( accTypeEnumIndex );
+      let ucType = CMD4_ACC_TYPE_ENUM.accEnumIndexToUC( accTypeEnumIndex );
 
       let definitions;
 
@@ -664,11 +689,18 @@ class Cmd4Accessory
       let rc = definitions;
       for ( let key in definitions )
       {
-         if ( characteristicProps[ key ] == undefined )
+         // warn now
+         if ( key.charAt( 0 ) === key.charAt( 0 ).toUpperCase() )
+         {
+            this.log.warn( `The property definition key: ${ key } is Capitalized.  In the near future all characteristics will start with a lower case character for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
+         }
+         let lcKey = lcFirst ( key );
+
+         if ( characteristicProps[ lcKey ] == undefined )
             throw new Error( `props for key "${ key }" not in definition of "${ type }"` );
 
 
-         if ( typeof characteristicProps[ key ] !=  typeof definitions[ key ] )
+         if ( typeof characteristicProps[ lcKey ] !=  typeof definitions[ lcKey ] )
             throw new Error( `props for key "${ key }" type "${ typeof definitions[ key ] }" Not equal to definition of "${ typeof characteristicProps[ key ] }"` );
 
       }
@@ -735,17 +767,16 @@ class Cmd4Accessory
        // Check every possible characteristic
        for ( let accTypeEnumIndex = 0; accTypeEnumIndex < CMD4_ACC_TYPE_ENUM.EOL; accTypeEnumIndex++ )
        {
-          let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+          // For "Get" or "Set" commands, we send uppercase
+          let uCCharacteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToUC( accTypeEnumIndex );
 
           // If there is a stored value for this characteristic ( defined by the config file )
           // Then we need to add the characteristic too
-          let storedValue = accessory.cmd4Storage.getStoredValueForCharacteristic( characteristicString );
-
+          let storedValue = accessory.cmd4Storage.getStoredValueForIndex( accTypeEnumIndex );
           if ( storedValue != undefined )
           {
              if ( cmd4Dbg ) accessory.log.debug( "Found characteristic:%s value:%s for:%s",
-                  CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type,
-                  //this.getStoredValueForIndex( accTypeEnumIndex ),
+                  uCCharacteristicString,
                   storedValue,
                   this.displayName );
 
@@ -755,7 +786,7 @@ class Cmd4Accessory
                   CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic ) )
              {
                 //if ( cmd4Dbg ) accessory.log.debug( "Adding optional characteristic:%s for: %s", CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, this.displayName );
-                if ( cmd4Dbg ) accessory.log.debug( "Adding optional characteristic:%s for: %s", characteristicString, this.displayName );
+                if ( cmd4Dbg ) accessory.log.debug( "Adding optional characteristic:%s for: %s", uCCharacteristicString, this.displayName );
 
                 accessory.service.addCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic );
              }
@@ -767,7 +798,7 @@ class Cmd4Accessory
              if ( props )
              {
                 //if ( cmd4Dbg ) accessory.log.debug( "Overriding characteristic %s props for: %s ", CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, this.displayName );
-                if ( cmd4Dbg ) accessory.log.debug( "Overriding characteristic %s props for: %s ", characteristicString, this.displayName );
+                if ( cmd4Dbg ) accessory.log.debug( "Overriding characteristic %s props for: %s ", uCCharacteristicString, this.displayName );
                   accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].
                          characteristic )
                   .setProps(
@@ -809,7 +840,7 @@ class Cmd4Accessory
              {
              accessory.service.setCharacteristic(
                 CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic,
-                      this.cmd4Storage.getStoredValueForCharacteristic( characteristicString ) );
+                      this.cmd4Storage.getStoredValueForIndex( accTypeEnumIndex ) );
              }
 
 
@@ -823,19 +854,19 @@ class Cmd4Accessory
                 {
 
                    // getCachedValue or getValue
-                   if (   ! accessory.polling ||
+                   if ( ! accessory.polling ||
                           accessory.listOfPollingCharacteristics[ accTypeEnumIndex ] == undefined
                       )
                    {
-                      if ( cmd4Dbg ) this.log.debug( chalk.yellow( `Adding getCachedValue for ${ accessory.displayName } characteristic: ${ characteristicString } ` ) );
+                      if ( cmd4Dbg ) this.log.debug( chalk.yellow( `Adding getCachedValue for ${ accessory.displayName } characteristic: ${ uCCharacteristicString } ` ) );
                       //Get cachedValue
                       accessory.service.getCharacteristic(
                          CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
                          .characteristic )
-                            .on( "get", accessory.getCachedValue.bind( accessory, accTypeEnumIndex, characteristicString ) );
+                            .on( "get", accessory.getCachedValue.bind( accessory, accTypeEnumIndex, uCCharacteristicString ) );
                   } else
                   {
-                      if ( cmd4Dbg ) this.log.debug( chalk.yellow( `Adding priorityGetValue for ${ accessory.displayName } characteristic: ${ characteristicString }` ) );
+                      if ( cmd4Dbg ) this.log.debug( chalk.yellow( `Adding priorityGetValue for ${ accessory.displayName } characteristic: ${ uCCharacteristicString }` ) );
 
                       let details = accessory.lookupAccessoryHVForPollingCharacteristic( accessory, accTypeEnumIndex );
 
@@ -844,7 +875,7 @@ class Cmd4Accessory
                       accessory.service.getCharacteristic(
                          CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
                          .characteristic )
-                            .on( "get", accessory.queue.priorityGetValue.bind( accessory, accTypeEnumIndex, characteristicString, details.timeout ) );
+                            .on( "get", accessory.queue.priorityGetValue.bind( accessory, accTypeEnumIndex, uCCharacteristicString, details.timeout ) );
                    }
                 }
              }
@@ -861,11 +892,11 @@ class Cmd4Accessory
                    if ( ! accessory.polling ||
                         accessory.listOfPollingCharacteristics[ accTypeEnumIndex ] == undefined)
                    {
-                      if ( cmd4Dbg ) this.log.debug( chalk.yellow( `Adding setCachedValue for ${ accessory.displayName } characteristic: ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type } ` ) );
+                      if ( cmd4Dbg ) this.log.debug( chalk.yellow( `Adding setCachedValue for ${ accessory.displayName } characteristic: ${ uCCharacteristicString } ` ) );
                       // setCachedValue has parameters:
                       // accTypeEnumIndex, value, callback
                       // The first bound value though is "this"
-                      let boundSetCachedValue = accessory.setCachedValue.bind( this, accTypeEnumIndex, characteristicString );
+                      let boundSetCachedValue = accessory.setCachedValue.bind( this, accTypeEnumIndex, uCCharacteristicString );
                       accessory.service.getCharacteristic(
                          CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
                          .characteristic ).on( "set", ( value, callback ) => {
@@ -874,13 +905,13 @@ class Cmd4Accessory
                       });
 
                    } else {
-                      if ( cmd4Dbg ) this.log.debug( chalk.yellow( `Adding prioritySetValue for ${ accessory.displayName } characteristic: ${ characteristicString } ` ) );
+                      if ( cmd4Dbg ) this.log.debug( chalk.yellow( `Adding prioritySetValue for ${ accessory.displayName } characteristic: ${ uCCharacteristicString } ` ) );
 
                       let details = accessory.lookupAccessoryHVForPollingCharacteristic( accessory, accTypeEnumIndex );
 
                       // Set parms are accTypeEnumIndex, value, callback
                       // Get parms are accTypeEnumIndex, callback
-                      let boundSetValue = accessory.queue.prioritySetValue.bind( this, accTypeEnumIndex, characteristicString, details.timeout, details.stateChangeResponseTime );
+                      let boundSetValue = accessory.queue.prioritySetValue.bind( this, accTypeEnumIndex, uCCharacteristicString, details.timeout, details.stateChangeResponseTime );
                          accessory.service.getCharacteristic(
                          CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
                          .characteristic ).on( "set", ( value, callback ) => {
@@ -1076,7 +1107,7 @@ class Cmd4Accessory
          // warn now
          if ( key.charAt( 0 ) === key.charAt( 0 ).toUpperCase() )
          {
-            this.log.warn( `The config.json FakeGato key: ${ key } is Capitalized.  All definitions, except CONSTANTS, in the near future will start with a lower case character for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
+            this.log.warn( `The config.json FakeGato key: ${ key } is Capitalized.  In the near future all Cmd4 directives will start with a lower case character for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
          }
           let lcKey = lcFirst ( key );
           let value = fakegatoConfig[ key ];
@@ -1120,12 +1151,12 @@ class Cmd4Accessory
              case constants.CURRENTTEMP:
              case constants.VALVEPOSITION:
              {
-                let ucValue = ucFirst( value );
-                let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucValue );
+                // This check both upper and lower case
+                let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.indexOfEnum( value );
 
                 // make sure that the characteristic to log to fakegato is valid
                 // and if it is not 0 for not used.
-                if ( ucValue != "0" )
+                if ( value != "0" )
                 {
                    if ( accTypeEnumIndex < 0 )
                       throw new Error( `Invalid characteristic "${ value }" for fakegato to log of "${ key }".` );
@@ -1256,21 +1287,29 @@ class Cmd4Accessory
       return true;
    }
 
+   // We are looking for things like Volume: <value>, Name: <value>, Mute: <value>
    parseKeyForCharacteristics( key, value, parseConfigShouldUseCharacteristicValues )
    {
       // fix the their scripts, fix it here.
-      let ucKey = ucFirst( key );
+      let rcDirective = isAccDirective( key, false );
+      if ( rcDirective == null )
+      {
+         rcDirective = isAccDirective( key, true );
+         if ( rcDirective == null )
+            throw new Error( `OOPS: "${ key }" not found for parsing characteristics in: "${ this.displayName }".` );
 
-      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucKey );
+         this.log.warn( `The config.json characteristic key: ${ key } is Capitalized.  It should be: ${ rcDirective.type }. In the near future this will be an error for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
+      }
 
-      if ( accTypeEnumIndex < 0 )
-         throw new Error( `OOPS: "${ key }" not found for parsing characteristics in: "${ this.displayName }".` );
 
-      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+      let characteristicString = rcDirective.type;
+      let accTypeEnumIndex = rcDirective.accTypeEnumIndex;
 
       // Do not update the stored values as it is being restored from cache
+      this.log.debug( `Checking to see if value should be set ${ parseConfigShouldUseCharacteristicValues }` );
       if ( parseConfigShouldUseCharacteristicValues == false )
          return;
+      //this.log.debug( `Going to set its value` );
 
 
       if ( Object.keys( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].validValues ).length > 0 )
@@ -1291,6 +1330,7 @@ class Cmd4Accessory
       }
 
 
+      //this.log.debug("Setting %s to %s", characteristicString, properValue );
       this.cmd4Storage.setStoredValueForCharacteristic( characteristicString, properValue );
    }
 
@@ -1450,20 +1490,20 @@ class Cmd4Accessory
       {
          let value = config[ key ];
 
-         let lcKey = lcFirst( key );
-         if ( key == "UUID" )
+         // warn now - Cmd4 Directives are AS DEFINED
+         let rcDirective = isCmd4Directive( key );
+         if ( rcDirective == null )
          {
-            lcKey = key;
-         } else {
-
-            // warn now
-            if ( key.charAt( 0 ) === key.charAt( 0 ).toUpperCase() )
+            rcDirective = isCmd4Directive( key, true );
+            if ( rcDirective != null )
             {
-               this.log.warn( `The config.json key: ${ key } is Capitalized.  All definitions, except CONSTANTS, in the near future will start with a lower case character for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
+               this.log.warn( `The config.json Cmd4 Directive: ${ key } is Capitalized.  It should be: ${ rcDirective }. In the near future this will be an error for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
+               key = rcDirective;
             }
          }
+         // Not finding the key is not an error as it could be a Characteristic
 
-         switch ( lcKey )
+         switch ( key )
          {
             case constants.TYPE:
                this.type = value;
@@ -1482,7 +1522,7 @@ class Cmd4Accessory
                break;
             case constants.UUID:
                // For those who define there own UUID
-               this.UUID = value;
+               this.uuid = value;
 
                break;
            case constants.ACCESSORY:
@@ -1506,32 +1546,6 @@ class Cmd4Accessory
             case constants.PROPS:
                // Allow characteristic property changes.
                this.props = value;
-
-               break;
-            case constants.NAME:
-               // This has already been parsed, but
-               // here so that parseConfig passes and because
-               // name is also a characteristic.
-               this.name = value;
-
-               // Name is also a characteristic, which must be added.
-               this.parseKeyForCharacteristics( key, value, parseConfigShouldUseCharacteristicValues );
-
-               break;
-            case constants.MODEL:
-               this.model = value;
-
-               break;
-            case constants.MANUFACTURER:
-               this.manufacturer = value;
-
-               break;
-            case constants.SERIALNUMBER:
-               this.serialNumber = value;
-
-               break;
-            case constants.FIRMWAREREVISION:
-               this.firmwareRevision = value;
 
                break;
             case constants.OUTPUTCONSTANTS:
@@ -1686,20 +1700,21 @@ class Cmd4Accessory
       // warn now
       if ( this.type.charAt( 0 ) === this.type.charAt( 0 ).toLowerCase( ) )
       {
-         this.log.warn( `The config.json value: ${ this.type } is NOT Captalized.  In the near future this will be an Error so that Cmd4 can use homebridge-ui.\nTo remove this Warning, Please fix your config.json.` );
+         this.log.warn( `The config.json value: ${ this.type } is NOT Capitalized.  In the near future all Characteristic names will start with an upper case character for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
       }
 
-      this.ucType = ucFirst( this.type );
-      this.typeIndex = CMD4_DEVICE_TYPE_ENUM.properties.indexOfEnum( i => i.deviceName === this.ucType );
+      let  ucType = ucFirst( this.type );
+      this.typeIndex = CMD4_DEVICE_TYPE_ENUM.indexOfEnum( ucType );
       if ( this.typeIndex < 0 )
           throw new Error( `Unknown device type: "${ this.type }" given in: "${ this.displayName }".` );
+      this.type = CMD4_DEVICE_TYPE_ENUM.devEnumIndexToC( this.typeIndex );
 
       // Create a subType to delimit services with multiple accessories of
       // the same type and possibly the same accessory.name.
       this.subType = this.subType || this.displayName;
 
       // UUID must be defined or created.
-      this.UUID = this.UUID || getAccessoryUUID( config, this.api.hap.uuid );
+      this.uuid = this.uuid || getAccessoryUUID( config, this.api.hap.uuid );
 
       // Solve some issues people have encounterred who
       // have had problems with shell completion which is
@@ -1773,7 +1788,7 @@ class Cmd4Accessory
       for ( let accTypeEnumIndex = 0; accTypeEnumIndex < CMD4_ACC_TYPE_ENUM.EOL; accTypeEnumIndex ++ )
       {
          // concert the accTypeEnumIndex to its characteristic string
-         let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
+         let characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToLC( accTypeEnumIndex );
          // There was a previously stored characteristic, if it was not initialized
          let storedValue = this.cmd4Storage.getStoredValueForCharacteristic( characteristicString );
          if ( storedValue != null )
@@ -1884,24 +1899,28 @@ class Cmd4Accessory
 
             let value;
             let accTypeEnumIndex = -1;
-            let characteristicString = "";
 
             // All this code disappears in the next major release.
             for ( let key in jsonPollingConfig )
             {
-               // warn now
-               if ( key.charAt( 0 ) === key.charAt( 0 ).toUpperCase( ) )
-               {
-                  this.log.warn( `The config.json polling key: ${ key } is Capitalized.  All definitions, except CONSTANTS, in the near future will start with a lower case character for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
-               }
-
-               let lcKey = lcFirst( key );
                value = jsonPollingConfig[ key ];
 
-               switch ( lcKey )
+               let rcDirective = isCmd4Directive( key );
+               if ( rcDirective == null )
+               {
+                  rcDirective = isCmd4Directive( key, true );
+                  if ( rcDirective != null )
+                  {
+                     this.log.warn( `The config.json Cmd4 Polling Directive: ${ key } is Capitalized.  It should be: ${ rcDirective.type }. In the near future this will be an error for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
+                     key = rcDirective;
+                  }
+               }
+               // Not finding the key is not an error as it could be a Characteristic
+
+               switch ( key )
                {
                   case constants.TIMEOUT:
-                        // Timers are in milliseconds. A low value can result in failure to get/set values
+                     // Timers are in milliseconds. A low value can result in failure to get/set values
                      timeout = parseInt( value, 10 );
                      if ( timeout < 500 )
                         this.log.warn( `Timeout for: ${ accessory.displayName } is in milliseconds. A value of: ${ timeout } seems pretty low.` );
@@ -1927,21 +1946,19 @@ class Cmd4Accessory
                   }
                   case constants.CHARACTERISTIC:
                   {
-                     // Warn now
-                     if ( value.charAt( 0 ) === value.charAt( 0 ).toLowerCase( ) )
+                     rcDirective = isAccDirective( value, false );
+                     if ( rcDirective == null )
                      {
-                        this.log.warn( `The Polling config.json value: ${ value } is Lower Case.  In the near future this will be an Error so that Cmd4 can use homebridge-ui.\nTo remove this Warning, Please fix your config.json.` );
+                        rcDirective = isAccDirective( value, true );
+                        if ( rcDirective == null )
+                           throw new Error( `No such polling characteristic: "${ value }" for: "${ this.displayName }".` );
+
+                        this.log.warn( `The config.json Polling characteristic: ${ value } is Capitalized it should be: ${ rcDirective.type }.  In the near future this will be an Error so that Cmd4 can use homebridge-ui.\nTo remove this Warning, Please fix your config.json.` );
                      }
+                     accTypeEnumIndex = rcDirective.accTypeEnumIndex;
 
-                     //1 DetermineCharacteristicsToPollAndItsChildren
-                     let ucValue = ucFirst( value );
-                     accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === ucValue );
-                     if ( accTypeEnumIndex < 0 )
-                        throw new Error( `No such polling characteristic: "${ value }" for: "${ this.displayName }".` );
-
-                     characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
                      // We can do this as this is a new way to do things.
-                     if ( this.cmd4Storage.getStoredValueForCharacteristic( characteristicString ) == undefined )
+                     if ( this.cmd4Storage.getStoredValueForIndex( accTypeEnumIndex ) == undefined )
                         throw new Error( `Polling for: "${ value }" requested, but characteristic is not in your config.json file for: "${ this.displayName }".` );
 
                      break;
@@ -1960,7 +1977,8 @@ class Cmd4Accessory
                      if ( accTypeEnumIndex != -1 )
                         throw new Error( `For charateristic polling, you can only define one characteristic per array item.\nCannot add "${ key }" as "${ characteristicString }" is already defined for: ${ accessory.displayName }` );
 
-                     accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === key );
+                     // This checks both upper and lower case
+                     accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.indexOfEnum( key );
                      if ( accTypeEnumIndex < 0 )
                         throw new Error( `No such polling characteristic: "${ key }" for: "${ accessory.displayName }".` );
 
@@ -1973,6 +1991,8 @@ class Cmd4Accessory
             {
                this.queue = addQueue( this.log, "Q:" + this.displayName, constants.QUEUETYPE_STANDARD );
             }
+            // This has to be UC as it gets passed to the getValue cmd string
+            let characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToUC( accTypeEnumIndex );
 
             if ( cmd4Dbg ) this.log.debug( `Setting up accessory: ${ accessory.displayName } for polling of: ${ characteristicString } timeout: ${ timeout } interval: ${ interval } queueName: "${ this.queue.queueName }"` );
 
@@ -2006,7 +2026,8 @@ class Cmd4Accessory
          CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ].defaultPollingCharacteristics.forEach( defaultPollingAccTypeEnumIndex =>
          {
 
-            let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ defaultPollingAccTypeEnumIndex ].type;
+            // This has to be UC as it gets passed to the getValue cmd string
+            let characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToUC( defaultPollingAccTypeEnumIndex );
             let record = { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: defaultPollingAccTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: interval, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.QUEUE_NAME_lv ]: this.queue.queueName };
 
             // Used to determine missing related characteristics and
@@ -2049,8 +2070,8 @@ class Cmd4Accessory
                )
             {
 
-               let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type;
-               let relatedCharacteristicString = CMD4_ACC_TYPE_ENUM.properties[ relatedTargetAccTypeEnumIndex ].type;
+               let characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToLC( accTypeEnumIndex );
+               let relatedCharacteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToLC( relatedTargetAccTypeEnumIndex );
                this.log.warn( `Warning, With polling for "${ characteristicString }" requested, you also must do polling of "${ relatedCharacteristicString }" or things will not function properly` );
             }
          }
@@ -2060,14 +2081,14 @@ class Cmd4Accessory
 }
 
 // Compare accessory's UUID with those already created for possible duplicates
-function checkAccessoryForDuplicateUUID( accessory, UUID )
+function checkAccessoryForDuplicateUUID( accessory, uuid )
 {
    // check for UUID+subtype conflict
-   if ( cmd4Dbg ) accessory.log.debug( `Checking ${ accessory.name } for Duplicate UUID: ${ accessory.UUID }` );
+   if ( cmd4Dbg ) accessory.log.debug( `Checking ${ accessory.name } for Duplicate UUID: ${ accessory.uuid }` );
 
    for ( let existingAccessory in accessory.createdCmd4Accessories )
    {
-      if ( UUID == existingAccessory.UUID )
+      if ( uuid == existingAccessory.uuid )
       {
          // This is the same check as what is in 
          // hap-nodejs/dist/lib/Accessory.js
@@ -2086,7 +2107,7 @@ function checkAccessoryForDuplicateUUID( accessory, UUID )
       {
          accessory.accessories.forEach( ( addedAccessory ) =>
          {
-            checkAccessoryForDuplicateUUID( addedAccessory, UUID );
+            checkAccessoryForDuplicateUUID( addedAccessory, uuid );
          });
       }
 
@@ -2095,12 +2116,12 @@ function checkAccessoryForDuplicateUUID( accessory, UUID )
       {
          accessory.linkedAccessories.forEach( ( linkedAccessory ) =>
          {
-            checkAccessoryForDuplicateUUID( linkedAccessory, UUID );
+            checkAccessoryForDuplicateUUID( linkedAccessory, uuid );
          });
       }
    }
 
-   if ( cmd4Dbg ) accessory.log.debug( `No Duplicate UUID's for this Accessory - ` + chalk.green( `OK` ) + `. Using: ${ accessory.UUID }` );
+   if ( cmd4Dbg ) accessory.log.debug( `No Duplicate UUID's for this Accessory - ` + chalk.green( `OK` ) + `. Using: ${ accessory.uuid }` );
 }
 
 exports.Cmd4Accessory = Cmd4Accessory;

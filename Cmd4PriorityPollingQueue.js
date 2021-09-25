@@ -76,7 +76,7 @@ class Cmd4PriorityPollingQueue
       let self = this;
 
       // Save the value to cache. The set will come later
-      self.cmd4Storage.setStoredValueForCharacteristic( characteristicString, value );
+      self.cmd4Storage.setStoredValueForIndex( accTypeEnumIndex, value );
       callback( 0 );
 
       let newEntry = { [ constants.IS_SET_lv ]: true, [ constants.ACCESSORY_lv ]: self, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.CALLBACK_lv ]: callback, [ constants.VALUE_lv ]: value };
@@ -90,7 +90,7 @@ class Cmd4PriorityPollingQueue
       } else {
 
          // Make sure that this is the latest "Set" of this entry
-         let index = self.queue.highPriorityQueue.findIndex( ( entry ) => entry.accessory.UUID == self.UUID && entry.isSet == true && entry.accTypeEnumIndex == accTypeEnumIndex );
+         let index = self.queue.highPriorityQueue.findIndex( ( entry ) => entry.accessory.uuid == self.uuid && entry.isSet == true && entry.accTypeEnumIndex == accTypeEnumIndex );
 
          if ( index == -1 )
          {
@@ -121,7 +121,7 @@ class Cmd4PriorityPollingQueue
       let self = this;
 
       // return the cached value
-      let storedValue = self.cmd4Storage.getStoredValueForCharacteristic( characteristicString );
+      let storedValue = self.cmd4Storage.getStoredValueForIndex( accTypeEnumIndex );
       callback( 0, storedValue );
 
       // When the value is returned, it will update homebridge
@@ -824,10 +824,10 @@ class Cmd4PriorityPollingQueue
             if ( staggeredDelayIndex++ >= staggeredDelaysLength )
                staggeredDelayIndex = 0;
 
-            if ( lastAccessoryUUID != entry.accessory.UUID )
+            if ( lastAccessoryUUID != entry.accessory.uuid )
                staggeredDelayIndex = 0;
 
-            lastAccessoryUUID = entry.accessory.UUID;
+            lastAccessoryUUID = entry.accessory.uuid;
 
             delay += staggeredDelays[ staggeredDelayIndex ];
 
@@ -877,7 +877,7 @@ class Cmd4PriorityPollingQueue
    isCharacteristicPolled( accTypeEnumIndex, queue, accessory )
    {
        if ( queue.lowPriorityQueue.filter(
-               entry => entry.accessory.UUID == accessory.UUID &&
+               entry => entry.accessory.uuid == accessory.uuid &&
                entry.accTypeEnumIndex == accTypeEnumIndex
             ).length == 0 )
        {
@@ -927,7 +927,7 @@ var parseAddQueueTypes = function ( log, entrys )
          // warn now
          if ( key.charAt( 0 ) === key.charAt( 0 ).toUpperCase( ) )
          {
-            log.warn( `The config.json queueTypes key: ${ key } is Capitalized.  All definitions, except CONSTANTS, in the near future will start with a lower case character for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
+            log.warn( `The config.json queueTypes key: ${ key } is Capitalized.  All keys in the near future will ALWAYS start with a lower case character for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
          }
 
          let value = entry[ key ];

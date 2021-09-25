@@ -187,13 +187,13 @@ class Cmd4Platform
          let lcKey = lcFirst( key );
          if ( key == "UUID" )
          {
-            lcKey = "UUID";
+            lcKey = "uuid";
          } else
          {
             // warn now
             if ( key.charAt( 0 ) === key.charAt( 0 ).toUpperCase( ) )
             {
-               this.log.warn( `The config.json Platform key: ${ key } is Capitalized.  All definitions, except CONSTANTS, in the near future will start with a lower case character for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
+               this.log.warn( `The config.json Platform key: ${ key } is Capitalized.  All keys in the near future will ALWAYS start with a lower case character for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
             }
          }
 
@@ -416,19 +416,24 @@ class Cmd4Platform
          // generate a unique id for the accessory this should be generated from
          // something globally unique, but constant, for example, the device serial
          // number or MAC address.
-         let UUID = getAccessoryUUID( device, this.api.hap.uuid );
+         let uuid = getAccessoryUUID( device, this.api.hap.uuid );
 
          // See if an accessory with the same UUID has already been registered and
          // restored from the cached devices we stored in the `configureAccessory`
          // method above
-         const existingAccessory = this.toBeRestoredPlatforms.find(accessory => accessory.UUID === UUID);
+
+         // NOTE: HOMEBRIDGE EXAMPLES HAVE THIS AS UPPERCASE UUID.
+         //       lower case uuid will not be found.
+         const existingAccessory = this.toBeRestoredPlatforms.find(accessory => accessory.UUID === uuid);
 
          if (existingAccessory)
          {
+            // NOTE: HOMEBRIDGE EXAMPLES HAVE THIS AS UPPERCASE UUID.
+            //       lower case uuid will not be found.
             let duplicatePlatformAccessory = this.createdCmd4Platforms.find(accessory => accessory.UUID === existingAccessory.UUID);
             if ( duplicatePlatformAccessory )
             {
-               this.log( chalk.red( `Error duplicate platform accessory: ${ duplicatePlatformAccessory.name } UUID:${ duplicatePlatformAccessory.UUID }` ) );
+               this.log( chalk.red( `Error duplicate platform accessory: ${ duplicatePlatformAccessory.name } uuid:${ duplicatePlatformAccessory.UUID }` ) );
                // Next in for.Each object iteration
                return;
             }
@@ -516,8 +521,8 @@ class Cmd4Platform
             // Create the new PlatformAccessory
             if ( device.category == undefined )
             {
-               if ( cmd4Dbg ) this.log.debug( `Step 1. platformAccessory = new platformAccessory( ${ displayName }, ${ UUID } )` );
-               platform = new this.api.platformAccessory( displayName, UUID );
+               if ( cmd4Dbg ) this.log.debug( `Step 1. platformAccessory = new platformAccessory( ${ displayName }, ${ uuid } )` );
+               platform = new this.api.platformAccessory( displayName, uuid );
 
             } else
             {
@@ -528,9 +533,9 @@ class Cmd4Platform
                if ( ! category )
                   throw new Error( `Category specified: ${ device.category } is not a valid homebridge category.` );
 
-               if ( cmd4Dbg ) this.log.debug( `Step 1. platformAccessory = new platformAccessory( ${ displayName }, ${ UUID }, ${ category } )` );
+               if ( cmd4Dbg ) this.log.debug( `Step 1. platformAccessory = new platformAccessory( ${ displayName }, ${ uuid }, ${ category } )` );
 
-               platform = new this.api.platformAccessory( displayName, UUID, category );
+               platform = new this.api.platformAccessory( displayName, uuid, category );
             }
 
             platform.Service = this.Service;

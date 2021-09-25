@@ -22,6 +22,8 @@
        "CMD4_ACC_TYPE_ENUM" : "readonly",
        "CMD4_DEVICE_TYPE_ENUM" : "readonly",
        "cleanStatesDir" : "readonly",
+       "accEnumIndexToC" : "readonly",
+       "devEnumIndexToC" : "readonly",
        "fs" : "writeable",
        "HomebridgeAPI" : "writeable",
        "Logger" : "writeable",

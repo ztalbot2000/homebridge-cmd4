@@ -69,6 +69,15 @@ global.sleep = function( secondsToSleep = 1 )
    while( moment ( ).isBefore( sleepUntill ) ) { /* block the process */ }
 }
 
+global.accEnumIndexToC = function( index )
+{
+   return CMD4_ACC_TYPE_ENUM.properties[ index ].type;
+}
+global.devEnumIndexToC = function( index )
+{
+   return CMD4_DEVICE_TYPE_ENUM.properties[ index ].deviceName;
+}
+
 // How it's used
 // sleep( 10 );
 

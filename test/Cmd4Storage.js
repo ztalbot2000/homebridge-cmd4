@@ -14,7 +14,11 @@ describe(`Basic Cmd4Storage Tests`, ( ) =>
 {
    it( `Test creation of Cmd4Storage`, ( done ) =>
    {
-      const cmd4Storage = new Cmd4Storage( );
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+
+      const cmd4Storage = new Cmd4Storage( log );
 
       assert.instanceOf( cmd4Storage , Cmd4Storage, "Expected cmd4Storage to be instance of Cmd4Storage. Found %s" , cmd4Storage );
 
@@ -33,52 +37,241 @@ describe(`Basic Cmd4Storage Tests`, ( ) =>
 
    it( `Cmd4Storage can init itself properly`, ( done ) =>
    {
-      let cmd4Storage = new Cmd4Storage( );
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+
+      let cmd4Storage = new Cmd4Storage( log );
+
+      assert.equal( cmd4Storage.DATA.length, CMD4_ACC_TYPE_ENUM.EOL, `cmd4Storage is not the correct size` );
 
       for ( let i = 0; i < CMD4_ACC_TYPE_ENUM.EOL; i++ )
       {
-        let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ i ].type;
-
-        assert.equal( cmd4Storage.DATA[ `${ characteristicString}` ], null, `cmd4Storage[ ${characteristicString} ] is not null` );
+        assert.equal( cmd4Storage.DATA[ i ], null, `cmd4Storage[ ${ i } ] is not null` );
       }
 
       done( );
    });
 
-   it( `Cmd4Storage can set data properly`, ( done ) =>
+   it( `Cmd4Storage can set data properly using an index`, ( done ) =>
    {
-      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM.On ].type;
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
 
-      let cmd4Storage = new Cmd4Storage( );
+      let cmd4Storage = new Cmd4Storage( log );
 
-      cmd4Storage.setStoredValueForCharacteristic( characteristicString, 1 );
-      assert.equal( cmd4Storage.DATA[ `${ characteristicString}` ], 1, `cmd4Storage[ ${characteristicString} ] is not 1` );
+      cmd4Storage.setStoredValueForIndex( CMD4_ACC_TYPE_ENUM.On, 1 );
+      assert.equal( cmd4Storage.DATA[ CMD4_ACC_TYPE_ENUM.On ], 1, `cmd4Storage.DATA[ ${ CMD4_ACC_TYPE_ENUM.On } ] is not 1` );
 
       done( );
    });
 
-   it( `Cmd4Storage can get data properly`, ( done ) =>
+   it( `Cmd4Storage can set data properly using a UC characteristic`, ( done ) =>
    {
-      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM.On ].type;
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
 
-      let cmd4Storage = new Cmd4Storage( );
+      let characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToUC( CMD4_ACC_TYPE_ENUM.On );
+
+      let cmd4Storage = new Cmd4Storage( log );
 
       cmd4Storage.setStoredValueForCharacteristic( characteristicString, 1 );
-
-      let value = cmd4Storage.getStoredValueForCharacteristic( characteristicString );
-      assert.equal( value, 1, `cmd4Storage[ ${characteristicString} ] did not return 1` );
+      assert.equal( cmd4Storage.DATA[ CMD4_ACC_TYPE_ENUM.On ], 1, `cmd4Storage.DATA[ ${ CMD4_ACC_TYPE_ENUM.On } ] is not 1` );
 
       done( );
    });
 
-   it( `Cmd4Storage can test data properly`, ( done ) =>
+   it( `Cmd4Storage can set data properly using a LC characteristic`, ( done ) =>
    {
-      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM.On ].type;
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
 
-      let cmd4Storage = new Cmd4Storage( );
+      let characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToLC( CMD4_ACC_TYPE_ENUM.On );
+
+      let cmd4Storage = new Cmd4Storage( log );
+
+      cmd4Storage.setStoredValueForCharacteristic( characteristicString, 1 );
+      assert.equal( cmd4Storage.DATA[ CMD4_ACC_TYPE_ENUM.On ], 1, `cmd4Storage.DATA[ ${ CMD4_ACC_TYPE_ENUM.On } ] is not 1` );
+
+      done( );
+   });
+
+   it( `Cmd4Storage can get data properly using an index`, ( done ) =>
+   {
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+
+      let cmd4Storage = new Cmd4Storage( log );
+
+      cmd4Storage.setStoredValueForIndex( CMD4_ACC_TYPE_ENUM.On, 1 );
+      assert.equal( cmd4Storage.DATA[ CMD4_ACC_TYPE_ENUM.On ], 1, `cmd4Storage.DATA[ ${ CMD4_ACC_TYPE_ENUM.On } ] is not 1` );
+
+
+      let value = cmd4Storage.getStoredValueForIndex( CMD4_ACC_TYPE_ENUM.On );
+      assert.equal( value, 1, `cmd4Storage.getStoredValueForIndex( ${ CMD4_ACC_TYPE_ENUM.On } ) did not return 1` );
+
+      done( );
+   });
+
+   it( `Cmd4Storage can get data properly using a LC characteristic`, ( done ) =>
+   {
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+
+      let cmd4Storage = new Cmd4Storage( log );
+
+      cmd4Storage.setStoredValueForIndex( CMD4_ACC_TYPE_ENUM.On, 1 );
+      assert.equal( cmd4Storage.DATA[ CMD4_ACC_TYPE_ENUM.On ], 1, `cmd4Storage.DATA[ ${ CMD4_ACC_TYPE_ENUM.On } ] is not 1` );
+
+
+      let characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToLC( CMD4_ACC_TYPE_ENUM.On );
 
       let value = cmd4Storage.getStoredValueForCharacteristic( characteristicString );
-      assert.equal( value, undefined, `cmd4Storage[ ${characteristicString} ] did not return undefined` );
+      assert.equal( value, 1, `cmd4Storage.getStoredValueForCharacteristic( ${ characteristicString } ) did not return 1` );
+
+      done( );
+   });
+
+   it( `Cmd4Storage can get data properly using a UC characteristic`, ( done ) =>
+   {
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+
+      let cmd4Storage = new Cmd4Storage( log );
+
+      cmd4Storage.setStoredValueForIndex( CMD4_ACC_TYPE_ENUM.On, 1 );
+      assert.equal( cmd4Storage.DATA[ CMD4_ACC_TYPE_ENUM.On ], 1, `cmd4Storage.DATA[ ${ CMD4_ACC_TYPE_ENUM.On } ] is not 1` );
+
+
+      let characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToLC( CMD4_ACC_TYPE_ENUM.On );
+
+      let value = cmd4Storage.getStoredValueForCharacteristic( characteristicString );
+      assert.equal( value, 1, `cmd4Storage.getStoredValueForCharacteristic( ${ characteristicString } ) did not return 1` );
+
+      done( );
+   });
+
+   it( `Cmd4Storage can test data properly for an index value to be null`, ( done ) =>
+   {
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+
+      //let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM.On ].type;
+
+      let cmd4Storage = new Cmd4Storage( log );
+
+      let value = cmd4Storage.testStoredValueForIndex( CMD4_ACC_TYPE_ENUM.On );
+      assert.equal( value, undefined, `cmd4Storage.testSoredValueForIndex( ${ CMD4_ACC_TYPE_ENUM.On } ) did not return undefined` );
+
+      done( );
+   });
+
+   it( `Cmd4Storage can test data properly for an index value to be set`, ( done ) =>
+   {
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+
+      let cmd4Storage = new Cmd4Storage( log );
+
+      cmd4Storage.setStoredValueForIndex( CMD4_ACC_TYPE_ENUM.On, 1 );
+
+      let value = cmd4Storage.testStoredValueForIndex( CMD4_ACC_TYPE_ENUM.On );
+      assert.equal( value, 1, `cmd4Storage.testSoredValueForIndex( ${ CMD4_ACC_TYPE_ENUM.On } ) did not return 1` );
+
+      done( );
+   });
+
+   it( `Cmd4Storage can test data properly for an UC characteristic value to be null`, ( done ) =>
+   {
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+
+      let characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToUC( CMD4_ACC_TYPE_ENUM.On );
+
+      let cmd4Storage = new Cmd4Storage( log );
+
+      let value = cmd4Storage.testStoredValueForCharacteristic( characteristicString );
+      assert.equal( value, undefined, `cmd4Storage.testSoredValueForIndex( ${ characteristicString } ) did not return undefined` );
+
+      done( );
+   });
+
+   it( `Cmd4Storage can test data properly for an LC characteristic value to be null`, ( done ) =>
+   {
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+
+      let characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToLC( CMD4_ACC_TYPE_ENUM.On );
+
+      let cmd4Storage = new Cmd4Storage( log );
+
+      let value = cmd4Storage.testStoredValueForCharacteristic( characteristicString );
+      assert.equal( value, undefined, `cmd4Storage.testSoredValueForIndex( ${ characteristicString } ) did not return undefined` );
+
+      done( );
+   });
+
+   it( `Cmd4Storage can test data properly for an UC characteristic value to be set`, ( done ) =>
+   {
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+
+      let characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToUC( CMD4_ACC_TYPE_ENUM.On );
+
+      let cmd4Storage = new Cmd4Storage( log );
+      cmd4Storage.setStoredValueForIndex( CMD4_ACC_TYPE_ENUM.On, 1 );
+
+      let value = cmd4Storage.testStoredValueForCharacteristic( characteristicString );
+
+      assert.equal( value, 1, `cmd4Storage.testSoredValueForIndex( ${ CMD4_ACC_TYPE_ENUM.On } ) did not return 1` );
+
+      done( );
+   });
+
+   it( `Cmd4Storage can test data properly for an LC characteristic value to be set`, ( done ) =>
+   {
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+
+      let characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToLC( CMD4_ACC_TYPE_ENUM.On );
+
+      let cmd4Storage = new Cmd4Storage( log );
+      cmd4Storage.setStoredValueForIndex( CMD4_ACC_TYPE_ENUM.On, 1 );
+
+      let value = cmd4Storage.testStoredValueForCharacteristic( characteristicString );
+
+      assert.equal( value, 1, `cmd4Storage.testSoredValueForIndex( ${ CMD4_ACC_TYPE_ENUM.On } ) did not return 1` );
+
+      done( );
+   });
+
+
+
+   it( `Cmd4Storage can set/get data`, ( done ) =>
+   {
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+
+      let characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToLC( CMD4_ACC_TYPE_ENUM.On );
+
+      let cmd4Storage = new Cmd4Storage( log );
+
+      cmd4Storage.setStoredValueForCharacteristic( characteristicString, 50 );
+      let rc = cmd4Storage.getStoredValueForCharacteristic( characteristicString );
+      assert.equal( rc, 50, `cmd4Storage did not set/get data correctly` );
 
       done( );
    });
@@ -87,13 +280,17 @@ describe(`Init with Class data Tests`, ( ) =>
 {
    it( `Test creation of Cmd4Storage with Class data`, ( done ) =>
    {
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+
       // The Test data
-      let testData = new Cmd4Storage( );
-      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM.On ].type;
+      let testData = new Cmd4Storage( log );
+      let characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToUC( CMD4_ACC_TYPE_ENUM.On );
       testData.setStoredValueForCharacteristic( characteristicString, 1 );
 
 
-      let cmd4Storage = new Cmd4Storage( testData );
+      let cmd4Storage = new Cmd4Storage( log, testData );
       assert.instanceOf( cmd4Storage , Cmd4Storage, "Expected cmd4Storage to be instance of Cmd4Storage. Found %s" , cmd4Storage );
 
       let value = cmd4Storage.getStoredValueForCharacteristic( characteristicString );
@@ -103,26 +300,34 @@ describe(`Init with Class data Tests`, ( ) =>
 
    it( `Test creation of Cmd4Storage with invalid Class data throws error`, ( done ) =>
    {
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+
       // The Test data
-      let testData = new Cmd4Storage( );
-      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM.On ].type;
+      let testData = new Cmd4Storage( log );
+      let characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToUC( CMD4_ACC_TYPE_ENUM.On );
       testData.setStoredValueForCharacteristic( characteristicString, 1 );
 
-      expect ( ( ) => new Cmd4Storage( 155 ) ).to.throw(/Do not know how to handle Cmd4_Storage parm: 155/);
+      expect ( ( ) => new Cmd4Storage( log, 155 ) ).to.throw(/Do not know how to handle typeof: number Cmd4_Storage parm: 155/);
 
       done( );
    });
 
    it( `Test creation of Cmd4Storage with invalid Class Version throws error`, ( done ) =>
    {
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+
       // The Test data
-      let testData = new Cmd4Storage( );
-      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM.On ].type;
+      let testData = new Cmd4Storage( log );
+      let characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToUC( CMD4_ACC_TYPE_ENUM.On );
       testData.setStoredValueForCharacteristic( characteristicString, 1 );
       testData.CLASS_VERSION = 0;
 
 
-      expect ( ( ) => new Cmd4Storage( testData ) ).to.throw(/Do not know how to handle Cmd4_Storage Class version: 0/);
+      expect ( ( ) => new Cmd4Storage( log, testData ) ).to.throw(/Do not know how to handle Cmd4_Storage Class version: 0/);
 
       done( );
    });
@@ -133,15 +338,19 @@ describe(`Init with Old data Tests`, ( ) =>
 {
    it( `Test creation of Cmd4Storage with old data below ListPairing`, ( done ) =>
    {
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+
       // The Test data
       let storedValuesPerCharacteristic = new Array( CMD4_ACC_TYPE_ENUM.EOL -1 ).fill( null );
       storedValuesPerCharacteristic[ CMD4_ACC_TYPE_ENUM.Active ] = 1;
 
 
-      let cmd4Storage = new Cmd4Storage( storedValuesPerCharacteristic );
+      let cmd4Storage = new Cmd4Storage( log, storedValuesPerCharacteristic );
       assert.instanceOf( cmd4Storage , Cmd4Storage, "Expected cmd4Storage to be instance of Cmd4Storage. Found %s" , cmd4Storage );
 
-      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM.Active ].type;
+      let characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToUC( CMD4_ACC_TYPE_ENUM.Active );
       let value = cmd4Storage.getStoredValueForCharacteristic( characteristicString );
       assert.equal( value, 1, `cmd4Storage[ ${characteristicString} ] did not return 1` );
       done( );
@@ -149,6 +358,10 @@ describe(`Init with Old data Tests`, ( ) =>
 
    it( `Test creation of Cmd4Storage with old data above ListPairing`, ( done ) =>
    {
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+
       // The Test data
       let storedValuesPerCharacteristic = new Array( CMD4_ACC_TYPE_ENUM.EOL -1 ).fill( null );
       // The old data would be the new minus one.
@@ -156,14 +369,14 @@ describe(`Init with Old data Tests`, ( ) =>
       storedValuesPerCharacteristic[ CMD4_ACC_TYPE_ENUM.WiFiSatelliteStatus -1 ] = 1;
 
 
-      let cmd4Storage = new Cmd4Storage( storedValuesPerCharacteristic );
+      let cmd4Storage = new Cmd4Storage( log, storedValuesPerCharacteristic );
       assert.instanceOf( cmd4Storage , Cmd4Storage, "Expected cmd4Storage to be instance of Cmd4Storage. Found %s" , cmd4Storage );
 
       // Check the next characteristic past ListPairing
-      let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM.LockControlPoint ].type;
+      let characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToUC( CMD4_ACC_TYPE_ENUM.LockControlPoint );
       let value = cmd4Storage.getStoredValueForCharacteristic( characteristicString );
       assert.equal( value, 1, `cmd4Storage[ ${characteristicString} ] did not return 1` );
-      characteristicString = CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM.WiFiSatelliteStatus ].type;
+      characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToUC( CMD4_ACC_TYPE_ENUM.WiFiSatelliteStatus );
       value = cmd4Storage.getStoredValueForCharacteristic( characteristicString );
       assert.equal( value, 1, `cmd4Storage[ ${characteristicString} ] did not return 1` );
       done( );

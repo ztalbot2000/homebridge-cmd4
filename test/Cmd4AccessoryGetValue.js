@@ -143,7 +143,7 @@ describe( "Testing Cmd4Accessory", function( )
 
    });
 
-   it( "getValue Active should inject 1 to Hombridge for ACTIVE response", function ( done )
+   it( "getValue active should inject 1 to Hombridge for ACTIVE response", function ( done )
    {
       let platformConfig =
       {
@@ -196,7 +196,7 @@ describe( "Testing Cmd4Accessory", function( )
       // Call the getValue bound function, which is priorityGetValue
       cmd4Accessory.service.getCharacteristic(
          CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM.Active ]
-             .characteristic ).getValue( "Active", function dummyCallback( ) { } );
+             .characteristic ).getValue( "active", function dummyCallback( ) { } );
 
       setTimeout( ( ) =>
       {
@@ -256,7 +256,7 @@ describe( "Testing Cmd4Accessory", function( )
       // Call the getValue bound function, which is priorityGetValue
       cmd4Accessory.service.getCharacteristic(
          CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM.Active ]
-             .characteristic ).getValue( "Active", function dummyCallback( ) { } );
+             .characteristic ).getValue( "active", function dummyCallback( ) { } );
 
       setTimeout( ( ) =>
       {
@@ -268,7 +268,7 @@ describe( "Testing Cmd4Accessory", function( )
       }, 1900);
    });
 
-   it( "getValue Active should inject 0 to Hombridge for 0 response", function ( done )
+   it( "getValue active should inject 0 to Hombridge for 0 response", function ( done )
    {
       let platformConfig =
       {
@@ -600,7 +600,7 @@ describe( "Testing Cmd4Accessory", function( )
             pictureMode:              "STANDARD",
             remoteKey:                "SELECT",
                                       // Since Mute is optional
-            polling:                  [{ characteristic: "Mute" }],
+            polling:                  [{ characteristic: "mute" }],
             state_cmd:                "./test/echoScripts/echo_true"
          }]
       };
@@ -664,7 +664,7 @@ describe( "Testing Cmd4Accessory", function( )
             pictureMode:              "STANDARD",
             remoteKey:                "SELECT",
                                       // Since Mute is optional
-            polling:                  [{ characteristic: "Mute" }],
+            polling:                  [{ characteristic: "mute" }],
             state_cmd:                "./test/echoScripts/echo_0"
          }]
       };
@@ -727,7 +727,7 @@ describe( "Testing Cmd4Accessory", function( )
             pictureMode:              "STANDARD",
             remoteKey:                "SELECT",
                                       // Since Mute is optional
-            polling:                  [{ characteristic: "Mute" }],
+            polling:                  [{ characteristic: "mute" }],
             state_cmd:                "./test/echoScripts/echo_1"
          }]
       };
@@ -790,7 +790,7 @@ describe( "Testing Cmd4Accessory", function( )
             pictureMode:              "STANDARD",
             remoteKey:                "SELECT",
                                       // Since Mute is optional
-            polling:                  [{ characteristic: "Mute" }],
+            polling:                  [{ characteristic: "mute" }],
             state_cmd:                "./test/echoScripts/echo_quotedFALSE"
          }]
       };
@@ -854,7 +854,7 @@ describe( "Testing Cmd4Accessory", function( )
             pictureMode:              "STANDARD",
             remoteKey:                "SELECT",
                                       // Since Mute is optional
-            polling:                  [{ characteristic: "Mute" }],
+            polling:                  [{ characteristic: "mute" }],
             state_cmd:                "./test/echoScripts/echo_quotedTRUE"
          }]
       };
@@ -917,7 +917,7 @@ describe( "Testing Cmd4Accessory", function( )
             pictureMode:              "STANDARD",
             remoteKey:                "SELECT",
                                       // Since ClosedCaptions is optional
-            polling:                  [{ characteristic: "ClosedCaptions" }],
+            polling:                  [{ characteristic: "closedCaptions" }],
             state_cmd:                "./test/echoScripts/echo_DISABLED"
          }]
       };
@@ -981,7 +981,7 @@ describe( "Testing Cmd4Accessory", function( )
             pictureMode:              "STANDARD",
             remoteKey:                "SELECT",
                                       // Since Mute is optional
-            polling:                  [{ characteristic: "Mute" }],
+            polling:                  [{ characteristic: "mute" }],
             state_cmd:                "./test/echoScripts/echo_nothing",
             timeout:                   500
          }]
@@ -1046,7 +1046,7 @@ describe( "Testing Cmd4Accessory", function( )
             pictureMode:              "STANDARD",
             remoteKey:                "SELECT",
                                       // Since Mute is optional
-            polling:                  [{ characteristic: "Mute" }],
+            polling:                  [{ characteristic: "mute" }],
             state_cmd:                "./test/echoScripts/echo_null",
             timeout:                  500
          }]
@@ -1111,7 +1111,7 @@ describe( "Testing Cmd4Accessory", function( )
             pictureMode:              "STANDARD",
             remoteKey:                "SELECT",
                                       // Since Mute is optional
-            polling:                  [{ characteristic: "Mute" }],
+            polling:                  [{ characteristic: "mute" }],
             state_cmd:                "./test/echoScripts/echo_true_withRcOf1",
             timeout:                  500
          }]
@@ -1180,7 +1180,7 @@ describe( "Testing Cmd4Accessory", function( )
             pictureMode:              "STANDARD",
             remoteKey:                "SELECT",
                                       // Since Mute is optional
-            polling:                  [{ characteristic: "Mute" }],
+            polling:                  [{ characteristic: "mute" }],
             state_cmd:                "./test/echoScripts/echo_quotedNULL",
             timeout:                  500
          }]
@@ -1244,7 +1244,7 @@ describe( "Testing Cmd4Accessory", function( )
             pictureMode:              "STANDARD",
             remoteKey:                "SELECT",
                                       // Since Mute is optional
-            polling:                  [{ characteristic: "Mute" }],
+            polling:                  [{ characteristic: "mute" }],
             state_cmd:                "./test/echoScripts/echo_quotedNothing",
             timeout:                  500
          }]
@@ -1308,7 +1308,7 @@ describe( "Testing Cmd4Accessory", function( )
             pictureMode:              "STANDARD",
             remoteKey:                "SELECT",
                                       // Since Mute is optional
-            polling:                  [{ characteristic: "Mute" }],
+            polling:                  [{ characteristic: "mute" }],
             state_cmd:                "./test/echoScripts/echo_errorToStderr",
             timeout:                  500
          }]
@@ -1374,7 +1374,7 @@ describe( "Testing Cmd4Accessory", function( )
             remoteKey:                "SELECT",
             timeout:                   500,
                                       // Since Mute is optional
-            polling:                  [{ characteristic: "Mute" }],
+            polling:                  [{ characteristic: "mute" }],
             state_cmd: "./test/echoScripts/justExitWithRCof0"
          }]
       };
@@ -1438,7 +1438,7 @@ describe( "Testing Cmd4Accessory", function( )
             remoteKey:                "SELECT",
             timeout:                   500,
                                       // Since Mute is optional
-            polling:                  [{ characteristic: "Mute" }],
+            polling:                  [{ characteristic: "mute" }],
             state_cmd: "./test/echoScripts/justExitWithRCof0"
          }]
       };
@@ -1516,7 +1516,7 @@ describe( "Testing Cmd4Accessory", function( )
             remoteKey:                "SELECT",
             timeout:                   400,
                                       // Since Mute is optional
-            polling:                  [{ characteristic: "Mute" }],
+            polling:                  [{ characteristic: "mute" }],
             state_cmd:                "./test/echoScripts/runToTimeoutRcOf0"
          }]
       };
