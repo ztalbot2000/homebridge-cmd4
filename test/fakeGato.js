@@ -26,18 +26,18 @@ let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, _api.hap.Servi
 //}
 
 // ******** QUICK TEST CMD4_ACC_TYPE_ENUM *************
-describe( "Quick Test of CMD4_DEVICE_TYPE_ENUM", ( ) =>
+describe( `Quick Test of CMD4_DEVICE_TYPE_ENUM`, ( ) =>
 {
-   it( "CMD4_DEVICE_TYPE_ENUM.EOL =" + DEVICE_EOL, ( ) =>
+   it( `CMD4_DEVICE_TYPE_ENUM.EOL ${ DEVICE_EOL }`, ( ) =>
    {
      expect( CMD4_DEVICE_TYPE_ENUM.EOL ).to.equal( DEVICE_EOL );
    });
 });
 
 // ******** QUICK TEST CMD4_ACC_TYPE_ENUM *************
-describe( "Quick Test of CMD4_ACC_TYPE_ENUM", ( ) =>
+describe( `Quick Test of CMD4_ACC_TYPE_ENUM`, ( ) =>
 {
-   it( "CMD4_ACC_TYPE_ENUM.EOL =" + ACC_EOL, ( ) =>
+   it( `CMD4_ACC_TYPE_ENUM.EOL = ${ ACC_EOL }`, ( ) =>
    {
      expect( CMD4_ACC_TYPE_ENUM.EOL ).to.equal( ACC_EOL );
    });
@@ -78,12 +78,12 @@ describe('Testing FakeGato gets created', ( ) =>
 
    });
 
-   it( "Test if Cmd4Platform exists", function ( )
+   it( `Test if Cmd4Platform exists`, function ( )
    {
-      expect( Cmd4Platform ).not.to.be.a( "null", "Cmd4Platform was null" );
+      expect( Cmd4Platform ).not.to.be.a( "null", `Cmd4Platform was null` );
    });
 
-   it( "Test creation of Accessory with FakeGato Thermo", function( done )
+   it( `Test creation of Accessory with FakeGato Thermo`, function( done )
    {
       let platformConfig =
       {
@@ -136,7 +136,7 @@ describe('Testing FakeGato gets created', ( ) =>
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
-      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, `cmd4Platform is not an instance of Cmd4Platform` );
 
       assert.equal( "", log.logBuf, ` Cmd4Platform unexpected stdout received: ${ log.logBuf }` );
       assert.equal( "", log.errBuf, ` Cmd4Platform unexpected stderr received: ${ log.errBuf }` );
@@ -146,13 +146,13 @@ describe('Testing FakeGato gets created', ( ) =>
       let cmd4LightAccessory = cmd4Platform.createdCmd4Accessories[0];
       let cmd4ThermostatAccessory = cmd4Platform.createdCmd4Accessories[1];
 
-      expect( cmd4LightAccessory ).to.be.a.instanceOf( Cmd4Accessory, "Light is not an instance of Cmd4Accessory" );
-      expect( cmd4ThermostatAccessory ).to.be.a.instanceOf( Cmd4Accessory, "Thermostat is not an instance of Cmd4Accessory" );
+      expect( cmd4LightAccessory ).to.be.a.instanceOf( Cmd4Accessory, `Light is not an instance of Cmd4Accessory` );
+      expect( cmd4ThermostatAccessory ).to.be.a.instanceOf( Cmd4Accessory, `Thermostat is not an instance of Cmd4Accessory` );
 
       done( );
    });
 
-   it( "Test creation of Accessory with FakeGato room", function( done )
+   it( `Test creation of Accessory with FakeGato room`, function( done )
    {
       let platformConfig =
       {
@@ -204,7 +204,7 @@ describe('Testing FakeGato gets created', ( ) =>
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
-      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, `cmd4Platform is not an instance of Cmd4Platform` );
 
       assert.equal( "", log.logBuf, ` Cmd4Platform unexpected stdout received: ${ log.logBuf }` );
       assert.equal( "", log.errBuf, ` Cmd4Platform unexpected stderr received: ${ log.errBuf }` );
@@ -214,13 +214,13 @@ describe('Testing FakeGato gets created', ( ) =>
       let cmd4LightAccessory = cmd4Platform.createdCmd4Accessories[0];
       let cmd4ThermostatAccessory = cmd4Platform.createdCmd4Accessories[1];
 
-      expect( cmd4LightAccessory ).to.be.a.instanceOf( Cmd4Accessory, "Light is not an instance of Cmd4Accessory" );
-      expect( cmd4ThermostatAccessory ).to.be.a.instanceOf( Cmd4Accessory, "Thermostat is not an instance of Cmd4Accessory" );
+      expect( cmd4LightAccessory ).to.be.a.instanceOf( Cmd4Accessory, `Light is not an instance of Cmd4Accessory` );
+      expect( cmd4ThermostatAccessory ).to.be.a.instanceOf( Cmd4Accessory, `Thermostat is not an instance of Cmd4Accessory` );
 
       done( );
    });
 
-   it( "Test creation of Accessory with FakeGato door", function( done )
+   it( `Test creation of Accessory with FakeGato door`, function( done )
    {
       let platformConfig =
       {
@@ -270,7 +270,7 @@ describe('Testing FakeGato gets created', ( ) =>
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
-      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, `cmd4Platform is not an instance of Cmd4Platform` );
 
       assert.equal( "", log.logBuf, ` Cmd4Platform unexpected stdout received: ${ log.logBuf }` );
       assert.equal( "", log.errBuf, ` Cmd4Platform unexpected stderr received: ${ log.errBuf }` );
@@ -280,13 +280,13 @@ describe('Testing FakeGato gets created', ( ) =>
       let cmd4LightAccessory = cmd4Platform.createdCmd4Accessories[0];
       let cmd4DoorAccessory = cmd4Platform.createdCmd4Accessories[1];
 
-      expect( cmd4LightAccessory ).to.be.a.instanceOf( Cmd4Accessory, "Light is not an instance of Cmd4Accessory" );
-      expect( cmd4DoorAccessory ).to.be.a.instanceOf( Cmd4Accessory, "Door is not an instance of Cmd4Accessory" );
+      expect( cmd4LightAccessory ).to.be.a.instanceOf( Cmd4Accessory, `Light is not an instance of Cmd4Accessory` );
+      expect( cmd4DoorAccessory ).to.be.a.instanceOf( Cmd4Accessory, `Door is not an instance of Cmd4Accessory` );
 
       done( );
    });
 
-   it( "Test creation of Accessory with FakeGato power", function( done )
+   it( `Test creation of Accessory with FakeGato power`, function( done )
    {
       let platformConfig =
       {
@@ -334,7 +334,7 @@ describe('Testing FakeGato gets created', ( ) =>
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
-      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, `cmd4Platform is not an instance of Cmd4Platform` );
 
       assert.equal( "", log.logBuf, ` Cmd4Platform unexpected stdout received: ${ log.logBuf }` );
       assert.equal( "", log.errBuf, ` Cmd4Platform unexpected stderr received: ${ log.errBuf }` );
@@ -344,13 +344,13 @@ describe('Testing FakeGato gets created', ( ) =>
       let cmd4LightAccessory = cmd4Platform.createdCmd4Accessories[0];
       let cmd4FanAccessory = cmd4Platform.createdCmd4Accessories[1];
 
-      expect( cmd4LightAccessory ).to.be.a.instanceOf( Cmd4Accessory, "Light is not an instance of Cmd4Accessory" );
-      expect( cmd4FanAccessory ).to.be.a.instanceOf( Cmd4Accessory, "Fan is not an instance of Cmd4Accessory" );
+      expect( cmd4LightAccessory ).to.be.a.instanceOf( Cmd4Accessory, `Light is not an instance of Cmd4Accessory` );
+      expect( cmd4FanAccessory ).to.be.a.instanceOf( Cmd4Accessory, `Fan is not an instance of Cmd4Accessory` );
 
       done( );
    });
 
-   it( "Test incorrect characteristic throws fakegato error ", function( done )
+   it( `Test incorrect characteristic throws fakegato error `, function( done )
    {
       let platformConfig =
       {
@@ -401,7 +401,7 @@ describe('Testing FakeGato gets created', ( ) =>
       done( );
    });
 
-   it( "Test not defining polling characteristic throws fakegato error ", function( done )
+   it( `Test not defining polling characteristic throws fakegato error `, function( done )
    {
       let platformConfig =
       {
@@ -453,7 +453,7 @@ describe('Testing FakeGato gets created', ( ) =>
       done( );
    });
 
-   it( "Test invalid Eve type throws error ", function( done )
+   it( `Test invalid Eve type throws error `, function( done )
    {
       let platformConfig =
       {
@@ -494,7 +494,7 @@ describe('Testing FakeGato gets created', ( ) =>
       done( );
    });
 
-   it( "Test invalid fakegato key throws error ", function( done )
+   it( `Test invalid fakegato key throws error `, function( done )
    {
       let platformConfig =
       {
@@ -532,6 +532,102 @@ describe('Testing FakeGato gets created', ( ) =>
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
       expect ( ( ) => cmd4Platform.discoverDevices( ) ).to.throw(/Invalid fakegato key: "badKey" in json.config for: "My_v1Fan"./);
+
+      done( );
+   });
+
+   it( `Test uppercase FakeGato Key throws an error.  It Always did `, function( done )
+   {
+      let platformConfig =
+      {
+         accessories: [
+            {
+               type:                         "Fan",
+               name:                         "My_v1Fan",
+               rotationDirection:             1,
+               rotationSpeed:                 100,
+               stateChangeResponseTime:       1,
+               polling:                      [ { characteristic: "rotationDirection" },
+                                               { characteristic: "rotationSpeed" },
+                                               { characteristic: "on" }
+                                             ],
+               fakegato: { eve:          "Energy",
+                           // rotationSpeed used as an example.
+                           // Not really power characteristic
+                           power:        "rotationSpeed",
+                           storage:      "fs",
+                           storagePath:  ".homebridge/FakegatoStorage",
+                           folder:       "folderName",
+                           keyPath:      "/place/to/store/my/keys/"
+                          },
+               state_cmd:                      "./test/echoScripts/echo_ACTIVE"
+             }
+         ]
+      }
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect ( ( ) => cmd4Platform.discoverDevices( ) ).to.throw(/Invalid fakegato eve type: "Energy". It must be one of \( energy, room, weather, door, motion, thermo, aqua \). Check the Cmd4 README at: "https:\/\/github.com\/simont77\/fakegato-history"./);
+
+      assert.equal( 2, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
+
+
+      done( );
+   });
+
+   it( `Test uppercase FakeGato Characteristic creates a warning `, function( done )
+   {
+      let platformConfig =
+      {
+         accessories: [
+            {
+               type:                         "Fan",
+               name:                         "My_v1Fan",
+               rotationDirection:             1,
+               rotationSpeed:                 100,
+               stateChangeResponseTime:       1,
+               polling:                      [ { characteristic: "rotationDirection" },
+                                               { characteristic: "rotationSpeed" },
+                                               { characteristic: "on" }
+                                             ],
+               fakegato: { eve:          "energy",
+                           // rotationSpeed used as an example.
+                           // Not really power characteristic
+                           power:        "RotationSpeed",
+                           storage:      "fs",
+                           storagePath:  ".homebridge/FakegatoStorage",
+                           folder:       "folderName",
+                           keyPath:      "/place/to/store/my/keys/"
+                          },
+               state_cmd:                      "./test/echoScripts/echo_ACTIVE"
+             }
+         ]
+      }
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      cmd4Platform.discoverDevices( );
+
+      let cmd4FanAccessory = cmd4Platform.createdCmd4Accessories[0];
+
+      expect( cmd4FanAccessory ).to.be.a.instanceOf( Cmd4Accessory, `Fan is not an instance of Cmd4Accessory` );
+
+
+      //assert.equal( "", log.logBuf, ` Cmd4Platform unexpected stdout received: ${ log.logBuf }` );
+      assert.include( log.errBuf, `[33mThe config.json FakeGato characteristic: RotationSpeed is Capitalized it should be: rotationSpeed.  In the near future this will be an Error so that Cmd4 can use homebridge-ui`, ` Cmd4Platform unexpected stderr received: ${ log.errBuf }` );
+      assert.equal( 3, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
+
+
 
       done( );
    });

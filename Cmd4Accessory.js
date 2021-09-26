@@ -1151,23 +1151,24 @@ class Cmd4Accessory
              case constants.CURRENTTEMP:
              case constants.VALVEPOSITION:
              {
-                // This check both upper and lower case
-                let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.indexOfEnum( value );
-
-                // make sure that the characteristic to log to fakegato is valid
-                // and if it is not 0 for not used.
                 if ( value != "0" )
                 {
-                   if ( accTypeEnumIndex < 0 )
-                      throw new Error( `Invalid characteristic "${ value }" for fakegato to log of "${ key }".` );
+                   let rcDirective = isAccDirective( value, false );
+                   if ( rcDirective == null )
+                   {
+                      rcDirective = isAccDirective( value, true );
+                      if ( rcDirective == null )
+                         throw new Error( `Invalid characteristic "${ value }" for fakegato to log of "${ key }".` );
 
+                     this.log.warn( `The config.json FakeGato characteristic: ${ value } is Capitalized it should be: ${ rcDirective.type }.  In the near future this will be an Error so that Cmd4 can use homebridge-ui.\nTo remove this Warning, Please fix your config.json.` );
+                   }
 
-                   // Make sure the characteristic is being polled so I do not get any more tickets
-                   // as to why the value is not changing.
-                   if ( this.queue.isCharacteristicPolled( accTypeEnumIndex, this.queue, this ) == false )
-                       throw new Error(`Characteristic: "${ value }" for fakegato to log of "${ key }" is not being polled.\nHistory can not be updated continiously.` );
-
+                   // Make sure the characteristic is being polled (Changing) so I do
+                   // not get any more tickets.
+                   if ( this.queue.isCharacteristicPolled( rcDirective.accTypeEnumIndex, this.queue, this ) == false )
+                      throw new Error(`Characteristic: "${ value }" for fakegato to log of "${ key }" is not being polled.\nHistory can not be updated continiously.` );
                 }
+
                 break;
              }
              default:
@@ -1787,22 +1788,22 @@ class Cmd4Accessory
       // We need to check for removed characteristics in the config
       for ( let accTypeEnumIndex = 0; accTypeEnumIndex < CMD4_ACC_TYPE_ENUM.EOL; accTypeEnumIndex ++ )
       {
-         // concert the accTypeEnumIndex to its characteristic string
-         let characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToLC( accTypeEnumIndex );
-         // There was a previously stored characteristic, if it was not initialized
-         let storedValue = this.cmd4Storage.getStoredValueForCharacteristic( characteristicString );
+         let storedValue = this.cmd4Storage.getStoredValueForIndex( accTypeEnumIndex );
          if ( storedValue != null )
          {
-            let ucCharacteristicString = ucFirst( characteristicString );
-            let lcCharacteristicString = lcFirst( characteristicString );
-            if ( config[ characteristicString ] != undefined ||
-                 config[ lcCharacteristicString  ] != undefined ||
+
+            // connect the accTypeEnumIndex to its characteristic string
+            let lcCharacteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToLC( accTypeEnumIndex );
+            let ucCharacteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToUC( accTypeEnumIndex );
+            if ( config[ lcCharacteristicString  ] != undefined ||
                  config[ ucCharacteristicString  ] != undefined )
             {
                continue;
-            } else {
-                this.log.warn( `Removing previously configured characteristic: ${ characteristicString }` );
-                this.cmd4Storage.setStoredValueForCharacteristic( characteristicString, null );
+            } else
+            {
+               // There was a previously stored characteristic, if it was not initialized
+               this.log.warn( `Removing previously configured characteristic: ${ lcCharacteristicString }` );
+               this.cmd4Storage.setStoredValueForIndex( accTypeEnumIndex, null );
             }
          }
       }
@@ -1953,13 +1954,13 @@ class Cmd4Accessory
                         if ( rcDirective == null )
                            throw new Error( `No such polling characteristic: "${ value }" for: "${ this.displayName }".` );
 
-                        this.log.warn( `The config.json Polling characteristic: ${ value } is Capitalized it should be: ${ rcDirective.type }.  In the near future this will be an Error so that Cmd4 can use homebridge-ui.\nTo remove this Warning, Please fix your config.json.` );
+                        this.log.warn( `1. The config.json Polling characteristic: ${ value } is Capitalized it should be: ${ rcDirective.type }.  In the near future this will be an Error so that Cmd4 can use homebridge-ui.\nTo remove this Warning, Please fix your config.json.` );
                      }
                      accTypeEnumIndex = rcDirective.accTypeEnumIndex;
 
                      // We can do this as this is a new way to do things.
                      if ( this.cmd4Storage.getStoredValueForIndex( accTypeEnumIndex ) == undefined )
-                        throw new Error( `Polling for: "${ value }" requested, but characteristic is not in your config.json file for: "${ this.displayName }".` );
+                        throw new Error( `CCC Polling for: "${ value }" requested, but characteristic is not in your config.json file for: "${ this.displayName }".` );
 
                      break;
                   }
