@@ -37,8 +37,8 @@ describe( `Test isCmd4Directive`, ( ) =>
    {
       let directive = "polling";
       let rc = isCmd4Directive( directive );
-      assert.isString( rc, `Unexpected result for isCmd4Directive` );
-      assert.equal( rc, directive, `Expected result to be "polling"` );
+      assert.isString( rc.key, `Unexpected result for isCmd4Directive` );
+      assert.equal( rc.key, directive, `Expected result to be "polling"` );
    });
    it( `isCmd4Directive should NOT identify an uppercase type `, ( ) =>
    {
@@ -56,7 +56,7 @@ describe( `Test isCmd4Directive`, ( ) =>
    {
       let directive = "Polling";
       let rc = isCmd4Directive( directive, true );
-      assert.isString( rc, `Expected result to be a string` );
-      assert.equal( rc, "polling", `Expected result to be "polling"` );
+      assert.isString( rc.key, `Expected result to be a string` );
+      assert.equal( rc.key, "polling", `Expected result to be "polling"` );
    });
 });

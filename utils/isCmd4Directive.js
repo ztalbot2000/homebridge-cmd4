@@ -11,32 +11,35 @@ const lcFirst = require( "./lcFirst" );
 // @param m - directive to check.
 // @returns: boolean
 
-function isCmd4Directive( directive, allowUpperCase = false )
+function isCmd4Directive( directive, allowUpper = false )
 {
    if ( ! directive )
    {
       console.warn( "No parameter passed to isCmd4Directive" );
-      return directive;
+      return null;
    }
 
    if ( Object.values( constants ).indexOf( directive ) >= 0 )
    {
       //console.log("isCmd4Directive directive: %s returning: %s", directive, directive );
-      return directive;
+      return { key:      directive,
+               wasLower: true };
    }
 
-   // Any exemptions before allowUpper
    if ( directive == "UUID" )
-      return    "uuid";
+      return { key:      "uuid",
+               wasLower:  false };
 
-   if ( allowUpperCase == true )
+   // Note: There are othes like WiFi ... but nobody uses them thankfully !
+   if ( allowUpper == true )
    {
 
       let lcDirective = lcFirst( directive );
       if ( Object.values( constants ).indexOf( lcDirective ) >= 0 )
       {
          //console.log("isCmd4Directive directive: %s returning: %s", directive, lcDirective );
-         return lcDirective;
+         return { key:      lcDirective,
+                  wasLower: false };
       }
    }
 

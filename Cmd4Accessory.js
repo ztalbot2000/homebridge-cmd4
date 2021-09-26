@@ -22,7 +22,6 @@ let HV = require( "./utils/HV" );
 
 let createAccessorysInformationService = require( "./utils/createAccessorysInformationService" );
 
-let ucFirst = require( "./utils/ucFirst" );
 let lcFirst = require( "./utils/lcFirst" );
 let trueTypeOf = require( "./utils/trueTypeOf" );
 
@@ -442,8 +441,14 @@ class Cmd4Accessory
                if ( rcDirective != null )
                {
                   // warn now
-                  this.log.warn( `The config.json Cmd4 Polling Directive: ${ key } is Capitalized.  It should be: ${ rcDirective }. In the near future this will be an error for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
-                  key = rcDirective;
+                  this.log.warn( `The config.json Cmd4 Polling Directive: ${ key } is Capitalized.  It should be: ${ rcDirective.key }. In the near future this will be an error for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
+                  // create the proper lower case value
+                  jsonPollingConfig[ rcDirective.key ] = value;
+                  // delete the upper case value
+                  delete jsonPollingConfig[ key ];
+
+                  //set the key
+                  key = rcDirective.key;
                }
             }
             // Not finding the key is not an error as it could be a Characteristic
@@ -937,18 +942,17 @@ class Cmd4Accessory
       if ( this.loggingService )
       {
          let firstParm, secondParm, thirdParm;
-         let ucFirstParm, ucSecondParm, ucThirdParm;
          let firstParmValue, secondParmValue, thirdParmValue = 0;
+         let firstParmDirective, secondParmDirective, thirdParmDirective;
 
          switch ( this.eve )
          {
             case constants.FAKEGATO_TYPE_ENERGY:
             {
                firstParm   = this.fakegatoConfig[ constants.POWER ] || "0";
-               ucFirstParm = ucFirst( firstParm )                   || "0";
-
-               firstParmValue = ( this.cmd4Storage.testStoredValueForCharacteristic( ucFirstParm ) == undefined ) ?
-                      firstParmValue : this.cmd4Storage.getStoredValueForCharacteristic( ucFirstParm );
+               firstParmDirective = isAccDirective( firstParm, true );
+               firstParmValue = ( this.cmd4Storage.testStoredValueForIndex( firstParmDirective.accTypeEnumIndex ) == undefined ) ?
+                      firstParmValue : this.cmd4Storage.getStoredValueForIndex( firstParmDirective.accTypeEnumIndex );
 
                if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.POWER }: ${ firstParmValue }` );
                // Eve Energy ( Outlet service )
@@ -961,18 +965,18 @@ class Cmd4Accessory
             case constants.FAKEGATO_TYPE_ROOM:
             {
                firstParm       = this.fakegatoConfig[ constants.TEMP ]     || "0";
+               firstParmDirective = isAccDirective( firstParm, true );
                secondParm      = this.fakegatoConfig[ constants.HUMIDITY ] || "0";
+               secondParmDirective = isAccDirective( secondParm, true );
                thirdParm       = this.fakegatoConfig[ constants.PPM ]      || "0";
-               ucFirstParm     = ucFirst( firstParm )  || "0";
-               ucSecondParm    = ucFirst( secondParm ) || "0";
-               ucThirdParm     = ucFirst( thirdParm )  || "0";
+               thirdParmDirective = isAccDirective( thirdParm, true );
 
-               firstParmValue = ( this.cmd4Storage.testStoredValueForCharacteristic( ucFirstParm ) == undefined ) ?
-                      firstParmValue : this.cmd4Storage.getStoredValueForCharacteristic( ucFirstParm );
-               secondParmValue = ( this.cmd4Storage.testStoredValueForCharacteristic( ucSecondParm ) == undefined ) ?
-                  secondParmValue : this.cmd4Storage.getStoredValueForCharacteristic( ucSecondParm );
-               thirdParmValue = ( this.storedValuesForCharacteristic.testStoredValueForCharacteristic( ucThirdParm ) == undefined ) ?
-                  thirdParmValue : this.cmd4Storage.getStoredValueForCharacteristic( ucThirdParm );
+               firstParmValue = ( this.cmd4Storage.testStoredValueForIndex( firstParmDirective.accTypeEnumIndex ) == undefined ) ?
+                      firstParmValue : this.cmd4Storage.getStoredValueForIndex( firstParmDirective.accTypeEnumIndex );
+               secondParmValue = ( this.cmd4Storage.testStoredValueForIndex( secondParmDirective.accTypeEnumIndex ) == undefined ) ?
+                      secondParmValue : this.cmd4Storage.getStoredValueForIndex( secondParmDirective.accTypeEnumIndex );
+               thirdParmValue = ( this.cmd4Storage.testStoredValueForIndex( thirdParmDirective.accTypeEnumIndex ) == undefined ) ?
+                      thirdParmValue : this.cmd4Storage.getStoredValueForIndex( thirdParmDirective.accTypeEnumIndex );
 
 
                if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.TEMP }:${ firstParmValue } ${constants.HUMIDITY }:${ secondParmValue } ${ constants.PPM }:${ thirdParmValue }` );
@@ -988,18 +992,18 @@ class Cmd4Accessory
             case constants.FAKEGATO_TYPE_WEATHER:
             {
                firstParm       = this.fakegatoConfig[ constants.TEMP ]     || "0";
+               firstParmDirective = isAccDirective( firstParm, true );
                secondParm      = this.fakegatoConfig[ constants.PRESSURE ] || "0";
+               secondParmDirective = isAccDirective( secondParm, true );
                thirdParm       = this.fakegatoConfig[ constants.HUMIDITY ] || "0";
-               ucFirstParm     = ucFirst( firstParm )  || "0";
-               ucSecondParm    = ucFirst( secondParm ) || "0";
-               ucThirdParm     = ucFirst( thirdParm )  || "0";
+               thirdParmDirective = isAccDirective( thirdParm, true );
 
-               firstParmValue = ( this.cmd4Storage.testStoredValueForCharacteristic( ucFirstParm ) == undefined ) ?
-                      firstParmValue : this.cmd4Storage.getStoredValueForCharacteristic( ucFirstParm );
-               secondParmValue = ( this.cmd4Storage.testStoredValueForCharacteristic( ucSecondParm ) == undefined ) ?
-                  secondParmValue : this.cmd4Storage.getStoredValueForCharacteristic( ucSecondParm );
-               thirdParmValue = ( this.storedValuesForCharacteristic.testStoredValueForCharacteristic( ucThirdParm ) == undefined ) ?
-                  thirdParmValue : this.cmd4Storage.getStoredValueForCharacteristic( ucThirdParm );
+               firstParmValue = ( this.cmd4Storage.testStoredValueForIndex( firstParmDirective.accTypeEnumIndex ) == undefined ) ?
+                      firstParmValue : this.cmd4Storage.getStoredValueForIndex( firstParmDirective.accTypeEnumIndex );
+               secondParmValue = ( this.cmd4Storage.testStoredValueForIndex( secondParmDirective.accTypeEnumIndex ) == undefined ) ?
+                      secondParmValue : this.cmd4Storage.getStoredValueForIndex( secondParmDirective.accTypeEnumIndex );
+               thirdParmValue = ( this.cmd4Storage.testStoredValueForIndex( thirdParmDirective.accTypeEnumIndex ) == undefined ) ?
+                      thirdParmValue : this.cmd4Storage.getStoredValueForIndex( thirdParmDirective.accTypeEnumIndex );
 
                if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.TEMP }: ${ firstParmValue } ${ constants.PRESSURE }: ${ secondParmValue } ${ constants.HUMIDITY }: ${ thirdParmValue }` );
 
@@ -1015,10 +1019,10 @@ class Cmd4Accessory
             case constants.FAKEGATO_TYPE_DOOR:
             {
                firstParm   = this.fakegatoConfig[ constants.STATUS ] || "0";
-               ucFirstParm = ucFirst( firstParm )                      || "0";
+               firstParmDirective = isAccDirective( firstParm, true );
 
-               firstParmValue = ( this.cmd4Storage.testStoredValueForCharacteristic( ucFirstParm ) == undefined ) ?
-                      firstParmValue : this.cmd4Storage.getStoredValueForCharacteristic( ucFirstParm );
+               firstParmValue = ( this.cmd4Storage.testStoredValueForIndex( firstParmDirective.accTypeEnumIndex ) == undefined ) ?
+                      firstParmValue : this.cmd4Storage.getStoredValueForIndex( firstParmDirective.accTypeEnumIndex );
 
                if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.STATUS } status: ${ firstParmValue }` );
 
@@ -1031,10 +1035,10 @@ class Cmd4Accessory
             case constants.FAKEGATO_TYPE_MOTION:
             {
                firstParm   = this.fakegatoConfig[ constants.STATUS ] || "0";
-               ucFirstParm = ucFirst( firstParm )                    || "0";
+               firstParmDirective = isAccDirective( firstParm, true );
 
-               firstParmValue = ( this.cmd4Storage.testStoredValueForCharacteristic( ucFirstParm ) == undefined ) ?
-                      firstParmValue : this.cmd4Storage.getStoredValueForCharacteristic( ucFirstParm );
+               firstParmValue = ( this.cmd4Storage.testStoredValueForIndex( firstParmDirective.accTypeEnumIndex ) == undefined ) ?
+                      firstParmValue : this.cmd4Storage.getStoredValueForIndex( firstParmDirective.accTypeEnumIndex );
 
                if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.STATUS }: ${ firstParmValue }` );
 
@@ -1047,18 +1051,18 @@ class Cmd4Accessory
             case constants.FAKEGATO_TYPE_THERMO:
             {
                firstParm       = this.fakegatoConfig[ constants.CURRENTTEMP ]   || "0";
+               firstParmDirective = isAccDirective( firstParm, true );
                secondParm      = this.fakegatoConfig[ constants.SETTEMP ]       || "0";
+               secondParmDirective = isAccDirective( secondParm, true );
                thirdParm       = this.fakegatoConfig[ constants.VALVEPOSITION ] || "0";
-               ucFirstParm     = ucFirst( firstParm )  || "0";
-               ucSecondParm    = ucFirst( secondParm ) || "0";
-               ucThirdParm     = ucFirst( thirdParm )  || "0";
+               thirdParmDirective = isAccDirective( thirdParm, true );
 
-               firstParmValue = ( this.cmd4Storage.testStoredValueForCharacteristic( ucFirstParm ) == undefined ) ?
-                      firstParmValue : this.cmd4Storage.getStoredValueForCharacteristic( ucFirstParm );
-               secondParmValue = ( this.cmd4Storage.testStoredValueForCharacteristic( ucSecondParm ) == undefined ) ?
-                  secondParmValue : this.cmd4Storage.getStoredValueForCharacteristic( ucSecondParm );
-               thirdParmValue = ( this.storedValuesForCharacteristic.testStoredValueForCharacteristic( ucThirdParm ) == undefined ) ?
-                  thirdParmValue : this.cmd4Storage.getStoredValueForCharacteristic( ucThirdParm );
+               firstParmValue = ( this.cmd4Storage.testStoredValueForIndex( firstParmDirective.accTypeEnumIndex ) == undefined ) ?
+                      firstParmValue : this.cmd4Storage.getStoredValueForIndex( firstParmDirective.accTypeEnumIndex );
+               secondParmValue = ( this.cmd4Storage.testStoredValueForIndex( secondParmDirective.accTypeEnumIndex ) == undefined ) ?
+                      secondParmValue : this.cmd4Storage.getStoredValueForIndex( secondParmDirective.accTypeEnumIndex );
+               thirdParmValue = ( this.cmd4Storage.testStoredValueForIndex( thirdParmDirective.accTypeEnumIndex ) == undefined ) ?
+                      thirdParmValue : this.cmd4Storage.getStoredValueForIndex( thirdParmDirective.accTypeEnumIndex );
 
                if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.CURRENTTEMP }: ${ firstParmValue } ${ constants.SETTEMP }:${ secondParmValue } ${constants.VALVEPOSITION }:${ thirdParmValue } ` );
 
@@ -1074,14 +1078,14 @@ class Cmd4Accessory
             case constants.FAKEGATO_TYPE_AQUA:
             {
                firstParm       = this.fakegatoConfig[ constants.STATUS ]      || "0";
+               firstParmDirective = isAccDirective( firstParm, true );
                secondParm      = this.fakegatoConfig[ constants.WATERAMOUNT ] || "0";
-               ucFirstParm     = ucFirst( firstParm )  || "0";
-               ucSecondParm    = ucFirst( secondParm ) || "0";
+               secondParmDirective = isAccDirective( secondParm, true );
 
-               firstParmValue = ( this.cmd4Storage.testStoredValueForCharacteristic( ucFirstParm ) == undefined ) ?
-                  firstParmValue : this.cmd4Storage.getStoredValueForCharacteristic( ucFirstParm );
-               secondParmValue = ( this.cmd4Storage.testStoredValueForCharacteristic( ucSecondParm ) == undefined ) ?
-                  secondParmValue : this.cmd4Storage.getStoredValueForCharacteristic( ucSecondParm );
+               firstParmValue = ( this.cmd4Storage.testStoredValueForIndex( firstParmDirective.accTypeEnumIndex ) == undefined ) ?
+                      firstParmValue : this.cmd4Storage.getStoredValueForIndex( firstParmDirective.accTypeEnumIndex );
+               secondParmValue = ( this.cmd4Storage.testStoredValueForIndex( secondParmDirective.accTypeEnumIndex ) == undefined ) ?
+                      secondParmValue : this.cmd4Storage.getStoredValueForIndex( secondParmDirective.accTypeEnumIndex );
 
                if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.STATUS }: ${ firstParmValue } ${ constants.WATERAMOUNT }: ${ secondParmValue }` );
 
@@ -1104,76 +1108,89 @@ class Cmd4Accessory
 
       for ( let key in fakegatoConfig )
       {
-         // warn now
-         if ( key.charAt( 0 ) === key.charAt( 0 ).toUpperCase() )
+         let value = fakegatoConfig[ key ];
+
+         let rcDirective = isCmd4Directive( key, false );
+         if ( rcDirective == null )
          {
-            this.log.warn( `The config.json FakeGato key: ${ key } is Capitalized.  In the near future all Cmd4 directives will start with a lower case character for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
+            rcDirective = isCmd4Directive( key, true );
+            if ( rcDirective != null )
+            {
+               // warn now
+               this.log.warn( `The config.json FakeGato key: ${ key } is Capitalized. It should be: ${ rcDirective.key }. In the near future this will be an error for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
+               // create the proper lower case value
+               fakegatoConfig[ rcDirective.key ] = value;
+               // delete the upper case value
+               fakegatoConfig[ key ].remove();
+
+               //set the key
+               key = rcDirective.key;
+            }
          }
-          let lcKey = lcFirst ( key );
-          let value = fakegatoConfig[ key ];
-          switch ( lcKey )
-          {
-             case constants.EVE:
-                this.eve = fakegatoConfig[ key ];
-                switch( value )
-                {
-                    case constants.FAKEGATO_TYPE_ENERGY:
-                    case constants.FAKEGATO_TYPE_ROOM:
-                    case constants.FAKEGATO_TYPE_WEATHER:
-                    case constants.FAKEGATO_TYPE_DOOR:
-                    case constants.FAKEGATO_TYPE_MOTION:
-                    case constants.FAKEGATO_TYPE_THERMO:
-                    case constants.FAKEGATO_TYPE_AQUA:
-                       break;
-                    default:
-                       throw new Error( `Invalid fakegato eve type: "${ value }". It must be one of ( ${ constants.FAKEGATO_TYPE_ENERGY }, ${ constants.FAKEGATO_TYPE_ROOM }, ${ constants.FAKEGATO_TYPE_WEATHER }, ${ constants.FAKEGATO_TYPE_DOOR }, ${ constants.FAKEGATO_TYPE_MOTION }, ${ constants.FAKEGATO_TYPE_THERMO }, ${ constants.FAKEGATO_TYPE_AQUA } ). Check the Cmd4 README at: "https://github.com/simont77/fakegato-history".` );
+
+         switch ( key )
+         {
+            case constants.EVE:
+               this.eve = fakegatoConfig[ key ];
+               switch( value )
+               {
+                   case constants.FAKEGATO_TYPE_ENERGY:
+                   case constants.FAKEGATO_TYPE_ROOM:
+                   case constants.FAKEGATO_TYPE_WEATHER:
+                   case constants.FAKEGATO_TYPE_DOOR:
+                   case constants.FAKEGATO_TYPE_MOTION:
+                   case constants.FAKEGATO_TYPE_THERMO:
+                   case constants.FAKEGATO_TYPE_AQUA:
+                      break;
+                   default:
+                      throw new Error( `Invalid fakegato eve type: "${ value }". It must be one of ( ${ constants.FAKEGATO_TYPE_ENERGY }, ${ constants.FAKEGATO_TYPE_ROOM }, ${ constants.FAKEGATO_TYPE_WEATHER }, ${ constants.FAKEGATO_TYPE_DOOR }, ${ constants.FAKEGATO_TYPE_MOTION }, ${ constants.FAKEGATO_TYPE_THERMO }, ${ constants.FAKEGATO_TYPE_AQUA } ). Check the Cmd4 README at: "https://github.com/simont77/fakegato-history".` );
                 }
                 break;
-             case constants.STORAGE:
+            case constants.STORAGE:
                 this.storage = fakegatoConfig[ key ];
                 break;
-             case constants.STORAGEPATH:
+            case constants.STORAGEPATH:
                 this.storagePath = fakegatoConfig[ key ];
                 break;
-             case constants.KEYPATH:
+            case constants.KEYPATH:
                 this.keyPath = fakegatoConfig[ key ];
                 break;
-             case constants.FOLDER:
+            case constants.FOLDER:
                 this.Folder = fakegatoConfig[ key ];
                 break;
-             case constants.STATUS:
-             case constants.TEMP:
-             case constants.SETTEMP:
-             case constants.HUMIDITY:
-             case constants.PPM:
-             case constants.POWER:
-             case constants.PRESSURE:
-             case constants.CURRENTTEMP:
-             case constants.VALVEPOSITION:
-             {
-                if ( value != "0" )
-                {
-                   let rcDirective = isAccDirective( value, false );
-                   if ( rcDirective == null )
-                   {
-                      rcDirective = isAccDirective( value, true );
-                      if ( rcDirective == null )
-                         throw new Error( `Invalid characteristic "${ value }" for fakegato to log of "${ key }".` );
+            case constants.STATUS:
+            case constants.TEMP:
+            case constants.SETTEMP:
+            case constants.HUMIDITY:
+            case constants.PPM:
+            case constants.POWER:
+            case constants.PRESSURE:
+            case constants.CURRENTTEMP:
+            case constants.VALVEPOSITION:
+            {
+               if ( value != "0" )
+               {
+                  let rcDirective = isAccDirective( value, false );
+                  if ( rcDirective == null )
+                  {
+                     rcDirective = isAccDirective( value, true );
+                     if ( rcDirective == null )
+                        throw new Error( `Invalid characteristic "${ value }" for fakegato to log of "${ key }".` );
 
-                     this.log.warn( `The config.json FakeGato characteristic: ${ value } is Capitalized it should be: ${ rcDirective.type }.  In the near future this will be an Error so that Cmd4 can use homebridge-ui.\nTo remove this Warning, Please fix your config.json.` );
-                   }
+                    this.log.warn( `The config.json FakeGato characteristic: ${ value } is Capitalized it should be: ${ rcDirective.type }.  In the near future this will be an Error so that Cmd4 can use homebridge-ui.\nTo remove this Warning, Please fix your config.json.` );
+                  }
 
-                   // Make sure the characteristic is being polled (Changing) so I do
-                   // not get any more tickets.
-                   if ( this.queue.isCharacteristicPolled( rcDirective.accTypeEnumIndex, this.queue, this ) == false )
-                      throw new Error(`Characteristic: "${ value }" for fakegato to log of "${ key }" is not being polled.\nHistory can not be updated continiously.` );
-                }
+                  // Make sure the characteristic is being polled (Changing) so I do
+                  // not get any more tickets.
+                  if ( this.queue.isCharacteristicPolled( rcDirective.accTypeEnumIndex, this.queue, this ) == false )
+                     throw new Error(`Characteristic: "${ value }" for fakegato to log of "${ key }" is not being polled.\nHistory can not be updated continiously.` );
+               }
 
-                break;
-             }
-             default:
-                throw new Error( `Invalid fakegato key: "${ key }" in json.config for: "${ this.displayName }".` );
-          }
+               break;
+            }
+            default:
+               throw new Error( `Invalid fakegato key: "${ key }" in json.config for: "${ this.displayName }".` );
+         }
       }
 
       // Optional
@@ -1491,15 +1508,21 @@ class Cmd4Accessory
       {
          let value = config[ key ];
 
-         // warn now - Cmd4 Directives are AS DEFINED
-         let rcDirective = isCmd4Directive( key );
+         // warn now - Cmd4 Directives
+         let rcDirective = isCmd4Directive( key, false );
          if ( rcDirective == null )
          {
             rcDirective = isCmd4Directive( key, true );
             if ( rcDirective != null )
             {
-               this.log.warn( `The config.json Cmd4 Directive: ${ key } is Capitalized.  It should be: ${ rcDirective }. In the near future this will be an error for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
-               key = rcDirective;
+               this.log.warn( `The config.json Cmd4 Directive: ${ key } is Capitalized.  It should be: ${ rcDirective.key }. In the near future this will be an error for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
+               // create the proper lower case value
+               config[ rcDirective.key ] = value;
+               // delete the upper case value
+               delete config[ key ];
+
+               //set the key
+               key = rcDirective.key;
             }
          }
          // Not finding the key is not an error as it could be a Characteristic
@@ -1695,19 +1718,10 @@ class Cmd4Accessory
          this.log.warn( `To remove this message, just remove "Cmd4_Mode" from your config.json` );
       }
 
-      if ( trueTypeOf( this.type ) != String )
-         throw new Error( `No device type given in: "${ this.displayName }"` );
-
-      // warn now
-      if ( this.type.charAt( 0 ) === this.type.charAt( 0 ).toLowerCase( ) )
-      {
-         this.log.warn( `The config.json value: ${ this.type } is NOT Capitalized.  In the near future all Characteristic names will start with an upper case character for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
-      }
-
-      let  ucType = ucFirst( this.type );
-      this.typeIndex = CMD4_DEVICE_TYPE_ENUM.indexOfEnum( ucType );
+      this.typeIndex = CMD4_DEVICE_TYPE_ENUM.indexOfEnum( this.type );
       if ( this.typeIndex < 0 )
           throw new Error( `Unknown device type: "${ this.type }" given in: "${ this.displayName }".` );
+      // Sad we have to upper case this
       this.type = CMD4_DEVICE_TYPE_ENUM.devEnumIndexToC( this.typeIndex );
 
       // Create a subType to delimit services with multiple accessories of
@@ -1785,7 +1799,7 @@ class Cmd4Accessory
             throw new Error( `Do not know how to handle polling type of: "${ pollingType }" for: "${ this.displayName }".` );
       }
 
-      // We need to check for removed characteristics in the config
+      // We need to check for removed characteristic Strings in the config
       for ( let accTypeEnumIndex = 0; accTypeEnumIndex < CMD4_ACC_TYPE_ENUM.EOL; accTypeEnumIndex ++ )
       {
          let storedValue = this.cmd4Storage.getStoredValueForIndex( accTypeEnumIndex );
@@ -1912,8 +1926,14 @@ class Cmd4Accessory
                   rcDirective = isCmd4Directive( key, true );
                   if ( rcDirective != null )
                   {
-                     this.log.warn( `The config.json Cmd4 Polling Directive: ${ key } is Capitalized.  It should be: ${ rcDirective.type }. In the near future this will be an error for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
-                     key = rcDirective;
+                     this.log.warn( `The config.json Cmd4 Polling Directive: ${ key } is Capitalized.  It should be: ${ rcDirective.key }. In the near future this will be an error for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
+                     // create the proper lower case value
+                     jsonPollingConfig[ rcDirective.key ] = value;
+                     // delete the upper case value
+                     delete jsonPollingConfig[ key ];
+
+                     //set the key
+                     key = rcDirective.key;
                   }
                }
                // Not finding the key is not an error as it could be a Characteristic

@@ -638,7 +638,7 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
 
       let STORED_DATA_ARRAY = [ ];
 
-      expect ( ( ) => new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY ) ).to.throw(/No device type given in: "Test Switch"/);
+      expect ( ( ) => new Cmd4Accessory( log, config, _api, STORED_DATA_ARRAY ) ).to.throw(/Unknown device type: "undefined" given in: "Test Switch"./);
    });
 
    it( `Check that unknown type is defined for an accessory throws an error`, ( ) =>
