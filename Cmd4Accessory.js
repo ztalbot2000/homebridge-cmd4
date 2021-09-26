@@ -1331,7 +1331,7 @@ class Cmd4Accessory
 
 
       //this.log.debug("Setting %s to %s", characteristicString, properValue );
-      this.cmd4Storage.setStoredValueForCharacteristic( characteristicString, properValue );
+      this.cmd4Storage.setStoredValueForIndex( accTypeEnumIndex, properValue );
    }
 
    processRequires( requires )
