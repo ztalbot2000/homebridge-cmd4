@@ -74,8 +74,8 @@
                      "volumeControlType":      "ABSOLUTE",
                      "state_cmd": "node .homebridge/YourScriptHere.js",
                      "polling": [
-                        {"characteristic": "Active",         "interval": 50,  "timeout": 5000},
-                        {"characteristic": "VolumeSelector", "interval": 50,  "timeout": 5000}
+                        {"characteristic": "active",         "interval": 50,  "timeout": 5000},
+                        {"characteristic": "volumeSelector", "interval": 50,  "timeout": 5000}
                      ]
                   }
               ],
@@ -118,9 +118,9 @@
                "pictureMode":               "STANDARD",
                "remoteKey":                 "SELECT",
                "polling": [
-                  {"characteristic": "Active",            "interval": 50,  "timeout": 5000},
-                  {"characteristic": "ActiveIdentifier",  "interval": 50,  "timeout": 5000},
-                  {"characteristic": "CurrentMediaState", "interval": 540, "timeout": 5000}
+                  {"characteristic": "active",            "interval": 50,  "timeout": 5000},
+                  {"characteristic": "activeIdentifier",  "interval": 50,  "timeout": 5000},
+                  {"characteristic": "currentMediaState", "interval": 540, "timeout": 5000}
                ],
                "stateChangeResponseTime":    3,
                "state_cmd": "node .homebridge/YourScriptHere.js"
@@ -205,8 +205,8 @@ Notice that there is no Platform definition. Otherwise everything is the same. Y
 
 ```json
 "interval": 5,
-"polling": [ { "characteristic": "CurrentTemperature", "queue": "A" },
-             { "characteristic": "TargetTemperature", "queue": "A" }
+"polling": [ { "characteristic": "currentTemperature", "queue": "A" },
+             { "characteristic": "targetTemperature", "queue": "A" }
            ]
 ```
   The interval of the characteristic is defined through the heirarch of the Platform/Accessory and then the Characteristic, as always.<BR>
@@ -217,8 +217,8 @@ Notice that there is no Platform definition. Otherwise everything is the same. Y
              ],
 "queue": "A",
 "interval": 10,
-"polling": [ { "characteristic": "CurrentTemperature" },
-             { "characteristic": "TargetTemperature", "interval": 15 }
+"polling": [ { "characteristic": "currentTemperature" },
+             { "characteristic": "targetTemperature", "interval": 15 }
            ]
 ```
 Example 3:
@@ -239,9 +239,9 @@ Example 3:
         "type": "Thermostatwitch",
         "interval": 15,
         "queue": "A",
-        "polling": [ { "characteristic": "CurrentTemperature" },
-                     { "characteristic": "TargetTemperature" },
-                     { "characteristic": "CurrentHeatingCoolingState", "interval": 25 }
+        "polling": [ { "characteristic": "currentTemperature" },
+                     { "characteristic": "targetTemperature" },
+                     { "characteristic": "currentHeatingCoolingState", "interval": 25 }
                    ],
         ...
      },
@@ -262,7 +262,7 @@ Example 3:
      {
         "name": "Switch2",
         "type": "Switch",
-        "polling": [ { "characteristic": "On", "queue": "D" } ],   // Defaults to "WoRm"
+        "polling": [ { "characteristic": "on", "queue": "D" } ],   // Defaults to "WoRm"
         ...
      }
 
@@ -293,10 +293,10 @@ Example 3:
                     "model": "e-zone",
                     "serialNumber": "Fujitsu e-zone2",
                     "polling": [
-                        { "characteristic": "CurrentTemperature", "queue": "A"  }
+                        { "characteristic": "currentTemperature", "queue": "A"  }
                     ],
                     "props": {
-                        "CurrentTemperature": {
+                        "currentTemperature": {
                             "maxValue": 100,
                             "minValue": -100,
                             "minStep": 0.1
@@ -328,7 +328,7 @@ Example 3:
                     "model": "e-zone",
                     "serialNumber": "Fujitsu e-zone2",
                     "polling": [
-                        { "characteristic": "On", "queue": "A" }
+                        { "characteristic": "on", "queue": "A" }
                     ],
                     "stateChangeResponseTime": 1,
                     "state_cmd": "bash /home/pi/ezone.sh"
@@ -347,10 +347,10 @@ Example 3:
                     "serialNumber": "Fujitsu e-zone2",
                     "queue": "A",  // All characteristics would go to queue "A"
                     "polling": [
-                        { "characteristic": "CurrentHeatingCoolingState" },
-                        { "characteristic": "TargetHeatingCoolingState" },
-                        { "characteristic": "CurrentTemperature" },
-                        { "characteristic": "TargetTemperature" }
+                        { "characteristic": "currentHeatingCoolingState" },
+                        { "characteristic": "targetHeatingCoolingState" },
+                        { "characteristic": "currentTemperature" },
+                        { "characteristic": "targetTemperature" }
                     ],
                     "state_cmd": "bash /home/pi/ezone.sh"
                 }
@@ -404,8 +404,8 @@ See [fakegato-history](https://github.com/simont77/fakegato-history)
 
 ```json
 "fakegato":{"eve":"thermo",
-            "currentTemp": "CurrentTemperature",
-            "setTemp": "TargetTemperature",
+            "currentTemp": "currentTemperature",
+            "setTemp": "targetTemperature",
             "valvePosition": "0",
             "storage": "fs",
             "storagePath": ".homebridge/FakegatoStorage",
@@ -425,9 +425,9 @@ The value "0" should be used for any characteristics value which is not possible
 &nbsp;&nbsp;&nbsp; For history to be collected you will have to enable polling and interval for the accessory, and according to the fakegato-history documents it should be less than 10 minutes (600 seconds). The new polling config section allows for each characteristic to be polled at their individual times.
 
 ```json
-"polling": [{"characteristic": "CurrentHeatingCoolingState",
+"polling": [{"characteristic": "currentHeatingCoolingState",
              "interval": 540,  "timeout": 4000},
-            {"characteristic": "CurrentTemperature",
+            {"characteristic": "currentTemperature",
              "interval": 60,   "timeout": 4000}
            ],
 ```
