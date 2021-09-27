@@ -8,9 +8,6 @@ const commandExistsSync = require( "command-exists" ).sync;
 let settings = require( "./cmd4Settings" );
 const constants = require( "./cmd4Constants" );
 
-var cmd4Dbg = settings.cmd4Dbg;
-
-
 let Logger = require( "./utils/Logger" );
 const { getAccessoryName, getAccessoryDisplayName
       } = require( "./utils/getAccessoryNameFunctions" );
@@ -93,7 +90,7 @@ class Cmd4Accessory
          this.log = log;
 
          // Carry the debug flag from the platform
-         cmd4Dbg = log.debugEnabled;
+         settings.cmd4Dbg = log.debugEnabled;
       }
       else
       {
@@ -104,11 +101,10 @@ class Cmd4Accessory
               process.env.DEBUG == settings.PLATFORM_NAME )
          {
             settings.cmd4Dbg = true;
-            cmd4Dbg = true;
          }
 
       }
-      this.log.setDebugEnabled( cmd4Dbg );
+      this.log.setDebugEnabled( settings.cmd4Dbg );
 
       this.config = config;
       this.api = api;
@@ -125,7 +121,7 @@ class Cmd4Accessory
 
       let typeMsg =  [ "", "Linked ", "Added " ][ this.LEVEL ] || "";
 
-      if ( cmd4Dbg ) log.debug( chalk.blue ( `Creating ${ typeMsg }${ this.CMD4 } Accessory type for : ${ config.displayName } LEVEL: ${ this.LEVEL }` ) );
+      if ( settings.cmd4Dbg ) log.debug( chalk.blue ( `Creating ${ typeMsg }${ this.CMD4 } Accessory type for : ${ config.displayName } LEVEL: ${ this.LEVEL }` ) );
 
       this.services = [ ];
       this.linkedAccessories = [ ];
@@ -189,11 +185,11 @@ class Cmd4Accessory
       if ( existingData )
       {
          //Z this.log.info( chalk.blue ( `THIS MSG TO BE REMOVED. Found existing data for: ${ this.displayName }` ) );
-         if ( cmd4Dbg ) this.log.debug(`Cmd4Accessory: found existingData for ${ this.displayName }` );
+         if ( settings.cmd4Dbg ) this.log.debug(`Cmd4Accessory: found existingData for ${ this.displayName }` );
          if ( existingData.storedValuesPerCharacteristic )
          {
             //Z this.log.info( chalk.blue ( `THIS MSG TO BE REMOVED. Found old storedValuesPerCharacteristic for: ${ this.displayName }` ) );
-            if ( cmd4Dbg ) this.log.debug( `Upgrading to cmd4Storage` );
+            if ( settings.cmd4Dbg ) this.log.debug( `Upgrading to cmd4Storage` );
             this.cmd4Storage = new Cmd4Storage( this.log, existingData.storedValuesPerCharacteristic );
             this.STORED_DATA_ARRAY.push( { [ constants.UUID ]: uuid,
                                            [ constants.CMD4_STORAGE_lv ]: this.cmd4Storage
@@ -204,7 +200,7 @@ class Cmd4Accessory
          } else if ( existingData.cmd4Storage )
          {
             //Z this.log.info( chalk.blue ( `THIS MSG TO BE REMOVED. Using existing cmd4Storage for: ${ this.displayName }` ) );
-            if ( cmd4Dbg ) this.log.debug( `Using existing cmd4Storage` );
+            if ( settings.cmd4Dbg ) this.log.debug( `Using existing cmd4Storage` );
             this.cmd4Storage = new Cmd4Storage( this.log, existingData.cmd4Storage );
             this.STORED_DATA_ARRAY.push( { [ constants.UUID ]: uuid,
                                            [ constants.CMD4_STORAGE_lv ]: this.cmd4Storage
@@ -229,7 +225,7 @@ class Cmd4Accessory
       } else
       {
          //Z log.info( chalk.blue ( `THIS MSG TO BE REMOVED. Creating new cmd4Storage for: ${ this.displayName }` ) );
-         if ( cmd4Dbg ) this.log.debug(`Cmd4Accessory: creating new cmd4Storage for ${ this.displayName }` );
+         if ( settings.cmd4Dbg ) this.log.debug(`Cmd4Accessory: creating new cmd4Storage for ${ this.displayName }` );
          // Instead of local variables for every characteristic, create an array to
          // hold values for  all characteristics based on the size of all possible
          // characteristics.  Placing them in .config will make them be cached over
@@ -305,12 +301,12 @@ class Cmd4Accessory
       // This can be done for only LEVEL 0 accessories and itself
       if ( this.LEVEL == 0 )
       {
-         // if ( cmd4Dbg ) log.debug( "CMD4=%s LEVEL=%s for %s", accessory.CMD4, accessory.LEVEL, accessory.displayName );
+         // if ( settings.cmd4Dbg ) log.debug( "CMD4=%s LEVEL=%s for %s", accessory.CMD4, accessory.LEVEL, accessory.displayName );
          // The linked accessory children are at different levels of recursion, so only
          // allow what is posssible.
          if ( this.linkedAccessories && this.linkedAccessories.length > 0 )
          {
-            if ( cmd4Dbg ) this.log.debug( `Setting up which characteristics will be polled for Linked Accessories of ${ this.displayName }` );
+            if ( settings.cmd4Dbg ) this.log.debug( `Setting up which characteristics will be polled for Linked Accessories of ${ this.displayName }` );
 
             this.linkedAccessories.forEach( ( linkedAccessory ) =>
             {
@@ -324,7 +320,7 @@ class Cmd4Accessory
          // The Television Speaker Platform Example
          if ( this.accessories && this.accessories.length > 0 )
          {
-            if ( cmd4Dbg ) this.log.debug( `Setting up which characteristics will be polled for Added Accessories of ${ this.displayName }` );
+            if ( settings.cmd4Dbg ) this.log.debug( `Setting up which characteristics will be polled for Added Accessories of ${ this.displayName }` );
             this.accessories.forEach( ( addedAccessory ) =>
             {
                if ( addedAccessory.polling )
@@ -334,7 +330,7 @@ class Cmd4Accessory
             });
          }
 
-         if ( cmd4Dbg ) this.log.debug( `Setting up which characteristics will be polled for ${ this.displayName }` );
+         if ( settings.cmd4Dbg ) this.log.debug( `Setting up which characteristics will be polled for ${ this.displayName }` );
          this.determineCharacteristicsToPollForAccessory( this );
       }
 
@@ -343,7 +339,7 @@ class Cmd4Accessory
       // polling started. Otherwise the platform will have to do this.
       if ( this.CMD4 == constants.STANDALONE && this.LEVEL == 0 )
       {
-         if ( cmd4Dbg ) log.debug( `Creating Standalone service for: ${ this.displayName }` );
+         if ( settings.cmd4Dbg ) log.debug( `Creating Standalone service for: ${ this.displayName }` );
          this.createServicesForStandaloneAccessoryAndItsChildren( this )
       }
 
@@ -358,9 +354,9 @@ class Cmd4Accessory
    {
       //if ( this.services )
       //{
-      //   if ( cmd4Dbg ) this.log.debug( Fg.Red + "ZZZZ Returning:%s number of services for:%s" + Fg.Rm, this.services.length, this.displayName );
+      //   if ( settings.cmd4Dbg ) this.log.debug( Fg.Red + "ZZZZ Returning:%s number of services for:%s" + Fg.Rm, this.services.length, this.displayName );
       //} else {
-      //   if ( cmd4Dbg ) this.log.debug( Fg.Red + "ZZZZ Returning this.services:%s for:%s" + Fg.Rm, this.services, this.displayName );
+      //   if ( settings.cmd4Dbg ) this.log.debug( Fg.Red + "ZZZZ Returning this.services:%s for:%s" + Fg.Rm, this.services, this.displayName );
       //}
       return this.services;
    }
@@ -409,7 +405,7 @@ class Cmd4Accessory
             if ( accTypeEnumIndex == CMD4_ACC_TYPE_ENUM.ConfiguredName )
                defaultValue = getAccessoryName( this.config );
 
-            if ( cmd4Dbg ) this.log.debug( `*****Adding default value ${ defaultValue } for: ${ this.displayName }` );
+            if ( settings.cmd4Dbg ) this.log.debug( `*****Adding default value ${ defaultValue } for: ${ this.displayName }` );
 
             this.cmd4Storage.setStoredValueForIndex( accTypeEnumIndex, defaultValue );
          }
@@ -421,7 +417,7 @@ class Cmd4Accessory
       if ( trueTypeOf( pollingConfig ) != Array )
          return;
 
-      if ( cmd4Dbg ) this.log.debug( `Checking ${ this.displayName } for polling of unset characteristics.` );
+      if ( settings.cmd4Dbg ) this.log.debug( `Checking ${ this.displayName } for polling of unset characteristics.` );
 
       pollingConfig.forEach( ( jsonPollingConfig ) =>
       {
@@ -475,10 +471,10 @@ class Cmd4Accessory
                   valueToStore = null;
 
                   let rcDirective = isAccDirective( value, false );
-                  if ( rcDirective == null )
+                  if ( rcDirective.accTypeEnumIndex == null )
                   {
                      rcDirective = isAccDirective( value, true );
-                     if ( rcDirective == null )
+                     if ( rcDirective.accTypeEnumIndex == null )
                         throw new Error( `No such polling characteristic: "${ value }" for: "${ this.displayName }".` );
 
                      this.log.warn( `The config.json Polling characteristic: ${ value } is Capitalized it should be: ${ rcDirective.type }.  In the near future this will be an Error so that Cmd4 can use homebridge-ui.\nTo remove this Warning, Please fix your config.json.` );
@@ -524,10 +520,10 @@ class Cmd4Accessory
 
    createServicesForStandaloneAccessoryAndItsChildren( accessory )
    {
-      if ( cmd4Dbg ) accessory.log.debug( chalk.blue( `createServicesFor${ this.CMD4 }AccessoryAndItsChildren` ) );
+      if ( settings.cmd4Dbg ) accessory.log.debug( chalk.blue( `createServicesFor${ this.CMD4 }AccessoryAndItsChildren` ) );
       if ( accessory.ServiceCreated == true )
       {
-         if ( cmd4Dbg ) accessory.log.debug( chalk.red( `SERVICES ALREADY CREATED FOR ${ this.displayName } ${ this.CMD4 } ${ this.LEVEL }` ) );
+         if ( settings.cmd4Dbg ) accessory.log.debug( chalk.red( `SERVICES ALREADY CREATED FOR ${ this.displayName } ${ this.CMD4 } ${ this.LEVEL }` ) );
          return;
       } else {
          accessory.ServiceCreated = true;
@@ -543,7 +539,7 @@ class Cmd4Accessory
       // Create the accessory's service
       accessory.service = new properties.service( accessory.name, accessory.subType )
 
-      if ( cmd4Dbg ) accessory.log.debug( `Creating information service for standalone accessory: ${ accessory.displayName }` );
+      if ( settings.cmd4Dbg ) accessory.log.debug( `Creating information service for standalone accessory: ${ accessory.displayName }` );
 
 
       // Create the Standalone accessory's information service.
@@ -558,16 +554,16 @@ class Cmd4Accessory
 
             // Standalone Step 4.
             //    const hdmi1InputService = this.tvAccessory.addService( this.Service.InputSource, `hdmi1', 'HDMI 1' );
-            if ( cmd4Dbg ) accessory.log.debug( `Standalone Step 4. linkedAccessory( ${ accessory.displayName } ).service = new Service( ${ linkedAccessory.name }, ${ linkedAccessory.subType } )` );
+            if ( settings.cmd4Dbg ) accessory.log.debug( `Standalone Step 4. linkedAccessory( ${ accessory.displayName } ).service = new Service( ${ linkedAccessory.name }, ${ linkedAccessory.subType } )` );
             linkedAccessory.service = new properties.service( linkedAccessory.name, linkedAccessory.subType )
             accessory.services.push( linkedAccessory.service );
 
             // Hmmm Double Check this !!
             // Create Information Service
-            //if ( cmd4Dbg ) linkedAccessory.log.debug( "Creating information service for linkedAccessory:%s", linkedAccessory.displayName );
+            //if ( settings.cmd4Dbg ) linkedAccessory.log.debug( "Creating information service for linkedAccessory:%s", linkedAccessory.displayName );
             //createAccessorysInformationService( linkedAccessory );
 
-            if ( cmd4Dbg ) accessory.log.debug( `Standalone Step 5. ${ accessory.displayName }.service.addLinkedService( ${ linkedAccessory.displayName }.service` );
+            if ( settings.cmd4Dbg ) accessory.log.debug( `Standalone Step 5. ${ accessory.displayName }.service.addLinkedService( ${ linkedAccessory.displayName }.service` );
             // Standalone Step 5.
             //    tvService.addLinkedService( hdmi1InputService ); // link to tv service
             accessory.service.addLinkedService( linkedAccessory.service );
@@ -609,7 +605,7 @@ class Cmd4Accessory
       if ( self.hV.statusMsg == "TRUE" )
          self.log.info( chalk.blue( `Setting (Cached) ${ self.displayName } ${ characteristicString }` ) + ` ${ value }` );
       else
-         if ( cmd4Dbg ) self.log.debug( `setCachedvalue accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } value: ${ value }` );
+         if ( settings.cmd4Dbg ) self.log.debug( `setCachedvalue accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } value: ${ value }` );
 
 
       // Save the cached value.
@@ -657,7 +653,7 @@ class Cmd4Accessory
          callback( 10, null );
       }
 
-      if ( cmd4Dbg ) self.log.debug( `getCachedValue ${ characteristicString } for: ${ self.displayName } returned (CACHED) value: ${ storedValue }` );
+      if ( settings.cmd4Dbg ) self.log.debug( `getCachedValue ${ characteristicString } for: ${ self.displayName } returned (CACHED) value: ${ storedValue }` );
 
       callback( 0, storedValue );
 
@@ -718,7 +714,7 @@ class Cmd4Accessory
       // We fix this here.
       if ( accTypeEnumIndex == CMD4_ACC_TYPE_ENUM.CurrentHeatingCoolingState )
       {
-         if ( cmd4Dbg ) this.log.debug( "fixing heatingCoolingState" );
+         if ( settings.cmd4Dbg ) this.log.debug( "fixing heatingCoolingState" );
          accessory.service.getCharacteristic(
             CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].
                characteristic ).setProps(
@@ -765,7 +761,7 @@ class Cmd4Accessory
    // ***********************************************
    addAllServiceCharacteristicsForAccessory( accessory )
    {
-       if ( cmd4Dbg ) accessory.log.debug( `Adding All Service Characteristics for: ${ accessory.displayName }` );
+       if ( settings.cmd4Dbg ) accessory.log.debug( `Adding All Service Characteristics for: ${ accessory.displayName }` );
 
        let perms = "";
 
@@ -780,7 +776,7 @@ class Cmd4Accessory
           let storedValue = accessory.cmd4Storage.getStoredValueForIndex( accTypeEnumIndex );
           if ( storedValue != undefined )
           {
-             if ( cmd4Dbg ) accessory.log.debug( "Found characteristic:%s value:%s for:%s",
+             if ( settings.cmd4Dbg ) accessory.log.debug( "Found characteristic:%s value:%s for:%s",
                   uCCharacteristicString,
                   storedValue,
                   this.displayName );
@@ -790,8 +786,8 @@ class Cmd4Accessory
              if ( ! accessory.service.testCharacteristic(
                   CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic ) )
              {
-                //if ( cmd4Dbg ) accessory.log.debug( "Adding optional characteristic:%s for: %s", CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, this.displayName );
-                if ( cmd4Dbg ) accessory.log.debug( "Adding optional characteristic:%s for: %s", uCCharacteristicString, this.displayName );
+                //if ( settings.cmd4Dbg ) accessory.log.debug( "Adding optional characteristic:%s for: %s", CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, this.displayName );
+                if ( settings.cmd4Dbg ) accessory.log.debug( "Adding optional characteristic:%s for: %s", uCCharacteristicString, this.displayName );
 
                 accessory.service.addCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic );
              }
@@ -802,8 +798,8 @@ class Cmd4Accessory
              let props = accessory.configHasCharacteristicProps( accTypeEnumIndex );
              if ( props )
              {
-                //if ( cmd4Dbg ) accessory.log.debug( "Overriding characteristic %s props for: %s ", CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, this.displayName );
-                if ( cmd4Dbg ) accessory.log.debug( "Overriding characteristic %s props for: %s ", uCCharacteristicString, this.displayName );
+                //if ( settings.cmd4Dbg ) accessory.log.debug( "Overriding characteristic %s props for: %s ", CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, this.displayName );
+                if ( settings.cmd4Dbg ) accessory.log.debug( "Overriding characteristic %s props for: %s ", uCCharacteristicString, this.displayName );
                   accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].
                          characteristic )
                   .setProps(
@@ -863,7 +859,7 @@ class Cmd4Accessory
                           accessory.listOfPollingCharacteristics[ accTypeEnumIndex ] == undefined
                       )
                    {
-                      if ( cmd4Dbg ) this.log.debug( chalk.yellow( `Adding getCachedValue for ${ accessory.displayName } characteristic: ${ uCCharacteristicString } ` ) );
+                      if ( settings.cmd4Dbg ) this.log.debug( chalk.yellow( `Adding getCachedValue for ${ accessory.displayName } characteristic: ${ uCCharacteristicString } ` ) );
                       //Get cachedValue
                       accessory.service.getCharacteristic(
                          CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ]
@@ -871,7 +867,7 @@ class Cmd4Accessory
                             .on( "get", accessory.getCachedValue.bind( accessory, accTypeEnumIndex, uCCharacteristicString ) );
                   } else
                   {
-                      if ( cmd4Dbg ) this.log.debug( chalk.yellow( `Adding priorityGetValue for ${ accessory.displayName } characteristic: ${ uCCharacteristicString }` ) );
+                      if ( settings.cmd4Dbg ) this.log.debug( chalk.yellow( `Adding priorityGetValue for ${ accessory.displayName } characteristic: ${ uCCharacteristicString }` ) );
 
                       let details = accessory.lookupAccessoryHVForPollingCharacteristic( accessory, accTypeEnumIndex );
 
@@ -897,7 +893,7 @@ class Cmd4Accessory
                    if ( ! accessory.polling ||
                         accessory.listOfPollingCharacteristics[ accTypeEnumIndex ] == undefined)
                    {
-                      if ( cmd4Dbg ) this.log.debug( chalk.yellow( `Adding setCachedValue for ${ accessory.displayName } characteristic: ${ uCCharacteristicString } ` ) );
+                      if ( settings.cmd4Dbg ) this.log.debug( chalk.yellow( `Adding setCachedValue for ${ accessory.displayName } characteristic: ${ uCCharacteristicString } ` ) );
                       // setCachedValue has parameters:
                       // accTypeEnumIndex, value, callback
                       // The first bound value though is "this"
@@ -910,7 +906,7 @@ class Cmd4Accessory
                       });
 
                    } else {
-                      if ( cmd4Dbg ) this.log.debug( chalk.yellow( `Adding prioritySetValue for ${ accessory.displayName } characteristic: ${ uCCharacteristicString } ` ) );
+                      if ( settings.cmd4Dbg ) this.log.debug( chalk.yellow( `Adding prioritySetValue for ${ accessory.displayName } characteristic: ${ uCCharacteristicString } ` ) );
 
                       let details = accessory.lookupAccessoryHVForPollingCharacteristic( accessory, accTypeEnumIndex );
 
@@ -954,7 +950,7 @@ class Cmd4Accessory
                firstParmValue = ( this.cmd4Storage.testStoredValueForIndex( firstParmDirective.accTypeEnumIndex ) == undefined ) ?
                       firstParmValue : this.cmd4Storage.getStoredValueForIndex( firstParmDirective.accTypeEnumIndex );
 
-               if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.POWER }: ${ firstParmValue }` );
+               if ( settings.cmd4Dbg ) this.log.debug( `Logging ${ constants.POWER }: ${ firstParmValue }` );
                // Eve Energy ( Outlet service )
                this.loggingService.addEntry(
                   { [ constants.TIME ]  :  moment( ).unix( ),
@@ -979,7 +975,7 @@ class Cmd4Accessory
                       thirdParmValue : this.cmd4Storage.getStoredValueForIndex( thirdParmDirective.accTypeEnumIndex );
 
 
-               if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.TEMP }:${ firstParmValue } ${constants.HUMIDITY }:${ secondParmValue } ${ constants.PPM }:${ thirdParmValue }` );
+               if ( settings.cmd4Dbg ) this.log.debug( `Logging ${ constants.TEMP }:${ firstParmValue } ${constants.HUMIDITY }:${ secondParmValue } ${ constants.PPM }:${ thirdParmValue }` );
                // Eve Room ( TempSensor, HumiditySensor and AirQuality Services )
                this.loggingService.addEntry(
                   { [ constants.TIME ]     : moment( ).unix( ),
@@ -1005,7 +1001,7 @@ class Cmd4Accessory
                thirdParmValue = ( this.cmd4Storage.testStoredValueForIndex( thirdParmDirective.accTypeEnumIndex ) == undefined ) ?
                       thirdParmValue : this.cmd4Storage.getStoredValueForIndex( thirdParmDirective.accTypeEnumIndex );
 
-               if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.TEMP }: ${ firstParmValue } ${ constants.PRESSURE }: ${ secondParmValue } ${ constants.HUMIDITY }: ${ thirdParmValue }` );
+               if ( settings.cmd4Dbg ) this.log.debug( `Logging ${ constants.TEMP }: ${ firstParmValue } ${ constants.PRESSURE }: ${ secondParmValue } ${ constants.HUMIDITY }: ${ thirdParmValue }` );
 
                // Eve Weather ( TempSensor Service )
                this.loggingService.addEntry(
@@ -1024,7 +1020,7 @@ class Cmd4Accessory
                firstParmValue = ( this.cmd4Storage.testStoredValueForIndex( firstParmDirective.accTypeEnumIndex ) == undefined ) ?
                       firstParmValue : this.cmd4Storage.getStoredValueForIndex( firstParmDirective.accTypeEnumIndex );
 
-               if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.STATUS } status: ${ firstParmValue }` );
+               if ( settings.cmd4Dbg ) this.log.debug( `Logging ${ constants.STATUS } status: ${ firstParmValue }` );
 
                this.loggingService.addEntry(
                   { [ constants.TIME ]   : moment( ).unix( ),
@@ -1040,7 +1036,7 @@ class Cmd4Accessory
                firstParmValue = ( this.cmd4Storage.testStoredValueForIndex( firstParmDirective.accTypeEnumIndex ) == undefined ) ?
                       firstParmValue : this.cmd4Storage.getStoredValueForIndex( firstParmDirective.accTypeEnumIndex );
 
-               if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.STATUS }: ${ firstParmValue }` );
+               if ( settings.cmd4Dbg ) this.log.debug( `Logging ${ constants.STATUS }: ${ firstParmValue }` );
 
                this.loggingService.addEntry(
                   { [ constants.TIME ]   : moment( ).unix( ),
@@ -1064,7 +1060,7 @@ class Cmd4Accessory
                thirdParmValue = ( this.cmd4Storage.testStoredValueForIndex( thirdParmDirective.accTypeEnumIndex ) == undefined ) ?
                       thirdParmValue : this.cmd4Storage.getStoredValueForIndex( thirdParmDirective.accTypeEnumIndex );
 
-               if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.CURRENTTEMP }: ${ firstParmValue } ${ constants.SETTEMP }:${ secondParmValue } ${constants.VALVEPOSITION }:${ thirdParmValue } ` );
+               if ( settings.cmd4Dbg ) this.log.debug( `Logging ${ constants.CURRENTTEMP }: ${ firstParmValue } ${ constants.SETTEMP }:${ secondParmValue } ${constants.VALVEPOSITION }:${ thirdParmValue } ` );
 
                // Eve Thermo ( Thermostat service )
                this.loggingService.addEntry(
@@ -1087,7 +1083,7 @@ class Cmd4Accessory
                secondParmValue = ( this.cmd4Storage.testStoredValueForIndex( secondParmDirective.accTypeEnumIndex ) == undefined ) ?
                       secondParmValue : this.cmd4Storage.getStoredValueForIndex( secondParmDirective.accTypeEnumIndex );
 
-               if ( cmd4Dbg ) this.log.debug( `Logging ${ constants.STATUS }: ${ firstParmValue } ${ constants.WATERAMOUNT }: ${ secondParmValue }` );
+               if ( settings.cmd4Dbg ) this.log.debug( `Logging ${ constants.STATUS }: ${ firstParmValue } ${ constants.WATERAMOUNT }: ${ secondParmValue }` );
 
                // Eve Aqua ( Valve service set to Irrigation Type )
                this.LoggingService.addEntry(
@@ -1171,10 +1167,10 @@ class Cmd4Accessory
                if ( value != "0" )
                {
                   let rcDirective = isAccDirective( value, false );
-                  if ( rcDirective == null )
+                  if ( rcDirective.accTypeEnumIndex == null )
                   {
                      rcDirective = isAccDirective( value, true );
-                     if ( rcDirective == null )
+                     if ( rcDirective.accTypeEnumIndex == null )
                         throw new Error( `Invalid characteristic "${ value }" for fakegato to log of "${ key }".` );
 
                     this.log.warn( `The config.json FakeGato characteristic: ${ value } is Capitalized it should be: ${ rcDirective.type }.  In the near future this will be an Error so that Cmd4 can use homebridge-ui.\nTo remove this Warning, Please fix your config.json.` );
@@ -1310,10 +1306,10 @@ class Cmd4Accessory
    {
       // fix the their scripts, fix it here.
       let rcDirective = isAccDirective( key, false );
-      if ( rcDirective == null )
+      if ( rcDirective.accTypeEnumIndex == null )
       {
          rcDirective = isAccDirective( key, true );
-         if ( rcDirective == null )
+         if ( rcDirective.accTypeEnumIndex == null )
             throw new Error( `OOPS: "${ key }" not found for parsing characteristics in: "${ this.displayName }".` );
 
          this.log.warn( `The config.json characteristic key: ${ key } is Capitalized.  It should be: ${ rcDirective.type }. In the near future this will be an error for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
@@ -1372,7 +1368,7 @@ class Cmd4Accessory
                throw new Error( `Requires definition: "${ required }"  must be a string.` );
 
 
-            if ( cmd4Dbg ) this.log.debug( `Requiring ${ required }` );
+            if ( settings.cmd4Dbg ) this.log.debug( `Requiring ${ required }` );
 
             require( required );
          }
@@ -1686,12 +1682,12 @@ class Cmd4Accessory
 
                break;
             case constants.LINKEDTYPES:
-               if ( cmd4Dbg ) this.log.debug(  `parseConfig. Found linked Accessories` );
+               if ( settings.cmd4Dbg ) this.log.debug(  `parseConfig. Found linked Accessories` );
                this.linkedAccessoriesConfig = value;
 
                break;
             case constants.ACCESSORIES:
-               if ( cmd4Dbg ) this.log.debug( `parseConfig. Found Accessories` );
+               if ( settings.cmd4Dbg ) this.log.debug( `parseConfig. Found Accessories` );
                this.accessoriesConfig = value;
 
                break;
@@ -1780,10 +1776,10 @@ class Cmd4Accessory
       {
          case null:
          case undefined:
-            if ( cmd4Dbg ) this.log.debug( `No polling configured.` );
+            if ( settings.cmd4Dbg ) this.log.debug( `No polling configured.` );
             return;
          case Boolean:
-            if ( cmd4Dbg ) this.log.debug( `Polling config is Default Polling. Nothing to check for unset polling characteristics` );
+            if ( settings.cmd4Dbg ) this.log.debug( `Polling config is Default Polling. Nothing to check for unset polling characteristics` );
             return;
          case String:
             throw new Error( `Unknown type for Polling "${ this.polling }" given in: "${ this.displayName }".` );
@@ -1905,7 +1901,7 @@ class Cmd4Accessory
       // which happens in the Demo mode without polling.
       if ( typeof accessory.polling == "object" )
       {
-         if ( cmd4Dbg ) this.log.debug( `Characteristic polling for: ${ accessory.displayName }` );
+         if ( settings.cmd4Dbg ) this.log.debug( `Characteristic polling for: ${ accessory.displayName }` );
          accessory.polling.forEach( ( jsonPollingConfig ) =>
          {
             // Characteristic polling is a json type
@@ -1968,10 +1964,10 @@ class Cmd4Accessory
                   case constants.CHARACTERISTIC:
                   {
                      rcDirective = isAccDirective( value, false );
-                     if ( rcDirective == null )
+                     if ( rcDirective.accTypeEnumIndex == null )
                      {
                         rcDirective = isAccDirective( value, true );
-                        if ( rcDirective == null )
+                        if ( rcDirective.accTypeEnumIndex == null )
                            throw new Error( `No such polling characteristic: "${ value }" for: "${ this.displayName }".` );
 
                         this.log.warn( `1. The config.json Polling characteristic: ${ value } is Capitalized it should be: ${ rcDirective.type }.  In the near future this will be an Error so that Cmd4 can use homebridge-ui.\nTo remove this Warning, Please fix your config.json.` );
@@ -2015,7 +2011,7 @@ class Cmd4Accessory
             // This has to be UC as it gets passed to the getValue cmd string
             let characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToUC( accTypeEnumIndex );
 
-            if ( cmd4Dbg ) this.log.debug( `Setting up accessory: ${ accessory.displayName } for polling of: ${ characteristicString } timeout: ${ timeout } interval: ${ interval } queueName: "${ this.queue.queueName }"` );
+            if ( settings.cmd4Dbg ) this.log.debug( `Setting up accessory: ${ accessory.displayName } for polling of: ${ characteristicString } timeout: ${ timeout } interval: ${ interval } queueName: "${ this.queue.queueName }"` );
 
             let record = { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: interval, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.QUEUE_NAME_lv ]: this.queue.queueName };
 
@@ -2059,7 +2055,7 @@ class Cmd4Accessory
             if ( accessory.polling == true )
             {
 
-               if ( cmd4Dbg ) this.log.debug( `Adding ${ record.accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ record.accTypeEnumIndex ].type }  record.timeout: ${ record.timeout } record.interval: ${ record.interval }  to Polled Queue ${ record.queueName }` );
+               if ( settings.cmd4Dbg ) this.log.debug( `Adding ${ record.accessory.displayName } ${ CMD4_ACC_TYPE_ENUM.properties[ record.accTypeEnumIndex ].type }  record.timeout: ${ record.timeout } record.interval: ${ record.interval }  to Polled Queue ${ record.queueName }` );
 
                this.queue.addLowPriorityGetPolledQueueEntry(
                      record.accessory,
@@ -2105,7 +2101,7 @@ class Cmd4Accessory
 function checkAccessoryForDuplicateUUID( accessory, uuid )
 {
    // check for UUID+subtype conflict
-   if ( cmd4Dbg ) accessory.log.debug( `Checking ${ accessory.name } for Duplicate UUID: ${ accessory.uuid }` );
+   if ( settings.cmd4Dbg ) accessory.log.debug( `Checking ${ accessory.name } for Duplicate UUID: ${ accessory.uuid }` );
 
    for ( let existingAccessory in accessory.createdCmd4Accessories )
    {
@@ -2142,7 +2138,7 @@ function checkAccessoryForDuplicateUUID( accessory, uuid )
       }
    }
 
-   if ( cmd4Dbg ) accessory.log.debug( `No Duplicate UUID's for this Accessory - ` + chalk.green( `OK` ) + `. Using: ${ accessory.uuid }` );
+   if ( settings.cmd4Dbg ) accessory.log.debug( `No Duplicate UUID's for this Accessory - ` + chalk.green( `OK` ) + `. Using: ${ accessory.uuid }` );
 }
 
 exports.Cmd4Accessory = Cmd4Accessory;

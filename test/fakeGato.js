@@ -76,6 +76,9 @@ describe('Testing FakeGato gets created', ( ) =>
       // Put back the polling queues
       settings.listOfCreatedPriorityQueues = { };
 
+      // MaxListenersExceededWarning: Possible EventEmitter memory leak detected
+      _api.removeAllListeners();
+
    });
 
    it( `Test if Cmd4Platform exists`, function ( )
@@ -628,6 +631,76 @@ describe('Testing FakeGato gets created', ( ) =>
       assert.equal( 3, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
 
 
+
+      done( );
+   });
+
+   it( `Test FakeGato updateAccessoryAttribute creates a log for THERMO`, function( done )
+   {
+      let platformConfig =
+      {
+         accessories: [
+            {
+               type:                        "Thermostat",
+               name:                        "My_Thermostat",
+               displayName:                 "My_Thermostat",
+               currentHeatingCoolingState:  "OFF",
+               targetHeatingCoolingState:   "OFF",
+               currentTemperature:          22.2,
+               targetTemperature:           22.2,
+               temperatureDisplayUnits:     "CELSIUS",
+               currentRelativeHumidity:     60,
+               targetRelativeHumidity:      60,
+               coolingThresholdTemperature: 21.4,
+               heatingThresholdTemperature: 20.2,
+               polling: [
+                          { characteristic: "currentTemperature" },
+                          { characteristic: "targetTemperature" }
+               ],
+               fakegato: { eve:             "thermo",
+                           currentTemp:     "currentTemperature",
+                           setTemp:         "targetTemperature",
+                           valvePosition:   0,
+                           storage:         "fs",
+                           storagePath:     ".homebridge/FakegatoStorage",
+                           folder:          "folderName",
+                           keyPath:         "/place/to/store/my/keys/"
+                         },
+               state_cmd:                   "./test/echoScripts/echo_ACTIVE"
+             }
+         ]
+      }
+
+      let log = new Logger( );
+      log.setBufferEnabled( true );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      cmd4Platform.discoverDevices( );
+
+      let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
+
+      expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, `Fan is not an instance of Cmd4Accessory` );
+
+
+
+      assert.include( log.logBuf, `[39m Adding new platformAccessory: My_Thermostat` );
+      assert.include( log.logBuf, `35mConfiguring platformAccessory: \u001b[39mMy_Thermostat` );
+      assert.equal( 2, log.logLineCount, ` Unexpected number of stdout lines:  ${ log.logBuf }` );
+      //assert.equal( "", log.logBuf, ` Unexpected stdout: ${ log.logBuf }` );
+      assert.equal( 0, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
+
+      log.reset( );
+      log.setBufferEnabled( true );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+      cmd4Accessory.updateAccessoryAttribute( CMD4_ACC_TYPE_ENUM.CurrentTemperature, 18);
+
+
+      assert.include( log.logBuf, `[39m \u001b[90mLogging currentTemp: 18 setTemp:22.2 valvePosition:0`, `Incorrect stdout: ${ log.logBuf }` );
 
       done( );
    });

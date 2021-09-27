@@ -35,12 +35,14 @@ describe( `Test isAccDirective`, ( ) =>
    it( `isAccDirective should NOT identify an uppercase type `, ( ) =>
    {
       let ucType = CMD4_ACC_TYPE_ENUM.accEnumIndexToUC( CMD4_ACC_TYPE_ENUM.On );
-      assert.isNull( isAccDirective( ucType ), `Expected result to be null` );
+      let rc =  isAccDirective( ucType );
+      assert.isNull( rc.accTypeEnumIndex, `Expected result to be null` );
    });
    it( `isAccDirective should NOT identify an unknown type `, ( ) =>
    {
       let type = "Blast";
-      assert.isNull( isAccDirective( type ), `Expected result to be null` );
+      let rc =  isAccDirective( type );
+      assert.isNull( rc.accTypeEnumIndex, `Expected result to be null` );
    });
    it( `isAccDirective should identify an uppercase type if upperCase is checked`, ( ) =>
    {

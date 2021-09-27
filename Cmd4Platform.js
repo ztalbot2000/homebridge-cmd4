@@ -37,7 +37,6 @@ const Cmd4Accessory = require( "./Cmd4Accessory" ).Cmd4Accessory;
 // Settings, Globals and Constants
 let settings = require( "./cmd4Settings" );
 const constants = require( "./cmd4Constants" );
-let cmd4Dbg = settings.cmd4Dbg;
 
 // Platform definition
 class Cmd4Platform
@@ -51,7 +50,7 @@ class Cmd4Platform
          this.log = log;
 
          // Carry the debug flag from the platform
-         cmd4Dbg = log.debugEnabled;
+         settings.cmd4Dbg = log.debugEnabled;
       }
       else
       {
@@ -63,13 +62,12 @@ class Cmd4Platform
               process.env.DEBUG == settings.PLATFORM_NAME )
          {
             settings.cmd4Dbg = true;
-            cmd4Dbg = true;
          }
       }
 
-      this.log.setDebugEnabled( cmd4Dbg );
+      this.log.setDebugEnabled( settings.cmd4Dbg );
 
-      if ( cmd4Dbg ) this.log.debug( chalk.blue( `Class Cmd4Platform` ) );
+      if ( settings.cmd4Dbg ) this.log.debug( chalk.blue( `Class Cmd4Platform` ) );
 
       if ( config === undefined )
          return;
@@ -151,7 +149,7 @@ class Cmd4Platform
    {
       if ( platformAccessory )
       {
-         if ( cmd4Dbg ) this.log.debug( `Found cached accessory: ${ platformAccessory.displayName }` );
+         if ( settings.cmd4Dbg ) this.log.debug( `Found cached accessory: ${ platformAccessory.displayName }` );
          this.toBeRestoredPlatforms.push( platformAccessory );
       }
    }
@@ -324,7 +322,7 @@ class Cmd4Platform
 
       this.definitions.forEach( ( definition, definitionIndex ) =>
       {
-         if ( cmd4Dbg ) this.log.debug( `Processing definition index: ${ definitionIndex }` );
+         if ( settings.cmd4Dbg ) this.log.debug( `Processing definition index: ${ definitionIndex }` );
 
          if ( trueTypeOf( definition.type ) != String )
             throw new Error( `definition.type at index: ${ definitionIndex } is not a String.` );
@@ -392,7 +390,7 @@ class Cmd4Platform
          }
 
          CMD4_ACC_TYPE_ENUM.add( this.api, definition.type, definition.description, definition.props, definition.validValues );
-         if ( cmd4Dbg ) this.log.debug( `Created definition type: "${ definition.type }".` );
+         if ( settings.cmd4Dbg ) this.log.debug( `Created definition type: "${ definition.type }".` );
 
       });
    }
@@ -407,7 +405,7 @@ class Cmd4Platform
       // already been registered.
       this.config.accessories && this.config.accessories.forEach( ( device ) =>
       {
-         if ( cmd4Dbg ) this.log.debug( `Fetching config.json Platform accessories.` );
+         if ( settings.cmd4Dbg ) this.log.debug( `Fetching config.json Platform accessories.` );
          this.Service=this.api.hap.Service;
 
          device.name = getAccessoryName( device );
@@ -473,7 +471,7 @@ class Cmd4Platform
             // If the saved context has our STORED_DATA_ARRAY, then use it.
             if ( existingAccessory.context.STORED_DATA_ARRAY )
             {
-               if ( cmd4Dbg ) this.log.debug(`Cmd4Platform: Using context.STORED_DATA_ARRAY` );
+               if ( settings.cmd4Dbg ) this.log.debug(`Cmd4Platform: Using context.STORED_DATA_ARRAY` );
                STORED_DATA_ARRAY = existingAccessory.context.STORED_DATA_ARRAY;
 
             }
@@ -493,7 +491,7 @@ class Cmd4Platform
             // Get the properties for this accessories device type
             let devProperties = CMD4_DEVICE_TYPE_ENUM.properties[ accessory.typeIndex ];
 
-            if ( cmd4Dbg ) this.log.debug( `Step 2. ${ accessory.displayName }.service = platform.getService( Service.${ devProperties.deviceName }, ${ accessory.subType })` );
+            if ( settings.cmd4Dbg ) this.log.debug( `Step 2. ${ accessory.displayName }.service = platform.getService( Service.${ devProperties.deviceName }, ${ accessory.subType })` );
             accessory.service = platform.getService( devProperties.service, accessory.name, accessory.subType );
 
             // Determine which characteristics, if any, will be polled. This
@@ -521,7 +519,7 @@ class Cmd4Platform
             // Create the new PlatformAccessory
             if ( device.category == undefined )
             {
-               if ( cmd4Dbg ) this.log.debug( `Step 1. platformAccessory = new platformAccessory( ${ displayName }, ${ uuid } )` );
+               if ( settings.cmd4Dbg ) this.log.debug( `Step 1. platformAccessory = new platformAccessory( ${ displayName }, ${ uuid } )` );
                platform = new this.api.platformAccessory( displayName, uuid );
 
             } else
@@ -533,7 +531,7 @@ class Cmd4Platform
                if ( ! category )
                   throw new Error( `Category specified: ${ device.category } is not a valid homebridge category.` );
 
-               if ( cmd4Dbg ) this.log.debug( `Step 1. platformAccessory = new platformAccessory( ${ displayName }, ${ uuid }, ${ category } )` );
+               if ( settings.cmd4Dbg ) this.log.debug( `Step 1. platformAccessory = new platformAccessory( ${ displayName }, ${ uuid }, ${ category } )` );
 
                platform = new this.api.platformAccessory( displayName, uuid, category );
             }
@@ -548,7 +546,7 @@ class Cmd4Platform
             // Put the accessory into its correct collection array.
             this.createdCmd4Accessories.push( accessory );
 
-            if ( cmd4Dbg ) this.log.debug( `Created platformAccessory: ${ accessory.displayName }` );
+            if ( settings.cmd4Dbg ) this.log.debug( `Created platformAccessory: ${ accessory.displayName }` );
 
             // Store a copy of the device object in the `accessory.context`
             // the `context` property can be used to store any data about the
@@ -560,7 +558,7 @@ class Cmd4Platform
 
             // MOVE OUSTSIDE
             // Platform Step 2. const tvService = this.tvAccessory.addService( this.Service.Television );
-            if ( cmd4Dbg ) this.log.debug( `Step 2. ${ accessory.displayName }.service = platform.addService( this.Service.${ devProperties.deviceName }, ${ accessory.name }, ${ accessory.subType })` );
+            if ( settings.cmd4Dbg ) this.log.debug( `Step 2. ${ accessory.displayName }.service = platform.addService( this.Service.${ devProperties.deviceName }, ${ accessory.name }, ${ accessory.subType })` );
             accessory.service = platform.addService( new devProperties.service( accessory.name, accessory.subType )  );
 
             // Create all the services for the accessory, including fakegato
@@ -570,12 +568,12 @@ class Cmd4Platform
             // Step 6. this.api.publishExternalAccessories( PLUGIN_NAME, [ this.tvAccessory ] );
             if ( accessory.publishExternally )
             {
-               if ( cmd4Dbg ) this.log.debug( `Step 6. publishExternalAccessories( ${ settings.PLUGIN_NAME }, [ ${accessory.displayName } ] )` );
+               if ( settings.cmd4Dbg ) this.log.debug( `Step 6. publishExternalAccessories( ${ settings.PLUGIN_NAME }, [ ${accessory.displayName } ] )` );
 
                this.api.publishExternalAccessories( settings.PLUGIN_NAME, [ platform ] );
 
             } else {
-               if ( cmd4Dbg ) this.log.debug( `Step 6. registerPlatformAccessories( ${ settings.PLUGIN_NAME }, ${ settings.PLATFORM_NAME }, [ ${  accessory.displayName } ] ) `);
+               if ( settings.cmd4Dbg ) this.log.debug( `Step 6. registerPlatformAccessories( ${ settings.PLUGIN_NAME }, ${ settings.PLATFORM_NAME }, [ ${  accessory.displayName } ] ) `);
 
                this.api.registerPlatformAccessories( settings.PLUGIN_NAME, settings.PLATFORM_NAME, [ platform ] );
             }
@@ -599,28 +597,28 @@ class Cmd4Platform
       // for us and the getService hangs off the platform, not the accessory.
       if ( cmd4PlatformAccessory.model )
       {
-         if ( cmd4Dbg ) cmd4PlatformAccessory.log.debug( `Adding model( ${ cmd4PlatformAccessory.model } ) to information service of ${ cmd4PlatformAccessory.displayName }` );
+         if ( settings.cmd4Dbg ) cmd4PlatformAccessory.log.debug( `Adding model( ${ cmd4PlatformAccessory.model } ) to information service of ${ cmd4PlatformAccessory.displayName }` );
          cmd4PlatformAccessory.platform.getService( cmd4PlatformAccessory.platform.Service.AccessoryInformation )
             .setCharacteristic( this.api.hap.Characteristic.Model, cmd4PlatformAccessory.model );
       }
 
       if ( cmd4PlatformAccessory.manufacturer )
       {
-         if ( cmd4Dbg ) cmd4PlatformAccessory.log.debug( `Adding manufacturer( ${ cmd4PlatformAccessory.manufacturer } ) to information service of ${ cmd4PlatformAccessory.displayName }` );
+         if ( settings.cmd4Dbg ) cmd4PlatformAccessory.log.debug( `Adding manufacturer( ${ cmd4PlatformAccessory.manufacturer } ) to information service of ${ cmd4PlatformAccessory.displayName }` );
          cmd4PlatformAccessory.platform.getService( cmd4PlatformAccessory.platform.Service.AccessoryInformation )
             .setCharacteristic( this.api.hap.Characteristic.Manufacturer, cmd4PlatformAccessory.manufacturer );
       }
 
       if ( cmd4PlatformAccessory.serialNumber )
       {
-         if ( cmd4Dbg ) cmd4PlatformAccessory.log.debug( `Adding serial Number( ${ cmd4PlatformAccessory.serialNumber } ) to information service of ${ cmd4PlatformAccessory.displayName }` );
+         if ( settings.cmd4Dbg ) cmd4PlatformAccessory.log.debug( `Adding serial Number( ${ cmd4PlatformAccessory.serialNumber } ) to information service of ${ cmd4PlatformAccessory.displayName }` );
          cmd4PlatformAccessory.platform.getService( cmd4PlatformAccessory.platform.Service.AccessoryInformation )
             .setCharacteristic( this.api.hap.Characteristic.SerialNumber, cmd4PlatformAccessory.serialNumber );
       }
 
       if ( cmd4PlatformAccessory.firmwareRevision )
       {
-         if ( cmd4Dbg ) cmd4PlatformAccessory.log.debug( `Adding Firmware Revision( ${ cmd4PlatformAccessory.firmwareRevision } ) to information service of ${ cmd4PlatformAccessory.displayName }` );
+         if ( settings.cmd4Dbg ) cmd4PlatformAccessory.log.debug( `Adding Firmware Revision( ${ cmd4PlatformAccessory.firmwareRevision } ) to information service of ${ cmd4PlatformAccessory.displayName }` );
          cmd4PlatformAccessory.platform.getService( cmd4PlatformAccessory.platform.Service.AccessoryInformation )
             .setCharacteristic( this.api.hap.Characteristic.FirmwareRevision, cmd4PlatformAccessory.firmwareRevision );
       }
@@ -640,19 +638,19 @@ class Cmd4Platform
          // Existing Accessories would have existing services
          if ( fromExisting == true )
          {
-            if ( cmd4Dbg ) this.log.debug( `Platform (AddedAccessory-existing) Step 3, ${ addedAccessory.displayName }.service = accessory.platform.getService( Service.${ devProperties.deviceName }, ${ addedAccessory.name }, ${ addedAccessory.subType }` );
+            if ( settings.cmd4Dbg ) this.log.debug( `Platform (AddedAccessory-existing) Step 3, ${ addedAccessory.displayName }.service = accessory.platform.getService( Service.${ devProperties.deviceName }, ${ addedAccessory.name }, ${ addedAccessory.subType }` );
             addedAccessory.service = addedAccessory.platform.getService( devProperties.service, addedAccessory.name, addedAccessory.subType );
          } else
          {
 
-            if ( cmd4Dbg ) this.log.debug( `Platform (AddedAccessory-new) Step 3, ${ addedAccessory.displayName }.service = PlatformAccessory: ${ cmd4PlatformAccessory.displayName } addService( Service:${ devProperties.deviceName }, ${ addedAccessory.name }, ${ addedAccessory.subType } )` );
+            if ( settings.cmd4Dbg ) this.log.debug( `Platform (AddedAccessory-new) Step 3, ${ addedAccessory.displayName }.service = PlatformAccessory: ${ cmd4PlatformAccessory.displayName } addService( Service:${ devProperties.deviceName }, ${ addedAccessory.name }, ${ addedAccessory.subType } )` );
 
             addedAccessory.service = cmd4PlatformAccessory.platform.addService( new devProperties.service( addedAccessory.name, addedAccessory.subType ) );
          }
 
          addedAccessory.addAllServiceCharacteristicsForAccessory( addedAccessory );
          // Create Information Service for the addedAccessory
-         if ( cmd4Dbg ) addedAccessory.log.debug( `Creating information service for AddedAccessory: ${ addedAccessory.displayName }` );
+         if ( settings.cmd4Dbg ) addedAccessory.log.debug( `Creating information service for AddedAccessory: ${ addedAccessory.displayName }` );
          createAccessorysInformationService( addedAccessory );
 
           // Setup the fakegato service if defined in the config.json file
@@ -679,12 +677,12 @@ class Cmd4Platform
          // Existing Accessories would have existing services
          if ( fromExisting == true )
          {
-            if ( cmd4Dbg ) this.log.debug( `Platform (LinkedAccessory-existing) Step 4. ${ linkedAccessory.displayName }.service = ${ cmd4PlatformAccessory.displayName }.getService:( ${ devProperties.deviceName }.service, ${linkedAccessory.name }, ${linkedAccessory.subType } )` );
+            if ( settings.cmd4Dbg ) this.log.debug( `Platform (LinkedAccessory-existing) Step 4. ${ linkedAccessory.displayName }.service = ${ cmd4PlatformAccessory.displayName }.getService:( ${ devProperties.deviceName }.service, ${linkedAccessory.name }, ${linkedAccessory.subType } )` );
 
             linkedAccessory.service = linkedAccessory.platform.getService( devProperties.service, linkedAccessory.name, linkedAccessory.subType );
          } else
          {
-            if ( cmd4Dbg ) this.log.debug( `Platform (LinkedAccessory-new) Step 4. ${ linkedAccessory.displayName }.service = ${ cmd4PlatformAccessory.displayName }.addService:( ${ devProperties.deviceName }.service, ${linkedAccessory.name }, ${linkedAccessory.subType } )` );
+            if ( settings.cmd4Dbg ) this.log.debug( `Platform (LinkedAccessory-new) Step 4. ${ linkedAccessory.displayName }.service = ${ cmd4PlatformAccessory.displayName }.addService:( ${ devProperties.deviceName }.service, ${linkedAccessory.name }, ${linkedAccessory.subType } )` );
 
             linkedAccessory.service = cmd4PlatformAccessory.platform.addService( new devProperties.service( linkedAccessory.name, linkedAccessory.subType ) );
          }
@@ -693,12 +691,12 @@ class Cmd4Platform
 
          if ( fromExisting == false )
          {
-            if ( cmd4Dbg ) this.log.debug( `Platform Step 5. ${ cmd4PlatformAccessory.displayName }.service.addLinkedService( ${ linkedAccessory.displayName }.service )` );
+            if ( settings.cmd4Dbg ) this.log.debug( `Platform Step 5. ${ cmd4PlatformAccessory.displayName }.service.addLinkedService( ${ linkedAccessory.displayName }.service )` );
             cmd4PlatformAccessory.service.addLinkedService( linkedAccessory.service );
          }
 
          // Create Information Service for the linkedAccessory
-         if ( cmd4Dbg ) linkedAccessory.log.debug( `Creating information service for Linked Platform Accessory: ${ linkedAccessory.displayName }` );
+         if ( settings.cmd4Dbg ) linkedAccessory.log.debug( `Creating information service for Linked Platform Accessory: ${ linkedAccessory.displayName }` );
          createAccessorysInformationService( linkedAccessory );
 
           // Setup the fakegato service if defined in the config.json file
@@ -725,7 +723,7 @@ class Cmd4Platform
       // Check for any queued characteristics
       if ( Object.keys( settings.listOfCreatedPriorityQueues ).length == 0 )
       {
-         if ( cmd4Dbg ) this.log.debug( `No queued polling characteristics` );
+         if ( settings.cmd4Dbg ) this.log.debug( `No queued polling characteristics` );
          return;
       }
 

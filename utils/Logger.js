@@ -57,6 +57,7 @@ class Logger
    setDebugEnabled( enabled = true )
    {
       this.debugEnabled = enabled;
+      settings.cmd4Dbg = enabled;
    }
    setOutputEnabled( enabled = true )
    {

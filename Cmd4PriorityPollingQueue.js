@@ -29,8 +29,6 @@ let HIGH_PRIORITY_SET = 0;
 let HIGH_PRIORITY_GET = 1;
 let LOW_PRIORITY_GET = 2;
 
-let cmd4Dbg = settings.cmd4Dbg;
-
 class Cmd4PriorityPollingQueue
 {
    constructor( log, queueName, queueType = constants.DEFAULT_QUEUE_TYPE )
@@ -38,7 +36,7 @@ class Cmd4PriorityPollingQueue
       this.log = log;
 
       // This works better for Unit testing
-      cmd4Dbg = log.debugEnabled;
+      settings.cmd4Dbg = log.debugEnabled;
 
       this.queueName = queueName;
       this.queueType = queueType;
@@ -139,7 +137,7 @@ class Cmd4PriorityPollingQueue
 
    processHighPrioritySetQueue( entry )
    {
-      if ( cmd4Dbg ) this.log.debug( `Processing high priority queue "Set" entry: ${ entry.accTypeEnumIndex } length: ${ this.highPriorityQueue.length }` );
+      if ( settings.cmd4Dbg ) this.log.debug( `Processing high priority queue "Set" entry: ${ entry.accTypeEnumIndex } length: ${ this.highPriorityQueue.length }` );
 
       this.inProgressSets ++;
       this.qSetValue( entry.accessory, entry.accTypeEnumIndex, entry.characteristicString, entry.timeout, entry.value, function ( error )
@@ -213,7 +211,7 @@ class Cmd4PriorityPollingQueue
 
    processHighPriorityGetQueue( entry )
    {
-      if ( cmd4Dbg ) this.log.debug( `Processing high priority queue "Get" entry: ${ entry.accTypeEnumIndex } isUpdate: ${ entry.queueGetIsUpdate } length: ${ this.highPriorityQueue.length }` );
+      if ( settings.cmd4Dbg ) this.log.debug( `Processing high priority queue "Get" entry: ${ entry.accTypeEnumIndex } isUpdate: ${ entry.queueGetIsUpdate } length: ${ this.highPriorityQueue.length }` );
 
       this.inProgressGets ++;
 
@@ -253,7 +251,7 @@ class Cmd4PriorityPollingQueue
 
    processEntryFromLowPriorityQueue( entry )
    {
-      if ( cmd4Dbg ) this.log.debug( `Processing low priority queue entry: ${ entry.accTypeEnumIndex }` );
+      if ( settings.cmd4Dbg ) this.log.debug( `Processing low priority queue entry: ${ entry.accTypeEnumIndex }` );
 
       let queue = entry.accessory.queue;
 
@@ -308,7 +306,7 @@ class Cmd4PriorityPollingQueue
 
       let cmd = self.state_cmd_prefix + self.state_cmd + " Get '" + self.displayName + "' '" + characteristicString  + "'" + self.state_cmd_suffix;
 
-      if ( cmd4Dbg ) self.log.debug( `getValue: accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } cmd: ${ cmd } timeout: ${ timeout }` );
+      if ( settings.cmd4Dbg ) self.log.debug( `getValue: accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } cmd: ${ cmd } timeout: ${ timeout }` );
 
       let reply = "NxN";
 
@@ -415,11 +413,11 @@ class Cmd4PriorityPollingQueue
             self.log.warn( `getValue: Warning, Retrieving ${ characteristicString }, expected only one word value for: ${ self.displayName } of: ${ trimmedReply }` );
          }
 
-         if ( cmd4Dbg ) self.log.debug( `getValue: ${ characteristicString } function for: ${ self.displayName } returned: ${ unQuotedReply }` );
+         if ( settings.cmd4Dbg ) self.log.debug( `getValue: ${ characteristicString } function for: ${ self.displayName } returned: ${ unQuotedReply }` );
 
 
          var transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, unQuotedReply )
-         if ( cmd4Dbg && transposed != unQuotedReply ) self.log.debug( `getValue: ${ characteristicString } for: ${ self.displayName } transposed: ${ transposed }` );
+         if ( settings.cmd4Dbg && transposed != unQuotedReply ) self.log.debug( `getValue: ${ characteristicString } for: ${ self.displayName } transposed: ${ transposed }` );
 
 
          // Return the appropriate type, by seeing what it is
@@ -434,7 +432,7 @@ class Cmd4PriorityPollingQueue
             return;
          }
 
-         if ( cmd4Dbg && properValue != transposed ) self.log.debug( `getValue: ${ characteristicString } for: ${ self.displayName } properValue: ${ properValue }` );
+         if ( settings.cmd4Dbg && properValue != transposed ) self.log.debug( `getValue: ${ characteristicString } for: ${ self.displayName } properValue: ${ properValue }` );
 
          // Success !!!!
          callback( 0, properValue );
@@ -493,7 +491,7 @@ class Cmd4PriorityPollingQueue
       if ( accessory.hV.statusMsg == "TRUE" )
          self.log.info( chalk.blue( `Setting ${ self.displayName } ${ characteristicString }` ) + ` ${ value }` );
 
-      if ( cmd4Dbg ) self.log.debug( `setValue: accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } ${ value }  cmd: ${ cmd } timeout: ${ timeout }` );
+      if ( settings.cmd4Dbg ) self.log.debug( `setValue: accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } ${ value }  cmd: ${ cmd } timeout: ${ timeout }` );
 
       // Execute command to Set a characteristic value for an accessory
       let child = exec( cmd, { timeout: timeout }, function ( error, stdout, stderr )
@@ -608,7 +606,7 @@ class Cmd4PriorityPollingQueue
              return false;
 
           } else {
-             if ( cmd4Dbg ) this.log.debug( `Unhandled lastTransactionType: ${ lastTransactionType } inProgressSets: ${  queue.inProgressSets } inProgressGets: ${  queue.inProgressGets } queueStarted: ${ queue.queueStarted } lowQueueLen: ${ queue.lowPriorityQueue.length } hiQueueLen: ${ queue.highPriorityQueue.length }` );
+             if ( settings.cmd4Dbg ) this.log.debug( `Unhandled lastTransactionType: ${ lastTransactionType } inProgressSets: ${  queue.inProgressSets } inProgressGets: ${  queue.inProgressGets } queueStarted: ${ queue.queueStarted } lowQueueLen: ${ queue.lowPriorityQueue.length } hiQueueLen: ${ queue.highPriorityQueue.length }` );
 
           }
       }
@@ -679,7 +677,7 @@ class Cmd4PriorityPollingQueue
              return false;
 
           } else {
-             if ( cmd4Dbg ) this.log.debug( `Unhandled lastTransactionType: ${ lastTransactionType } inProgressSets: ${  queue.inProgressSets } inProgressGets: ${  queue.inProgressGets } queueStarted: ${ queue.queueStarted } lowQueueLen: ${ queue.lowPriorityQueue.length } hiQueueLen: ${ queue.highPriorityQueue.length }` );
+             if ( settings.cmd4Dbg ) this.log.debug( `Unhandled lastTransactionType: ${ lastTransactionType } inProgressSets: ${  queue.inProgressSets } inProgressGets: ${  queue.inProgressGets } queueStarted: ${ queue.queueStarted } lowQueueLen: ${ queue.lowPriorityQueue.length } hiQueueLen: ${ queue.highPriorityQueue.length }` );
 
           }
       }
@@ -711,7 +709,7 @@ class Cmd4PriorityPollingQueue
       let self = entry.accessory;
       let queue = entry.accessory.queue;
 
-      if ( cmd4Dbg ) self.log.debug( `Scheduling Poll of index: ${ entry.accTypeEnumIndex } characteristic: ${ entry.characteristicString } for: ${ self.displayName } timeout: ${ entry.timeout } interval: ${ entry.interval }` );
+      if ( settings.cmd4Dbg ) self.log.debug( `Scheduling Poll of index: ${ entry.accTypeEnumIndex } characteristic: ${ entry.characteristicString } for: ${ self.displayName } timeout: ${ entry.timeout } interval: ${ entry.interval }` );
 
       // Clear polling
       if ( queue.listOfRunningPolls &&
@@ -723,7 +721,7 @@ class Cmd4PriorityPollingQueue
          // If the queue was busy/not available, schedule the entry at a later time
          if ( queue.processQueueFunc( LOW_PRIORITY_GET, queue, entry ) == false )
          {
-            if ( cmd4Dbg ) self.log.debug( `processsQueue returned false` );
+            if ( settings.cmd4Dbg ) self.log.debug( `processsQueue returned false` );
 
             queue.scheduleLowPriorityEntry( entry );
          }
@@ -782,7 +780,7 @@ class Cmd4PriorityPollingQueue
       let lastAccessoryUUID = ""
       let allDoneCount = 0;
 
-      if ( cmd4Dbg ) this.log.debug( `enablePolling for the first time` );
+      if ( settings.cmd4Dbg ) this.log.debug( `enablePolling for the first time` );
 
       // If there is nothing in the lowPriorityQueue, we are dome.
       // Demo mode or Unit testing.
@@ -799,19 +797,19 @@ class Cmd4PriorityPollingQueue
             allDoneCount ++;
             setTimeout( ( ) =>
             {
-               if ( entryIndex == 0 && cmd4Dbg )
+               if ( entryIndex == 0 && settings.cmd4Dbg )
                   if ( queue.queueType == constants.QUEUETYPE_WORM )
                      entry.accessory.log.debug( `Started staggered kick off of ${ queue.lowPriorityQueue.length } polled characteristics for queue: "${ entry.accessory.queue.queueName }"` );
                   else
                      entry.accessory.log.debug( `Started staggered kick off of ${ queue.lowPriorityQueue.length } polled characteristics for "${ entry.accessory.displayName }"` );
 
-               if ( cmd4Dbg ) entry.accessory.log.debug( `Kicking off polling for: ${ entry.accessory.displayName } ${ entry.characteristicString } interval:${ entry.interval }, staggered:${ staggeredDelays[ staggeredDelayIndex ] }` );
+               if ( settings.cmd4Dbg ) entry.accessory.log.debug( `Kicking off polling for: ${ entry.accessory.displayName } ${ entry.characteristicString } interval:${ entry.interval }, staggered:${ staggeredDelays[ staggeredDelayIndex ] }` );
 
                queue.scheduleLowPriorityEntry( entry );
 
                if ( entryIndex == queue.lowPriorityQueue.length -1 )
                {
-                  if ( cmd4Dbg )
+                  if ( settings.cmd4Dbg )
                      if ( queue.queueType == constants.QUEUETYPE_WORM )
                         entry.accessory.log.debug( `All characteristics are now being polled for queue: "${ queue.queueName }"` );
                      else
@@ -858,7 +856,7 @@ class Cmd4PriorityPollingQueue
             this.processQueueFunc = this.processWormQueue;
             // When not in debug mode, do not echo errors for the WoRm queue
             // as errors are handled through retries.
-            if ( ! cmd4Dbg )
+            if ( ! settings.cmd4Dbg )
                this.echoE = false;
             break;
          case constants.QUEUETYPE_STANDARD:
@@ -969,7 +967,7 @@ var parseAddQueueTypes = function ( log, entrys )
       if ( queueName == null )
          throw new Error( `"${ constants.QUEUE }"  not provided at index ${ entryIndex }` );
 
-      if ( cmd4Dbg ) log.debug( `calling addQueue: ${ queueName } type: ${ queueType }` );
+      if ( settings.cmd4Dbg ) log.debug( `calling addQueue: ${ queueName } type: ${ queueType }` );
       addQueue( log, queueName, queueType );
    } );
 }

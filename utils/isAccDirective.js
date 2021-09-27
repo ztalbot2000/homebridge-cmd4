@@ -12,10 +12,17 @@ let CMD4_ACC_TYPE_ENUM = require( "../lib/CMD4_ACC_TYPE_ENUM" ).CMD4_ACC_TYPE_EN
 
 function isAccDirective( type, allowUpper = false )
 {
+   // For backward compatability of testStoredValueForIndex of FakeGato
+   // we must return a null accTypeIndex, which should be checked instead
+   // of just rc.
+   let defaultRc = { "type": type,
+                     "accTypeEnumIndex": null
+                   };
+
    if ( ! type )
    {
       console.warn( "No parameter passed to isCmd4Directive" );
-      return null;
+      return defaultRc;
    }
 
    let accTypeEnumIndex;
@@ -29,7 +36,7 @@ function isAccDirective( type, allowUpper = false )
    // Note: There are othes like WiFi ... but nobody uses them thankfully !
    if ( allowUpper == true )
    {
-       accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === type )
+       accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.properties.indexOfEnum( i => i.type === type );
 
       // We return the correct lower case
       if ( accTypeEnumIndex >= 0 )
@@ -37,7 +44,7 @@ function isAccDirective( type, allowUpper = false )
                   "accTypeEnumIndex": accTypeEnumIndex };
    }
 
-   return null;
+   return defaultRc;
 }
 
 
