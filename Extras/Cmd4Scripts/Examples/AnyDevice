@@ -12,8 +12,8 @@
 
    Parameters:
    ===========
-      Get < any accessory name > < characteristic >
-      Set < any accessory name > < characteristic > < value >
+      Get < Any accessory name > < Characteristic >
+      Set < Any accessory name > < Characteristic > < value >
 
    Notes:
    =====

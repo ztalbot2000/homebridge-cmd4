@@ -653,7 +653,8 @@ function addSideNavCharacteristicsLinks_WithinSideNav( )
    wf( "+", `<div class="panel">\n` );
       for ( let index=0; index < CMD4_ACC_TYPE_ENUM.EOL; index ++)
       {
-         let characteristic = CMD4_ACC_TYPE_ENUM.properties[ index ].type;
+         // Lower case characteristic
+         let characteristic = CMD4_ACC_TYPE_ENUM.properties[ index ].sche;
 
          wfs( `<a href="#${ characteristic }" onclick="toggleVisibility( '${ characteristic }');">${ characteristic }</a>\n` );
       }
@@ -790,7 +791,7 @@ function addSingleDeviceContent(device_type_enum, deviceName )
       requiredCharacteristics.forEach( ( characteristic ) =>
       {
          // Look up the characteristic index given, to its string value
-         let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ characteristic.type ].type;
+         let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ characteristic.type ].sche;
          let defaultValue = characteristic.defaultValue;
 
          let transposed = transposeValueToValidConstant( CMD4_ACC_TYPE_ENUM.properties, characteristic.type, defaultValue );
@@ -811,7 +812,7 @@ function addSingleDeviceContent(device_type_enum, deviceName )
       wf( "+", `<UL>\n` );
       optionalCharacteristics.forEach( ( characteristic ) =>
       {
-         let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ characteristic ].type;
+         let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ characteristic ].sche;
         wfs( `<LI><a href="#${ characteristicString }">${ characteristicString }</a>\n` );
       });
       wf( "-", `</UL>\n` );
@@ -826,7 +827,7 @@ function addSingleDeviceContent(device_type_enum, deviceName )
 
       defaultPollingCharacteristics.forEach( ( characteristic ) =>
       {
-         let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ characteristic ].type;
+         let characteristicString = CMD4_ACC_TYPE_ENUM.properties[ characteristic ].sche;
          wfs( `<LI><a href="#${ characteristicString }">${ characteristicString }</a>\n` );
       });
 
@@ -841,7 +842,8 @@ function addSingleDeviceContent(device_type_enum, deviceName )
    // The stuff in the brace will be indented
    wf( "+", `{\n` );
    wfs( `${ constants.TYPE }: ${ definition.deviceName },\n` );
-   wfs( `Name }: "MY_${ definition.deviceName }",\n` );
+   let nameCharacteristicString = CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM.Name ].sche;
+   wfs( `${ nameCharacteristicString }: "MY_${ definition.deviceName }",\n` );
    wfs( `${ constants.DISPLAYNAME }: "MY_${ definition.deviceName }"` );
    if ( requiredCharacteristics && requiredCharacteristics.length > 0 )
    {
@@ -852,7 +854,7 @@ function addSingleDeviceContent(device_type_enum, deviceName )
             w( `,\n` );
 
          // Look up the characteristic index given, to its string value
-         let characteristicString = requiredDefinition.type;
+         let characteristicString = requiredDefinition.sche;
          let defaultValue = characteristic.defaultValue;
          wfs( `${ characteristicString }: "${ defaultValue}"` );
       });
@@ -863,7 +865,7 @@ function addSingleDeviceContent(device_type_enum, deviceName )
       optionalCharacteristics.forEach( ( characteristic ) =>
       {
          let optionalDefinition = CMD4_ACC_TYPE_ENUM.properties[ characteristic ];
-         let characteristicString = optionalDefinition.type;
+         let characteristicString = optionalDefinition.sche;
 
          if ( optionalDefinition.type == CMD4_ACC_TYPE_ENUM.Name )
             return;
@@ -945,7 +947,7 @@ function addCharacteristicPages_WithinMain( )
    //
    for ( let index=0; index < CMD4_ACC_TYPE_ENUM.EOL; index ++)
    {
-      let characteristic = CMD4_ACC_TYPE_ENUM.properties[ index ].type;
+      let characteristic = CMD4_ACC_TYPE_ENUM.properties[ index ].sche;
 
       addSingleCharacteristicContent( index, characteristic );
 
@@ -1073,8 +1075,7 @@ function addCmd4DirectivePages_WithinMain( )
 
    // statusMsg - CMD4 Directives - See cmd4Constants as why we do this
    let  defaultStatusMsg = constants.DEFAULT_STATUSMSG;
-   let  defaultStatusMsg_l = defaultStatusMsg.toLowerCase();
-   wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATUSMSG }_D"> ${ constants.STATUSMSG }</a><TD> < Bool > <TD> ${ defaultStatusMsg_l } <TD> Cmd4 will log a Set Status Message for all Accessories.</TR>\n` );
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATUSMSG }_D"> ${ constants.STATUSMSG }</a><TD> < Bool > <TD> ${ defaultStatusMsg } <TD> Cmd4 will log a Set Status Message for all Accessories.</TR>\n` );
 
    // Interval - CMD4 Directives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.INTERVAL }_D"> ${ constants.INTERVAL }</a><TD> ${ constants.INTERVAL } <TD> ${ constants.DEFAULT_INTERVAL * .001 } < seconds > <TD> How long before killing the state command of all polled characteristics. See <a href="#${ constants.INTERVAL }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.INTERVAL }</a> in Accessory Directives for full description as it can also be set per accessory or per characteristic.</TR>\n` );
@@ -1115,8 +1116,7 @@ function addCmd4AccessoryDirectivePages_WithinMain( )
 
    // statusMsg - AccessoryDirectives
    let defaultStatusMsg = constants.DEFAULT_STATUSMSG;
-   let defaultStatusMsg_l = defaultStatusMsg.toLowerCase();
-   wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATUSMSG }">${ constants.STATUSMSG }</a><TD>  < Bool >  <TD>  ${ defaultStatusMsg_l } <TD>Cmd4 will log a Set Status Message</TR>\n` );
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.STATUSMSG }">${ constants.STATUSMSG }</a><TD>  < Bool >  <TD>  ${ defaultStatusMsg } <TD>Cmd4 will log a Set Status Message</TR>\n` );
 
    // publishExternally - AccessoryDirectives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.PUBLISHEXTERNALLY }">${ constants.PUBLISHEXTERNALLY }</a><TD>  < Bool >  <TD>    false     <TD> Tell Homebridge to publish the device as its own bridge. </TR>\n` );
@@ -1156,7 +1156,7 @@ function addCmd4AccessoryDirectivePages_WithinMain( )
    // props - AccessoryDirectives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.PROPS }">${ constants.PROPS }</a><TD>  < Bool >  <TD>    false     <TD> A way to override Hap Characteristiic Properties<BR>\n` );
    wfs( `         Only used to set min/max temperatures, for instance:</TR>\n` );
-   wfs( `<TR ALIGN="Left"><TD><TD COLSPAN=3>"${ constants.PROPS }" : { "CurrentTemperature": { "maxValue":100, "minValue": -100, "minStep": 0.1}}</TR>\n` );
+   wfs( `<TR ALIGN="Left"><TD><TD COLSPAN=3>"${ constants.PROPS }" : { "currentTemperature": { "maxValue":100, "minValue": -100, "minStep": 0.1}}</TR>\n` );
 
    // category - AccessoryDirectives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.CATEGORY }">${ constants.CATEGORY }</a><TD> < CATEGORY > <TD> <TD> See <a href="https://developers.homebridge.io/#/categories">Homebridge Categories</a> for a complete list of possible categories.  </TR>\n` );
@@ -1202,8 +1202,8 @@ function addCustomCharacteristicPages_withinMain( )
    wfs( `        "name": "PS_4",\n` );
    wfs( `        "PointX": 3267,\n` );
    wfs( `        "on": false,\n` );
-   wfs( `        "polling": [ { "characteristic": "On", "interval": 50 },\n` );
-   wfs( `                     { "characteristic": "PointX", "interval": 5 }\n` );
+   wfs( `        "polling": [ { "characteristic": "on", "interval": 50 },\n` );
+   wfs( `                     { "characteristic": "pointX", "interval": 5 }\n` );
    wfs( `                   ],\n` );
    wfs( `        "state_cmd": "node .homebridge/Cmd4Scripts/AnyDevice.js"\n` );
    wfs( `      }\n` );

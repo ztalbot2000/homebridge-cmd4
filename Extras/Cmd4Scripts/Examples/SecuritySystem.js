@@ -45,8 +45,8 @@
       "interval": 30,
       "timeout": 4900,
       "polling": [
-          { "characteristic": "SecuritySystemCurrentState" },
-          { "characteristic": "SecuritySystemTargetState" }
+          { "characteristic": "securitySystemCurrentState" },
+          { "characteristic": "securitySystemTargetState" }
       ],
       "stateChangeResponseTime": 1,
       "state_cmd": "node ./homebridge/Cmd4Scripts/SecuritySystem.js"

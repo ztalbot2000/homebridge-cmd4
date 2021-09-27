@@ -14,8 +14,8 @@
 //   - chmod u+x $HOME/.homebridge/Cmd4Scripts/State.js
 //
 // Parameters are:
-//    Get <accessory name> <characteristic>
-//    Set <accessory name> <characteristic> <value>
+//    Get <Accessory name> <Characteristic>
+//    Set <Accessory name> <Characteristic> <value>
 //
 // Note 1: These paramaters match the those of the Cmd4 plugin.
 // Note 2: All characteristics of the HomeKit Accessory Protocol (HAP)

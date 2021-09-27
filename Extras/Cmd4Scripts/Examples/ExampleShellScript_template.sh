@@ -7,8 +7,8 @@
 #   of your own
 #
 # Parameters are:
-#    Get < any accessory name > < characteristic>
-#    Set < any accessory name > < characteristic> < value >
+#    Get < Any accessory name > < Characteristic>
+#    Set < Any accessory name > < Characteristic> < value >
 #
 # Note 1: These paramaters match the those of the Cmd4 plugin.
 #         A full lost of supported devices and characteristics can be
@@ -40,8 +40,8 @@ characteristic=""
 option=""
 
 if [ $length -le 1 ]; then
-   printf "Usage: $0 Get < AccessoryName > < characteristic >\n"
-   printf "Usage: $0 Set < AccessoryName > < characteristic > < Value >\n"
+   printf "Usage: $0 Get < AccessoryName > < Characteristic >\n"
+   printf "Usage: $0 Set < AccessoryName > < Characteristic > < Value >\n"
    exit -1
 fi
 

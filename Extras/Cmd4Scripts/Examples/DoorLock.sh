@@ -20,12 +20,12 @@
 #    "serialNumber": "GPIO 24",
 #    "polling": [
 #        {
-#            "characteristic": "LockCurrentState",
+#            "characteristic": "lockCurrentState",
 #            "interval": 5,
 #            "timeout": 4900
 #        },
 #        {
-#            "characteristic": "LockTargetState",
+#            "characteristic": "lockTargetState",
 #            "interval": 5,
 #            "timeout": 4900
 #        }

@@ -6,8 +6,8 @@
 //   of your own
 //
 // Parameters are:
-//    Get < any accessory name > < characteristic >
-//    Set < any accessory name > < characteristic > < value >
+//    Get < Any accessory name > < Characteristic >
+//    Set < Any accessory name > < Characteristic > < value >
 //
 // Note 1: These paramaters match the those of the Cmd4 plugin.
 //         A full lost of supported devices and characteristics can be
