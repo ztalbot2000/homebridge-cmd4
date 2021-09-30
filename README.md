@@ -82,7 +82,7 @@ See [homebridge](https://github.com/homebridge/homebridge) for complete details.
 &nbsp;&nbsp;&nbsp; Use the provided config.json file or add it to your own.
 
 ```bash
-   *SHELL*> cp /usr/lib/node_modules/homebridge-cmd4/Extras/config.json $HOME/.homebridge/
+   *SHELL*> cp /usr/local/lib/node_modules/homebridge-cmd4/Extras/config.json $HOME/.homebridge/
 ```
 
 
