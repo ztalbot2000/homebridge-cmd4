@@ -8,8 +8,12 @@ const lcFirst = require( "./lcFirst" );
 //    Determine if parameter is a Cmd4 directive based on it being
 //    in the cmd4Constants.
 //
-// @param m - directive to check.
-// @returns: boolean
+// @param directive - The Cmd4 Directive to check
+// @param allowUpper - if upper case allowed to be checked.
+// @returns: { key: The CORRECT directive
+//             wasLower: If the directive was lowered to make it correct.
+//           } or null
+
 
 function isCmd4Directive( directive, allowUpper = false )
 {
