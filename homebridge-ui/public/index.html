@@ -1,0 +1,244 @@
+<link rel="stylesheet" href="css/style.css">
+
+<div id="main" class="card card-body pb-5">
+
+  <!-- start -->
+  <div id="start">
+    <img src="images/Cmd4_icon.svg" alt="Scripting with Cmd4 for Homebridge" width="150px" class="center-it cmd4Logo">
+    <h3 class="text-center">Welcome to <br> <b style="font-weight: 800;">Cmd4 Platform</b></h3>
+    <h6 class="text-center">Cmd4 Homebridge plugin for Scripting</h6>
+    <button id="startButton" type="submit" class="btn btn-primary center-it mt-3">Start</button>
+  </div>
+
+  <!-- newAccessory -->
+  <div id="newAccessory" style="display:none;">
+    <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    </button>
+    <button type="submit" class="btn btn-primary float-right showConfigureGlobalsPageButton">
+       <i class="fa fa-globe fa-border" aria-hidden="true"></i>
+    </button>
+    <img src="images/Cmd4_icon.svg" alt="Scripting with Cmd4 for Homebridge" width="150px" class="center-it mt-4 cmd4Logo">
+    <h6 class="text-center">To start the process, we need some data for the accessory. <br> Please fill out all marked fields.</h6>
+    <div class="container mt-5">
+      <div class="form-group">
+        <label for="accessoryType">Type <span class="text-danger">*</span> </label>
+        <select name="accessoryTypeSelect" class="form-control" id="accessoryTypeSelect">
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="accessoryName">Name <span class="text-danger">*</span> </label>
+        <input type="text" class="form-control" id="accessoryName">
+      </div>
+      <div class="form-group">
+        <label for="polling">Polling <span class="text-danger">*</span> </label>
+        <input type="checkbox" class="form-control" id="polling">
+      </div>
+      <div class="form-group">
+        <label for="accessoryCharacteristics">Accessory Characteristics<span class="text-danger">*</span> </label>
+        <input type="text" class="form-control" id="accessoryCharacteristics">
+      </div>
+      <button id="auth" type="submit" class="btn btn-primary float-right mt-3 mr-0">Next</button>
+    </div>
+  </div>
+
+  <!-- selectExistingAccessory -->
+  <div id="selectExistingAccessory" style="display:none;">
+    <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    </button>
+    <button type="submit" class="btn btn-primary float-right showConfigureGlobalsPageButton">
+       <i class="fa fa-globe fa-border" aria-hidden="true"></i>
+    </button>
+    <img src="images/HB_Cmd4.png" alt="Scripting with Cmd4 for Homebridge" width="150px" class="center-it cmd4Logo">
+    <h3 class="text-center"><span style="font-size: 20px">Welcome to</span> <br> <b style="font-weight: 800;">Cmd4 Platform</b></h3>
+    <h6 class="text-center">Cmd4 Homebridge plugin for Scripting</h6>
+    <div class="container mt-4" style="max-width: 360px;">
+      <div class="form-row">
+        <div class="col-10">
+          <select class="custom-select" id="accessorySelect"></select>
+        </div>
+        <div class="col-2">
+          <button id="editAccessory" type="submit" class="btn btn-elegant m-0">
+            <i class="fas fa-edit"></i>
+          </button>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center mt-4">
+        <a href="#" id="addAccessory" class="d-flex justify-content-center align-items-center btn-primary addBtn">
+          <i class="fas fa-plus"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- accessoryGlobals -->
+  <div id="accessoryGlobals" style="display:none;">
+    <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    </button>
+    <img src="images/Cmd4_icon.svg" alt="Cmd4 Icon" width="150px" class="center-it mt-4 cmd4Logo">
+    <h6 class="text-center">Accessory Globals<br> The defaults are pre-defined. Press back to continue.</h6>
+    <div class="container mt-5">
+    </div>
+  </div>
+
+  <!-- queueGlobalsPage -->
+  <div id="queueGlobalsPage" style="display:none;">
+    <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    </button>
+    <img src="images/Cmd4_icon.svg" alt="Queue Globals Page" width="150px" class="center-it mt-4 cmd4Logo">
+    <h6 class="text-center">Queue Globals<br> Polling queues are done by default via interval. Queues allow finer controls like Worm or Sequential.</h6>
+    <div class="container mt-4" style="max-width: 360px;">
+      <div class="form-row">
+        <h4 id="globalQueueMessage" Queueclass="text-left">There are no defined global queues.</h4>
+      </div>
+    </div>
+    <a href="#" id="showQueueGlobalsPageButton" class="d-flex justify-content-center align-items-center btn-primary showQueueGlobalsPageButton">
+          <i class="fas fa-plus"></i>
+    </a>
+  </div>
+
+  <!-- requiredCharacteristics -->
+  <div id="requiredCharacteristics" style="display:none;">
+    <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    </button>
+    <button type="submit" class="btn btn-primary float-right showConfigureGlobalsPageButton">
+       <i class="fa fa-globe fa-border" aria-hidden="true"></i>
+    </button>
+    <img src="images/Cmd4_icon.svg" alt="Cmd4 Globals" width="150px" class="center-it mt-4 cmd4Logo">
+    <h6 class="text-center">Required Characteristics<br> The defaults are pre-defined. Press back to continue.</h6>
+    <div class="container mt-5">
+    </div>
+  </div>
+
+  <!-- optionalCharacteristics -->
+  <div id="optionalCharacteristics" style="display:none;">
+    <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    </button>
+    <button type="submit" class="btn btn-primary float-right showConfigureGlobalsPageButton">
+       <i class="fa fa-globe fa-border" aria-hidden="true"></i>
+    </button>
+    <img src="images/Cmd4_icon.svg" alt="Cmd4 Globals" width="150px" class="center-it mt-4 cmd4Logo">
+    <h6 class="text-center">Optional Characteristics<br> The defaults are pre-defined. Press back to continue.</h6>
+    <div class="container mt-5">
+    </div>
+  </div>
+
+  <!-- stateCmd -->
+  <div id="stateCmd" style="display:none;">
+    <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    </button>
+    <img src="images/Cmd4_icon.svg" alt="Cmd4 Icon" width="150px" class="center-it mt-4 cmd4Logo">
+    <h6 class="text-center">Optional Characteristics<br> The defaults are pre-defined. Press back to continue.</h6>
+    <div class="container mt-5">
+    </div>
+  </div>
+
+
+
+  <!-- configureGlobals -->
+  <div id="configureGlobals" style="display:none;">
+    <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    </button>
+    <img src="images/Cmd4_icon.svg" alt="Cmd4 Globals" width="150px" class="center-it mt-4 cmd4Logo">
+    <h6 class="text-center">Global Definitions<br> The defaults are pre-defined. Press back to continue.</h6>
+    <div class="container mt-5">
+      <div class="form-group">
+        <label for="debug">Debug <span class="text-danger">*</span> </label>
+        <input type="checkbox" class="form-control" id="debug">
+      </div>
+      <div class="form-group">
+        <label for="outputConstants">Output Constants<span class="text-danger">*</span>
+        </label>
+        <input type="checkbox" class="form-control" id="outputConstants">
+      </div>
+      <div class="form-group">
+        <label for="allowTLV8">Allow TLV8 Characteristics<span class="text-danger">*</span>
+        </label>
+        <input type="checkbox" class="form-control" id="allowTLV8">
+      </div>
+      <div class="form-group">
+        <label for="statusMsg">Show Status Messages in Logs<span class="text-danger">*</span>
+        </label>
+        <input type="checkbox" class="form-control" id="statusMsg" checked>
+      </div>
+      <div class="form-group">
+        <label for="timeout">Default polling timeout (sec)<span class="text-danger">*</span>
+        </label>
+        <input type="number" class="form-control" id="timeout" name="timeout" min="5" max="20" value="3">
+      </div>
+      <div class="form-group">
+         <label for="stateChangeResponseTime">Default State Change Response Time (sec)<span class="text-danger">*</span>
+         </label>
+         <input type="number" class="form-control" id="globalStateChangeResponseTime" name="globalStateChangeResponseTime" min="0" max="20" value="3">
+      </div>
+      <div class="form-group">
+         <label for="stateCmdPrefix">Default State Command Prefix to use<span class="text-danger">*</span>
+         </label>
+        <input type="string" class="form-control" id="globalStateCmdPrefix" name="globalStateCmdPrefix" value="">
+      </div>
+      <div class="form-group">
+         <label for="stateCmd">Default State Command to use<span class="text-danger">*</span>
+         </label>
+        <input type="string" class="form-control" id="globalStateCmd" name="globalStateCmd" value="">
+      </div>
+      <div class="form-group">
+         <label for="stateCmdSuffix">Default State Command Suffix to use<span class="text-danger">*</span>
+         </label>
+        <input type="string" class="form-control" id="globalStateCmdPrefix" name="globalStateCmdSuffix" value="">
+      </div>
+      <div class="form-group">
+        <label for="globalQueuesLabel">Pre-Defined Queues<span class="text-danger">*</span>
+        </label>
+      </div>
+      <div class="container mt-4" style="max-width: 360px;">
+         <div class="row form-group">
+         <h3 id="globalQueueMessage" class="text-center">There are no defined global queues.</h3>
+         </div>
+         <div id="globalQueuesForm" class="col=12 globalQueuesForm" style="max-width:360px;">
+            <div class="row justify-content-between">
+               <div class="col-4" style="background-color:red;"></div>
+               <div class="col-4" style="background-color:blue;">Queue Name</div>
+               <div class="col-4" style="background-color:green;">queue Interval</div>
+            </div>
+
+            <div class="row justify-content-between">
+               <button type="button" class="btn col-4 deleteQueueButton" value="queue1" style="background-color:red;">
+                  <i class="fa fa-trash" aria-hidden="true"></i>
+               </button>
+               <div class="col-4" style="background-color:blue;">queue1</div>
+               <div class="col-4" style="background-color:green;">default</div>
+            </div>
+         </div>
+
+         <div class="d-flex justify-content-center mt-4">
+           <a href="#" id="configureNewQueuePageButton" class="d-flex justify-content-center align-items-center btn-primary configureNewQueuePageButton">
+             <i class="fas fa-plus"></i>
+           </a>
+         </div>
+      </div>
+      <button id="configureGlobals" type="submit" class="btn btn-primary float-right mt-3 mr-0">Update</button>
+    </div>
+  </div>
+
+</div>
+
+
+
+</div>
+
+<!-- Modules -->
+<script type="text/javascript" src="js/modules/jquery.min.js"></script>
+
+<!-- Custom Schema -->
+<script type="text/javascript" src="js/schema.js?v=0.0.7"></script>
+
+<!-- Main -->
+<script type="text/javascript" src="js/main.js?v=0.0.7"></script>
+
