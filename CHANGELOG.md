@@ -1,5 +1,5 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
-## 6.0.0 (2021-09-27)
+## 6.0.0 (2021-10-01)
 
 ##### New Features
 
@@ -22,6 +22,7 @@ Finally
    John Talbot
 
 
+*  Schema Prep - Found in Beta Check case of type ([9a394de0](https://github.com/ztalbot2000/homebridge-cmd4/commit/9a394de020b2ccf67a9c30194163807ea3a226a9))
 *  Schema Prep - More documentation changes ([c6d68f1f](https://github.com/ztalbot2000/homebridge-cmd4/commit/c6d68f1f8a7c24e786a54dbf1660dba98a5d1b6a))
 *  Schema Prep - Documentation changes for feat ([5be7393d](https://github.com/ztalbot2000/homebridge-cmd4/commit/5be7393d4b722c602862a382b1bd710556ff196a))
 *  Schema Prep. More fakegato testing, Make cmd4Dbg not be file global scope ([50355797](https://github.com/ztalbot2000/homebridge-cmd4/commit/503557973758fd4103ab13f34680a4f08eaed3c2))

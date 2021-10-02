@@ -34,6 +34,7 @@ var { transposeConstantToValidValue,
 let isJSON = require( "./utils/isJSON" );
 let isCmd4Directive = require( "./utils/isCmd4Directive" );
 let isAccDirective = require( "./utils/isAccDirective" );
+let isDevDirective = require( "./utils/isDevDirective" );
 
 // Pretty Colors
 var chalk = require( "chalk" );
@@ -1526,9 +1527,24 @@ class Cmd4Accessory
          switch ( key )
          {
             case constants.TYPE:
+            {
                this.type = value;
+               let rcValue = isDevDirective( value, false );
+               if ( rcValue.devEnumIndex == null )
+               {
+                  rcValue = isDevDirective( value, true );
+                  if ( rcValue.devEnumIndex == null )
+                    throw new Error( `Unknown device type: "${ value }" given in: "${ this.displayName }".` );
+
+                  // warn now
+                  this.log.warn( `The config.json Cmd4 device type: ${ value } is lowerCase.  It should be: ${ rcValue.deviceName }. In the near future this will be an error for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
+
+                  this.type = rcValue.deviceName;
+               }
+               this.typeIndex = rcValue.devEnumIndex;
 
                break;
+            }
             case constants.SUBTYPE:
                this.subType = value;
 
@@ -1714,11 +1730,9 @@ class Cmd4Accessory
          this.log.warn( `To remove this message, just remove "Cmd4_Mode" from your config.json` );
       }
 
-      this.typeIndex = CMD4_DEVICE_TYPE_ENUM.indexOfEnum( this.type );
-      if ( this.typeIndex < 0 )
+      // A device type must be specified
+      if ( this.typeIndex == undefined || this.typeIndex < 0 )
           throw new Error( `Unknown device type: "${ this.type }" given in: "${ this.displayName }".` );
-      // Sad we have to upper case this
-      this.type = CMD4_DEVICE_TYPE_ENUM.devEnumIndexToC( this.typeIndex );
 
       // Create a subType to delimit services with multiple accessories of
       // the same type and possibly the same accessory.name.

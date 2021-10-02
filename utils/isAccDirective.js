@@ -4,11 +4,14 @@ let CMD4_ACC_TYPE_ENUM = require( "../lib/CMD4_ACC_TYPE_ENUM" ).CMD4_ACC_TYPE_EN
 
 
 // Description:
-//    Determine if parameter is a Cmd4 directive based on it being
-//    in the cmd4Constants.
+//    Determine if parameter is a Cmd4 accessory characteristic
 //
-// @param m - directive to check.
-// @returns: boolean
+// @param type - The characteristic type to check. i.e. "On"
+// @param allowUpper - if upper case allowed to be checked.
+// @returns: { type: The CORRECT characteristic type
+//             accTypeEnumIndex: The index of the characteristic
+//           } or null
+//
 
 function isAccDirective( type, allowUpper = false )
 {
