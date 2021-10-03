@@ -83,7 +83,7 @@
     </div>
   </div>
 
-  <!-- queueGlobalsPage -->
+  <!-- queueGlobalsPage UNUSED -->
   <div id="queueGlobalsPage" style="display:none;">
     <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
       <i class="fa fa-arrow-left" aria-hidden="true"></i>
@@ -92,7 +92,7 @@
     <h6 class="text-center">Queue Globals<br> Polling queues are done by default via interval. Queues allow finer controls like Worm or Sequential.</h6>
     <div class="container mt-4" style="max-width: 360px;">
       <div class="form-row">
-        <h4 id="globalQueueMessage" Queueclass="text-left">There are no defined global queues.</h4>
+        <h4 id="notusedyet" Queueclass="text-left">There are no defined global queues.</h4>
       </div>
     </div>
     <a href="#" id="showQueueGlobalsPageButton" class="d-flex justify-content-center align-items-center btn-primary showQueueGlobalsPageButton">
@@ -148,72 +148,94 @@
     </button>
     <img src="images/Cmd4_icon.svg" alt="Cmd4 Globals" width="150px" class="center-it mt-4 cmd4Logo">
     <h6 class="text-center">Global Definitions<br> The defaults are pre-defined. Press back to continue.</h6>
-    <div class="container mt-5">
+   <div class="container mt-5">
       <div class="form-group">
-        <label for="debug">Debug <span class="text-danger">*</span> </label>
-        <input type="checkbox" class="form-control" id="debug">
-      </div>
-      <div class="form-group">
-        <label for="outputConstants">Output Constants<span class="text-danger">*</span>
-        </label>
-        <input type="checkbox" class="form-control" id="outputConstants">
-      </div>
-      <div class="form-group">
-        <label for="allowTLV8">Allow TLV8 Characteristics<span class="text-danger">*</span>
-        </label>
-        <input type="checkbox" class="form-control" id="allowTLV8">
-      </div>
-      <div class="form-group">
-        <label for="statusMsg">Show Status Messages in Logs<span class="text-danger">*</span>
-        </label>
-        <input type="checkbox" class="form-control" id="statusMsg" checked>
-      </div>
-      <div class="form-group">
-        <label for="timeout">Default polling timeout (sec)<span class="text-danger">*</span>
-        </label>
-        <input type="number" class="form-control" id="timeout" name="timeout" min="5" max="20" value="3">
-      </div>
-      <div class="form-group">
-         <label for="stateChangeResponseTime">Default State Change Response Time (sec)<span class="text-danger">*</span>
-         </label>
-         <input type="number" class="form-control" id="globalStateChangeResponseTime" name="globalStateChangeResponseTime" min="0" max="20" value="3">
-      </div>
-      <div class="form-group">
-         <label for="stateCmdPrefix">Default State Command Prefix to use<span class="text-danger">*</span>
-         </label>
-        <input type="string" class="form-control" id="globalStateCmdPrefix" name="globalStateCmdPrefix" value="">
-      </div>
-      <div class="form-group">
-         <label for="stateCmd">Default State Command to use<span class="text-danger">*</span>
-         </label>
-        <input type="string" class="form-control" id="globalStateCmd" name="globalStateCmd" value="">
-      </div>
-      <div class="form-group">
-         <label for="stateCmdSuffix">Default State Command Suffix to use<span class="text-danger">*</span>
-         </label>
-        <input type="string" class="form-control" id="globalStateCmdPrefix" name="globalStateCmdSuffix" value="">
-      </div>
-      <div class="form-group">
-        <label for="globalQueuesLabel">Pre-Defined Queues<span class="text-danger">*</span>
-        </label>
-      </div>
-      <div class="container mt-4" style="max-width: 360px;">
-         <div class="row form-group">
-         <h3 id="globalQueueMessage" class="text-center">There are no defined global queues.</h3>
+         <div class="col">
+            <label for="debug">Debug</label>
          </div>
-         <div id="globalQueuesForm" class="col=12 globalQueuesForm" style="max-width:360px;">
-            <div class="row justify-content-between">
-               <div class="col-4" style="background-color:red;"></div>
-               <div class="col-4" style="background-color:blue;">Queue Name</div>
-               <div class="col-4" style="background-color:green;">queue Interval</div>
-            </div>
+         <div class="col-3">
+            <input type="checkbox" class="form-control" id="debug">
+         </div>
+         <div class="col">
+            <label for="outputConstants">Output Constants<span class="text-danger">*</span>
+            </label>
+         </div>
+         <div class="col-3">
+            <input type="checkbox" class="form-control" id="outputConstants">
+         </div>
+         <div class="col">
+            <label for="allowTLV8">Allow TLV8 Characteristics<span class="text-danger">*</span>
+            </label>
+         </div>
+         <div class="col-3">
+            <input type="checkbox" class="form-control" id="allowTLV8">
+         </div>
+         <div class="col">
+            <label for="statusMsg">Show Status Messages in Logs</label>
+         </div>
+         <div class="col-3">
+            <input type="checkbox" class="form-control" id="statusMsg" checked>
+         </div>
+         <div  class="col">
+            <label for="globalTimeout">Default polling timeout (msec)</label>
+         </div>
+         <div  class="col-3">
+            <input class="form-control" id="globalTimeout" type="number" min="5" max="20" value="3">
+         </div>
+         <div  class="col">
+            <label for="stateChangeResponseTime">Default State Change Response Time (sec)
+            </label>
+         </div>
+         <div  class="col-3">
+            <input type="number" class="form-control" id="globalStateChangeResponseTime" name="globalStateChangeResponseTime" min="0" max="20" value="3">
+         </div>
+         <div  class="col">
+            <label for="stateCmdPrefix">Default State Command Prefix to use
+            </label>
+         </div>
+         <div  class="col">
+            <input type="string" class="form-control" id="globalStateCmdPrefix" name="globalStateCmdPrefix" value="">
+         </div>
+         <div  class="col">
+            <label for="stateCmd">Default State Command to use
+            </label>
+         </div>
+         <div  class="col">
+            <input type="string" class="form-control" id="globalStateCmd" name="globalStateCmd" value="">
+         </div>
+         <div  class="col">
+            <label for="stateCmdSuffix">Default State Command Suffix to use</label>
+         </div>
+         <div  class="col">
+           <input type="string" class="form-control" id="globalStateCmdPrefix" name="globalStateCmdSuffix" value="">
+         </div>
+      </div>
 
-            <div class="row justify-content-between">
-               <button type="button" class="btn col-4 deleteQueueButton" value="queue1" style="background-color:red;">
-                  <i class="fa fa-trash" aria-hidden="true"></i>
-               </button>
-               <div class="col-4" style="background-color:blue;">queue1</div>
-               <div class="col-4" style="background-color:green;">default</div>
+      <label>Pre-Defined Global Queues</label>
+
+      <div id="globalQueueMessage">
+         <label>There are no defined global queues.</label>
+         <h3 class="text-center">There are no defined global queues.</h3>
+      </div>
+
+      <div id="globalQueueContainer" class="container">
+         <div id="globalQueuesForm">
+            <div class="row no-gutters">
+               <div class="col">
+                  <div class="card card-body text-success" style="visibility:hidden;">
+                     <h5 class="card-title">Queue Name</h5>
+                  </div>
+               </div>
+               <div class="col">
+                  <div class="card card-body text-success">
+                      <h5 class="card-title">Queue Name</h5>
+                  </div>
+               </div>
+               <div class="col">
+                  <div class="card card-body text-success">
+                     <h5 class="card-title">Queue Type</h5>
+                  </div>
+               </div>
             </div>
          </div>
 
@@ -224,9 +246,8 @@
          </div>
       </div>
       <button id="configureGlobals" type="submit" class="btn btn-primary float-right mt-3 mr-0">Update</button>
-    </div>
-  </div>
-
+      </div>
+   </div>
 </div>
 
 
