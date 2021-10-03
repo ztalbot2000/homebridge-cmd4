@@ -110,7 +110,7 @@ class UiServer extends HomebridgePluginUiServer
           timeout:
           {
              name: "Timeout",
-             type: "nummber",
+             type: "number",
              min: 0,
              max: 300,
              placeholder: accessory.timeout,

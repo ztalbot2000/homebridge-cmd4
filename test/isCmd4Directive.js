@@ -9,7 +9,7 @@ let isCmd4Directive = require( "../utils/isCmd4Directive" );
 var _api = new HomebridgeAPI(); // object we feed to Plugins
 
 // Init the library for all to use
-let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
+CMD4_DEVICE_TYPE_ENUM.init( _api.hap.Service );
 
 
 // ******** QUICK TEST of SETUP *************

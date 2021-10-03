@@ -22,21 +22,17 @@ let createAccessorysInformationService = require( "./utils/createAccessorysInfor
 // Pretty Colors
 var chalk = require( "chalk" );
 
-// These would already be initialized by index.js
-let CMD4_CHAR_TYPE_ENUMS = require( "./lib/CMD4_CHAR_TYPE_ENUMS" ).CMD4_CHAR_TYPE_ENUMS;
-let CMD4_DEVICE_TYPE_ENUM = require( "./lib/CMD4_DEVICE_TYPE_ENUM" ).CMD4_DEVICE_TYPE_ENUM;
-let CMD4_ACC_TYPE_ENUM = require( "./lib/CMD4_ACC_TYPE_ENUM" ).CMD4_ACC_TYPE_ENUM;
-
-let CMD4_FORMAT_TYPE_ENUM = CMD4_CHAR_TYPE_ENUMS.CMD4_FORMAT_TYPE_ENUM;
-let CMD4_UNITS_TYPE_ENUM = CMD4_CHAR_TYPE_ENUMS.CMD4_UNIT_TYPE_ENUM;
-let CMD4_PERMS_TYPE_ENUM = CMD4_CHAR_TYPE_ENUMS.CMD4_PERMS_TYPE_ENUM;
-
-// The Cmd4 Classes
-const Cmd4Accessory = require( "./Cmd4Accessory" ).Cmd4Accessory;
-
 // Settings, Globals and Constants
 let settings = require( "./cmd4Settings" );
 const constants = require( "./cmd4Constants" );
+
+// These would already be initialized by index.js
+let CMD4_DEVICE_TYPE_ENUM = settings.CMD4_DEVICE_TYPE_ENUM;
+let CMD4_ACC_TYPE_ENUM = settings.CMD4_ACC_TYPE_ENUM;
+let clonedCharacteristic = settings.clonedCharacteristic;
+
+// The Cmd4 Classes
+const Cmd4Accessory = require( "./Cmd4Accessory" ).Cmd4Accessory;
 
 // Platform definition
 class Cmd4Platform
@@ -337,7 +333,8 @@ class Cmd4Platform
             throw new Error( `definition.props.format at index: ${ definitionIndex } is not a String.` );
 
          // Need to check if format is correct
-         let formatIndex = CMD4_FORMAT_TYPE_ENUM.properties.indexOfEnum( i => i.type === definition.props.format );
+         //let formatIndex = CMD4_FORMAT_TYPE_ENUM.properties.indexOfEnum( i => i.type === definition.props.format );
+          let formatIndex = Object.values(clonedCharacteristic.Formats).indexOfEnum( i => i === definition.props.format );
          if ( formatIndex < 0 )
             throw new Error( `definition.props.format at index: ${ definitionIndex } is not a valid format.` );
 
@@ -348,7 +345,7 @@ class Cmd4Platform
                throw new Error( `definition.props.units at index: ${ definitionIndex } is not a String.` );
 
             // Need to check if units is correct
-            let unitsIndex = CMD4_UNITS_TYPE_ENUM.properties.indexOfEnum( i => i.type === definition.props.units );
+            let unitsIndex = Object.values(clonedCharacteristic.Units).indexOfEnum( i => i === definition.props.units );
             if ( unitsIndex < 0 )
                throw new Error( `definition.props.units at index: ${ definitionIndex } is not a valid unit.` );
 
@@ -374,7 +371,7 @@ class Cmd4Platform
 
          definition.props.perms.forEach( ( perm ) =>
          {
-            let permIndex = CMD4_PERMS_TYPE_ENUM.properties.indexOfEnum( i => i.type === perm );
+            let permIndex = Object.values(clonedCharacteristic.Perms).indexOfEnum( i => i === perm );
             if ( permIndex < 0 )
                throw new Error( `definition.props.perms at index: ${ definitionIndex } ${ perm } is not a valid perm.` );
 

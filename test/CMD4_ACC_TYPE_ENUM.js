@@ -9,12 +9,7 @@ describe( `Testing require of CMD4_ACC_TYPE_ENUM.js`, ( ) =>
 {
    it( `CMD4_ACC_TYPE_ENUM should be defined ( required correctly )`, ( ) =>
    {
-      assert.isNotNull( ACC_DATA, `CMD4_ACC_TYPE_ENUM is null` );
-   });
-
-   it( `ACC_DATA.init should be a function`, ( ) =>
-   {
-      assert.isFunction( ACC_DATA.init, `.init is not a function` );
+      assert.isNotNull( CMD4_ACC_TYPE_ENUM, `CMD4_ACC_TYPE_ENUM is null` );
    });
 
    // ************ TEST UNINITIALIZED CMD4_ACC_TYPE_ENUM EOL **************
@@ -42,10 +37,6 @@ describe( `Testing require of CMD4_ACC_TYPE_ENUM.js`, ( ) =>
 
 describe( `Testing INITIALIZED CMD4_ACC_TYPE_ENUM`, ( ) =>
 {
-   // Init the library for all to use
-   let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
-
-
    describe(`Testing Initialized CMD4_ACC_TYPE_ENUM.properties[]`, ( ) =>
    {
       it('CMD4_ACC_TYPE_ENUM.properties should be an object', ( ) =>
@@ -343,10 +334,6 @@ describe( `Testing INITIALIZED CMD4_ACC_TYPE_ENUM`, ( ) =>
 
 describe( `Testing CMD4_ACC_TYPE_ENUM.indexOfEnum`, ( ) =>
 {
-   // Init the library for all to use
-   let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
-
-
    it('CMD4_ACC_TYPE_ENUM.indexOfEnum should be a function', ( ) =>
    {
       assert.isFunction(CMD4_ACC_TYPE_ENUM.indexOfEnum, `CMD4_DEVICE_TYPE_ENUM.indexOfEnum is not a function` );
@@ -372,9 +359,6 @@ describe( `Testing CMD4_ACC_TYPE_ENUM.indexOfEnum`, ( ) =>
 
 describe( `Testing CMD4_ACC_TYPE_ENUM stringConversionFunction`, ( ) =>
 {
-   // Init the library for all to use
-   let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
-
    describe( `Testing CMD4_ACC_TYPE_ENUM.properties[].stringConversionFunction`, ( ) =>
    {
       it( 'CMD4_ACC_TYPE_ENUM[ 0 - ${ ACC_EOL } ].stringConversionFunction should be a function', ( ) =>
@@ -676,9 +660,6 @@ describe( `Testing CMD4_ACC_TYPE_ENUM stringConversionFunction`, ( ) =>
 
 describe( `Testing CMD4_ACC_TYPE_ENUM Add Characteristic`, ( ) =>
 {
-   // Init the library for all to use
-   let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
-
    it( `ACC_DATA.add should be a function`, ( ) =>
    {
       assert.isFunction( CMD4_ACC_TYPE_ENUM.add, `.add is not a function` );

@@ -6,11 +6,6 @@ Object.defineProperty(exports, "indexOfEnum", { enumerable: true, get: function 
 let isAccDirective = require( "../utils/isAccDirective" );
 
 
-var _api = new HomebridgeAPI(); // object we feed to Plugins
-
-// Init the library for all to use
-let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
-
 
 // ******** TEST isAccDirectivw .*************
 

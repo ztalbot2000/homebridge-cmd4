@@ -4,13 +4,13 @@
 const exec = require( "child_process" ).exec;
 
 
-// These would already be initialized by index.js
-let CMD4_ACC_TYPE_ENUM = require( "./lib/CMD4_ACC_TYPE_ENUM" ).CMD4_ACC_TYPE_ENUM;
-
 
 // Settings, Globals and Constants
 let settings = require( "./cmd4Settings" );
 const constants = require( "./cmd4Constants" );
+
+// These would already be initialized by index.js
+let CMD4_ACC_TYPE_ENUM = settings.CMD4_ACC_TYPE_ENUM;
 
 // Pretty Colors
 var chalk = require( "chalk" );

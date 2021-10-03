@@ -1,7 +1,7 @@
 {
    "name": "homebridge-cmd4",
    "description": "Exec Plugin for Homebridge supporting all accessorys and characteristics",
-   "version": "6.0.0",
+   "version": "7.0.0-beta1",
    "license": "MIT",
    "author": {
       "name": "John Talbot"
@@ -17,10 +17,12 @@
       "email": "ztalbot2000@gmail.com"
    },
    "dependencies": {
+      "@homebridge/plugin-ui-utils": "^0.0.19",
       "chalk": "^4.1.0",
       "command-exists": "^1.2.9",
       "fakegato-history": ">=0.6.1",
       "github-version-checker": ">=2.2.0",
+      "hap-nodejs": "^0.9.5",
       "latest-version": "^5.1.0",
       "moment": "*"
    },
@@ -43,7 +45,8 @@
       "test": "test",
       "lib": "lib",
       "utils": "utils",
-      "docs": "docs"
+      "docs": "docs",
+      "homebridge-ui": "homebridge-ui"
    },
    "engines": {
       "homebridge": ">=1.2.5",
@@ -87,7 +90,7 @@
       "_Note": "Excluded only because they sometimes fail, but pass alone.    ",
       "testCmd4Accessory": "node_modules/.bin/mocha --file test/mocha-setup test/Cmd4Accessory.js",
       "testVersionChecker": "node_modules/.bin/mocha --file test/mocha-setup test/versionChecker.js",
-      "lint": "eslint --ext .js *.js utils/*.js lib/*.js tools/* test/*.js",
+      "lint": "eslint --ext .js *.js utils/*.js lib/*.js tools/* test/*.js homebridge-ui/server.js homebridge-ui/public/js/*.js",
       "postinstall": "node postinstall.js",
       "_Note01": "Auto change the version based on the commit history.        ",
       "_Note02": "Where:                                                      ",

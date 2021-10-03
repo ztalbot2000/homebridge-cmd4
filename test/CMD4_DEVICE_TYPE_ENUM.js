@@ -7,12 +7,12 @@ describe( "Testing require of CMD4_DEVICE_TYPE_ENUM.js", ( ) =>
 {
    it( "CMD4_DEVICE_TYPE_ENUM should be defined ( required correctly)", ( ) =>
    {
-      assert.isNotNull( DEVICE_DATA, "CMD4_DEVICE_TYPE_ENUM is null" );
+      assert.isNotNull( CMD4_DEVICE_TYPE_ENUM, "CMD4_DEVICE_TYPE_ENUM is null" );
    });
 
    it( "DEVICE_DATA.init should be a function", ( ) =>
    {
-      assert.isFunction( DEVICE_DATA.init, ".init is not a function" );
+      assert.isFunction( CMD4_DEVICE_TYPE_ENUM.init, ".init is not a function" );
    });
 
    // ************ TEST UNINITIALIZED CMD4_DEVICE_TYPE_ENUM EOL **************
@@ -42,8 +42,7 @@ describe( "Testing require of CMD4_DEVICE_TYPE_ENUM.js", ( ) =>
 describe( "Testing INITIALIZED CMD4_DEVICE_TYPE_ENUM", ( ) =>
 {
    // Init the library for all to use
-   let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
-   let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, _api.hap.Service, _api.hap.Characteristic, _api.hap.Categories );
+   CMD4_DEVICE_TYPE_ENUM.init( _api.hap.Service );
 
 
    // *** TEST CMD4_DEVICE_TYPE_ENUM.properties[].UUID *******
