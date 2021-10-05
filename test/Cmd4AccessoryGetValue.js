@@ -7,7 +7,7 @@ let { Cmd4Platform } = require( "../Cmd4Platform" );
 let { Cmd4Accessory } = require( "../Cmd4Accessory" );
 
 
-var _api = new HomebridgeAPI( ); // object we feed to Plugins
+var _api = new HomebridgeAPI.HomebridgeAPI; // object we feed to Plugins
 
 
 

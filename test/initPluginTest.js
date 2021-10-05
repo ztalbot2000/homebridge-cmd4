@@ -26,7 +26,7 @@ describe( `Testing homebridge API`, ( ) =>
 {
    it( `API should not be null`, ( ) =>
    {
-      let apiInstance = new HomebridgeAPI();
+      let apiInstance = new HomebridgeAPI.HomebridgeAPI();
       assert.isNotNull( apiInstance, ` apiInstance is null` );
    });
 });
@@ -35,23 +35,23 @@ describe( `Testing homebridge setup`, ( ) =>
 {
    it( `HAP Categories should not be null`, ( ) =>
    {
-      let apiInstance = new HomebridgeAPI();
+      let apiInstance = new HomebridgeAPI.HomebridgeAPI();
       assert.isNotNull( apiInstance.hap.Categories, `Categories is null` );
    });
 
    it( `HAP Characteristic should be a function`, ( ) =>
    {
-      let apiInstance = new HomebridgeAPI();
+      let apiInstance = new HomebridgeAPI.HomebridgeAPI();
       assert.isFunction( apiInstance.hap.Characteristic, "Characteristic is not an function" );
    });
    it( `HAP Accessory should be a function`, ( ) =>
    {
-      let apiInstance = new HomebridgeAPI();
+      let apiInstance = new HomebridgeAPI.HomebridgeAPI();
       assert.isFunction( apiInstance.hap.Accessory, `apiInstance.hap.Accessory is not an function` );
    });
    it( `HAP Service should be a function`, ( ) =>
    {
-      let apiInstance = new HomebridgeAPI();
+      let apiInstance = new HomebridgeAPI.HomebridgeAPI();
       assert.isFunction( apiInstance.hap.Service, ` apiInstance.hap.Service is not an function` );
    });
 });
@@ -85,14 +85,14 @@ describe( `Testing index.js plugin Initialized variables.`, ( ) =>
 {
    it( `Initialized Plugin CMD4_DEVICE_TYPE_ENUM.EOL should be correct`, ( ) =>
    {
-      let apiInstance = new HomebridgeAPI();
+      let apiInstance = new HomebridgeAPI.HomebridgeAPI();
       let cmd4 = pluginModule.default( apiInstance );
 
       assert.equal(cmd4.CMD4_DEVICE_TYPE_ENUM.EOL, DEVICE_EOL, "returned CMD4_DEVICE_TYPE_ENUM.EOL is incorrect" );
    });
    it( `Initialized Plugin returned CMD4_ACC_TYPE_ENUM.EOL should be correct`, ( ) =>
    {
-      let apiInstance = new HomebridgeAPI();
+      let apiInstance = new HomebridgeAPI.HomebridgeAPI();
       let cmd4 = pluginModule.default( apiInstance );
 
       assert.equal(cmd4.CMD4_ACC_TYPE_ENUM.EOL, ACC_EOL, `returned CMD4_ACC_TYPE_ENUM.EOL is incorrect` );
@@ -100,7 +100,7 @@ describe( `Testing index.js plugin Initialized variables.`, ( ) =>
 
    it( `Initialized Plugin returned CMD4_DEVICE_TYPE_ENUM.properties length should be correct`, ( ) =>
    {
-      let apiInstance = new HomebridgeAPI();
+      let apiInstance = new HomebridgeAPI.HomebridgeAPI();
       let cmd4 = pluginModule.default( apiInstance );
       let properties = cmd4.CMD4_DEVICE_TYPE_ENUM.properties;
 
@@ -109,7 +109,7 @@ describe( `Testing index.js plugin Initialized variables.`, ( ) =>
 
    it( `Initialized Plugin returned CMD4_ACC_TYPE_ENUM.properties length should be correct`, ( ) =>
    {
-      let apiInstance = new HomebridgeAPI();
+      let apiInstance = new HomebridgeAPI.HomebridgeAPI();
       let cmd4 = pluginModule.default( apiInstance );
       let properties = cmd4.CMD4_ACC_TYPE_ENUM.properties;
 
@@ -118,7 +118,7 @@ describe( `Testing index.js plugin Initialized variables.`, ( ) =>
 
    it( `Initialized Plugin returned CMD4_ACC_TYPE_ENUM.properties[0-${ ACC_EOL }].Characteristic should be defined`, ( ) =>
    {
-      let apiInstance = new HomebridgeAPI();
+      let apiInstance = new HomebridgeAPI.HomebridgeAPI();
       let cmd4 = pluginModule.default( apiInstance );
       let properties = cmd4.CMD4_ACC_TYPE_ENUM.properties;
 
@@ -130,7 +130,7 @@ describe( `Testing index.js plugin Initialized variables.`, ( ) =>
 
    it( `Initialized Plugin returned CMD4_DEVICE_TYPE_ENUM.properties[0-${ DEVICE_EOL }].service should be defined`, ( ) =>
    {
-      let apiInstance = new HomebridgeAPI();
+      let apiInstance = new HomebridgeAPI.HomebridgeAPI();
       let cmd4 = pluginModule.default( apiInstance );
       let properties = cmd4.CMD4_DEVICE_TYPE_ENUM.properties;
 

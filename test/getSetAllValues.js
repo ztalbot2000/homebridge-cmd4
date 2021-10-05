@@ -87,7 +87,7 @@ describe( "Quick Testing CMD4_DEVICE_TYPE_ENUM EOL", ( ) =>
    });
 });
 
-var _api = new HomebridgeAPI( ); // object we feed to Plugins
+var _api = new HomebridgeAPI.HomebridgeAPI; // object we feed to Plugins
 
 describe( "Testing homebridge API", ( ) =>
 {

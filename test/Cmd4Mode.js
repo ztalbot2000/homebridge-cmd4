@@ -10,7 +10,7 @@ let { Cmd4Accessory } = require( "../Cmd4Accessory" );
 let settings = require( "../cmd4Settings" );
 
 
-var _api = new HomebridgeAPI( ); // object we feed to Plugins
+var _api = new HomebridgeAPI.HomebridgeAPI; // object we feed to Plugins
 
 
 // Init the library for all to use

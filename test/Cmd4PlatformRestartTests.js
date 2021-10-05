@@ -70,7 +70,7 @@ function saveCachedPlatformAccessoriesOnDisk( cachedPlatformAccessories, accesso
 
 
 
-var _api = new HomebridgeAPI(); // object we feed to Plugins
+var _api = new HomebridgeAPI.HomebridgeAPI; // object we feed to Plugins
 
 // Init the library for all to use
 CMD4_DEVICE_TYPE_ENUM.init( _api.hap.Service );

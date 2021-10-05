@@ -6,7 +6,8 @@ let settings = require( "../cmd4Settings" );
 const constants = require( "../cmd4Constants" );
 
 
-var _api = new HomebridgeAPI(); // object we feed to Plugins
+var _api = new HomebridgeAPI.HomebridgeAPI; // object we feed to Plugins
+
 
 // Init the library for all to use
 CMD4_DEVICE_TYPE_ENUM.init( _api.hap.Service );
@@ -157,10 +158,8 @@ describe('Test Cmd4Accessory variables ', ( ) =>
             continue;
          }
 
-         //config.name = `MY_${ CMD4_DEVICE_TYPE_ENUM.properties[index].deviceName }`;
-         config.name = devEnumIndexToC( index );
-         config.type = CMD4_DEVICE_TYPE_ENUM.properties[index].deviceName;
-
+         config.name = "My_" + CMD4_DEVICE_TYPE_ENUM.devEnumIndexToC( index );
+         config.type = CMD4_DEVICE_TYPE_ENUM.devEnumIndexToC( index );
 
          let log = new Logger( );
          log.setOutputEnabled( false );
@@ -487,7 +486,7 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
 
       let accessory = new Cmd4Accessory( log, config, _api, [ ] );
 
-      let characteristicString = accEnumIndexToC( CMD4_ACC_TYPE_ENUM.On );
+      let characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToUC( CMD4_ACC_TYPE_ENUM.On );
 
       config.On = true;
       let newValue = true;

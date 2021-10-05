@@ -16,7 +16,8 @@ let HIGH_PRIORITY_GET = 1;
 //let LOW_PRIORITY_GET = 2;
 
 
-var _api = new HomebridgeAPI( ); // object we feed to Plugins
+var _api = new HomebridgeAPI.HomebridgeAPI; // object we feed to Plugins
+
 
 
 // Init the library for all to use
@@ -54,13 +55,10 @@ describe('WoRm - Testing Cmd4PriorityPollingQueue polling', ( ) =>
 
    before( ( ) =>
    {
-      //sinon.stub( process, `exit` );
-
       cleanStatesDir();
    });
    after( ( ) =>
    {
-      //process.exit.restore( );
 
    });
    beforeEach( function( )
@@ -489,13 +487,10 @@ describe('QUEUETYPE: STANDARD (Passthru ) -  Testing Cmd4PriorityPollingQueue po
 
    before( ( ) =>
    {
-      sinon.stub( process, `exit` );
-
       cleanStatesDir();
    });
    after( ( ) =>
    {
-      process.exit.restore( );
 
    });
    beforeEach( function( )
@@ -939,14 +934,11 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
 
    before( ( ) =>
    {
-      sinon.stub( process, `exit` );
-
       cleanStatesDir();
 
    });
    after( ( ) =>
    {
-      process.exit.restore( );
    });
    beforeEach( function( )
    {
@@ -1790,14 +1782,11 @@ describe('Standard - Testing Cmd4PriorityPollingQueue recovery correction', ( ) 
 
    before( ( ) =>
    {
-      sinon.stub( process, `exit` );
-
       cleanStatesDir();
 
    });
    after( ( ) =>
    {
-      process.exit.restore( );
    });
    beforeEach( function( )
    {

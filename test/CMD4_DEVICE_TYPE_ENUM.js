@@ -1,6 +1,6 @@
 'use strict';
 
-var _api = new HomebridgeAPI(); // object we feed to Plugins
+var _api = new HomebridgeAPI.HomebridgeAPI; // object we feed to Plugins
 
 
 describe( "Testing require of CMD4_DEVICE_TYPE_ENUM.js", ( ) =>

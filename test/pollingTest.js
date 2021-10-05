@@ -13,7 +13,7 @@ let Cmd4PriorityPollingQueue = require( "../Cmd4PriorityPollingQueue" ).Cmd4Prio
 // Hierarchy variables
 let HV = require( "../utils/HV" );
 
-var _api = new HomebridgeAPI( ); // object we feed to Plugins
+var _api = new HomebridgeAPI.HomebridgeAPI; // object we feed to Plugins
 
 
 // Init the library for all to use

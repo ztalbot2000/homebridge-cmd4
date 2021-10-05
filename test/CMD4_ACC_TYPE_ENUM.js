@@ -1,6 +1,6 @@
 'use strict';
 
-var _api = new HomebridgeAPI(); // object we feed to Plugins
+var _api = new HomebridgeAPI.HomebridgeAPI; // object we feed to Plugins
 var Service = _api.hap.Service;
 var Characteristic = _api.hap.Characteristic;
 
