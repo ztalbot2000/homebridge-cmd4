@@ -3,12 +3,12 @@
 'use strict'
 
 const { HomebridgePluginUiServer } = require('@homebridge/plugin-ui-utils');
-const { RequestError } = require('@homebridge/plugin-ui-utils');
+//const { RequestError } = require('@homebridge/plugin-ui-utils');
 const fs = require('fs')
 
 // Settings, Globals and Constants
 let settings = require( "../cmd4Settings" );
-const constants = require( "../cmd4Constants" );
+//const constants = require( "../cmd4Constants" );
 
 
 // These would already be initialized by index.js

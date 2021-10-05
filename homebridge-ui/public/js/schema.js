@@ -41,7 +41,8 @@ const schema =
                'title': 'Accessory Polling',
                   'description': 'Polling of a characteristics state',
                   'type': 'string',
-                  'required': true
+               'placeholder': false,
+                  'required': false
             },
             'electricVehicle':
             {
@@ -94,14 +95,6 @@ const schema =
                'description': 'Maximum distance after full tank load',
                'type': 'integer',
                'required': false
-            },
-               'polling':
-            {
-               'title': 'Polling',
-               'description': 'Mercedes Me API Polling in seconds',
-               'type': 'boolean',
-               'required': false,
-               'placeholder': false,
             },
             'token':
             {

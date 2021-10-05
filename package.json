@@ -90,7 +90,7 @@
       "_Note": "Excluded only because they sometimes fail, but pass alone.    ",
       "testCmd4Accessory": "node_modules/.bin/mocha --file test/mocha-setup test/Cmd4Accessory.js",
       "testVersionChecker": "node_modules/.bin/mocha --file test/mocha-setup test/versionChecker.js",
-      "lint": "eslint --ext .js *.js utils/*.js lib/*.js tools/* test/*.js homebridge-ui/server.js homebridge-ui/public/js/*.js",
+      "lint": "eslint --ext .js *.js utils/*.js lib/*.js tools/Cmd4AccDocGenerator tools/generateChangeLog tools/whereIsConstant test/*.js homebridge-ui/server.js homebridge-ui/public/js/*.js",
       "postinstall": "node postinstall.js",
       "_Note01": "Auto change the version based on the commit history.        ",
       "_Note02": "Where:                                                      ",

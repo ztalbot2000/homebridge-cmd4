@@ -1,4 +1,4 @@
-/*global $, window, location, homebridge, schema*/
+/*global $, Option, homebridge, schema Option*/
 
 
 
@@ -39,8 +39,7 @@ async function createCustomSchema( accessory )
       statusMsg: GLOBAL.pluginConfig[0].statusMsg,
       timeout: GLOBAL.pluginConfig[0].timeout,
       stateChangeResponseTime: GLOBAL.pluginConfig[0].stateChangeResponseTime,
-      accessories: [],
-      accessories: accessory
+      accessories: []
    } );
 
    GLOBAL.customSchema.onChange( async config =>
@@ -79,52 +78,6 @@ async function createCustomSchema( accessory )
    } );
 
    return;
-
-}
-
-// This shows below the edit accessory. Not what I want
-async function createCustomSchema( accessory )
-{
-
-   GLOBAL.accessoryOptions = {
-      Name:  accessory.Name,
-      displayName:  accessory.displayName,
-      polling:  accessory.polling,
-   };
-
-   GLOBAL.customSchema = homebridge.createForm(schema, {
-      Name: GLOBAL.pluginConfig[0].Name,
-      debug: GLOBAL.pluginConfig[0].debug,
-      accessories: accessory
-   });
-
-   GLOBAL.customSchema.onChange(async config =>
-   {
-
-      GLOBAL.pluginConfig[0].Name = config.Name;
-      GLOBAL.pluginConfig[0].debug = config.debug;
-      GLOBAL.pluginConfig[0].accessories = GLOBAL.pluginConfig[0].accessories.map(accessory =>
-      {
-         if ( accessory.displayName === config.accessory.displayName &&
-              accessory.Name === config.accessory.Name )
-         {
-            accessory = config.accessory;
-         }
-         return accessory;
-      });
-
-      try {
-
-         await homebridge.updatePluginConfig(GLOBAL.pluginConfig);
-
-      } catch(err) {
-
-         homebridge.toast.error(err.message, 'Error');
-
-      }
-  });
-
-  return;
 
 }
 
@@ -604,6 +557,9 @@ $( '#removeAccessory' ).on( 'click', async ( ) =>
    {
 
       await removeDeviceFromConfig( );
+   // just to resolve lint at this time
+   //addNewDeviceToConfig( accessory )
+   addNewDeviceToConfig( );
 
       resetUI( );
 

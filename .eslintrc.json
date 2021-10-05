@@ -16,9 +16,6 @@
        "UNITS_EOL" : "readonly",
        "PERMS_EOL" : "readonly",
        "DEVICE_DATA" : "readonly",
-       "ACC_DATA" : "readonly",
-       "CHAR_DATA" : "readonly",
-       "CMD4_CHAR_TYPE_ENUMS" : "readonly",
        "CMD4_ACC_TYPE_ENUM" : "readonly",
        "CMD4_DEVICE_TYPE_ENUM" : "readonly",
        "cleanStatesDir" : "readonly",
@@ -27,7 +24,8 @@
        "fs" : "writeable",
        "HomebridgeAPI" : "writeable",
        "Logger" : "writeable",
-       "platformAccessory_1" : "writeable"
+       "platformAccessory_1" : "writeable",
+       "document": "readable"
     },
     "extends": "eslint:recommended",
     "parserOptions": {
@@ -37,5 +35,8 @@
        "no-fallthrough": ["error", { "commentPattern": "break[\\s\\w]*omitted"}],
        "no-whitespace-before-property": ["error"],
        "arrow-spacing": ["error"]
-    }
+    },
+    "ignorePatterns": [
+       "*.[0-9]"
+    ]
 }
