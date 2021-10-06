@@ -39,7 +39,6 @@ module.exports =
    {
       // Init the libraries for all to use
       CMD4_DEVICE_TYPE_ENUM.init( api.hap.Service );
-      console.log( chalk.red( "\n* IGNORE * this message -> " ) + `The plugin "homebridge-cmd4" defines "hap-nodejs" in their 'dependencies' section,' hap-nodejs is needed for homebridge-ui. Homebridge bug #2971.\n`);
 
       api.registerAccessory( settings.PLATFORM_NAME, Cmd4Accessory );
       api.registerPlatform( settings.PLATFORM_NAME, Cmd4Platform );

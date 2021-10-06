@@ -1,6 +1,6 @@
 'use strict';
 
-const hapNodeJs = require( "hap-nodejs" );
+const hapNodeJs = CMD4_ACC_TYPE_ENUM.hapNodeJs;
 //let clonedCharacteristic = hapNodeJs.Characteristic;
 
 let Cmd4_Characteristics = require( "../lib/Cmd4_Characteristics" ).clonedCharacteristic;
