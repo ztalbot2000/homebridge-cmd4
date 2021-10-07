@@ -122,8 +122,8 @@ let ACC_DATA = require('../lib/CMD4_ACC_TYPE_ENUM');
 let DEVICE_DATA = require('../lib/CMD4_DEVICE_TYPE_ENUM');
 
 // Init the library for all to use
-let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
-let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, _api.hap.Service, _api.hap.Characteristic, _api.hap.Categories );
+let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap );
+let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( _api.hap, _api.hap.Service );
 let Characteristic = _api.hap.Characteristic;
 
 
