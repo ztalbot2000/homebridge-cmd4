@@ -10,6 +10,7 @@
        "assert" : "writeable",
        "expect" : "writeable",
        "sinon" : "writeable",
+       "window" : "writeable",
        "ACC_EOL" : "readonly",
        "DEVICE_EOL" : "readonly",
        "FORMAT_EOL" : "readonly",
