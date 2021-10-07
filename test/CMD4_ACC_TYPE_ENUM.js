@@ -32,6 +32,10 @@ describe( `Testing require of CMD4_ACC_TYPE_ENUM.js`, ( ) =>
             assert.notEqual( CMD4_ACC_TYPE_ENUM[index], index );
          }
       });
+      it( `CMD4_ACC_TYPE_ENUM.init is function`, ( ) =>
+      {
+         assert.isFunction( CMD4_ACC_TYPE_ENUM.init, `CMD4_ACC_TYPE_ENUM.init not found` );
+      });
    });
 })
 
@@ -39,9 +43,11 @@ describe( `Testing INITIALIZED CMD4_ACC_TYPE_ENUM`, ( ) =>
 {
    describe(`Testing Initialized CMD4_ACC_TYPE_ENUM.properties[]`, ( ) =>
    {
+      CMD4_ACC_TYPE_ENUM.init( _api.hap );
+
       it('CMD4_ACC_TYPE_ENUM.properties should be an object', ( ) =>
       {
-         assert.isObject(CMD4_ACC_TYPE_ENUM.properties, `CMD4_DEVICE_TYPE_ENUM.properties is not an object` );
+         assert.isObject(CMD4_ACC_TYPE_ENUM.properties, `CMD4_ACC_TYPE_ENUM.properties is not an object` );
       });
 
       it(`Testing CMD4_ACC_TYPE_ENUM.properties[]`, ( ) =>
@@ -336,7 +342,7 @@ describe( `Testing CMD4_ACC_TYPE_ENUM.indexOfEnum`, ( ) =>
 {
    it('CMD4_ACC_TYPE_ENUM.indexOfEnum should be a function', ( ) =>
    {
-      assert.isFunction(CMD4_ACC_TYPE_ENUM.indexOfEnum, `CMD4_DEVICE_TYPE_ENUM.indexOfEnum is not a function` );
+      assert.isFunction(CMD4_ACC_TYPE_ENUM.indexOfEnum, `CMD4_ACC_TYPE_ENUM.indexOfEnum is not a function` );
    });
 
    it(`Testing CMD4_ACC_TYPE_ENUM.indexOfEnum( "On" )`, ( ) =>

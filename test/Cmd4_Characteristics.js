@@ -1,6 +1,11 @@
 'use strict';
 
-const hapNodeJs = CMD4_ACC_TYPE_ENUM.hapNodeJs;
+
+var _api = new HomebridgeAPI.HomebridgeAPI; // object we feed to Plugins
+
+CMD4_ACC_TYPE_ENUM.init( _api.hap );
+
+const hapNodeJs = _api.hap;
 //let clonedCharacteristic = hapNodeJs.Characteristic;
 
 let Cmd4_Characteristics = require( "../lib/Cmd4_Characteristics" ).clonedCharacteristic;

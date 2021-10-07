@@ -13,7 +13,9 @@ let settings = require( "../cmd4Settings" );
 
 // These would already be initialized by index.js
 let CMD4_ACC_TYPE_ENUM = require( "../lib/CMD4_ACC_TYPE_ENUM" );
+CMD4_ACC_TYPE_ENUM.init( );
 let CMD4_DEVICE_TYPE_ENUM = require( "../lib/CMD4_DEVICE_TYPE_ENUM" );
+CMD4_DEVICE_TYPE_ENUM.init( );
 
 
 //orig const { AuthorizationCode } = require('simple-oauth2');

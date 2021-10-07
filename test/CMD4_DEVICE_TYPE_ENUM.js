@@ -42,7 +42,7 @@ describe( "Testing require of CMD4_DEVICE_TYPE_ENUM.js", ( ) =>
 describe( "Testing INITIALIZED CMD4_DEVICE_TYPE_ENUM", ( ) =>
 {
    // Init the library for all to use
-   CMD4_DEVICE_TYPE_ENUM.init( _api.hap.Service );
+   CMD4_DEVICE_TYPE_ENUM.init( _api.hap, _api.hap.Service );
 
 
    // *** TEST CMD4_DEVICE_TYPE_ENUM.properties[].UUID *******

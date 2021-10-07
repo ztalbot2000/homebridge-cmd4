@@ -10,7 +10,8 @@ describe( "Initializing our plugin module", ( ) => {});
 var _api = new HomebridgeAPI.HomebridgeAPI; // object we feed to Plugins
 
 // Init the library for all to use
-CMD4_DEVICE_TYPE_ENUM.init( _api.hap.Service );
+CMD4_ACC_TYPE_ENUM.init( _api.hap );
+CMD4_DEVICE_TYPE_ENUM.init( _api.hap, _api.hap.Service );
 
 
 // ******** QUICK TEST CMD4_DEVICE_TYPE_ENUM *************

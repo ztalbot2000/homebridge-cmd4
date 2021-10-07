@@ -38,7 +38,8 @@ module.exports =
    default: function ( api )
    {
       // Init the libraries for all to use
-      CMD4_DEVICE_TYPE_ENUM.init( api.hap.Service );
+      CMD4_ACC_TYPE_ENUM.init( api.hap );
+      CMD4_DEVICE_TYPE_ENUM.init( api.hap, api.hap.Service );
 
       api.registerAccessory( settings.PLATFORM_NAME, Cmd4Accessory );
       api.registerPlatform( settings.PLATFORM_NAME, Cmd4Platform );
