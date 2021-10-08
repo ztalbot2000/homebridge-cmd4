@@ -13,13 +13,13 @@ const GLOBAL =
 
 async function createCustomSchema( accessory )
 {
-   console.log( "In CreateCustomSchema for:%s %s", accessory.Name, accessory.displayName );
+   console.log( "In CreateCustomSchema for:%s %s", accessory.name, accessory.displayName );
    console.log( "In CreateCustomSchema accessory:%s", accessory );
    //let settings = await homebridge.request( "/cmd4StaticVariable", "settings" );
 
    GLOBAL.accessorySchema =
    {
-      Name: accessory.Name,
+      name: accessory.name,
       displayName: accessory.displayName,
       accessoryCharacteristics: accessory.characteristics,
       polling: accessory.polling,
@@ -33,7 +33,7 @@ async function createCustomSchema( accessory )
 
    GLOBAL.customSchema = homebridge.createForm( schema,
    {
-      name: GLOBAL.pluginConfig[0].Name,
+      name: GLOBAL.pluginConfig[0].name,
       debug: GLOBAL.pluginConfig[0].debug,
       outputConstants: GLOBAL.pluginConfig[0].outputConstants,
       statusMsg: GLOBAL.pluginConfig[0].statusMsg,
@@ -47,7 +47,7 @@ async function createCustomSchema( accessory )
       console.log( "In customSchema.onChange config:%s %s", config );
       //let settings = await homebridge.request( "/cmd4StaticVariable", "settings" );
 
-      GLOBAL.pluginConfig[0].name = config.Name;
+      GLOBAL.pluginConfig[0].name = config.name;
       GLOBAL.pluginConfig[0].debug = config.debug;
       GLOBAL.pluginConfig[0].outputConstants = config.outputConstants;
       GLOBAL.pluginConfig[0].statusMsg = config.statusMsg;
@@ -55,7 +55,7 @@ async function createCustomSchema( accessory )
       GLOBAL.pluginConfig[0].stateChangeResponseTime = config.stateChangeResponseTime;
       GLOBAL.pluginConfig[0].accessories = GLOBAL.pluginConfig[0].accessories.map( accessory =>
       {
-         if ( accessory.Name === config.accessories.Name )
+         if ( accessory.name === config.accessories.name )
          {
             accessory = config.accessories;
          }
@@ -134,7 +134,7 @@ function addAccessoryToList( accessory )
 {
    console.log( "In addAccessoryToList accessory.displayName:%s", accessory.displayName );
 
-   let name = typeof accessory === 'string' ? accessory : accessory.Name;
+   let name = typeof accessory === 'string' ? accessory : accessory.name;
    $( '#accessorySelect' ).append( '<option value="' + name + '">'+ name + '</option>' );
 
    return;
@@ -145,7 +145,7 @@ function removeAccessoryFromList( accessory )
 {
    console.log( "In removeAccessoryToList accessory.displayName:%s", accessory.displayName );
 
-   let name = typeof accessory === 'string' ? accessory : accessory.Name;
+   let name = typeof accessory === 'string' ? accessory : accessory.name;
    $( '#accessorySelect option[value=\'' + name + '\']' ).remove( );
 
    return;
@@ -154,7 +154,7 @@ function removeAccessoryFromList( accessory )
 
 async function addNewDeviceToConfig( accessory )
 {
-   console.log( "In addNewDeviceToConfig for:%s %s", accessory.Name, accessory.displayName );
+   console.log( "In addNewDeviceToConfig for:%s %s", accessory.name, accessory.displayName );
 
    let found = false;
 
@@ -162,7 +162,7 @@ async function addNewDeviceToConfig( accessory )
    {
       const config =
       {
-         name: accessory.Name,
+         name: accessory.name,
          accessoryCharacteristics: accessory.characteristics,
          polling: accessory.polling,
          electricVehicle: false,
@@ -179,7 +179,7 @@ async function addNewDeviceToConfig( accessory )
 
       for( const acc in GLOBAL.pluginConfig[0].accessories )
       {
-         if ( GLOBAL.pluginConfig[ 0 ].accessories[ acc ].Name === accessory.Name )
+         if ( GLOBAL.pluginConfig[ 0 ].accessories[ acc ].name === accessory.name )
          {
             found = true;
             GLOBAL.pluginConfig[ 0 ].accessories[ acc ].token =
@@ -190,7 +190,7 @@ async function addNewDeviceToConfig( accessory )
                expires_in: accessory.token.expires_in,
                expires_at: accessory.token.expires_at
             };
-            homebridge.toast.success( accessory.Name + ' refreshed!', 'Success' );
+            homebridge.toast.success( accessory.name + ' refreshed!', 'Success' );
          }
       }
 
@@ -200,7 +200,7 @@ async function addNewDeviceToConfig( accessory )
          GLOBAL.pluginConfig[0].accessories.push( config );
          addAccessoryToList( config );
 
-         homebridge.toast.success( config.Name + ' added to config!', 'Success' );
+         homebridge.toast.success( config.name + ' added to config!', 'Success' );
 
       }
 
@@ -228,7 +228,7 @@ async function removeDeviceFromConfig( )
 
    GLOBAL.pluginConfig[0].accessories.forEach( ( accessory, index ) =>
    {
-      if ( accessory.Name === selectedAccessory )
+      if ( accessory.name === selectedAccessory )
       {
          foundIndex = index;
       }
@@ -405,7 +405,7 @@ async function deleteGlobalQueueButtonPressed( event )
 
          GLOBAL.pluginConfig[0].accessories.forEach( accessory =>
          {
-            $( '#accessorySelect' ).append( '<option value="' + accessory.Name + '">'+ accessory.Name + '</option>' );
+            $( '#accessorySelect' ).append( '<option value="' + accessory.name + '">'+ accessory.name + '</option>' );
          } );
          console.log("GLOBAL.pluginConfig[0]=%s", GLOBAL.pluginConfig[0] );
          console.log("GLOBAL.pluginConfig[0].queueTypes=%s", GLOBAL.pluginConfig[0].queueTypes );
@@ -523,7 +523,7 @@ $( '#editAccessory' ).on( 'click', ( ) =>
    resetUI( );
 
    let selectedAccessory = $( '#accessorySelect option:selected' ).text( );
-   let accessory = GLOBAL.pluginConfig[0].accessories.find( accessory => accessory.Name === selectedAccessory );
+   let accessory = GLOBAL.pluginConfig[0].accessories.find( accessory => accessory.name === selectedAccessory );
 
    if ( !accessory )
       return homebridge.toast.error( 'Can not find the accessory!', 'Error' );
@@ -542,7 +542,7 @@ $( '#refreshAccessory' ).on( 'click', async ( ) =>
 
       resetSchema( );
 
-      let accessory = GLOBAL.pluginConfig[0].accessories.find( accessory => accessory.Name === GLOBAL.accessorySchema.Name );
+      let accessory = GLOBAL.pluginConfig[0].accessories.find( accessory => accessory.name === GLOBAL.accessorySchema.name );
 
       if ( !accessory )
          return homebridge.toast.error( 'Can not find accessory in config!', 'Error' );
