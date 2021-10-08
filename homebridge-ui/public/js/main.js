@@ -516,6 +516,7 @@ $( '#addAccessory, #Xstart' ).on( 'click', ( ) =>
 
 } );
 
+// This is called when an existing Accessory is to be edited
 $( '#editAccessory' ).on( 'click', ( ) =>
 {
 
