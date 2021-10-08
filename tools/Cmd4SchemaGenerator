@@ -126,7 +126,8 @@ function  addSchemaHeader( )
    // singular: If set to true the UI will not allow the user to add
    // more than one config block. This is usually used for platform
    // plugins where only a single config block should be present.
-   wfs( `"singular": "false"` );
+   wfs( `"singular": false,` );
+   wfs( `"customUi": true` );
 
    commaRequired = true;
 }
@@ -251,7 +252,7 @@ function addPollingDesignationDefinitionBlock( )
       wfs( `"$id": "#Polling_designation",\n` );
       wfs( `"title": "${ constants.POLLING }",\n` );
       wfs( `"type": "array",\n` );
-      wfs( `"required": false\n` );
+      wfs( `"required": false,\n` );
       wf( "+", `"items": {\n`);
          wfs( `"type": "object",\n` );
          wf( "+", `"properties": {\n` );
@@ -438,10 +439,9 @@ function addAccessorySchemaBlock( )
       w( `,\n` );
 
    // ** Begin bracket properties
-   wfs( `"type": "object",\n` );
    wf( "+", `"properties": {\n` );
       wfs( `"${ constants.TYPE }": { "$ref": "#/definitions/Type_designation"},\n` );
-      wfs( `"${ constants.NAME }": { "$ref": "#/definitions/Name_designation"},\n` );
+      wfs( `"name": { "$ref": "#/definitions/Name_designation"},\n` );
       wfs( `"${ constants.POLLING }": { "$ref": "#/definitions/Polling_designation"},\n` );
       wfs( `"${ constants.STATE_CMD }": { "$ref": "#/definitions/State_cmd_designation"}\n` );
    // *** End bracket type:

@@ -1,45 +1,1476 @@
 {
-  "pluginAlias": "Cmd4",
-  "pluginType": "platform",
-  "singular": true,
-  "customUi": true,
-  "schema": {
-    "properties": {
-      "debug": {
-        "title": "debug",
-        "type": "boolean",
-        "default": false,
-        "required": false,
-        "description": "Enables additional output (debug) in the log."
+   "pluginAlias": "Cmd4",
+   "pluginType": "platform",
+   "headerDisplay": "Cmd4 Add Accessories",
+   "singular": false,   "customUi": true,
+   "schema": {
+      "definitions": {
+         "AccessControlLevel": {
+            "$id": "#AccessControlLevel",
+            "title": "AccessControlLevel",
+            "type": "string",
+            "description": " The Devices Access Control Level"
+         },
+         "AccessoryFlags": {
+            "$id": "#AccessoryFlags",
+            "title": "AccessoryFlags",
+            "type": "string",
+            "description": " The Devices Accessory Flags"
+         },
+         "AccessoryIdentifier": {
+            "$id": "#AccessoryIdentifier",
+            "title": "AccessoryIdentifier",
+            "type": "string",
+            "description": " The Devices Accessory Identifier String"
+         },
+         "Active": {
+            "$id": "#Active",
+            "title": "Active",
+            "type": "string",
+            "description": " If the Device is ACTIVE/INACTIVE"
+         },
+         "ActiveIdentifier": {
+            "$id": "#ActiveIdentifier",
+            "title": "ActiveIdentifier",
+            "type": "string",
+            "description": " The Devices Active Identifier"
+         },
+         "ActivityInterval": {
+            "$id": "#ActivityInterval",
+            "title": "ActivityInterval",
+            "type": "string",
+            "description": " The Devices Activity Interval"
+         },
+         "AdministratorOnlyAccess": {
+            "$id": "#AdministratorOnlyAccess",
+            "title": "AdministratorOnlyAccess",
+            "type": "string",
+            "description": " If the Device has 2cwAdmin Only Access"
+         },
+         "AirParticulateDensity": {
+            "$id": "#AirParticulateDensity",
+            "title": "AirParticulateDensity",
+            "type": "string",
+            "description": " The Measured Air Particulate Density"
+         },
+         "AirParticulateSize": {
+            "$id": "#AirParticulateSize",
+            "title": "AirParticulateSize",
+            "type": "string",
+            "description": " The Measured Air Particulate Size"
+         },
+         "AirQuality": {
+            "$id": "#AirQuality",
+            "title": "AirQuality",
+            "type": "string",
+            "description": " The Current Air Quality"
+         },
+         "AppMatchingIdentifier": {
+            "$id": "#AppMatchingIdentifier",
+            "title": "AppMatchingIdentifier",
+            "type": "string",
+            "description": " The Devices App Matching Identifier"
+         },
+         "AudioFeedback": {
+            "$id": "#AudioFeedback",
+            "title": "AudioFeedback",
+            "type": "string",
+            "description": " If Audio Feedback is Present"
+         },
+         "BatteryLevel": {
+            "$id": "#BatteryLevel",
+            "title": "BatteryLevel",
+            "type": "string",
+            "description": " The Measured Battery Level"
+         },
+         "Brightness": {
+            "$id": "#Brightness",
+            "title": "Brightness",
+            "type": "string",
+            "description": " The Percentage of Existing Brightness"
+         },
+         "ButtonEvent": {
+            "$id": "#ButtonEvent",
+            "title": "ButtonEvent",
+            "type": "string",
+            "description": " The Devices zbutton Event"
+         },
+         "CCAEnergyDetectThreshold": {
+            "$id": "#CCAEnergyDetectThreshold",
+            "title": "CCAEnergyDetectThreshold",
+            "type": "string",
+            "description": " The Devices CCA Energy Detect Threshold"
+         },
+         "CCASignalDetectThreshold": {
+            "$id": "#CCASignalDetectThreshold",
+            "title": "CCASignalDetectThreshold",
+            "type": "string",
+            "description": " The Devices Signal Detect Threshold"
+         },
+         "CameraOperatingModeIndicator": {
+            "$id": "#CameraOperatingModeIndicator",
+            "title": "CameraOperatingModeIndicator",
+            "type": "string",
+            "description": " The State of the Camera's Operating Mode Indicator"
+         },
+         "CarbonDioxideDetected": {
+            "$id": "#CarbonDioxideDetected",
+            "title": "CarbonDioxideDetected",
+            "type": "string",
+            "description": " If Carbon Dioxide has been Detected"
+         },
+         "CarbonDioxideLevel": {
+            "$id": "#CarbonDioxideLevel",
+            "title": "CarbonDioxideLevel",
+            "type": "string",
+            "description": " The Amount of CO2 Detected"
+         },
+         "CarbonDioxidePeakLevel": {
+            "$id": "#CarbonDioxidePeakLevel",
+            "title": "CarbonDioxidePeakLevel",
+            "type": "string",
+            "description": " The Maximum Amount of CO2 Detected"
+         },
+         "CarbonMonoxideDetected": {
+            "$id": "#CarbonMonoxideDetected",
+            "title": "CarbonMonoxideDetected",
+            "type": "string",
+            "description": " Indication of CO Detected"
+         },
+         "CarbonMonoxideLevel": {
+            "$id": "#CarbonMonoxideLevel",
+            "title": "CarbonMonoxideLevel",
+            "type": "string",
+            "description": " The Amount of CO Detected"
+         },
+         "CarbonMonoxidePeakLevel": {
+            "$id": "#CarbonMonoxidePeakLevel",
+            "title": "CarbonMonoxidePeakLevel",
+            "type": "string",
+            "description": " The Maximum Amount of CO Detected"
+         },
+         "Category": {
+            "$id": "#Category",
+            "title": "Category",
+            "type": "string",
+            "description": " A Hint to HomeKitf of which Icon to Use"
+         },
+         "CharacteristicValueTransitionControl": {
+            "$id": "#CharacteristicValueTransitionControl",
+            "title": "CharacteristicValueTransitionControl",
+            "type": "string",
+            "description": " The Devices Characteristic Value Transition Control"
+         },
+         "ChargingState": {
+            "$id": "#ChargingState",
+            "title": "ChargingState",
+            "type": "string",
+            "description": " The Current Charging State"
+         },
+         "ClosedCaptions": {
+            "$id": "#ClosedCaptions",
+            "title": "ClosedCaptions",
+            "type": "string",
+            "description": " If Closed Captioning is Enabled"
+         },
+         "ColorTemperature": {
+            "$id": "#ColorTemperature",
+            "title": "ColorTemperature",
+            "type": "string",
+            "description": " The Colors Current Temperature"
+         },
+         "ConfigureBridgedAccessory": {
+            "$id": "#ConfigureBridgedAccessory",
+            "title": "ConfigureBridgedAccessory",
+            "type": "string",
+            "description": " The Configured Bridge Accessory"
+         },
+         "ConfigureBridgedAccessoryStatus": {
+            "$id": "#ConfigureBridgedAccessoryStatus",
+            "title": "ConfigureBridgedAccessoryStatus",
+            "type": "string",
+            "description": " The Configured Bridge Accessory Status"
+         },
+         "ConfiguredName": {
+            "$id": "#ConfiguredName",
+            "title": "ConfiguredName",
+            "type": "string",
+            "description": " Name of accessory, as displayed in HomeKit"
+         },
+         "ContactSensorState": {
+            "$id": "#ContactSensorState",
+            "title": "ContactSensorState",
+            "type": "string",
+            "description": " The Current RState of a Contact Sensor"
+         },
+         "CoolingThresholdTemperature": {
+            "$id": "#CoolingThresholdTemperature",
+            "title": "CoolingThresholdTemperature",
+            "type": "string",
+            "description": " The Current Cooling Threshold Temperature"
+         },
+         "CurrentAirPurifierState": {
+            "$id": "#CurrentAirPurifierState",
+            "title": "CurrentAirPurifierState",
+            "type": "string",
+            "description": " The Current Target Air Purification State"
+         },
+         "CurrentAmbientLightLevel": {
+            "$id": "#CurrentAmbientLightLevel",
+            "title": "CurrentAmbientLightLevel",
+            "type": "string",
+            "description": " The Measured Ambient Light Level"
+         },
+         "CurrentDoorState": {
+            "$id": "#CurrentDoorState",
+            "title": "CurrentDoorState",
+            "type": "string",
+            "description": " The Doors Current Operating State"
+         },
+         "CurrentFanState": {
+            "$id": "#CurrentFanState",
+            "title": "CurrentFanState",
+            "type": "string",
+            "description": " The Fans Current Operating State"
+         },
+         "CurrentHeaterCoolerState": {
+            "$id": "#CurrentHeaterCoolerState",
+            "title": "CurrentHeaterCoolerState",
+            "type": "string",
+            "description": " The Heater/Coolers  Current Operating State"
+         },
+         "CurrentHeatingCoolingState": {
+            "$id": "#CurrentHeatingCoolingState",
+            "title": "CurrentHeatingCoolingState",
+            "type": "string",
+            "description": " The Current Mode of the Heating/Cooling Device"
+         },
+         "CurrentHorizontalTiltAngle": {
+            "$id": "#CurrentHorizontalTiltAngle",
+            "title": "CurrentHorizontalTiltAngle",
+            "type": "string",
+            "description": " The Current Horizontal Tilt Angle"
+         },
+         "CurrentHumidifierDehumidifierState": {
+            "$id": "#CurrentHumidifierDehumidifierState",
+            "title": "CurrentHumidifierDehumidifierState",
+            "type": "string",
+            "description": " The Humidifier or Dehumidifier Current State"
+         },
+         "CurrentMediaState": {
+            "$id": "#CurrentMediaState",
+            "title": "CurrentMediaState",
+            "type": "string",
+            "description": " The Medias Current State"
+         },
+         "CurrentPosition": {
+            "$id": "#CurrentPosition",
+            "title": "CurrentPosition",
+            "type": "string",
+            "description": " The devices Current Position"
+         },
+         "CurrentRelativeHumidity": {
+            "$id": "#CurrentRelativeHumidity",
+            "title": "CurrentRelativeHumidity",
+            "type": "string",
+            "description": " The Measured Current Relative Humidity"
+         },
+         "CurrentSlatState": {
+            "$id": "#CurrentSlatState",
+            "title": "CurrentSlatState",
+            "type": "string",
+            "description": " The Slats Current State"
+         },
+         "CurrentTemperature": {
+            "$id": "#CurrentTemperature",
+            "title": "CurrentTemperature",
+            "type": "string",
+            "description": " The Current Measured Temperature"
+         },
+         "CurrentTiltAngle": {
+            "$id": "#CurrentTiltAngle",
+            "title": "CurrentTiltAngle",
+            "type": "string",
+            "description": " The Current Measured Tilt Angle"
+         },
+         "CurrentTime": {
+            "$id": "#CurrentTime",
+            "title": "CurrentTime",
+            "type": "string",
+            "description": " What Time it is Now"
+         },
+         "CurrentTransport": {
+            "$id": "#CurrentTransport",
+            "title": "CurrentTransport",
+            "type": "string",
+            "description": " The Devices Current Transport"
+         },
+         "CurrentVerticalTiltAngle": {
+            "$id": "#CurrentVerticalTiltAngle",
+            "title": "CurrentVerticalTiltAngle",
+            "type": "string",
+            "description": " TheMeasured Current Vertical Tilt Angle"
+         },
+         "CurrentVisibilityState": {
+            "$id": "#CurrentVisibilityState",
+            "title": "CurrentVisibilityState",
+            "type": "string",
+            "description": " Is a Device Currently Being Shown or Hidden"
+         },
+         "DataStreamHAPTransport": {
+            "$id": "#DataStreamHAPTransport",
+            "title": "DataStreamHAPTransport",
+            "type": "string",
+            "description": " The Devices Data Stream Transport"
+         },
+         "DataStreamHAPTransportInterrupt": {
+            "$id": "#DataStreamHAPTransportInterrupt",
+            "title": "DataStreamHAPTransportInterrupt",
+            "type": "string",
+            "description": " The Devices Data Stream Transport Interrupt"
+         },
+         "DayoftheWeek": {
+            "$id": "#DayoftheWeek",
+            "title": "DayoftheWeek",
+            "type": "string",
+            "description": " The Current Numerical Day of the Week"
+         },
+         "DiagonalFieldOfView": {
+            "$id": "#DiagonalFieldOfView",
+            "title": "DiagonalFieldOfView",
+            "type": "string",
+            "description": " The Measured Diagonal Field of View"
+         },
+         "DigitalZoom": {
+            "$id": "#DigitalZoom",
+            "title": "DigitalZoom",
+            "type": "string",
+            "description": " The Measured Digital Zoom"
+         },
+         "DiscoverBridgedAccessories": {
+            "$id": "#DiscoverBridgedAccessories",
+            "title": "DiscoverBridgedAccessories",
+            "type": "string",
+            "description": " The Discovered Bridge Accessories"
+         },
+         "DiscoveredBridgedAccessories": {
+            "$id": "#DiscoveredBridgedAccessories",
+            "title": "DiscoveredBridgedAccessories",
+            "type": "string",
+            "description": " The Discovered Bridged Accessories"
+         },
+         "DisplayOrder": {
+            "$id": "#DisplayOrder",
+            "title": "DisplayOrder",
+            "type": "string",
+            "description": " The Display Order"
+         },
+         "EventRetransmissionMaximum": {
+            "$id": "#EventRetransmissionMaximum",
+            "title": "EventRetransmissionMaximum",
+            "type": "string",
+            "description": " The Event Retransmission Maximum Amount"
+         },
+         "EventSnapshotsActive": {
+            "$id": "#EventSnapshotsActive",
+            "title": "EventSnapshotsActive",
+            "type": "string",
+            "description": " Is the Event Snapshot Enabled"
+         },
+         "EventTransmissionCounters": {
+            "$id": "#EventTransmissionCounters",
+            "title": "EventTransmissionCounters",
+            "type": "string",
+            "description": " The Event Transmission Counters"
+         },
+         "FilterChangeIndication": {
+            "$id": "#FilterChangeIndication",
+            "title": "FilterChangeIndication",
+            "type": "string",
+            "description": " An Filters Current Quality"
+         },
+         "FilterLifeLevel": {
+            "$id": "#FilterLifeLevel",
+            "title": "FilterLifeLevel",
+            "type": "string",
+            "description": " An Measurement of Filters Current Quality"
+         },
+         "FirmwareRevision": {
+            "$id": "#FirmwareRevision",
+            "title": "FirmwareRevision",
+            "type": "string",
+            "description": " The Firmwares Revision String"
+         },
+         "HardwareRevision": {
+            "$id": "#HardwareRevision",
+            "title": "HardwareRevision",
+            "type": "string",
+            "description": " The Hardwares Revision String"
+         },
+         "HeartBeat": {
+            "$id": "#HeartBeat",
+            "title": "HeartBeat",
+            "type": "string",
+            "description": " The Current Heart Rate"
+         },
+         "HeatingThresholdTemperature": {
+            "$id": "#HeatingThresholdTemperature",
+            "title": "HeatingThresholdTemperature",
+            "type": "string",
+            "description": " The Heating Threshold Temperature"
+         },
+         "HoldPosition": {
+            "$id": "#HoldPosition",
+            "title": "HoldPosition",
+            "type": "string",
+            "description": " If Position Should Be Held"
+         },
+         "HomeKitCameraActive": {
+            "$id": "#HomeKitCameraActive",
+            "title": "HomeKitCameraActive",
+            "type": "string",
+            "description": " Is the HomeKit Camera ON/OFF"
+         },
+         "Hue": {
+            "$id": "#Hue",
+            "title": "Hue",
+            "type": "string",
+            "description": " The Measured Hue"
+         },
+         "Identifier": {
+            "$id": "#Identifier",
+            "title": "Identifier",
+            "type": "string",
+            "description": " The Devices Identifier"
+         },
+         "Identify": {
+            "$id": "#Identify",
+            "title": "Identify",
+            "type": "string",
+            "description": " The Devices Identify Status"
+         },
+         "ImageMirroring": {
+            "$id": "#ImageMirroring",
+            "title": "ImageMirroring",
+            "type": "string",
+            "description": " Is Image Being Mirrored"
+         },
+         "ImageRotation": {
+            "$id": "#ImageRotation",
+            "title": "ImageRotation",
+            "type": "string",
+            "description": " The Images Degree of Rotation "
+         },
+         "InUse": {
+            "$id": "#InUse",
+            "title": "InUse",
+            "type": "string",
+            "description": " Is the Device In Use"
+         },
+         "InputDeviceType": {
+            "$id": "#InputDeviceType",
+            "title": "InputDeviceType",
+            "type": "string",
+            "description": " The Input Devices Type"
+         },
+         "InputSourceType": {
+            "$id": "#InputSourceType",
+            "title": "InputSourceType",
+            "type": "string",
+            "description": " The Input Devices Source Type"
+         },
+         "IsConfigured": {
+            "$id": "#IsConfigured",
+            "title": "IsConfigured",
+            "type": "string",
+            "description": " Is the device Configured"
+         },
+         "LeakDetected": {
+            "$id": "#LeakDetected",
+            "title": "LeakDetected",
+            "type": "string",
+            "description": " Is There a Leak Detected"
+         },
+         "LinkQuality": {
+            "$id": "#LinkQuality",
+            "title": "LinkQuality",
+            "type": "string",
+            "description": " The Links Quality"
+         },
+         "ListPairings": {
+            "$id": "#ListPairings",
+            "title": "ListPairings",
+            "type": "string",
+            "description": " The Links Quality"
+         },
+         "LockControlPoint": {
+            "$id": "#LockControlPoint",
+            "title": "LockControlPoint",
+            "type": "string",
+            "description": " The Control Point of the Lock"
+         },
+         "LockCurrentState": {
+            "$id": "#LockCurrentState",
+            "title": "LockCurrentState",
+            "type": "string",
+            "description": " The Locks Current State"
+         },
+         "LockLastKnownAction": {
+            "$id": "#LockLastKnownAction",
+            "title": "LockLastKnownAction",
+            "type": "string",
+            "description": " The Locks Last known Action"
+         },
+         "LockManagementAutoSecurityTimeout": {
+            "$id": "#LockManagementAutoSecurityTimeout",
+            "title": "LockManagementAutoSecurityTimeout",
+            "type": "string",
+            "description": " The Locks Security Timeout Value"
+         },
+         "LockPhysicalControls": {
+            "$id": "#LockPhysicalControls",
+            "title": "LockPhysicalControls",
+            "type": "string",
+            "description": " Is the Lock Physically Enabled/Disabled"
+         },
+         "LockTargetState": {
+            "$id": "#LockTargetState",
+            "title": "LockTargetState",
+            "type": "string",
+            "description": " The Locks Requested State"
+         },
+         "Logs": {
+            "$id": "#Logs",
+            "title": "Logs",
+            "type": "string",
+            "description": " The Devices Logs"
+         },
+         "MACRetransmissionMaximum": {
+            "$id": "#MACRetransmissionMaximum",
+            "title": "MACRetransmissionMaximum",
+            "type": "string",
+            "description": " The Devices MAC Retransmission Maximum Amount"
+         },
+         "MACTransmissionCounters": {
+            "$id": "#MACTransmissionCounters",
+            "title": "MACTransmissionCounters",
+            "type": "string",
+            "description": " The Devices MAC Transmission Counters"
+         },
+         "ManagedNetworkEnable": {
+            "$id": "#ManagedNetworkEnable",
+            "title": "ManagedNetworkEnable",
+            "type": "string",
+            "description": " The Networks Current State"
+         },
+         "ManuallyDisabled": {
+            "$id": "#ManuallyDisabled",
+            "title": "ManuallyDisabled",
+            "type": "string",
+            "description": " Is the Device Manually Enabled/Disabled"
+         },
+         "Manufacturer": {
+            "$id": "#Manufacturer",
+            "title": "Manufacturer",
+            "type": "string",
+            "description": " The Devices Manufacturer"
+         },
+         "Model": {
+            "$id": "#Model",
+            "title": "Model",
+            "type": "string",
+            "description": " The Devices Model"
+         },
+         "MotionDetected": {
+            "$id": "#MotionDetected",
+            "title": "MotionDetected",
+            "type": "string",
+            "description": " Is Motion Being Detected"
+         },
+         "Mute": {
+            "$id": "#Mute",
+            "title": "Mute",
+            "type": "string",
+            "description": " Is the Device Currently Muted"
+         },
+         "Name": {
+            "$id": "#Name",
+            "title": "Name",
+            "type": "string",
+            "description": " Name of accessory, as displayed in HomeKit"
+         },
+         "NetworkAccessViolationControl": {
+            "$id": "#NetworkAccessViolationControl",
+            "title": "NetworkAccessViolationControl",
+            "type": "string",
+            "description": " The Network AccessViolation Control"
+         },
+         "NetworkClientProfileControl": {
+            "$id": "#NetworkClientProfileControl",
+            "title": "NetworkClientProfileControl",
+            "type": "string",
+            "description": " The Network Client Profile Control"
+         },
+         "NetworkClientStatusControl": {
+            "$id": "#NetworkClientStatusControl",
+            "title": "NetworkClientStatusControl",
+            "type": "string",
+            "description": " The Network Client Status Control"
+         },
+         "NightVision": {
+            "$id": "#NightVision",
+            "title": "NightVision",
+            "type": "string",
+            "description": " Is Night Vision Available"
+         },
+         "NitrogenDioxideDensity": {
+            "$id": "#NitrogenDioxideDensity",
+            "title": "NitrogenDioxideDensity",
+            "type": "string",
+            "description": " The Measured NO2 Density"
+         },
+         "ObstructionDetected": {
+            "$id": "#ObstructionDetected",
+            "title": "ObstructionDetected",
+            "type": "string",
+            "description": " Is Obstruction Currently Detected"
+         },
+         "OccupancyDetected": {
+            "$id": "#OccupancyDetected",
+            "title": "OccupancyDetected",
+            "type": "string",
+            "description": " Is Occupancy Currently Detected"
+         },
+         "On": {
+            "$id": "#On",
+            "title": "On",
+            "type": "string",
+            "description": " Is the Device On"
+         },
+         "OperatingStateResponse": {
+            "$id": "#OperatingStateResponse",
+            "title": "OperatingStateResponse",
+            "type": "string",
+            "description": " The Devices Operating State Response"
+         },
+         "OpticalZoom": {
+            "$id": "#OpticalZoom",
+            "title": "OpticalZoom",
+            "type": "string",
+            "description": " The Devices Optical Zoom Factor"
+         },
+         "OutletInUse": {
+            "$id": "#OutletInUse",
+            "title": "OutletInUse",
+            "type": "string",
+            "description": " Is the Outlet in Use"
+         },
+         "OzoneDensity": {
+            "$id": "#OzoneDensity",
+            "title": "OzoneDensity",
+            "type": "string",
+            "description": " The Ozones Current Measured Density"
+         },
+         "PM10Density": {
+            "$id": "#PM10Density",
+            "title": "PM10Density",
+            "type": "string",
+            "description": " The PM1O Current Measured Density"
+         },
+         "PM2_5Density": {
+            "$id": "#PM2_5Density",
+            "title": "PM2_5Density",
+            "type": "string",
+            "description": " The PM2_5 Current Measured Density"
+         },
+         "PairSetup": {
+            "$id": "#PairSetup",
+            "title": "PairSetup",
+            "type": "string",
+            "description": " The Devices Pair Setup"
+         },
+         "PairVerify": {
+            "$id": "#PairVerify",
+            "title": "PairVerify",
+            "type": "string",
+            "description": " The Devices Pair Verify"
+         },
+         "PairingFeatures": {
+            "$id": "#PairingFeatures",
+            "title": "PairingFeatures",
+            "type": "string",
+            "description": " The Devices Pairing Features"
+         },
+         "PairingPairings": {
+            "$id": "#PairingPairings",
+            "title": "PairingPairings",
+            "type": "string",
+            "description": " The Devices Pairing Pairings"
+         },
+         "PasswordSetting": {
+            "$id": "#PasswordSetting",
+            "title": "PasswordSetting",
+            "type": "string",
+            "description": " The Devices Password Setting"
+         },
+         "PeriodicSnapshotsActive": {
+            "$id": "#PeriodicSnapshotsActive",
+            "title": "PeriodicSnapshotsActive",
+            "type": "string",
+            "description": " Is the Periodic Snapshot Enabled/Disabled"
+         },
+         "PictureMode": {
+            "$id": "#PictureMode",
+            "title": "PictureMode",
+            "type": "string",
+            "description": " The Current Picture Mode"
+         },
+         "Ping": {
+            "$id": "#Ping",
+            "title": "Ping",
+            "type": "string",
+            "description": " The Devices Ping Characteristic"
+         },
+         "PositionState": {
+            "$id": "#PositionState",
+            "title": "PositionState",
+            "type": "string",
+            "description": " The Devices Position State"
+         },
+         "PowerModeSelection": {
+            "$id": "#PowerModeSelection",
+            "title": "PowerModeSelection",
+            "type": "string",
+            "description": " The Devices Power Mode Selection"
+         },
+         "ProductData": {
+            "$id": "#ProductData",
+            "title": "ProductData",
+            "type": "string",
+            "description": " The Devices Product Data"
+         },
+         "ProgramMode": {
+            "$id": "#ProgramMode",
+            "title": "ProgramMode",
+            "type": "string",
+            "description": " The Devices Program Mode"
+         },
+         "ProgrammableSwitchEvent": {
+            "$id": "#ProgrammableSwitchEvent",
+            "title": "ProgrammableSwitchEvent",
+            "type": "string",
+            "description": " The Devices Current Position State"
+         },
+         "ProgrammableSwitchOutputState": {
+            "$id": "#ProgrammableSwitchOutputState",
+            "title": "ProgrammableSwitchOutputState",
+            "type": "string",
+            "description": " The Programmable Switches Output State"
+         },
+         "Reachable": {
+            "$id": "#Reachable",
+            "title": "Reachable",
+            "type": "string",
+            "description": " If the Device is Reachable"
+         },
+         "ReceivedSignalStrengthIndication": {
+            "$id": "#ReceivedSignalStrengthIndication",
+            "title": "ReceivedSignalStrengthIndication",
+            "type": "string",
+            "description": " The Received Signal Strength Measurement"
+         },
+         "ReceiverSensitivity": {
+            "$id": "#ReceiverSensitivity",
+            "title": "ReceiverSensitivity",
+            "type": "string",
+            "description": " The Amount of Receiver Sensitivity"
+         },
+         "RecordingAudioActive": {
+            "$id": "#RecordingAudioActive",
+            "title": "RecordingAudioActive",
+            "type": "string",
+            "description": " Is Recordding Audio Enabled/DisAbled"
+         },
+         "RelativeHumidityDehumidifierThreshold": {
+            "$id": "#RelativeHumidityDehumidifierThreshold",
+            "title": "RelativeHumidityDehumidifierThreshold",
+            "type": "string",
+            "description": " The Relative Humidity DeHumidifier Threshold"
+         },
+         "RelativeHumidityHumidifierThreshold": {
+            "$id": "#RelativeHumidityHumidifierThreshold",
+            "title": "RelativeHumidityHumidifierThreshold",
+            "type": "string",
+            "description": " The Relative Humidity Humidifier Threshold"
+         },
+         "RelayControlPoint": {
+            "$id": "#RelayControlPoint",
+            "title": "RelayControlPoint",
+            "type": "string",
+            "description": " The Relay Control Point"
+         },
+         "RelayEnabled": {
+            "$id": "#RelayEnabled",
+            "title": "RelayEnabled",
+            "type": "string",
+            "description": " Is the Relay Currently Enabled"
+         },
+         "RelayState": {
+            "$id": "#RelayState",
+            "title": "RelayState",
+            "type": "string",
+            "description": " The Relays Current State"
+         },
+         "RemainingDuration": {
+            "$id": "#RemainingDuration",
+            "title": "RemainingDuration",
+            "type": "string",
+            "description": " The Remaining Duration"
+         },
+         "RemoteKey": {
+            "$id": "#RemoteKey",
+            "title": "RemoteKey",
+            "type": "string",
+            "description": " The Remote Key"
+         },
+         "ResetFilterIndication": {
+            "$id": "#ResetFilterIndication",
+            "title": "ResetFilterIndication",
+            "type": "string",
+            "description": " If Reset Filter Indication "
+         },
+         "RotationDirection": {
+            "$id": "#RotationDirection",
+            "title": "RotationDirection",
+            "type": "string",
+            "description": " The Current Direction of Rotation"
+         },
+         "RotationSpeed": {
+            "$id": "#RotationSpeed",
+            "title": "RotationSpeed",
+            "type": "string",
+            "description": " The Current Speed of Rotation"
+         },
+         "RouterStatus": {
+            "$id": "#RouterStatus",
+            "title": "RouterStatus",
+            "type": "string",
+            "description": " The Current Router Status"
+         },
+         "Saturation": {
+            "$id": "#Saturation",
+            "title": "Saturation",
+            "type": "string",
+            "description": " The Percentage of Color Saturation"
+         },
+         "SecuritySystemAlarmType": {
+            "$id": "#SecuritySystemAlarmType",
+            "title": "SecuritySystemAlarmType",
+            "type": "string",
+            "description": " The Security System Alarm Type"
+         },
+         "SecuritySystemCurrentState": {
+            "$id": "#SecuritySystemCurrentState",
+            "title": "SecuritySystemCurrentState",
+            "type": "string",
+            "description": " The Security Systems Currently Armed State"
+         },
+         "SecuritySystemTargetState": {
+            "$id": "#SecuritySystemTargetState",
+            "title": "SecuritySystemTargetState",
+            "type": "string",
+            "description": " The Target Armed State of the Security System"
+         },
+         "SelectedAudioStreamConfiguration": {
+            "$id": "#SelectedAudioStreamConfiguration",
+            "title": "SelectedAudioStreamConfiguration",
+            "type": "string",
+            "description": " The Selected Audio Stream Configuration"
+         },
+         "SelectedCameraRecordingConfiguration": {
+            "$id": "#SelectedCameraRecordingConfiguration",
+            "title": "SelectedCameraRecordingConfiguration",
+            "type": "string",
+            "description": " The Selected Cameras Recording Configuration"
+         },
+         "SelectedRTPStreamConfiguration": {
+            "$id": "#SelectedRTPStreamConfiguration",
+            "title": "SelectedRTPStreamConfiguration",
+            "type": "string",
+            "description": " The Selected RTP Stream Configuration"
+         },
+         "SerialNumber": {
+            "$id": "#SerialNumber",
+            "title": "SerialNumber",
+            "type": "string",
+            "description": " The Devices Serial Number"
+         },
+         "ServiceLabelIndex": {
+            "$id": "#ServiceLabelIndex",
+            "title": "ServiceLabelIndex",
+            "type": "string",
+            "description": " The Devices Service Label Index"
+         },
+         "ServiceLabelNamespace": {
+            "$id": "#ServiceLabelNamespace",
+            "title": "ServiceLabelNamespace",
+            "type": "string",
+            "description": " The Devices Service Label NameSpace"
+         },
+         "SetDuration": {
+            "$id": "#SetDuration",
+            "title": "SetDuration",
+            "type": "string",
+            "description": " The Devices Set Duration"
+         },
+         "SetupDataStreamTransport": {
+            "$id": "#SetupDataStreamTransport",
+            "title": "SetupDataStreamTransport",
+            "type": "string",
+            "description": " The Devices Setup Stream Transport Value"
+         },
+         "SetupEndpoints": {
+            "$id": "#SetupEndpoints",
+            "title": "SetupEndpoints",
+            "type": "string",
+            "description": " The Devices Setup End Points"
+         },
+         "SetupTransferTransport": {
+            "$id": "#SetupTransferTransport",
+            "title": "SetupTransferTransport",
+            "type": "string",
+            "description": " The Devices Setup Transfer Transport"
+         },
+         "SignalToNoiseRatio": {
+            "$id": "#SignalToNoiseRatio",
+            "title": "SignalToNoiseRatio",
+            "type": "string",
+            "description": " The Measured Signal to Noise Ratio"
+         },
+         "SiriInputType": {
+            "$id": "#SiriInputType",
+            "title": "SiriInputType",
+            "type": "string",
+            "description": " siri's Input Type"
+         },
+         "SlatType": {
+            "$id": "#SlatType",
+            "title": "SlatType",
+            "type": "string",
+            "description": " The Slat Type"
+         },
+         "SleepDiscoveryMode": {
+            "$id": "#SleepDiscoveryMode",
+            "title": "SleepDiscoveryMode",
+            "type": "string",
+            "description": " The Devices Discoverable Sleep Mode"
+         },
+         "SleepInterval": {
+            "$id": "#SleepInterval",
+            "title": "SleepInterval",
+            "type": "string",
+            "description": " The Devices Sleep Interval"
+         },
+         "SmokeDetected": {
+            "$id": "#SmokeDetected",
+            "title": "SmokeDetected",
+            "type": "string",
+            "description": " If Smoke is Detected or Not"
+         },
+         "SoftwareRevision": {
+            "$id": "#SoftwareRevision",
+            "title": "SoftwareRevision",
+            "type": "string",
+            "description": " The Devices Software Revision String"
+         },
+         "StatusActive": {
+            "$id": "#StatusActive",
+            "title": "StatusActive",
+            "type": "string",
+            "description": " If the Device is Active or Not"
+         },
+         "StatusFault": {
+            "$id": "#StatusFault",
+            "title": "StatusFault",
+            "type": "string",
+            "description": " If the Device has a Status Fault"
+         },
+         "StatusJammed": {
+            "$id": "#StatusJammed",
+            "title": "StatusJammed",
+            "type": "string",
+            "description": " If the Device is in Jammed Status"
+         },
+         "StatusLowBattery": {
+            "$id": "#StatusLowBattery",
+            "title": "StatusLowBattery",
+            "type": "string",
+            "description": " The Status of the Battery Level"
+         },
+         "StatusTampered": {
+            "$id": "#StatusTampered",
+            "title": "StatusTampered",
+            "type": "string",
+            "description": " If the Device is Tampered"
+         },
+         "StreamingStatus": {
+            "$id": "#StreamingStatus",
+            "title": "StreamingStatus",
+            "type": "string",
+            "description": " The Devices Streaming Status"
+         },
+         "SulphurDioxideDensity": {
+            "$id": "#SulphurDioxideDensity",
+            "title": "SulphurDioxideDensity",
+            "type": "string",
+            "description": " The measured Sulphur Dioxide Density"
+         },
+         "SupportedAudioRecordingConfiguration": {
+            "$id": "#SupportedAudioRecordingConfiguration",
+            "title": "SupportedAudioRecordingConfiguration",
+            "type": "string",
+            "description": " The Supported Audio Recording Configuration"
+         },
+         "SupportedAudioStreamConfiguration": {
+            "$id": "#SupportedAudioStreamConfiguration",
+            "title": "SupportedAudioStreamConfiguration",
+            "type": "string",
+            "description": " The Supported Audio Stream Configuration"
+         },
+         "SupportedCameraRecordingConfiguration": {
+            "$id": "#SupportedCameraRecordingConfiguration",
+            "title": "SupportedCameraRecordingConfiguration",
+            "type": "string",
+            "description": " The Supported Audio Recording Configuration"
+         },
+         "SupportedDataStreamTransportConfiguration": {
+            "$id": "#SupportedDataStreamTransportConfiguration",
+            "title": "SupportedDataStreamTransportConfiguration",
+            "type": "string",
+            "description": " The Supported Data Stream Transport Configuration"
+         },
+         "SupportedCharacteristicValueTransitionConfiguration": {
+            "$id": "#SupportedCharacteristicValueTransitionConfiguration",
+            "title": "SupportedCharacteristicValueTransitionConfiguration",
+            "type": "string",
+            "description": " The Supported Characteristic Value Transition Configuration"
+         },
+         "SupportedDiagnosticsSnapshot": {
+            "$id": "#SupportedDiagnosticsSnapshot",
+            "title": "SupportedDiagnosticsSnapshot",
+            "type": "string",
+            "description": " The Supported Diagnostic Snapshot"
+         },
+         "SupportedRTPConfiguration": {
+            "$id": "#SupportedRTPConfiguration",
+            "title": "SupportedRTPConfiguration",
+            "type": "string",
+            "description": " The Supported RTP Configuration"
+         },
+         "SupportedRouterConfiguration": {
+            "$id": "#SupportedRouterConfiguration",
+            "title": "SupportedRouterConfiguration",
+            "type": "string",
+            "description": " The Supported Router Configuration"
+         },
+         "SupportedTransferTransportConfiguration": {
+            "$id": "#SupportedTransferTransportConfiguration",
+            "title": "SupportedTransferTransportConfiguration",
+            "type": "string",
+            "description": " The Supported Transfer Transport Configuration"
+         },
+         "SupportedVideoRecordingConfiguration": {
+            "$id": "#SupportedVideoRecordingConfiguration",
+            "title": "SupportedVideoRecordingConfiguration",
+            "type": "string",
+            "description": " The Supported Video Recording Configuration"
+         },
+         "SupportedVideoStreamConfiguration": {
+            "$id": "#SupportedVideoStreamConfiguration",
+            "title": "SupportedVideoStreamConfiguration",
+            "type": "string",
+            "description": " The Supported Video Stream Configuration"
+         },
+         "SwingMode": {
+            "$id": "#SwingMode",
+            "title": "SwingMode",
+            "type": "string",
+            "description": " The DevicesnCurrent Swing Mode"
+         },
+         "TargetAirPurifierState": {
+            "$id": "#TargetAirPurifierState",
+            "title": "TargetAirPurifierState",
+            "type": "string",
+            "description": " The Requested Target Air Purification State"
+         },
+         "TargetAirQuality": {
+            "$id": "#TargetAirQuality",
+            "title": "TargetAirQuality",
+            "type": "string",
+            "description": " The Requested Target Air Quality"
+         },
+         "TargetControlList": {
+            "$id": "#TargetControlList",
+            "title": "TargetControlList",
+            "type": "string",
+            "description": " The Target Control List"
+         },
+         "TargetControlSupportedConfiguration": {
+            "$id": "#TargetControlSupportedConfiguration",
+            "title": "TargetControlSupportedConfiguration",
+            "type": "string",
+            "description": " The Target Supported Configuration"
+         },
+         "TargetDoorState": {
+            "$id": "#TargetDoorState",
+            "title": "TargetDoorState",
+            "type": "string",
+            "description": " The Doors Requested State"
+         },
+         "TargetFanState": {
+            "$id": "#TargetFanState",
+            "title": "TargetFanState",
+            "type": "string",
+            "description": " The Fans Requested State"
+         },
+         "TargetHeaterCoolerState": {
+            "$id": "#TargetHeaterCoolerState",
+            "title": "TargetHeaterCoolerState",
+            "type": "string",
+            "description": " The Heaters Requested Cooling State"
+         },
+         "TargetHeatingCoolingState": {
+            "$id": "#TargetHeatingCoolingState",
+            "title": "TargetHeatingCoolingState",
+            "type": "string",
+            "description": " The Heaters Requested Heating State"
+         },
+         "TargetHorizontalTiltAngle": {
+            "$id": "#TargetHorizontalTiltAngle",
+            "title": "TargetHorizontalTiltAngle",
+            "type": "string",
+            "description": " The Requested Horizontal Tilt Angle"
+         },
+         "TargetHumidifierDehumidifierState": {
+            "$id": "#TargetHumidifierDehumidifierState",
+            "title": "TargetHumidifierDehumidifierState",
+            "type": "string",
+            "description": " The Requested Humidifier/DeHumidifier State"
+         },
+         "TargetMediaState": {
+            "$id": "#TargetMediaState",
+            "title": "TargetMediaState",
+            "type": "string",
+            "description": " The Requested Media State"
+         },
+         "TargetPosition": {
+            "$id": "#TargetPosition",
+            "title": "TargetPosition",
+            "type": "string",
+            "description": " The Devices Requested Position"
+         },
+         "TargetRelativeHumidity": {
+            "$id": "#TargetRelativeHumidity",
+            "title": "TargetRelativeHumidity",
+            "type": "string",
+            "description": " The Devices Requested Relative Humidity Level"
+         },
+         "TargetSlatState": {
+            "$id": "#TargetSlatState",
+            "title": "TargetSlatState",
+            "type": "string",
+            "description": " The Devices Requested Slat State"
+         },
+         "TargetTemperature": {
+            "$id": "#TargetTemperature",
+            "title": "TargetTemperature",
+            "type": "string",
+            "description": " The Devices Requested Temperature"
+         },
+         "TargetTiltAngle": {
+            "$id": "#TargetTiltAngle",
+            "title": "TargetTiltAngle",
+            "type": "string",
+            "description": " The Devices Requested Tilt Angle"
+         },
+         "TargetVerticalTiltAngle": {
+            "$id": "#TargetVerticalTiltAngle",
+            "title": "TargetVerticalTiltAngle",
+            "type": "string",
+            "description": " The Devices Requested Vertical Tilt Angle"
+         },
+         "TargetVisibilityState": {
+            "$id": "#TargetVisibilityState",
+            "title": "TargetVisibilityState",
+            "type": "string",
+            "description": " The Devices Requested Visibility State"
+         },
+         "TemperatureDisplayUnits": {
+            "$id": "#TemperatureDisplayUnits",
+            "title": "TemperatureDisplayUnits",
+            "type": "string",
+            "description": " The Units to Display the Temperature in"
+         },
+         "ThirdPartyCameraActive": {
+            "$id": "#ThirdPartyCameraActive",
+            "title": "ThirdPartyCameraActive",
+            "type": "string",
+            "description": " The ON/OFF Auxiliary Camera State"
+         },
+         "TimeUpdate": {
+            "$id": "#TimeUpdate",
+            "title": "TimeUpdate",
+            "type": "string",
+            "description": " Ifnthe Time Should be Updated"
+         },
+         "TransmitPower": {
+            "$id": "#TransmitPower",
+            "title": "TransmitPower",
+            "type": "string",
+            "description": " The Devices Measured Transmit Power"
+         },
+         "TransmitPowerMaximum": {
+            "$id": "#TransmitPowerMaximum",
+            "title": "TransmitPowerMaximum",
+            "type": "string",
+            "description": " The Devices Maximum Power Output"
+         },
+         "TunnelConnectionTimeout": {
+            "$id": "#TunnelConnectionTimeout",
+            "title": "TunnelConnectionTimeout",
+            "type": "string",
+            "description": " The Timeout Value of the Tunnel Connection"
+         },
+         "TunneledAccessoryAdvertising": {
+            "$id": "#TunneledAccessoryAdvertising",
+            "title": "TunneledAccessoryAdvertising",
+            "type": "string",
+            "description": " If the Device is Currently Tunneled Advertising"
+         },
+         "TunneledAccessoryConnected": {
+            "$id": "#TunneledAccessoryConnected",
+            "title": "TunneledAccessoryConnected",
+            "type": "string",
+            "description": " If the Device is Tunneled Connected "
+         },
+         "TunneledAccessoryStateNumber": {
+            "$id": "#TunneledAccessoryStateNumber",
+            "title": "TunneledAccessoryStateNumber",
+            "type": "string",
+            "description": " The Tunneled Accessorys State Number"
+         },
+         "VOCDensity": {
+            "$id": "#VOCDensity",
+            "title": "VOCDensity",
+            "type": "string",
+            "description": " The Devices Measured VOC Density"
+         },
+         "ValveType": {
+            "$id": "#ValveType",
+            "title": "ValveType",
+            "type": "string",
+            "description": " The Devices Valve Type"
+         },
+         "Version": {
+            "$id": "#Version",
+            "title": "Version",
+            "type": "string",
+            "description": " The Devices Version String"
+         },
+         "VideoAnalysisActive": {
+            "$id": "#VideoAnalysisActive",
+            "title": "VideoAnalysisActive",
+            "type": "string",
+            "description": " The Devices Video Analysis Active Status"
+         },
+         "Volume": {
+            "$id": "#Volume",
+            "title": "Volume",
+            "type": "string",
+            "description": " The Devices Volume as a Percentage"
+         },
+         "VolumeControlType": {
+            "$id": "#VolumeControlType",
+            "title": "VolumeControlType",
+            "type": "string",
+            "description": " The Devices Volume Control Type"
+         },
+         "VolumeSelector": {
+            "$id": "#VolumeSelector",
+            "title": "VolumeSelector",
+            "type": "string",
+            "description": " The Devices Volume Selector"
+         },
+         "WANConfigurationList": {
+            "$id": "#WANConfigurationList",
+            "title": "WANConfigurationList",
+            "type": "string",
+            "description": " The Devices WAN Configuration List"
+         },
+         "WANStatusList": {
+            "$id": "#WANStatusList",
+            "title": "WANStatusList",
+            "type": "string",
+            "description": " The Devices WAN Status List"
+         },
+         "WakeConfiguration": {
+            "$id": "#WakeConfiguration",
+            "title": "WakeConfiguration",
+            "type": "string",
+            "description": " The Devices Wake Configuration"
+         },
+         "WaterLevel": {
+            "$id": "#WaterLevel",
+            "title": "WaterLevel",
+            "type": "string",
+            "description": " The Current Water Level Measurement"
+         },
+         "WiFiCapabilities": {
+            "$id": "#WiFiCapabilities",
+            "title": "WiFiCapabilities",
+            "type": "string",
+            "description": " The Devices WiFi Capabilities"
+         },
+         "WiFiConfigurationControl": {
+            "$id": "#WiFiConfigurationControl",
+            "title": "WiFiConfigurationControl",
+            "type": "string",
+            "description": " The Devices WiFi Configuration Control"
+         },
+         "WiFiSatelliteStatus": {
+            "$id": "#WiFiSatelliteStatus",
+            "title": "WiFiSatelliteStatus",
+            "type": "string",
+            "description": " The Devices WiFi Satellite Status"
+         },
+         "Type_designation": {
+            "$id": "#Type_designation",
+            "type": "string",
+            "title": "type",
+            "description": "Select the Accessory Type.",
+            "default": "Switch",
+            "oneOf": [
+               { "title": "AccessControl", "enum": ["AccessControl"] },
+               { "title": "AccessoryRuntimeInformation", "enum": ["AccessoryRuntimeInformation"] },
+               { "title": "AccessoryInformation", "enum": ["AccessoryInformation"] },
+               { "title": "AirPurifier", "enum": ["AirPurifier"] },
+               { "title": "AirQualitySensor", "enum": ["AirQualitySensor"] },
+               { "title": "BatteryService", "enum": ["BatteryService"] },
+               { "title": "BridgeConfiguration", "enum": ["BridgeConfiguration"] },
+               { "title": "BridgingState", "enum": ["BridgingState"] },
+               { "title": "CameraEventRecordingManagement", "enum": ["CameraEventRecordingManagement"] },
+               { "title": "CameraControl", "enum": ["CameraControl"] },
+               { "title": "CameraRTPStreamManagement", "enum": ["CameraRTPStreamManagement"] },
+               { "title": "CameraOperatingMode", "enum": ["CameraOperatingMode"] },
+               { "title": "CarbonDioxideSensor", "enum": ["CarbonDioxideSensor"] },
+               { "title": "CarbonMonoxideSensor", "enum": ["CarbonMonoxideSensor"] },
+               { "title": "ContactSensor", "enum": ["ContactSensor"] },
+               { "title": "Diagnostics", "enum": ["Diagnostics"] },
+               { "title": "Door", "enum": ["Door"] },
+               { "title": "DoorBell", "enum": ["DoorBell"] },
+               { "title": "Fan", "enum": ["Fan"] },
+               { "title": "Fanv1", "enum": ["Fanv1"] },
+               { "title": "Fanv2", "enum": ["Fanv2"] },
+               { "title": "Faucet", "enum": ["Faucet"] },
+               { "title": "FilterMaintenance", "enum": ["FilterMaintenance"] },
+               { "title": "GarageDoorOpener", "enum": ["GarageDoorOpener"] },
+               { "title": "HeaterCooler", "enum": ["HeaterCooler"] },
+               { "title": "HumidifierDehumidifier", "enum": ["HumidifierDehumidifier"] },
+               { "title": "HumiditySensor", "enum": ["HumiditySensor"] },
+               { "title": "InputSource", "enum": ["InputSource"] },
+               { "title": "IrrigationSystem", "enum": ["IrrigationSystem"] },
+               { "title": "LeakSensor", "enum": ["LeakSensor"] },
+               { "title": "LightSensor", "enum": ["LightSensor"] },
+               { "title": "Lightbulb", "enum": ["Lightbulb"] },
+               { "title": "LockManagement", "enum": ["LockManagement"] },
+               { "title": "LockMechanism", "enum": ["LockMechanism"] },
+               { "title": "Microphone", "enum": ["Microphone"] },
+               { "title": "MotionSensor", "enum": ["MotionSensor"] },
+               { "title": "OccupancySensor", "enum": ["OccupancySensor"] },
+               { "title": "Outlet", "enum": ["Outlet"] },
+               { "title": "Pairing", "enum": ["Pairing"] },
+               { "title": "PowerManagement", "enum": ["PowerManagement"] },
+               { "title": "ProtocolInformation", "enum": ["ProtocolInformation"] },
+               { "title": "Relay", "enum": ["Relay"] },
+               { "title": "SecuritySystem", "enum": ["SecuritySystem"] },
+               { "title": "ServiceLabel", "enum": ["ServiceLabel"] },
+               { "title": "Siri", "enum": ["Siri"] },
+               { "title": "Slat", "enum": ["Slat"] },
+               { "title": "SmartSpeaker", "enum": ["SmartSpeaker"] },
+               { "title": "SmokeSensor", "enum": ["SmokeSensor"] },
+               { "title": "Speaker", "enum": ["Speaker"] },
+               { "title": "StatefulProgrammableSwitch", "enum": ["StatefulProgrammableSwitch"] },
+               { "title": "StatelessProgrammableSwitch", "enum": ["StatelessProgrammableSwitch"] },
+               { "title": "Switch", "enum": ["Switch"] },
+               { "title": "TargetControl", "enum": ["TargetControl"] },
+               { "title": "TargetControlManagement", "enum": ["TargetControlManagement"] },
+               { "title": "Television", "enum": ["Television"] },
+               { "title": "TelevisionSpeaker", "enum": ["TelevisionSpeaker"] },
+               { "title": "TemperatureSensor", "enum": ["TemperatureSensor"] },
+               { "title": "Thermostat", "enum": ["Thermostat"] },
+               { "title": "TimeInformation", "enum": ["TimeInformation"] },
+               { "title": "TransferTransportManagement", "enum": ["TransferTransportManagement"] },
+               { "title": "TunneledBTLEAccessoryService", "enum": ["TunneledBTLEAccessoryService"] },
+               { "title": "Valve", "enum": ["Valve"] },
+               { "title": "WiFiRouter", "enum": ["WiFiRouter"] },
+               { "title": "WiFiSatellite", "enum": ["WiFiSatellite"] },
+               { "title": "Window", "enum": ["Window"] },
+               { "title": "WindowCovering", "enum": ["WindowCovering"] }
+            ],
+            "required": true
+         },
+         "Name_designation": {
+            "$id": "#Name_designation",
+            "title": "undefined",
+            "type": "string",
+            "minLength": 1,
+            "required": true
+         },
+         "Polling_designation": {
+            "$id": "#Polling_designation",
+            "title": "polling",
+            "type": "array",
+            "required": false,
+            "items": {
+               "type": "object",
+               "properties": {
+                  "characteristic": {
+                     "title": "characteristic",
+                     "type": "string",
+                     "required": "true"
+                  },                  "interval": {
+                     "title": "interval",
+                     "type": "number",
+                     "required": "false"
+                  },                  "stateChaneResponseTime": {
+                     "title": "stateChaneResponseTime",
+                     "type": "number",
+                     "required": "false"
+                  },                  "queue": {
+                     "title": "queue",
+                     "type": "string",
+                     "required": "false"
+                  }               }            }         },
+         "State_cmd_designation": {
+            "$id": "#State_cmd_designation",
+            "title": "state_cmd",
+            "type": "string",
+            "required": false
+         }
       },
-      "allowTlv8": {
-        "title": "allowTlv8",
-        "type": "boolean",
-        "default": false,
-        "required": false,
-        "description": "Allow TLV8 characteristics."
-      },
-      "statusMsg": {
-        "title": "statusMsg",
-        "type": "boolean",
-        "default": true,
-        "required": false,
-        "description": "Display status changes."
-      },
-      "timeout": {
-        "title": "timeout",
-        "type": "number",
-        "default": 6000,
-        "required": false,
-        "description": "Timeout for stateCmd (msec)."
-      },
-      "stateChangeResponseTime": {
-        "title": "stateChangeResponseTime",
-        "type": "number",
-        "default": 3,
-        "required": false,
-        "description": "Time for state change to occur (sec)."
+      "properties": {
+         "type": { "$ref": "#/definitions/Type_designation"},
+         "name": { "$ref": "#/definitions/Name_designation"},
+         "polling": { "$ref": "#/definitions/Polling_designation"},
+         "state_cmd": { "$ref": "#/definitions/State_cmd_designation"}
       }
-    }
-  }
+   },
+   "layout": [
+      "type", {
+         "key": "name",
+         "condition": {
+            "functionBody": "return model.type && model.type !== 'null';"
+         }
+      }
+   ]
 }
