@@ -7,7 +7,8 @@ const GLOBAL =
    pluginConfig: false,
    customSchema: false,
    accessoryOptions: false,
-   newGlobalQueueBeingAdded: false
+   newGlobalQueueBeingAdded: false,
+   constants: null
 };
 
 
@@ -258,16 +259,11 @@ async function removeDeviceFromConfig( )
          throw err;
 
       }
-
    }
    else
    {
-
       throw new Error( 'No accessory found in config to remove!' );
-
    }
-
-
 
    return;
 
@@ -296,6 +292,27 @@ async function showQueueGlobalsPageButtonPressed( )
    // unused
    homebridge.request( "/showQueueGlobalsPage" );
 }
+async function updateQueueGlobalsPageButtonPressed( )
+{
+   console.log("main.js async function globals updating globals");
+   // Grab all the globals queue page information
+   /*
+   let debug = $('#debug');
+   let outputConstants = $('#outputConstants');
+   let allowTLV8 = $('#allowTLV8');
+   let statusMsg = $('#statusMsg');
+   let globalTimeout = $('#globalTimeout');
+   let globalStateChangeResponseTime = $('#globalStateChangeResponseTime');
+   let globalStateCmdPrefix = $('#globalStateCmdPrefix');
+   let globalStateCmd = $('#globalStateCmd');
+   let globalStateCmdSuffix = $('#globalStateCmdSuffix');
+   */
+
+   // Verify the information collected
+
+   // send information to server
+   //homebridge.request( "/showQueueGlobalsPage" );
+}
 async function configureNewQueuePageButtonPressed()
 {
    console.log("main.js async function configureNewQueuePageButtonPressed");
@@ -305,37 +322,47 @@ async function configureNewQueuePageButtonPressed()
       return;
    }
    GLOBAL.newGlobalQueueBeingAdded = true;
+   addGlobalQueueEntryItem( "", GLOBAL.constants.DEFAULT_QUEUE_TYPE );
 
-   console.log("Adding new queue");
-               $( '#globalQueuesForm' ).append(
-                  '<div class="row no-gutters">' +
-                     '<div class="col">' +
-                        '<div class="card card-body">' +
-                           '<button type="submit" class="btn btn-primary p-0 mt-0 mb-0 deleteGlobalQueueButton" value="TEMP_QUEUE_NAME">' +
-                              '<i class="fa fa-trash" aria-hidden="true"></i>' +
-                           '</button>' +
-                        '</div>' +
-                     '</div>' +
-                     '<div class="col">' +
-                        '<div class="card card-body">' +
-                           '<input type="text" class="input-group p-0 pt-0 pb-0 border-0" placeHolder="queueName">' +
-                        '</div>' +
-                     '</div>' +
-                     '<div class="col">' +
-                        '<div class="card card-body">' +
-                           '<input type="text" class="input-group p-0 pt-0 pb-0 border-0" placeHolder="WoRm">' +
-                        '</div>' +
-                     '</div>' +
-                  '</div>'
-               );
-               // You need to rebind the newly created button
-               $(document.body).on('click','.deleteGlobalQueueButton', deleteGlobalQueueButtonPressed);
+   // You need to rebind the newly created button
+   $(document.body).on('click','.deleteGlobalQueueButton', deleteGlobalQueueButtonPressed);
 }
 
 async function deleteGlobalQueueButtonPressed( event )
 {
    console.log("Click deleteGlobalQueueButtonPressed event:%s", event );
    console.log(" Value is %s", $(this).val() );
+}
+function addGlobalQueueEntryItem( queueName, selectedQueueType )
+{
+   console.log("Adding queue: %s", queueName );
+   let unSelectedQueueType = GLOBAL.constants.QUEUETYPE_SEQUENTIAL;
+   if ( selectedQueueType == GLOBAL.constants.QUEUETYPE_SEQUENTIAL )
+       unSelectedQueueType = GLOBAL.constants.QUEUETYPE_WORM;
+   $( '#globalQueuesForm' ).append(
+      '<div class="row no-gutters">' +
+         '<div class="col">' +
+            '<div class="card card-body">' +
+               '<button type="submit" class="btn btn-primary p-0 mt-0 mb-0 deleteGlobalQueueButton" value="' + queueName +'">' +
+                  '<i class="fa fa-trash" aria-hidden="true"></i>' +
+               '</button>' +
+            '</div>' +
+         '</div>' +
+         '<div class="col">' +
+            '<div class="card card-body">' +
+               '<input type="text" class="input-group p-0 pt-0 pb-0 border-0" placeHolder="' + queueName + '">' +
+            '</div>' +
+         '</div>' +
+         '<div class="col">' +
+            '<div class="card card-body">' +
+               '<select class="input-group p-0 pt-0 pb-0 border-0" name="queueType">' +
+                  '<option value="' + selectedQueueType + '" selected >' + selectedQueueType + '</option>' +
+                  '<option value="' + unSelectedQueueType + '">' + unSelectedQueueType + '</option>' +
+               '</select>' +
+            '</div>' +
+         '</div>' +
+      '</div>'
+   );
 }
 
 // STARTUP CODE
@@ -352,6 +379,8 @@ async function deleteGlobalQueueButtonPressed( event )
           $( event.data.from ).hide( );
           $( event.data.to ).show( );
       });
+
+      GLOBAL.constants = await homebridge.request( "/cmd4StaticVariable", "cmd4Constants" );
 
       // UPDATE accessoryTypeSelect
       let select = document.getElementById( "accessoryTypeSelect" );
@@ -418,24 +447,7 @@ async function deleteGlobalQueueButtonPressed( event )
 
             GLOBAL.pluginConfig[0].queueTypes.forEach( entry =>
             {
-               console.log("Adding queue: %s", entry.queue );
-               $( '#globalQueuesForm' ).append(
-                  '<div class="row no-gutters">' +
-                     '<div class="col">' +
-                        '<div class="card card-body">' +
-                           '<button type="submit" class="btn btn-primary p-0 mt-0 mb-0 deleteGlobalQueueButton" value="' + entry.queue +'">' +
-                              '<i class="fa fa-trash" aria-hidden="true"></i>' +
-                           '</button>' +
-                        '</div>' +
-                     '</div>' +
-                     '<div class="col">' +
-                        '<div class="card card-body">' + entry.queue + '</div>' +
-                     '</div>' +
-                     '<div class="col">' +
-                        '<div class="card card-body">' + entry.queueType + '</div>' +
-                     '</div>' +
-                  '</div>'
-               );
+               addGlobalQueueEntryItem( entry.queue, entry.queueType );
             });
          } else {
             $( "#globalQueueMessage" ).show( );
@@ -445,9 +457,7 @@ async function deleteGlobalQueueButtonPressed( event )
    }
    catch( err )
    {
-
       homebridge.toast.error( err.message, 'Error' );
-
    }
 
 } )( );
@@ -477,6 +487,12 @@ $( '.showQueueGlobalsPageButton' ).on( 'click', ( ) =>
    console.log("Click showQueueGlobalsPageButton");
    // unused
    showQueueGlobalsPageButtonPressed();
+} );
+$( '#updateGlobalsPageButton' ).on( 'click', ( ) =>
+{
+   console.log("Click updateGlobalsPageButton");
+   // unused
+   updateQueueGlobalsPageButtonPressed();
 } );
 
 $( '.configureNewQueuePageButton' ).on( 'click', ( ) =>
@@ -536,10 +552,8 @@ $( '#editAccessory' ).on( 'click', ( ) =>
 
 $( '#refreshAccessory' ).on( 'click', async ( ) =>
 {
-
    if ( GLOBAL.customSchema && GLOBAL.accessorySchema )
    {
-
       resetSchema( );
 
       let accessory = GLOBAL.pluginConfig[0].accessories.find( accessory => accessory.name === GLOBAL.accessorySchema.name );

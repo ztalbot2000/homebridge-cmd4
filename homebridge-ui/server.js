@@ -8,7 +8,7 @@ const fs = require('fs')
 
 // Settings, Globals and Constants
 let settings = require( "../cmd4Settings" );
-//const constants = require( "../cmd4Constants" );
+const cmd4Constants = require( "../cmd4Constants" );
 
 
 // These would already be initialized by index.js
@@ -165,8 +165,22 @@ class UiServer extends HomebridgePluginUiServer
                 description: "Set the accessory's state chane response time (sec).",
                 required: false
              };
+             if ( entry.queue &&
+                 ( entry.queueType == cmd4Constants.QUEUETYPE_WORM ||
+                   entry.queueType == cmd4Constants.QUEUETYPE_SEQUENTIAL )
+                )
+                {
+                   schema.polling.items[ index ].push(
+                      {
+                         title: "queue",
+                         type: "string",
+                         placeholder: entry.queueName,
+                         required: true
+                      });
+                }
           });
       }
+      return schema;
    }
 
      // A native method getCachedAccessories() was introduced in config-ui-x v4.37.0
