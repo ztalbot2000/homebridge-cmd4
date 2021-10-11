@@ -350,7 +350,7 @@ function addGlobalQueueEntryItem( queueName, selectedQueueType )
          '</div>' +
          '<div class="col">' +
             '<div class="card card-body">' +
-               '<input type="text" class="input-group p-0 pt-0 pb-0 border-0" placeHolder="' + queueName + '">' +
+               '<input type="text" style="text-align:center" class="input-group p-0 pt-0 pb-0 border-0" placeHolder="' + queueName + '">' +
             '</div>' +
          '</div>' +
          '<div class="col">' +
