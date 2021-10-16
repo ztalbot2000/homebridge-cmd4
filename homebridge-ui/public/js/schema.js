@@ -2,187 +2,207 @@
 
 const schema =
 {
-   'schema':
+   "schema":
    {
-      'name':
+     "debug":
       {
-         'title': 'Name',
-            'type': 'string',
-            'default': 'MercedesPlatform',
-            'description': 'Name for the log.'
+         "title": "Debug",
+         "type": "boolean",
+         "description": "Enables additional output in the log.",
+         "default": false
       },
-         'debug':
+      "statusMsg":
       {
-         'title': 'Debug',
-            'type': 'boolean',
-            'description': 'Enables additional output in the log.'
+         "title": "statusMsg",
+         "type": "boolean",
+         "description": "Enables state change status messages.",
+         "required": false,
+         "default": true
       },
-         'accessories':
+      "allowTLV8":
       {
-         'type': 'object',
-            'properties':
+         "title": "allowTLV8",
+         "type": "boolean",
+         "description": "Enables wacky TLV8 characteristics.",
+         "required": false,
+         "default": false
+      },
+      "timeout":
+      {
+         "title": "timeout",
+         "description": "The time to for a poll before its not",
+         "type": "integer",
+         "required": false
+      },
+      "stateChangeResponseTime":
+      {
+         "title": "stateChangeResponseTime",
+         "description": "The time to wait between states",
+         "type": "integer",
+         "required": false
+      },
+      "stateCmdPrefix":
+      {
+         "title": "stateCmdPrefix",
+         "description": "The global prefix to execute for state",
+         "type": "string",
+         "required": false
+      },
+      "stateCmd":
+      {
+         "title": "stateCmd",
+         "description": "The global command to execute for state",
+         "type": "string",
+         "required": false
+      },
+      "stateCmdSuffix":
+      {
+         "title": "stateCmd",
+         "description": "The global suffix to execute for state",
+         "type": "string",
+         "required": false
+      },
+      "queueTypes":
+      {
+         "title": "queueTypes",
+         "type": "array",
+         "uniqueItems": true,
+         "required": false,
+         "items":
          {
-            'name':
+            "type": "object",
+            "properties":
             {
-               'title': 'Accessory Name',
-                  'description': 'The name of your accessory in HomeKit',
-                  'type': 'string',
-                  'required': true
-            },
-           'accessoryCharacteristics':
-            {
-               'title': 'Accessory Characteristics',
-                  'description': 'The characteristics for the accessorys typen',
-                  'type': 'string',
-                  'required': true
-            },
-           'polling':
-            {
-               'title': 'Accessory Polling',
-                  'description': 'Polling of a characteristics state',
-                  'type': 'string',
-               'placeholder': false,
-                  'required': false
-            },
-            'electricVehicle':
-            {
-               'title': 'Electric Vehicle',
-                  'type': 'boolean',
-                  'description': 'Check if your accessory is an electric vehicle.'
-            },
-           'hybridVehicle':
-            {
-               'title': 'Hybrid Vehicle',
-               'type': 'boolean',
-               'description': 'Check if your accessory is a hybrid vehicle.'
-            },
-               'tankBatteryType':
-            {
-               'title': 'Tank load/Battery Accessory Type',
-               'type': 'string',
-               'description': 'You can choose between several accessory types for your tank load and/or electric vehicle battery. If \'none\' is choosen, only the tank load (for non electric vehicle) or battery level (electric vehicle) will be shown as a battery service within the accessory.',
-                  'oneOf': [
+               "name":
                {
-                  'title': 'Humidity Sensor',
-                  'enum': [
-                     'HUMIDITY'
-                   ]
+                  "type": "string",
+                  "required": true
                },
-               {
-                  'title': 'Lighhtbulb',
-                  'enum': [
-                     'LIGHTBULB'
+               "queueType":
+               {  "type": "string",
+                  "oneOf": [
+                     {"title": "WoRm","enum": ["WoRm"] },
+                     { "title": "Sequential", "enum": ["Sequential" ]}
                   ]
                }
-               ]
-            },
-           'manufacturer':
+            }
+         }
+      },
+      "accessories":
+      {
+         "type": "object",
+         "properties":
+         {
+            "name":
             {
-               'name': 'Manufacturer',
-               'type': 'string',
-               'description': 'Set the manufacturer name for display in the Home app.'
+               "title": "Accessory Name",
+               "description": "The name of your accessory in HomeKit",
+               "type": "string",
+               "required": true
             },
-               'model':
+            "polling":
             {
-               'title': 'Model',
-               'description': 'Accessory model',
-               'type': 'string',
-                  'required': false
+               "title": "Accessory Polling",
+               "description": "Polling of a characteristics state",
+               "type": "string",
+               "placeholder": false,
+               "required": false
             },
-            'maxRange':
+            "queueTypes":
             {
-               'title': 'Max Range',
-               'description': 'Maximum distance after full tank load',
-               'type': 'integer',
-               'required': false
-            },
-            'token':
-            {
-               'titel': 'Token',
-               'type': 'object',
-               'properties':
+               "title": "queueTypes",
+               "type": "array",
+               "uniqueItems": true,
+               "required": false,
+               "items":
                {
-                  'access_token':
+                  "type": "object",
+                  "properties":
                   {
-                     'title': 'Access Token',
-                     'type': 'string',
-                     'required': true
-                  },
-                  'refresh_token':
-                  {
-                     'title': 'Refresh Token',
-                     'type': 'string',
-                     'required': true
-                  },
-                     'token_type':
-                  {
-                     'title': 'Token Type',
-                     'type': 'string',
-                     'required': true
-                  },
-                     'expires_in':
-                  {
-                     'title': 'Expires In',
-                     'type': 'integer',
-                     'required': true
-                  },
-                     'expires_at':
-                  {
-                     'title': 'Expires at',
-                     'type': 'string',
-                     'required': true
+                     "name":
+                     {
+                        "type": "string",
+                        "required": true
+                     },
+                     "queueType":
+                     {  "type": "string",
+                        "oneOf": [
+                           {"title": "WoRm","enum": ["WoRm"] },
+                           { "title": "Sequential", "enum": ["Sequential" ]}
+                        ]
+                     }
                   }
                }
+            },
+           "manufacturer":
+            {
+               "name": "Manufacturer",
+               "type": "string",
+               "description": "Set the manufacturer name for display in the Home app."
+            },
+            "model":
+            {
+               "title": "Model",
+               "description": "Accessory model",
+               "type": "string",
+               "required": false
+            },
+            "stateChangeResponseTime":
+            {
+               "title": "stateChangeResponseTime",
+               "description": "The time to wait between states",
+               "type": "integer",
+               "required": false
             }
          }
       }
    },
-   'layout': [
-      'name',
-      'debug',
-      'accessories.name',
-      'accessories.accessoryCharacteristics',
-      'accessories.polling',
-      'accessories.electricVehicle',
-      'accessories.hybridVehicle',
-      'accessories.tankBatteryType',
+   "layout": [
+      "name",
+      "debug",
+      "accessories.name",
+      "accessories.accessoryCharacteristics",
+      "accessories.polling",
+      "accessories.electricVehicle",
+      "accessories.hybridVehicle",
+      "accessories.tankBatteryType",
        {
-         'key': 'accessories',
-         'type': 'section',
-         'title': 'Branding',
-         'expandable': true,
-         'expanded': false,
-         'orderable': false,
-         'items': [
-            'accessories.manufacturer',
-            'accessories.model'
+         "key": "accessories",
+         "type": "section",
+         "title": "Branding",
+         "expandable": true,
+         "expanded": false,
+         "orderable": false,
+         "items": [
+            "accessories.manufacturer",
+            "accessories.model"
          ]
       },
       {
-         'key': 'accessories',
-         'type': 'section',
-         'title': 'Extras',
-         'expandable': true,
-         'expanded': false,
-         'orderable': false,
-         'items': [
-            'accessories.maxRange',
-            'accessories.polling'
+         "key": "accessories",
+         "type": "section",
+         "title": "Extras",
+         "expandable": true,
+         "expanded": false,
+         "orderable": false,
+         "items": [
+            "accessories.maxRange",
+            "accessories.polling"
          ]
       },
       {
-         'key': 'accessories.token',
-         'type': 'section',
-         'title': 'Authorization',
-         'expandable': true,
-         'expanded': false,
-         'orderable': false,
-         'items': [
-            'accessories.token.access_token',
-            'accessories.token.refresh_token',
-            'accessories.token.token_type',
-            'accessories.token.expires_in',
-            'accessories.token.expires_at'
+         "key": "accessories.token",
+         "type": "section",
+         "title": "Authorization",
+         "expandable": true,
+         "expanded": false,
+         "orderable": false,
+         "items": [
+            "accessories.token.access_token",
+            "accessories.token.refresh_token",
+            "accessories.token.token_type",
+            "accessories.token.expires_in",
+            "accessories.token.expires_at"
          ]
       }
    ]

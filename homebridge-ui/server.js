@@ -17,7 +17,6 @@ CMD4_ACC_TYPE_ENUM.init( );
 let CMD4_DEVICE_TYPE_ENUM = require( "../lib/CMD4_DEVICE_TYPE_ENUM" );
 CMD4_DEVICE_TYPE_ENUM.init( );
 
-
 //orig const { AuthorizationCode } = require('simple-oauth2');
 
 class UiServer extends HomebridgePluginUiServer
@@ -34,6 +33,7 @@ class UiServer extends HomebridgePluginUiServer
       this.onRequest('/startButtonPressed', this.startButtonPressed.bind(this));
       this.onRequest('/backButtonPressed', this.backButtonPressed.bind(this));
       this.onRequest('/showConfigureGlobalsPage', this.showConfigureGlobalsPage.bind(this));
+      this.onRequest('/updateCmd4Globals', this.updateCmd4Globals.bind(this));
       this.onRequest('/showQueueGlobalsPage', this.showQueueGlobalsPage.bind(this));
 
 
@@ -41,6 +41,7 @@ class UiServer extends HomebridgePluginUiServer
       this.onRequest('/getCachedAccessories', this.getCachedAccessories.bind(this));
 
       this.onRequest('/cmd4StaticVariable', this.cmd4StaticVariable.bind(this));
+      this.onRequest('/consoleLog', this.consoleLog.bind(this));
       this.onRequest('/ACC_Info', this.cmd4AccInfo.bind(this));
       this.onRequest('/DEVICE_Info', this.cmd4DeviceInfo.bind(this));
 
@@ -225,6 +226,10 @@ class UiServer extends HomebridgePluginUiServer
       console.log("server.js for %s", variableString );
       return eval( variableString );
    }
+   async consoleLog( msg )
+   {
+      console.log( msg );
+   }
    async cmd4AccInfo( accTypeEnumIndex )
    {
       return CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ];
@@ -288,6 +293,41 @@ class UiServer extends HomebridgePluginUiServer
       this.pushEvent('my-pageEvent', { from: fromPage,       // from: is hide
                                        to:   toPage }        // to:   is show
                     );
+   }
+   async updateCmd4Globals( Cmd4Globals )
+   {
+      if ( Cmd4Globals.debug == undefined )
+         delete this.pluginConfig[ "debug" ];
+      else
+         this.pluginConfig.debug = Cmd4Globals.debug;
+      if ( Cmd4Globals.outputConstants == undefined )
+         delete this.pluginConfig[ "outputConstants" ];
+      else
+         this.pluginConfig.outputConstants = Cmd4Globals.outputConstants;
+      if ( Cmd4Globals.allowTLV8 == undefined )
+         delete this.pluginConfig[ "allowTLV8" ];
+      else
+         this.pluginConfig.allowTLV8 = Cmd4Globals.allowTLV8;
+      if ( Cmd4Globals.timeout == undefined )
+         delete this.pluginConfig[ "timeout" ];
+      else
+         this.pluginConfig.timeout = Cmd4Globals.timeout;
+      if ( Cmd4Globals.stateChangeResponseTime == undefined )
+         delete this.pluginConfig[ "stateChangeResponseTime" ];
+      else
+         this.pluginConfig.stateChangeResponseTime = Cmd4Globals.stateChangeResponseTime;
+      if ( Cmd4Globals.stateCmdPrefix == undefined )
+         delete this.pluginConfig[ "stateCmdPrefix" ];
+      else
+         this.pluginConfig.stateCmdPrefix = Cmd4Globals.stateCmdPrefix;
+      if ( Cmd4Globals.stateCmd == undefined )
+         delete this.pluginConfig[ "stateCmd" ];
+      else
+         this.pluginConfig.stateCmd = Cmd4Globals.stateCmd;
+      if ( Cmd4Globals.stateCmdSuffix == undefined )
+         delete this.pluginConfig[ "stateCmdSuffix" ];
+      else
+         this.pluginConfig.stateCmdSuffix = Cmd4Globals.stateCmdSuffix;
    }
 }
 

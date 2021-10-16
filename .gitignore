@@ -20,6 +20,7 @@ npm-debug.log
 .node-version
 
 test/tmp/*
+test/schemaFiles/*
 
 # Not a fan
 package-lock.json

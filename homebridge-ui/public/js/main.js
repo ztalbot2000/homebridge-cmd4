@@ -2,6 +2,7 @@
 
 
 
+
 const GLOBAL =
 {
    pluginConfig: false,
@@ -294,24 +295,36 @@ async function showQueueGlobalsPageButtonPressed( )
 }
 async function updateQueueGlobalsPageButtonPressed( )
 {
+   let Cmd4Globals =
+   {
+      debug: GLOBAL.constants.DEFAULT_DEBUG,
+      outputConstants: false,
+      allowTLV8: GLOBAL.constants.DEFAULT_ALLOW_TLV8,
+      statusMsg: GLOBAL.constants.DEFAULT_STATUS_MSG,
+      stateCmdPrefix: undefined,
+      stateCmd: undefined,
+      stateCmdSuffix: undefined,
+      timeout: undefined,
+      stateChangeResponseTime: undefined,
+      queueTypes: undefined
+   };
+
    console.log("main.js async function globals updating globals");
    // Grab all the globals queue page information
-   /*
-   let debug = $('#debug');
-   let outputConstants = $('#outputConstants');
-   let allowTLV8 = $('#allowTLV8');
-   let statusMsg = $('#statusMsg');
-   let globalTimeout = $('#globalTimeout');
-   let globalStateChangeResponseTime = $('#globalStateChangeResponseTime');
-   let globalStateCmdPrefix = $('#globalStateCmdPrefix');
-   let globalStateCmd = $('#globalStateCmd');
-   let globalStateCmdSuffix = $('#globalStateCmdSuffix');
-   */
+   Cmd4Globals.debug = ( $('#globalDebug').val() === "on") ? true : false;
 
-   // Verify the information collected
+   homebridge.request( "/consoleLog", `globalDebug=${ Cmd4Globals.debug }` );
+   Cmd4Globals.outputConstants = ( $('#globalOutputConstants').val() === "on") ? true : false;
+   homebridge.request( "/consoleLog", `globalOutputConstants=${ Cmd4Globals.outputConstants }` );
+   Cmd4Globals.allowTLV8 = ( $('#globalAllowTLV8').val() === "on") ? true : false;
+   Cmd4Globals.statusMsg = ( $('#globalStatusMsg').val() === "on") ? true : false;
+   Cmd4Globals.timeout = ( $('#globalTimeout').val() === "" ) ? undefined : $('#globalTimeout').val();
+   Cmd4Globals.stateCmdPrefix = ( $('#globalStateCmdPrefix').val() === "" ) ? undefined : $('#globalStateCmdPrefix').val();
+   Cmd4Globals.stateCmd = ( $('#globalStateCmd').val() === "" ) ? undefined : $('#globalStateCmd').val();
+   Cmd4Globals.stateCmdSuffix = ( $('#globalStateCmdSuffix').val() === "" ) ? undefined : $('#globalStateCmdSuffix').val();
 
    // send information to server
-   //homebridge.request( "/showQueueGlobalsPage" );
+   homebridge.request( "/updateCmd4Globals", Cmd4Globals );
 }
 async function configureNewQueuePageButtonPressed()
 {
@@ -350,12 +363,12 @@ function addGlobalQueueEntryItem( queueName, selectedQueueType )
          '</div>' +
          '<div class="col">' +
             '<div class="card card-body">' +
-               '<input type="text" style="text-align:center" class="input-group p-0 pt-0 pb-0 border-0" placeHolder="' + queueName + '">' +
+               '<input type="text" style="text-align:center" class="input-group p-0 pt-0 pb-0 border-0" placeHolder="' + queueName + '" id="queueName' + 1 + '">' +
             '</div>' +
          '</div>' +
          '<div class="col">' +
             '<div class="card card-body">' +
-               '<select class="input-group p-0 pt-0 pb-0 border-0" name="queueType">' +
+               '<select class="input-group p-0 pt-0 pb-0 border-0" name="queueType" id="queueType' + 1 +'">' +
                   '<option value="' + selectedQueueType + '" selected >' + selectedQueueType + '</option>' +
                   '<option value="' + unSelectedQueueType + '">' + unSelectedQueueType + '</option>' +
                '</select>' +
