@@ -149,105 +149,6 @@
     </button>
     <img src="images/HB_Cmd4.png" alt="Cmd4 Globals" width="150px" class="center-it mt-4 cmd4Logo">
     <h6 class="text-center">Global Definitions<br> The defaults are pre-defined. Press back to continue.</h6>
-   <div class="container mt-5">
-      <div class="form-group">
-         <div class="col">
-            <label for="debug">Debug</label>
-         </div>
-         <div class="col-3">
-            <input type="checkbox" class="form-control" id="globalDebug">
-         </div>
-         <div class="col">
-            <label for="outputConstants">Output Constants<span class="text-danger">*</span>
-            </label>
-         </div>
-         <div class="col-3">
-            <input type="checkbox" class="form-control" id="globalOutputConstants">
-         </div>
-         <div class="col">
-            <label for="allowTLV8">Allow TLV8 Characteristics<span class="text-danger">*</span>
-            </label>
-         </div>
-         <div class="col-3">
-            <input type="checkbox" class="form-control" id="globalAllowTLV8">
-         </div>
-         <div class="col">
-            <label for="statusMsg">Show Status Messages in Logs</label>
-         </div>
-         <div class="col-3">
-            <input type="checkbox" class="form-control" id="globalStatusMsg" checked>
-         </div>
-         <div  class="col">
-            <label for="globalTimeout">Default polling timeout (msec)</label>
-         </div>
-         <div  class="col-3">
-            <input class="form-control" id="globalTimeout" type="number" min="5" max="20" value="3">
-         </div>
-         <div  class="col">
-            <label for="stateChangeResponseTime">Default State Change Response Time (sec)
-            </label>
-         </div>
-         <div  class="col-3">
-            <input type="number" class="form-control" id="globalStateChangeResponseTime" name="globalStateChangeResponseTime" min="0" max="20" value="3">
-         </div>
-         <div  class="col">
-            <label for="stateCmdPrefix">Default State Command Prefix to use
-            </label>
-         </div>
-         <div  class="col">
-            <input type="string" class="form-control" id="globalStateCmdPrefix" name="globalStateCmdPrefix" value="">
-         </div>
-         <div  class="col">
-            <label for="stateCmd">Default State Command to use
-            </label>
-         </div>
-         <div  class="col">
-            <input type="string" class="form-control" id="globalStateCmd" name="globalStateCmd" value="">
-         </div>
-         <div  class="col">
-            <label for="stateCmdSuffix">Default State Command Suffix to use</label>
-         </div>
-         <div  class="col">
-           <input type="string" class="form-control" id="globalStateCmdPrefix" name="globalStateCmdSuffix" value="">
-         </div>
-      </div>
-
-      <label>Pre-Defined Global Queues</label>
-
-      <div id="globalQueueMessage">
-         <label>There are no defined global queues.</label>
-         <h3 class="text-center">There are no defined global queues.</h3>
-      </div>
-
-      <div id="globalQueueContainer" class="container">
-         <div id="globalQueuesForm">
-            <div class="row no-gutters">
-               <div class="col">
-                  <div class="card card-body text-success" style="visibility:hidden;">
-                     <h5 class="card-title">Queue Name</h5>
-                  </div>
-               </div>
-               <div class="col">
-                  <div class="card card-body text-success">
-                      <h5 class="card-title">Queue Name</h5>
-                  </div>
-               </div>
-               <div class="col">
-                  <div class="card card-body text-success">
-                     <h5 class="card-title">Queue Type</h5>
-                  </div>
-               </div>
-            </div>
-         </div>
-
-         <div class="d-flex justify-content-center mt-4">
-           <a href="#" id="configureNewQueuePageButton" class="d-flex justify-content-center align-items-center btn-primary configureNewQueuePageButton">
-             <i class="fas fa-plus"></i>
-           </a>
-         </div>
-      </div>
-      <button id="updateGlobalsPageButton" type="submit" class="btn btn-primary float-right mt-3 mr-0">Update</button>
-      </div>
    </div>
 </div>
 
@@ -260,6 +161,7 @@
 
 <!-- Custom Schema -->
 <script type="text/javascript" src="js/schema.js?v=0.0.7"></script>
+<script type="text/javascript" src="js/globalsSchema.js?v=0.0.7"></script>
 <!-- Main -->
 <script type="text/javascript" src="js/main.js?v=0.0.7"></script>
 

@@ -1,3 +1,6 @@
+/*eslint no-unused-vars: ["error", { "varsIgnorePattern": "globalsSchema" }]*/
+
+const globalsSchema =
 {
    "schema":
    {
@@ -131,7 +134,7 @@
             "type": "object",
             "properties":
             {
-               "name":
+               "queue":
                {
                   "type": "string",
                   "required": true
@@ -187,7 +190,7 @@
            "flex-direction": "row",
            "items": [
            {
-              "key": "queueTypes[].name", "flex": "1 1 50px",
+              "key": "queueTypes[].queue", "flex": "1 1 50px",
               "notitle": false, "placeholder": "AQueueName"
            },
            { "key": "queueTypes[].queueType", "flex": "4 4 200px",

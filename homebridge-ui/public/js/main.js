@@ -1,4 +1,4 @@
-/*global $, Option, homebridge, schema Option*/
+/*global $, Option, homebridge, globalsSchema, schema*/
 
 
 
@@ -7,6 +7,7 @@ const GLOBAL =
 {
    pluginConfig: false,
    customSchema: false,
+   globalsForm: false,
    accessoryOptions: false,
    newGlobalQueueBeingAdded: false,
    constants: null
@@ -15,8 +16,8 @@ const GLOBAL =
 
 async function createCustomSchema( accessory )
 {
-   console.log( "In CreateCustomSchema for:%s %s", accessory.name, accessory.displayName );
-   console.log( "In CreateCustomSchema accessory:%s", accessory );
+   homebridge.request( "/consoleLog",  `In CreateCustomSchema for: ${ accessory.name } ${ accessory.displayName }` );
+   homebridge.request( "/consoleLog",  `In CreateCustomSchema accessory: ${ accessory }` );
    //let settings = await homebridge.request( "/cmd4StaticVariable", "settings" );
 
    GLOBAL.accessorySchema =
@@ -46,7 +47,7 @@ async function createCustomSchema( accessory )
 
    GLOBAL.customSchema.onChange( async config =>
    {
-      console.log( "In customSchema.onChange config:%s %s", config );
+      homebridge.request( "/consoleLog",  `In customSchema.onChange config: ${ config }` );
       //let settings = await homebridge.request( "/cmd4StaticVariable", "settings" );
 
       GLOBAL.pluginConfig[0].name = config.name;
@@ -86,7 +87,7 @@ async function createCustomSchema( accessory )
 
 function resetUI( )
 {
-   console.log( "In resetUI" );
+   homebridge.request( "/consoleLog",  `In resetUI` );
 
    resetForm( );
    resetSchema( );
@@ -97,7 +98,7 @@ function resetUI( )
 
 function resetForm( )
 {
-   console.log( "In resetForm" );
+   homebridge.request( "/consoleLog",  `In resetForm` );
 
    $( '#accessoryName' ).val( '' );
    $( '#accessoryCharacteristics' ).val( '' );
@@ -113,6 +114,7 @@ function resetForm( )
    $( '#tokenInput' ).hide( );
 
    GLOBAL.accessorySchema = false;
+   GLOBAL.globalsForm = false;
 
    return;
 
@@ -120,7 +122,7 @@ function resetForm( )
 
 function resetSchema( )
 {
-   console.log( "In resetSchema" );
+   homebridge.request( "/consoleLog",  `In resetSchema` );
 
    if ( GLOBAL.customSchema )
    {
@@ -134,7 +136,7 @@ function resetSchema( )
 
 function addAccessoryToList( accessory )
 {
-   console.log( "In addAccessoryToList accessory.displayName:%s", accessory.displayName );
+   homebridge.request( "/consoleLog",  `In addAccessoryToList accessory.displayName: ${ accessory.displayName }` );
 
    let name = typeof accessory === 'string' ? accessory : accessory.name;
    $( '#accessorySelect' ).append( '<option value="' + name + '">'+ name + '</option>' );
@@ -145,7 +147,7 @@ function addAccessoryToList( accessory )
 
 function removeAccessoryFromList( accessory )
 {
-   console.log( "In removeAccessoryToList accessory.displayName:%s", accessory.displayName );
+   homebridge.request( "/consoleLog",  `In removeAccessoryToList accessory.displayName: ${ accessory.displayName }` );
 
    let name = typeof accessory === 'string' ? accessory : accessory.name;
    $( '#accessorySelect option[value=\'' + name + '\']' ).remove( );
@@ -156,7 +158,7 @@ function removeAccessoryFromList( accessory )
 
 async function addNewDeviceToConfig( accessory )
 {
-   console.log( "In addNewDeviceToConfig for:%s %s", accessory.name, accessory.displayName );
+   homebridge.request( "/consoleLog",  `In addNewDeviceToConfig for: ${ accessory.name } ${ accessory.displayName }` );
 
    let found = false;
 
@@ -271,25 +273,93 @@ async function removeDeviceFromConfig( )
 }
 async function startButtonPressed( )
 {
-   let pluginConfig = await homebridge.getPluginConfig( );
-   GLOBAL.pluginConfig = pluginConfig;
-   console.log("got pluginConfig start sending start");
+   // This is alreays done by the main async function below
+   // let pluginConfig = await homebridge.getPluginConfig( );
+   // GLOBAL.pluginConfig = pluginConfig;
 
-   homebridge.request( "/startButtonPressed", pluginConfig );
+   homebridge.request( "/consoleLog", `Have pluginConfig start sending start GLOBAL.pluginConfig: ${ GLOBAL.pluginConfig }`);
+
+   // Pass the GLOBAL.pluginConfig to the server
+   homebridge.request( "/startButtonPressed", GLOBAL.pluginConfig );
 }
 async function backButtonPressed( )
 {
-   console.log("main.js async function back sending back");
+   homebridge.request( "/consoleLog", `main.js async function back sending back`);
    homebridge.request( "/backButtonPressed" );
 }
 async function showConfigureGlobalsPageButtonPressed( )
 {
-   console.log("main.js async function globals sending globals");
+   homebridge.request( "/consoleLog", `main.js async function globals sending globals` );
    homebridge.request( "/showConfigureGlobalsPage" );
+
+   GLOBAL.globalsForm = homebridge.createForm( globalsSchema,
+   {
+      "debug": GLOBAL.pluginConfig[0].debug,
+      "statusMsg": GLOBAL.pluginConfig[0].statusMsg,
+      "allowTLV8": GLOBAL.pluginConfig[0].allowTLV8,
+      "outputConstants": GLOBAL.pluginConfig[0].outputConstants,
+      "timeout": GLOBAL.pluginConfig[0].timeout,
+      "stateChangeResponseTime": GLOBAL.pluginConfig[0].stateChangeResponseTime,
+      "interval": GLOBAL.pluginConfig[0].interval,
+      "stateCmdPrefix": GLOBAL.pluginConfig[0].stateCmdPrefix,
+      "stateCmd": GLOBAL.pluginConfig[0].stateCmd,
+      "stateCmdSuffix": GLOBAL.pluginConfig[0].stateCmdSuffix,
+      "storage": GLOBAL.pluginConfig[0].storage,
+      "storagePath": GLOBAL.pluginConfig[0].storagePath,
+      "folder": GLOBAL.pluginConfig[0].folder,
+      "keyPath": GLOBAL.pluginConfig[0].keyPath,
+      "definitions": GLOBAL.pluginConfig[0].definitions,
+      "queueTypes": GLOBAL.pluginConfig[0].queueTypes
+   }, "MySubmitButton", "MyCancelButton" );
+
+   GLOBAL.globalsForm.onChange(async change => {
+      homebridge.request( "/consoleLog", `main.js showConfigureGlobalsPage onChange` );
+      GLOBAL.pluginConfig[0].debug = ( change.debug ) ? change.debug : undefined;
+      GLOBAL.pluginConfig[0].statusMsg = change.statusMsg ? change.statusMsg : undefined;
+      GLOBAL.pluginConfig[0].allowTLV8 = change.allowTLV8 ? change.allowTLV8 : undefined;
+      GLOBAL.pluginConfig[0].outputConstants = change.outputConstants ? change.outputConstants : undefined;
+      GLOBAL.pluginConfig[0].timeout = change.timeout ? change.timeout : undefined;
+      GLOBAL.pluginConfig[0].stateCmdResponseTime = change.stateCmdResponseTime ? change.stateCmdResponseTime : undefined;
+      GLOBAL.pluginConfig[0].interval = change.interval ? change.interval : undefined;
+      GLOBAL.pluginConfig[0].stateCmdPrefix = change.stateCmdPrefix ? change.stateCmdPrefix : undefined;
+      GLOBAL.pluginConfig[0].stateCmd= change.stateCmd ? change.stateCmd : undefined;
+      GLOBAL.pluginConfig[0].stateCmdSuffix = change.stateCmdSuffix ? change.stateCmdSuffix : undefined;
+      GLOBAL.pluginConfig[0].storage = change.storage ? change.storage : undefined;
+      GLOBAL.pluginConfig[0].storagePath = change.storagePath ? change.storagePath : undefined;
+      GLOBAL.pluginConfig[0].folder = change.folder ? change.folder : undefined;
+      GLOBAL.pluginConfig[0].keyPath = change.keyPath ? change.keyPath : undefined;
+      GLOBAL.pluginConfig[0].definitions = change.definitions ? change.definitions : undefined;
+      GLOBAL.pluginConfig[0].queueTypes = change.queueTypes ? change.queueTypes : undefined;
+   });
+
+   // watch for submit button click events
+   GLOBAL.globalsForm.onSubmit( (form) => {
+      homebridge.request( "/consoleLog",  `submit button pressed for form: ${ form }` );
+    });
+
+   try {
+      homebridge.request( "/consoleLog",  `await homebridge.updatePlugin` );
+      await homebridge.updatePluginConfig(GLOBAL.pluginConfig);
+    } catch(err) {
+      homebridge.toast.error(err.message, 'Error');
+    }
 }
+/* not used yet
+async function cancelButtonPressed( )
+{
+
+    homebridge.request( "/consoleLog",  `cancel button pressed` );
+    // stop listening to change events and hide the form
+    GLOBAL.globalsForm.end();
+    GLOBAL.globalsForm = false;
+
+   homebridge.hideSchemaForm();
+
+}
+*/
 async function showQueueGlobalsPageButtonPressed( )
 {
-   console.log("main.js async function globals sending globals");
+   homebridge.request( "/consoleLog", `main.js async function globals sending globals` );
    // unused
    homebridge.request( "/showQueueGlobalsPage" );
 }
@@ -309,7 +379,7 @@ async function updateQueueGlobalsPageButtonPressed( )
       queueTypes: undefined
    };
 
-   console.log("main.js async function globals updating globals");
+   homebridge.request( "/consoleLog", `main.js async function globals updating globals` );
    // Grab all the globals queue page information
    Cmd4Globals.debug = ( $('#globalDebug').val() === "on") ? true : false;
 
@@ -328,7 +398,7 @@ async function updateQueueGlobalsPageButtonPressed( )
 }
 async function configureNewQueuePageButtonPressed()
 {
-   console.log("main.js async function configureNewQueuePageButtonPressed");
+   homebridge.request( "/consoleLog", `main.js async function configureNewQueuePageButtonPressed` );
    if ( GLOBAL.newGlobalQueueBeingAdded == true )
    {
       homebridge.toast.error('A new queue has already been started.', 'Error');
@@ -343,12 +413,12 @@ async function configureNewQueuePageButtonPressed()
 
 async function deleteGlobalQueueButtonPressed( event )
 {
-   console.log("Click deleteGlobalQueueButtonPressed event:%s", event );
-   console.log(" Value is %s", $(this).val() );
+   homebridge.request( "/consoleLog", `Click deleteGlobalQueueButtonPressed event: ${ event }` );
+   homebridge.request( "/consoleLog", `Value is ${ $(this).val() }` );
 }
 function addGlobalQueueEntryItem( queueName, selectedQueueType )
 {
-   console.log("Adding queue: %s", queueName );
+   homebridge.request( "/consoleLog", `Adding queue: ${ queueName }` );
    let unSelectedQueueType = GLOBAL.constants.QUEUETYPE_SEQUENTIAL;
    if ( selectedQueueType == GLOBAL.constants.QUEUETYPE_SEQUENTIAL )
        unSelectedQueueType = GLOBAL.constants.QUEUETYPE_WORM;
@@ -387,7 +457,7 @@ function addGlobalQueueEntryItem( queueName, selectedQueueType )
       // PAGE SWITCH EVENT
       homebridge.addEventListener('my-pageEvent', (event) =>
       {
-         console.log("In Main.js server.js told me from:%s to:%s", event.data.from, event.data.to);
+         homebridge.request( "/consoleLog", `In Main.js server.js told me from: ${event.data.from }  to: ${ event.data.to }` );
 
           $( event.data.from ).hide( );
           $( event.data.to ).show( );
@@ -397,18 +467,18 @@ function addGlobalQueueEntryItem( queueName, selectedQueueType )
 
       // UPDATE accessoryTypeSelect
       let select = document.getElementById( "accessoryTypeSelect" );
-      console.log("main.js select=%s", select);
+      homebridge.request( "/consoleLog", `main.js select= ${ select }` );
 
-      console.log( "In Cmd4.js select" );
+      homebridge.request( "/consoleLog",  `In Cmd4.js select` );
       let CMD4_DEVICE_TYPE_ENUM = await homebridge.request( "/cmd4StaticVariable", "CMD4_DEVICE_TYPE_ENUM" );
       Object.keys( CMD4_DEVICE_TYPE_ENUM.properties ).forEach( key => {
          let defaultSelection = false;
          if ( key == CMD4_DEVICE_TYPE_ENUM.Switch )
          {
-            console.log( " Setting default selection to true at: %s", key );
+            homebridge.request( "/consoleLog",  `Setting default selection to true at: ${ key }` );
             defaultSelection = true;
          }
-         //console.log( "In Cmd4.js select appending %s", CMD4_DEVICE_TYPE_ENUM.properties[key].deviceName );
+         //homebridge.request( "/consoleLog",  `In Cmd4.js select appending ${ CMD4_DEVICE_TYPE_ENUM.properties[key].deviceName }` );
          select.appendChild( new Option( CMD4_DEVICE_TYPE_ENUM.properties[key].deviceName, CMD4_DEVICE_TYPE_ENUM.properties[key].deviceName, defaultSelection, defaultSelection ) );
       } );
 
@@ -416,7 +486,7 @@ function addGlobalQueueEntryItem( queueName, selectedQueueType )
       GLOBAL.pluginConfig = await homebridge.getPluginConfig( );
       //GLOBAL.pluginConfig.forEach( ( elem, index ) =>
       //{
-         //console.log( "GLOBAL.pluginConfig[ %s ] returned by homebridge: %s", index, elem );
+         //homebridge.request( "/consoleLog",  `GLOBAL.pluginConfig[ ${ index } ] returned by homebridge: ${ elem }` );
       //} );
 
       if ( !GLOBAL.pluginConfig.length )
@@ -449,8 +519,8 @@ function addGlobalQueueEntryItem( queueName, selectedQueueType )
          {
             $( '#accessorySelect' ).append( '<option value="' + accessory.name + '">'+ accessory.name + '</option>' );
          } );
-         console.log("GLOBAL.pluginConfig[0]=%s", GLOBAL.pluginConfig[0] );
-         console.log("GLOBAL.pluginConfig[0].queueTypes=%s", GLOBAL.pluginConfig[0].queueTypes );
+         homebridge.request( "/consoleLog", `GLOBAL.pluginConfig[0]=${ GLOBAL.pluginConfig[0] }` );
+         homebridge.request( "/consoleLog", `GLOBAL.pluginConfig[0].queueTypes=${ GLOBAL.pluginConfig[0].queueTypes }` );
 
          if ( GLOBAL.pluginConfig[0].queueTypes )
          {
@@ -479,38 +549,38 @@ function addGlobalQueueEntryItem( queueName, selectedQueueType )
 
 $( '.backButton' ).on( 'click', ( ) =>
 {
-   console.log(" main.js click .back");
+   homebridge.request( "/consoleLog", `main.js click .back` );
    backButtonPressed();
 } );
 
 $( '#startButton' ).on( 'click', ( ) =>
 {
-   console.log("Click startButton");
+   homebridge.request( "/consoleLog", `Click startButton` );
    startButtonPressed();
 });
 
 $( '.showConfigureGlobalsPageButton' ).on( 'click', ( ) =>
 {
-   console.log("Click showConfigureGlobalsPageButton");
+   homebridge.request( "/consoleLog", `Click showConfigureGlobalsPageButton` );
    showConfigureGlobalsPageButtonPressed();
 } );
 
 $( '.showQueueGlobalsPageButton' ).on( 'click', ( ) =>
 {
-   console.log("Click showQueueGlobalsPageButton");
+   homebridge.request( "/consoleLog", `Click showQueueGlobalsPageButton` );
    // unused
    showQueueGlobalsPageButtonPressed();
 } );
 $( '#updateGlobalsPageButton' ).on( 'click', ( ) =>
 {
-   console.log("Click updateGlobalsPageButton");
+   homebridge.request( "/consoleLog", `Click updateGlobalsPageButton` );
    // unused
    updateQueueGlobalsPageButtonPressed();
 } );
 
 $( '.configureNewQueuePageButton' ).on( 'click', ( ) =>
 {
-   console.log("Click configureNewQueuePageButton");
+   homebridge.request( "/consoleLog", `Click configureNewQueuePageButton` );
    configureNewQueuePageButtonPressed();
 } );
 
@@ -520,13 +590,13 @@ async function populateSelect( )
 {
    let select = document.getElementById( "accessoryType" );
 
-   console.log( "In Cmd4.js select" );
+   homebridge.request( "/consoleLog",  `In Cmd4.js select` );
    let CMD4_DEVICE_TYPE_ENUM = await homebridge.request( "/cmd4StaticVariable", "CMD4_DEVICE_TYPE_ENUM" );
    Object.keys( CMD4_DEVICE_TYPE_ENUM.properties ).forEach( key => {
       let defaultSelection = false;
       if ( key == CMD4_DEVICE_TYPE_ENUM.Switch )
       {
-         console.log( " Setting default selection to true at: %s", key );
+         homebridge.request( "/consoleLog",  `Setting default selection to true at: ${ key }` );
          defaultSelection = true;
       }
       select.appendChild( new Option( CMD4_DEVICE_TYPE_ENUM.properties[key].deviceName, CMD4_DEVICE_TYPE_ENUM.properties[key].deviceName, defaultSelection, defaultSelection ) );
@@ -557,7 +627,7 @@ $( '#editAccessory' ).on( 'click', ( ) =>
    if ( !accessory )
       return homebridge.toast.error( 'Can not find the accessory!', 'Error' );
 
-   console.log("EDIT ACCESSORY INCOMPLETE");
+   homebridge.request( "/consoleLog", `EDIT ACCESSORY INCOMPLETE` );
    createCustomSchema( accessory );
 
 

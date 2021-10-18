@@ -400,7 +400,7 @@ function addGlobalsDefinitionBlock( )
             wfs( `"type": "object",\n` );
             wfs( `"properties":\n` );
             wf( "+", `{\n` );
-               wfs( `"name":\n` );
+               wfs( `"queue":\n` );
                wf( "+", `{\n` );
                   wfs( `"type": "string",\n` );
                   wfs( `"required": true\n` );
@@ -714,11 +714,10 @@ function addFakeGatoLayout( )
    commaRequired = true;
 }
 
-
-function addRequiredCharacteristicLayout( )
+function addRequiredCharacteristicPerDeviceLayout( )
 {
 
-   wfs( `"$comment": "START OF REQUIRED CHARACTERISTIC LAYOUT BLOCK",\n` );
+   wfs( `"$comment": "START OF REQUIRED CHARACTERISTIC LAYOUT PER DEVICE BLOCK",\n` );
 
 
    // Over the Cmd4 Devices, create pre-definitions
@@ -773,6 +772,64 @@ function addRequiredCharacteristicLayout( )
    commaRequired = true;
 }
 
+function addOptionalCharacteristicPerDeviceLayout( )
+{
+
+   wfs( `"$comment": "START OF REQUIRED CHARACTERISTIC LAYOUT PER DEVICE BLOCK",\n` );
+
+
+   // Over the Cmd4 Devices, create pre-definitions
+   for ( let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++ )
+   {
+      let properties = CMD4_DEVICE_TYPE_ENUM.properties[ index ];
+      let deviceName = properties.deviceName;
+      let optionalCharacteristics = properties.optionalCharacteristics;
+      let optionalStarted  = false;
+
+      optionalCharacteristics.forEach( ( entry ) =>
+      {
+         // add the comma always next time.
+         if ( commaRequired == true )
+         {
+             w( `,\n` );
+            commaRequired = false;
+         }
+         let optionalCharacteristic = CMD4_ACC_TYPE_ENUM.accEnumIndexToLC( entry );
+         // add the comma always next time.
+         if ( optionalStarted == false )
+         {
+            optionalStarted = true;
+
+            wf( "+", `{\n` );
+               wfs( `"type": "fieldset",\n`);
+               wfs( `"expandable": true,\n`);
+               wfs( `"title": "${ deviceName } Optional Characteristics",\n`);
+               wfs( `"condition":\n` );
+               wf( "+", `{\n` );
+                  wfs( `"functionBody": "return ['${ deviceName }'].includes(model.type);"\n` );
+               wf( "-", `},\n` );
+               wfs( `"items":\n` );
+               wf( "+", `[\n` );
+                  wfs( `"${ optionalCharacteristic }"` );
+          } else
+          {
+                  w( `,"${ optionalCharacteristic }"` );
+          }
+      })
+      if ( optionalStarted == true )
+      {
+               w( `\n` );
+               wf( "-", `]\n` );
+             wf( "-", `}` );
+
+             commaRequired = true;
+      }
+
+   }
+
+   commaRequired = true;
+}
+
 
 function addQueueTypesLayout( )
 {
@@ -798,7 +855,7 @@ function addQueueTypesLayout( )
            wfs( `"items":\n` );
            wf( "+", `[\n` );
               wf( "+", `{\n` );
-                  wfs( `"key": "queueTypes[].name", "flex": "1 1 50px",\n` );
+                  wfs( `"key": "queueTypes[].queue", "flex": "1 1 50px",\n` );
                   wfs( `"notitle": false, "placeholder": "AQueueName"\n` );
                wf( "-", `},\n` );
                wf( "+", `{\n` );
@@ -841,7 +898,8 @@ function addLayout( )
       addGlobalsLayout( );
       addFakeGatoLayout( );
       addQueueTypesLayout( );
-      addRequiredCharacteristicLayout( );
+      addRequiredCharacteristicPerDeviceLayout( );
+      addOptionalCharacteristicPerDeviceLayout( );
       addStateCmdLayout( );
 
    // * End square bracket layout:
