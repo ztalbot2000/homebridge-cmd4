@@ -1,4 +1,4 @@
-/*global $, Option, homebridge, globalsSchema, schema*/
+/*global $, Option, homebridge, globalsSchema, accessorySchema*/
 
 
 
@@ -6,49 +6,49 @@
 const GLOBAL =
 {
    pluginConfig: false,
-   customSchema: false,
+   accessoryForm: false,
    globalsForm: false,
-   accessoryOptions: false,
    newGlobalQueueBeingAdded: false,
    constants: null
 };
 
 
-async function createCustomSchema( accessory )
+async function createAccessorySchema( accessory )
 {
    homebridge.request( "/consoleLog",  `In CreateCustomSchema for: ${ accessory.name } ${ accessory.displayName }` );
    homebridge.request( "/consoleLog",  `In CreateCustomSchema accessory: ${ accessory }` );
    //let settings = await homebridge.request( "/cmd4StaticVariable", "settings" );
 
-   GLOBAL.accessorySchema =
-   {
-      name: accessory.name,
-      displayName: accessory.displayName,
-      accessoryCharacteristics: accessory.characteristics,
-      polling: accessory.polling,
-      timeout: accessory.timeout,
-      queue: accessory.queue,
-      stateChangeResponseTime: accessory.stateChangeResponseTime,
-      stateCmdPrefix: accessory.stateCmdPrefix,
-      stateCmd: accessory.stateCmd,
-      stateCmdSuffix: accessory.stateCmdSuffix
-   };
 
-   GLOBAL.customSchema = homebridge.createForm( schema,
+   GLOBAL.accessoryForm = homebridge.createForm( accessorySchema,
    {
-      name: GLOBAL.pluginConfig[0].name,
-      debug: GLOBAL.pluginConfig[0].debug,
-      outputConstants: GLOBAL.pluginConfig[0].outputConstants,
-      statusMsg: GLOBAL.pluginConfig[0].statusMsg,
-      timeout: GLOBAL.pluginConfig[0].timeout,
-      stateChangeResponseTime: GLOBAL.pluginConfig[0].stateChangeResponseTime,
-      accessories: []
-   } );
+      "debug": GLOBAL.pluginConfig[0].debug,
+      "statusMsg": GLOBAL.pluginConfig[0].statusMsg,
+      "allowTLV8": GLOBAL.pluginConfig[0].allowTLV8,
+      "outputConstants": GLOBAL.pluginConfig[0].outputConstants,
+      "timeout": GLOBAL.pluginConfig[0].timeout,
+      "stateChangeResponseTime": GLOBAL.pluginConfig[0].stateChangeResponseTime,
+      "interval": GLOBAL.pluginConfig[0].interval,
+      "state_cmd_prefix": GLOBAL.pluginConfig[0].state_cmd_prefix,
+      "state_cmd": GLOBAL.pluginConfig[0].state_cmd,
+      "state_cmd_suffix": GLOBAL.pluginConfig[0].state_cmd_suffix,
+      "storage": GLOBAL.pluginConfig[0].storage,
+      "storagePath": GLOBAL.pluginConfig[0].storagePath,
+      "folder": GLOBAL.pluginConfig[0].folder,
+      "keyPath": GLOBAL.pluginConfig[0].keyPath,
+      "definitions": GLOBAL.pluginConfig[0].definitions,
+      "queueTypes": GLOBAL.pluginConfig[0].queueTypes,
+      "name": GLOBAL.pluginConfig[0].name,
+      "polling": GLOBAL.pluginConfig[0].polling
+      // need to update forms characteristics
 
-   GLOBAL.customSchema.onChange( async config =>
+
+   }, "MySubmitButton", "MyCancelButton" );
+
+
+   GLOBAL.accessoryForm.onChange( async config =>
    {
       homebridge.request( "/consoleLog",  `In customSchema.onChange config: ${ config }` );
-      //let settings = await homebridge.request( "/cmd4StaticVariable", "settings" );
 
       GLOBAL.pluginConfig[0].name = config.name;
       GLOBAL.pluginConfig[0].debug = config.debug;
@@ -103,17 +103,8 @@ function resetForm( )
    $( '#accessoryName' ).val( '' );
    $( '#accessoryCharacteristics' ).val( '' );
    $( '#accessoryPolling' ).val( '' );
-   $( '#authCode' ).val( '' );
-   $( '#authToken' ).val( '' );
-   $( '#authRefreshToken' ).val( '' );
-   $( '#authTokenType' ).val( '' );
-   $( '#authExpiresIn' ).val( '' );
-   $( '#authExpiresAt' ).val( '' );
 
-   $( '#codeInput' ).hide( );
-   $( '#tokenInput' ).hide( );
-
-   GLOBAL.accessorySchema = false;
+   GLOBAL.accessoryForm = false;
    GLOBAL.globalsForm = false;
 
    return;
@@ -292,6 +283,7 @@ async function showConfigureGlobalsPageButtonPressed( )
    homebridge.request( "/consoleLog", `main.js async function globals sending globals` );
    homebridge.request( "/showConfigureGlobalsPage" );
 
+   // js/globalsSchema.js is included by index.html
    GLOBAL.globalsForm = homebridge.createForm( globalsSchema,
    {
       "debug": GLOBAL.pluginConfig[0].debug,
@@ -301,9 +293,9 @@ async function showConfigureGlobalsPageButtonPressed( )
       "timeout": GLOBAL.pluginConfig[0].timeout,
       "stateChangeResponseTime": GLOBAL.pluginConfig[0].stateChangeResponseTime,
       "interval": GLOBAL.pluginConfig[0].interval,
-      "stateCmdPrefix": GLOBAL.pluginConfig[0].stateCmdPrefix,
-      "stateCmd": GLOBAL.pluginConfig[0].stateCmd,
-      "stateCmdSuffix": GLOBAL.pluginConfig[0].stateCmdSuffix,
+      "state_cmd_prefix": GLOBAL.pluginConfig[0].state_cmd_prefix,
+      "state_cmd": GLOBAL.pluginConfig[0].state_cmd,
+      "state_cmd_suffix": GLOBAL.pluginConfig[0].state_cmd_suffix,
       "storage": GLOBAL.pluginConfig[0].storage,
       "storagePath": GLOBAL.pluginConfig[0].storagePath,
       "folder": GLOBAL.pluginConfig[0].folder,
@@ -322,9 +314,9 @@ async function showConfigureGlobalsPageButtonPressed( )
       GLOBAL.pluginConfig[0].timeout = change.timeout ? change.timeout : undefined;
       GLOBAL.pluginConfig[0].stateCmdResponseTime = change.stateCmdResponseTime ? change.stateCmdResponseTime : undefined;
       GLOBAL.pluginConfig[0].interval = change.interval ? change.interval : undefined;
-      GLOBAL.pluginConfig[0].stateCmdPrefix = change.stateCmdPrefix ? change.stateCmdPrefix : undefined;
-      GLOBAL.pluginConfig[0].stateCmd= change.stateCmd ? change.stateCmd : undefined;
-      GLOBAL.pluginConfig[0].stateCmdSuffix = change.stateCmdSuffix ? change.stateCmdSuffix : undefined;
+      GLOBAL.pluginConfig[0].state_cmd_prefix = change.state_cmd_prefix ? change.state_cmd_prefix : undefined;
+      GLOBAL.pluginConfig[0].state_cmd = change.state_cmd ? change.state_cmd : undefined;
+      GLOBAL.pluginConfig[0].state_cmd_suffix = change.state_cmd_suffix ? change.state_cmd_suffix : undefined;
       GLOBAL.pluginConfig[0].storage = change.storage ? change.storage : undefined;
       GLOBAL.pluginConfig[0].storagePath = change.storagePath ? change.storagePath : undefined;
       GLOBAL.pluginConfig[0].folder = change.folder ? change.folder : undefined;
@@ -375,9 +367,9 @@ async function updateQueueGlobalsPageButtonPressed( )
       outputConstants: false,
       allowTLV8: GLOBAL.constants.DEFAULT_ALLOW_TLV8,
       statusMsg: GLOBAL.constants.DEFAULT_STATUS_MSG,
-      stateCmdPrefix: undefined,
-      stateCmd: undefined,
-      stateCmdSuffix: undefined,
+      state_cmd_prefix: undefined,
+      state_cmd: undefined,
+      state_cmd_suffix: undefined,
       timeout: undefined,
       stateChangeResponseTime: undefined,
       queueTypes: undefined
@@ -393,9 +385,9 @@ async function updateQueueGlobalsPageButtonPressed( )
    Cmd4Globals.allowTLV8 = ( $('#globalAllowTLV8').val() === "on") ? true : false;
    Cmd4Globals.statusMsg = ( $('#globalStatusMsg').val() === "on") ? true : false;
    Cmd4Globals.timeout = ( $('#globalTimeout').val() === "" ) ? undefined : $('#globalTimeout').val();
-   Cmd4Globals.stateCmdPrefix = ( $('#globalStateCmdPrefix').val() === "" ) ? undefined : $('#globalStateCmdPrefix').val();
-   Cmd4Globals.stateCmd = ( $('#globalStateCmd').val() === "" ) ? undefined : $('#globalStateCmd').val();
-   Cmd4Globals.stateCmdSuffix = ( $('#globalStateCmdSuffix').val() === "" ) ? undefined : $('#globalStateCmdSuffix').val();
+   Cmd4Globals.state_cmd_prefix = ( $('#globalState_cmd_prefix').val() === "" ) ? undefined : $('#globalState_cmd_prefix').val();
+   Cmd4Globals.state_cmd = ( $('#globalState_cmd').val() === "" ) ? undefined : $('#globalState_cmd').val();
+   Cmd4Globals.state_cmd_suffix = ( $('#globalState_cmd_suffix').val() === "" ) ? undefined : $('#globalState_cmd_suffix').val();
 
    // send information to server
    homebridge.request( "/updateCmd4Globals", Cmd4Globals );
@@ -632,7 +624,7 @@ $( '#editAccessory' ).on( 'click', ( ) =>
       return homebridge.toast.error( 'Can not find the accessory!', 'Error' );
 
    homebridge.request( "/consoleLog", `EDIT ACCESSORY INCOMPLETE` );
-   createCustomSchema( accessory );
+   createAccessorySchema( accessory );
 
 
 } );

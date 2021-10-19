@@ -243,26 +243,6 @@ function addPollingDefinitionBlock( )
    commaRequired = true;
 }
 
-function addStateCmdDefinitionBlock( )
-{
-   // add the comma always next time.
-   if ( commaRequired == true )
-      w( `,\n` );
-
-   wfs( `"$comment": "START OF STATE_CMD DEFINITION",\n` );
-   // *** Begin bracket State_cmd designation definition
-   wfs( `"state_cmd":\n` );
-   wf( "+", `{\n` );
-      wfs( `"$id": "#state_cmd",\n` );
-      wfs( `"title": "${ constants.STATE_CMD }",\n` );
-      wfs( `"type": "string",\n` );
-      wfs( `"required": false\n` );
-   // *** End bracket State_cmd designation definition
-   wf( "-", `}` );
-
-   commaRequired = true;
-}
-
 function addGlobalsDefinitionBlock( )
 {
    // add the comma always next time.
@@ -310,9 +290,9 @@ function addGlobalsDefinitionBlock( )
          wfs( `"minimum": 3,\n` );
          wfs( `"placeholder": 3\n` );
       wf( "-", `},\n` );
-      wfs( `"stateCmdResponseTime":\n` );
+      wfs( `"stateChangeResponseTime":\n` );
       wf( "+", `{\n` );
-         wfs( `"title": "stateCmdResponseTime",\n` );
+         wfs( `"title": "stateChangeResponseTime",\n` );
          wfs( `"type": "integer",\n` );
          wfs( `"description": "The time for the accessories to respond (msec).",\n` );
          wfs( `"required": false,\n` );
@@ -327,26 +307,26 @@ function addGlobalsDefinitionBlock( )
          wfs( `"minimum": 3,\n` );
          wfs( `"placeholder": 60\n` );
       wf( "-", `},\n` );
-      wfs( `"stateCmdPrefix":\n` );
+      wfs( `"state_cmd_prefix":\n` );
       wf( "+", `{\n` );
-         wfs( `"title": "stateCmdPrefix",\n` );
+         wfs( `"title": "state_cmd_prefix",\n` );
          wfs( `"type": "string",\n` );
-         wfs( `"description": "The global stateCmd prefix for all accessories.",\n` );
+         wfs( `"description": "The global state_cmd prefix for all accessories.",\n` );
          wfs( `"required": false\n` );
       wf( "-", `},\n` );
-      wfs( `"stateCmd":\n` );
+      wfs( `"state_cmd":\n` );
       wf( "+", `{\n` );
-         wfs( `"title": "stateCmd",\n` );
+         wfs( `"title": "state_cmd",\n` );
          wfs( `"type": "string",\n` );
-         wfs( `"description": "The global stateCmd for all accessories.",\n` );
+         wfs( `"description": "The global state_cmd for all accessories.",\n` );
          wfs( `"placeholder": ".homebridge/cmd4Scripts/",\n` );
          wfs( `"required": false\n` );
       wf( "-", `},\n` );
-      wfs( `"stateCmdSuffix":\n` );
+      wfs( `"state_cmd_suffix":\n` );
       wf( "+", `{\n` );
-         wfs( `"title": "stateCmdSuffix",\n` );
+         wfs( `"title": "state_cmd_suffix",\n` );
          wfs( `"type": "string",\n` );
-         wfs( `"description": "The global stateCmd suffix for all accessories.",\n` );
+         wfs( `"description": "The global state_cmd suffix for all accessories.",\n` );
          wfs( `"required": false\n` );
       wf( "-", `},\n` );
       wfs( `"storage":\n` );
@@ -463,7 +443,7 @@ function addCharacteristicDefinitionBlock( )
                wfs( `"type": "integer",\n` );
                break;
             case hapFormats.FLOAT:
-               wfs( `"type": "float",\n` );
+               wfs( `"type": "number",\n` );
                break;
             case hapFormats.STRING:
                wfs( `"type": "string",\n` );
@@ -475,9 +455,9 @@ function addCharacteristicDefinitionBlock( )
                break;
          }
          if ( props.minValue != undefined )
-            wfs( `"minimum": "${ props.minValue }",\n` );
+            wfs( `"minimum": ${ props.minValue },\n` );
          if ( props.maxValue != undefined )
-            wfs( `"maximum": "${ props.maxValue }",\n` );
+            wfs( `"maximum": ${ props.maxValue },\n` );
 
          wfs( `"description": "${ description }"` );
 
@@ -540,7 +520,6 @@ function addDefinitionsBlock( )
       addCharacteristicDefinitionBlock( );
       addAccessoryTypeDefinitionBlock( );
       addPollingDefinitionBlock( );
-      addStateCmdDefinitionBlock( );
 
    // ** End bracket definitions
    w( `\n` );
@@ -573,7 +552,6 @@ function addAccessorySchemaBlock( )
 
       wfs( `"folder": { "$ref": "#/$definitions/folder"},\n` );
       wfs( `"storage": { "$ref": "#/$definitions/storage"},\n` );
-      wfs( `"fs": { "$ref": "#/$definitions/fs"},\n` );
       wfs( `"storagePath": { "$ref": "#/$definitions/storagePath"},\n` );
       wfs( `"keyPath": { "$ref": "#/$definitions/keyPath"},\n` );
 
@@ -587,9 +565,9 @@ function addAccessorySchemaBlock( )
       }
 
       wfs( `"${ constants.POLLING }": { "$ref": "#/$definitions/polling"},\n` );
-      wfs( `"stateCmdPrefix": { "$ref": "#/$definitions/stateCmdPrefix"},\n` );
+      wfs( `"${ constants.STATE_CMD_PREFIX }": { "$ref": "#/$definitions/state_cmd_prefix"},\n` );
       wfs( `"${ constants.STATE_CMD }": { "$ref": "#/$definitions/state_cmd"},\n` );
-      wfs( `"stateCmdSuffix": { "$ref": "#/$definitions/stateCmdSuffix"}\n` );
+      wfs( `"${ constants.STATE_CMD_SUFFIX }": { "$ref": "#/$definitions/state_cmd_suffix"}\n` );
    // *** End bracket properties:
    wf( "-", `}\n` );
 
@@ -641,7 +619,7 @@ function addGlobalsLayout( )
       wfs( `"title": "Accessory Options",\n` );
       wfs( `"type": "fieldset",\n` );
       wfs( `"expandable": true,\n` );
-      wf( "+", `"items": {\n` );
+      wf( "+", `"items": [\n` );
 //    wfs( `"items":\n` );
 //    wf( "+", `[\n` );
          wfs( `"debug",\n` );
@@ -665,14 +643,14 @@ function addStateCmdLayout( )
       w( `,\n` );
 
    wf( "+", `{\n` );
-      wfs( `"title": "StateCmd Options",\n` );
+      wfs( `"title": "state_cmd Options",\n` );
       wfs( `"type": "fieldset",\n` );
       wfs( `"expandable": true,\n` );
       wfs( `"items":\n` );
       wf( "+", `[\n` );
-         wfs( `"stateCmdPrefix",\n` );
-         wfs( `"stateCmd",\n` );
-         wfs( `"stateCmdSuffix"\n` );
+         wfs( `"state_cmd_prefix",\n` );
+         wfs( `"state_cmd",\n` );
+         wfs( `"state_cmd_suffix"\n` );
       wf( "-", `]\n` );
    wf( "-", `}` );
 

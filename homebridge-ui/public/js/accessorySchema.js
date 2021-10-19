@@ -1,3 +1,6 @@
+/*eslint no-unused-vars: ["error", { "varsIgnorePattern": "accessorySchema" }]*/
+
+const accessorySchema =
 {
    "pluginAlias": "Cmd4",
    "pluginType": "platform",
@@ -2515,13 +2518,9 @@
                      "title": "queue",
                      "type": "string",
                      "required": "false"
-                  }               }            }         },
-         "state_cmd":
-         {
-            "$id": "#state_cmd",
-            "title": "state_cmd",
-            "type": "string",
-            "required": false
+                  }
+               }
+            }
          }
       },
       "properties":
