@@ -313,10 +313,11 @@ async function showConfigureGlobalsPageButtonPressed( )
    }, "MySubmitButton", "MyCancelButton" );
 
    GLOBAL.globalsForm.onChange(async change => {
-      homebridge.request( "/consoleLog", `main.js showConfigureGlobalsPage onChange` );
+      homebridge.request( "/consoleLog", `main.js showConfigureGlobalsPage onChange before change.allowTLV8: ${ change.allowTLV8 }` );
       GLOBAL.pluginConfig[0].debug = ( change.debug ) ? change.debug : undefined;
       GLOBAL.pluginConfig[0].statusMsg = change.statusMsg ? change.statusMsg : undefined;
       GLOBAL.pluginConfig[0].allowTLV8 = change.allowTLV8 ? change.allowTLV8 : undefined;
+      homebridge.request( "/consoleLog", `main.js showConfigureGlobalsPage onChange after GLOBAL.allowTLV8: ${ GLOBAL.pluginConfig[0].allowTLV8 }` );
       GLOBAL.pluginConfig[0].outputConstants = change.outputConstants ? change.outputConstants : undefined;
       GLOBAL.pluginConfig[0].timeout = change.timeout ? change.timeout : undefined;
       GLOBAL.pluginConfig[0].stateCmdResponseTime = change.stateCmdResponseTime ? change.stateCmdResponseTime : undefined;
@@ -330,19 +331,22 @@ async function showConfigureGlobalsPageButtonPressed( )
       GLOBAL.pluginConfig[0].keyPath = change.keyPath ? change.keyPath : undefined;
       GLOBAL.pluginConfig[0].definitions = change.definitions ? change.definitions : undefined;
       GLOBAL.pluginConfig[0].queueTypes = change.queueTypes ? change.queueTypes : undefined;
+
+      try {
+         homebridge.request( "/consoleLog",  `await homebridge.updatePlugin` );
+         await homebridge.updatePluginConfig(GLOBAL.pluginConfig);
+       } catch(err) {
+         homebridge.toast.error(err.message, 'Error');
+       }
    });
 
    // watch for submit button click events
    GLOBAL.globalsForm.onSubmit( (form) => {
       homebridge.request( "/consoleLog",  `submit button pressed for form: ${ form }` );
+      homebridge.savePluginConfig();
+     homebridge.toast.success( ' Globals Updated!', 'Success' );
     });
 
-   try {
-      homebridge.request( "/consoleLog",  `await homebridge.updatePlugin` );
-      await homebridge.updatePluginConfig(GLOBAL.pluginConfig);
-    } catch(err) {
-      homebridge.toast.error(err.message, 'Error');
-    }
 }
 /* not used yet
 async function cancelButtonPressed( )
