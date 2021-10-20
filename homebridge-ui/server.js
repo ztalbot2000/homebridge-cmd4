@@ -13,9 +13,7 @@ const cmd4Constants = require( "../cmd4Constants" );
 
 // These would already be initialized by index.js
 let CMD4_ACC_TYPE_ENUM = require( "../lib/CMD4_ACC_TYPE_ENUM" );
-CMD4_ACC_TYPE_ENUM.init( );
 let CMD4_DEVICE_TYPE_ENUM = require( "../lib/CMD4_DEVICE_TYPE_ENUM" );
-CMD4_DEVICE_TYPE_ENUM.init( );
 
 //orig const { AuthorizationCode } = require('simple-oauth2');
 
@@ -25,6 +23,10 @@ class UiServer extends HomebridgePluginUiServer
    {
 
       super();
+      CMD4_ACC_TYPE_ENUM.init( );
+      CMD4_DEVICE_TYPE_ENUM.init( );
+
+      console.log("CMD4_DEVICE_TYPE_ENUM=%s", CMD4_DEVICE_TYPE_ENUM);
       console.log("settings=%s", settings.PLUGIN_NAME);
 
 
@@ -222,8 +224,8 @@ class UiServer extends HomebridgePluginUiServer
    // A method for main.js to access Static Cmd4 variables
    async cmd4StaticVariable( variableString )
    {
-      //console.log("server.js for %s returning: %s", variableString, eval(variableString));
       console.log("server.js for %s", variableString );
+      //console.log("server.js returning: %s", eval(variableString));
       return eval( variableString );
    }
    async consoleLog( msg )

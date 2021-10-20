@@ -584,28 +584,44 @@ $(document.body).on('click','.deleteGlobalQueueButton', deleteGlobalQueueButtonP
 
 async function populateSelect( )
 {
-   let select = document.getElementById( "accessoryType" );
+   homebridge.request( "/consoleLog",  `In populate select` );
 
-   homebridge.request( "/consoleLog",  `In Cmd4.js select` );
-   let CMD4_DEVICE_TYPE_ENUM = await homebridge.request( "/cmd4StaticVariable", "CMD4_DEVICE_TYPE_ENUM" );
-   Object.keys( CMD4_DEVICE_TYPE_ENUM.properties ).forEach( key => {
-      let defaultSelection = false;
-      if ( key == CMD4_DEVICE_TYPE_ENUM.Switch )
-      {
-         homebridge.request( "/consoleLog",  `Setting default selection to true at: ${ key }` );
-         defaultSelection = true;
-      }
-      select.appendChild( new Option( CMD4_DEVICE_TYPE_ENUM.properties[key].deviceName, CMD4_DEVICE_TYPE_ENUM.properties[key].deviceName, defaultSelection, defaultSelection ) );
-   } );
+   let select = document.getElementById( "accessoryTypeSelect" );
+
+   let length = $('#accessoryTypeSelect' ).children( 'option' ).length;
+
+   // Only add them once
+   if (length == 0 )
+   {
+      homebridge.request( "/consoleLog", `length2 number of items=${ length2 }` );
+
+      // This must be in an async function or you will just get the promise
+      let CMD4_DEVICE_TYPE_ENUM = await homebridge.request( "/cmd4StaticVariable", "CMD4_DEVICE_TYPE_ENUM" );
+
+      Object.keys( CMD4_DEVICE_TYPE_ENUM.properties ).forEach( ( key ) => {
+         let defaultSelection = false;
+         if ( key == CMD4_DEVICE_TYPE_ENUM.Switch )
+         {
+            homebridge.request( "/consoleLog",  `Setting default selection to true at: ${ key }` );
+            defaultSelection = true;
+         }
+         let deviceName = CMD4_DEVICE_TYPE_ENUM.properties[key].deviceName;
+         homebridge.request( "/consoleLog", `deviceName = ${ deviceName }` );
+
+         select.appendChild( new Option( deviceName, deviceName, defaultSelection, defaultSelection ) );
+      } );
+   }
+
 }
 
-$( '#addAccessory, #Xstart' ).on( 'click', ( ) =>
+//$( '#addAccessory, #start' ).on( 'click', ( ) =>
+$( '#addAccessory' ).on( 'click', ( ) =>
 {
-
-   resetUI( );
 
    populateSelect( );
 
+   let length2 = $('#accessoryType' ).children( 'option' ).length;
+   homebridge.request( "/consoleLog", `length1 number of items=${ length2 }` );
 
    //let activeContent = $( '#notConfigured' ).css( 'display' ) !== 'none' ? $( '#notConfigured' ) : $( '#isConfigured' );
 
