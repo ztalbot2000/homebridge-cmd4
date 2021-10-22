@@ -1,20 +1,69 @@
 #!/bin/bash
 
-file=$1;
+# fun color stuff
+TRED=$(tput setaf 1)
+TGRN=$(tput setaf 2)
+TNRM=$(tput sgr0)
 
-if [ ! -f "$file" ]; then
-   echo "no such file $file to lint"
+# The full file and path passed in to lint
+fullFileName=$1;
+
+# Clear the screen of any previous errors
+clear;
+
+PASS( )
+{
+   echo "${TGRN}"
+   echo "                    __________  _____    _________ _________ "
+   echo "                    \______   \/  _  \  /   _____//   _____/ "
+   echo "                     |     ___/  /_\  \ \_____  \ \_____  \ "
+   echo "                     |    |  /    |    \/        \/        \ "
+   echo "                     |____|  \____|__  /_______  /_______  / "
+   echo "                                     \/        \/        \/ "
+   echo "${TNRM}"
+
+}
+FAIL( )
+{
+   echo "${TRED}"
+   echo "                        ________________  .___.____ "
+   echo "                        \_   _____/  _  \ |   |    | "
+   echo "                         |    __)/  /_\  \|   |    | "
+   echo "                         |     \/    |    \   |    |___ "
+   echo "                         \___  /\____|__  /___|_______ \ "
+   echo "                             \/         \/            \/ "
+   echo "${TNRM}"
+}
+
+# Make sure the file to lint exists
+if [ ! -f "${fullFileName}" ]; then
+   echo "no such file $fullFileName to lint"
    exit 1;
 fi
-result=$(npm run lint "$file" 2>&1);
+
+# Get the output of the lint command and its return code
+result=$(npm run lint "${fullFileName}" 2>&1);
 rc=$?
 
-if [ "$rc" -ne "0" ]; then
+# Check the return code for pass/fail
+if [ "${rc}" == "0" ]; then
+
+   PASS
+
+   # echo "No Errors found at this time";
+
+else
+
+   FAIL
+
    # Notifications are a pain as they hang around in the background
    # alerter -message "$result" -mute
-   if [ -x osascript ]; then
+   # Instead use osascript if we have it.
+   if [ -x $( which osascript ) ]; then
       osascript -e "tell app \"Terminal\" to display dialog \"${result//\"/}\""
    else
+      // The characters around result stop malicious code
+      // from being injected into our Terminal.
       echo "tell app \"Terminal\" to display dialog \"${result//\"/}\""
    fi
 fi
