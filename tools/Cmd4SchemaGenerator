@@ -1,77 +1,69 @@
 #!/usr/bin/env node
 
+
 // Cmd4 Constants and Settings
 const constants = require( "../cmd4Constants" );
 const settings = require( "../cmd4Settings" );
-
-
-const which = require('which');
 const path = require( "path" );
+let fs = require( "fs" );
 
-// Get the real path of homebridge instead of a dev dependancy,
-// which caused issues if you forget to update dependancies but
-// upgrade homebridge.
-const homebridgePath = which.sync( 'homebridge', { nothrow: true } )
+const CMD4_SCHEMA_FILE = "./config.schema.json";
+const CMD4_CONFIG_FILE = "./Extras/config.json";
+//const CMD4_SCHEMA_FILE = "/usr/local/lib/node_modules/homebridge-cmd4/config.schema.json";
 
 const schemaVersionSupport = 6;
+let _api;
+let hapFormats;
 
-let apiPath;
-let HomebridgeAPI;
-if ( homebridgePath )
-{
-   let dirname = path.dirname( homebridgePath );
-
-   console.log( "Found homebridge in path %s", dirname );
-   apiPath = `${ dirname }/../lib/node_modules/homebridge/lib/api`;
-   HomebridgeAPI = require( apiPath ).HomebridgeAPI;
-
-   if ( ! HomebridgeAPI )
-   {
-      console.log( "homebridgeAPI not available !!!" );
-      process.exit( 10 );
-   }
-
-} else
-{
-   console.log( "homebridge not found !!!" );
-   process.exit( 10 );
-}
-console.log( "Found api in %s", apiPath );
-
-let _api = new HomebridgeAPI( ); // object we feed to Plugins
-let hapFormats = _api.hap.Formats;
 
 // These would be the uninitialized values.
 let CMD4_ACC_TYPE_ENUM = require( '../lib/CMD4_ACC_TYPE_ENUM' );
 let CMD4_DEVICE_TYPE_ENUM = require( '../lib/CMD4_DEVICE_TYPE_ENUM' );
 
-// Init the library for all to use
-CMD4_ACC_TYPE_ENUM.init( _api.hap );
-CMD4_DEVICE_TYPE_ENUM.init( _api.hap, _api.hap.Service );
-
-
-
-// Fan, Faucet, Switch, TELEVISION
-//let devices = [ 18, 21, 51, 54 ];
-// Fan
-// let devices = [ 18 ];
-
-// File System utilities
-let fs = require( "fs" );
-
+// Formatting stuff
 var fid;
-
 var bracketLevel=0;
 const INDENT = 3;
-var commaRequired = false;
+var commaRequired_g = false;
 var validatorStates = { REQUIRED: 0, COMMA_HANGING: 1, COLON_HANGINg: 2 };
-
 var validator = validatorStates.NOT_REQUIED;
 
-// For now, put in /tmp
-//let CMD4_SCHEMA_FILE = "../config.schema.json";
-let CMD4_SCHEMA_FILE = "/usr/local/lib/node_modules/homebridge-cmd4/config.schema.json";
 
+function getHomebridgeVars( )
+{
+   const which = require('which');
+   let apiPath;
+   let HomebridgeAPI;
+
+   // Get the real path of homebridge instead of a dev dependancy,
+   // which caused issues if you forget to update dependancies but
+   // upgrade homebridge.
+   const homebridgePath = which.sync( 'homebridge', { nothrow: true } )
+
+   if ( homebridgePath )
+   {
+      let dirname = path.dirname( homebridgePath );
+
+      console.log( "Found homebridge in path %s", dirname );
+      apiPath = `${ dirname }/../lib/node_modules/homebridge/lib/api`;
+      HomebridgeAPI = require( apiPath ).HomebridgeAPI;
+
+      if ( ! HomebridgeAPI )
+      {
+         console.log( "homebridgeAPI not available !!!" );
+         process.exit( 10 );
+      }
+
+   } else
+   {
+      console.log( "homebridge not found !!!" );
+      process.exit( 10 );
+   }
+   console.log( "Found api in %s", apiPath );
+
+   _api = new HomebridgeAPI( ); // object we feed to Plugins
+   hapFormats = _api.hap.Formats;
+}
 
 function createSchemaFile( )
 {
@@ -87,12 +79,34 @@ function createSchemaFile( )
       process.exit( err );
    });
 
-   commaRequired = false;
+   commaRequired_g = false;
    addSchemaHeader( );
 
    startSchema( );
 
-   addDefinitionsBlock( );
+   // add the comma always next time.
+   if ( commaRequired_g == true )
+      w( `,\n` );
+
+   // ** Begin bracket definitions
+   wfs( `"$definitions":\n` );
+   wf( "+", `{\n` );
+
+      commaRequired_g = false;
+      addGlobalsDefinitionBlock( );
+      addCharacteristicDefinitionBlock( );
+      addAccessoryTypeDefinitionBlock( );
+      addSubTypeDefinitionBlock( );
+      addConfiguredNameDefinitionBlock( );
+      addDisplayNameDefinitionBlock( );
+      addPollingDefinitionBlock( );
+      addAccessoryDefinitionBlock( );
+
+   // ** End bracket definitions
+   w( `\n` );
+   wf( "-", `}` );
+
+   commaRequired_g = true;
 
    addAccessorySchemaBlock( );
 
@@ -102,14 +116,30 @@ function createSchemaFile( )
 
    closeSchemaDocument( );
 
+   // After it is closed, check if it was properly aligned
+   if ( bracketLevel == 0)
+   {
+      console.log( `Yahoo !  All lined up.` );
+   } else
+   {
+      console.log( `Booo ... alignment failed: [ ${ Number(bracketLevel > 0) + bracketLevel } ]` );
+   }
+   if (  validator == validatorStates.REQUIRED )
+   {
+      console.log( `Yahoo !  No hanging commas.` );
+   } else
+   {
+      console.log( `Booo ... comma left hanging ${ validator }` );
+   }
 }
+
 //
 // Write the beginning blurb
 //
 function  addSchemaHeader( )
 {
    // add the comma always next time.
-   if ( commaRequired == true )
+   if ( commaRequired_g == true )
       w( `,\n` );
 
    // Begin bracket JSON
@@ -133,13 +163,13 @@ function  addSchemaHeader( )
    wfs( `"singular": false,` );
    wfs( `"customUi": true` );
 
-   commaRequired = true;
+   commaRequired_g = true;
 }
 
 function startSchema( )
 {
    // add the comma always next time.
-   if ( commaRequired == true )
+   if ( commaRequired_g == true )
       w( `,\n` );
 
    // * Begin bracket Schema
@@ -147,16 +177,80 @@ function startSchema( )
    wf( "+", `{\n` );
    //wfs ( `"schema": "https://json-schema.org/draft/2020-12/schema",\n`);
 
-   commaRequired = false;
+   commaRequired_g = false;
 }
+
+function addSubTypeDefinitionBlock( )
+{
+   // add the comma always next time.
+   if ( commaRequired_g == true )
+      w( `,\n` );
+
+   wfs( `"$comment": "START OF subType DEFINITION",\n` );
+   // *** Begin bracket subType designation definition
+   wfs( `"subType":\n` );
+   wf( "+", `{\n` );
+      wfs( `"$id": "#subType",\n` );
+      wfs( `"type": "string",\n` );
+      wfs( `"title": "subType",\n` );
+      wfs( `"description": "The accessories subType.",\n` );
+      wfs( `"placeholder": "A secondary name",\n` );
+      wfs( `"required": false\n` );
+   wf( "-", `}`, "end bracket subType designation" );
+
+   commaRequired_g = false;
+}
+
+function addConfiguredNameDefinitionBlock( )
+{
+   // add the comma always next time.
+   if ( commaRequired_g == true )
+      w( `,\n` );
+
+   wfs( `"$comment": "START OF configuredName DEFINITION",\n` );
+   // *** Begin bracket configuredName designation definition
+   wfs( `"configuredName":\n` );
+   wf( "+", `{\n` );
+      wfs( `"$id": "#configuredName",\n` );
+      wfs( `"type": "string",\n` );
+      wfs( `"title": "configuredName",\n` );
+      wfs( `"description": "The accessories configured name.",\n` );
+      wfs( `"placeholder": "My_Device",\n` );
+      wfs( `"required": false\n` );
+   wf( "-", `}`, "end bracket configuredName designation" );
+
+   commaRequired_g = false;
+}
+
+function addDisplayNameDefinitionBlock( )
+{
+   // add the comma always next time.
+   if ( commaRequired_g == true )
+      w( `,\n` );
+
+   wfs( `"$comment": "START OF displayName DEFINITION",\n` );
+   // *** Begin bracket displayName designation definition
+   wfs( `"displayName":\n` );
+   wf( "+", `{\n` );
+      wfs( `"$id": "#displayName",\n` );
+      wfs( `"type": "string",\n` );
+      wfs( `"title": "displayName",\n` );
+      wfs( `"description": "The accessories display name.",\n` );
+      wfs( `"placeholder": "My_Device",\n` );
+      wfs( `"required": true\n` );
+   wf( "-", `}`, "end bracket displayName designation" );
+
+   commaRequired_g = false;
+}
+
 
 function addAccessoryTypeDefinitionBlock( )
 {
    // add the comma always next time.
-   if ( commaRequired == true )
+   if ( commaRequired_g == true )
       w( `,\n` );
 
-   wfs( `"$comment": "START OF TYPE DEFINITION",\n` );
+   wfs( `"$comment": "START OF type DEFINITION",\n` );
    // *** Begin bracket Type designation definition
    wfs( `"type":\n` );
    wf( "+", `{\n` );
@@ -168,7 +262,7 @@ function addAccessoryTypeDefinitionBlock( )
       // **** Begin square bracket oneOf for "type"
       wfs( `"oneOf":\n` );
       wf( "+", `[\n` );
-         //wfs( `{ "title": "Switch", "enum": ["Switch"] },\n` );
+         //Example: { "title": "Switch", "enum": ["Switch"] },
 
          // Over the Cmd4 Devices
          let deviceCommaRequired = false;
@@ -189,16 +283,16 @@ function addAccessoryTypeDefinitionBlock( )
       wfs( `"required": true\n` );
    wf( "-", `}`, "end bracket Type designation" );
 
-   commaRequired = true;
+   commaRequired_g = true;
 }
 
 function addPollingDefinitionBlock( )
 {
    // add the comma always next time.
-   if ( commaRequired == true )
+   if ( commaRequired_g == true )
       w( `,\n` );
 
-   wfs( `"$comment": "START OF POLLING DEFINITION",\n` );
+   wfs( `"$comment": "START OF polling DEFINITION",\n` );
    // *** Begin bracket Polling designation definition
    wfs( `"polling":\n` );
    wf( "+", `{\n` );
@@ -234,19 +328,80 @@ function addPollingDefinitionBlock( )
                wfs( `"title": "queue",\n` );
                wfs( `"type": "string",\n` );
                wfs( `"required": "false"\n` );
-            wf( "-", `}` );
-         wf( "-", `}` );
-      wf( "-", `}` );
+            wf( "-", `}\n` );
+         wf( "-", `}\n` );
+      wf( "-", `}\n` );
    // *** End bracket Polling designation definition
    wf( "-", `}` );
 
-   commaRequired = true;
+   commaRequired_g = true;
 }
+
+function addAccessoryDefinitionBlock( )
+{
+   // add the comma always next time.
+   if ( commaRequired_g == true )
+      w( `,\n` );
+
+   wfs( `"$comment": "START OF accessories DEFINITION",\n` );
+
+   // ** Begin bracket accessories definition block
+   wf( "+", `"accessories": {\n` );
+      wfs( `"$id": "#accessories",\n` );
+      wfs( `"title": "Accessories",\n` );
+      wfs( `"type": "array",\n` );
+      wf( "+", `"items": {\n` );
+
+         wfs( `"${ constants.TYPE }": { "$ref": "#/$definitions/type"},\n` );
+
+         // All the globals that can be defined at the Accessory level
+         wfs( `"debug": { "$ref": "#/$definitions/debug"},\n` );
+         wfs( `"allowTLV8": { "$ref": "#/$definitions/allowTLV8"},\n` );
+         wfs( `"outputConstants": { "$ref": "#/$definitions/outputConstants"},\n` );
+         wfs( `"statusMsg": { "$ref": "#/$definitions/statusMsg"},\n` );
+         wfs( `"interval": { "$ref": "#/$definitions/interval"},\n` );
+         wfs( `"timeout": { "$ref": "#/$definitions/timeout"},\n` );
+         wfs( `"stateChangeResponseTime": { "$ref": "#/$definitions/stateChangeResponseTime"},\n` );
+         wfs( `"queueTypes": { "$ref": "#/$definitions/queueTypes"},\n` );
+
+         wfs( `"folder": { "$ref": "#/$definitions/folder"},\n` );
+         wfs( `"storage": { "$ref": "#/$definitions/storage"},\n` );
+         wfs( `"storagePath": { "$ref": "#/$definitions/storagePath"},\n` );
+         wfs( `"keyPath": { "$ref": "#/$definitions/keyPath"},\n` );
+
+         wfs( `"type": { "$ref": "#/$definitions/type"},\n` );
+         wfs( `"name": { "$ref": "#/$definitions/name"},\n` );
+         wfs( `"displayName": { "$ref": "#/$definitions/displayName"},\n` );
+         wfs( `"configuredName": { "$ref": "#/$definitions/configuredName"},\n` );
+         wfs( `"subType": { "$ref": "#/$definitions/subType"},\n` );
+         wfs( `"category": { "$ref": "#/$definitions/category"},\n` );
+
+         // All the characteristics
+         for ( let i=0; i < CMD4_ACC_TYPE_ENUM.EOL; i ++)
+         {
+            let properties = CMD4_ACC_TYPE_ENUM.properties[ i ];
+            let characteristicString = properties.sche;
+
+            wfs( `"${ characteristicString }": { "$ref": "#/$definitions/${ characteristicString }"},\n` );
+         }
+
+         wfs( `"${ constants.POLLING }": { "$ref": "#/$definitions/polling"},\n` );
+         wfs( `"${ constants.STATE_CMD_PREFIX }": { "$ref": "#/$definitions/state_cmd_prefix"},\n` );
+         wfs( `"${ constants.STATE_CMD }": { "$ref": "#/$definitions/state_cmd"},\n` );
+         wfs( `"${ constants.STATE_CMD_SUFFIX }": { "$ref": "#/$definitions/state_cmd_suffix"}\n` );
+      // *** End bracket items:
+      wf( "-", `}\n` );
+   // *** End bracket accessories:
+   wf( "-", `}` );
+
+   commaRequired_g = true;
+}
+
 
 function addGlobalsDefinitionBlock( )
 {
    // add the comma always next time.
-   if ( commaRequired == true )
+   if ( commaRequired_g == true )
       w( `,\n` );
 
       wfs( `"debug":\n` );
@@ -399,14 +554,14 @@ function addGlobalsDefinitionBlock( )
    wf( "-", `}` );
 
 
-   commaRequired = true;
+   commaRequired_g = true;
 }
 
 
 function addCharacteristicDefinitionBlock( )
 {
    // add the comma always next time.
-   if ( commaRequired == true )
+   if ( commaRequired_g == true )
       w( `,\n` );
 
    wfs( `"$comment": "START OF CHARACTERISTIC DEFINITIONS",\n` );
@@ -507,38 +662,14 @@ function addCharacteristicDefinitionBlock( )
       characteristicCommaRequired = true;
    }
 
-   commaRequired = true;
-}
-
-
-function addDefinitionsBlock( )
-{
-   // add the comma always next time.
-   if ( commaRequired == true )
-      w( `,\n` );
-
-   // ** Begin bracket definitions
-   wfs( `"$definitions":\n` );
-   wf( "+", `{\n` );
-
-      commaRequired = false;
-      addGlobalsDefinitionBlock( );
-      addCharacteristicDefinitionBlock( );
-      addAccessoryTypeDefinitionBlock( );
-      addPollingDefinitionBlock( );
-
-   // ** End bracket definitions
-   w( `\n` );
-   wf( "-", `}` );
-
-   commaRequired = true;
+   commaRequired_g = true;
 }
 
 
 function addAccessorySchemaBlock( )
 {
    // add the comma always next time.
-   if ( commaRequired == true )
+   if ( commaRequired_g == true )
       w( `,\n` );
 
    // ** Begin bracket properties
@@ -577,7 +708,7 @@ function addAccessorySchemaBlock( )
    // *** End bracket properties:
    wf( "-", `}\n` );
 
-   commaRequired = true;
+   commaRequired_g = true;
 }
 
 
@@ -586,7 +717,7 @@ function addAccessorySchemaBlock( )
 function addTypeLayout( )
 {
    // add the comma always next time.
-   if ( commaRequired == true )
+   if ( commaRequired_g == true )
       w( `,\n` );
 
       wf( "+", `{\n` );
@@ -594,13 +725,13 @@ function addTypeLayout( )
         wfs( `"$ref": "#/$definitions/type"\n` );
       wf( "-", `}` );
 
-   commaRequired = true;
+   commaRequired_g = true;
 }
 
 function addNameLayout( )
 {
    // add the comma always next time.
-   if ( commaRequired == true )
+   if ( commaRequired_g == true )
       w( `,\n` );
 
    wf( "+", `{\n` );
@@ -611,14 +742,13 @@ function addNameLayout( )
      wf( "-", `}\n` );
    wf( "-", `}` );
 
-   commaRequired = true;
-
+   commaRequired_g = true;
 }
 
 function addGlobalsLayout( )
 {
    // add the comma always next time.
-   if ( commaRequired == true )
+   if ( commaRequired_g == true )
       w( `,\n` );
 
    wf( "+", `{\n` );
@@ -638,14 +768,14 @@ function addGlobalsLayout( )
       wf( "-", `]\n` );
    wf( "-", `}` );
 
-   commaRequired = true;
+   commaRequired_g = true;
 }
 
 
 function addStateCmdLayout( )
 {
    // add the comma always next time.
-   if ( commaRequired == true )
+   if ( commaRequired_g == true )
       w( `,\n` );
 
    wf( "+", `{\n` );
@@ -660,14 +790,14 @@ function addStateCmdLayout( )
       wf( "-", `]\n` );
    wf( "-", `}` );
 
-   commaRequired = true;
+   commaRequired_g = true;
 }
 
 
 function addFakeGatoLayout( )
 {
    // add the comma always next time.
-   if ( commaRequired == true )
+   if ( commaRequired_g == true )
       w( `,\n` );
 
    wf( "+", `{\n` );
@@ -695,7 +825,7 @@ function addFakeGatoLayout( )
       wf( "-", `]\n` );
    wf( "-", `}` );
 
-   commaRequired = true;
+   commaRequired_g = true;
 }
 
 function addRequiredCharacteristicPerDeviceLayout( )
@@ -715,10 +845,10 @@ function addRequiredCharacteristicPerDeviceLayout( )
       requiredCharacteristics.forEach( ( entry ) =>
       {
          // add the comma always next time.
-         if ( commaRequired == true )
+         if ( commaRequired_g == true )
          {
              w( `,\n` );
-            commaRequired = false;
+            commaRequired_g = false;
          }
          let requiredCharacteristic = CMD4_ACC_TYPE_ENUM.accEnumIndexToLC( entry.type );
          // add the comma always next time.
@@ -748,12 +878,12 @@ function addRequiredCharacteristicPerDeviceLayout( )
                wf( "-", `]\n` );
              wf( "-", `}` );
 
-             commaRequired = true;
+             commaRequired_g = true;
       }
 
    }
 
-   commaRequired = true;
+   commaRequired_g = true;
 }
 
 function addOptionalCharacteristicPerDeviceLayout( )
@@ -773,10 +903,10 @@ function addOptionalCharacteristicPerDeviceLayout( )
       optionalCharacteristics.forEach( ( entry ) =>
       {
          // add the comma always next time.
-         if ( commaRequired == true )
+         if ( commaRequired_g == true )
          {
              w( `,\n` );
-            commaRequired = false;
+            commaRequired_g = false;
          }
          let optionalCharacteristic = CMD4_ACC_TYPE_ENUM.accEnumIndexToLC( entry );
          // add the comma always next time.
@@ -806,12 +936,12 @@ function addOptionalCharacteristicPerDeviceLayout( )
                wf( "-", `]\n` );
              wf( "-", `}` );
 
-             commaRequired = true;
+             commaRequired_g = true;
       }
 
    }
 
-   commaRequired = true;
+   commaRequired_g = true;
 }
 
 
@@ -820,10 +950,10 @@ function addQueueTypesLayout( )
    wfs( `"$comment": "START OF QUEUE TYPES LAYOUT BLOCK",\n` );
 
    // add the comma always next time.
-   if ( commaRequired == true )
+   if ( commaRequired_g == true )
    {
       w( `,\n` );
-      commaRequired = false;
+      commaRequired_g = false;
    }
 
    wf( "+", `{\n` )
@@ -851,7 +981,7 @@ function addQueueTypesLayout( )
       wf( "-", `]\n` );
    wf( "-", `}` );
 
-   commaRequired = true;
+   commaRequired_g = true;
 }
 
 // $$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -862,20 +992,20 @@ function endBracketSchema( )
    // * End bracket Schema
    wf( "-", `}` );
 
-   commaRequired = true;
+   commaRequired_g = true;
 }
 
 function addLayout( )
 {
    // add the comma always next time.
-   if ( commaRequired == true )
+   if ( commaRequired_g == true )
       w( `,\n` );
 
    // * Begin square bracket layout:
    wfs( `"layout":\n` );
    wf( "+", `[\n` );
 
-      commaRequired = false;
+      commaRequired_g = false;
 
       addTypeLayout( );
       addNameLayout( );
@@ -889,7 +1019,7 @@ function addLayout( )
    // * End square bracket layout:
    wf( "-", `]\n` );
 
-   commaRequired = true;
+   commaRequired_g = true;
 }
 
 function closeSchemaDocument( )
@@ -899,6 +1029,23 @@ function closeSchemaDocument( )
 
    // Close the Schema file
    fid.end( );
+}
+
+function testGeneratedSchema( )
+{
+   var Validator = require('jsonschema').Validator;
+   let v = new Validator();
+   //let schema_in = require( CMD4_SCHEMA_FILE );
+   let schema_in = fs.readFileSync( CMD4_SCHEMA_FILE, 'utf8' );
+   console.log( schema_in );
+   let schema = JSON.parse( schema_in );
+   //let data_in = require( CMD4_CONFIG_FILE );
+   let data_in = fs.readFileSync( CMD4_CONFIG_FILE, 'utf8' );
+   let DATA = JSON.parse( data_in );
+   console.log( v.validate( DATA, schema ));
+   // import config from "/usr/local/lib/node_modules/homebridge-cmd4/Extras/config.json";
+      //
+
 }
 
 
@@ -995,14 +1142,19 @@ function wf( level, text )
 
    fid.write( " ".repeat( bracketLevel * INDENT ).concat( text ) );
 
-   if ( text.endsWith( "," ) || text.endsWith( ",\n"  ) ||
-        text.endsWith( ", ") || text.endsWith( ", \n" )
-      )
+   //  match exactly 1 of comma
+   //    [1]{1}
+   //  followed by 0 or more spaces
+   //    [,]{1}\s*
+   //  followed by 0 or more newline characters
+   //    [,]{1}\s*[\n]*
+   //  at end of line
+   //    [,]{1}\s*[\n]*$
+   //
+   if ( text.match( /[,]{1}\s*[\n]*$/ ) )
    {
       validator = validatorStates.COMMA_HANGING;
-   } else if ( text.endsWith( ":" ) || text.endsWith( ":\n"  ) ||
-               text.endsWith( ": ") || text.endsWith( ": \n" )
-             )
+   } else if ( text.match( /[:]{1}\s*[\n]*$/ ) )
    {
       validator = validatorStates.COLON_HANGING;
    }
@@ -1054,9 +1206,16 @@ function w( text )
       console.log( `Warning, adding brackets without calling wfs for text: ${ text }` );
    }
 
-   if ( text.endsWith( ",")  || text.endsWith( ",\n"  ) ||
-        text.endsWith( ", ") || text.endsWith( ", \n" )
-      )
+   //  match exactly 1 of comma
+   //    [1]{1}
+   //  followed by 0 or more spaces
+   //    [,]{1}\s*
+   //  followed by 0 or more newline characters
+   //    [,]{1}\s*[\n]*
+   //  at end of line
+   //    [,]{1}\s*[\n]*$
+   //
+   if ( text.match( /[,]{1}\s*[\n]*$/ ) )
    {
       validator = validatorStates.COMMA_HANGING;
    } else
@@ -1065,21 +1224,38 @@ function w( text )
    }
 }
 
+// MAIN STUFF STARTS HERE
+
+getHomebridgeVars( );
+
+// Init the library for all to use
+CMD4_ACC_TYPE_ENUM.init( _api.hap );
+CMD4_DEVICE_TYPE_ENUM.init( _api.hap, _api.hap.Service );
+
+// Command line parser
+const { Command } = require( "commander" );
+const program = new Command;
+
+// A nice little getOpt node.js package
+program
+  .description( 'Generate Cmd4 cinfig.schema.json' )
+  //.requiredOption( '-c, --constant <constant value>', 'Constant to search for>' )
+
+  .option( '-t, --test', 'test against our config.json' );
+
+
+// Parse the arguments passed into this program.
+program.parse( process.argv );
+
+// Get the options passed in based on the commander getOpts definitions.
+let options = program.opts( );
+
+// Always create the schema file
 createSchemaFile( );
 
 
-if ( bracketLevel == 0)
-{
-   console.log( `Yahoo !  All lined up.` );
-} else
-{
-   console.log( `Booo ... alignment failed: [ ${ Number(bracketLevel > 0) + bracketLevel } ]` );
-}
-if (  validator == validatorStates.REQUIRED )
-{
-   console.log( `Yahoo !  No hanging commas.` );
-} else
-{
-   console.log( `Booo ... comma left hanging ${ validator }` );
-}
+if ( options.test )
+   testGeneratedSchema( );
+
+// The bracket level is a good indication of overall success
 return bracketLevel;

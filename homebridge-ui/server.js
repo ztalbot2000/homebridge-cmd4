@@ -11,11 +11,8 @@ let settings = require( "../cmd4Settings" );
 const cmd4Constants = require( "../cmd4Constants" );
 
 
-// These would already be initialized by index.js
-let CMD4_ACC_TYPE_ENUM = require( "../lib/CMD4_ACC_TYPE_ENUM" );
-let CMD4_DEVICE_TYPE_ENUM = require( "../lib/CMD4_DEVICE_TYPE_ENUM" );
-
-//orig const { AuthorizationCode } = require('simple-oauth2');
+let CMD4_ACC_TYPE_ENUM = settings.CMD4_ACC_TYPE_ENUM;
+let CMD4_DEVICE_TYPE_ENUM = settings.CMD4_DEVICE_TYPE_ENUM;
 
 class UiServer extends HomebridgePluginUiServer
 {
@@ -23,6 +20,8 @@ class UiServer extends HomebridgePluginUiServer
    {
 
       super();
+
+      // Initialize them now for all to use.
       CMD4_ACC_TYPE_ENUM.init( );
       CMD4_DEVICE_TYPE_ENUM.init( );
 
@@ -49,6 +48,7 @@ class UiServer extends HomebridgePluginUiServer
       this.onRequest('/ACC_Info', this.cmd4AccInfo.bind(this));
       this.onRequest('/DEVICE_Info', this.cmd4DeviceInfo.bind(this));
 
+      // Init the page back/forward stack
       this.fromPage = "#start";
       this.toPage = null;
       this.pages = [ ];

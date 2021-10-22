@@ -641,6 +641,8 @@ $( '#editAccessory' ).on( 'click', ( ) =>
    homebridge.request( "/consoleLog", `EDIT ACCESSORY INCOMPLETE` );
    createAccessorySchema( accessory );
 
+   homebridge.request( "/editAccessoryButtonPressed" );
+
 
 } );
 

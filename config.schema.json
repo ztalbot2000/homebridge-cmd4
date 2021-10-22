@@ -300,7 +300,7 @@
             "description": "The Devices zbutton Event",
             "condition":
             {
-               "functionBody": "return ['TargetControl'].includes(model.type);"
+               "functionBody": "return ['TargetControl'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "ccaEnergyDetectThreshold":
@@ -452,7 +452,7 @@
             "description": "The Configured Bridge Accessory Status",
             "condition":
             {
-               "functionBody": "return ['BridgeConfiguration'].includes(model.type);"
+               "functionBody": "return ['BridgeConfiguration'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "configuredName":
@@ -990,7 +990,7 @@
             "description": "The Links Quality",
             "condition":
             {
-               "functionBody": "return ['Pairing'].includes(model.type);"
+               "functionBody": "return ['Pairing'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "lockControlPoint":
@@ -1001,7 +1001,7 @@
             "description": "The Control Point of the Lock",
             "condition":
             {
-               "functionBody": "return ['LockManagement'].includes(model.type);"
+               "functionBody": "return ['LockManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "lockCurrentState":
@@ -1159,7 +1159,7 @@
             "description": "The Network AccessViolation Control",
             "condition":
             {
-               "functionBody": "return ['WiFiRouter'].includes(model.type);"
+               "functionBody": "return ['WiFiRouter'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "networkClientProfileControl":
@@ -1170,7 +1170,7 @@
             "description": "The Network Client Profile Control",
             "condition":
             {
-               "functionBody": "return ['WiFiRouter'].includes(model.type);"
+               "functionBody": "return ['WiFiRouter'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "networkClientStatusControl":
@@ -1181,7 +1181,7 @@
             "description": "The Network Client Status Control",
             "condition":
             {
-               "functionBody": "return ['WiFiRouter'].includes(model.type);"
+               "functionBody": "return ['WiFiRouter'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "nightVision":
@@ -1295,7 +1295,7 @@
             "description": "The Devices Pair Setup",
             "condition":
             {
-               "functionBody": "return ['Pairing'].includes(model.type);"
+               "functionBody": "return ['Pairing'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "pairVerify":
@@ -1306,7 +1306,7 @@
             "description": "The Devices Pair Verify",
             "condition":
             {
-               "functionBody": "return ['Pairing'].includes(model.type);"
+               "functionBody": "return ['Pairing'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "pairingFeatures":
@@ -1487,7 +1487,7 @@
             "description": "The Relay Control Point",
             "condition":
             {
-               "functionBody": "return ['Relay'].includes(model.type);"
+               "functionBody": "return ['Relay'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "relayEnabled":
@@ -1635,7 +1635,7 @@
             "description": "The Selected Cameras Recording Configuration",
             "condition":
             {
-               "functionBody": "return ['CameraEventRecordingManagement'].includes(model.type);"
+               "functionBody": "return ['CameraEventRecordingManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "selectedRTPStreamConfiguration":
@@ -1646,7 +1646,7 @@
             "description": "The Selected RTP Stream Configuration",
             "condition":
             {
-               "functionBody": "return ['CameraRTPStreamManagement'].includes(model.type);"
+               "functionBody": "return ['CameraRTPStreamManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "serialNumber":
@@ -1706,7 +1706,7 @@
             "description": "The Devices Setup End Points",
             "condition":
             {
-               "functionBody": "return ['CameraRTPStreamManagement'].includes(model.type);"
+               "functionBody": "return ['CameraRTPStreamManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "setupTransferTransport":
@@ -1717,7 +1717,7 @@
             "description": "The Devices Setup Transfer Transport",
             "condition":
             {
-               "functionBody": "return ['TransferTransportManagement'].includes(model.type);"
+               "functionBody": "return ['TransferTransportManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "signalToNoiseRatio":
@@ -1849,7 +1849,7 @@
             "description": "The Devices Streaming Status",
             "condition":
             {
-               "functionBody": "return ['CameraRTPStreamManagement'].includes(model.type);"
+               "functionBody": "return ['CameraRTPStreamManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "sulphurDioxideDensity":
@@ -1869,7 +1869,7 @@
             "description": "The Supported Audio Recording Configuration",
             "condition":
             {
-               "functionBody": "return ['CameraEventRecordingManagement'].includes(model.type);"
+               "functionBody": "return ['CameraEventRecordingManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "supportedAudioStreamConfiguration":
@@ -1880,7 +1880,7 @@
             "description": "The Supported Audio Stream Configuration",
             "condition":
             {
-               "functionBody": "return ['CameraRTPStreamManagement'].includes(model.type);"
+               "functionBody": "return ['CameraRTPStreamManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "supportedCameraRecordingConfiguration":
@@ -1891,7 +1891,7 @@
             "description": "The Supported Audio Recording Configuration",
             "condition":
             {
-               "functionBody": "return ['CameraEventRecordingManagement'].includes(model.type);"
+               "functionBody": "return ['CameraEventRecordingManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "supportedDataStreamTransportConfiguration":
@@ -1916,7 +1916,7 @@
             "description": "The Supported Diagnostic Snapshot",
             "condition":
             {
-               "functionBody": "return ['Diagnostics'].includes(model.type);"
+               "functionBody": "return ['Diagnostics'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "supportedRTPConfiguration":
@@ -1927,7 +1927,7 @@
             "description": "The Supported RTP Configuration",
             "condition":
             {
-               "functionBody": "return ['CameraRTPStreamManagement'].includes(model.type);"
+               "functionBody": "return ['CameraRTPStreamManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "supportedRouterConfiguration":
@@ -1938,7 +1938,7 @@
             "description": "The Supported Router Configuration",
             "condition":
             {
-               "functionBody": "return ['WiFiRouter'].includes(model.type);"
+               "functionBody": "return ['WiFiRouter'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "supportedTransferTransportConfiguration":
@@ -1949,7 +1949,7 @@
             "description": "The Supported Transfer Transport Configuration",
             "condition":
             {
-               "functionBody": "return ['TransferTransportManagement'].includes(model.type);"
+               "functionBody": "return ['TransferTransportManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "supportedVideoRecordingConfiguration":
@@ -1960,7 +1960,7 @@
             "description": "The Supported Video Recording Configuration",
             "condition":
             {
-               "functionBody": "return ['CameraEventRecordingManagement'].includes(model.type);"
+               "functionBody": "return ['CameraEventRecordingManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "supportedVideoStreamConfiguration":
@@ -1971,7 +1971,7 @@
             "description": "The Supported Video Stream Configuration",
             "condition":
             {
-               "functionBody": "return ['CameraRTPStreamManagement'].includes(model.type);"
+               "functionBody": "return ['CameraRTPStreamManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "swingMode":
@@ -2013,7 +2013,7 @@
             "description": "The Target Control List",
             "condition":
             {
-               "functionBody": "return ['TargetControlManagement'].includes(model.type);"
+               "functionBody": "return ['TargetControlManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "targetControlSupportedConfiguration":
@@ -2024,7 +2024,7 @@
             "description": "The Target Supported Configuration",
             "condition":
             {
-               "functionBody": "return ['TargetControlManagement'].includes(model.type);"
+               "functionBody": "return ['TargetControlManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "targetDoorState":
@@ -2345,7 +2345,7 @@
             "description": "The Devices WAN Configuration List",
             "condition":
             {
-               "functionBody": "return ['WiFiRouter'].includes(model.type);"
+               "functionBody": "return ['WiFiRouter'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "wanStatusList":
@@ -2356,7 +2356,7 @@
             "description": "The Devices WAN Status List",
             "condition":
             {
-               "functionBody": "return ['WiFiRouter'].includes(model.type);"
+               "functionBody": "return ['WiFiRouter'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "wakeConfiguration":
@@ -2367,7 +2367,7 @@
             "description": "The Devices Wake Configuration",
             "condition":
             {
-               "functionBody": "return ['PowerManagement'].includes(model.type);"
+               "functionBody": "return ['PowerManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "waterLevel":
@@ -2484,7 +2484,31 @@
             ],
             "required": true
          },
-         "polling":
+         "subType":
+         {
+            "$id": "#subType",
+            "type": "string",
+            "title": "subType",
+            "description": "The accessories subType.",
+            "placeholder": "A secondary name",
+            "required": false
+         }         "configuredName":
+         {
+            "$id": "#configuredName",
+            "type": "string",
+            "title": "configuredName",
+            "description": "The accessories configured name.",
+            "placeholder": "My_Device",
+            "required": false
+         }         "displayName":
+         {
+            "$id": "#displayName",
+            "type": "string",
+            "title": "displayName",
+            "description": "The accessories display name.",
+            "placeholder": "My_Device",
+            "required": true
+         }         "polling":
          {
             "$id": "#polling",
             "title": "polling",
@@ -2515,13 +2539,262 @@
                      "title": "queue",
                      "type": "string",
                      "required": "false"
-                  }               }            }         },
-         "state_cmd":
-         {
-            "$id": "#state_cmd",
-            "title": "state_cmd",
-            "type": "string",
-            "required": false
+                  }
+               }
+            }
+         },
+         "accessories": {
+            "$id": "#accessories",
+            "title": "Accessories",
+            "type": "array",
+            "items": {
+               "type": { "$ref": "#/$definitions/type"},
+               "debug": { "$ref": "#/$definitions/debug"},
+               "allowTLV8": { "$ref": "#/$definitions/allowTLV8"},
+               "outputConstants": { "$ref": "#/$definitions/outputConstants"},
+               "statusMsg": { "$ref": "#/$definitions/statusMsg"},
+               "interval": { "$ref": "#/$definitions/interval"},
+               "timeout": { "$ref": "#/$definitions/timeout"},
+               "stateChangeResponseTime": { "$ref": "#/$definitions/stateChangeResponseTime"},
+               "queueTypes": { "$ref": "#/$definitions/queueTypes"},
+               "folder": { "$ref": "#/$definitions/folder"},
+               "storage": { "$ref": "#/$definitions/storage"},
+               "storagePath": { "$ref": "#/$definitions/storagePath"},
+               "keyPath": { "$ref": "#/$definitions/keyPath"},
+               "type": { "$ref": "#/$definitions/type"},
+               "name": { "$ref": "#/$definitions/name"},
+               "displayName": { "$ref": "#/$definitions/displayName"},
+               "configuredName": { "$ref": "#/$definitions/configuredName"},
+               "subType": { "$ref": "#/$definitions/subType"},
+               "category": { "$ref": "#/$definitions/category"},
+               "accessControlLevel": { "$ref": "#/$definitions/accessControlLevel"},
+               "accessoryFlags": { "$ref": "#/$definitions/accessoryFlags"},
+               "accessoryIdentifier": { "$ref": "#/$definitions/accessoryIdentifier"},
+               "active": { "$ref": "#/$definitions/active"},
+               "activeIdentifier": { "$ref": "#/$definitions/activeIdentifier"},
+               "activityInterval": { "$ref": "#/$definitions/activityInterval"},
+               "administratorOnlyAccess": { "$ref": "#/$definitions/administratorOnlyAccess"},
+               "airParticulateDensity": { "$ref": "#/$definitions/airParticulateDensity"},
+               "airParticulateSize": { "$ref": "#/$definitions/airParticulateSize"},
+               "airQuality": { "$ref": "#/$definitions/airQuality"},
+               "appMatchingIdentifier": { "$ref": "#/$definitions/appMatchingIdentifier"},
+               "audioFeedback": { "$ref": "#/$definitions/audioFeedback"},
+               "batteryLevel": { "$ref": "#/$definitions/batteryLevel"},
+               "brightness": { "$ref": "#/$definitions/brightness"},
+               "buttonEvent": { "$ref": "#/$definitions/buttonEvent"},
+               "ccaEnergyDetectThreshold": { "$ref": "#/$definitions/ccaEnergyDetectThreshold"},
+               "ccaSignalDetectThreshold": { "$ref": "#/$definitions/ccaSignalDetectThreshold"},
+               "cameraOperatingModeIndicator": { "$ref": "#/$definitions/cameraOperatingModeIndicator"},
+               "carbonDioxideDetected": { "$ref": "#/$definitions/carbonDioxideDetected"},
+               "carbonDioxideLevel": { "$ref": "#/$definitions/carbonDioxideLevel"},
+               "carbonDioxidePeakLevel": { "$ref": "#/$definitions/carbonDioxidePeakLevel"},
+               "carbonMonoxideDetected": { "$ref": "#/$definitions/carbonMonoxideDetected"},
+               "carbonMonoxideLevel": { "$ref": "#/$definitions/carbonMonoxideLevel"},
+               "carbonMonoxidePeakLevel": { "$ref": "#/$definitions/carbonMonoxidePeakLevel"},
+               "category": { "$ref": "#/$definitions/category"},
+               "characteristicValueTransitionControl": { "$ref": "#/$definitions/characteristicValueTransitionControl"},
+               "chargingState": { "$ref": "#/$definitions/chargingState"},
+               "closedCaptions": { "$ref": "#/$definitions/closedCaptions"},
+               "colorTemperature": { "$ref": "#/$definitions/colorTemperature"},
+               "configureBridgedAccessory": { "$ref": "#/$definitions/configureBridgedAccessory"},
+               "configureBridgedAccessoryStatus": { "$ref": "#/$definitions/configureBridgedAccessoryStatus"},
+               "configuredName": { "$ref": "#/$definitions/configuredName"},
+               "contactSensorState": { "$ref": "#/$definitions/contactSensorState"},
+               "coolingThresholdTemperature": { "$ref": "#/$definitions/coolingThresholdTemperature"},
+               "currentAirPurifierState": { "$ref": "#/$definitions/currentAirPurifierState"},
+               "currentAmbientLightLevel": { "$ref": "#/$definitions/currentAmbientLightLevel"},
+               "currentDoorState": { "$ref": "#/$definitions/currentDoorState"},
+               "currentFanState": { "$ref": "#/$definitions/currentFanState"},
+               "currentHeaterCoolerState": { "$ref": "#/$definitions/currentHeaterCoolerState"},
+               "currentHeatingCoolingState": { "$ref": "#/$definitions/currentHeatingCoolingState"},
+               "currentHorizontalTiltAngle": { "$ref": "#/$definitions/currentHorizontalTiltAngle"},
+               "currentHumidifierDehumidifierState": { "$ref": "#/$definitions/currentHumidifierDehumidifierState"},
+               "currentMediaState": { "$ref": "#/$definitions/currentMediaState"},
+               "currentPosition": { "$ref": "#/$definitions/currentPosition"},
+               "currentRelativeHumidity": { "$ref": "#/$definitions/currentRelativeHumidity"},
+               "currentSlatState": { "$ref": "#/$definitions/currentSlatState"},
+               "currentTemperature": { "$ref": "#/$definitions/currentTemperature"},
+               "currentTiltAngle": { "$ref": "#/$definitions/currentTiltAngle"},
+               "currentTime": { "$ref": "#/$definitions/currentTime"},
+               "currentTransport": { "$ref": "#/$definitions/currentTransport"},
+               "currentVerticalTiltAngle": { "$ref": "#/$definitions/currentVerticalTiltAngle"},
+               "currentVisibilityState": { "$ref": "#/$definitions/currentVisibilityState"},
+               "dataStreamHAPTransport": { "$ref": "#/$definitions/dataStreamHAPTransport"},
+               "dataStreamHAPTransportInterrupt": { "$ref": "#/$definitions/dataStreamHAPTransportInterrupt"},
+               "dayoftheWeek": { "$ref": "#/$definitions/dayoftheWeek"},
+               "diagonalFieldOfView": { "$ref": "#/$definitions/diagonalFieldOfView"},
+               "digitalZoom": { "$ref": "#/$definitions/digitalZoom"},
+               "discoverBridgedAccessories": { "$ref": "#/$definitions/discoverBridgedAccessories"},
+               "discoveredBridgedAccessories": { "$ref": "#/$definitions/discoveredBridgedAccessories"},
+               "displayOrder": { "$ref": "#/$definitions/displayOrder"},
+               "eventRetransmissionMaximum": { "$ref": "#/$definitions/eventRetransmissionMaximum"},
+               "eventSnapshotsActive": { "$ref": "#/$definitions/eventSnapshotsActive"},
+               "eventTransmissionCounters": { "$ref": "#/$definitions/eventTransmissionCounters"},
+               "filterChangeIndication": { "$ref": "#/$definitions/filterChangeIndication"},
+               "filterLifeLevel": { "$ref": "#/$definitions/filterLifeLevel"},
+               "firmwareRevision": { "$ref": "#/$definitions/firmwareRevision"},
+               "hardwareRevision": { "$ref": "#/$definitions/hardwareRevision"},
+               "heartBeat": { "$ref": "#/$definitions/heartBeat"},
+               "heatingThresholdTemperature": { "$ref": "#/$definitions/heatingThresholdTemperature"},
+               "holdPosition": { "$ref": "#/$definitions/holdPosition"},
+               "homeKitCameraActive": { "$ref": "#/$definitions/homeKitCameraActive"},
+               "hue": { "$ref": "#/$definitions/hue"},
+               "identifier": { "$ref": "#/$definitions/identifier"},
+               "identify": { "$ref": "#/$definitions/identify"},
+               "imageMirroring": { "$ref": "#/$definitions/imageMirroring"},
+               "imageRotation": { "$ref": "#/$definitions/imageRotation"},
+               "inUse": { "$ref": "#/$definitions/inUse"},
+               "inputDeviceType": { "$ref": "#/$definitions/inputDeviceType"},
+               "inputSourceType": { "$ref": "#/$definitions/inputSourceType"},
+               "isConfigured": { "$ref": "#/$definitions/isConfigured"},
+               "leakDetected": { "$ref": "#/$definitions/leakDetected"},
+               "linkQuality": { "$ref": "#/$definitions/linkQuality"},
+               "listPairings": { "$ref": "#/$definitions/listPairings"},
+               "lockControlPoint": { "$ref": "#/$definitions/lockControlPoint"},
+               "lockCurrentState": { "$ref": "#/$definitions/lockCurrentState"},
+               "lockLastKnownAction": { "$ref": "#/$definitions/lockLastKnownAction"},
+               "lockManagementAutoSecurityTimeout": { "$ref": "#/$definitions/lockManagementAutoSecurityTimeout"},
+               "lockPhysicalControls": { "$ref": "#/$definitions/lockPhysicalControls"},
+               "lockTargetState": { "$ref": "#/$definitions/lockTargetState"},
+               "logs": { "$ref": "#/$definitions/logs"},
+               "macRetransmissionMaximum": { "$ref": "#/$definitions/macRetransmissionMaximum"},
+               "macTransmissionCounters": { "$ref": "#/$definitions/macTransmissionCounters"},
+               "managedNetworkEnable": { "$ref": "#/$definitions/managedNetworkEnable"},
+               "manuallyDisabled": { "$ref": "#/$definitions/manuallyDisabled"},
+               "manufacturer": { "$ref": "#/$definitions/manufacturer"},
+               "model": { "$ref": "#/$definitions/model"},
+               "motionDetected": { "$ref": "#/$definitions/motionDetected"},
+               "mute": { "$ref": "#/$definitions/mute"},
+               "name": { "$ref": "#/$definitions/name"},
+               "networkAccessViolationControl": { "$ref": "#/$definitions/networkAccessViolationControl"},
+               "networkClientProfileControl": { "$ref": "#/$definitions/networkClientProfileControl"},
+               "networkClientStatusControl": { "$ref": "#/$definitions/networkClientStatusControl"},
+               "nightVision": { "$ref": "#/$definitions/nightVision"},
+               "nitrogenDioxideDensity": { "$ref": "#/$definitions/nitrogenDioxideDensity"},
+               "obstructionDetected": { "$ref": "#/$definitions/obstructionDetected"},
+               "occupancyDetected": { "$ref": "#/$definitions/occupancyDetected"},
+               "on": { "$ref": "#/$definitions/on"},
+               "operatingStateResponse": { "$ref": "#/$definitions/operatingStateResponse"},
+               "opticalZoom": { "$ref": "#/$definitions/opticalZoom"},
+               "outletInUse": { "$ref": "#/$definitions/outletInUse"},
+               "ozoneDensity": { "$ref": "#/$definitions/ozoneDensity"},
+               "pm10Density": { "$ref": "#/$definitions/pm10Density"},
+               "pm2_5Density": { "$ref": "#/$definitions/pm2_5Density"},
+               "pairSetup": { "$ref": "#/$definitions/pairSetup"},
+               "pairVerify": { "$ref": "#/$definitions/pairVerify"},
+               "pairingFeatures": { "$ref": "#/$definitions/pairingFeatures"},
+               "pairingPairings": { "$ref": "#/$definitions/pairingPairings"},
+               "passwordSetting": { "$ref": "#/$definitions/passwordSetting"},
+               "periodicSnapshotsActive": { "$ref": "#/$definitions/periodicSnapshotsActive"},
+               "pictureMode": { "$ref": "#/$definitions/pictureMode"},
+               "ping": { "$ref": "#/$definitions/ping"},
+               "positionState": { "$ref": "#/$definitions/positionState"},
+               "powerModeSelection": { "$ref": "#/$definitions/powerModeSelection"},
+               "productData": { "$ref": "#/$definitions/productData"},
+               "programMode": { "$ref": "#/$definitions/programMode"},
+               "programmableSwitchEvent": { "$ref": "#/$definitions/programmableSwitchEvent"},
+               "programmableSwitchOutputState": { "$ref": "#/$definitions/programmableSwitchOutputState"},
+               "reachable": { "$ref": "#/$definitions/reachable"},
+               "receivedSignalStrengthIndication": { "$ref": "#/$definitions/receivedSignalStrengthIndication"},
+               "receiverSensitivity": { "$ref": "#/$definitions/receiverSensitivity"},
+               "recordingAudioActive": { "$ref": "#/$definitions/recordingAudioActive"},
+               "relativeHumidityDehumidifierThreshold": { "$ref": "#/$definitions/relativeHumidityDehumidifierThreshold"},
+               "relativeHumidityHumidifierThreshold": { "$ref": "#/$definitions/relativeHumidityHumidifierThreshold"},
+               "relayControlPoint": { "$ref": "#/$definitions/relayControlPoint"},
+               "relayEnabled": { "$ref": "#/$definitions/relayEnabled"},
+               "relayState": { "$ref": "#/$definitions/relayState"},
+               "remainingDuration": { "$ref": "#/$definitions/remainingDuration"},
+               "remoteKey": { "$ref": "#/$definitions/remoteKey"},
+               "resetFilterIndication": { "$ref": "#/$definitions/resetFilterIndication"},
+               "rotationDirection": { "$ref": "#/$definitions/rotationDirection"},
+               "rotationSpeed": { "$ref": "#/$definitions/rotationSpeed"},
+               "routerStatus": { "$ref": "#/$definitions/routerStatus"},
+               "saturation": { "$ref": "#/$definitions/saturation"},
+               "securitySystemAlarmType": { "$ref": "#/$definitions/securitySystemAlarmType"},
+               "securitySystemCurrentState": { "$ref": "#/$definitions/securitySystemCurrentState"},
+               "securitySystemTargetState": { "$ref": "#/$definitions/securitySystemTargetState"},
+               "selectedAudioStreamConfiguration": { "$ref": "#/$definitions/selectedAudioStreamConfiguration"},
+               "selectedCameraRecordingConfiguration": { "$ref": "#/$definitions/selectedCameraRecordingConfiguration"},
+               "selectedRTPStreamConfiguration": { "$ref": "#/$definitions/selectedRTPStreamConfiguration"},
+               "serialNumber": { "$ref": "#/$definitions/serialNumber"},
+               "serviceLabelIndex": { "$ref": "#/$definitions/serviceLabelIndex"},
+               "serviceLabelNamespace": { "$ref": "#/$definitions/serviceLabelNamespace"},
+               "setDuration": { "$ref": "#/$definitions/setDuration"},
+               "setupDataStreamTransport": { "$ref": "#/$definitions/setupDataStreamTransport"},
+               "setupEndpoints": { "$ref": "#/$definitions/setupEndpoints"},
+               "setupTransferTransport": { "$ref": "#/$definitions/setupTransferTransport"},
+               "signalToNoiseRatio": { "$ref": "#/$definitions/signalToNoiseRatio"},
+               "siriInputType": { "$ref": "#/$definitions/siriInputType"},
+               "slatType": { "$ref": "#/$definitions/slatType"},
+               "sleepDiscoveryMode": { "$ref": "#/$definitions/sleepDiscoveryMode"},
+               "sleepInterval": { "$ref": "#/$definitions/sleepInterval"},
+               "smokeDetected": { "$ref": "#/$definitions/smokeDetected"},
+               "softwareRevision": { "$ref": "#/$definitions/softwareRevision"},
+               "statusActive": { "$ref": "#/$definitions/statusActive"},
+               "statusFault": { "$ref": "#/$definitions/statusFault"},
+               "statusJammed": { "$ref": "#/$definitions/statusJammed"},
+               "statusLowBattery": { "$ref": "#/$definitions/statusLowBattery"},
+               "statusTampered": { "$ref": "#/$definitions/statusTampered"},
+               "streamingStatus": { "$ref": "#/$definitions/streamingStatus"},
+               "sulphurDioxideDensity": { "$ref": "#/$definitions/sulphurDioxideDensity"},
+               "supportedAudioRecordingConfiguration": { "$ref": "#/$definitions/supportedAudioRecordingConfiguration"},
+               "supportedAudioStreamConfiguration": { "$ref": "#/$definitions/supportedAudioStreamConfiguration"},
+               "supportedCameraRecordingConfiguration": { "$ref": "#/$definitions/supportedCameraRecordingConfiguration"},
+               "supportedDataStreamTransportConfiguration": { "$ref": "#/$definitions/supportedDataStreamTransportConfiguration"},
+               "supportedCharacteristicValueTransitionConfiguration": { "$ref": "#/$definitions/supportedCharacteristicValueTransitionConfiguration"},
+               "supportedDiagnosticsSnapshot": { "$ref": "#/$definitions/supportedDiagnosticsSnapshot"},
+               "supportedRTPConfiguration": { "$ref": "#/$definitions/supportedRTPConfiguration"},
+               "supportedRouterConfiguration": { "$ref": "#/$definitions/supportedRouterConfiguration"},
+               "supportedTransferTransportConfiguration": { "$ref": "#/$definitions/supportedTransferTransportConfiguration"},
+               "supportedVideoRecordingConfiguration": { "$ref": "#/$definitions/supportedVideoRecordingConfiguration"},
+               "supportedVideoStreamConfiguration": { "$ref": "#/$definitions/supportedVideoStreamConfiguration"},
+               "swingMode": { "$ref": "#/$definitions/swingMode"},
+               "targetAirPurifierState": { "$ref": "#/$definitions/targetAirPurifierState"},
+               "targetAirQuality": { "$ref": "#/$definitions/targetAirQuality"},
+               "targetControlList": { "$ref": "#/$definitions/targetControlList"},
+               "targetControlSupportedConfiguration": { "$ref": "#/$definitions/targetControlSupportedConfiguration"},
+               "targetDoorState": { "$ref": "#/$definitions/targetDoorState"},
+               "targetFanState": { "$ref": "#/$definitions/targetFanState"},
+               "targetHeaterCoolerState": { "$ref": "#/$definitions/targetHeaterCoolerState"},
+               "targetHeatingCoolingState": { "$ref": "#/$definitions/targetHeatingCoolingState"},
+               "targetHorizontalTiltAngle": { "$ref": "#/$definitions/targetHorizontalTiltAngle"},
+               "targetHumidifierDehumidifierState": { "$ref": "#/$definitions/targetHumidifierDehumidifierState"},
+               "targetMediaState": { "$ref": "#/$definitions/targetMediaState"},
+               "targetPosition": { "$ref": "#/$definitions/targetPosition"},
+               "targetRelativeHumidity": { "$ref": "#/$definitions/targetRelativeHumidity"},
+               "targetSlatState": { "$ref": "#/$definitions/targetSlatState"},
+               "targetTemperature": { "$ref": "#/$definitions/targetTemperature"},
+               "targetTiltAngle": { "$ref": "#/$definitions/targetTiltAngle"},
+               "targetVerticalTiltAngle": { "$ref": "#/$definitions/targetVerticalTiltAngle"},
+               "targetVisibilityState": { "$ref": "#/$definitions/targetVisibilityState"},
+               "temperatureDisplayUnits": { "$ref": "#/$definitions/temperatureDisplayUnits"},
+               "thirdPartyCameraActive": { "$ref": "#/$definitions/thirdPartyCameraActive"},
+               "timeUpdate": { "$ref": "#/$definitions/timeUpdate"},
+               "transmitPower": { "$ref": "#/$definitions/transmitPower"},
+               "transmitPowerMaximum": { "$ref": "#/$definitions/transmitPowerMaximum"},
+               "tunnelConnectionTimeout": { "$ref": "#/$definitions/tunnelConnectionTimeout"},
+               "tunneledAccessoryAdvertising": { "$ref": "#/$definitions/tunneledAccessoryAdvertising"},
+               "tunneledAccessoryConnected": { "$ref": "#/$definitions/tunneledAccessoryConnected"},
+               "tunneledAccessoryStateNumber": { "$ref": "#/$definitions/tunneledAccessoryStateNumber"},
+               "vocDensity": { "$ref": "#/$definitions/vocDensity"},
+               "valveType": { "$ref": "#/$definitions/valveType"},
+               "version": { "$ref": "#/$definitions/version"},
+               "videoAnalysisActive": { "$ref": "#/$definitions/videoAnalysisActive"},
+               "volume": { "$ref": "#/$definitions/volume"},
+               "volumeControlType": { "$ref": "#/$definitions/volumeControlType"},
+               "volumeSelector": { "$ref": "#/$definitions/volumeSelector"},
+               "wanConfigurationList": { "$ref": "#/$definitions/wanConfigurationList"},
+               "wanStatusList": { "$ref": "#/$definitions/wanStatusList"},
+               "wakeConfiguration": { "$ref": "#/$definitions/wakeConfiguration"},
+               "waterLevel": { "$ref": "#/$definitions/waterLevel"},
+               "wifiCapabilities": { "$ref": "#/$definitions/wifiCapabilities"},
+               "wifiConfigurationControl": { "$ref": "#/$definitions/wifiConfigurationControl"},
+               "wifiSatelliteStatus": { "$ref": "#/$definitions/wifiSatelliteStatus"},
+               "polling": { "$ref": "#/$definitions/polling"},
+               "state_cmd_prefix": { "$ref": "#/$definitions/state_cmd_prefix"},
+               "state_cmd": { "$ref": "#/$definitions/state_cmd"},
+               "state_cmd_suffix": { "$ref": "#/$definitions/state_cmd_suffix"}
+            }
          }
       },
       "properties":
