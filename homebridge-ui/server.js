@@ -35,6 +35,8 @@ class UiServer extends HomebridgePluginUiServer
       this.onRequest('/startButtonPressed', this.startButtonPressed.bind(this));
       this.onRequest('/backButtonPressed', this.backButtonPressed.bind(this));
       this.onRequest('/showConfigureGlobalsPage', this.showConfigureGlobalsPage.bind(this));
+      this.onRequest('/addAccessoryButtonPressed', this.addAccessoryButtonPressed.bind(this));
+      this.onRequest('/editAccessoryButtonPressed', this.editAccessoryButtonPressed.bind(this));
       this.onRequest('/updateCmd4Globals', this.updateCmd4Globals.bind(this));
       this.onRequest('/showQueueGlobalsPage', this.showQueueGlobalsPage.bind(this));
 
@@ -270,6 +272,39 @@ class UiServer extends HomebridgePluginUiServer
       let fromPage = this.pages.pop();
       let toPage = this.pages[ this.pages.length -1];
       console.log("Server.js in back() toPage: %s fromPage", toPage, fromPage );
+      this.pushEvent('my-pageEvent', { from: fromPage,       // from: is hide
+                                       to:   toPage }        // to:   is show
+                    );
+   }
+   async editAccessoryButtonPressed( )
+   {
+      let fromPage = this.pages[ this.pages.length -1];
+      let toPage = "#editAccessory";
+      console.log("Server.js in main() toPage: %s fromPage", toPage, fromPage );
+
+      this.pages.push( toPage );
+      this.pushEvent('my-pageEvent', { from: fromPage,       // from: is hide
+                                       to:   toPage }        // to:   is show
+                    );
+   }
+   async addAccessoryButtonPressed( )
+   {
+      let fromPage = this.pages[ this.pages.length -1];
+      let toPage = "#addAccessory";
+      console.log("Server.js in main() toPage: %s fromPage", toPage, fromPage );
+
+      this.pages.push( toPage );
+      this.pushEvent('my-pageEvent', { from: fromPage,       // from: is hide
+                                       to:   toPage }        // to:   is show
+                    );
+   }
+   async showEditAccessoryPage( )
+   {
+      let fromPage = this.pages[ this.pages.length -1];
+      let toPage = "#editAccessory";
+      console.log("Server.js in main() toPage: %s fromPage", toPage, fromPage );
+
+      this.pages.push( toPage );
       this.pushEvent('my-pageEvent', { from: fromPage,       // from: is hide
                                        to:   toPage }        // to:   is show
                     );

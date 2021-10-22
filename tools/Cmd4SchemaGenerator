@@ -419,7 +419,7 @@ function addCharacteristicDefinitionBlock( )
       let properties = CMD4_ACC_TYPE_ENUM.properties[ i ];
       let characteristicString = properties.sche;
       let description = properties.description;
-      let props = properties.props;
+      let accProps = properties.props;
 
       // add the comma always next time.
       if ( characteristicCommaRequired == true )
@@ -430,7 +430,7 @@ function addCharacteristicDefinitionBlock( )
       wf( "+", `{\n` );
          wfs( `"$id": "#${ characteristicString }",\n` );
          wfs( `"title": "${ characteristicString }",\n` );
-         switch ( props.format )
+         switch ( accProps.format )
          {
             case hapFormats.BOOL:
                wfs( `"type": "boolean",\n` );
@@ -454,10 +454,10 @@ function addCharacteristicDefinitionBlock( )
                wfs( `"type": "string",\n` );
                break;
          }
-         if ( props.minValue != undefined )
-            wfs( `"minimum": ${ props.minValue },\n` );
-         if ( props.maxValue != undefined )
-            wfs( `"maximum": ${ props.maxValue },\n` );
+         if ( accProps.minValue != undefined )
+            wfs( `"minimum": ${ accProps.minValue },\n` );
+         if ( accProps.maxValue != undefined )
+            wfs( `"maximum": ${ accProps.maxValue },\n` );
 
          wfs( `"description": "${ description }"` );
 
@@ -487,9 +487,15 @@ function addCharacteristicDefinitionBlock( )
          }
          if ( conditionStarted == true )
          {
-             w( `].includes(model.type);"\n`);
-             // ***End bracket condition
-             wf( "-", `}\n` );
+            if ( accProps.format == hapFormats.TLV8 )
+            {
+               w( `].includes(model.type) && model.allowTLV8 == true;"\n`);
+            } else
+            {
+               w( `].includes(model.type);"\n`);
+            }
+            // ***End bracket condition
+            wf( "-", `}\n` );
          } else
          {
              w( `\n`);

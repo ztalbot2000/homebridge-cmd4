@@ -589,11 +589,11 @@ async function populateSelect( )
    let select = document.getElementById( "accessoryTypeSelect" );
 
    let length = $('#accessoryTypeSelect' ).children( 'option' ).length;
+      homebridge.request( "/consoleLog", `length number of items=${ length }` );
 
    // Only add them once
    if (length == 0 )
    {
-      homebridge.request( "/consoleLog", `length2 number of items=${ length2 }` );
 
       // This must be in an async function or you will just get the promise
       let CMD4_DEVICE_TYPE_ENUM = await homebridge.request( "/cmd4StaticVariable", "CMD4_DEVICE_TYPE_ENUM" );
@@ -615,13 +615,12 @@ async function populateSelect( )
 }
 
 //$( '#addAccessory, #start' ).on( 'click', ( ) =>
-$( '#addAccessory' ).on( 'click', ( ) =>
+$( '#addAccessoryButton' ).on( 'click', ( ) =>
 {
 
    populateSelect( );
 
-   let length2 = $('#accessoryType' ).children( 'option' ).length;
-   homebridge.request( "/consoleLog", `length1 number of items=${ length2 }` );
+   homebridge.request( "/addAccessoryButtonPressed" );
 
    //let activeContent = $( '#notConfigured' ).css( 'display' ) !== 'none' ? $( '#notConfigured' ) : $( '#isConfigured' );
 
