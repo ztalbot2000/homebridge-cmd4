@@ -1,0 +1,22 @@
+#!/bin/bash
+
+file=$1;
+
+if [ ! -f "$file" ]; then
+   echo "no such file $file to lint"
+   exit 1;
+fi
+result=$(npm run lint "$file" 2>&1);
+rc=$?
+
+if [ "$rc" -ne "0" ]; then
+   # Notifications are a pain as they hang around in the background
+   # alerter -message "$result" -mute
+   if [ -x osascript ]; then
+      osascript -e "tell app \"Terminal\" to display dialog \"${result//\"/}\""
+   else
+      echo "tell app \"Terminal\" to display dialog \"${result//\"/}\""
+   fi
+fi
+exit 0;
+

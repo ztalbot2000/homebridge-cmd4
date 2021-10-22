@@ -26,20 +26,23 @@
       "moment": "*"
    },
    "devDependencies": {
-      "@commitlint/cli": "^11.0.0",
-      "@commitlint/config-conventional": "^11.0.0",
+      "@commitlint/cli": "^13.2.1",
+      "@commitlint/config-conventional": "^13.2.0",
+      "background-eslint-hook": "^1.0.0",
       "canvas": "^2.8.0",
       "chai": "^4.2.0",
       "commander": "^8.2.0",
       "commitlint-plugin-function-rules": "^1.1.20",
-      "eslint": "^7.17.0",
+      "eslint": "^8.0.1",
       "generate-changelog": "^1.8.0",
       "husky": "^4.3.8",
       "jsdom-canvas-2": "^11.6.3-alpha.0",
       "markdown-link-check": "^3.8.6",
-      "mocha": "^8.0.1",
-      "node-persist": "^0.0.11",
-      "sinon": "^9.2.4",
+      "mocha": "^9.1.3",
+      "node-persist": "^3.1.0",
+      "onchange": "^7.1.0",
+      "sinon": "^11.1.2",
+      "watch": "^1.0.2",
       "which": "^2.0.2"
    },
    "directories": {
@@ -73,7 +76,7 @@
    ],
    "husky": {
       "hooks": {
-         "pre-commit": "npm run lint && npm run test test/cmd4Constants",
+         "pre-commit": "npm run eslint && npm run test test/cmd4Constants",
          "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
       }
    },
@@ -91,7 +94,11 @@
       "_Note": "Excluded only because they sometimes fail, but pass alone.    ",
       "testCmd4Accessory": "node_modules/.bin/mocha --file test/mocha-setup test/Cmd4Accessory.js",
       "testVersionChecker": "node_modules/.bin/mocha --file test/mocha-setup test/versionChecker.js",
-      "lint": "eslint --ext .js *.js utils/*.js lib/*.js tools/Cmd4AccDocGenerator tools/generateChangeLog tools/whereIsConstant tools/Cmd4SchemaGenerator test/*.js homebridge-ui/server.js homebridge-ui/public/js/*.js",
+      "lint": "eslint",
+      "eslint": "eslint  --ext .js *.js utils/*.js lib/*.js tools/Cmd4AccDocGenerator tools/generateChangeLog tools/whereIsConstant tools/Cmd4SchemaGenerator test/*.js homebridge-ui/server.js homebridge-ui/public/js/*.js",
+      "eslint:onchange": "./node_modules/onchange/dist/bin.js '.js' '*.js' 'utils/*.js' 'lib/*.js' 'tools/Cmd4AccDocGenerator' 'tools/generateChangeLog' 'tools/whereIsConstant' 'tools/Cmd4SchemaGenerator' 'test/*.js' 'homebridge-ui/server.js' 'homebridge-ui/public/js/*.js' -- ./tools/lintIt '{{ file }}'",
+      "Aeslint:onchange": "./node_modules/onchange/dist/bin.js '.js' '*.js' 'utils/*.js' 'lib/*.js' 'tools/Cmd4AccDocGenerator' 'tools/generateChangeLog' 'tools/whereIsConstant' 'tools/Cmd4SchemaGenerator' 'test/*.js' 'homebridge-ui/server.js' 'homebridge-ui/public/js/*.js' -- onerror \"eslint '{{ file }}'\"",
+      "eslint:watch": "watch 'npm run eslint'",
       "postinstall": "node postinstall.js",
       "_Note01": "Auto change the version based on the commit history.        ",
       "_Note02": "Where:                                                      ",
