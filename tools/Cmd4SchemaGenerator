@@ -25,9 +25,20 @@ var fid;
 var bracketLevel=0;
 const INDENT = 3;
 var commaRequired_g = false;
-var validatorStates = { REQUIRED: 0, COMMA_HANGING: 1, COLON_HANGINg: 2 };
-var validator = validatorStates.NOT_REQUIED;
-
+var previousText = "";
+var validatorStates = { CLEAR: 0,
+                        COMMA_HANGING: 1,
+                        COLON_HANGING: 2,
+                        OPEN_ROUND_BRACKET_HANGING: 3,
+                        CLOSED_ROUND_BRACKET_HANGING: 4,
+                        OPEN_SQUARE_BRACKET_HANGING: 5,
+                        CLOSED_SQUARE_BRACKET_HANGING: 6,
+                        OPEN_SQUIGGLY_BRACKET_HANGING: 7,
+                        CLOSED_SQUIGGLY_BRACKET_HANGING: 8,
+                        DOUBLE_QUOTE_HANGING: 9,
+                        NONE_FOUND: 10
+                      };
+var validator_g = validatorStates.CLEAR;
 
 function getHomebridgeVars( )
 {
@@ -86,10 +97,10 @@ function createSchemaFile( )
 
    // add the comma always next time.
    if ( commaRequired_g == true )
-      w( `,\n` );
+      wf( `,\n` );
 
    // ** Begin bracket definitions
-   wfs( `"$definitions":\n` );
+   wf( `"$definitions":\n` );
    wf( "+", `{\n` );
 
       commaRequired_g = false;
@@ -97,13 +108,12 @@ function createSchemaFile( )
       addCharacteristicDefinitionBlock( );
       addAccessoryTypeDefinitionBlock( );
       addSubTypeDefinitionBlock( );
-      addConfiguredNameDefinitionBlock( );
       addDisplayNameDefinitionBlock( );
       addPollingDefinitionBlock( );
       addAccessoryDefinitionBlock( );
 
    // ** End bracket definitions
-   w( `\n` );
+   wf( `\n` );
    wf( "-", `}` );
 
    commaRequired_g = true;
@@ -124,12 +134,12 @@ function createSchemaFile( )
    {
       console.log( `Booo ... alignment failed: [ ${ Number(bracketLevel > 0) + bracketLevel } ]` );
    }
-   if (  validator == validatorStates.REQUIRED )
+   if (  validator_g == validatorStates.REQUIRED )
    {
       console.log( `Yahoo !  No hanging commas.` );
    } else
    {
-      console.log( `Booo ... comma left hanging ${ validator }` );
+      console.log( `Booo ... comma left hanging ${ validator_g }` );
    }
 }
 
@@ -140,28 +150,28 @@ function  addSchemaHeader( )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
-      w( `,\n` );
+      wf( `,\n` );
 
    // Begin bracket JSON
-   wf( "+", `{\n` );
+   wf( "+", `{\n` );   // For vi % balance: }
 
    // pluginAlias: The plugin identifier.
-   wfs( `"pluginAlias": "${ settings.PLATFORM_NAME }",\n` );
+   wf( `"pluginAlias": "${ settings.PLATFORM_NAME }",\n` );
 
    // pluginType: The type of plugin, valid values are platform or accessory.
-   wfs( `"pluginType": "platform",\n` );
+   wf( `"pluginType": "platform",\n` );
 
    // headerDisplay: Additional content in the user interface above the config form.
-   wfs( `"headerDisplay": "Cmd4 Add Accessories",\n` );
+   wf( `"headerDisplay": "Cmd4 Add Accessories",\n` );
 
    // footerDisplay: Additional content in the user interface below the config form.
-   // wfs( `"footerDisplay": "A Sample Footer for Cmd4",\n` );
+   // wf( `"footerDisplay": "A Sample Footer for Cmd4",\n` );
 
    // singular: If set to true the UI will not allow the user to add
    // more than one config block. This is usually used for platform
    // plugins where only a single config block should be present.
-   wfs( `"singular": false,` );
-   wfs( `"customUi": true` );
+   wf( `"singular": false,` );
+   wf( `"customUi": true` );
 
    commaRequired_g = true;
 }
@@ -170,12 +180,12 @@ function startSchema( )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
-      w( `,\n` );
+      wf( `,\n` );
 
    // * Begin bracket Schema
-   wfs( `"schema":\n` );
-   wf( "+", `{\n` );
-   //wfs ( `"schema": "https://json-schema.org/draft/2020-12/schema",\n`);
+   wf( `"schema":\n` );
+   wf( "+", `{\n` );   // For vi % balance: }
+   //w ( `"schema": "https://json-schema.org/draft/2020-12/schema",\n`);
 
    commaRequired_g = false;
 }
@@ -184,63 +194,42 @@ function addSubTypeDefinitionBlock( )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
-      w( `,\n` );
+      wf( `,\n` );
 
-   wfs( `"$comment": "START OF subType DEFINITION",\n` );
+   wf( `"$comment": "START OF subType DEFINITION",\n` );
    // *** Begin bracket subType designation definition
-   wfs( `"subType":\n` );
+   wf( `"subType":\n` );
    wf( "+", `{\n` );
-      wfs( `"$id": "#subType",\n` );
-      wfs( `"type": "string",\n` );
-      wfs( `"title": "subType",\n` );
-      wfs( `"description": "The accessories subType.",\n` );
-      wfs( `"placeholder": "A secondary name",\n` );
-      wfs( `"required": false\n` );
+      wf( `"$id": "#subType",\n` );
+      wf( `"type": "string",\n` );
+      wf( `"title": "subType",\n` );
+      wf( `"description": "The accessories subType.",\n` );
+      wf( `"placeholder": "A secondary name",\n` );
+      wf( `"required": false\n` );
    wf( "-", `}`, "end bracket subType designation" );
 
-   commaRequired_g = false;
-}
-
-function addConfiguredNameDefinitionBlock( )
-{
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      w( `,\n` );
-
-   wfs( `"$comment": "START OF configuredName DEFINITION",\n` );
-   // *** Begin bracket configuredName designation definition
-   wfs( `"configuredName":\n` );
-   wf( "+", `{\n` );
-      wfs( `"$id": "#configuredName",\n` );
-      wfs( `"type": "string",\n` );
-      wfs( `"title": "configuredName",\n` );
-      wfs( `"description": "The accessories configured name.",\n` );
-      wfs( `"placeholder": "My_Device",\n` );
-      wfs( `"required": false\n` );
-   wf( "-", `}`, "end bracket configuredName designation" );
-
-   commaRequired_g = false;
+   commaRequired_g = true;
 }
 
 function addDisplayNameDefinitionBlock( )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
-      w( `,\n` );
+      wf( `,\n` );
 
-   wfs( `"$comment": "START OF displayName DEFINITION",\n` );
+   wf( `"$comment": "START OF displayName DEFINITION",\n` );
    // *** Begin bracket displayName designation definition
-   wfs( `"displayName":\n` );
+   wf( `"displayName":\n` );
    wf( "+", `{\n` );
-      wfs( `"$id": "#displayName",\n` );
-      wfs( `"type": "string",\n` );
-      wfs( `"title": "displayName",\n` );
-      wfs( `"description": "The accessories display name.",\n` );
-      wfs( `"placeholder": "My_Device",\n` );
-      wfs( `"required": true\n` );
+      wf( `"$id": "#displayName",\n` );
+      wf( `"type": "string",\n` );
+      wf( `"title": "displayName",\n` );
+      wf( `"description": "The accessories display name.",\n` );
+      wf( `"placeholder": "My_Device",\n` );
+      wf( `"required": true\n` );
    wf( "-", `}`, "end bracket displayName designation" );
 
-   commaRequired_g = false;
+   commaRequired_g = true;
 }
 
 
@@ -248,19 +237,19 @@ function addAccessoryTypeDefinitionBlock( )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
-      w( `,\n` );
+      wf( `,\n` );
 
-   wfs( `"$comment": "START OF type DEFINITION",\n` );
+   wf( `"$comment": "START OF type DEFINITION",\n` );
    // *** Begin bracket Type designation definition
-   wfs( `"type":\n` );
+   wf( `"type":\n` );
    wf( "+", `{\n` );
-      wfs( `"$id": "#type",\n` );
-      wfs( `"type": "string",\n` );
-      wfs( `"title": "${ constants.TYPE }",\n` );
-      wfs( `"description": "Select the Accessory Type.",\n` );
-      wfs( `"default": "Switch",\n` );
+      wf( `"$id": "#type",\n` );
+      wf( `"type": "string",\n` );
+      wf( `"title": "${ constants.TYPE }",\n` );
+      wf( `"description": "Select the Accessory Type.",\n` );
+      wf( `"default": "Switch",\n` );
       // **** Begin square bracket oneOf for "type"
-      wfs( `"oneOf":\n` );
+      wf( `"oneOf":\n` );
       wf( "+", `[\n` );
          //Example: { "title": "Switch", "enum": ["Switch"] },
 
@@ -270,17 +259,17 @@ function addAccessoryTypeDefinitionBlock( )
          //for ( let j=0; j < devices.length; j++ )
          {
              if ( deviceCommaRequired == true )
-                 w(",\n");
+                 wf(",\n");
 
              //let index = devices[ j ];
              let deviceName = CMD4_DEVICE_TYPE_ENUM.properties[ index ].deviceName;
-             wfs( `{ "title": "${ deviceName }", "enum": ["${ deviceName }"] }` );
+             wf( `{ "title": "${ deviceName }", "enum": ["${ deviceName }"] }` );
 
              deviceCommaRequired = true ;
          }
-         w( "\n" );
+         wf( "\n" );
       wf( "-", `],\n`, "end square bracket oneOf" );
-      wfs( `"required": true\n` );
+      wf( `"required": true\n` );
    wf( "-", `}`, "end bracket Type designation" );
 
    commaRequired_g = true;
@@ -288,46 +277,48 @@ function addAccessoryTypeDefinitionBlock( )
 
 function addPollingDefinitionBlock( )
 {
+   console.log("*****validator_g: %s", validator_g );
    // add the comma always next time.
    if ( commaRequired_g == true )
-      w( `,\n` );
+      wf( `,\n` );
+   console.log("*****validator_g: %s", validator_g );
 
-   wfs( `"$comment": "START OF polling DEFINITION",\n` );
+   wf( `"$comment": "START OF polling DEFINITION",\n` );
    // *** Begin bracket Polling designation definition
-   wfs( `"polling":\n` );
+   wf( `"polling":\n` );
    wf( "+", `{\n` );
-      wfs( `"$id": "#polling",\n` );
-      wfs( `"title": "${ constants.POLLING }",\n` );
-      wfs( `"type": "array",\n` );
-      wfs( `"required": false,\n` );
-      wfs( `"items":\n`);
+      wf( `"$id": "#polling",\n` );
+      wf( `"title": "${ constants.POLLING }",\n` );
+      wf( `"type": "array",\n` );
+      wf( `"required": false,\n` );
+      wf( `"items":\n`);
       wf( "+", `{\n`);
-         wfs( `"type": "object",\n` );
-         wfs( `"properties":\n` );
+         wf( `"type": "object",\n` );
+         wf( `"properties":\n` );
          wf( "+", `{\n` );
-            wfs( `"characteristic":\n` );
+            wf( `"characteristic":\n` );
             wf( "+", `{\n` );
-               wfs( `"title": "characteristic",\n` );
-               wfs( `"type": "string",\n` );
-               wfs( `"required": "true"\n` );
+               wf( `"title": "characteristic",\n` );
+               wf( `"type": "string",\n` );
+               wf( `"required": "true"\n` );
             wf( "-", `},` );
-            wfs( `"interval":\n` );
+            wf( `"interval":\n` );
             wf( "+", `{\n` );
-               wfs( `"title": "interval",\n` );
-               wfs( `"type": "number",\n` );
-               wfs( `"required": "false"\n` );
+               wf( `"title": "interval",\n` );
+               wf( `"type": "number",\n` );
+               wf( `"required": "false"\n` );
             wf( "-", `},` );
-            wfs( `"stateChaneResponseTime":\n` );
+            wf( `"stateChaneResponseTime":\n` );
             wf( "+", `{\n` );
-               wfs( `"title": "stateChaneResponseTime",\n` );
-               wfs( `"type": "number",\n` );
-               wfs( `"required": "false"\n` );
+               wf( `"title": "stateChaneResponseTime",\n` );
+               wf( `"type": "number",\n` );
+               wf( `"required": "false"\n` );
             wf( "-", `},` );
-            wfs( `"queue":\n` );
+            wf( `"queue":\n` );
             wf( "+", `{\n` );
-               wfs( `"title": "queue",\n` );
-               wfs( `"type": "string",\n` );
-               wfs( `"required": "false"\n` );
+               wf( `"title": "queue",\n` );
+               wf( `"type": "string",\n` );
+               wf( `"required": "false"\n` );
             wf( "-", `}\n` );
          wf( "-", `}\n` );
       wf( "-", `}\n` );
@@ -341,40 +332,35 @@ function addAccessoryDefinitionBlock( )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
-      w( `,\n` );
+      wf( `,\n` );
 
-   wfs( `"$comment": "START OF accessories DEFINITION",\n` );
+   wf( `"$comment": "START OF accessories DEFINITION",\n` );
 
    // ** Begin bracket accessories definition block
    wf( "+", `"accessories": {\n` );
-      wfs( `"$id": "#accessories",\n` );
-      wfs( `"title": "Accessories",\n` );
-      wfs( `"type": "array",\n` );
+      wf( `"$id": "#accessories",\n` );
+      wf( `"title": "Accessories",\n` );
+      wf( `"type": "array",\n` );
       wf( "+", `"items": {\n` );
 
-         wfs( `"${ constants.TYPE }": { "$ref": "#/$definitions/type"},\n` );
+         wf( `"${ constants.TYPE }": { "$ref": "#/$definitions/type"},\n` );
 
          // All the globals that can be defined at the Accessory level
-         wfs( `"debug": { "$ref": "#/$definitions/debug"},\n` );
-         wfs( `"allowTLV8": { "$ref": "#/$definitions/allowTLV8"},\n` );
-         wfs( `"outputConstants": { "$ref": "#/$definitions/outputConstants"},\n` );
-         wfs( `"statusMsg": { "$ref": "#/$definitions/statusMsg"},\n` );
-         wfs( `"interval": { "$ref": "#/$definitions/interval"},\n` );
-         wfs( `"timeout": { "$ref": "#/$definitions/timeout"},\n` );
-         wfs( `"stateChangeResponseTime": { "$ref": "#/$definitions/stateChangeResponseTime"},\n` );
-         wfs( `"queueTypes": { "$ref": "#/$definitions/queueTypes"},\n` );
+         wf( `"debug": { "$ref": "#/$definitions/debug"},\n` );
+         wf( `"allowTLV8": { "$ref": "#/$definitions/allowTLV8"},\n` );
+         wf( `"outputConstants": { "$ref": "#/$definitions/outputConstants"},\n` );
+         wf( `"statusMsg": { "$ref": "#/$definitions/statusMsg"},\n` );
+         wf( `"interval": { "$ref": "#/$definitions/interval"},\n` );
+         wf( `"timeout": { "$ref": "#/$definitions/timeout"},\n` );
+         wf( `"stateChangeResponseTime": { "$ref": "#/$definitions/stateChangeResponseTime"},\n` );
+         wf( `"queueTypes": { "$ref": "#/$definitions/queueTypes"},\n` );
 
-         wfs( `"folder": { "$ref": "#/$definitions/folder"},\n` );
-         wfs( `"storage": { "$ref": "#/$definitions/storage"},\n` );
-         wfs( `"storagePath": { "$ref": "#/$definitions/storagePath"},\n` );
-         wfs( `"keyPath": { "$ref": "#/$definitions/keyPath"},\n` );
-
-         wfs( `"type": { "$ref": "#/$definitions/type"},\n` );
-         wfs( `"name": { "$ref": "#/$definitions/name"},\n` );
-         wfs( `"displayName": { "$ref": "#/$definitions/displayName"},\n` );
-         wfs( `"configuredName": { "$ref": "#/$definitions/configuredName"},\n` );
-         wfs( `"subType": { "$ref": "#/$definitions/subType"},\n` );
-         wfs( `"category": { "$ref": "#/$definitions/category"},\n` );
+         wf( `"folder": { "$ref": "#/$definitions/folder"},\n` );
+         wf( `"storage": { "$ref": "#/$definitions/storage"},\n` );
+         wf( `"storagePath": { "$ref": "#/$definitions/storagePath"},\n` );
+         wf( `"keyPath": { "$ref": "#/$definitions/keyPath"},\n` );
+         wf( `"displayName": { "$ref": "#/$definitions/displayName"},\n` );
+         wf( `"subType": { "$ref": "#/$definitions/subType"},\n` );
 
          // All the characteristics
          for ( let i=0; i < CMD4_ACC_TYPE_ENUM.EOL; i ++)
@@ -382,13 +368,13 @@ function addAccessoryDefinitionBlock( )
             let properties = CMD4_ACC_TYPE_ENUM.properties[ i ];
             let characteristicString = properties.sche;
 
-            wfs( `"${ characteristicString }": { "$ref": "#/$definitions/${ characteristicString }"},\n` );
+            wf( `"${ characteristicString }": { "$ref": "#/$definitions/${ characteristicString }"},\n` );
          }
 
-         wfs( `"${ constants.POLLING }": { "$ref": "#/$definitions/polling"},\n` );
-         wfs( `"${ constants.STATE_CMD_PREFIX }": { "$ref": "#/$definitions/state_cmd_prefix"},\n` );
-         wfs( `"${ constants.STATE_CMD }": { "$ref": "#/$definitions/state_cmd"},\n` );
-         wfs( `"${ constants.STATE_CMD_SUFFIX }": { "$ref": "#/$definitions/state_cmd_suffix"}\n` );
+         wf( `"${ constants.POLLING }": { "$ref": "#/$definitions/polling"},\n` );
+         wf( `"${ constants.STATE_CMD_PREFIX }": { "$ref": "#/$definitions/state_cmd_prefix"},\n` );
+         wf( `"${ constants.STATE_CMD }": { "$ref": "#/$definitions/state_cmd"},\n` );
+         wf( `"${ constants.STATE_CMD_SUFFIX }": { "$ref": "#/$definitions/state_cmd_suffix"}\n` );
       // *** End bracket items:
       wf( "-", `}\n` );
    // *** End bracket accessories:
@@ -402,151 +388,151 @@ function addGlobalsDefinitionBlock( )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
-      w( `,\n` );
+      wf( `,\n` );
 
-      wfs( `"debug":\n` );
+      wf( `"debug":\n` );
       wf( "+", `{\n` );
-         wfs( `"title": "debug",\n` );
-         wfs( `"type": "boolean",\n` );
-         wfs( `"description": "Enables additional output in the log.",\n` );
-         wfs( `"required": false,\n` );
-         wfs( `"placeholder": false\n` );
+         wf( `"title": "debug",\n` );
+         wf( `"type": "boolean",\n` );
+         wf( `"description": "Enables additional output in the log.",\n` );
+         wf( `"required": false,\n` );
+         wf( `"placeholder": false\n` );
       wf( "-", `},\n` );
-      wfs( `"statusMsg":\n` );
+      wf( `"statusMsg":\n` );
       wf( "+", `{\n` );
-         wfs( `"title": "statusMsg",\n` );
-         wfs( `"type": "boolean",\n` );
-         wfs( `"description": "Enables additional output in the log.",\n` );
-         wfs( `"required": false,\n` );
-         wfs( `"placeholder": true\n` );
+         wf( `"title": "statusMsg",\n` );
+         wf( `"type": "boolean",\n` );
+         wf( `"description": "Enables additional output in the log.",\n` );
+         wf( `"required": false,\n` );
+         wf( `"placeholder": true\n` );
       wf( "-", `},\n` );
-      wfs( `"allowTLV8":\n` );
+      wf( `"allowTLV8":\n` );
       wf( "+", `{\n` );
-         wfs( `"title": "allowTLV8",\n` );
-         wfs( `"type": "boolean",\n` );
-         wfs( `"description": "Enables wacky TLV8 characteristics.",\n` );
-         wfs( `"required": false,\n` );
-         wfs( `"placeholder": false\n` );
+         wf( `"title": "allowTLV8",\n` );
+         wf( `"type": "boolean",\n` );
+         wf( `"description": "Enables wacky TLV8 characteristics.",\n` );
+         wf( `"required": false,\n` );
+         wf( `"placeholder": false\n` );
       wf( "-", `},\n` );
-      wfs( `"outputConstants":\n` );
+      wf( `"outputConstants":\n` );
       wf( "+", `{\n` );
-         wfs( `"title": "outputConstants",\n` );
-         wfs( `"type": "boolean",\n` );
-         wfs( `"description": "Output constants instead of values.",\n` );
-         wfs( `"required": false,\n` );
-         wfs( `"placeholder": false\n` );
+         wf( `"title": "outputConstants",\n` );
+         wf( `"type": "boolean",\n` );
+         wf( `"description": "Output constants instead of values.",\n` );
+         wf( `"required": false,\n` );
+         wf( `"placeholder": false\n` );
       wf( "-", `},\n` );
-      wfs( `"timeout":\n` );
+      wf( `"timeout":\n` );
       wf( "+", `{\n` );
-         wfs( `"title": "timeout",\n` );
-         wfs( `"type": "integer",\n` );
-         wfs( `"description": "The global timeout for all polling accessories (sec).",\n` );
-         wfs( `"required": false,\n` );
-         wfs( `"minimum": 3,\n` );
-         wfs( `"placeholder": 3\n` );
+         wf( `"title": "timeout",\n` );
+         wf( `"type": "integer",\n` );
+         wf( `"description": "The global timeout for all polling accessories (sec).",\n` );
+         wf( `"required": false,\n` );
+         wf( `"minimum": 3,\n` );
+         wf( `"placeholder": 3\n` );
       wf( "-", `},\n` );
-      wfs( `"stateChangeResponseTime":\n` );
+      wf( `"stateChangeResponseTime":\n` );
       wf( "+", `{\n` );
-         wfs( `"title": "stateChangeResponseTime",\n` );
-         wfs( `"type": "integer",\n` );
-         wfs( `"description": "The time for the accessories to respond (msec).",\n` );
-         wfs( `"required": false,\n` );
-         wfs( `"placeholder": 60000\n` );
+         wf( `"title": "stateChangeResponseTime",\n` );
+         wf( `"type": "integer",\n` );
+         wf( `"description": "The time for the accessories to respond (msec).",\n` );
+         wf( `"required": false,\n` );
+         wf( `"placeholder": 60000\n` );
       wf( "-", `},\n` );
-      wfs( `"interval":\n` );
+      wf( `"interval":\n` );
       wf( "+", `{\n` );
-         wfs( `"title": "interval",\n` );
-         wfs( `"type": "integer",\n` );
-         wfs( `"description": "Polling interval of all accesssories (sec}.",\n` );
-         wfs( `"required": false,\n` );
-         wfs( `"minimum": 3,\n` );
-         wfs( `"placeholder": 60\n` );
+         wf( `"title": "interval",\n` );
+         wf( `"type": "integer",\n` );
+         wf( `"description": "Polling interval of all accesssories (sec}.",\n` );
+         wf( `"required": false,\n` );
+         wf( `"minimum": 3,\n` );
+         wf( `"placeholder": 60\n` );
       wf( "-", `},\n` );
-      wfs( `"state_cmd_prefix":\n` );
+      wf( `"state_cmd_prefix":\n` );
       wf( "+", `{\n` );
-         wfs( `"title": "state_cmd_prefix",\n` );
-         wfs( `"type": "string",\n` );
-         wfs( `"description": "The global state_cmd prefix for all accessories.",\n` );
-         wfs( `"required": false\n` );
+         wf( `"title": "state_cmd_prefix",\n` );
+         wf( `"type": "string",\n` );
+         wf( `"description": "The global state_cmd prefix for all accessories.",\n` );
+         wf( `"required": false\n` );
       wf( "-", `},\n` );
-      wfs( `"state_cmd":\n` );
+      wf( `"state_cmd":\n` );
       wf( "+", `{\n` );
-         wfs( `"title": "state_cmd",\n` );
-         wfs( `"type": "string",\n` );
-         wfs( `"description": "The global state_cmd for all accessories.",\n` );
-         wfs( `"placeholder": ".homebridge/cmd4Scripts/",\n` );
-         wfs( `"required": false\n` );
+         wf( `"title": "state_cmd",\n` );
+         wf( `"type": "string",\n` );
+         wf( `"description": "The global state_cmd for all accessories.",\n` );
+         wf( `"placeholder": ".homebridge/cmd4Scripts/",\n` );
+         wf( `"required": false\n` );
       wf( "-", `},\n` );
-      wfs( `"state_cmd_suffix":\n` );
+      wf( `"state_cmd_suffix":\n` );
       wf( "+", `{\n` );
-         wfs( `"title": "state_cmd_suffix",\n` );
-         wfs( `"type": "string",\n` );
-         wfs( `"description": "The global state_cmd suffix for all accessories.",\n` );
-         wfs( `"required": false\n` );
+         wf( `"title": "state_cmd_suffix",\n` );
+         wf( `"type": "string",\n` );
+         wf( `"description": "The global state_cmd suffix for all accessories.",\n` );
+         wf( `"required": false\n` );
       wf( "-", `},\n` );
-      wfs( `"storage":\n` );
+      wf( `"storage":\n` );
       wf( "+", `{\n` );
-         wfs( `"title": "storage",\n` );
-         wfs( `"description": "The FakeGato Storage type for all accessories.",\n` );
-         wfs( `"required": false,\n` );
-         wfs( `"type": "string",\n` );
-         wfs( `"oneOf":\n`);
+         wf( `"title": "storage",\n` );
+         wf( `"description": "The FakeGato Storage type for all accessories.",\n` );
+         wf( `"required": false,\n` );
+         wf( `"type": "string",\n` );
+         wf( `"oneOf":\n`);
          wf( "+", `[\n` );
-           wfs( `{"title": "fs","enum": ["fs"] },\n` );
-           wfs( `{ "title": "googleDrive", "enum": ["googleDrive" ]}\n` );
+           wf( `{"title": "fs","enum": ["fs"] },\n` );
+           wf( `{ "title": "googleDrive", "enum": ["googleDrive" ]}\n` );
          wf( "-", `]\n` );
       wf( "-", `},\n` );
-      wfs( `"storagePath":\n` );
+      wf( `"storagePath":\n` );
       wf( "+", `{\n` );
-         wfs( `"title": "storagePath",\n` );
-         wfs( `"type": "string",\n` );
-         wfs( `"description": "The global FakeGato storagePath for all accessories.",\n` );
-         wfs( `"required": false\n` );
+         wf( `"title": "storagePath",\n` );
+         wf( `"type": "string",\n` );
+         wf( `"description": "The global FakeGato storagePath for all accessories.",\n` );
+         wf( `"required": false\n` );
       wf( "-", `},\n` );
-      wfs( `"folder":\n` );
+      wf( `"folder":\n` );
       wf( "+", `{\n` );
-         wfs( `"title": "folder",\n` );
-         wfs( `"type": "string",\n` );
-         wfs( `"description": "The global FakeGato folder for all accessories.",\n` );
-         wfs( `"required": false\n` );
+         wf( `"title": "folder",\n` );
+         wf( `"type": "string",\n` );
+         wf( `"description": "The global FakeGato folder for all accessories.",\n` );
+         wf( `"required": false\n` );
       wf( "-", `},\n` );
-      wfs( `"keyPath":\n` );
+      wf( `"keyPath":\n` );
       wf( "+", `{\n` );
-         wfs( `"title": "keyPath",\n` );
-         wfs( `"type": "string",\n` );
-         wfs( `"description": "The FakeGato keyPath for all accessories.",\n` );
-         wfs( `"required": false\n` );
+         wf( `"title": "keyPath",\n` );
+         wf( `"type": "string",\n` );
+         wf( `"description": "The FakeGato keyPath for all accessories.",\n` );
+         wf( `"required": false\n` );
       wf( "-", `},\n` );
-      wfs( `"definitions":\n` );
+      wf( `"definitions":\n` );
       wf( "+", `{\n` );
-         wfs( `"title": "definitions",\n` );
-         wfs( `"type": "object",\n` );
-         wfs( `"description": "complex data.",\n` );
-         wfs( `"required": false\n` );
+         wf( `"title": "definitions",\n` );
+         wf( `"type": "object",\n` );
+         wf( `"description": "complex data.",\n` );
+         wf( `"required": false\n` );
       wf( "-", `},\n` );
-      wfs( `"queueTypes":\n` );
+      wf( `"queueTypes":\n` );
       wf( "+", `{\n` );
-         wfs( `"title": "queueTypes",\n` );
-         wfs( `"type": "array",\n` );
-         wfs( `"uniqueItems": true,\n` );
-         wfs( `"required": false,\n` );
-         wfs( `"items":\n` );
+         wf( `"title": "queueTypes",\n` );
+         wf( `"type": "array",\n` );
+         wf( `"uniqueItems": true,\n` );
+         wf( `"required": false,\n` );
+         wf( `"items":\n` );
          wf( "+", `{\n` );
-            wfs( `"type": "object",\n` );
-            wfs( `"properties":\n` );
+            wf( `"type": "object",\n` );
+            wf( `"properties":\n` );
             wf( "+", `{\n` );
-               wfs( `"queue":\n` );
+               wf( `"queue":\n` );
                wf( "+", `{\n` );
-                  wfs( `"type": "string",\n` );
-                  wfs( `"required": true\n` );
+                  wf( `"type": "string",\n` );
+                  wf( `"required": true\n` );
                wf( "-", `},\n` );
-               wfs( `"queueType":\n` );
+               wf( `"queueType":\n` );
                wf( "+", `{\n` );
-                  wfs( `"type": "string",\n` );
-                  wfs( `"oneOf":\n` );
+                  wf( `"type": "string",\n` );
+                  wf( `"oneOf":\n` );
                   wf( "+", `[\n` );
-                     wfs( `{"title": "WoRm","enum": ["WoRm"] },\n` );
-                     wfs( `{ "title": "Sequential", "enum": ["Sequential" ]}\n` );
+                     wf( `{"title": "WoRm","enum": ["WoRm"] },\n` );
+                     wf( `{ "title": "Sequential", "enum": ["Sequential" ]}\n` );
                  wf( "-", `]\n` );
              wf( "-", `}\n` );
          wf( "-", `}\n` );
@@ -562,9 +548,9 @@ function addCharacteristicDefinitionBlock( )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
-      w( `,\n` );
+      wf( `,\n` );
 
-   wfs( `"$comment": "START OF CHARACTERISTIC DEFINITIONS",\n` );
+   wf( `"$comment": "START OF CHARACTERISTIC DEFINITIONS",\n` );
    // Over the Cmd4 Characteristics, create pre-definitions
    let characteristicCommaRequired = false;
 
@@ -578,43 +564,43 @@ function addCharacteristicDefinitionBlock( )
 
       // add the comma always next time.
       if ( characteristicCommaRequired == true )
-         w( `,\n` );
+         wf( `,\n` );
 
       // *** Begin bracket characteristic definition
-      wfs( `"${ characteristicString }":\n` );
+      wf( `"${ characteristicString }":\n` );
       wf( "+", `{\n` );
-         wfs( `"$id": "#${ characteristicString }",\n` );
-         wfs( `"title": "${ characteristicString }",\n` );
+         wf( `"$id": "#${ characteristicString }",\n` );
+         wf( `"title": "${ characteristicString }",\n` );
          switch ( accProps.format )
          {
             case hapFormats.BOOL:
-               wfs( `"type": "boolean",\n` );
+               wf( `"type": "boolean",\n` );
                break;
             case hapFormats.INT:
             case hapFormats.UINT8:
             case hapFormats.UINT16:
             case hapFormats.UINT32:
             case hapFormats.UINT64:
-               wfs( `"type": "integer",\n` );
+               wf( `"type": "integer",\n` );
                break;
             case hapFormats.FLOAT:
-               wfs( `"type": "number",\n` );
+               wf( `"type": "number",\n` );
                break;
             case hapFormats.STRING:
-               wfs( `"type": "string",\n` );
+               wf( `"type": "string",\n` );
                break;
             case hapFormats.DATA:
             case hapFormats.TLV8:
             case hapFormats.DICT:
-               wfs( `"type": "string",\n` );
+               wf( `"type": "string",\n` );
                break;
          }
          if ( accProps.minValue != undefined )
-            wfs( `"minimum": ${ accProps.minValue },\n` );
+            wf( `"minimum": ${ accProps.minValue },\n` );
          if ( accProps.maxValue != undefined )
-            wfs( `"maximum": ${ accProps.maxValue },\n` );
+            wf( `"maximum": ${ accProps.maxValue },\n` );
 
-         wfs( `"description": "${ description }"` );
+         wf( `"description": "${ description }"` );
 
          for ( let j = 0; j < CMD4_DEVICE_TYPE_ENUM.EOL; j ++ )
          {
@@ -628,14 +614,14 @@ function addCharacteristicDefinitionBlock( )
                  {
 
                     // dtart bracket condition
-                    w( `,\n` );
-                    wfs( `"condition":\n` );
+                    wf( `,\n` );
+                    wf( `"condition":\n` );
                     wf( "+", `{\n` );
-                        wfs( `"functionBody": "return ['${ devProps.deviceName }'`);
+                        wf( `"functionBody": "return ['${ devProps.deviceName }'`);
                     conditionStarted = true;
                  } else
                  {
-                         w( `,'${ devProps.deviceName }'`);
+                         wf( `,'${ devProps.deviceName }'`);
                  }
               }
            });
@@ -644,16 +630,16 @@ function addCharacteristicDefinitionBlock( )
          {
             if ( accProps.format == hapFormats.TLV8 )
             {
-               w( `].includes(model.type) && model.allowTLV8 == true;"\n`);
+               wf( `].includes(model.type) && model.allowTLV8 == true;"\n`);
             } else
             {
-               w( `].includes(model.type);"\n`);
+               wf( `].includes(model.type);"\n`);
             }
             // ***End bracket condition
             wf( "-", `}\n` );
          } else
          {
-             w( `\n`);
+             wf( `\n`);
          }
 
          // *** End bracket characteristic definition
@@ -670,27 +656,27 @@ function addAccessorySchemaBlock( )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
-      w( `,\n` );
+      wf( `,\n` );
 
    // ** Begin bracket properties
-   wfs( `"properties":\n` );
+   wf( `"properties":\n` );
    wf( "+", `{\n` );
-      wfs( `"${ constants.TYPE }": { "$ref": "#/$definitions/type"},\n` );
+//    wf( `"${ constants.TYPE }": { "$ref": "#/$definitions/type"},\n` );
 
       // All the globals that can be defined at the Accessory level
-      wfs( `"debug": { "$ref": "#/$definitions/debug"},\n` );
-      wfs( `"allowTLV8": { "$ref": "#/$definitions/allowTLV8"},\n` );
-      wfs( `"outputConstants": { "$ref": "#/$definitions/outputConstants"},\n` );
-      wfs( `"statusMsg": { "$ref": "#/$definitions/statusMsg"},\n` );
-      wfs( `"interval": { "$ref": "#/$definitions/interval"},\n` );
-      wfs( `"timeout": { "$ref": "#/$definitions/timeout"},\n` );
-      wfs( `"stateChangeResponseTime": { "$ref": "#/$definitions/stateChangeResponseTime"},\n` );
-      wfs( `"queueTypes": { "$ref": "#/$definitions/queueTypes"},\n` );
+      wf( `"debug": { "$ref": "#/$definitions/debug"},\n` );
+      wf( `"allowTLV8": { "$ref": "#/$definitions/allowTLV8"},\n` );
+      wf( `"outputConstants": { "$ref": "#/$definitions/outputConstants"},\n` );
+      wf( `"statusMsg": { "$ref": "#/$definitions/statusMsg"},\n` );
+      wf( `"interval": { "$ref": "#/$definitions/interval"},\n` );
+      wf( `"timeout": { "$ref": "#/$definitions/timeout"},\n` );
+      wf( `"stateChangeResponseTime": { "$ref": "#/$definitions/stateChangeResponseTime"},\n` );
+      wf( `"queueTypes": { "$ref": "#/$definitions/queueTypes"},\n` );
 
-      wfs( `"folder": { "$ref": "#/$definitions/folder"},\n` );
-      wfs( `"storage": { "$ref": "#/$definitions/storage"},\n` );
-      wfs( `"storagePath": { "$ref": "#/$definitions/storagePath"},\n` );
-      wfs( `"keyPath": { "$ref": "#/$definitions/keyPath"},\n` );
+      wf( `"folder": { "$ref": "#/$definitions/folder"},\n` );
+      wf( `"storage": { "$ref": "#/$definitions/storage"},\n` );
+      wf( `"storagePath": { "$ref": "#/$definitions/storagePath"},\n` );
+      wf( `"keyPath": { "$ref": "#/$definitions/keyPath"},\n` );
 
       // All the characteristics
       for ( let i=0; i < CMD4_ACC_TYPE_ENUM.EOL; i ++)
@@ -698,13 +684,13 @@ function addAccessorySchemaBlock( )
          let properties = CMD4_ACC_TYPE_ENUM.properties[ i ];
          let characteristicString = properties.sche;
 
-         wfs( `"${ characteristicString }": { "$ref": "#/$definitions/${ characteristicString }"},\n` );
+         wf( `"${ characteristicString }": { "$ref": "#/$definitions/${ characteristicString }"},\n` );
       }
 
-      wfs( `"${ constants.POLLING }": { "$ref": "#/$definitions/polling"},\n` );
-      wfs( `"${ constants.STATE_CMD_PREFIX }": { "$ref": "#/$definitions/state_cmd_prefix"},\n` );
-      wfs( `"${ constants.STATE_CMD }": { "$ref": "#/$definitions/state_cmd"},\n` );
-      wfs( `"${ constants.STATE_CMD_SUFFIX }": { "$ref": "#/$definitions/state_cmd_suffix"}\n` );
+      wf( `"${ constants.POLLING }": { "$ref": "#/$definitions/polling"},\n` );
+      wf( `"${ constants.STATE_CMD_PREFIX }": { "$ref": "#/$definitions/state_cmd_prefix"},\n` );
+      wf( `"${ constants.STATE_CMD }": { "$ref": "#/$definitions/state_cmd"},\n` );
+      wf( `"${ constants.STATE_CMD_SUFFIX }": { "$ref": "#/$definitions/state_cmd_suffix"}\n` );
    // *** End bracket properties:
    wf( "-", `}\n` );
 
@@ -718,11 +704,11 @@ function addTypeLayout( )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
-      w( `,\n` );
+      wf( `,\n` );
 
       wf( "+", `{\n` );
-        wfs( `"key": "${ constants.TYPE }",\n` );
-        wfs( `"$ref": "#/$definitions/type"\n` );
+        wf( `"key": "${ constants.TYPE }",\n` );
+        wf( `"$ref": "#/$definitions/type"\n` );
       wf( "-", `}` );
 
    commaRequired_g = true;
@@ -732,13 +718,13 @@ function addNameLayout( )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
-      w( `,\n` );
+      wf( `,\n` );
 
    wf( "+", `{\n` );
-     wfs( `"key": "name",\n` );
-     wfs( `"condition":\n` );
+     wf( `"key": "name",\n` );
+     wf( `"condition":\n` );
      wf( "+", `{\n` );
-        wfs( `"functionBody": "return model.type && model.type !== 'null';"\n` );
+        wf( `"functionBody": "return model.type && model.type !== 'null';"\n` );
      wf( "-", `}\n` );
    wf( "-", `}` );
 
@@ -749,22 +735,22 @@ function addGlobalsLayout( )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
-      w( `,\n` );
+      wf( `,\n` );
 
    wf( "+", `{\n` );
-      wfs( `"title": "Accessory Options",\n` );
-      wfs( `"type": "fieldset",\n` );
-      wfs( `"expandable": true,\n` );
+      wf( `"title": "Accessory Options",\n` );
+      wf( `"type": "fieldset",\n` );
+      wf( `"expandable": true,\n` );
       wf( "+", `"items": [\n` );
-//    wfs( `"items":\n` );
+//    wf( `"items":\n` );
 //    wf( "+", `[\n` );
-         wfs( `"debug",\n` );
-         wfs( `"statusMsg",\n` );
-         wfs( `"allowTLV8",\n` );
-         wfs( `"outputConstants",\n` );
-         wfs( `"timeout",\n` );
-         wfs( `"stateChangeResponseTime",\n` );
-         wfs( `"interval"\n` );
+         wf( `"debug",\n` );
+         wf( `"statusMsg",\n` );
+         wf( `"allowTLV8",\n` );
+         wf( `"outputConstants",\n` );
+         wf( `"timeout",\n` );
+         wf( `"stateChangeResponseTime",\n` );
+         wf( `"interval"\n` );
       wf( "-", `]\n` );
    wf( "-", `}` );
 
@@ -776,17 +762,17 @@ function addStateCmdLayout( )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
-      w( `,\n` );
+      wf( `,\n` );
 
    wf( "+", `{\n` );
-      wfs( `"title": "state_cmd Options",\n` );
-      wfs( `"type": "fieldset",\n` );
-      wfs( `"expandable": true,\n` );
-      wfs( `"items":\n` );
+      wf( `"title": "state_cmd Options",\n` );
+      wf( `"type": "fieldset",\n` );
+      wf( `"expandable": true,\n` );
+      wf( `"items":\n` );
       wf( "+", `[\n` );
-         wfs( `"state_cmd_prefix",\n` );
-         wfs( `"state_cmd",\n` );
-         wfs( `"state_cmd_suffix"\n` );
+         wf( `"state_cmd_prefix",\n` );
+         wf( `"state_cmd",\n` );
+         wf( `"state_cmd_suffix"\n` );
       wf( "-", `]\n` );
    wf( "-", `}` );
 
@@ -798,29 +784,29 @@ function addFakeGatoLayout( )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
-      w( `,\n` );
+      wf( `,\n` );
 
    wf( "+", `{\n` );
-      wfs( `"title": "FakeGato Options",\n` );
-      wfs( `"type": "fieldset",\n` );
-      wfs( `"expandable": true,\n` );
-      wfs( `"items":\n` );
+      wf( `"title": "FakeGato Options",\n` );
+      wf( `"type": "fieldset",\n` );
+      wf( `"expandable": true,\n` );
+      wf( `"items":\n` );
       wf( "+", `[\n` );
          wf( "+", `{\n` );
-            wfs( `"key": "storage", "flex": "1 1 50px",\n` );
-            wfs( `"notitle": false, "placeholder": "fs"\n` );
+            wf( `"key": "storage", "flex": "1 1 50px",\n` );
+            wf( `"notitle": false, "placeholder": "fs"\n` );
          wf( "-", `},\n` );
          wf( "+", `{\n` );
-            wfs( `"key": "storagePath", "flex": "1 1 50px",\n` );
-            wfs( `"notitle": false\n` );
+            wf( `"key": "storagePath", "flex": "1 1 50px",\n` );
+            wf( `"notitle": false\n` );
          wf( "-", `},\n` );
          wf( "+", `{\n` );
-            wfs( `"key": "folder", "flex": "1 1 50px",\n` );
-            wfs( `"notitle": false\n` );
+            wf( `"key": "folder", "flex": "1 1 50px",\n` );
+            wf( `"notitle": false\n` );
          wf( "-", `},\n` );
          wf( "+", `{\n` );
-            wfs( `"key": "keyPath", "flex": "1 1 50px",\n` );
-            wfs( `"notitle": false\n` );
+            wf( `"key": "keyPath", "flex": "1 1 50px",\n` );
+            wf( `"notitle": false\n` );
          wf( "-", `}\n` );
       wf( "-", `]\n` );
    wf( "-", `}` );
@@ -831,7 +817,7 @@ function addFakeGatoLayout( )
 function addRequiredCharacteristicPerDeviceLayout( )
 {
 
-   wfs( `"$comment": "START OF REQUIRED CHARACTERISTIC LAYOUT PER DEVICE BLOCK",\n` );
+   wf( `"$comment": "START OF REQUIRED CHARACTERISTIC LAYOUT PER DEVICE BLOCK",\n` );
 
 
    // Over the Cmd4 Devices, create pre-definitions
@@ -847,7 +833,7 @@ function addRequiredCharacteristicPerDeviceLayout( )
          // add the comma always next time.
          if ( commaRequired_g == true )
          {
-             w( `,\n` );
+             wf( `,\n` );
             commaRequired_g = false;
          }
          let requiredCharacteristic = CMD4_ACC_TYPE_ENUM.accEnumIndexToLC( entry.type );
@@ -857,24 +843,24 @@ function addRequiredCharacteristicPerDeviceLayout( )
             requireStarted = true;
 
             wf( "+", `{\n` );
-               wfs( `"type": "fieldset",\n`);
-               wfs( `"expandable": true,\n`);
-               wfs( `"title": "${ deviceName } Required Characteristics",\n`);
-               wfs( `"condition":\n` );
+               wf( `"type": "fieldset",\n`);
+               wf( `"expandable": true,\n`);
+               wf( `"title": "${ deviceName } Required Characteristics",\n`);
+               wf( `"condition":\n` );
                wf( "+", `{\n` );
-                  wfs( `"functionBody": "return ['${ deviceName }'].includes(model.type);"\n` );
+                  wf( `"functionBody": "return ['${ deviceName }'].includes(model.type);"\n` );
                wf( "-", `},\n` );
-               wfs( `"items":\n` );
+               wf( `"items":\n` );
                wf( "+", `[\n` );
-                  wfs( `"${ requiredCharacteristic }"` );
+                  wf( `"${ requiredCharacteristic }"` );
           } else
           {
-                  w( `,"${ requiredCharacteristic }"` );
+                  wf( `,"${ requiredCharacteristic }"` );
           }
       })
       if ( requireStarted == true )
       {
-               w( `\n` );
+               wf( `\n` );
                wf( "-", `]\n` );
              wf( "-", `}` );
 
@@ -889,7 +875,7 @@ function addRequiredCharacteristicPerDeviceLayout( )
 function addOptionalCharacteristicPerDeviceLayout( )
 {
 
-   wfs( `"$comment": "START OF REQUIRED CHARACTERISTIC LAYOUT PER DEVICE BLOCK",\n` );
+   wf( `"$comment": "START OF REQUIRED CHARACTERISTIC LAYOUT PER DEVICE BLOCK",\n` );
 
 
    // Over the Cmd4 Devices, create pre-definitions
@@ -905,7 +891,7 @@ function addOptionalCharacteristicPerDeviceLayout( )
          // add the comma always next time.
          if ( commaRequired_g == true )
          {
-             w( `,\n` );
+             wf( `,\n` );
             commaRequired_g = false;
          }
          let optionalCharacteristic = CMD4_ACC_TYPE_ENUM.accEnumIndexToLC( entry );
@@ -915,24 +901,24 @@ function addOptionalCharacteristicPerDeviceLayout( )
             optionalStarted = true;
 
             wf( "+", `{\n` );
-               wfs( `"type": "fieldset",\n`);
-               wfs( `"expandable": true,\n`);
-               wfs( `"title": "${ deviceName } Optional Characteristics",\n`);
-               wfs( `"condition":\n` );
+               wf( `"type": "fieldset",\n`);
+               wf( `"expandable": true,\n`);
+               wf( `"title": "${ deviceName } Optional Characteristics",\n`);
+               wf( `"condition":\n` );
                wf( "+", `{\n` );
-                  wfs( `"functionBody": "return ['${ deviceName }'].includes(model.type);"\n` );
+                  wf( `"functionBody": "return ['${ deviceName }'].includes(model.type);"\n` );
                wf( "-", `},\n` );
-               wfs( `"items":\n` );
+               wf( `"items":\n` );
                wf( "+", `[\n` );
-                  wfs( `"${ optionalCharacteristic }"` );
+                  wf( `"${ optionalCharacteristic }"` );
           } else
           {
-                  w( `,"${ optionalCharacteristic }"` );
+                  wf( `,"${ optionalCharacteristic }"` );
           }
       })
       if ( optionalStarted == true )
       {
-               w( `\n` );
+               wf( `\n` );
                wf( "-", `]\n` );
              wf( "-", `}` );
 
@@ -947,34 +933,34 @@ function addOptionalCharacteristicPerDeviceLayout( )
 
 function addQueueTypesLayout( )
 {
-   wfs( `"$comment": "START OF QUEUE TYPES LAYOUT BLOCK",\n` );
+   wf( `"$comment": "START OF QUEUE TYPES LAYOUT BLOCK",\n` );
 
    // add the comma always next time.
    if ( commaRequired_g == true )
    {
-      w( `,\n` );
+      wf( `,\n` );
       commaRequired_g = false;
    }
 
    wf( "+", `{\n` )
-     wfs( `"key": "queueTypes",\n` );
-     wfs( `"type": "array",\n` );
-     wfs( `"listItems": 1,\n` );
-     wfs( `"items":\n` );
+     wf( `"key": "queueTypes",\n` );
+     wf( `"type": "array",\n` );
+     wf( `"listItems": 1,\n` );
+     wf( `"items":\n` );
      wf( "+", `[\n` );
         wf( "+", `{\n` );
-           wfs( `"type": "div",\n` );
-           wfs( `"displayFlex": true,\n` );
-           wfs( `"flex-direction": "row",\n` );
-           wfs( `"items":\n` );
+           wf( `"type": "div",\n` );
+           wf( `"displayFlex": true,\n` );
+           wf( `"flex-direction": "row",\n` );
+           wf( `"items":\n` );
            wf( "+", `[\n` );
               wf( "+", `{\n` );
-                  wfs( `"key": "queueTypes[].queue", "flex": "1 1 50px",\n` );
-                  wfs( `"notitle": false, "placeholder": "AQueueName"\n` );
+                  wf( `"key": "queueTypes[].queue", "flex": "1 1 50px",\n` );
+                  wf( `"notitle": false, "placeholder": "AQueueName"\n` );
                wf( "-", `},\n` );
                wf( "+", `{\n` );
-                 wfs( `"key": "queueTypes[].queueType", "flex": "4 4 200px",\n` );
-                 wfs( `"notitle": false, "placeholder": "WoRm"\n` );
+                 wf( `"key": "queueTypes[].queueType", "flex": "4 4 200px",\n` );
+                 wf( `"notitle": false, "placeholder": "WoRm"\n` );
                wf( "-", `}\n` );
             wf( "-", `]\n` );
          wf( "-", `}\n` );
@@ -999,10 +985,10 @@ function addLayout( )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
-      w( `,\n` );
+      wf( `,\n` );
 
    // * Begin square bracket layout:
-   wfs( `"layout":\n` );
+   wf( `"layout":\n` );
    wf( "+", `[\n` );
 
       commaRequired_g = false;
@@ -1025,6 +1011,7 @@ function addLayout( )
 function closeSchemaDocument( )
 {
    // End bracket JSON
+   // For vi % balance: {
    wf( "-", `}\n` );
 
    // Close the Schema file
@@ -1050,26 +1037,34 @@ function testGeneratedSchema( )
 
 
 // Write to fid the given text, increasing or decreasing bracketLevel.
-function wf( level, text )
+function wf( level, text = undefined )
 {
+   if ( text == undefined )
+   {
+      text = level;
+      level = undefined;
+   }
+
+   // Ignore comments that are only available in version 7+
+   if ( schemaVersionSupport <= 6 && text.startsWith( `"$comment"` ) )
+      return;
+
+
    // Subtract now
-   switch( level)
+   switch( level )
    {
       case "-":
-         bracketLevel--;
-         //     text != "}"  && text != "}\n"  &&
-         //     text != "}," && text != "},\n" &&
-         //     text != "]"  && text != "]\n"  &&
-         //     text != "],"  && text != "],\n"
 
-         //  match exactly 1 of either } or : or ]
-         // [}\]]{1}[,]?\n*
+         bracketLevel--;
+
+         if ( bracketLevel < 0 )
+            throw new Error( `two many closed braces ${ bracketLevel } for text: ${ text }` );
+
+         //  match exactly 1 of either CLOSED_SQUIGGLY_BRACKET or : or ]
          //  optionally followed by 0 or 1 commas
-         // [}\]]{1}[,]?\n*
          //  followed by 0 or more newline characters
-         // [}\]]{1}[,]?\n*
          //  at end of line
-         // [}\]]{1}[,]?\n*$
+         //  // For vi % balance: {[
          if ( text.match( /[}\]]{1}[,]?\n*$/ ) )
          {
             // noop
@@ -1077,70 +1072,156 @@ function wf( level, text )
             throw new Error ( `Invalid text for closed level. text: ${ text }` );
          break;
       case "+":
-         //  match exactly 1 of either { or : or {
-         //    [\{:\[]{1}
+         //  match exactly 1 of either OPEN_SQUIGGLY_BRACKET or : or [
          //  followed by 0 or more spaces
-         //    [\{:\[]{1}\s*
          //  followed by 0 or more newline characters
-         //    [\{:\[]{1}\s*[\n]*
          //  at end of line
-         //    [\{:\[]{1}\s*[\n]*$
-         //
 
-         //if ( text != "{"  && text != "{\n"  &&
-         //     text != "["  && text != "[\n"  &&
-         if ( text.match( /[{:[]{1}\s*[\n]*$/ ) )
+         if ( text.match( /[{:[]{1}\s*[\n]*$/ ) ) // For vi % balance: ]}
          {
             // noop
          } else
             throw new Error ( `Invalid text for open level. text: ${ text }` );
          break;
-      case "nc":
-
+      case undefined:
+         // No level passed in
          break;
       default:
          throw new Error ( `Invalid level: ${ level }` );
    }
 
-   if ( bracketLevel < 0 )
-      throw new Error( `two many closed braces ${ bracketLevel } for text: ${ text }` );
 
-   // We need to check to see if the text first starts with a comma
-   // as it changes the validator
+   // Validate actual text, not just spaces and a newline
+   if ( text.match( /\S[\n]{1}$/ ) )
+   {
+      // Based on the set validator_g, the text must contain ...
+      switch( validator_g )
+      {
+         case validatorStates.COLON_HANGING:
+         {
+            // must start with " or { or [
+            // For vi % balance: }]
+            if ( text.match( /^\s*["{[]{1}/ ) ) // for vi % balance: ]}
+            {
+               // noop
+            } else
+               throw new Error( `With COLON_HANGING next char must be " or { or [ for text: ${ text }\npreviousText: ${ previousText }` );
+            break;
+         }
+         case validatorStates.COMMA_HANGING:
+         {
+            // must start with " or {
+            // For vi % balance: }
+            if ( text.match( /^\s*["{]{1}/ ) ) // for vi % balance: }
+            {
+               // noop
+            } else
+               throw new Error( `With COMMA_HANGING next char must be " or { for text: ${ text }\npreviousText: ${ previousText }` );
+            break;
+         }
+         case validatorStates.CLOSED_SQUARE_BRACKET_HANGING:
+         {
+            // For vi % balance: {
+            // must start with } or .
+            // For vi % balance: {
+            if ( text.match( /^\s*[}\\.]{1}/ ) )
+            {
+               // noop
+            } else
+               throw new Error( `With CLOSED_SQUARE_BRACKET_HANGING next char must be } or . for text: ${ text }\npreviousText: ${ previousText }` );
+            break;
+         }
+         case validatorStates.OPEN_SQUARE_BRACKET_HANGING:
+         {
+            // must start with " or { or '
+            if ( text.match( /^\s*["{']{1}/ ) ) // for vi % balance: }}
+            {
+               // noop
+            } else
+               throw new Error( `With OPEN_SQUARE_BRACKET_HANGING next char must be " or { or ' for text: ${ text }\npreviousText: ${ previousText }` );
+            break;
+         }
+         case validatorStates.CLOSED_ROUND_BRACKET_HANGING:
+         {
+            // must start with & or ;
+            if ( text.match( /^\s*[&;]{1}/ ) )
+            {
+               // noop
+            } else
+               throw new Error( `With CLOSED_ROUND_BRACKET_HANGING next char must be & or ; for text: ${ text }\npreviousText: ${ previousText }` );
+            break;
+         }
+         case validatorStates.OPEN_ROUND_BRACKET_HANGING:
+         {
+            // must start with model
+            if ( text.match( /^\s*model/ ) )
+            {
+               // noop
+            } else
+               throw new Error( `With OPEN_ROUND_BRACKET_HANGING next char must be 'model' for text: ${ text }\npreviousText: ${ previousText }` );
+            break;
+         }
+         case validatorStates.CLOSED_SQUIGGLY_BRACKET_HANGING:
+         {
+            // for vi % balance: {
+            // must start with , } "
+            // for vi % balance: {
+            if ( text.match( /^\s*[,}]{1}/ ) )
+            {
+               // noop
+            } else
+            {
+               // for vi % balance: {
+               if ( level == "-" &&
+                    text.match( /^\s*[}\]]{1}/ ) )
+               {
+                  // A level change with a } or ] bracket is okay
 
-   //  From the beginning of the line
-   //   ^
-   //  match 0 or more spaces
-   //   ^\s*,
-   //  followed by a comma
-   //   ^\s*,
-   if ( text.match(/^\s*,/) &&
-        ( validator == validatorStates.COMMA_HANGING ||
-          validator == validatorStates.COLON_HANGING )
-      )
-   {
-      throw new Error( `Additional hanging comma for text: ${ text }` );
-   } else if ( text.match(/^\s+:/) &&
-               ( validator == validatorStates.COMMA_HANGING ||
-                 validator == validatorStates.COLON_HANGING )
-             )
-   {
-      throw new Error( `Additional hanging colon for text: ${ text }` );
-   } else
-   {
-      validator = validatorStates.REQUIRED;
+                  // noop
+               } else
+               {
+                  throw new Error( `With CLOSED_SQUIGGLY_BRACKET_HANGING: next char must be , or } or " for text: ${ text }\npreviousText: ${ previousText }` );
+               }
+            }
+            break;
+         }
+         case validatorStates.OPEN_SQUIGGLY_BRACKET_HANGING:
+         {
+            // must start with  "
+            if ( text.match( /^\s*["]{1}/ ) )
+            {
+               // noop
+            } else
+               throw new Error( `With OPEN_SQUIGGLY_BRACKET_HANGING: next char must be " for text: ${ text }\npreviousText: ${ previousText }` );
+            break;
+         }
+
+         case validatorStates.DOUBLE_QUOTES_HANGING:
+         {
+            // must start with a-zA-Z:,
+            if ( text.match( /^\s*[a-zA-Z:,]/ ) )
+            {
+               // noop
+            } else
+               throw new Error( `With DOUBLE_QUOTES_HANGING next char must be " or a-zA-Z:i or , for text: ${ text }\npreviousText: ${ previousText }` );
+            break;
+         }
+         case validatorStates.CLEAR:
+         default:
+      }
    }
 
-   // Now we can check if a level change causes a comma
-   // to be hung.
-   if (  validator == validatorStates.COMMA_HANGING )
-      if ( level == "+" )
-         throw new Error( `Adding Open bracket leaves comma hanging for text: ${ text }` );
-      else if ( level == "-" )
-         throw new Error( `Adding Closed bracket leaves comma hanging for text: ${ text }` );
+   // Anything not previously a new line gets indented
+   if ( previousText.match( /\n$/ ) )
+   {
+      fid.write( " ".repeat( bracketLevel * INDENT ).concat( text ) );
+   } else
+   {
+      fid.write( text );
+   }
 
 
-   fid.write( " ".repeat( bracketLevel * INDENT ).concat( text ) );
+   // ******** UPDATE VALIDATOR FOR NEXT WRITE OF TEXT
 
    //  match exactly 1 of comma
    //    [1]{1}
@@ -1153,75 +1234,38 @@ function wf( level, text )
    //
    if ( text.match( /[,]{1}\s*[\n]*$/ ) )
    {
-      validator = validatorStates.COMMA_HANGING;
+      validator_g = validatorStates.COMMA_HANGING;
    } else if ( text.match( /[:]{1}\s*[\n]*$/ ) )
    {
-      validator = validatorStates.COLON_HANGING;
+      validator_g = validatorStates.COLON_HANGING;
+   } else if ( text.match( /[\]]{1}\s*[\n]*$/ ) )
+   {
+      validator_g = validatorStates.CLOSED_SQUARE_BRACKET_HANGING;
+   } else if ( text.match( /[)]{1}\s*[\n]*$/ ) )
+   {
+      validator_g = validatorStates.CLOSED_ROUND_BRACKET_HANGING;
+   } else if ( text.match( /[(]{1}\s*[\n]*$/ ) )
+   {
+      validator_g = validatorStates.OPEN_ROUND_BRACKET_HANGING;
+   } else if ( text.match( /[[]{1}\s*[\n]*$/ ) )
+   {
+      validator_g = validatorStates.OPEN_SQUARE_BRACKET_HANGING;
+   } // For vi % balance: {
+   else if ( text.match( /[}]{1}\s*[\n]*$/ ) )
+   {
+      validator_g = validatorStates.CLOSED_SQUIGGLY_BRACKET_HANGING;
+   } else if ( text.match( /[{]{1}\s*[\n]*$/ ) ) // For vi % balance: }
+   {
+      validator_g = validatorStates.OPEN_SQUIGGLY_BRACKET_HANGING;
+   } else {
+      validator_g = validatorStates.NONE_FOUND;
    }
+
+   previousText = text;
 
    // Add later
    if ( level == "+" )
       bracketLevel++;
-}
-
-// Convenience function for wfs. writing to same level.
-function wfs( text )
-{
-   // Ignore comments that are only available in version 7+
-   if ( schemaVersionSupport <= 6 && text.startsWith( `"$comment"` ) )
-   {
-      // nc
-   } else
-   {
-      wf( "nc", text );
-   }
-}
-// Convenience function to write to fid, no formatting, as is.
-function w( text )
-{
-   fid.write( text );
-
-   // We need to check to see if the text first starts with a comma
-   // as it changes the validator
-   if ( text.match(/\s+,/) &&
-        validator == validatorStates.COMMA_HANGING )
-   {
-      throw new Error( `Additional hanging comma for text: ${ text }` );
-   } else
-   {
-      validator = validatorStates.REQUIRED;
-   }
-
-   // Now we can check there was possibly a level change
-   // that should have used wfs
-   if ( text.startsWith( "{" ) ||
-        text.startsWith( "}" )
-        // Does not play nicely with layout
-        // wfs( `"functionBody": "return ['${ devProps.deviceName }'`);
-        //   w( `].includes(model.type);"\n`);
-        // text.match(/\s+]/) ||
-        // text.match(/\s+[/)
-      )
-   {
-      console.log( `Warning, adding brackets without calling wfs for text: ${ text }` );
-   }
-
-   //  match exactly 1 of comma
-   //    [1]{1}
-   //  followed by 0 or more spaces
-   //    [,]{1}\s*
-   //  followed by 0 or more newline characters
-   //    [,]{1}\s*[\n]*
-   //  at end of line
-   //    [,]{1}\s*[\n]*$
-   //
-   if ( text.match( /[,]{1}\s*[\n]*$/ ) )
-   {
-      validator = validatorStates.COMMA_HANGING;
-   } else
-   {
-      validator = validatorStates.REQUIRED;
-   }
 }
 
 // MAIN STUFF STARTS HERE

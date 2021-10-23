@@ -2,7 +2,7 @@
    "pluginAlias": "Cmd4",
    "pluginType": "platform",
    "headerDisplay": "Cmd4 Add Accessories",
-   "singular": false,   "customUi": true,
+   "singular": false,"customUi": true,
    "schema":
    {
       "$definitions":
@@ -2492,15 +2492,8 @@
             "description": "The accessories subType.",
             "placeholder": "A secondary name",
             "required": false
-         }         "configuredName":
-         {
-            "$id": "#configuredName",
-            "type": "string",
-            "title": "configuredName",
-            "description": "The accessories configured name.",
-            "placeholder": "My_Device",
-            "required": false
-         }         "displayName":
+         },
+         "displayName":
          {
             "$id": "#displayName",
             "type": "string",
@@ -2508,7 +2501,8 @@
             "description": "The accessories display name.",
             "placeholder": "My_Device",
             "required": true
-         }         "polling":
+         },
+         "polling":
          {
             "$id": "#polling",
             "title": "polling",
@@ -2524,17 +2518,17 @@
                      "title": "characteristic",
                      "type": "string",
                      "required": "true"
-                  },                  "interval":
+                  },"interval":
                   {
                      "title": "interval",
                      "type": "number",
                      "required": "false"
-                  },                  "stateChaneResponseTime":
+                  },"stateChaneResponseTime":
                   {
                      "title": "stateChaneResponseTime",
                      "type": "number",
                      "required": "false"
-                  },                  "queue":
+                  },"queue":
                   {
                      "title": "queue",
                      "type": "string",
@@ -2561,12 +2555,8 @@
                "storage": { "$ref": "#/$definitions/storage"},
                "storagePath": { "$ref": "#/$definitions/storagePath"},
                "keyPath": { "$ref": "#/$definitions/keyPath"},
-               "type": { "$ref": "#/$definitions/type"},
-               "name": { "$ref": "#/$definitions/name"},
                "displayName": { "$ref": "#/$definitions/displayName"},
-               "configuredName": { "$ref": "#/$definitions/configuredName"},
                "subType": { "$ref": "#/$definitions/subType"},
-               "category": { "$ref": "#/$definitions/category"},
                "accessControlLevel": { "$ref": "#/$definitions/accessControlLevel"},
                "accessoryFlags": { "$ref": "#/$definitions/accessoryFlags"},
                "accessoryIdentifier": { "$ref": "#/$definitions/accessoryIdentifier"},
@@ -2799,7 +2789,6 @@
       },
       "properties":
       {
-         "type": { "$ref": "#/$definitions/type"},
          "debug": { "$ref": "#/$definitions/debug"},
          "allowTLV8": { "$ref": "#/$definitions/allowTLV8"},
          "outputConstants": { "$ref": "#/$definitions/outputConstants"},
@@ -4699,5 +4688,5 @@
             "state_cmd",
             "state_cmd_suffix"
          ]
-      }   ]
+      }]
 }
