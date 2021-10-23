@@ -60,6 +60,8 @@ else
    # alerter -message "$result" -mute
    # Instead use osascript if we have it.
    if [ -x $( which osascript ) ]; then
+      # orig osascript -e "tell app \"Terminal\" to display dialog \"${result//\"/}\""
+      result="$(echo "$result" | sed -e 's/[\\"]//g')"
       osascript -e "tell app \"Terminal\" to display dialog \"${result//\"/}\""
    else
       // The characters around result stop malicious code
