@@ -614,17 +614,29 @@ async function populateSelect( )
 
 }
 
-//$( '#addAccessory, #start' ).on( 'click', ( ) =>
 $( '#showAddAccessoryPageButton' ).on( 'click', ( ) =>
 {
+   resetUI( );
 
    populateSelect( );
 
    homebridge.request( "/showAddAccessoryPageButtonPressed" );
 
-   //let activeContent = $( '#notConfigured' ).css( 'display' ) !== 'none' ? $( '#notConfigured' ) : $( '#isConfigured' );
+} );
+$( '#addAccessoryPage2Button' ).on( 'click', ( ) =>
+{
+   let accessory = {
+      name: $('#accessoryName').val(),
+      type : $('#accessoryTypeSelect').val(),
+   };
+   resetUI( );
+
+   createAccessorySchema( accessory );
+
+   homebridge.request( "/showAddAccessoryPage2ButtonPressed" );
 
 } );
+
 
 // This is called when an existing Accessory is to be edited
 $( '#showEditAccessoryPageButton' ).on( 'click', ( ) =>

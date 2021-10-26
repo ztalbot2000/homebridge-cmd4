@@ -10,38 +10,6 @@
     <button id="startButton" type="submit" class="btn btn-primary center-it mt-3">Start</button>
   </div>
 
-  <!-- addAccessoryPage -->
-  <div id="addAccessoryPage" style="display:none;">
-    <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
-      <i class="fa fa-arrow-left" aria-hidden="true"></i>
-    </button>
-    <button type="submit" class="btn btn-primary float-right showConfigureGlobalsPageButton">
-       <i class="fa fa-globe fa-border" aria-hidden="true"></i>
-    </button>
-    <img src="images/HB_Cmd4.png" alt="Queue Globals Page" width="150px" class="center-it mt-4 cmd4Logo">
-    <h6 class="text-center">To start the process, we need some data for the accessory. <br> Please fill out all marked fields.</h6>
-    <div class="container mt-5">
-      <div class="form-group">
-        <label for="accessoryType">Type <span class="text-danger">*</span> </label>
-        <select name="accessoryTypeSelect" class="form-control" id="accessoryTypeSelect">
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="accessoryName">Name <span class="text-danger">*</span> </label>
-        <input type="text" class="form-control" id="accessoryName">
-      </div>
-      <div class="form-group">
-        <label for="polling">Polling <span class="text-danger">*</span> </label>
-        <input type="checkbox" class="form-control" id="polling">
-      </div>
-      <div class="form-group">
-        <label for="accessoryCharacteristics">Accessory Characteristics<span class="text-danger">*</span> </label>
-        <input type="text" class="form-control" id="accessoryCharacteristics">
-      </div>
-      <button id="auth" type="submit" class="btn btn-primary float-right mt-3 mr-0">Next</button>
-    </div>
-  </div>
-
   <!-- selectExistingAccessory WORKING -->
   <div id="selectExistingAccessory" style="display:none;">
     <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
@@ -129,16 +97,53 @@
     </div>
   </div>
 
+  <!-- addAccessoryPage -->
+  <div id="addAccessoryPage" style="display:none;">
+    <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    </button>
+    <button type="submit" class="btn btn-primary float-right showConfigureGlobalsPageButton">
+       <i class="fa fa-globe fa-border" aria-hidden="true"></i>
+    </button>
+    <img src="images/HB_Cmd4.png" alt="Queue Globals Page" width="150px" class="center-it mt-4 cmd4Logo">
+    <h6 class="text-center">To start the process, we need some data for the accessory. <br> Please fill out all marked fields.</h6>
+    <div class="container mt-5">
+      <div class="form-group">
+        <label for="accessoryType">Type <span class="text-danger">*</span> </label>
+        <select name="accessoryTypeSelect" class="form-control" id="accessoryTypeSelect">
+        </select>
+        <label for="accessoryName">Name <span class="text-danger">*</span> </label>
+        <input type="text" class="form-control" id="accessoryName">
+      </div>
+      <button id="addAccessoryPage2Button" type="submit" class="btn btn-primary float-right mt-3 mr-0">Next</button>
+    </div>
+  </div>
+
+  <!-- addAccessoryPage2 NEW -->
+  <div id="addAccessoryPage2" style="display:none;">
+    <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    </button>
+    <button type="submit" class="btn btn-primary float-right showConfigureGlobalsPageButton">
+       <i class="fa fa-globe fa-border" aria-hidden="true"></i>
+    </button>
+    <img src="images/HB_Cmd4.png" alt="Edit Accessory" width="150px" class="center-it mt-4 cmd4Logo">
+    <h6 class="text-center">add Accessory Page</h6>
+   </div>
+</div>
+
   <!-- editAccessoryPage -->
   <div id="editAccessoryPage" style="display:none;">
     <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
       <i class="fa fa-arrow-left" aria-hidden="true"></i>
     </button>
+    <button type="submit" class="btn btn-primary float-right showConfigureGlobalsPageButton">
+       <i class="fa fa-globe fa-border" aria-hidden="true"></i>
+    </button>
     <img src="images/HB_Cmd4.png" alt="Edit Accessory" width="150px" class="center-it mt-4 cmd4Logo">
     <h6 class="text-center">edit Accessory</h6>
    </div>
 </div>
-
 
 
 

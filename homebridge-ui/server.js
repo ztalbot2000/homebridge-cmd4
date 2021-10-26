@@ -35,6 +35,7 @@ class UiServer extends HomebridgePluginUiServer
       this.onRequest('/backButtonPressed', this.backButtonPressed.bind(this));
       this.onRequest('/showConfigureGlobalsPageButtonPressed', this.showConfigureGlobalsPageButtonPressed.bind(this));
       this.onRequest('/showAddAccessoryPageButtonPressed', this.showAddAccessoryPageButtonPressed.bind(this));
+      this.onRequest('/showAddAccessoryPage2ButtonPressed', this.showAddAccessoryPage2ButtonPressed.bind(this));
       this.onRequest('/showEditAccessoryPageButtonPressed', this.showEditAccessoryPageButtonPressed.bind(this));
       this.onRequest('/updateCmd4Globals', this.updateCmd4Globals.bind(this));
       this.onRequest('/showQueueGlobalsPage', this.showQueueGlobalsPage.bind(this));
@@ -261,7 +262,8 @@ class UiServer extends HomebridgePluginUiServer
 
       this.pages.push( toPage );
       this.pushEvent('my-pageEvent', { from: fromPage,   // from: is hide
-                                       to:   toPage }    // to: is show
+                                       to:   toPage      // to: is show
+                                     }
                     );
 
    }
@@ -271,7 +273,8 @@ class UiServer extends HomebridgePluginUiServer
       let toPage = this.pages[ this.pages.length -1];
       console.log("Server.js in back() toPage: %s fromPage", toPage, fromPage );
       this.pushEvent('my-pageEvent', { from: fromPage,       // from: is hide
-                                       to:   toPage }        // to:   is show
+                                       to:   toPage          // to:   is show
+                                     }
                     );
    }
    async editAccessoryButtonPressed( )
@@ -282,7 +285,8 @@ class UiServer extends HomebridgePluginUiServer
 
       this.pages.push( toPage );
       this.pushEvent('my-pageEvent', { from: fromPage,       // from: is hide
-                                       to:   toPage }        // to:   is show
+                                       to:   toPage          // to:   is show
+                                     }
                     );
    }
    async showAddAccessoryPageButtonPressed( )
@@ -293,7 +297,20 @@ class UiServer extends HomebridgePluginUiServer
 
       this.pages.push( toPage );
       this.pushEvent('my-pageEvent', { from: fromPage,       // from: is hide
-                                       to:   toPage }        // to:   is show
+                                       to:   toPage          // to:   is show
+                                     }
+                    );
+   }
+   async showAddAccessoryPage2ButtonPressed( )
+   {
+      let fromPage = this.pages[ this.pages.length -1];
+      let toPage = "#addAccessoryPage2";
+      console.log("Server.js in main() toPage: %s fromPage", toPage, fromPage );
+
+      this.pages.push( toPage );
+      this.pushEvent('my-pageEvent', { from: fromPage,       // from: is hide
+                                       to:   toPage          // to:   is show
+                                     }
                     );
    }
    async showEditAccessoryPageButtonPressed( )
@@ -304,7 +321,8 @@ class UiServer extends HomebridgePluginUiServer
 
       this.pages.push( toPage );
       this.pushEvent('my-pageEvent', { from: fromPage,       // from: is hide
-                                       to:   toPage }        // to:   is show
+                                       to:   toPage          // to:   is show
+                                     }
                     );
    }
    async showConfigureGlobalsPageButtonPressed( )
@@ -315,7 +333,8 @@ class UiServer extends HomebridgePluginUiServer
 
       this.pages.push( toPage );
       this.pushEvent('my-pageEvent', { from: fromPage,       // from: is hide
-                                       to:   toPage }        // to:   is show
+                                       to:   toPage          // to:   is show
+                                     }
                     );
    }
    async showQueueGlobalsPage( )
