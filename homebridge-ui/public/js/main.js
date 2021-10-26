@@ -275,6 +275,21 @@ async function startButtonPressed( )
 }
 async function backButtonPressed( )
 {
+   if ( GLOBAL.accessoryForm )
+   {
+      GLOBAL.accessoryForm.end( );
+      GLOBAL.accessoryForm = false;
+
+      homebridge.hideSchemaForm();
+   }
+   if ( GLOBAL.globalsForm )
+   {
+      GLOBAL.globalsForm.end( );
+      GLOBAL.globalsForm = false;
+
+      homebridge.hideSchemaForm();
+   }
+
    homebridge.request( "/consoleLog", `main.js async function back sending back`);
    homebridge.request( "/backButtonPressed" );
 }
