@@ -33,9 +33,9 @@ class UiServer extends HomebridgePluginUiServer
       // require Cmd4 javascript files
       this.onRequest('/startButtonPressed', this.startButtonPressed.bind(this));
       this.onRequest('/backButtonPressed', this.backButtonPressed.bind(this));
-      this.onRequest('/showConfigureGlobalsPage', this.showConfigureGlobalsPage.bind(this));
-      this.onRequest('/addAccessoryButtonPressed', this.addAccessoryButtonPressed.bind(this));
-      this.onRequest('/editAccessoryButtonPressed', this.editAccessoryButtonPressed.bind(this));
+      this.onRequest('/showConfigureGlobalsPageButtonPressed', this.showConfigureGlobalsPageButtonPressed.bind(this));
+      this.onRequest('/showAddAccessoryPageButtonPressed', this.showAddAccessoryPageButtonPressed.bind(this));
+      this.onRequest('/showEditAccessoryPageButtonPressed', this.showEditAccessoryPageButtonPressed.bind(this));
       this.onRequest('/updateCmd4Globals', this.updateCmd4Globals.bind(this));
       this.onRequest('/showQueueGlobalsPage', this.showQueueGlobalsPage.bind(this));
 
@@ -49,9 +49,8 @@ class UiServer extends HomebridgePluginUiServer
       this.onRequest('/DEVICE_Info', this.cmd4DeviceInfo.bind(this));
 
       // Init the page back/forward stack
-      this.fromPage = "#start";
-      this.toPage = null;
       this.pages = [ ];
+      this.pages.push( "#start" );
 
       this.pluginConfig = null;
 
@@ -253,14 +252,13 @@ class UiServer extends HomebridgePluginUiServer
           console.log("Server.js pluginConfig[ %s ]: %s", index, entry );
       });
 
-      let fromPage = "#start";
+      let fromPage = this.pages[ this.pages.length -1];
       let toPage = "";
       if ( pluginConfig && pluginConfig.length >= 1 && pluginConfig[0].accessories.length >= 1 )
          toPage = "#selectExistingAccessory";
       else
          toPage = "#newAccessory";
 
-      this.pages.push( fromPage );
       this.pages.push( toPage );
       this.pushEvent('my-pageEvent', { from: fromPage,   // from: is hide
                                        to:   toPage }    // to: is show
@@ -287,10 +285,10 @@ class UiServer extends HomebridgePluginUiServer
                                        to:   toPage }        // to:   is show
                     );
    }
-   async addAccessoryButtonPressed( )
+   async showAddAccessoryPageButtonPressed( )
    {
       let fromPage = this.pages[ this.pages.length -1];
-      let toPage = "#addAccessory";
+      let toPage = "#addAccessoryPage";
       console.log("Server.js in main() toPage: %s fromPage", toPage, fromPage );
 
       this.pages.push( toPage );
@@ -298,10 +296,10 @@ class UiServer extends HomebridgePluginUiServer
                                        to:   toPage }        // to:   is show
                     );
    }
-   async showEditAccessoryPage( )
+   async showEditAccessoryPageButtonPressed( )
    {
       let fromPage = this.pages[ this.pages.length -1];
-      let toPage = "#editAccessory";
+      let toPage = "#editAccessoryPage";
       console.log("Server.js in main() toPage: %s fromPage", toPage, fromPage );
 
       this.pages.push( toPage );
@@ -309,10 +307,10 @@ class UiServer extends HomebridgePluginUiServer
                                        to:   toPage }        // to:   is show
                     );
    }
-   async showConfigureGlobalsPage( )
+   async showConfigureGlobalsPageButtonPressed( )
    {
       let fromPage = this.pages[ this.pages.length -1];
-      let toPage = "#configureGlobals";
+      let toPage = "#configureGlobalsPage";
       console.log("Server.js in globals() toPage: %s fromPage", toPage, fromPage );
 
       this.pages.push( toPage );

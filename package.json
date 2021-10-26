@@ -31,7 +31,7 @@
       "background-eslint-hook": "^1.0.0",
       "canvas": "^2.8.0",
       "chai": "^4.2.0",
-      "commander": "^8.2.0",
+      "commander": "^8.3.0",
       "commitlint-plugin-function-rules": "^1.1.20",
       "eslint": "^8.0.1",
       "generate-changelog": "^1.8.0",

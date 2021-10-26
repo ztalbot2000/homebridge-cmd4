@@ -10,15 +10,15 @@
     <button id="startButton" type="submit" class="btn btn-primary center-it mt-3">Start</button>
   </div>
 
-  <!-- addAccessory -->
-  <div id="addAccessory" style="display:none;">
+  <!-- addAccessoryPage -->
+  <div id="addAccessoryPage" style="display:none;">
     <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
       <i class="fa fa-arrow-left" aria-hidden="true"></i>
     </button>
     <button type="submit" class="btn btn-primary float-right showConfigureGlobalsPageButton">
        <i class="fa fa-globe fa-border" aria-hidden="true"></i>
     </button>
-    <img src="images/Cmd4_icon.svg" alt="Scripting with Cmd4 for Homebridge" width="150px" class="center-it mt-4 cmd4Logo">
+    <img src="images/HB_Cmd4.png" alt="Queue Globals Page" width="150px" class="center-it mt-4 cmd4Logo">
     <h6 class="text-center">To start the process, we need some data for the accessory. <br> Please fill out all marked fields.</h6>
     <div class="container mt-5">
       <div class="form-group">
@@ -60,13 +60,13 @@
           <select class="custom-select" id="accessorySelect"></select>
         </div>
         <div class="col-2">
-          <button id="editAccessory" type="submit" class="btn btn-elegant m-0">
+          <button id="showEditAccessoryPageButton" type="submit" class="btn btn-elegant m-0">
             <i class="fas fa-edit"></i>
           </button>
         </div>
       </div>
       <div class="d-flex justify-content-center mt-4">
-        <a href="#" id="addAccessoryButton" class="d-flex justify-content-center align-items-center btn-primary addBtn">
+        <a href="#" id="showAddAccessoryPageButton" class="d-flex justify-content-center align-items-center btn-primary addBtn">
           <i class="fas fa-plus"></i>
         </a>
       </div>
@@ -101,7 +101,7 @@
     </a>
   </div>
 
-  <!-- requiredCharacteristics -->
+  <!-- requiredCharacteristics UNUDED -->
   <div id="requiredCharacteristics" style="display:none;">
     <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
       <i class="fa fa-arrow-left" aria-hidden="true"></i>
@@ -115,7 +115,7 @@
     </div>
   </div>
 
-  <!-- optionalCharacteristics -->
+  <!-- optionalCharacteristics UNUDED -->
   <div id="optionalCharacteristics" style="display:none;">
     <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
       <i class="fa fa-arrow-left" aria-hidden="true"></i>
@@ -129,8 +129,8 @@
     </div>
   </div>
 
-  <!-- editAccessory -->
-  <div id="editAccessory" style="display:none;">
+  <!-- editAccessoryPage -->
+  <div id="editAccessoryPage" style="display:none;">
     <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
       <i class="fa fa-arrow-left" aria-hidden="true"></i>
     </button>
@@ -142,8 +142,8 @@
 
 
 
-  <!-- configureGlobals -->
-  <div id="configureGlobals" style="display:none;">
+  <!-- configureGlobalsPage -->
+  <div id="configureGlobalsPage" style="display:none;">
     <button type="submit" class="btn btn-elegant backButton" style="position: absolute;">
       <i class="fa fa-arrow-left" aria-hidden="true"></i>
     </button>

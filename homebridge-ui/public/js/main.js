@@ -281,7 +281,7 @@ async function backButtonPressed( )
 async function showConfigureGlobalsPageButtonPressed( )
 {
    homebridge.request( "/consoleLog", `main.js async function globals sending globals` );
-   homebridge.request( "/showConfigureGlobalsPage" );
+   homebridge.request( "/showConfigureGlobalsPageButtonPressed" );
 
    // js/globalsSchema.js is included by index.html
    GLOBAL.globalsForm = homebridge.createForm( globalsSchema,
@@ -615,19 +615,19 @@ async function populateSelect( )
 }
 
 //$( '#addAccessory, #start' ).on( 'click', ( ) =>
-$( '#addAccessoryButton' ).on( 'click', ( ) =>
+$( '#showAddAccessoryPageButton' ).on( 'click', ( ) =>
 {
 
    populateSelect( );
 
-   homebridge.request( "/addAccessoryButtonPressed" );
+   homebridge.request( "/showAddAccessoryPageButtonPressed" );
 
    //let activeContent = $( '#notConfigured' ).css( 'display' ) !== 'none' ? $( '#notConfigured' ) : $( '#isConfigured' );
 
 } );
 
 // This is called when an existing Accessory is to be edited
-$( '#editAccessory' ).on( 'click', ( ) =>
+$( '#showEditAccessoryPageButton' ).on( 'click', ( ) =>
 {
 
    resetUI( );
@@ -641,7 +641,7 @@ $( '#editAccessory' ).on( 'click', ( ) =>
    homebridge.request( "/consoleLog", `EDIT ACCESSORY INCOMPLETE` );
    createAccessorySchema( accessory );
 
-   homebridge.request( "/editAccessoryButtonPressed" );
+   homebridge.request( "/showEditAccessoryPageButtonPressed" );
 
 
 } );

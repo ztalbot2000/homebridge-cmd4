@@ -7,9 +7,9 @@ const settings = require( "../cmd4Settings" );
 const path = require( "path" );
 let fs = require( "fs" );
 
-const CMD4_SCHEMA_FILE = "./config.schema.json";
+//const CMD4_SCHEMA_FILE = "./config.schema.json";
 const CMD4_CONFIG_FILE = "./Extras/config.json";
-//const CMD4_SCHEMA_FILE = "/usr/local/lib/node_modules/homebridge-cmd4/config.schema.json";
+const CMD4_SCHEMA_FILE = "/usr/local/lib/node_modules/homebridge-cmd4/config.schema.json";
 
 const schemaVersionSupport = 6;
 let _api;
@@ -1022,22 +1022,17 @@ function testGeneratedSchema( )
 {
    var Validator = require('jsonschema').Validator;
    let v = new Validator();
-   //let schema_in = require( CMD4_SCHEMA_FILE );
    let schema_in = fs.readFileSync( CMD4_SCHEMA_FILE, 'utf8' );
-   console.log( schema_in );
    let schema = JSON.parse( schema_in );
-   //let data_in = require( CMD4_CONFIG_FILE );
    let data_in = fs.readFileSync( CMD4_CONFIG_FILE, 'utf8' );
    let DATA = JSON.parse( data_in );
    console.log( v.validate( DATA, schema ));
-   // import config from "/usr/local/lib/node_modules/homebridge-cmd4/Extras/config.json";
-      //
 
 }
 
 
 // Write to fid the given text, increasing or decreasing bracketLevel.
-function wf( level, text = undefined )
+function wf( level, text = undefined, comment = undefined )
 {
    if ( text == undefined )
    {
@@ -1219,6 +1214,9 @@ function wf( level, text = undefined )
    {
       fid.write( text );
    }
+   // Ignore comments that are only available in version 7+
+   if ( schemaVersionSupport >= 7 && comment != undefined )
+      fid.write( `"$comment": "${comment}"\n` );
 
 
    // ******** UPDATE VALIDATOR FOR NEXT WRITE OF TEXT
