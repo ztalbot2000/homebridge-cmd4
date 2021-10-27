@@ -291,6 +291,9 @@ function addPollingDefinitionBlock( )
       wf( `"title": "${ constants.POLLING }",\n` );
       wf( `"type": "array",\n` );
       wf( `"required": false,\n` );
+      wf( `"uniqueItems": true,\n` );
+      wf( `"$comment": "This will have to Increase as each added are validated",\n` );
+      wf( `"maxItems": 0,\n` );
       wf( `"items":\n`);
       wf( "+", `{\n`);
          wf( `"type": "object",\n` );
@@ -341,6 +344,7 @@ function addAccessoryDefinitionBlock( )
       wf( `"$id": "#accessories",\n` );
       wf( `"title": "Accessories",\n` );
       wf( `"type": "array",\n` );
+      wf( `"uniqueItems": true,\n` );
       wf( "+", `"items": {\n` );
 
          wf( `"${ constants.TYPE }": { "$ref": "#/$definitions/type"},\n` );
@@ -515,6 +519,8 @@ function addGlobalsDefinitionBlock( )
          wf( `"title": "queueTypes",\n` );
          wf( `"type": "array",\n` );
          wf( `"uniqueItems": true,\n` );
+         wf( `"$comment": "This will have to Increase as each added are validated",\n` );
+         wf( `"maxItems": 0,\n` );
          wf( `"required": false,\n` );
          wf( `"items":\n` );
          wf( "+", `{\n` );
@@ -944,6 +950,7 @@ function addQueueTypesLayout( )
 
    wf( "+", `{\n` )
      wf( `"key": "queueTypes",\n` );
+     wf( `"$ref": "#/$definitions/queueTypes",\n` );
      wf( `"type": "array",\n` );
      wf( `"listItems": 1,\n` );
      wf( `"items":\n` );

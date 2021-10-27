@@ -2507,6 +2507,7 @@
             "$id": "#polling",
             "title": "polling",
             "type": "array",
+            "uniqueItems": true,
             "required": false,
             "items":
             {
@@ -2541,6 +2542,7 @@
             "$id": "#accessories",
             "title": "Accessories",
             "type": "array",
+            "uniqueItems": true,
             "items": {
                "type": { "$ref": "#/$definitions/type"},
                "debug": { "$ref": "#/$definitions/debug"},
@@ -3085,6 +3087,8 @@
          "key": "queueTypes",
          "type": "array",
          "listItems": 1,
+         "maxItems": 0,
+         "uniqueItems": true,
          "items":
          [
             {

@@ -135,6 +135,7 @@ const accessorySchema =
             "title": "queueTypes",
             "type": "array",
             "uniqueItems": true,
+            "maxItems": 0,
             "required": false,
             "items":
             {
@@ -2493,6 +2494,7 @@ const accessorySchema =
             "title": "polling",
             "type": "array",
             "required": false,
+            "maxItems": 0,
             "items":
             {
                "type": "object",
@@ -2820,6 +2822,7 @@ const accessorySchema =
       },
       {
          "key": "queueTypes",
+         "$ref": "#/$definitions/queueTypes",
          "type": "array",
          "listItems": 1,
          "items":

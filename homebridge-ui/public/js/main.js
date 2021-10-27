@@ -19,6 +19,31 @@ async function createAccessorySchema( accessory )
    homebridge.request( "/consoleLog",  `In CreateCustomSchema accessory: ${ accessory }` );
    //let settings = await homebridge.request( "/cmd4StaticVariable", "settings" );
 
+   // Need to set globalSchema.queueTypes and polling
+   // maxItems based on number of existing items + 1.
+   // so only 1 entry is added at a time
+   // Note: We do this in the definitions, because in the Layout section
+   //       you would have to figure out what entry has the queueTypes
+   //console.log("accessory.queueTypes=%s",accessory.queueTypes );
+   console.log("accessorySchema definitions.queueTypes=%s",accessorySchema.schema['$definitions'].queueTypes );
+   console.log("accessorySchema definitions.queueTypes.maxItems=%s",accessorySchema.schema['$definitions'].queueTypes );
+
+   let maxItems = 1;
+      Object.keys(accessory).forEach( key =>
+      {
+         console.log(`accessory[${key}]=${ accessory[ key ] }`);
+      });
+   if ( accessory.queueTypes != undefined )
+   {
+       console.log("accessory.queueTypes.length=%s",accessory.queueTypes.length );
+       maxItems = accessory.queueTypes.length + 1
+   }
+   accessorySchema.schema['$definitions'].queueTypes.maxItems = maxItems;
+
+   maxItems = 1;
+   if ( accessory.polling )
+      maxItems = accessory.polling.length + 1;
+   accessorySchema.schema['$definitions'].polling.maxItems = maxItems
 
    GLOBAL.accessoryForm = homebridge.createForm( accessorySchema,
    {
@@ -298,6 +323,25 @@ async function showConfigureGlobalsPageButtonPressed( )
    homebridge.request( "/consoleLog", `main.js async function globals sending globals` );
    homebridge.request( "/showConfigureGlobalsPageButtonPressed" );
 
+   // Need to set globalSchema.queueTypes and polling
+   // maxItems based on number of existing items + 1.
+   // so only 1 entry is added at a time
+   // Note: We do this in the definitions, because in the Layout section
+   //       you would have to figure out what entry has the queueTypes
+   console.log("GLOBAL.pluginConfig[0]=%s",GLOBAL.pluginConfig[0] );
+   console.log("GLOBAL.pluginConfig[0].queueTypes=%s",GLOBAL.pluginConfig[0].queueTypes );
+   console.log("globalsSchema.schema.queueTypes.maxItems=%s",globalsSchema.schema.queueTypes.maxItems );
+
+   let maxItems = 1;
+   if ( GLOBAL.pluginConfig[0].queueTypes )
+       maxItems = GLOBAL.pluginConfig[0].queueTypes.length + 1
+
+   globalsSchema.schema.queueTypes.maxItems = maxItems;
+
+   // Missing ?
+   //globalsSchema['$definitions'].polling.maxItems =
+   //   GLOBAL.pluginConfig[0]['$definitions'].polling.maxItems + 1;
+
    // js/globalsSchema.js is included by index.html
    GLOBAL.globalsForm = homebridge.createForm( globalsSchema,
    {
@@ -346,6 +390,24 @@ async function showConfigureGlobalsPageButtonPressed( )
          homebridge.toast.error(err.message, 'Error');
        }
    });
+   console.log( `GLOBAL.globalsForm:` );
+      Object.keys(GLOBAL.globalsForm).forEach( key =>
+      {
+         console.log(`GLOBAL.globalsForm[${key}]=${ GLOBAL.globalsForm[ key ] }`);
+      });
+   console.log( `GLOBAL.globalsForm.parent:` );
+      Object.keys(GLOBAL.globalsForm.parent).forEach( key =>
+      {
+         console.log(`GLOBAL.globalsForm[${key}]=${ GLOBAL.globalsForm[ key ] }`);
+      });
+   // $watchCollection is not a function
+   //GLOBAL.globalsForm.$watchCollection('queueTypes', function( x )
+   // watchCollection is not a function
+   //GLOBAL.globalsForm.watchCollection('queueTypes', function( x )
+   //GLOBAL.globalsForm.watchCollection('queueTypes', function( x )
+   //{
+   //      homebridge.request( "/consoleLog",  `watchCollection x:${x}` );
+   //});
 
    // watch for submit button click events
    GLOBAL.globalsForm.onSubmit( (form) => {

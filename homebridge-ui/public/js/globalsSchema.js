@@ -128,6 +128,7 @@ const globalsSchema =
          "title": "queueTypes",
          "type": "array",
          "uniqueItems": true,
+         "maxItems": 0,
          "required": false,
          "items":
          {
