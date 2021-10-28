@@ -8,8 +8,13 @@ const path = require( "path" );
 let fs = require( "fs" );
 
 //const CMD4_SCHEMA_FILE = "./config.schema.json";
-const CMD4_CONFIG_FILE = "./Extras/config.json";
-const CMD4_SCHEMA_FILE = "/usr/local/lib/node_modules/homebridge-cmd4/config.schema.json";
+let CMD4_BASE_PATH = ".";
+//let CMD4_BASE_PATH = "/usr/local/lib/node_modules/homebridge-cmd4;
+const CMD4_CONFIG_FILE = "Extras/config.json";
+
+const CMD4_SCHEMA_FILE = "config.schema.json";
+const CMD4_ACCESSORY_SCHEMA_FILE = "homebridge-ui/public/js/accessorySchema.js";
+const CMD4_GLOBALS_SCHEMA_FILE = "homebridge-ui/public/js/globalsSchema.js";
 
 const schemaVersionSupport = 6;
 let _api;
@@ -39,6 +44,16 @@ var validatorStates = { CLEAR: 0,
                         NONE_FOUND: 10
                       };
 var validator_g = validatorStates.CLEAR;
+
+
+// This should be clled if another schema document is to be created.
+function reInit()
+{
+   validator_g = validatorStates.CLEAR;
+   bracketLevel=0;
+   commaRequired_g = false;
+   previousText = "";
+}
 
 function getHomebridgeVars( )
 {
@@ -76,77 +91,266 @@ function getHomebridgeVars( )
    hapFormats = _api.hap.Formats;
 }
 
-function createSchemaFile( )
+// Create the accessorySchema.js file
+function createAccessorySchemaFile( )
 {
+   reInit( );
+
+   let schemaFile = `${ CMD4_BASE_PATH }/${ CMD4_ACCESSORY_SCHEMA_FILE }`;
    // Open the Schema file for writing
-   fid = fs.createWriteStream( CMD4_SCHEMA_FILE,
-   { flags: "w" // Open for write
-   });
-   console.log( `Creating Schema file: ${ CMD4_SCHEMA_FILE }` );
+   fid = fs.openSync( schemaFile, "w" ); // Open for write
+   console.log( `\nCreating ${ CMD4_ACCESSORY_SCHEMA_FILE }  file: ${ schemaFile }` );
 
-   fid.on("error", ( err ) =>
-   {
-      console.log( "dserror: %s", err );
-      process.exit( err );
-   });
+// fid.on("error", ( err ) =>
+// {
+//    console.log( "dserror: %s", err );
+//    process.exit( err );
+// });
 
-   commaRequired_g = false;
-   addSchemaHeader( );
+   wf( `/*eslint no-unused-vars: ["error", { "varsIgnorePattern": "accessorySchema" }]*/\n\n` );
 
-   startSchema( );
+   wf( `const accessorySchema =\n` );
+   wf( "+", `{\n` );   // For vi % balance: }
+      commaRequired_g = false;
 
+      // Not in accessorySchema
+      //  beginJSON( );
+      // addSchemaHeader( );
+
+      startSchema( );
+
+         // add the comma always next time.
+         if ( commaRequired_g == true )
+            wf( `,\n` );
+
+         // ** Begin bracket definitions
+         wf( `"$definitions":\n` );
+         wf( "+", `{\n` );
+
+            commaRequired_g = false;
+            addGlobalsDefinitionBlock( );
+            addCharacteristicDefinitionBlock( );
+            addAccessoryTypeDefinitionBlock( );
+            addSubTypeDefinitionBlock( );
+            addDisplayNameDefinitionBlock( );
+            addPollingDefinitionBlock( );
+            // addAccessoryDefinitionBlock( );
+
+         // ** End bracket definitions
+         wf( `\n` );
+         wf( "-", `}` );
+
+         commaRequired_g = true;
+
+         // accessorySchema
+         beginSchemaProperties( );
+            wf( `"${ constants.TYPE }": { "$ref": "#/$definitions/type"},\n` );
+            addGlobalsSchemaBlock( );
+            addAccessorySchemaBlock( );
+            addPollingSchemaBlock( );
+            addStateCmdSchemaBlock( );
+         endSchemaProperties( );
+
+      endBracketSchema( );
+
+   // addLayout( ); // for accessorySchema
    // add the comma always next time.
    if ( commaRequired_g == true )
       wf( `,\n` );
 
-   // ** Begin bracket definitions
-   wf( `"$definitions":\n` );
-   wf( "+", `{\n` );
+   // * Begin square bracket layout:
+   wf( `"layout":\n` );
+   wf( "+", `[\n` );
 
       commaRequired_g = false;
-      addGlobalsDefinitionBlock( );
-      addCharacteristicDefinitionBlock( );
-      addAccessoryTypeDefinitionBlock( );
-      addSubTypeDefinitionBlock( );
-      addDisplayNameDefinitionBlock( );
-      addPollingDefinitionBlock( );
-      addAccessoryDefinitionBlock( );
 
-   // ** End bracket definitions
-   wf( `\n` );
-   wf( "-", `}` );
+      addTypeLayout( );
+      addNameLayout( );
+      addGlobalsLayout( "Accessory" );
+      addFakeGatoLayout( );
+      addQueueTypesLayout( );
+      addRequiredCharacteristicPerDeviceLayout( );
+      addOptionalCharacteristicPerDeviceLayout( );
+      addStateCmdLayout( );
+
+   // * End square bracket layout:
+   wf( "-", `]\n` );
 
    commaRequired_g = true;
 
-   addAccessorySchemaBlock( );
+   closeSchemaDocument( );
+}
+// Create the globalsSchema.js file
+function createGlobalsSchemaFile( )
+{
+   reInit( );
 
-   endBracketSchema( );
+   let schemaFile = `${ CMD4_BASE_PATH }/${ CMD4_GLOBALS_SCHEMA_FILE }`;
+   // Open the Schema file for writing
+   fid = fs.openSync( schemaFile, "w" ); // Open for write
+   console.log( `\nCreating ${ CMD4_GLOBALS_SCHEMA_FILE }  file: ${ schemaFile }` );
 
-   addLayout( );
+// fid.on("error", ( err ) =>
+// {
+//    console.log( "dserror: %s", err );
+//    process.exit( err );
+// });
+
+   wf( `/*eslint no-unused-vars: ["error", { "varsIgnorePattern": "globalsSchema" }]*/\n\n` );
+
+   wf( `const globalsSchema =\n`);
+   wf( "+", `{\n`);   // For vi % balance: }
+
+      commaRequired_g = false;
+      // Not in globalsySchema
+      //  beginJSON( );
+      //addSchemaHeader( );
+
+      startSchema( );
+
+         // add the comma always next time.
+         if ( commaRequired_g == true )
+            wf( `,\n` );
+
+         // ** Begin bracket definitions
+         wf( `"$definitions":\n` );
+         wf( "+", `{\n` );
+
+            commaRequired_g = false;
+            addGlobalsDefinitionBlock( );
+            //addCharacteristicDefinitionBlock( );
+            //addAccessoryTypeDefinitionBlock( );
+            //addSubTypeDefinitionBlock( );
+            //addDisplayNameDefinitionBlock( );
+            //addPollingDefinitionBlock( );
+            //addAccessoryDefinitionBlock( );
+
+         // ** End bracket definitions
+         wf( `\n` );
+         wf( "-", `}` );
+
+         commaRequired_g = true;
+
+         beginSchemaProperties( );
+            addGlobalsSchemaBlock( );
+            // Not in globalsySchema
+            // addAccessorySchemaBlock( );
+            // addPollingSchemaBlock( );
+            addStateCmdSchemaBlock( );
+         endSchemaProperties( );
+
+      endBracketSchema( );
+
+   // addLayout( ); // for globalsSchema
+   // add the comma always next time.
+   if ( commaRequired_g == true )
+      wf( `,\n` );
+
+   // * Begin square bracket layout:
+   wf( `"layout":\n` );
+   wf( "+", `[\n` );
+
+      commaRequired_g = false;
+
+      // addTypeLayout( );
+      // addNameLayout( );
+      addGlobalsLayout( "Global" );
+      addFakeGatoLayout( );
+      addQueueTypesLayout( );
+      // addRequiredCharacteristicPerDeviceLayout( );
+      // addOptionalCharacteristicPerDeviceLayout( );
+      addStateCmdLayout( );
+
+   // * End square bracket layout:
+   wf( "-", `]\n` );
+
+   commaRequired_g = true;
 
    closeSchemaDocument( );
-
-   // After it is closed, check if it was properly aligned
-   if ( bracketLevel == 0)
-   {
-      console.log( `Yahoo !  All lined up.` );
-   } else
-   {
-      console.log( `Booo ... alignment failed: [ ${ Number(bracketLevel > 0) + bracketLevel } ]` );
-   }
-   if (  validator_g == validatorStates.REQUIRED )
-   {
-      console.log( `Yahoo !  No hanging commas.` );
-   } else
-   {
-      console.log( `Booo ... comma left hanging ${ validator_g }` );
-   }
 }
 
-//
-// Write the beginning blurb
-//
-function  addSchemaHeader( )
+function createSchemaFile( )
+{
+   let schemaFile = `${ CMD4_BASE_PATH }/${CMD4_SCHEMA_FILE }`;
+   // Open the Schema file for writing
+   fid = fs.openSync( schemaFile, "w" ); // Open for write
+   console.log( `\nCreating Schema file: ${ schemaFile }` );
+
+// fid.on("error", ( err ) =>
+// {
+//    console.log( "dserror: %s", err );
+//    process.exit( err );
+// });
+
+   commaRequired_g = false;
+
+   beginJSON( );
+
+      addSchemaHeader( );
+
+      startSchema( );
+
+         // add the comma always next time.
+         if ( commaRequired_g == true )
+            wf( `,\n` );
+
+         // ** Begin bracket definitions
+         wf( `"$definitions":\n` );
+         wf( "+", `{\n` );
+
+            commaRequired_g = false;
+            addGlobalsDefinitionBlock( );
+            addCharacteristicDefinitionBlock( );
+            addAccessoryTypeDefinitionBlock( );
+            addSubTypeDefinitionBlock( );
+            addDisplayNameDefinitionBlock( );
+            addPollingDefinitionBlock( );
+            addAccessoryDefinitionBlock( );
+
+         // ** End bracket definitions
+         wf( `\n` );
+         wf( "-", `}` );
+
+         commaRequired_g = true;
+
+         beginSchemaProperties( );
+            addGlobalsSchemaBlock( );
+            addAccessorySchemaBlock( );
+            addPollingSchemaBlock( );
+            addStateCmdSchemaBlock( );
+         endSchemaProperties( );
+
+      endBracketSchema( );
+
+   // addLayout( ); // for config.schema.json
+   // add the comma always next time.
+   if ( commaRequired_g == true )
+      wf( `,\n` );
+
+   // * Begin square bracket layout:
+   wf( `"layout":\n` );
+   wf( "+", `[\n` );
+
+      commaRequired_g = false;
+
+      addTypeLayout( );
+      addNameLayout( );
+      addGlobalsLayout( "Accessory" );
+      addFakeGatoLayout( );
+      addQueueTypesLayout( );
+      addRequiredCharacteristicPerDeviceLayout( );
+      addOptionalCharacteristicPerDeviceLayout( );
+      addStateCmdLayout( );
+
+   // * End square bracket layout:
+   wf( "-", `]\n` );
+
+   commaRequired_g = true;
+
+   closeSchemaDocument( );
+}
+
+function  beginJSON( )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
@@ -154,6 +358,17 @@ function  addSchemaHeader( )
 
    // Begin bracket JSON
    wf( "+", `{\n` );   // For vi % balance: }
+
+   commaRequired_g = false;
+}
+
+//
+// Write the beginning blurb
+//
+function  addSchemaHeader( )
+{
+   if ( commaRequired_g == true )
+      wf( `,\n` );
 
    // pluginAlias: The plugin identifier.
    wf( `"pluginAlias": "${ settings.PLATFORM_NAME }",\n` );
@@ -277,11 +492,9 @@ function addAccessoryTypeDefinitionBlock( )
 
 function addPollingDefinitionBlock( )
 {
-   console.log("*****validator_g: %s", validator_g );
    // add the comma always next time.
    if ( commaRequired_g == true )
       wf( `,\n` );
-   console.log("*****validator_g: %s", validator_g );
 
    wf( `"$comment": "START OF polling DEFINITION",\n` );
    // *** Begin bracket Polling designation definition
@@ -657,8 +870,7 @@ function addCharacteristicDefinitionBlock( )
    commaRequired_g = true;
 }
 
-
-function addAccessorySchemaBlock( )
+function beginSchemaProperties( )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
@@ -667,40 +879,54 @@ function addAccessorySchemaBlock( )
    // ** Begin bracket properties
    wf( `"properties":\n` );
    wf( "+", `{\n` );
-//    wf( `"${ constants.TYPE }": { "$ref": "#/$definitions/type"},\n` );
-
-      // All the globals that can be defined at the Accessory level
-      wf( `"debug": { "$ref": "#/$definitions/debug"},\n` );
-      wf( `"allowTLV8": { "$ref": "#/$definitions/allowTLV8"},\n` );
-      wf( `"outputConstants": { "$ref": "#/$definitions/outputConstants"},\n` );
-      wf( `"statusMsg": { "$ref": "#/$definitions/statusMsg"},\n` );
-      wf( `"interval": { "$ref": "#/$definitions/interval"},\n` );
-      wf( `"timeout": { "$ref": "#/$definitions/timeout"},\n` );
-      wf( `"stateChangeResponseTime": { "$ref": "#/$definitions/stateChangeResponseTime"},\n` );
-      wf( `"queueTypes": { "$ref": "#/$definitions/queueTypes"},\n` );
-
-      wf( `"folder": { "$ref": "#/$definitions/folder"},\n` );
-      wf( `"storage": { "$ref": "#/$definitions/storage"},\n` );
-      wf( `"storagePath": { "$ref": "#/$definitions/storagePath"},\n` );
-      wf( `"keyPath": { "$ref": "#/$definitions/keyPath"},\n` );
-
-      // All the characteristics
-      for ( let i=0; i < CMD4_ACC_TYPE_ENUM.EOL; i ++)
-      {
-         let properties = CMD4_ACC_TYPE_ENUM.properties[ i ];
-         let characteristicString = properties.sche;
-
-         wf( `"${ characteristicString }": { "$ref": "#/$definitions/${ characteristicString }"},\n` );
-      }
-
-      wf( `"${ constants.POLLING }": { "$ref": "#/$definitions/polling"},\n` );
-      wf( `"${ constants.STATE_CMD_PREFIX }": { "$ref": "#/$definitions/state_cmd_prefix"},\n` );
-      wf( `"${ constants.STATE_CMD }": { "$ref": "#/$definitions/state_cmd"},\n` );
-      wf( `"${ constants.STATE_CMD_SUFFIX }": { "$ref": "#/$definitions/state_cmd_suffix"}\n` );
+}
+function endSchemaProperties( )
+{
    // *** End bracket properties:
    wf( "-", `}\n` );
 
    commaRequired_g = true;
+}
+
+function addGlobalsSchemaBlock( )
+{
+   // All the globals that can be defined at the Accessory level
+   wf( `"debug": { "$ref": "#/$definitions/debug"},\n` );
+   wf( `"allowTLV8": { "$ref": "#/$definitions/allowTLV8"},\n` );
+   wf( `"outputConstants": { "$ref": "#/$definitions/outputConstants"},\n` );
+   wf( `"statusMsg": { "$ref": "#/$definitions/statusMsg"},\n` );
+   wf( `"interval": { "$ref": "#/$definitions/interval"},\n` );
+   wf( `"timeout": { "$ref": "#/$definitions/timeout"},\n` );
+   wf( `"stateChangeResponseTime": { "$ref": "#/$definitions/stateChangeResponseTime"},\n` );
+   wf( `"queueTypes": { "$ref": "#/$definitions/queueTypes"},\n` );
+
+   wf( `"folder": { "$ref": "#/$definitions/folder"},\n` );
+   wf( `"storage": { "$ref": "#/$definitions/storage"},\n` );
+   wf( `"storagePath": { "$ref": "#/$definitions/storagePath"},\n` );
+   wf( `"keyPath": { "$ref": "#/$definitions/keyPath"},\n` );
+}
+
+function addAccessorySchemaBlock( )
+{
+   // All the characteristics
+   for ( let i=0; i < CMD4_ACC_TYPE_ENUM.EOL; i ++)
+   {
+      let properties = CMD4_ACC_TYPE_ENUM.properties[ i ];
+      let characteristicString = properties.sche;
+
+      wf( `"${ characteristicString }": { "$ref": "#/$definitions/${ characteristicString }"},\n` );
+   }
+}
+function addPollingSchemaBlock( )
+{
+   wf( `"${ constants.POLLING }": { "$ref": "#/$definitions/polling"},\n` );
+}
+
+function addStateCmdSchemaBlock( )
+{
+   wf( `"${ constants.STATE_CMD_PREFIX }": { "$ref": "#/$definitions/state_cmd_prefix"},\n` );
+   wf( `"${ constants.STATE_CMD }": { "$ref": "#/$definitions/state_cmd"},\n` );
+   wf( `"${ constants.STATE_CMD_SUFFIX }": { "$ref": "#/$definitions/state_cmd_suffix"}\n` );
 }
 
 
@@ -737,14 +963,14 @@ function addNameLayout( )
    commaRequired_g = true;
 }
 
-function addGlobalsLayout( )
+function addGlobalsLayout( title )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
       wf( `,\n` );
 
    wf( "+", `{\n` );
-      wf( `"title": "Accessory Options",\n` );
+      wf( `"title": "${ title } Options",\n` );
       wf( `"type": "fieldset",\n` );
       wf( `"expandable": true,\n` );
       wf( "+", `"items": [\n` );
@@ -988,33 +1214,6 @@ function endBracketSchema( )
    commaRequired_g = true;
 }
 
-function addLayout( )
-{
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
-
-   // * Begin square bracket layout:
-   wf( `"layout":\n` );
-   wf( "+", `[\n` );
-
-      commaRequired_g = false;
-
-      addTypeLayout( );
-      addNameLayout( );
-      addGlobalsLayout( );
-      addFakeGatoLayout( );
-      addQueueTypesLayout( );
-      addRequiredCharacteristicPerDeviceLayout( );
-      addOptionalCharacteristicPerDeviceLayout( );
-      addStateCmdLayout( );
-
-   // * End square bracket layout:
-   wf( "-", `]\n` );
-
-   commaRequired_g = true;
-}
-
 function closeSchemaDocument( )
 {
    // End bracket JSON
@@ -1022,16 +1221,30 @@ function closeSchemaDocument( )
    wf( "-", `}\n` );
 
    // Close the Schema file
-   fid.end( );
+   fs.closeSync( fid );
+
+   // After it is closed, check if it was properly aligned
+   if ( bracketLevel == 0)
+       console.log( `Yahoo !  Bracket Level All lined up.` );
+   else
+      console.log( `Booo ... alignment failed: [ ${ Number(bracketLevel > 0) + bracketLevel } ]` );
+
+   // Check if finished properly with closing bracket
+   if (  validator_g == validatorStates.CLOSED_SQUIGGLY_BRACKET_HANGING )
+      console.log( `Yahoo !  Finished with closing bracket.` );
+   else
+      console.log( `Booo ... validator left hanging ${ validator_g }` );
 }
 
 function testGeneratedSchema( )
 {
    var Validator = require('jsonschema').Validator;
    let v = new Validator();
-   let schema_in = fs.readFileSync( CMD4_SCHEMA_FILE, 'utf8' );
+   let schemaFile = `${ CMD4_BASE_PATH }/CMD4_SCHEMA_FILE }`;
+   let schema_in = fs.readFileSync( schemaFile, 'utf8' );
    let schema = JSON.parse( schema_in );
-   let data_in = fs.readFileSync( CMD4_CONFIG_FILE, 'utf8' );
+   let dataFile =  `${ CMD4_BASE_PATH }/${ CMD4_CONFIG_FILE }`;
+   let data_in = fs.readFileSync( dataFile, 'utf8' );
    let DATA = JSON.parse( data_in );
    console.log( v.validate( DATA, schema ));
 
@@ -1071,7 +1284,13 @@ function wf( level, text = undefined, comment = undefined )
          {
             // noop
          } else
-            throw new Error ( `Invalid text for closed level. text: ${ text }` );
+            // For vi % balance: {
+            // The schema.js files close with };
+            if ( level == "-" && text.match( /};\n*$/ ) )
+            {
+               // noop
+            } else
+               throw new Error ( `Invalid text for closed level. text: ${ text }` );
          break;
       case "+":
          //  match exactly 1 of either OPEN_SQUIGGLY_BRACKET or : or [
@@ -1216,14 +1435,14 @@ function wf( level, text = undefined, comment = undefined )
    // Anything not previously a new line gets indented
    if ( previousText.match( /\n$/ ) )
    {
-      fid.write( " ".repeat( bracketLevel * INDENT ).concat( text ) );
+      fs.writeSync( fid, " ".repeat( bracketLevel * INDENT ).concat( text ) );
    } else
    {
-      fid.write( text );
+      fs.writeSync( fid, text );
    }
    // Ignore comments that are only available in version 7+
    if ( schemaVersionSupport >= 7 && comment != undefined )
-      fid.write( `"$comment": "${comment}"\n` );
+      fs.writeSync( fid, `"$comment": "${comment}"\n` );
 
 
    // ******** UPDATE VALIDATOR FOR NEXT WRITE OF TEXT
@@ -1287,10 +1506,13 @@ const program = new Command;
 
 // A nice little getOpt node.js package
 program
-  .description( 'Generate Cmd4 cinfig.schema.json' )
+  .description( 'Generate Cmd4 config.schema.json and associated .js files if requested' )
   //.requiredOption( '-c, --constant <constant value>', 'Constant to search for>' )
 
-  .option( '-t, --test', 'test against our config.json' );
+  .option( '-g, --globals', `Create the globalsSchema.js file` )
+  .option( '-a, --accessory', `Create the accessorySchema.js file.` )
+  .option( '-b, --base', `base Path to read/write config files from.\nDefault: ${ CMD4_BASE_PATH }` )
+  .option( '-t, --test', `test against our config.json` );
 
 
 // Parse the arguments passed into this program.
@@ -1299,9 +1521,20 @@ program.parse( process.argv );
 // Get the options passed in based on the commander getOpts definitions.
 let options = program.opts( );
 
-// Always create the schema file
+if ( options.base )
+   CMD4_BASE_PATH = options.base;
+
+console.log( `basePath: ${ CMD4_BASE_PATH }` );
+
+// Always create the config.schema.json file
 createSchemaFile( );
 
+// Create the accessorySchema.js file
+if ( options.accessory )
+   createAccessorySchemaFile( );
+// Create the globalsSchema.js file
+if ( options.globals )
+   createGlobalsSchemaFile( );
 
 if ( options.test )
    testGeneratedSchema( );

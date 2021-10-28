@@ -330,13 +330,13 @@ async function showConfigureGlobalsPageButtonPressed( )
    //       you would have to figure out what entry has the queueTypes
    console.log("GLOBAL.pluginConfig[0]=%s",GLOBAL.pluginConfig[0] );
    console.log("GLOBAL.pluginConfig[0].queueTypes=%s",GLOBAL.pluginConfig[0].queueTypes );
-   console.log("globalsSchema.schema.queueTypes.maxItems=%s",globalsSchema.schema.queueTypes.maxItems );
+   console.log("globalsSchema.schema['$definitions'].queueTypes.maxItems=%s",globalsSchema.schema['$definitions'].queueTypes.maxItems );
 
    let maxItems = 1;
    if ( GLOBAL.pluginConfig[0].queueTypes )
        maxItems = GLOBAL.pluginConfig[0].queueTypes.length + 1
 
-   globalsSchema.schema.queueTypes.maxItems = maxItems;
+   globalsSchema.schema['$definitions'].queueTypes.maxItems = maxItems;
 
    // Missing ?
    //globalsSchema['$definitions'].polling.maxItems =

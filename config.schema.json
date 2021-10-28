@@ -132,6 +132,7 @@
             "title": "queueTypes",
             "type": "array",
             "uniqueItems": true,
+            "maxItems": 0,
             "required": false,
             "items":
             {
@@ -2507,8 +2508,9 @@
             "$id": "#polling",
             "title": "polling",
             "type": "array",
-            "uniqueItems": true,
             "required": false,
+            "uniqueItems": true,
+            "maxItems": 0,
             "items":
             {
                "type": "object",
@@ -3085,10 +3087,9 @@
       },
       {
          "key": "queueTypes",
+         "$ref": "#/$definitions/queueTypes",
          "type": "array",
          "listItems": 1,
-         "maxItems": 0,
-         "uniqueItems": true,
          "items":
          [
             {

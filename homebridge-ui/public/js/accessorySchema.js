@@ -2,10 +2,6 @@
 
 const accessorySchema =
 {
-   "pluginAlias": "Cmd4",
-   "pluginType": "platform",
-   "headerDisplay": "Cmd4 Add Accessories",
-   "singular": false,   "customUi": true,
    "schema":
    {
       "$definitions":
@@ -304,7 +300,7 @@ const accessorySchema =
             "description": "The Devices zbutton Event",
             "condition":
             {
-               "functionBody": "return ['TargetControl'].includes(model.type);"
+               "functionBody": "return ['TargetControl'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "ccaEnergyDetectThreshold":
@@ -456,7 +452,7 @@ const accessorySchema =
             "description": "The Configured Bridge Accessory Status",
             "condition":
             {
-               "functionBody": "return ['BridgeConfiguration'].includes(model.type);"
+               "functionBody": "return ['BridgeConfiguration'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "configuredName":
@@ -994,7 +990,7 @@ const accessorySchema =
             "description": "The Links Quality",
             "condition":
             {
-               "functionBody": "return ['Pairing'].includes(model.type);"
+               "functionBody": "return ['Pairing'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "lockControlPoint":
@@ -1005,7 +1001,7 @@ const accessorySchema =
             "description": "The Control Point of the Lock",
             "condition":
             {
-               "functionBody": "return ['LockManagement'].includes(model.type);"
+               "functionBody": "return ['LockManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "lockCurrentState":
@@ -1163,7 +1159,7 @@ const accessorySchema =
             "description": "The Network AccessViolation Control",
             "condition":
             {
-               "functionBody": "return ['WiFiRouter'].includes(model.type);"
+               "functionBody": "return ['WiFiRouter'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "networkClientProfileControl":
@@ -1174,7 +1170,7 @@ const accessorySchema =
             "description": "The Network Client Profile Control",
             "condition":
             {
-               "functionBody": "return ['WiFiRouter'].includes(model.type);"
+               "functionBody": "return ['WiFiRouter'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "networkClientStatusControl":
@@ -1185,7 +1181,7 @@ const accessorySchema =
             "description": "The Network Client Status Control",
             "condition":
             {
-               "functionBody": "return ['WiFiRouter'].includes(model.type);"
+               "functionBody": "return ['WiFiRouter'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "nightVision":
@@ -1299,7 +1295,7 @@ const accessorySchema =
             "description": "The Devices Pair Setup",
             "condition":
             {
-               "functionBody": "return ['Pairing'].includes(model.type);"
+               "functionBody": "return ['Pairing'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "pairVerify":
@@ -1310,7 +1306,7 @@ const accessorySchema =
             "description": "The Devices Pair Verify",
             "condition":
             {
-               "functionBody": "return ['Pairing'].includes(model.type);"
+               "functionBody": "return ['Pairing'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "pairingFeatures":
@@ -1491,7 +1487,7 @@ const accessorySchema =
             "description": "The Relay Control Point",
             "condition":
             {
-               "functionBody": "return ['Relay'].includes(model.type);"
+               "functionBody": "return ['Relay'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "relayEnabled":
@@ -1639,7 +1635,7 @@ const accessorySchema =
             "description": "The Selected Cameras Recording Configuration",
             "condition":
             {
-               "functionBody": "return ['CameraEventRecordingManagement'].includes(model.type);"
+               "functionBody": "return ['CameraEventRecordingManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "selectedRTPStreamConfiguration":
@@ -1650,7 +1646,7 @@ const accessorySchema =
             "description": "The Selected RTP Stream Configuration",
             "condition":
             {
-               "functionBody": "return ['CameraRTPStreamManagement'].includes(model.type);"
+               "functionBody": "return ['CameraRTPStreamManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "serialNumber":
@@ -1710,7 +1706,7 @@ const accessorySchema =
             "description": "The Devices Setup End Points",
             "condition":
             {
-               "functionBody": "return ['CameraRTPStreamManagement'].includes(model.type);"
+               "functionBody": "return ['CameraRTPStreamManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "setupTransferTransport":
@@ -1721,7 +1717,7 @@ const accessorySchema =
             "description": "The Devices Setup Transfer Transport",
             "condition":
             {
-               "functionBody": "return ['TransferTransportManagement'].includes(model.type);"
+               "functionBody": "return ['TransferTransportManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "signalToNoiseRatio":
@@ -1853,7 +1849,7 @@ const accessorySchema =
             "description": "The Devices Streaming Status",
             "condition":
             {
-               "functionBody": "return ['CameraRTPStreamManagement'].includes(model.type);"
+               "functionBody": "return ['CameraRTPStreamManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "sulphurDioxideDensity":
@@ -1873,7 +1869,7 @@ const accessorySchema =
             "description": "The Supported Audio Recording Configuration",
             "condition":
             {
-               "functionBody": "return ['CameraEventRecordingManagement'].includes(model.type);"
+               "functionBody": "return ['CameraEventRecordingManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "supportedAudioStreamConfiguration":
@@ -1884,7 +1880,7 @@ const accessorySchema =
             "description": "The Supported Audio Stream Configuration",
             "condition":
             {
-               "functionBody": "return ['CameraRTPStreamManagement'].includes(model.type);"
+               "functionBody": "return ['CameraRTPStreamManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "supportedCameraRecordingConfiguration":
@@ -1895,7 +1891,7 @@ const accessorySchema =
             "description": "The Supported Audio Recording Configuration",
             "condition":
             {
-               "functionBody": "return ['CameraEventRecordingManagement'].includes(model.type);"
+               "functionBody": "return ['CameraEventRecordingManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "supportedDataStreamTransportConfiguration":
@@ -1920,7 +1916,7 @@ const accessorySchema =
             "description": "The Supported Diagnostic Snapshot",
             "condition":
             {
-               "functionBody": "return ['Diagnostics'].includes(model.type);"
+               "functionBody": "return ['Diagnostics'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "supportedRTPConfiguration":
@@ -1931,7 +1927,7 @@ const accessorySchema =
             "description": "The Supported RTP Configuration",
             "condition":
             {
-               "functionBody": "return ['CameraRTPStreamManagement'].includes(model.type);"
+               "functionBody": "return ['CameraRTPStreamManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "supportedRouterConfiguration":
@@ -1942,7 +1938,7 @@ const accessorySchema =
             "description": "The Supported Router Configuration",
             "condition":
             {
-               "functionBody": "return ['WiFiRouter'].includes(model.type);"
+               "functionBody": "return ['WiFiRouter'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "supportedTransferTransportConfiguration":
@@ -1953,7 +1949,7 @@ const accessorySchema =
             "description": "The Supported Transfer Transport Configuration",
             "condition":
             {
-               "functionBody": "return ['TransferTransportManagement'].includes(model.type);"
+               "functionBody": "return ['TransferTransportManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "supportedVideoRecordingConfiguration":
@@ -1964,7 +1960,7 @@ const accessorySchema =
             "description": "The Supported Video Recording Configuration",
             "condition":
             {
-               "functionBody": "return ['CameraEventRecordingManagement'].includes(model.type);"
+               "functionBody": "return ['CameraEventRecordingManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "supportedVideoStreamConfiguration":
@@ -1975,7 +1971,7 @@ const accessorySchema =
             "description": "The Supported Video Stream Configuration",
             "condition":
             {
-               "functionBody": "return ['CameraRTPStreamManagement'].includes(model.type);"
+               "functionBody": "return ['CameraRTPStreamManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "swingMode":
@@ -2017,7 +2013,7 @@ const accessorySchema =
             "description": "The Target Control List",
             "condition":
             {
-               "functionBody": "return ['TargetControlManagement'].includes(model.type);"
+               "functionBody": "return ['TargetControlManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "targetControlSupportedConfiguration":
@@ -2028,7 +2024,7 @@ const accessorySchema =
             "description": "The Target Supported Configuration",
             "condition":
             {
-               "functionBody": "return ['TargetControlManagement'].includes(model.type);"
+               "functionBody": "return ['TargetControlManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "targetDoorState":
@@ -2349,7 +2345,7 @@ const accessorySchema =
             "description": "The Devices WAN Configuration List",
             "condition":
             {
-               "functionBody": "return ['WiFiRouter'].includes(model.type);"
+               "functionBody": "return ['WiFiRouter'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "wanStatusList":
@@ -2360,7 +2356,7 @@ const accessorySchema =
             "description": "The Devices WAN Status List",
             "condition":
             {
-               "functionBody": "return ['WiFiRouter'].includes(model.type);"
+               "functionBody": "return ['WiFiRouter'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "wakeConfiguration":
@@ -2371,7 +2367,7 @@ const accessorySchema =
             "description": "The Devices Wake Configuration",
             "condition":
             {
-               "functionBody": "return ['PowerManagement'].includes(model.type);"
+               "functionBody": "return ['PowerManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "waterLevel":
@@ -2488,12 +2484,31 @@ const accessorySchema =
             ],
             "required": true
          },
+         "subType":
+         {
+            "$id": "#subType",
+            "type": "string",
+            "title": "subType",
+            "description": "The accessories subType.",
+            "placeholder": "A secondary name",
+            "required": false
+         },
+         "displayName":
+         {
+            "$id": "#displayName",
+            "type": "string",
+            "title": "displayName",
+            "description": "The accessories display name.",
+            "placeholder": "My_Device",
+            "required": true
+         },
          "polling":
          {
             "$id": "#polling",
             "title": "polling",
             "type": "array",
             "required": false,
+            "uniqueItems": true,
             "maxItems": 0,
             "items":
             {
@@ -2505,17 +2520,17 @@ const accessorySchema =
                      "title": "characteristic",
                      "type": "string",
                      "required": "true"
-                  },                  "interval":
+                  },"interval":
                   {
                      "title": "interval",
                      "type": "number",
                      "required": "false"
-                  },                  "stateChaneResponseTime":
+                  },"stateChaneResponseTime":
                   {
                      "title": "stateChaneResponseTime",
                      "type": "number",
                      "required": "false"
-                  },                  "queue":
+                  },"queue":
                   {
                      "title": "queue",
                      "type": "string",
@@ -4428,5 +4443,5 @@ const accessorySchema =
             "state_cmd",
             "state_cmd_suffix"
          ]
-      }   ]
+      }]
 }
