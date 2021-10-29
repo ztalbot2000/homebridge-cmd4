@@ -15,8 +15,8 @@ const GLOBAL =
 
 async function createAccessorySchema( accessory )
 {
-   homebridge.request( "/consoleLog",  `In CreateCustomSchema for: ${ accessory.name } ${ accessory.displayName }` );
-   homebridge.request( "/consoleLog",  `In CreateCustomSchema accessory: ${ accessory }` );
+   homebridge.request( "/consoleLog",  `In CreateAccessorySchema for: ${ accessory.name } ${ accessory.displayName }` );
+   homebridge.request( "/consoleLog",  `In CreateAccessorySchema accessory: ${ accessory }` );
    //let settings = await homebridge.request( "/cmd4StaticVariable", "settings" );
 
    // Need to set globalSchema.queueTypes and polling
@@ -45,30 +45,35 @@ async function createAccessorySchema( accessory )
       maxItems = accessory.polling.length + 1;
    accessorySchema.schema['$definitions'].polling.maxItems = maxItems
 
+   /*
    GLOBAL.accessoryForm = homebridge.createForm( accessorySchema,
    {
-      "debug": GLOBAL.pluginConfig[0].debug,
-      "statusMsg": GLOBAL.pluginConfig[0].statusMsg,
-      "allowTLV8": GLOBAL.pluginConfig[0].allowTLV8,
-      "outputConstants": GLOBAL.pluginConfig[0].outputConstants,
-      "timeout": GLOBAL.pluginConfig[0].timeout,
-      "stateChangeResponseTime": GLOBAL.pluginConfig[0].stateChangeResponseTime,
-      "interval": GLOBAL.pluginConfig[0].interval,
-      "state_cmd_prefix": GLOBAL.pluginConfig[0].state_cmd_prefix,
-      "state_cmd": GLOBAL.pluginConfig[0].state_cmd,
-      "state_cmd_suffix": GLOBAL.pluginConfig[0].state_cmd_suffix,
-      "storage": GLOBAL.pluginConfig[0].storage,
-      "storagePath": GLOBAL.pluginConfig[0].storagePath,
-      "folder": GLOBAL.pluginConfig[0].folder,
-      "keyPath": GLOBAL.pluginConfig[0].keyPath,
-      "definitions": GLOBAL.pluginConfig[0].definitions,
-      "queueTypes": GLOBAL.pluginConfig[0].queueTypes,
-      "name": GLOBAL.pluginConfig[0].name,
-      "polling": GLOBAL.pluginConfig[0].polling
+      "debug": accessory.debug: accessory.debug ? "",
+      "statusMsg": accessory.statusMsg: accessory.debug ? "",
+      "allowTLV8": accessory.allowTLV8: accessory.debug ? "",
+      "outputConstants": accessory.outputConstants: accessory.debug ? "",
+      "timeout": accessory.timeout: accessory.debug ? "",
+      "stateChangeResponseTime": accessory.stateChangeResponseTime: accessory.debug ? "",
+      "interval": accessory.interval: accessory.debug ? "",
+      "state_cmd_prefix": accessory.state_cmd_prefix: accessory.debug ? "",
+      "state_cmd": accessory.state_cmd: accessory.debug ? "",
+      "state_cmd_suffix": accessory.state_cmd_suffix,
+      "storage": accessory.storage: accessory.debug ? "",
+      "storagePath": accessory.storagePath,
+      "folder": accessory.folder: accessory.debug ? "",
+      "keyPath": accessory.keyPath: accessory.debug ? "",
+      "definitions": accessory.definitions: accessory.definitions ? "",
+      "queueTypes": accessory.queueTypes: accessory.queueTypes ? "",
+      "name": accessory.name: accessory.name ? "",
+      "polling": accessory.polling: accessory.polling ? ""
       // need to update forms characteristics
-
-
    }, "MySubmitButton", "MyCancelButton" );
+   */
+
+
+   GLOBAL.accessoryForm = homebridge.createForm( accessorySchema, accessory,
+   "MySubmitButton", "MyCancelButton" );
+
 
 
    GLOBAL.accessoryForm.onChange( async config =>
