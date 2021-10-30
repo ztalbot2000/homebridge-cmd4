@@ -25,10 +25,6 @@ class UiServer extends HomebridgePluginUiServer
       CMD4_ACC_TYPE_ENUM.init( );
       CMD4_DEVICE_TYPE_ENUM.init( );
 
-      console.log("CMD4_DEVICE_TYPE_ENUM=%s", CMD4_DEVICE_TYPE_ENUM);
-      console.log("settings=%s", settings.PLUGIN_NAME);
-
-
       // Allow main.js to access Cmd4 Static variables as html files cannot
       // require Cmd4 javascript files
       this.onRequest('/startButtonPressed', this.startButtonPressed.bind(this));

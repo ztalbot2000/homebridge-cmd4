@@ -7,6 +7,9 @@ const GLOBAL =
 {
    pluginConfig: false,
    accessoryForm: false,
+   accessory: false,
+   accessoryName: false,
+   accessoryIsNew: false,
    globalsForm: false,
    newGlobalQueueBeingAdded: false,
    constants: null
@@ -24,15 +27,9 @@ async function createAccessorySchema( accessory )
    // so only 1 entry is added at a time
    // Note: We do this in the definitions, because in the Layout section
    //       you would have to figure out what entry has the queueTypes
-   //console.log("accessory.queueTypes=%s",accessory.queueTypes );
-   console.log("accessorySchema definitions.queueTypes=%s",accessorySchema.schema['$definitions'].queueTypes );
-   console.log("accessorySchema definitions.queueTypes.maxItems=%s",accessorySchema.schema['$definitions'].queueTypes );
+   //console.log("accessorySchema definitions.queueTypes=%s",accessorySchema.schema['$definitions'].queueTypes );
 
    let maxItems = 1;
-      Object.keys(accessory).forEach( key =>
-      {
-         console.log(`accessory[${key}]=${ accessory[ key ] }`);
-      });
    if ( accessory.queueTypes != undefined )
    {
        console.log("accessory.queueTypes.length=%s",accessory.queueTypes.length );
@@ -67,12 +64,16 @@ async function createAccessorySchema( accessory )
       "name": accessory.name: accessory.name ? "",
       "polling": accessory.polling: accessory.polling ? ""
       // need to update forms characteristics
-   }, "MySubmitButton", "MyCancelButton" );
+   }, "Update", "Cancel" ); // UPDATE CANCEL (Auto Capitalized)
    */
 
 
+   // Just in case the name is changed, know which one is being worked on.
+   GLOBAL.accessoryName = accessory.name;
+
+   // Create the accessory Form using the data from the passed in accesory
    GLOBAL.accessoryForm = homebridge.createForm( accessorySchema, accessory,
-   "MySubmitButton", "MyCancelButton" );
+   "Update", "Cancel" ); // UPDATE CANCEL (Auto Capitalized)
 
 
 
@@ -80,17 +81,11 @@ async function createAccessorySchema( accessory )
    {
       homebridge.request( "/consoleLog",  `In customSchema.onChange config: ${ config }` );
 
-      GLOBAL.pluginConfig[0].name = config.name;
-      GLOBAL.pluginConfig[0].debug = config.debug;
-      GLOBAL.pluginConfig[0].outputConstants = config.outputConstants;
-      GLOBAL.pluginConfig[0].statusMsg = config.statusMsg;
-      GLOBAL.pluginConfig[0].timeout = config.timeout;
-      GLOBAL.pluginConfig[0].stateChangeResponseTime = config.stateChangeResponseTime;
       GLOBAL.pluginConfig[0].accessories = GLOBAL.pluginConfig[0].accessories.map( accessory =>
       {
-         if ( accessory.name === config.accessories.name )
+         if ( accessory.name === config.name )
          {
-            accessory = config.accessories;
+            accessory = config;
          }
          return accessory;
       } );
@@ -229,7 +224,9 @@ async function addNewDeviceToConfig( accessory )
 
       }
 
+      // Update the plugin config (Does not save )
       await homebridge.updatePluginConfig( GLOBAL.pluginConfig );
+      // Saves the plugin config to disk
       await homebridge.savePluginConfig( );
 
    }
@@ -267,7 +264,9 @@ async function removeDeviceFromConfig( )
 
          GLOBAL.pluginConfig[0].accessories.splice( foundIndex, 1 );
 
+         // Update the plugin config (Does not save )
          await homebridge.updatePluginConfig( GLOBAL.pluginConfig );
+         // Saves the plugin config to disk
          await homebridge.savePluginConfig( );
 
          removeAccessoryFromList( selectedAccessory );
@@ -366,30 +365,28 @@ async function showConfigureGlobalsPageButtonPressed( )
       "keyPath": GLOBAL.pluginConfig[0].keyPath,
       "definitions": GLOBAL.pluginConfig[0].definitions,
       "queueTypes": GLOBAL.pluginConfig[0].queueTypes
-   }, "MySubmitButton", "MyCancelButton" );
+   }, "Update", "Cancel" ); // UPDATE CANCEL (Auto Capitalized)
 
-   GLOBAL.globalsForm.onChange(async change => {
-      homebridge.request( "/consoleLog", `main.js showConfigureGlobalsPage onChange before change.allowTLV8: ${ change.allowTLV8 }` );
-      GLOBAL.pluginConfig[0].debug = ( change.debug ) ? change.debug : undefined;
-      GLOBAL.pluginConfig[0].statusMsg = change.statusMsg ? change.statusMsg : undefined;
-      GLOBAL.pluginConfig[0].allowTLV8 = change.allowTLV8 ? change.allowTLV8 : undefined;
-      homebridge.request( "/consoleLog", `main.js showConfigureGlobalsPage onChange after GLOBAL.allowTLV8: ${ GLOBAL.pluginConfig[0].allowTLV8 }` );
-      GLOBAL.pluginConfig[0].outputConstants = change.outputConstants ? change.outputConstants : undefined;
-      GLOBAL.pluginConfig[0].timeout = change.timeout ? change.timeout : undefined;
-      GLOBAL.pluginConfig[0].stateCmdResponseTime = change.stateCmdResponseTime ? change.stateCmdResponseTime : undefined;
-      GLOBAL.pluginConfig[0].interval = change.interval ? change.interval : undefined;
-      GLOBAL.pluginConfig[0].state_cmd_prefix = change.state_cmd_prefix ? change.state_cmd_prefix : undefined;
-      GLOBAL.pluginConfig[0].state_cmd = change.state_cmd ? change.state_cmd : undefined;
-      GLOBAL.pluginConfig[0].state_cmd_suffix = change.state_cmd_suffix ? change.state_cmd_suffix : undefined;
-      GLOBAL.pluginConfig[0].storage = change.storage ? change.storage : undefined;
-      GLOBAL.pluginConfig[0].storagePath = change.storagePath ? change.storagePath : undefined;
-      GLOBAL.pluginConfig[0].folder = change.folder ? change.folder : undefined;
-      GLOBAL.pluginConfig[0].keyPath = change.keyPath ? change.keyPath : undefined;
-      GLOBAL.pluginConfig[0].definitions = change.definitions ? change.definitions : undefined;
-      GLOBAL.pluginConfig[0].queueTypes = change.queueTypes ? change.queueTypes : undefined;
+   GLOBAL.globalsForm.onChange(async change =>
+   {
+      // Check for form changes
+      Object.keys( change ).forEach( ( key ) =>
+      {
+         // If the key was removed. Delete it as Cmd4 handles it as a default.
+         if ( change[ key ] == undefined || change[ key ] == "" )
+         {
+            homebridge.request( "/consoleLog", `Deleting pluginConfig[ ${ key }] with ${ change[ key ] }` );
+            delete GLOBAL.pluginConfig[0][ key ];
+         } else
+         {
+            homebridge.request( "/consoleLog", `Updating pluginConfig[ ${ key }] with ${ change[ key ] }` );
+            GLOBAL.pluginConfig[0][key] = change[ key ];
+         }
+      });
 
       try {
          homebridge.request( "/consoleLog",  `await homebridge.updatePlugin` );
+         // Update the plugin config (Does not save )
          await homebridge.updatePluginConfig(GLOBAL.pluginConfig);
        } catch(err) {
          homebridge.toast.error(err.message, 'Error');
@@ -403,7 +400,7 @@ async function showConfigureGlobalsPageButtonPressed( )
    console.log( `GLOBAL.globalsForm.parent:` );
       Object.keys(GLOBAL.globalsForm.parent).forEach( key =>
       {
-         console.log(`GLOBAL.globalsForm[${key}]=${ GLOBAL.globalsForm[ key ] }`);
+         console.log(`GLOBAL.globalsForm.parent[${key}]=${ GLOBAL.globalsForm[ key ] }`);
       });
    // $watchCollection is not a function
    //GLOBAL.globalsForm.$watchCollection('queueTypes', function( x )
@@ -417,6 +414,7 @@ async function showConfigureGlobalsPageButtonPressed( )
    // watch for submit button click events
    GLOBAL.globalsForm.onSubmit( (form) => {
       homebridge.request( "/consoleLog",  `submit button pressed for form: ${ form }` );
+      // Saves the plugin config to disk
       homebridge.savePluginConfig();
      homebridge.toast.success( ' Globals Updated!', 'Success' );
     });
@@ -713,6 +711,8 @@ $( '#addAccessoryPage2Button' ).on( 'click', ( ) =>
    };
    resetUI( );
 
+   GLOBAL.accessory = accessory;
+   GLOBAL.accessoryIsNew = true;
    createAccessorySchema( accessory );
 
    homebridge.request( "/showAddAccessoryPage2ButtonPressed" );
@@ -733,6 +733,8 @@ $( '#showEditAccessoryPageButton' ).on( 'click', ( ) =>
       return homebridge.toast.error( 'Can not find the accessory!', 'Error' );
 
    homebridge.request( "/consoleLog", `EDIT ACCESSORY INCOMPLETE` );
+   GLOBAL.accessory = accessory;
+   GLOBAL.accessoryIsNew = false;
    createAccessorySchema( accessory );
 
    homebridge.request( "/showEditAccessoryPageButtonPressed" );
