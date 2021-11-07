@@ -1,8 +1,6 @@
 'use strict';
 
 const moment = require( "moment" );
-const fs = require( "fs" );
-const commandExistsSync = require( "command-exists" ).sync;
 
 // Settings, Globals and Constants
 let settings = require( "./cmd4Settings" );
@@ -1237,68 +1235,7 @@ class Cmd4Accessory
       if ( typeof state_cmd != "string" )
          throw new Error( `No state_cmd for: "${ this.displayName }".` );
 
-
-      // Split the state_cmd into words.
-      let cmdArray = state_cmd.match(/\S+/gi);
-
-      // Assume no words
-      let arrayLength = 0;
-
-      // Get the number of words
-      if ( cmdArray )
-         arrayLength = cmdArray.length;
-
-      // Check that the state_cmd is valid.
-      // The first word must be in the persons path
-      // The second word, if it exists must be a file
-      // and have the correct path.
-      switch ( arrayLength )
-      {
-         case 0:
-            this.log.error( `No state_cmd given` );
-            return false;
-         default:
-         {
-            let checkFile = cmdArray[ arrayLength -1 ];
-
-            try {
-               fs.accessSync( checkFile, fs.F_OK );
-               // File exists - OK
-
-            } catch ( e ) {
-               // It isn't accessible
-               throw new Error( `The file: "${ checkFile }" does not exist, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell.` );
-            }
-         }
-         // Purposely fall through to check the command as well
-         // break omitted
-         case 1:
-         {
-            let checkCmd = cmdArray[ 0 ];
-
-            // if the lone command is a path to a command
-            // Then check if it exists, oTherwise check if it is
-            // in Their path.
-            if ( checkCmd.charAt( 0 ) == "/" || (
-                  checkCmd.length > 1 &&
-                  checkCmd.charAt( 0 ) == "." &&
-                  checkCmd.charAt( 1 ) == "/" )
-               )
-            {
-               try {
-                  fs.accessSync( checkCmd, fs.F_OK );
-                  // File exists - OK
-               } catch ( e ) {
-                  throw new Error( `The file: "${ checkCmd }" does not exist, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell.` );
-               }
-            } else
-            {
-               if ( ! commandExistsSync( checkCmd ) )
-                  throw new Error( `The file: "${ checkCmd }" does not exist, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell.` );
-            }
-            break;
-         }
-      }
+      // This was messy, did not like spaces. let the user be the judge of it.
       return true;
    }
 
@@ -1321,11 +1258,8 @@ class Cmd4Accessory
       let accTypeEnumIndex = rcDirective.accTypeEnumIndex;
 
       // Do not update the stored values as it is being restored from cache
-      this.log.debug( `Checking to see if value should be set ${ parseConfigShouldUseCharacteristicValues }` );
       if ( parseConfigShouldUseCharacteristicValues == false )
          return;
-      //this.log.debug( `Going to set its value` );
-
 
       if ( Object.keys( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].validValues ).length > 0 )
       {
@@ -1408,11 +1342,11 @@ class Cmd4Accessory
             valueToAdd.replace(/'$/, "")
 
             this.listOfConstants[ keyToAdd ] = valueToAdd;
-        }
-        return;
+         }
+         return;
      }
 
-     throw new Error( `Constants must be an array of/or list of key/value pairs: "${ constantArg }".` );
+      throw new Error( `Constants must be an array of/or list of key/value pairs: "${ constantArg }".` );
    }
 
    processVariables( variables )
@@ -1656,6 +1590,7 @@ class Cmd4Accessory
                break;
             case constants.STATE_CMD_SUFFIX:
                // This gets added after any Get/Set <value>
+               // We replace any constants already defined
                this.state_cmd_suffix = value;
 
                break;
@@ -1758,6 +1693,10 @@ class Cmd4Accessory
             this.log.info( chalk.blue( `Cmd4 is running in Demo Mode for ${ this.displayName }` ) );
       }
 
+      // Add the global constants to the listOfConstants
+      if ( this.parentInfo.globalConstants != null )
+         this.processConstants( this.parentInfo.globalConstants );
+
       // Handle seperation of strings of state_cmd for a prefix
       if ( this.state_cmd_prefix )
          this.state_cmd_prefix = this.state_cmd_prefix + " ";
@@ -1766,9 +1705,15 @@ class Cmd4Accessory
 
       // Handle seperation of strings of state_cmd for a suffix
       if ( this.state_cmd_suffix )
-         this.state_cmd_suffix = " " + this.state_cmd_suffix;
-      else
+      {
+         if ( typeof this.state_cmd_suffix != "string" )
+            throw new Error( `state_cmd_suffix must be a string: "${ this.state_cmd_suffix }".` );
+
+         this.state_cmd_suffix = " " + this.replaceConstantsInString( this.state_cmd_suffix );
+      } else
+      {
          this.state_cmd_suffix = "";
+      }
 
       if ( this.typeIndex == CMD4_DEVICE_TYPE_ENUM.Television )
       {

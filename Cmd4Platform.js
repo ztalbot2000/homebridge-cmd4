@@ -89,6 +89,7 @@ class Cmd4Platform
       this.toBeRestoredPlatforms = [ ];
       this.createdCmd4Accessories = [ ];
       this.createdCmd4Platforms = [ ];
+      this.globalconstants = null;
 
       this.services = [ ];
 
@@ -293,6 +294,12 @@ class Cmd4Platform
                this.definitions = value;
 
                break;
+            case constants.CONSTANTS:
+               // Save the constants defined globally so the accessory
+               // can parse it.
+               this.globalconstants = value;
+
+               break
             case constants.PLATFORM:
                // Noop
 

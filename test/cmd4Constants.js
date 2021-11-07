@@ -189,33 +189,36 @@ describe( "Testing source constants  -  are defined", function( )
          var sourceMappedConstantsArray = sourceConstantsMatches.map( ( s ) =>
          {
             let returningArray = [ ];
-            let occurranceCountArray = s.match( /constants./g );
+            let occurranceCountArray = s.match( /constants\./g );
 
-            for ( let i = 0; i < occurranceCountArray.length; i++ )
+            if ( occurranceCountArray != null )
             {
-               s = s.slice( s.indexOf( "constants." ) + 10 );
+               for ( let i = 0; i < occurranceCountArray.length; i++ )
+               {
+                  s = s.slice( s.indexOf( "constants." ) + 10 );
 
-               const reg = new RegExp(`[\\s|,|:|;|}]` );
-               let sourceConstantLen = s.search( reg );
-               let sourceConstant = s.substr(0,  sourceConstantLen );
+                  const reg = new RegExp(`[\\s|,|:|;|}]` );
+                  let sourceConstantLen = s.search( reg );
+                  let sourceConstant = s.substr(0,  sourceConstantLen );
 
-               if ( returningArray.length == 0 )
-               {
-                  //console.log("pushing -->%s<--", sourceConstant );
-                  returningArray.push( sourceConstant );
-               } else if ( returningArray.find( ( entry ) => entry == sourceConstant ) == -1 )
-               {
-                  //console.log("pushing another  -->%s<--", sourceConstant );
-                  returningArray.push( sourceConstant );
-               } else
-               {
-                  // Duplicate
-               }
+                  if ( returningArray.length == 0 )
+                  {
+                     // console.log("pushing -->%s<--", sourceConstant );
+                     returningArray.push( sourceConstant );
+                  } else if ( returningArray.find( ( entry ) => entry == sourceConstant ) == -1 )
+                  {
+                     // console.log("pushing another  -->%s<--", sourceConstant );
+                     returningArray.push( sourceConstant );
+                  } else
+                  {
+                     // Duplicate
+                  }
 
-               // Proceed to the next constant within the same line
-               if ( i + 1 < occurranceCountArray.length )
-               {
-                  s = s.slice( sourceConstant.length )
+                  // Proceed to the next constant within the same line
+                  if ( i + 1 < occurranceCountArray.length )
+                  {
+                     s = s.slice( sourceConstant.length )
+                  }
                }
             }
 
