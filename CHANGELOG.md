@@ -1,4 +1,12 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
+#### 6.0.1 (2021-11-07)
+
+##### Bug Fixes
+
+*  For bug[#116](https://github.com/ztalbot2000/homebridge-cmd4/pull/116) remove stateCmd validation and for AirCon add global const parsing ([e7bc4963](https://github.com/ztalbot2000/homebridge-cmd4/commit/e7bc49630c47d16d296ff9751df7c7666cf2ecd3))
+
+
+# Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
 ## 6.0.0 (2021-10-01)
 
 ##### New Features

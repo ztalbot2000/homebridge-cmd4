@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-6-0-1">**Whats new in 6.0.1**</a>
 * <a href="#Whats-new-in-6-0-0">**Whats new in 6.0.0**</a>
 * <a href="#Whats-new-in-6-0-0-beta1">**Whats new in 6.0.0.beta1**</a>
 * <a href="#Whats-new-in-5-1-1">**Whats new in 5.1.1**</a>
@@ -74,6 +75,14 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-6-0-1">## Whats new in 6.0.1</a>
+#### 6.0.1 (2021-11-07)
+
+##### Bug Fixes
+
+*  For bug[#116](https://github.com/ztalbot2000/homebridge-cmd4/pull/116) remove stateCmd validation and for AirCon add global const parsing ([e7bc4963](https://github.com/ztalbot2000/homebridge-cmd4/commit/e7bc49630c47d16d296ff9751df7c7666cf2ecd3))
+
 
 <a name="Whats-new-in-6-0-0">## Whats new in 6.0.0</a>
 ## 6.0.0 (2021-10-01)
