@@ -1283,108 +1283,97 @@ class Cmd4Accessory
       this.cmd4Storage.setStoredValueForIndex( accTypeEnumIndex, properValue );
    }
 
-   processRequires( requires )
+   processRequires( requiresArray )
    {
-      if ( Array.isArray ( requires ) )
+      if ( ! Array.isArray ( requiresArray ) )
+         throw new Error( `requires must be an array of { "require": "some requires string" }` );
+
+      // Iterate over the groups of key/value constants in the array.
+      for ( let argIndex = 0; argIndex < requiresArray.length; argIndex++ )
       {
-          for ( let required in requires )
-             this.processRequires( requires[ required ] );
+         let argEntry = requiresArray[ argIndex ];
 
-         return;
+         if ( argEntry.require == undefined )
+            throw new Error( `Requires definition at index: "${ argIndex }" has no "require":"SomeRequire"` );
+
+         let required = argEntry.require;
+
+         if ( typeof required != "string" )
+            throw new Error( `Requires definition: "${ required }"  must be a string.` );
+         required = this.replaceConstantsInString( required );
+
+         if ( settings.cmd4Dbg ) this.log.debug( `Requiring ${ required }` );
+
+         require( required );
       }
-      if ( isJSON( requires ) )
-      {
-          // I assume only 1, but you know about assuming ...
-         for ( let key in requires )
-         {
-            let required = requires[ key ] ;
-
-            if ( typeof required != "string" )
-               throw new Error( `Requires definition: "${ required }"  must be a string.` );
-
-
-            if ( settings.cmd4Dbg ) this.log.debug( `Requiring ${ required }` );
-
-            require( required );
-         }
-         return;
-      }
-      throw new Error( `Requires must be an array of/or list of key/value pairs: "${ requires }".` );
    }
 
-   processConstants( constantArg )
+   processConstants( constantsArgArray )
    {
-      if ( Array.isArray ( constantArg ) )
-      {
-         for ( let constant in constantArg )
-            this.processConstants( constantArg[ constant ] );
+      if ( ! Array.isArray ( constantsArgArray ) )
+         throw new Error( `Constants must be an array of { "key": "\${SomeKey}", "value": "some replacement string" }` );
 
-         return;
+
+      // Iterate over the groups of key/value constants in the array.
+      for ( let argIndex = 0; argIndex < constantsArgArray.length; argIndex++ )
+      {
+         let argEntry = constantsArgArray[ argIndex ];
+
+         if ( argEntry.key == undefined )
+            throw new Error( `Constant definition at index: "${ argIndex }" has no "key":"\${SomeKey}"` );
+
+         if ( argEntry.value == undefined )
+            throw new Error( `Constant definition at index: "${ argIndex }" has no "value":"Some replacement string` );
+
+         let keyToAdd = argEntry.key;
+         let valueToAdd = argEntry.value;
+         if ( ! keyToAdd.startsWith( "${" ) )
+            throw new Error( `Constant definition for: "${ keyToAdd }" must start with "\${" for clarity.` );
+
+         if ( ! keyToAdd.endsWith( "}" ) )
+            throw new Error( `Constant definition for: "${ keyToAdd }" must end with "}" for clarity.` );
+
+         // remove any leading and trailing single quotes
+         // so that using it for replacement will be easier.
+         valueToAdd.replace(/^'/, "")
+         valueToAdd.replace(/'$/, "")
+
+         this.listOfConstants[ keyToAdd ] = valueToAdd;
       }
-      if ( isJSON( constantArg ) )
-      {
-         // I assume only 1, but you know about assuming ...
-         for ( let key in constantArg )
-         {
-            let keyToAdd = key ;
-            let valueToAdd = constantArg[ key ] ;
-            if ( ! keyToAdd.startsWith( "${" ) )
-               throw new Error( `Constant definition for: "${ keyToAdd }" must start with "\${" for clarity.` );
-
-
-            if ( ! keyToAdd.endsWith( "}" ) )
-               throw new Error( `Constant definition for: "${ keyToAdd }" must end with "}" for clarity.` );
-
-
-            // remove any leading and trailing single quotes
-            // so that using it for replacement will be easier.
-            valueToAdd.replace(/^'/, "")
-            valueToAdd.replace(/'$/, "")
-
-            this.listOfConstants[ keyToAdd ] = valueToAdd;
-         }
-         return;
-     }
-
-      throw new Error( `Constants must be an array of/or list of key/value pairs: "${ constantArg }".` );
    }
 
-   processVariables( variables )
+   processVariables( variablesArgArray )
    {
-      if ( Array.isArray ( variables ) )
+      if ( ! Array.isArray ( variablesArgArray ) )
+         throw new Error( `Variables must be an array of { "key": "\${SomeKey}", "value": "some replacement string" }` );
+
+
+      // Iterate over the groups of key/value constants in the array.
+      for ( let argIndex = 0; argIndex < variablesArgArray.length; argIndex++ )
       {
-         for ( let variable in variables )
-            this.processConstants( variables[ variable ] );
+         let argEntry = variablesArgArray[ argIndex ];
 
-         return;
+         if ( argEntry.key == undefined )
+            throw new Error( `Variable definition at index: "${ argIndex }" has no "key":"\${SomeKey}"` );
+
+         if ( argEntry.value == undefined )
+            throw new Error( `Variable definition at index: "${ argIndex }" has no "value":"Some replacement string` );
+
+         let keyToAdd = argEntry.key;
+         let valueToAdd = argEntry.value;
+         if ( ! keyToAdd.startsWith( "${" ) )
+            throw new Error( `Variable definition for: "${ keyToAdd }" must start with "\${" for clarity.` );
+
+         if ( ! keyToAdd.endsWith( "}" ) )
+            throw new Error( `Variable definition for: "${ keyToAdd }" must end with "}" for clarity.` );
+
+         // remove any leading and trailing single quotes
+         // so that using it for replacement will be easier.
+         valueToAdd.replace(/^'/, "")
+         valueToAdd.replace(/'$/, "")
+
+         this.listOfVariables[ keyToAdd ] = valueToAdd;
       }
-      if ( isJSON( variables ) )
-      {
-         // I assume only 1, but you know about assuming ...
-         for ( let key in variables )
-         {
-            let keyToAdd = key ;
-            let valueToAdd = variables[ key ] ;
-            if ( ! keyToAdd.startsWith( "${" ) )
-               throw new Error( `Variable definition for: "${ keyToAdd }" must start with "\${" for clarity.` );
-
-            if ( ! keyToAdd.endsWith( "}" ) )
-               throw new Error( `Variable definition for: "${ keyToAdd }" must end with "}" for clarity.` );
-
-            // remove any leading and trailing single quotes
-            // so that using it for replacement will be easier.
-            valueToAdd.replace(/^'/, "")
-            valueToAdd.replace(/'$/, "")
-
-            // The resultant variable may have Constants to be replaced.
-            let value = this.replaceConstantsInString( valueToAdd );
-
-            this.listOfVariables[ keyToAdd ] = value;
-         }
-         return;
-      }
-
-      throw new Error( `Variables must be an array of/or list of key/value pairs: "${ variables }".` );
    }
 
    accessoryTypeConfigToCmd4Accessories( config, parentInfo )
@@ -1694,7 +1683,7 @@ class Cmd4Accessory
       }
 
       // Add the global constants to the listOfConstants
-      if ( this.parentInfo.globalConstants != null )
+      if ( this.parentInfo && this.parentInfo.globalConstants != null )
          this.processConstants( this.parentInfo.globalConstants );
 
       // Handle seperation of strings of state_cmd for a prefix
