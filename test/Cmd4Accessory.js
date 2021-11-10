@@ -742,25 +742,6 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
       expect ( ( ) => new Cmd4Accessory( log, config, _api, [ ] ) ).to.throw(/No state_cmd for: "Test Switch"./);
    });
 
-   it( `Check that invalid state_cmd for an accessory throws an error`, ( ) =>
-   {
-      let config =
-      {
-         name:                            "Test Switch",
-         type:                            "Switch",
-         on:                               false,
-         polling:                          true,
-         state_cmd:                       "/tmp/noFile"
-      };
-
-      let log = new Logger( );
-      log.setOutputEnabled( false );
-      log.setBufferEnabled( true );
-
-
-      expect ( ( ) => new Cmd4Accessory( log, config, _api, [ ] ) ).to.throw(/The file: "\/tmp\/noFile" does not exist, It is highly likely the state_cmd will fail. Hint: Do not use wildcards that would normally be expanded by a shell./);
-   });
-
    it( `Check that invalid characteristic for an accessory throws an error`, ( ) =>
    {
       let config =
@@ -906,11 +887,11 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
          type:                            "Switch",
          on:                               false,
          polling:                         true,
-         constants: {
-                  "${psk}": "123456",
-                  "${ipaddress}": "12Aa34bbcc",
-                  "${port}": "8091"
-              },
+         constants: [
+            { "key": "${psk}", "value": "123456" },
+            { "key": "${ipaddress}", "value": "12Aa34bbcc" },
+            { "key": "${port}", "value": "8091" }
+         ],
          state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
       };
 
@@ -934,7 +915,9 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
          type:                            "Switch",
          on:                               false,
          polling:                         true,
-         constants:                     { "{psk}": "123456", },
+         constants: [
+            { key: "{psk}", value: "123456" }
+         ],
          state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
       };
 
@@ -956,7 +939,9 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
          type:                            "Switch",
          on:                               false,
          polling:                         true,
-         constants:                     { "${psk": "123456", },
+         constants: [
+            { key: "${psk", value: "123456" }
+         ],
          state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
       };
 
@@ -978,7 +963,8 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
          type:                            "Switch",
          on:                               false,
          polling:                         true,
-         constants:                     "${psk}:1",
+         constants:
+            { key: "${psk}", value: 1 },
          state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
       };
 
@@ -988,7 +974,7 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
       log.setDebugEnabled( false );
 
 
-      expect ( ( ) => new Cmd4Accessory( log, config, _api, [ ] ) ).to.throw(/Constants must be an array of\/or list of key\/value pairs: "\${psk}:1"./);
+      expect ( ( ) => new Cmd4Accessory( log, config, _api, [ ] ) ).to.throw(/Constants must be an array of { "key": "\${SomeKey}", "value": "some replacement string" }/ );
 
    });
 
@@ -1000,11 +986,11 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
          type:                            "Switch",
          on:                               false,
          polling:                         true,
-         variables: {
-                  "${psk}": "123456",
-                  "${ipaddress}": "12Aa34bbcc",
-                  "${port}": "8091"
-              },
+         variables: [
+            { key: "${psk}", value: "123456" },
+            { key: "${ipaddress}", value: "12Aa34bbcc" },
+            { key: "${port}", value: "8091" }
+         ],
          state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
       };
 
@@ -1028,7 +1014,9 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
          type:                            "Switch",
          on:                               false,
          polling:                         true,
-         variables:                     { "{psk}": "123456", },
+         variables: [
+            { key: "{psk}", value: "123456" }
+         ],
          state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
       };
 
@@ -1050,7 +1038,9 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
          type:                            "Switch",
          on:                               false,
          polling:                         true,
-         variables:                     { "${psk": "123456", },
+         variables: [
+            { key: "${psk", value: "123456" }
+         ],
          state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
       };
 
@@ -1082,7 +1072,7 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
       log.setDebugEnabled( false );
 
 
-      expect ( ( ) => new Cmd4Accessory( log, config, _api, [ ] ) ).to.throw(/Variables must be an array of\/or list of key\/value pairs: "\${psk}:1"./);
+      expect ( ( ) => new Cmd4Accessory( log, config, _api, [ ] ) ).to.throw(/Variables must be an array of { "key": "\${SomeKey}", "value": "some replacement string" }/);
 
    });
 
@@ -1140,7 +1130,13 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
          type:                            "Switch",
          on:                               false,
          polling:                         true,
-         requires:                      [{"${bravia}": "http"}],
+         constants: [
+            { "key": "${fs}", "value": "fs" }
+         ],
+         requires: [
+            { "require": "${fs}" },
+            { "require": "http" }
+         ],
          state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
       };
 
@@ -1174,7 +1170,7 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
       log.setDebugEnabled( false );
 
 
-      expect ( ( ) => new Cmd4Accessory( log, config, _api, [ ] ) ).to.throw(/Requires must be an array of\/or list of key\/value pairs: "15"./);
+      expect ( ( ) => new Cmd4Accessory( log, config, _api, [ ] ) ).to.throw(/requires must be an array of { "require": "some requires string" }/ );
 
    });
 

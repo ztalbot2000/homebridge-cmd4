@@ -1,4 +1,11 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
+### 6.0.2 (2021-11-10)
+
+##### Bug Fix
+
+*  Schema Prep - For Homebridge-ui schema must have defined keys ([3053780b](https://github.com/ztalbot2000/homebridge-cmd4/commit/3053780b40eb3d4505dc407411257109977688a1))
+
+# Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
 #### 6.0.1 (2021-11-07)
 
 ##### Bug Fixes
