@@ -16,10 +16,17 @@ const accessorySchema =
                "type": "object",
                "properties": {
                   "key": {
-                     "type": "string"
+                     "type": "string",
+                     "title": "key",
+                     "description": "The constant to replace. i.e. ${IP}.",
+                     "pattern": "^\\${[\\w\\s]+}$",
+                     "required": true
                   },
                   "value": {
-                     "type": "string"
+                     "type": "string",
+                     "title": "value",
+                     "description": "The replacement string",
+                     "required": true
                   }
                }
             }

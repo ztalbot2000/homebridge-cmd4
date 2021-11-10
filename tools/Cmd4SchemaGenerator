@@ -744,13 +744,14 @@ function addGlobalsDefinitionBlock( )
                   wf( `"type": "string",\n` );
                   wf( `"title": "key",\n` );
                   wf( `"description": "The constant to replace. i.e. \${IP}.",\n` );
-                  wf( `"pattern": "^\${[\\w]+}$",\n` );
+                  // Must end up with     "pattern": "^\\${[\\w\\s]+}$",
+                  wf( `"pattern": "^\\\\\${[\\\\w\\\\s]+}$",\n` );
                   wf( `"required": true\n` );
                wf( "-", `},\n` );
                wf( "+", `"value": {\n` );
                   wf( `"type": "string",\n` );
                   wf( `"title": "value",\n` );
-                  wf( `"description": "The replacement string"\n` );
+                  wf( `"description": "The replacement string",\n` );
                   wf( `"required": true\n` );
                wf( "-", `}\n` );
             wf( "-", `}\n` );

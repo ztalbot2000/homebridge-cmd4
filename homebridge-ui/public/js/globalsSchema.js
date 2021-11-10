@@ -16,10 +16,17 @@ const globalsSchema =
                "type": "object",
                "properties": {
                   "key": {
-                     "type": "string"
+                     "type": "string",
+                     "title": "key",
+                     "description": "The constant to replace. i.e. ${IP}.",
+                     "pattern": "^\\${[\\w\\s]+}$",
+                     "required": true
                   },
                   "value": {
-                     "type": "string"
+                     "type": "string",
+                     "title": "value",
+                     "description": "The replacement string",
+                     "required": true
                   }
                }
             }
@@ -210,7 +217,8 @@ const globalsSchema =
                "items": [ {
                   "key": "constants",
                   "type": "array",
-                  "listItems": "1",
+                  "uniqueItems": true,
+                  "listItems": "3",
                   "items": [ {
                      "type": "div",
                      "displayFlex": true,

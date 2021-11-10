@@ -184,17 +184,7 @@ async function addNewDeviceToConfig( accessory )
       {
          name: accessory.name,
          accessoryCharacteristics: accessory.characteristics,
-         polling: accessory.polling,
-         electricVehicle: false,
-         tankBatteryType: 'HUMIDITY',
-         token:
-         {
-            access_token: accessory.token.access_token,
-               refresh_token: accessory.token.refresh_token,
-               token_type: accessory.token.token_type,
-               expires_in: accessory.token.expires_in,
-               expires_at: accessory.token.expires_at
-         }
+         polling: accessory.polling
       };
 
       for( const acc in GLOBAL.pluginConfig[0].accessories )
@@ -204,11 +194,7 @@ async function addNewDeviceToConfig( accessory )
             found = true;
             GLOBAL.pluginConfig[ 0 ].accessories[ acc ].token =
             {
-               access_token: accessory.token.access_token,
-               refresh_token: accessory.token.refresh_token,
-               token_type: accessory.token.token_type,
-               expires_in: accessory.token.expires_in,
-               expires_at: accessory.token.expires_at
+               access_token: accessory.token.access_token
             };
             homebridge.toast.success( accessory.name + ' refreshed!', 'Success' );
          }
@@ -324,6 +310,8 @@ async function backButtonPressed( )
 }
 async function showConfigureGlobalsPageButtonPressed( )
 {
+   let maxItems = 1;
+
    homebridge.request( "/consoleLog", `main.js async function globals sending globals` );
    homebridge.request( "/showConfigureGlobalsPageButtonPressed" );
 
@@ -336,11 +324,17 @@ async function showConfigureGlobalsPageButtonPressed( )
    console.log("GLOBAL.pluginConfig[0].queueTypes=%s",GLOBAL.pluginConfig[0].queueTypes );
    console.log("globalsSchema.schema['$definitions'].queueTypes.maxItems=%s",globalsSchema.schema['$definitions'].queueTypes.maxItems );
 
-   let maxItems = 1;
+   // Set the Globals form queueTypes length to defined number + 1
+   maxItems = 1;
    if ( GLOBAL.pluginConfig[0].queueTypes )
        maxItems = GLOBAL.pluginConfig[0].queueTypes.length + 1
-
    globalsSchema.schema['$definitions'].queueTypes.maxItems = maxItems;
+
+   // Set the Globals form constants length to defined number + 1
+   maxItems = 1;
+   if ( GLOBAL.pluginConfig[0].constants )
+       maxItems = GLOBAL.pluginConfig[0].constants.length + 1
+   globalsSchema.schema['$definitions'].constants.maxItems = maxItems;
 
    // Missing ?
    //globalsSchema['$definitions'].polling.maxItems =
@@ -442,6 +436,9 @@ async function showQueueGlobalsPageButtonPressed( )
 }
 async function updateQueueGlobalsPageButtonPressed( )
 {
+   // Unused as form does this
+   homebridge.request( "/consoleLog", `main.js updateQueueGlobalsPageButtonPressed ` );
+   /*
    let Cmd4Globals =
    {
       debug: GLOBAL.constants.DEFAULT_DEBUG,
@@ -474,6 +471,7 @@ async function updateQueueGlobalsPageButtonPressed( )
 
    // send information to server
    homebridge.request( "/updateCmd4Globals", Cmd4Globals );
+   */
 }
 async function configureNewQueuePageButtonPressed()
 {
@@ -497,6 +495,9 @@ async function deleteGlobalQueueButtonPressed( event )
 }
 function addGlobalQueueEntryItem( queueName, selectedQueueType )
 {
+   // Unused as form does this
+   homebridge.request( "/consoleLog", `main.js updateGlobalQueueEntryItem  ` );
+   /*
    homebridge.request( "/consoleLog", `Adding queue: ${ queueName }` );
    let unSelectedQueueType = GLOBAL.constants.QUEUETYPE_SEQUENTIAL;
    if ( selectedQueueType == GLOBAL.constants.QUEUETYPE_SEQUENTIAL )
@@ -525,6 +526,7 @@ function addGlobalQueueEntryItem( queueName, selectedQueueType )
          '</div>' +
       '</div>'
    );
+   */
 }
 
 // STARTUP CODE
