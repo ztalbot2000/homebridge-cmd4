@@ -350,6 +350,7 @@ async function showConfigureGlobalsPageButtonPressed( )
    GLOBAL.globalsForm = homebridge.createForm( globalsSchema,
    {
       "debug": GLOBAL.pluginConfig[0].debug,
+      "constants": GLOBAL.pluginConfig[0].constants,
       "statusMsg": GLOBAL.pluginConfig[0].statusMsg,
       "allowTLV8": GLOBAL.pluginConfig[0].allowTLV8,
       "outputConstants": GLOBAL.pluginConfig[0].outputConstants,
@@ -444,6 +445,7 @@ async function updateQueueGlobalsPageButtonPressed( )
    let Cmd4Globals =
    {
       debug: GLOBAL.constants.DEFAULT_DEBUG,
+      constants: undefined,
       outputConstants: false,
       allowTLV8: GLOBAL.constants.DEFAULT_ALLOW_TLV8,
       statusMsg: GLOBAL.constants.DEFAULT_STATUS_MSG,
@@ -458,6 +460,7 @@ async function updateQueueGlobalsPageButtonPressed( )
    homebridge.request( "/consoleLog", `main.js async function globals updating globals` );
    // Grab all the globals queue page information
    Cmd4Globals.debug = ( $('#globalDebug').val() === "on") ? true : false;
+   Cmd4Globals.constants = ( $('#globalConstants').val() === "" ) ? undefined : $('#globalConstants').val();
 
    homebridge.request( "/consoleLog", `globalDebug=${ Cmd4Globals.debug }` );
    Cmd4Globals.outputConstants = ( $('#globalOutputConstants').val() === "on") ? true : false;

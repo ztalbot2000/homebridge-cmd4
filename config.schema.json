@@ -7,6 +7,24 @@
    {
       "$definitions":
       {
+         "constants":
+         {
+            "title": "constants",
+            "description": "Constants that can be replaced within state_cmd_suffix",
+            "required": false,
+            "type": "array",
+            "items": {
+               "type": "object",
+               "properties": {
+                  "key": {
+                     "type": "string"
+                  },
+                  "value": {
+                     "type": "string"
+                  }
+               }
+            }
+         },
          "debug":
          {
             "title": "debug",
@@ -2794,6 +2812,7 @@
       "properties":
       {
          "debug": { "$ref": "#/$definitions/debug"},
+         "constants": { "$ref": "#/$definitions/constants"},
          "allowTLV8": { "$ref": "#/$definitions/allowTLV8"},
          "outputConstants": { "$ref": "#/$definitions/outputConstants"},
          "statusMsg": { "$ref": "#/$definitions/statusMsg"},
@@ -3051,7 +3070,8 @@
          "title": "Accessory Options",
          "type": "fieldset",
          "expandable": true,
-         "items": [
+         "items":
+         [
             "debug",
             "statusMsg",
             "allowTLV8",

@@ -6,6 +6,24 @@ const globalsSchema =
    {
       "$definitions":
       {
+         "constants":
+         {
+            "title": "constants",
+            "description": "Constants that can be replaced within state_cmd_suffix",
+            "required": false,
+            "type": "array",
+            "items": {
+               "type": "object",
+               "properties": {
+                  "key": {
+                     "type": "string"
+                  },
+                  "value": {
+                     "type": "string"
+                  }
+               }
+            }
+         },
          "debug":
          {
             "title": "debug",
@@ -159,6 +177,7 @@ const globalsSchema =
       "properties":
       {
          "debug": { "$ref": "#/$definitions/debug"},
+         "constants": { "$ref": "#/$definitions/constants"},
          "allowTLV8": { "$ref": "#/$definitions/allowTLV8"},
          "outputConstants": { "$ref": "#/$definitions/outputConstants"},
          "statusMsg": { "$ref": "#/$definitions/statusMsg"},
@@ -181,8 +200,34 @@ const globalsSchema =
          "title": "Global Options",
          "type": "fieldset",
          "expandable": true,
-         "items": [
+         "items":
+         [
             "debug",
+            {
+               "title": "Global Constants",
+               "type": "fieldset",
+               "expandable": true,
+               "items": [ {
+                  "key": "constants",
+                  "type": "array",
+                  "listItems": "1",
+                  "items": [ {
+                     "type": "div",
+                     "displayFlex": true,
+                     "flex-direction": "row",
+                     "items": [
+                        {
+                           "key": "constants[].key", "flex": "1 1 100px",
+                           "title": "key", "placeholder": "i.e. ${IP}"
+                        },
+                        {
+                           "key": "constants[].value", "flex": "4 4 150px",
+                           "title": "value", "placeholder": "i.e. 192.168.x.x"
+                        }
+                     ]
+                  } ]
+               } ]
+            },
             "statusMsg",
             "allowTLV8",
             "outputConstants",

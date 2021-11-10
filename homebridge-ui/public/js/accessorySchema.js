@@ -6,6 +6,24 @@ const accessorySchema =
    {
       "$definitions":
       {
+         "constants":
+         {
+            "title": "constants",
+            "description": "Constants that can be replaced within state_cmd_suffix",
+            "required": false,
+            "type": "array",
+            "items": {
+               "type": "object",
+               "properties": {
+                  "key": {
+                     "type": "string"
+                  },
+                  "value": {
+                     "type": "string"
+                  }
+               }
+            }
+         },
          "debug":
          {
             "title": "debug",
@@ -2801,7 +2819,8 @@ const accessorySchema =
          "title": "Accessory Options",
          "type": "fieldset",
          "expandable": true,
-         "items": [
+         "items":
+         [
             "debug",
             "statusMsg",
             "allowTLV8",

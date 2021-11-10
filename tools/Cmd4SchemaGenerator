@@ -97,9 +97,9 @@ function createAccessorySchemaFile( )
    reInit( );
 
    let schemaFile = `${ CMD4_BASE_PATH }/${ CMD4_ACCESSORY_SCHEMA_FILE }`;
+   console.log( `\nCreating ${ CMD4_ACCESSORY_SCHEMA_FILE }  file: ${ schemaFile }` );
    // Open the Schema file for writing
    fid = fs.openSync( schemaFile, "w" ); // Open for write
-   console.log( `\nCreating ${ CMD4_ACCESSORY_SCHEMA_FILE }  file: ${ schemaFile }` );
 
 // fid.on("error", ( err ) =>
 // {
@@ -142,10 +142,10 @@ function createAccessorySchemaFile( )
 
          commaRequired_g = true;
 
-         // accessorySchema
+         // For Accessory Schema
          beginSchemaProperties( );
             wf( `"${ constants.TYPE }": { "$ref": "#/$definitions/type"},\n` );
-            addGlobalsSchemaBlock( );
+            addGlobalsSchemaBlockWithConstantSchemaBlock( false );
             addAccessorySchemaBlock( );
             addPollingSchemaBlock( );
             addStateCmdSchemaBlock( );
@@ -166,7 +166,7 @@ function createAccessorySchemaFile( )
 
       addTypeLayout( );
       addNameLayout( );
-      addGlobalsLayout( "Accessory" );
+      addGlobalsLayoutWithTitle( "Accessory" );
       addFakeGatoLayout( );
       addQueueTypesLayout( );
       addRequiredCharacteristicPerDeviceLayout( );
@@ -231,8 +231,9 @@ function createGlobalsSchemaFile( )
 
          commaRequired_g = true;
 
+         // For just Globals Schema
          beginSchemaProperties( );
-            addGlobalsSchemaBlock( );
+            addGlobalsSchemaBlockWithConstantSchemaBlock( true );
             // Not in globalsySchema
             // addAccessorySchemaBlock( );
             // addPollingSchemaBlock( );
@@ -254,7 +255,7 @@ function createGlobalsSchemaFile( )
 
       // addTypeLayout( );
       // addNameLayout( );
-      addGlobalsLayout( "Global" );
+      addGlobalsLayoutWithTitle( "Global" );
       addFakeGatoLayout( );
       addQueueTypesLayout( );
       // addRequiredCharacteristicPerDeviceLayout( );
@@ -313,8 +314,9 @@ function createSchemaFile( )
 
          commaRequired_g = true;
 
+         // For Full Schema
          beginSchemaProperties( );
-            addGlobalsSchemaBlock( );
+            addGlobalsSchemaBlockWithConstantSchemaBlock( true );
             addAccessorySchemaBlock( );
             addPollingSchemaBlock( );
             addStateCmdSchemaBlock( );
@@ -335,7 +337,7 @@ function createSchemaFile( )
 
       addTypeLayout( );
       addNameLayout( );
-      addGlobalsLayout( "Accessory" );
+      addGlobalsLayoutWithTitle( "Accessory" );
       addFakeGatoLayout( );
       addQueueTypesLayout( );
       addRequiredCharacteristicPerDeviceLayout( );
@@ -599,14 +601,161 @@ function addAccessoryDefinitionBlock( )
 
    commaRequired_g = true;
 }
+/*
+
+// Under definitions  - Wrong ?
+   "$definitions":
+   {
+      "constants":
+      { "type": "object",
+        "properties":
+        {
+            "key": { "type": "string" },
+            "value": { "type": "string" }
+        }
+      }
+   },
+
+// Under schema properties - Correct
+ "properties": {
+    "constants": { "$ref": "#/$definitions/constants" },
+    "debug":
 
 
+// Under schema layout - Correct
+
+  { "type": "flex", "flex-flow": "row wrap", "items": [ "constants.key", "constants.value" ] },
+
+ */
+
+/*   TRY 2
+ ^\${[^}]*}:\s*"[^"]*"
+
+     "$definitions":
+     {
+        "constants":
+        {
+           "type": "array",
+           "items": {
+              "type": "object",
+              "properties": {
+                 "constants": { "type": "string",
+                               "pattern": "^\${[^}]*}:\s*\"[^\"]*\""
+                              }
+              }
+           }
+        }
+     },
+
+     "constants": { "$ref": "#/$definitions/constants" },
+
+     { "key": "constants",
+      "type": "section",
+      "expandable": true,
+      "items": [
+      {
+         "type": "array",
+         "listItems": 1,
+         "items": [ {
+            "type": "div",
+            "displayFlex": true,
+            "flex-direction": "row",
+            "items": [
+            {  "key": "constants[]", "flex": "1 1 100px",
+               "notitle": true, "placeholder": "\"${IP}\": \"192.16.100.2\""
+            }]
+         }]
+      }]
+    },
+
+    "${IP}": "address",
+
+ */
+/*   TRY 3
+ 
+ https://stackoverflow.com/questions/44052088/how-can-i-take-a-json-schema-that-can-build-a-form-with-dynamic-objects-in-addit
+ https://hamidihamza.com/ajsf/?set=asf&example=asf-complex-key-support&framework=bootstrap-4&language=en
+
+
+{
+  "type": "object",
+  "patternProperties": {
+    "[/w/W]": {
+       "type": "object"
+    }
+  }
+}
+ */
+/*   TRY 4
+
+ "schema": {
+    "type": "object",
+    "properties": {
+       "constants":  {
+          "type": "array",
+          "items": {
+             "type": "object",
+             "properties": {
+             }
+          }
+       },
+       "first_name": { "type": "string" },
+
+
+ "layout": [
+ { "key": "constants",
+   "type": "array",
+   "listItems": 1,
+   "items": [ {
+      "type": "string",
+      "displayFlex": true,
+      "flex-direction": "row",
+      "items": [
+          { "key": "constants.", "flex": "4 4 200px",
+            "notitle": true, "placeholder": "some constant"
+          }
+      ]
+   }]
+ },
+ { "type": "flex", "flex-flow": "row wrap", "items": [ "first_name", "last_name" ] },
+
+
+
+ "data": {
+    "constants": [{"IP":"172"}],
+    "first_name": "Jane",
+ */
 function addGlobalsDefinitionBlock( )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
       wf( `,\n` );
 
+      wf( `"constants":\n` );
+      wf( "+", `{\n` );
+         wf( `"title": "constants",\n` );
+         wf( `"description": "Constants that can be replaced within state_cmd_suffix",\n` );
+         wf( `"required": false,\n` );
+         wf( `"type": "array",\n` );
+         wf( "+", `"items": {\n` );
+            wf( `"type": "object",\n` );
+            wf( "+", `"properties": {\n` );
+               wf( "+", `"key": {\n` );
+                  wf( `"type": "string",\n` );
+                  wf( `"title": "key",\n` );
+                  wf( `"description": "The constant to replace. i.e. \${IP}.",\n` );
+                  wf( `"pattern": "^\${[\\w]+}$",\n` );
+                  wf( `"required": true\n` );
+               wf( "-", `},\n` );
+               wf( "+", `"value": {\n` );
+                  wf( `"type": "string",\n` );
+                  wf( `"title": "value",\n` );
+                  wf( `"description": "The replacement string"\n` );
+                  wf( `"required": true\n` );
+               wf( "-", `}\n` );
+            wf( "-", `}\n` );
+         wf( "-", `}\n` );
+      wf( "-", `},\n` );
       wf( `"debug":\n` );
       wf( "+", `{\n` );
          wf( `"title": "debug",\n` );
@@ -888,10 +1037,13 @@ function endSchemaProperties( )
    commaRequired_g = true;
 }
 
-function addGlobalsSchemaBlock( )
+function addGlobalsSchemaBlockWithConstantSchemaBlock( withConstants )
 {
-   // All the globals that can be defined at the Accessory level
+   // All the globals that can be used at the Accessory level
    wf( `"debug": { "$ref": "#/$definitions/debug"},\n` );
+   if ( withConstants == true )
+      wf( `"constants": { "$ref": "#/$definitions/constants"},\n` );
+
    wf( `"allowTLV8": { "$ref": "#/$definitions/allowTLV8"},\n` );
    wf( `"outputConstants": { "$ref": "#/$definitions/outputConstants"},\n` );
    wf( `"statusMsg": { "$ref": "#/$definitions/statusMsg"},\n` );
@@ -963,7 +1115,7 @@ function addNameLayout( )
    commaRequired_g = true;
 }
 
-function addGlobalsLayout( title )
+function addGlobalsLayoutWithTitle( title )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
@@ -973,10 +1125,39 @@ function addGlobalsLayout( title )
       wf( `"title": "${ title } Options",\n` );
       wf( `"type": "fieldset",\n` );
       wf( `"expandable": true,\n` );
-      wf( "+", `"items": [\n` );
-//    wf( `"items":\n` );
-//    wf( "+", `[\n` );
+      wf( `"items":\n` );
+      wf( "+", `[\n` );
          wf( `"debug",\n` );
+
+         if ( title == "Global" )
+         {
+            wf( "+", `{\n` );
+               wf( `"title": "${ title } Constants",\n` );
+               wf( `"type": "fieldset",\n` );
+               wf( `"expandable": true,\n` );
+               wf( "+", `"items": [ {\n` );
+                  wf( `"key": "constants",\n` );
+                  wf( `"type": "array",\n` );
+                  wf( `"uniqueItems": true,\n` );
+                  wf( `"listItems": "3",\n` );
+                  wf( "+", `"items": [ {\n` );
+                     wf( `"type": "div",\n` );
+                     wf( `"displayFlex": true,\n` );
+                     wf( `"flex-direction": "row",\n` );
+                     wf( "+", `"items": [\n` );
+                        wf( "+", `{\n` );
+                            wf( `"key": "constants[].key", "flex": "1 1 100px",\n` );
+                            wf( `"title": "key", "placeholder": "i.e. \${IP}"\n` );
+                        wf( "-", `},\n` );
+                        wf( "+", `{\n` );
+                            wf( `"key": "constants[].value", "flex": "4 4 150px",\n` );
+                            wf( `"title": "value", "placeholder": "i.e. 192.168.x.x"\n` );
+                        wf( "-", `}\n` );
+                     wf( "-", `]\n` );
+                  wf( "-", `} ]\n` );
+               wf( "-", `} ]\n` );
+            wf( "-", `},\n` );
+         }
          wf( `"statusMsg",\n` );
          wf( `"allowTLV8",\n` );
          wf( `"outputConstants",\n` );
