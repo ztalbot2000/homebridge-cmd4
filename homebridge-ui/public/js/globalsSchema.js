@@ -245,7 +245,7 @@ const globalsSchema =
          ]
       },
       {
-         "title": "FakeGato Options",
+         "title": "Global FakeGato Options",
          "type": "fieldset",
          "expandable": true,
          "items":
@@ -269,18 +269,20 @@ const globalsSchema =
          ]
       },
       {
-         "key": "queueTypes",
-         "$ref": "#/$definitions/queueTypes",
-         "type": "array",
-         "listItems": 1,
-         "items":
-         [
-            {
+         "title": "Global QueueTypes",
+         "type": "fieldset",
+         "expandable": true,
+         "items": [ {
+            "key": "queueTypes",
+            "$ref": "#/$definitions/queueTypes",
+            "type": "array",
+            "uniqueItems": true,
+            "listItems": "3",
+            "items": [ {
                "type": "div",
                "displayFlex": true,
                "flex-direction": "row",
-               "items":
-               [
+               "items": [
                   {
                      "key": "queueTypes[].queue", "flex": "1 1 50px",
                      "notitle": false, "placeholder": "AQueueName"
@@ -290,11 +292,12 @@ const globalsSchema =
                      "notitle": false, "placeholder": "WoRm"
                   }
                ]
-            }
-         ]
-      },
+            } ]
+         } ]
+      }
+      ,
       {
-         "title": "state_cmd Options",
+         "title": "Global state_cmd Options",
          "type": "fieldset",
          "expandable": true,
          "items":

@@ -164,14 +164,15 @@ function createAccessorySchemaFile( )
 
       commaRequired_g = false;
 
+      // For Accessory Schema
       addTypeLayout( );
       addNameLayout( );
       addGlobalsLayoutWithTitle( "Accessory" );
-      addFakeGatoLayout( );
-      addQueueTypesLayout( );
+      addFakeGatoLayoutWithTitle( "" );
+      addQueueTypesLayoutWithTitle( "" );
       addRequiredCharacteristicPerDeviceLayout( );
       addOptionalCharacteristicPerDeviceLayout( );
-      addStateCmdLayout( );
+      addStateCmdLayoutWithTitle( "" );
 
    // * End square bracket layout:
    wf( "-", `]\n` );
@@ -256,11 +257,11 @@ function createGlobalsSchemaFile( )
       // addTypeLayout( );
       // addNameLayout( );
       addGlobalsLayoutWithTitle( "Global" );
-      addFakeGatoLayout( );
-      addQueueTypesLayout( );
+      addFakeGatoLayoutWithTitle( "Global" );
+      addQueueTypesLayoutWithTitle( "Global" );
       // addRequiredCharacteristicPerDeviceLayout( );
       // addOptionalCharacteristicPerDeviceLayout( );
-      addStateCmdLayout( );
+      addStateCmdLayoutWithTitle( "Global" );
 
    // * End square bracket layout:
    wf( "-", `]\n` );
@@ -338,11 +339,11 @@ function createSchemaFile( )
       addTypeLayout( );
       addNameLayout( );
       addGlobalsLayoutWithTitle( "Accessory" );
-      addFakeGatoLayout( );
-      addQueueTypesLayout( );
+      addFakeGatoLayoutWithTitle( "" );
+      addQueueTypesLayoutWithTitle( "" );
       addRequiredCharacteristicPerDeviceLayout( );
       addOptionalCharacteristicPerDeviceLayout( );
-      addStateCmdLayout( );
+      addStateCmdLayoutWithTitle( "" );
 
    // * End square bracket layout:
    wf( "-", `]\n` );
@@ -1172,14 +1173,14 @@ function addGlobalsLayoutWithTitle( title )
 }
 
 
-function addStateCmdLayout( )
+function addStateCmdLayoutWithTitle( title )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
       wf( `,\n` );
 
    wf( "+", `{\n` );
-      wf( `"title": "state_cmd Options",\n` );
+      wf( `"title": "${ title } state_cmd Options",\n` );
       wf( `"type": "fieldset",\n` );
       wf( `"expandable": true,\n` );
       wf( `"items":\n` );
@@ -1194,14 +1195,14 @@ function addStateCmdLayout( )
 }
 
 
-function addFakeGatoLayout( )
+function addFakeGatoLayoutWithTitle( title )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
       wf( `,\n` );
 
    wf( "+", `{\n` );
-      wf( `"title": "FakeGato Options",\n` );
+      wf( `"title": "${ title } FakeGato Options",\n` );
       wf( `"type": "fieldset",\n` );
       wf( `"expandable": true,\n` );
       wf( `"items":\n` );
@@ -1345,7 +1346,7 @@ function addOptionalCharacteristicPerDeviceLayout( )
 }
 
 
-function addQueueTypesLayout( )
+function addQueueTypesLayoutWithTitle( title )
 {
    wf( `"$comment": "START OF QUEUE TYPES LAYOUT BLOCK",\n` );
 
@@ -1355,7 +1356,7 @@ function addQueueTypesLayout( )
       wf( `,\n` );
       commaRequired_g = false;
    }
-
+/*
    wf( "+", `{\n` )
      wf( `"key": "queueTypes",\n` );
      wf( `"$ref": "#/$definitions/queueTypes",\n` );
@@ -1381,6 +1382,35 @@ function addQueueTypesLayout( )
          wf( "-", `}\n` );
       wf( "-", `]\n` );
    wf( "-", `}` );
+   */
+
+            wf( "+", `{\n` );
+               wf( `"title": "${ title } QueueTypes",\n` );
+               wf( `"type": "fieldset",\n` );
+               wf( `"expandable": true,\n` );
+               wf( "+", `"items": [ {\n` );
+                  wf( `"key": "queueTypes",\n` );
+                  wf( `"$ref": "#/$definitions/queueTypes",\n` );
+                  wf( `"type": "array",\n` );
+                  wf( `"uniqueItems": true,\n` );
+                  wf( `"listItems": "3",\n` );
+                  wf( "+", `"items": [ {\n` );
+                     wf( `"type": "div",\n` );
+                     wf( `"displayFlex": true,\n` );
+                     wf( `"flex-direction": "row",\n` );
+                     wf( "+", `"items": [\n` );
+                        wf( "+", `{\n` );
+                            wf( `"key": "queueTypes[].queue", "flex": "1 1 50px",\n` );
+                            wf( `"notitle": false, "placeholder": "AQueueName"\n` );
+                        wf( "-", `},\n` );
+                        wf( "+", `{\n` );
+                            wf( `"key": "queueTypes[].queueType", "flex": "4 4 200px",\n` );
+                            wf( `"notitle": false, "placeholder": "WoRm"\n` );
+                        wf( "-", `}\n` );
+                     wf( "-", `]\n` );
+                  wf( "-", `} ]\n` );
+               wf( "-", `} ]\n` );
+            wf( "-", `}\n` );
 
    commaRequired_g = true;
 }

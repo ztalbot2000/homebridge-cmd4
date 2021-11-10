@@ -496,7 +496,7 @@ async function deleteGlobalQueueButtonPressed( event )
 function addGlobalQueueEntryItem( queueName, selectedQueueType )
 {
    // Unused as form does this
-   homebridge.request( "/consoleLog", `main.js updateGlobalQueueEntryItem  ` );
+   homebridge.request( "/consoleLog", `main.js updateGlobalQueueEntryItem ${ queueName } ${ selectedQueueType }  ` );
    /*
    homebridge.request( "/consoleLog", `Adding queue: ${ queueName }` );
    let unSelectedQueueType = GLOBAL.constants.QUEUETYPE_SEQUENTIAL;
