@@ -1,4 +1,12 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
+### 6.0.3 (2021-11-11)
+
+##### Bug Fix
+
+*  Schema Prep for Homebridge-UI integration ([2c5df2c1](https://github.com/ztalbot2000/homebridge-cmd4/commit/2c5df2c1279ebe88fdaedbaa22ae0124e2841b6d))
+
+
+# Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
 ### 6.0.2 (2021-11-10)
 
 ##### Bug Fix
