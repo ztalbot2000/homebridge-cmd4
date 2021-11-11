@@ -158,13 +158,13 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
    {
       let platformConfig =
       {
+         queueTypes:                [{ queue: "A", queueType: "WoRm" }],
          accessories: [
          {
             statusMsg:                  true,
             type:                      "TemperatureSensor",
             displayName:               "TemperatureSensor",
             name:                      "TemperatureSensor",
-            queueTypes:                [{ queue: "A", queueType: "WoRm" }],
             queue:                     "A",
             currentTemperature:        "22.2",
             polling:                   [ { characteristic: "currentTemperature" } ],
@@ -207,6 +207,7 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
    {
       let platformConfig =
       {
+         queueTypes:                [{ queue: "A", queueType: "WoRm" }],
          accessories: [
          {
             statusMsg:                  true,
@@ -214,7 +215,6 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
             displayName:               "CameraControl",
             name:                      "CameraControl",
             on:                        "1",
-            queueTypes:                [{ queue: "A", queueType: "WoRm" }],
             queue:                     "A",
             currentHorizontalTiltAngle: 12,
             polling:                   [ { characteristic: "currentHorizontalTiltAngle" } ],

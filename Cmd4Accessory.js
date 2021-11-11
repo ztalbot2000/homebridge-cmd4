@@ -239,6 +239,10 @@ class Cmd4Accessory
                                     );
       }
 
+      // Add the global constants to the listOfConstants
+      if ( this.parentInfo && this.parentInfo.globalConstants != null )
+         this.processConstants( this.parentInfo.globalConstants );
+
       // Direct if polling should be set or false.
       // You cannot copy polling from the parent because you would be copying the array
       // of polled characteristics that the child does not have, or turning on polling
@@ -1463,7 +1467,7 @@ class Cmd4Accessory
                     throw new Error( `Unknown device type: "${ value }" given in: "${ this.displayName }".` );
 
                   // warn now
-                  this.log.warn( `The config.json Cmd4 device type: ${ value } is lowerCase.  It should be: ${ rcValue.deviceName }. In the near future this will be an error for homebridge-ui integration.\nTo remove this Warning, Please fix your config.json.` );
+                  this.log.warn( `The config.json Cmd4 device type: ${ value } is lowerCase.  It should be: ${ rcValue.deviceName }. In the near future this will be an error for homebridge-UI integration.\nTo remove this Warning, Please fix your config.json.` );
 
                   this.type = rcValue.deviceName;
                }
@@ -1532,6 +1536,9 @@ class Cmd4Accessory
 
                break;
             case constants.QUEUETYPES:
+               this.log.warn( `Warning: ${ key } will soon been deprecated at the accessory level. Please move it to where "Platform: "Cmd4" is located in your config.json.` );
+               this.log.warn( `This message will disappear when you have done so.` );
+
                parseAddQueueTypes( this.log, value );
 
                break;
@@ -1557,6 +1564,7 @@ class Cmd4Accessory
             case constants.POLLING:
                // Do not parse it yet as characteristics must be set first.
                this.polling = value;
+
                break;
             case "Cmd4_Mode":
             case "cmd4_Mode":
@@ -1592,18 +1600,30 @@ class Cmd4Accessory
 
                break;
             case constants.STORAGE:
+               this.log.warn( `Warning: ${ key } will soon been deprecated at the Platform level. It was always meant to just be a fakegato config option only.` );
+               this.log.warn( `This message will disappear when you have done so.` );
+
                this.storage = value;
 
                break;
             case constants.STORAGEPATH:
+               this.log.warn( `Warning: ${ key } will soon been deprecated at the Platform level. It was always meant to just be a fakegato config option only.` );
+               this.log.warn( `This message will disappear when you have done so.` );
+
                this.storagePath = value
 
                break;
             case constants.FOLDER:
+               this.log.warn( `Warning: ${ key } will soon been deprecated at the Platform level. It was always meant to just be a fakegato config option only.` );
+               this.log.warn( `This message will disappear when you have done so.` );
+
                this.folder = value
 
                break;
             case constants.KEYPATH:
+               this.log.warn( `Warning: ${ key } will soon been deprecated at the Platform level. It was always meant to just be a fakegato config option only.` );
+               this.log.warn( `This message will disappear when you have done so.` );
+
                this.keyPath = value
 
                break;
@@ -1617,6 +1637,9 @@ class Cmd4Accessory
 
                break;
             case constants.CONSTANTS:
+               this.log.warn( `Warning: ${ key } will soon been deprecated at the Accessory level. Please move it to where "Platform: "Cmd4" is located in your config.json.` );
+               this.log.warn( `This message will disappear when you have done so.` );
+
                this.processConstants( value );
 
                break;
@@ -1639,6 +1662,9 @@ class Cmd4Accessory
 
                break;
             case constants.ALLOWTLV8:
+               this.log.warn( `Warning: ${ key } will soon been deprecated at the Accessory level. Please move it to where "Platform: "Cmd4" is located.` );
+               this.log.warn( `This message will disappear when you have done so.` );
+
                this.allowTLV8 = value;
                break;
             default:
@@ -1684,10 +1710,6 @@ class Cmd4Accessory
          if ( this.level != 1)
             this.log.info( chalk.blue( `Cmd4 is running in Demo Mode for ${ this.displayName }` ) );
       }
-
-      // Add the global constants to the listOfConstants
-      if ( this.parentInfo && this.parentInfo.globalConstants != null )
-         this.processConstants( this.parentInfo.globalConstants );
 
       // Handle seperation of strings of state_cmd for a prefix
       if ( this.state_cmd_prefix )
@@ -1908,6 +1930,9 @@ class Cmd4Accessory
                      if ( this.queue && this.queue.queueName != value )
                         throw new Error( chalk.red( `Already defined Priority Polling Queue "${ this.queue.queueName }" for ${ this.displayName } cannot be redefined.` ) );
 
+                     this.log.warn( `Warning: ${ key } will soon been deprecated at the polling level. Please define it for the accessory: ${ this.displayName } as "queue": "${ value }"` );
+                     this.log.warn( `This message will disappear when you have done so.` );
+
                      this.queue = addQueue( this.log, value, constants.QUEUETYPE_WORM );
 
                      break;
@@ -1933,6 +1958,11 @@ class Cmd4Accessory
                   }
                   case constants.QUEUETYPES:
                   {
+                     // WHY IS THIS HERE AT ALL ??????????
+
+                     this.log.warn( `Warning: ${ key } will soon been deprecated at the accessory level. Please move it to where "Platform: "Cmd4" is located in your config.json.` );
+                     this.log.warn( `This message will disappear when you have done so.` );
+
                      parseAddQueueTypes( this.log, value );
                      // This whole record is not a characteristic polling entry
                      // continue to next ( via return )

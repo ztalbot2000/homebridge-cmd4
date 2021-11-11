@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-6-0-3">**Whats new in 6.0.3**</a>
 * <a href="#Whats-new-in-6-0-2">**Whats new in 6.0.2**</a>
 * <a href="#Whats-new-in-6-0-1">**Whats new in 6.0.1**</a>
 * <a href="#Whats-new-in-6-0-0">**Whats new in 6.0.0**</a>
@@ -76,6 +77,14 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-6-0-3">## Whats new in 6.0.3</a>
+### 6.0.3 (2021-11-11)
+
+##### Bug Fix
+
+*  Schema Prep for Homebridge-UI integration ([2c5df2c1](https://github.com/ztalbot2000/homebridge-cmd4/commit/2c5df2c1279ebe88fdaedbaa22ae0124e2841b6d))
+
 
 <a name="Whats-new-in-6-0-2">## Whats new in 6.0.2</a>
 ### 6.0.2 (2021-11-10)

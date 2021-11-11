@@ -665,7 +665,7 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
       assert.include( log.logBuf, `[34mCmd4 is running in Demo Mode for Test Switch`, `Incorrect stdout: ${ log.logBuf }` );
 
       assert.include( log.logBuf, "[34mCmd4 is running in Demo Mode for Test Switch", `Incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.errBuf, `[33mThe config.json Cmd4 device type: switch is lowerCase.  It should be: Switch. In the near future this will be an error for homebridge-ui integration`, ` Cmd4Accessory Unxexpected stderr: ${ log.errBuf }` );
+      assert.include( log.errBuf, `[33mThe config.json Cmd4 device type: switch is lowerCase.  It should be: Switch. In the near future this will be an error for homebridge-UI integration`, ` Cmd4Accessory Unxexpected stderr: ${ log.errBuf }` );
 
       assert.equal( 1, log.logLineCount, ` To many logged lines: ${ log.logBuf }` );
       assert.equal( 1, log.errLineCount, ` To many logged lines: ${ log.errBuf }` );
@@ -887,11 +887,6 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
          type:                            "Switch",
          on:                               false,
          polling:                         true,
-         constants: [
-            { "key": "${psk}", "value": "123456" },
-            { "key": "${ipaddress}", "value": "12Aa34bbcc" },
-            { "key": "${port}", "value": "8091" }
-         ],
          state_cmd:                    `node ${ home }/.homebridge/Cmd4Scripts/State.js`
       };
 
@@ -900,8 +895,16 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
       log.setOutputEnabled( false );
       log.setDebugEnabled( false );
 
+      let parentInfo={ "CMD4": constants.PLATFORM,
+                       "LEVEL": -1,
+                       "globalConstants": [
+                          { "key": "${psk}", "value": "123456" },
+                          { "key": "${ipaddress}", "value": "12Aa34bbcc" },
+                          { "key": "${port}", "value": "8091" }
+                       ]
+                     };
 
-      new Cmd4Accessory( log, config, _api, [ ] );
+      new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
       assert.equal( log.logBuf, "", ` Cmd4Accessory Unxexpected stdout: ${ log.logBuf }` );
       assert.equal( log.errBuf, "", ` Cmd4Accessory Unxexpected stderr: ${ log.errBuf }` );
@@ -1130,9 +1133,6 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
          type:                            "Switch",
          on:                               false,
          polling:                         true,
-         constants: [
-            { "key": "${fs}", "value": "fs" }
-         ],
          requires: [
             { "require": "${fs}" },
             { "require": "http" }
@@ -1145,8 +1145,14 @@ describe('Cmd4Accessory Test parseConfig', ( ) =>
       log.setOutputEnabled( false );
       log.setDebugEnabled( false );
 
+      let parentInfo={ "CMD4": constants.PLATFORM,
+                       "LEVEL": -1,
+                       "globalConstants": [
+                          { "key": "${fs}", "value": "fs" }
+                       ]
+                     };
 
-      new Cmd4Accessory( log, config, _api, [ ] );
+      new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
       assert.equal( log.logBuf, "", ` Cmd4Accessory Unxexpected stdout: ${ log.logBuf }` );
       assert.equal( log.errBuf, "", ` Cmd4Accessory Unxexpected stderr: ${ log.errBuf }` );
@@ -1578,6 +1584,7 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
    {
       let platformConfig =
       {
+         queueTypes:                  [{ queue: "A", queueType: "WoRm" }],
          accessories: [
          {
             type:                        "Thermostat",
@@ -1588,7 +1595,6 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
             targetTemperature:            20.0,
             currentHeatingCoolingState:   0,
             targetHeatingCoolingState:    0,
-            queueTypes:                  [{ queue: "A", queueType: "WoRm" }],
             queue:                       "A",
             polling:                     [{ characteristic: "currentTemperature" },
                                           { characteristic: "targetTemperature" },
