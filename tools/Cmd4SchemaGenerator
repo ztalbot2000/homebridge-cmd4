@@ -172,8 +172,8 @@ function createAccessorySchemaFile( )
       addQueueTypesLayoutWithTitle( "" );
       addRequiredCharacteristicPerDeviceLayout( );
       addOptionalCharacteristicPerDeviceLayout( );
+      addPollingLayout( );
       addStateCmdLayoutWithTitle( "" );
-
    // * End square bracket layout:
    wf( "-", `]\n` );
 
@@ -336,6 +336,7 @@ function createSchemaFile( )
 
       commaRequired_g = false;
 
+      // For Full Schema
       addTypeLayout( );
       addNameLayout( );
       addGlobalsLayoutWithTitle( "Accessory" );
@@ -343,6 +344,7 @@ function createSchemaFile( )
       addQueueTypesLayoutWithTitle( "" );
       addRequiredCharacteristicPerDeviceLayout( );
       addOptionalCharacteristicPerDeviceLayout( );
+      addPollingLayout( );
       addStateCmdLayoutWithTitle( "" );
 
    // * End square bracket layout:
@@ -1345,7 +1347,6 @@ function addOptionalCharacteristicPerDeviceLayout( )
    commaRequired_g = true;
 }
 
-
 function addQueueTypesLayoutWithTitle( title )
 {
    wf( `"$comment": "START OF QUEUE TYPES LAYOUT BLOCK",\n` );
@@ -1356,61 +1357,84 @@ function addQueueTypesLayoutWithTitle( title )
       wf( `,\n` );
       commaRequired_g = false;
    }
-/*
-   wf( "+", `{\n` )
-     wf( `"key": "queueTypes",\n` );
-     wf( `"$ref": "#/$definitions/queueTypes",\n` );
-     wf( `"type": "array",\n` );
-     wf( `"listItems": 1,\n` );
-     wf( `"items":\n` );
-     wf( "+", `[\n` );
-        wf( "+", `{\n` );
-           wf( `"type": "div",\n` );
-           wf( `"displayFlex": true,\n` );
-           wf( `"flex-direction": "row",\n` );
-           wf( `"items":\n` );
-           wf( "+", `[\n` );
-              wf( "+", `{\n` );
-                  wf( `"key": "queueTypes[].queue", "flex": "1 1 50px",\n` );
-                  wf( `"notitle": false, "placeholder": "AQueueName"\n` );
+
+   wf( "+", `{\n` );
+      wf( `"title": "${ title } QueueTypes",\n` );
+      wf( `"type": "fieldset",\n` );
+      wf( `"expandable": true,\n` );
+      wf( "+", `"items": [ {\n` );
+         wf( `"key": "queueTypes",\n` );
+         wf( `"$ref": "#/$definitions/queueTypes",\n` );
+         wf( `"type": "array",\n` );
+         wf( `"uniqueItems": true,\n` );
+         wf( `"listItems": "3",\n` );
+         wf( "+", `"items": [ {\n` );
+            wf( `"type": "div",\n` );
+            wf( `"displayFlex": true,\n` );
+            wf( `"flex-direction": "row",\n` );
+            wf( "+", `"items": [\n` );
+               wf( "+", `{\n` );
+                   wf( `"key": "queueTypes[].queue", "flex": "1 1 50px",\n` );
+                   wf( `"notitle": false, "placeholder": "AQueueName"\n` );
                wf( "-", `},\n` );
                wf( "+", `{\n` );
-                 wf( `"key": "queueTypes[].queueType", "flex": "4 4 200px",\n` );
-                 wf( `"notitle": false, "placeholder": "WoRm"\n` );
+                   wf( `"key": "queueTypes[].queueType", "flex": "4 4 200px",\n` );
+                   wf( `"notitle": false, "placeholder": "WoRm"\n` );
                wf( "-", `}\n` );
             wf( "-", `]\n` );
-         wf( "-", `}\n` );
-      wf( "-", `]\n` );
-   wf( "-", `}` );
-   */
+         wf( "-", `} ]\n` );
+      wf( "-", `} ]\n` );
+   wf( "-", `}\n` );
 
-            wf( "+", `{\n` );
-               wf( `"title": "${ title } QueueTypes",\n` );
-               wf( `"type": "fieldset",\n` );
-               wf( `"expandable": true,\n` );
-               wf( "+", `"items": [ {\n` );
-                  wf( `"key": "queueTypes",\n` );
-                  wf( `"$ref": "#/$definitions/queueTypes",\n` );
-                  wf( `"type": "array",\n` );
-                  wf( `"uniqueItems": true,\n` );
-                  wf( `"listItems": "3",\n` );
-                  wf( "+", `"items": [ {\n` );
-                     wf( `"type": "div",\n` );
-                     wf( `"displayFlex": true,\n` );
-                     wf( `"flex-direction": "row",\n` );
-                     wf( "+", `"items": [\n` );
-                        wf( "+", `{\n` );
-                            wf( `"key": "queueTypes[].queue", "flex": "1 1 50px",\n` );
-                            wf( `"notitle": false, "placeholder": "AQueueName"\n` );
-                        wf( "-", `},\n` );
-                        wf( "+", `{\n` );
-                            wf( `"key": "queueTypes[].queueType", "flex": "4 4 200px",\n` );
-                            wf( `"notitle": false, "placeholder": "WoRm"\n` );
-                        wf( "-", `}\n` );
-                     wf( "-", `]\n` );
-                  wf( "-", `} ]\n` );
-               wf( "-", `} ]\n` );
-            wf( "-", `}\n` );
+   commaRequired_g = true;
+}
+
+function addPollingLayout( )
+{
+   wf( `"$comment": "START OF POLLING LAYOUT BLOCK",\n` );
+
+   // add the comma always next time.
+   if ( commaRequired_g == true )
+   {
+      wf( `,\n` );
+      commaRequired_g = false;
+   }
+
+   wf( "+", `{\n` );
+      wf( `"title": "Polling",\n` );
+      wf( `"type": "fieldset",\n` );
+      wf( `"expandable": true,\n` );
+      wf( "+", `"items": [ {\n` );
+         wf( `"key": "polling",\n` );
+         wf( `"$ref": "#/$definitions/polling",\n` );
+         wf( `"type": "array",\n` );
+         wf( `"uniqueItems": true,\n` );
+         wf( `"listItems": "3",\n` );
+         wf( "+", `"items": [ {\n` );
+            wf( `"type": "div",\n` );
+            wf( `"displayFlex": true,\n` );
+            wf( `"flex-direction": "row",\n` );
+            wf( "+", `"items": [\n` );
+               wf( "+", `{\n` );
+                   wf( `"key": "polling[].characteristic", "flex": "3 3 auto",\n` );
+                   wf( `"notitle": false, "placeholder": "a characteristic"\n` );
+               wf( "-", `},\n` );
+               wf( "+", `{\n` );
+                   wf( `"key": "polling[].timeout", "flex": "1 1 auto",\n` );
+                   wf( `"notitle": false, "placeholder": "3000"\n` );
+               wf( "-", `},\n` );
+               wf( "+", `{\n` );
+                   wf( `"key": "polling[].stateChangeResponseTime", "flex": "2 2 auto",\n` );
+                   wf( `"notitle": false, "placeholder": "5000"\n` );
+               wf( "-", `},\n` );
+               wf( "+", `{\n` );
+                   wf( `"key": "polling[].queue", "flex": "1 1 auto",\n` );
+                   wf( `"notitle": false, "placeholder": "a queue name"\n` );
+               wf( "-", `}\n` );
+            wf( "-", `]\n` );
+         wf( "-", `} ]\n` );
+      wf( "-", `} ]\n` );
+   wf( "-", `}\n` );
 
    commaRequired_g = true;
 }

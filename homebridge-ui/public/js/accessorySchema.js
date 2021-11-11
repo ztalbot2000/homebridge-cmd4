@@ -4463,6 +4463,42 @@ const accessorySchema =
          ]
       },
       {
+         "title": "Polling",
+         "type": "fieldset",
+         "expandable": true,
+         "items": [ {
+            "key": "polling",
+            "$ref": "#/$definitions/polling",
+            "type": "array",
+            "uniqueItems": true,
+            "listItems": "3",
+            "items": [ {
+               "type": "div",
+               "displayFlex": true,
+               "flex-direction": "row",
+               "items": [
+                  {
+                     "key": "polling[].characteristic", "flex": "3 3 auto",
+                     "notitle": false, "placeholder": "a characteristic"
+                  },
+                  {
+                     "key": "polling[].timeout", "flex": "1 1 auto",
+                     "notitle": false, "placeholder": "3000"
+                  },
+                  {
+                     "key": "polling[].stateChangeResponseTime", "flex": "2 2 auto",
+                     "notitle": false, "placeholder": "5000"
+                  },
+                  {
+                     "key": "polling[].queue", "flex": "1 1 auto",
+                     "notitle": false, "placeholder": "a queue name"
+                  }
+               ]
+            } ]
+         } ]
+      }
+      ,
+      {
          "title": " state_cmd Options",
          "type": "fieldset",
          "expandable": true,
