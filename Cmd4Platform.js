@@ -89,7 +89,7 @@ class Cmd4Platform
       this.toBeRestoredPlatforms = [ ];
       this.createdCmd4Accessories = [ ];
       this.createdCmd4Platforms = [ ];
-      this.globalconstants = null;
+      this.globalConstants = null;
 
       this.services = [ ];
 
@@ -272,6 +272,9 @@ class Cmd4Platform
                this.log.warn( `To remove this message, just remove "${ key }" from your config.json` );
                break;
             case constants.STORAGE:
+               this.log.warn( `Warning: ${ key } will soon been deprecated at the Platform level. It was always meant to just be a fakegato config option only.` );
+               this.log.warn( `This message will disappear when you have done so.` );
+
                if ( value == constants.FS || value == constants.GOOGLEDRIVEl )
                   this.storage = value;
                else
@@ -279,14 +282,23 @@ class Cmd4Platform
 
                break;
             case constants.STORAGEPATH:
+               this.log.warn( `Warning: ${ key } will soon been deprecated at the Platform level. It was always meant to just be a fakegato config option only.` );
+               this.log.warn( `This message will disappear when you have done so.` );
+
                this.storagePath = value;
 
                break;
             case constants.FOLDER:
+               this.log.warn( `Warning: ${ key } will soon been deprecated at the Platform level. It was always meant to just be a fakegato config option only.` );
+               this.log.warn( `This message will disappear when you have done so.` );
+
                this.folder = value;
 
                break;
             case constants.KEYPATH:
+               this.log.warn( `Warning: ${ key } will soon been deprecated at the Platform level. It was always meant to just be a fakegato config option only.` );
+               this.log.warn( `This message will disappear when you have done so.` );
+
                this.keyPath = value;
 
                break;
@@ -297,7 +309,7 @@ class Cmd4Platform
             case constants.CONSTANTS:
                // Save the constants defined globally so the accessory
                // can parse it.
-               this.globalconstants = value;
+               this.globalConstants = value;
 
                break
             case constants.PLATFORM:

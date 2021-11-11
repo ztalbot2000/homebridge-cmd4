@@ -453,7 +453,7 @@ The value "0" should be used for any characteristics value which is not possible
 ### Step 3.  Install homebridge-cmd4 development dependencies
 
 ```bash
-   *SHELL*> npm install --save-dev
+   *SHELL*> npm install --dev
 ```
 
 ### Step 4.  Run the provided test cases
