@@ -34,7 +34,6 @@ const globalsSchema =
          "debug":
          {
             "title": "debug",
-            "$id": "debug",
             "type": "boolean",
             "description": "Enables additional output in the log.",
             "required": false,
@@ -43,7 +42,6 @@ const globalsSchema =
          "statusMsg":
          {
             "title": "statusMsg",
-            "$id": "statusMsg",
             "type": "boolean",
             "description": "Enables additional output in the log.",
             "required": false,
@@ -52,7 +50,6 @@ const globalsSchema =
          "allowTLV8":
          {
             "title": "allowTLV8",
-            "$id": "allowTLV8",
             "type": "boolean",
             "description": "Enables wacky TLV8 characteristics.",
             "required": false,
@@ -61,7 +58,6 @@ const globalsSchema =
          "outputConstants":
          {
             "title": "outputConstants",
-            "$id": "outputConstants",
             "type": "boolean",
             "description": "Output constants instead of values.",
             "required": false,
@@ -70,7 +66,6 @@ const globalsSchema =
          "timeout":
          {
             "title": "timeout",
-            "$id": "timeout",
             "type": "integer",
             "description": "The global timeout for all polling accessories (sec).",
             "required": false,
@@ -80,7 +75,6 @@ const globalsSchema =
          "stateChangeResponseTime":
          {
             "title": "stateChangeResponseTime",
-            "$id": "stateChangeResponseTime",
             "type": "integer",
             "description": "The time for the accessories to respond (msec).",
             "required": false,
@@ -89,7 +83,6 @@ const globalsSchema =
          "interval":
          {
             "title": "interval",
-            "$id": "interval",
             "type": "integer",
             "description": "Polling interval of all accesssories (sec}.",
             "required": false,
@@ -99,7 +92,6 @@ const globalsSchema =
          "state_cmd_prefix":
          {
             "title": "state_cmd_prefix",
-            "$id": "state_cmd_prefix",
             "type": "string",
             "description": "The global state_cmd prefix for all accessories.",
             "required": false
@@ -107,7 +99,6 @@ const globalsSchema =
          "state_cmd":
          {
             "title": "state_cmd",
-            "$id": "state_cmd",
             "type": "string",
             "description": "The global state_cmd for all accessories.",
             "placeholder": ".homebridge/cmd4Scripts/",
@@ -116,7 +107,6 @@ const globalsSchema =
          "state_cmd_suffix":
          {
             "title": "state_cmd_suffix",
-            "$id": "state_cmd_suffix",
             "type": "string",
             "description": "The global state_cmd suffix for all accessories.",
             "required": false
@@ -124,7 +114,6 @@ const globalsSchema =
          "definitions":
          {
             "title": "definitions",
-            "$id": "definitions",
             "type": "object",
             "description": "complex data.",
             "required": false
@@ -132,7 +121,6 @@ const globalsSchema =
          "queueTypes":
          {
             "title": "queueTypes",
-            "$id": "queueTypes",
             "type": "array",
             "uniqueItems": true,
             "maxItems": 0,

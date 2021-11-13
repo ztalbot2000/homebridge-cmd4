@@ -34,7 +34,6 @@ const accessorySchema =
          "debug":
          {
             "title": "debug",
-            "$id": "debug",
             "type": "boolean",
             "description": "Enables additional output in the log.",
             "required": false,
@@ -43,7 +42,6 @@ const accessorySchema =
          "statusMsg":
          {
             "title": "statusMsg",
-            "$id": "statusMsg",
             "type": "boolean",
             "description": "Enables additional output in the log.",
             "required": false,
@@ -52,7 +50,6 @@ const accessorySchema =
          "allowTLV8":
          {
             "title": "allowTLV8",
-            "$id": "allowTLV8",
             "type": "boolean",
             "description": "Enables wacky TLV8 characteristics.",
             "required": false,
@@ -61,7 +58,6 @@ const accessorySchema =
          "outputConstants":
          {
             "title": "outputConstants",
-            "$id": "outputConstants",
             "type": "boolean",
             "description": "Output constants instead of values.",
             "required": false,
@@ -70,7 +66,6 @@ const accessorySchema =
          "timeout":
          {
             "title": "timeout",
-            "$id": "timeout",
             "type": "integer",
             "description": "The global timeout for all polling accessories (sec).",
             "required": false,
@@ -80,7 +75,6 @@ const accessorySchema =
          "stateChangeResponseTime":
          {
             "title": "stateChangeResponseTime",
-            "$id": "stateChangeResponseTime",
             "type": "integer",
             "description": "The time for the accessories to respond (msec).",
             "required": false,
@@ -89,7 +83,6 @@ const accessorySchema =
          "interval":
          {
             "title": "interval",
-            "$id": "interval",
             "type": "integer",
             "description": "Polling interval of all accesssories (sec}.",
             "required": false,
@@ -99,7 +92,6 @@ const accessorySchema =
          "state_cmd_prefix":
          {
             "title": "state_cmd_prefix",
-            "$id": "state_cmd_prefix",
             "type": "string",
             "description": "The global state_cmd prefix for all accessories.",
             "required": false
@@ -107,7 +99,6 @@ const accessorySchema =
          "state_cmd":
          {
             "title": "state_cmd",
-            "$id": "state_cmd",
             "type": "string",
             "description": "The global state_cmd for all accessories.",
             "placeholder": ".homebridge/cmd4Scripts/",
@@ -116,7 +107,6 @@ const accessorySchema =
          "state_cmd_suffix":
          {
             "title": "state_cmd_suffix",
-            "$id": "state_cmd_suffix",
             "type": "string",
             "description": "The global state_cmd suffix for all accessories.",
             "required": false
@@ -124,7 +114,6 @@ const accessorySchema =
          "definitions":
          {
             "title": "definitions",
-            "$id": "definitions",
             "type": "object",
             "description": "complex data.",
             "required": false
@@ -132,7 +121,6 @@ const accessorySchema =
          "queueTypes":
          {
             "title": "queueTypes",
-            "$id": "queueTypes",
             "type": "array",
             "uniqueItems": true,
             "maxItems": 0,
@@ -161,7 +149,6 @@ const accessorySchema =
          },
          "accessControlLevel":
          {
-            "$id": "accessControlLevel",
             "title": "accessControlLevel",
             "type": "integer",
             "minimum": 0,
@@ -174,14 +161,12 @@ const accessorySchema =
          },
          "accessoryFlags":
          {
-            "$id": "accessoryFlags",
             "title": "accessoryFlags",
             "type": "integer",
             "description": "The Devices Accessory Flags"
          },
          "accessoryIdentifier":
          {
-            "$id": "accessoryIdentifier",
             "title": "accessoryIdentifier",
             "type": "string",
             "description": "The Devices Accessory Identifier String",
@@ -192,7 +177,6 @@ const accessorySchema =
          },
          "active":
          {
-            "$id": "active",
             "title": "active",
             "type": "integer",
             "minimum": 0,
@@ -205,7 +189,6 @@ const accessorySchema =
          },
          "activeIdentifier":
          {
-            "$id": "activeIdentifier",
             "title": "activeIdentifier",
             "type": "integer",
             "description": "The Devices Active Identifier",
@@ -216,7 +199,6 @@ const accessorySchema =
          },
          "activityInterval":
          {
-            "$id": "activityInterval",
             "title": "activityInterval",
             "type": "integer",
             "minimum": 0,
@@ -224,14 +206,12 @@ const accessorySchema =
          },
          "administratorOnlyAccess":
          {
-            "$id": "administratorOnlyAccess",
             "title": "administratorOnlyAccess",
             "type": "boolean",
             "description": "If the Device has 2cwAdmin Only Access"
          },
          "airParticulateDensity":
          {
-            "$id": "airParticulateDensity",
             "title": "airParticulateDensity",
             "type": "number",
             "minimum": 0,
@@ -240,7 +220,6 @@ const accessorySchema =
          },
          "airParticulateSize":
          {
-            "$id": "airParticulateSize",
             "title": "airParticulateSize",
             "type": "integer",
             "minimum": 0,
@@ -249,7 +228,6 @@ const accessorySchema =
          },
          "airQuality":
          {
-            "$id": "airQuality",
             "title": "airQuality",
             "type": "integer",
             "minimum": 0,
@@ -262,21 +240,18 @@ const accessorySchema =
          },
          "appMatchingIdentifier":
          {
-            "$id": "appMatchingIdentifier",
             "title": "appMatchingIdentifier",
             "type": "string",
             "description": "The Devices App Matching Identifier"
          },
          "audioFeedback":
          {
-            "$id": "audioFeedback",
             "title": "audioFeedback",
             "type": "boolean",
             "description": "If Audio Feedback is Present"
          },
          "batteryLevel":
          {
-            "$id": "batteryLevel",
             "title": "batteryLevel",
             "type": "integer",
             "minimum": 0,
@@ -289,7 +264,6 @@ const accessorySchema =
          },
          "brightness":
          {
-            "$id": "brightness",
             "title": "brightness",
             "type": "integer",
             "minimum": 0,
@@ -298,7 +272,6 @@ const accessorySchema =
          },
          "buttonEvent":
          {
-            "$id": "buttonEvent",
             "title": "buttonEvent",
             "type": "string",
             "description": "The Devices zbutton Event",
@@ -309,28 +282,24 @@ const accessorySchema =
          },
          "ccaEnergyDetectThreshold":
          {
-            "$id": "ccaEnergyDetectThreshold",
             "title": "ccaEnergyDetectThreshold",
             "type": "integer",
             "description": "The Devices CCA Energy Detect Threshold"
          },
          "ccaSignalDetectThreshold":
          {
-            "$id": "ccaSignalDetectThreshold",
             "title": "ccaSignalDetectThreshold",
             "type": "integer",
             "description": "The Devices Signal Detect Threshold"
          },
          "cameraOperatingModeIndicator":
          {
-            "$id": "cameraOperatingModeIndicator",
             "title": "cameraOperatingModeIndicator",
             "type": "boolean",
             "description": "The State of the Camera's Operating Mode Indicator"
          },
          "carbonDioxideDetected":
          {
-            "$id": "carbonDioxideDetected",
             "title": "carbonDioxideDetected",
             "type": "integer",
             "minimum": 0,
@@ -343,7 +312,6 @@ const accessorySchema =
          },
          "carbonDioxideLevel":
          {
-            "$id": "carbonDioxideLevel",
             "title": "carbonDioxideLevel",
             "type": "number",
             "minimum": 0,
@@ -352,7 +320,6 @@ const accessorySchema =
          },
          "carbonDioxidePeakLevel":
          {
-            "$id": "carbonDioxidePeakLevel",
             "title": "carbonDioxidePeakLevel",
             "type": "number",
             "minimum": 0,
@@ -361,7 +328,6 @@ const accessorySchema =
          },
          "carbonMonoxideDetected":
          {
-            "$id": "carbonMonoxideDetected",
             "title": "carbonMonoxideDetected",
             "type": "integer",
             "minimum": 0,
@@ -374,7 +340,6 @@ const accessorySchema =
          },
          "carbonMonoxideLevel":
          {
-            "$id": "carbonMonoxideLevel",
             "title": "carbonMonoxideLevel",
             "type": "number",
             "minimum": 0,
@@ -383,7 +348,6 @@ const accessorySchema =
          },
          "carbonMonoxidePeakLevel":
          {
-            "$id": "carbonMonoxidePeakLevel",
             "title": "carbonMonoxidePeakLevel",
             "type": "number",
             "minimum": 0,
@@ -392,7 +356,6 @@ const accessorySchema =
          },
          "category":
          {
-            "$id": "category",
             "title": "category",
             "type": "integer",
             "minimum": 1,
@@ -405,14 +368,12 @@ const accessorySchema =
          },
          "characteristicValueTransitionControl":
          {
-            "$id": "characteristicValueTransitionControl",
             "title": "characteristicValueTransitionControl",
             "type": "string",
             "description": "The Devices Characteristic Value Transition Control"
          },
          "chargingState":
          {
-            "$id": "chargingState",
             "title": "chargingState",
             "type": "integer",
             "minimum": 0,
@@ -425,7 +386,6 @@ const accessorySchema =
          },
          "closedCaptions":
          {
-            "$id": "closedCaptions",
             "title": "closedCaptions",
             "type": "integer",
             "minimum": 0,
@@ -434,7 +394,6 @@ const accessorySchema =
          },
          "colorTemperature":
          {
-            "$id": "colorTemperature",
             "title": "colorTemperature",
             "type": "integer",
             "minimum": 140,
@@ -443,14 +402,12 @@ const accessorySchema =
          },
          "configureBridgedAccessory":
          {
-            "$id": "configureBridgedAccessory",
             "title": "configureBridgedAccessory",
             "type": "string",
             "description": "The Configured Bridge Accessory"
          },
          "configureBridgedAccessoryStatus":
          {
-            "$id": "configureBridgedAccessoryStatus",
             "title": "configureBridgedAccessoryStatus",
             "type": "string",
             "description": "The Configured Bridge Accessory Status",
@@ -461,7 +418,6 @@ const accessorySchema =
          },
          "configuredName":
          {
-            "$id": "configuredName",
             "title": "configuredName",
             "type": "string",
             "description": "Name of accessory, as displayed in HomeKit",
@@ -472,7 +428,6 @@ const accessorySchema =
          },
          "contactSensorState":
          {
-            "$id": "contactSensorState",
             "title": "contactSensorState",
             "type": "integer",
             "minimum": 0,
@@ -485,7 +440,6 @@ const accessorySchema =
          },
          "coolingThresholdTemperature":
          {
-            "$id": "coolingThresholdTemperature",
             "title": "coolingThresholdTemperature",
             "type": "number",
             "minimum": 10,
@@ -494,7 +448,6 @@ const accessorySchema =
          },
          "currentAirPurifierState":
          {
-            "$id": "currentAirPurifierState",
             "title": "currentAirPurifierState",
             "type": "integer",
             "minimum": 0,
@@ -507,7 +460,6 @@ const accessorySchema =
          },
          "currentAmbientLightLevel":
          {
-            "$id": "currentAmbientLightLevel",
             "title": "currentAmbientLightLevel",
             "type": "number",
             "minimum": 0.0001,
@@ -520,7 +472,6 @@ const accessorySchema =
          },
          "currentDoorState":
          {
-            "$id": "currentDoorState",
             "title": "currentDoorState",
             "type": "integer",
             "minimum": 0,
@@ -533,7 +484,6 @@ const accessorySchema =
          },
          "currentFanState":
          {
-            "$id": "currentFanState",
             "title": "currentFanState",
             "type": "integer",
             "minimum": 0,
@@ -542,7 +492,6 @@ const accessorySchema =
          },
          "currentHeaterCoolerState":
          {
-            "$id": "currentHeaterCoolerState",
             "title": "currentHeaterCoolerState",
             "type": "integer",
             "minimum": 0,
@@ -555,7 +504,6 @@ const accessorySchema =
          },
          "currentHeatingCoolingState":
          {
-            "$id": "currentHeatingCoolingState",
             "title": "currentHeatingCoolingState",
             "type": "integer",
             "minimum": 0,
@@ -568,7 +516,6 @@ const accessorySchema =
          },
          "currentHorizontalTiltAngle":
          {
-            "$id": "currentHorizontalTiltAngle",
             "title": "currentHorizontalTiltAngle",
             "type": "integer",
             "minimum": -90,
@@ -577,7 +524,6 @@ const accessorySchema =
          },
          "currentHumidifierDehumidifierState":
          {
-            "$id": "currentHumidifierDehumidifierState",
             "title": "currentHumidifierDehumidifierState",
             "type": "integer",
             "minimum": 0,
@@ -590,7 +536,6 @@ const accessorySchema =
          },
          "currentMediaState":
          {
-            "$id": "currentMediaState",
             "title": "currentMediaState",
             "type": "integer",
             "minimum": 0,
@@ -603,7 +548,6 @@ const accessorySchema =
          },
          "currentPosition":
          {
-            "$id": "currentPosition",
             "title": "currentPosition",
             "type": "integer",
             "minimum": 0,
@@ -616,7 +560,6 @@ const accessorySchema =
          },
          "currentRelativeHumidity":
          {
-            "$id": "currentRelativeHumidity",
             "title": "currentRelativeHumidity",
             "type": "number",
             "minimum": 0,
@@ -629,7 +572,6 @@ const accessorySchema =
          },
          "currentSlatState":
          {
-            "$id": "currentSlatState",
             "title": "currentSlatState",
             "type": "integer",
             "minimum": 0,
@@ -642,7 +584,6 @@ const accessorySchema =
          },
          "currentTemperature":
          {
-            "$id": "currentTemperature",
             "title": "currentTemperature",
             "type": "number",
             "minimum": -270,
@@ -655,7 +596,6 @@ const accessorySchema =
          },
          "currentTiltAngle":
          {
-            "$id": "currentTiltAngle",
             "title": "currentTiltAngle",
             "type": "integer",
             "minimum": -90,
@@ -664,7 +604,6 @@ const accessorySchema =
          },
          "currentTime":
          {
-            "$id": "currentTime",
             "title": "currentTime",
             "type": "string",
             "description": "What Time it is Now",
@@ -675,14 +614,12 @@ const accessorySchema =
          },
          "currentTransport":
          {
-            "$id": "currentTransport",
             "title": "currentTransport",
             "type": "boolean",
             "description": "The Devices Current Transport"
          },
          "currentVerticalTiltAngle":
          {
-            "$id": "currentVerticalTiltAngle",
             "title": "currentVerticalTiltAngle",
             "type": "integer",
             "minimum": -90,
@@ -691,7 +628,6 @@ const accessorySchema =
          },
          "currentVisibilityState":
          {
-            "$id": "currentVisibilityState",
             "title": "currentVisibilityState",
             "type": "integer",
             "minimum": 0,
@@ -704,21 +640,18 @@ const accessorySchema =
          },
          "dataStreamHAPTransport":
          {
-            "$id": "dataStreamHAPTransport",
             "title": "dataStreamHAPTransport",
             "type": "string",
             "description": "The Devices Data Stream Transport"
          },
          "dataStreamHAPTransportInterrupt":
          {
-            "$id": "dataStreamHAPTransportInterrupt",
             "title": "dataStreamHAPTransportInterrupt",
             "type": "string",
             "description": "The Devices Data Stream Transport Interrupt"
          },
          "dayoftheWeek":
          {
-            "$id": "dayoftheWeek",
             "title": "dayoftheWeek",
             "type": "integer",
             "minimum": 1,
@@ -731,7 +664,6 @@ const accessorySchema =
          },
          "diagonalFieldOfView":
          {
-            "$id": "diagonalFieldOfView",
             "title": "diagonalFieldOfView",
             "type": "number",
             "minimum": 0,
@@ -740,42 +672,36 @@ const accessorySchema =
          },
          "digitalZoom":
          {
-            "$id": "digitalZoom",
             "title": "digitalZoom",
             "type": "number",
             "description": "The Measured Digital Zoom"
          },
          "discoverBridgedAccessories":
          {
-            "$id": "discoverBridgedAccessories",
             "title": "discoverBridgedAccessories",
             "type": "integer",
             "description": "The Discovered Bridge Accessories"
          },
          "discoveredBridgedAccessories":
          {
-            "$id": "discoveredBridgedAccessories",
             "title": "discoveredBridgedAccessories",
             "type": "integer",
             "description": "The Discovered Bridged Accessories"
          },
          "displayOrder":
          {
-            "$id": "displayOrder",
             "title": "displayOrder",
             "type": "string",
             "description": "The Display Order"
          },
          "eventRetransmissionMaximum":
          {
-            "$id": "eventRetransmissionMaximum",
             "title": "eventRetransmissionMaximum",
             "type": "integer",
             "description": "The Event Retransmission Maximum Amount"
          },
          "eventSnapshotsActive":
          {
-            "$id": "eventSnapshotsActive",
             "title": "eventSnapshotsActive",
             "type": "integer",
             "minimum": 0,
@@ -788,14 +714,12 @@ const accessorySchema =
          },
          "eventTransmissionCounters":
          {
-            "$id": "eventTransmissionCounters",
             "title": "eventTransmissionCounters",
             "type": "integer",
             "description": "The Event Transmission Counters"
          },
          "filterChangeIndication":
          {
-            "$id": "filterChangeIndication",
             "title": "filterChangeIndication",
             "type": "integer",
             "minimum": 0,
@@ -808,7 +732,6 @@ const accessorySchema =
          },
          "filterLifeLevel":
          {
-            "$id": "filterLifeLevel",
             "title": "filterLifeLevel",
             "type": "number",
             "minimum": 0,
@@ -817,7 +740,6 @@ const accessorySchema =
          },
          "firmwareRevision":
          {
-            "$id": "firmwareRevision",
             "title": "firmwareRevision",
             "type": "string",
             "description": "The Firmwares Revision String",
@@ -828,21 +750,18 @@ const accessorySchema =
          },
          "hardwareRevision":
          {
-            "$id": "hardwareRevision",
             "title": "hardwareRevision",
             "type": "string",
             "description": "The Hardwares Revision String"
          },
          "heartBeat":
          {
-            "$id": "heartBeat",
             "title": "heartBeat",
             "type": "integer",
             "description": "The Current Heart Rate"
          },
          "heatingThresholdTemperature":
          {
-            "$id": "heatingThresholdTemperature",
             "title": "heatingThresholdTemperature",
             "type": "number",
             "minimum": 0,
@@ -851,14 +770,12 @@ const accessorySchema =
          },
          "holdPosition":
          {
-            "$id": "holdPosition",
             "title": "holdPosition",
             "type": "boolean",
             "description": "If Position Should Be Held"
          },
          "homeKitCameraActive":
          {
-            "$id": "homeKitCameraActive",
             "title": "homeKitCameraActive",
             "type": "integer",
             "minimum": 0,
@@ -871,7 +788,6 @@ const accessorySchema =
          },
          "hue":
          {
-            "$id": "hue",
             "title": "hue",
             "type": "number",
             "minimum": 0,
@@ -880,14 +796,12 @@ const accessorySchema =
          },
          "identifier":
          {
-            "$id": "identifier",
             "title": "identifier",
             "type": "integer",
             "description": "The Devices Identifier"
          },
          "identify":
          {
-            "$id": "identify",
             "title": "identify",
             "type": "boolean",
             "description": "The Devices Identify Status",
@@ -898,14 +812,12 @@ const accessorySchema =
          },
          "imageMirroring":
          {
-            "$id": "imageMirroring",
             "title": "imageMirroring",
             "type": "boolean",
             "description": "Is Image Being Mirrored"
          },
          "imageRotation":
          {
-            "$id": "imageRotation",
             "title": "imageRotation",
             "type": "integer",
             "minimum": 0,
@@ -914,7 +826,6 @@ const accessorySchema =
          },
          "inUse":
          {
-            "$id": "inUse",
             "title": "inUse",
             "type": "integer",
             "minimum": 0,
@@ -927,7 +838,6 @@ const accessorySchema =
          },
          "inputDeviceType":
          {
-            "$id": "inputDeviceType",
             "title": "inputDeviceType",
             "type": "integer",
             "minimum": 0,
@@ -936,7 +846,6 @@ const accessorySchema =
          },
          "inputSourceType":
          {
-            "$id": "inputSourceType",
             "title": "inputSourceType",
             "type": "integer",
             "minimum": 0,
@@ -949,7 +858,6 @@ const accessorySchema =
          },
          "isConfigured":
          {
-            "$id": "isConfigured",
             "title": "isConfigured",
             "type": "integer",
             "minimum": 0,
@@ -962,7 +870,6 @@ const accessorySchema =
          },
          "leakDetected":
          {
-            "$id": "leakDetected",
             "title": "leakDetected",
             "type": "integer",
             "minimum": 0,
@@ -975,7 +882,6 @@ const accessorySchema =
          },
          "linkQuality":
          {
-            "$id": "linkQuality",
             "title": "linkQuality",
             "type": "integer",
             "minimum": 1,
@@ -988,7 +894,6 @@ const accessorySchema =
          },
          "listPairings":
          {
-            "$id": "listPairings",
             "title": "listPairings",
             "type": "string",
             "description": "The Links Quality",
@@ -999,7 +904,6 @@ const accessorySchema =
          },
          "lockControlPoint":
          {
-            "$id": "lockControlPoint",
             "title": "lockControlPoint",
             "type": "string",
             "description": "The Control Point of the Lock",
@@ -1010,7 +914,6 @@ const accessorySchema =
          },
          "lockCurrentState":
          {
-            "$id": "lockCurrentState",
             "title": "lockCurrentState",
             "type": "integer",
             "minimum": 0,
@@ -1023,7 +926,6 @@ const accessorySchema =
          },
          "lockLastKnownAction":
          {
-            "$id": "lockLastKnownAction",
             "title": "lockLastKnownAction",
             "type": "integer",
             "minimum": 0,
@@ -1032,14 +934,12 @@ const accessorySchema =
          },
          "lockManagementAutoSecurityTimeout":
          {
-            "$id": "lockManagementAutoSecurityTimeout",
             "title": "lockManagementAutoSecurityTimeout",
             "type": "integer",
             "description": "The Locks Security Timeout Value"
          },
          "lockPhysicalControls":
          {
-            "$id": "lockPhysicalControls",
             "title": "lockPhysicalControls",
             "type": "integer",
             "minimum": 0,
@@ -1048,7 +948,6 @@ const accessorySchema =
          },
          "lockTargetState":
          {
-            "$id": "lockTargetState",
             "title": "lockTargetState",
             "type": "integer",
             "minimum": 0,
@@ -1061,28 +960,24 @@ const accessorySchema =
          },
          "logs":
          {
-            "$id": "logs",
             "title": "logs",
             "type": "string",
             "description": "The Devices Logs"
          },
          "macRetransmissionMaximum":
          {
-            "$id": "macRetransmissionMaximum",
             "title": "macRetransmissionMaximum",
             "type": "integer",
             "description": "The Devices MAC Retransmission Maximum Amount"
          },
          "macTransmissionCounters":
          {
-            "$id": "macTransmissionCounters",
             "title": "macTransmissionCounters",
             "type": "string",
             "description": "The Devices MAC Transmission Counters"
          },
          "managedNetworkEnable":
          {
-            "$id": "managedNetworkEnable",
             "title": "managedNetworkEnable",
             "type": "integer",
             "minimum": 0,
@@ -1095,14 +990,12 @@ const accessorySchema =
          },
          "manuallyDisabled":
          {
-            "$id": "manuallyDisabled",
             "title": "manuallyDisabled",
             "type": "boolean",
             "description": "Is the Device Manually Enabled/Disabled"
          },
          "manufacturer":
          {
-            "$id": "manufacturer",
             "title": "manufacturer",
             "type": "string",
             "description": "The Devices Manufacturer",
@@ -1113,7 +1006,6 @@ const accessorySchema =
          },
          "model":
          {
-            "$id": "model",
             "title": "model",
             "type": "string",
             "description": "The Devices Model",
@@ -1124,7 +1016,6 @@ const accessorySchema =
          },
          "motionDetected":
          {
-            "$id": "motionDetected",
             "title": "motionDetected",
             "type": "boolean",
             "description": "Is Motion Being Detected",
@@ -1135,7 +1026,6 @@ const accessorySchema =
          },
          "mute":
          {
-            "$id": "mute",
             "title": "mute",
             "type": "boolean",
             "description": "Is the Device Currently Muted",
@@ -1146,7 +1036,6 @@ const accessorySchema =
          },
          "name":
          {
-            "$id": "name",
             "title": "name",
             "type": "string",
             "description": "Name of accessory, as displayed in HomeKit",
@@ -1157,7 +1046,6 @@ const accessorySchema =
          },
          "networkAccessViolationControl":
          {
-            "$id": "networkAccessViolationControl",
             "title": "networkAccessViolationControl",
             "type": "string",
             "description": "The Network AccessViolation Control",
@@ -1168,7 +1056,6 @@ const accessorySchema =
          },
          "networkClientProfileControl":
          {
-            "$id": "networkClientProfileControl",
             "title": "networkClientProfileControl",
             "type": "string",
             "description": "The Network Client Profile Control",
@@ -1179,7 +1066,6 @@ const accessorySchema =
          },
          "networkClientStatusControl":
          {
-            "$id": "networkClientStatusControl",
             "title": "networkClientStatusControl",
             "type": "string",
             "description": "The Network Client Status Control",
@@ -1190,14 +1076,12 @@ const accessorySchema =
          },
          "nightVision":
          {
-            "$id": "nightVision",
             "title": "nightVision",
             "type": "boolean",
             "description": "Is Night Vision Available"
          },
          "nitrogenDioxideDensity":
          {
-            "$id": "nitrogenDioxideDensity",
             "title": "nitrogenDioxideDensity",
             "type": "number",
             "minimum": 0,
@@ -1206,7 +1090,6 @@ const accessorySchema =
          },
          "obstructionDetected":
          {
-            "$id": "obstructionDetected",
             "title": "obstructionDetected",
             "type": "boolean",
             "description": "Is Obstruction Currently Detected",
@@ -1217,7 +1100,6 @@ const accessorySchema =
          },
          "occupancyDetected":
          {
-            "$id": "occupancyDetected",
             "title": "occupancyDetected",
             "type": "integer",
             "minimum": 0,
@@ -1230,7 +1112,6 @@ const accessorySchema =
          },
          "on":
          {
-            "$id": "on",
             "title": "on",
             "type": "boolean",
             "description": "Is the Device On",
@@ -1241,21 +1122,18 @@ const accessorySchema =
          },
          "operatingStateResponse":
          {
-            "$id": "operatingStateResponse",
             "title": "operatingStateResponse",
             "type": "string",
             "description": "The Devices Operating State Response"
          },
          "opticalZoom":
          {
-            "$id": "opticalZoom",
             "title": "opticalZoom",
             "type": "number",
             "description": "The Devices Optical Zoom Factor"
          },
          "outletInUse":
          {
-            "$id": "outletInUse",
             "title": "outletInUse",
             "type": "boolean",
             "description": "Is the Outlet in Use",
@@ -1266,7 +1144,6 @@ const accessorySchema =
          },
          "ozoneDensity":
          {
-            "$id": "ozoneDensity",
             "title": "ozoneDensity",
             "type": "number",
             "minimum": 0,
@@ -1275,7 +1152,6 @@ const accessorySchema =
          },
          "pm10Density":
          {
-            "$id": "pm10Density",
             "title": "pm10Density",
             "type": "number",
             "minimum": 0,
@@ -1284,7 +1160,6 @@ const accessorySchema =
          },
          "pm2_5Density":
          {
-            "$id": "pm2_5Density",
             "title": "pm2_5Density",
             "type": "number",
             "minimum": 0,
@@ -1293,7 +1168,6 @@ const accessorySchema =
          },
          "pairSetup":
          {
-            "$id": "pairSetup",
             "title": "pairSetup",
             "type": "string",
             "description": "The Devices Pair Setup",
@@ -1304,7 +1178,6 @@ const accessorySchema =
          },
          "pairVerify":
          {
-            "$id": "pairVerify",
             "title": "pairVerify",
             "type": "string",
             "description": "The Devices Pair Verify",
@@ -1315,7 +1188,6 @@ const accessorySchema =
          },
          "pairingFeatures":
          {
-            "$id": "pairingFeatures",
             "title": "pairingFeatures",
             "type": "integer",
             "description": "The Devices Pairing Features",
@@ -1326,28 +1198,24 @@ const accessorySchema =
          },
          "pairingPairings":
          {
-            "$id": "pairingPairings",
             "title": "pairingPairings",
             "type": "string",
             "description": "The Devices Pairing Pairings"
          },
          "passwordSetting":
          {
-            "$id": "passwordSetting",
             "title": "passwordSetting",
             "type": "string",
             "description": "The Devices Password Setting"
          },
          "periodicSnapshotsActive":
          {
-            "$id": "periodicSnapshotsActive",
             "title": "periodicSnapshotsActive",
             "type": "integer",
             "description": "Is the Periodic Snapshot Enabled/Disabled"
          },
          "pictureMode":
          {
-            "$id": "pictureMode",
             "title": "pictureMode",
             "type": "integer",
             "minimum": 0,
@@ -1356,7 +1224,6 @@ const accessorySchema =
          },
          "ping":
          {
-            "$id": "ping",
             "title": "ping",
             "type": "string",
             "description": "The Devices Ping Characteristic",
@@ -1367,7 +1234,6 @@ const accessorySchema =
          },
          "positionState":
          {
-            "$id": "positionState",
             "title": "positionState",
             "type": "integer",
             "minimum": 0,
@@ -1380,7 +1246,6 @@ const accessorySchema =
          },
          "powerModeSelection":
          {
-            "$id": "powerModeSelection",
             "title": "powerModeSelection",
             "type": "integer",
             "minimum": 0,
@@ -1389,14 +1254,12 @@ const accessorySchema =
          },
          "productData":
          {
-            "$id": "productData",
             "title": "productData",
             "type": "string",
             "description": "The Devices Product Data"
          },
          "programMode":
          {
-            "$id": "programMode",
             "title": "programMode",
             "type": "integer",
             "minimum": 0,
@@ -1409,7 +1272,6 @@ const accessorySchema =
          },
          "programmableSwitchEvent":
          {
-            "$id": "programmableSwitchEvent",
             "title": "programmableSwitchEvent",
             "type": "integer",
             "minimum": 0,
@@ -1422,7 +1284,6 @@ const accessorySchema =
          },
          "programmableSwitchOutputState":
          {
-            "$id": "programmableSwitchOutputState",
             "title": "programmableSwitchOutputState",
             "type": "integer",
             "minimum": 0,
@@ -1435,7 +1296,6 @@ const accessorySchema =
          },
          "reachable":
          {
-            "$id": "reachable",
             "title": "reachable",
             "type": "boolean",
             "description": "If the Device is Reachable",
@@ -1446,28 +1306,24 @@ const accessorySchema =
          },
          "receivedSignalStrengthIndication":
          {
-            "$id": "receivedSignalStrengthIndication",
             "title": "receivedSignalStrengthIndication",
             "type": "integer",
             "description": "The Received Signal Strength Measurement"
          },
          "receiverSensitivity":
          {
-            "$id": "receiverSensitivity",
             "title": "receiverSensitivity",
             "type": "integer",
             "description": "The Amount of Receiver Sensitivity"
          },
          "recordingAudioActive":
          {
-            "$id": "recordingAudioActive",
             "title": "recordingAudioActive",
             "type": "integer",
             "description": "Is Recordding Audio Enabled/DisAbled"
          },
          "relativeHumidityDehumidifierThreshold":
          {
-            "$id": "relativeHumidityDehumidifierThreshold",
             "title": "relativeHumidityDehumidifierThreshold",
             "type": "number",
             "minimum": 0,
@@ -1476,7 +1332,6 @@ const accessorySchema =
          },
          "relativeHumidityHumidifierThreshold":
          {
-            "$id": "relativeHumidityHumidifierThreshold",
             "title": "relativeHumidityHumidifierThreshold",
             "type": "number",
             "minimum": 0,
@@ -1485,7 +1340,6 @@ const accessorySchema =
          },
          "relayControlPoint":
          {
-            "$id": "relayControlPoint",
             "title": "relayControlPoint",
             "type": "string",
             "description": "The Relay Control Point",
@@ -1496,7 +1350,6 @@ const accessorySchema =
          },
          "relayEnabled":
          {
-            "$id": "relayEnabled",
             "title": "relayEnabled",
             "type": "boolean",
             "description": "Is the Relay Currently Enabled",
@@ -1507,7 +1360,6 @@ const accessorySchema =
          },
          "relayState":
          {
-            "$id": "relayState",
             "title": "relayState",
             "type": "integer",
             "minimum": 0,
@@ -1520,7 +1372,6 @@ const accessorySchema =
          },
          "remainingDuration":
          {
-            "$id": "remainingDuration",
             "title": "remainingDuration",
             "type": "integer",
             "minimum": 0,
@@ -1529,7 +1380,6 @@ const accessorySchema =
          },
          "remoteKey":
          {
-            "$id": "remoteKey",
             "title": "remoteKey",
             "type": "integer",
             "minimum": 0,
@@ -1542,7 +1392,6 @@ const accessorySchema =
          },
          "resetFilterIndication":
          {
-            "$id": "resetFilterIndication",
             "title": "resetFilterIndication",
             "type": "integer",
             "minimum": 1,
@@ -1551,7 +1400,6 @@ const accessorySchema =
          },
          "rotationDirection":
          {
-            "$id": "rotationDirection",
             "title": "rotationDirection",
             "type": "integer",
             "minimum": 0,
@@ -1560,7 +1408,6 @@ const accessorySchema =
          },
          "rotationSpeed":
          {
-            "$id": "rotationSpeed",
             "title": "rotationSpeed",
             "type": "number",
             "minimum": 0,
@@ -1569,7 +1416,6 @@ const accessorySchema =
          },
          "routerStatus":
          {
-            "$id": "routerStatus",
             "title": "routerStatus",
             "type": "integer",
             "minimum": 0,
@@ -1582,7 +1428,6 @@ const accessorySchema =
          },
          "saturation":
          {
-            "$id": "saturation",
             "title": "saturation",
             "type": "number",
             "minimum": 0,
@@ -1591,7 +1436,6 @@ const accessorySchema =
          },
          "securitySystemAlarmType":
          {
-            "$id": "securitySystemAlarmType",
             "title": "securitySystemAlarmType",
             "type": "integer",
             "minimum": 0,
@@ -1600,7 +1444,6 @@ const accessorySchema =
          },
          "securitySystemCurrentState":
          {
-            "$id": "securitySystemCurrentState",
             "title": "securitySystemCurrentState",
             "type": "integer",
             "minimum": 0,
@@ -1613,7 +1456,6 @@ const accessorySchema =
          },
          "securitySystemTargetState":
          {
-            "$id": "securitySystemTargetState",
             "title": "securitySystemTargetState",
             "type": "integer",
             "minimum": 0,
@@ -1626,14 +1468,12 @@ const accessorySchema =
          },
          "selectedAudioStreamConfiguration":
          {
-            "$id": "selectedAudioStreamConfiguration",
             "title": "selectedAudioStreamConfiguration",
             "type": "string",
             "description": "The Selected Audio Stream Configuration"
          },
          "selectedCameraRecordingConfiguration":
          {
-            "$id": "selectedCameraRecordingConfiguration",
             "title": "selectedCameraRecordingConfiguration",
             "type": "string",
             "description": "The Selected Cameras Recording Configuration",
@@ -1644,7 +1484,6 @@ const accessorySchema =
          },
          "selectedRTPStreamConfiguration":
          {
-            "$id": "selectedRTPStreamConfiguration",
             "title": "selectedRTPStreamConfiguration",
             "type": "string",
             "description": "The Selected RTP Stream Configuration",
@@ -1655,7 +1494,6 @@ const accessorySchema =
          },
          "serialNumber":
          {
-            "$id": "serialNumber",
             "title": "serialNumber",
             "type": "string",
             "description": "The Devices Serial Number",
@@ -1666,7 +1504,6 @@ const accessorySchema =
          },
          "serviceLabelIndex":
          {
-            "$id": "serviceLabelIndex",
             "title": "serviceLabelIndex",
             "type": "integer",
             "minimum": 1,
@@ -1675,7 +1512,6 @@ const accessorySchema =
          },
          "serviceLabelNamespace":
          {
-            "$id": "serviceLabelNamespace",
             "title": "serviceLabelNamespace",
             "type": "integer",
             "minimum": 0,
@@ -1688,7 +1524,6 @@ const accessorySchema =
          },
          "setDuration":
          {
-            "$id": "setDuration",
             "title": "setDuration",
             "type": "integer",
             "minimum": 0,
@@ -1697,14 +1532,12 @@ const accessorySchema =
          },
          "setupDataStreamTransport":
          {
-            "$id": "setupDataStreamTransport",
             "title": "setupDataStreamTransport",
             "type": "string",
             "description": "The Devices Setup Stream Transport Value"
          },
          "setupEndpoints":
          {
-            "$id": "setupEndpoints",
             "title": "setupEndpoints",
             "type": "string",
             "description": "The Devices Setup End Points",
@@ -1715,7 +1548,6 @@ const accessorySchema =
          },
          "setupTransferTransport":
          {
-            "$id": "setupTransferTransport",
             "title": "setupTransferTransport",
             "type": "string",
             "description": "The Devices Setup Transfer Transport",
@@ -1726,14 +1558,12 @@ const accessorySchema =
          },
          "signalToNoiseRatio":
          {
-            "$id": "signalToNoiseRatio",
             "title": "signalToNoiseRatio",
             "type": "integer",
             "description": "The Measured Signal to Noise Ratio"
          },
          "siriInputType":
          {
-            "$id": "siriInputType",
             "title": "siriInputType",
             "type": "integer",
             "minimum": 0,
@@ -1746,7 +1576,6 @@ const accessorySchema =
          },
          "slatType":
          {
-            "$id": "slatType",
             "title": "slatType",
             "type": "integer",
             "minimum": 0,
@@ -1759,7 +1588,6 @@ const accessorySchema =
          },
          "sleepDiscoveryMode":
          {
-            "$id": "sleepDiscoveryMode",
             "title": "sleepDiscoveryMode",
             "type": "integer",
             "minimum": 0,
@@ -1772,7 +1600,6 @@ const accessorySchema =
          },
          "sleepInterval":
          {
-            "$id": "sleepInterval",
             "title": "sleepInterval",
             "type": "integer",
             "minimum": 0,
@@ -1780,7 +1607,6 @@ const accessorySchema =
          },
          "smokeDetected":
          {
-            "$id": "smokeDetected",
             "title": "smokeDetected",
             "type": "integer",
             "minimum": 0,
@@ -1793,21 +1619,18 @@ const accessorySchema =
          },
          "softwareRevision":
          {
-            "$id": "softwareRevision",
             "title": "softwareRevision",
             "type": "string",
             "description": "The Devices Software Revision String"
          },
          "statusActive":
          {
-            "$id": "statusActive",
             "title": "statusActive",
             "type": "boolean",
             "description": "If the Device is Active or Not"
          },
          "statusFault":
          {
-            "$id": "statusFault",
             "title": "statusFault",
             "type": "integer",
             "minimum": 0,
@@ -1816,7 +1639,6 @@ const accessorySchema =
          },
          "statusJammed":
          {
-            "$id": "statusJammed",
             "title": "statusJammed",
             "type": "integer",
             "minimum": 0,
@@ -1825,7 +1647,6 @@ const accessorySchema =
          },
          "statusLowBattery":
          {
-            "$id": "statusLowBattery",
             "title": "statusLowBattery",
             "type": "integer",
             "minimum": 0,
@@ -1838,7 +1659,6 @@ const accessorySchema =
          },
          "statusTampered":
          {
-            "$id": "statusTampered",
             "title": "statusTampered",
             "type": "integer",
             "minimum": 0,
@@ -1847,7 +1667,6 @@ const accessorySchema =
          },
          "streamingStatus":
          {
-            "$id": "streamingStatus",
             "title": "streamingStatus",
             "type": "string",
             "description": "The Devices Streaming Status",
@@ -1858,7 +1677,6 @@ const accessorySchema =
          },
          "sulphurDioxideDensity":
          {
-            "$id": "sulphurDioxideDensity",
             "title": "sulphurDioxideDensity",
             "type": "number",
             "minimum": 0,
@@ -1867,7 +1685,6 @@ const accessorySchema =
          },
          "supportedAudioRecordingConfiguration":
          {
-            "$id": "supportedAudioRecordingConfiguration",
             "title": "supportedAudioRecordingConfiguration",
             "type": "string",
             "description": "The Supported Audio Recording Configuration",
@@ -1878,7 +1695,6 @@ const accessorySchema =
          },
          "supportedAudioStreamConfiguration":
          {
-            "$id": "supportedAudioStreamConfiguration",
             "title": "supportedAudioStreamConfiguration",
             "type": "string",
             "description": "The Supported Audio Stream Configuration",
@@ -1889,7 +1705,6 @@ const accessorySchema =
          },
          "supportedCameraRecordingConfiguration":
          {
-            "$id": "supportedCameraRecordingConfiguration",
             "title": "supportedCameraRecordingConfiguration",
             "type": "string",
             "description": "The Supported Audio Recording Configuration",
@@ -1900,21 +1715,18 @@ const accessorySchema =
          },
          "supportedDataStreamTransportConfiguration":
          {
-            "$id": "supportedDataStreamTransportConfiguration",
             "title": "supportedDataStreamTransportConfiguration",
             "type": "string",
             "description": "The Supported Data Stream Transport Configuration"
          },
          "supportedCharacteristicValueTransitionConfiguration":
          {
-            "$id": "supportedCharacteristicValueTransitionConfiguration",
             "title": "supportedCharacteristicValueTransitionConfiguration",
             "type": "string",
             "description": "The Supported Characteristic Value Transition Configuration"
          },
          "supportedDiagnosticsSnapshot":
          {
-            "$id": "supportedDiagnosticsSnapshot",
             "title": "supportedDiagnosticsSnapshot",
             "type": "string",
             "description": "The Supported Diagnostic Snapshot",
@@ -1925,7 +1737,6 @@ const accessorySchema =
          },
          "supportedRTPConfiguration":
          {
-            "$id": "supportedRTPConfiguration",
             "title": "supportedRTPConfiguration",
             "type": "string",
             "description": "The Supported RTP Configuration",
@@ -1936,7 +1747,6 @@ const accessorySchema =
          },
          "supportedRouterConfiguration":
          {
-            "$id": "supportedRouterConfiguration",
             "title": "supportedRouterConfiguration",
             "type": "string",
             "description": "The Supported Router Configuration",
@@ -1947,7 +1757,6 @@ const accessorySchema =
          },
          "supportedTransferTransportConfiguration":
          {
-            "$id": "supportedTransferTransportConfiguration",
             "title": "supportedTransferTransportConfiguration",
             "type": "string",
             "description": "The Supported Transfer Transport Configuration",
@@ -1958,7 +1767,6 @@ const accessorySchema =
          },
          "supportedVideoRecordingConfiguration":
          {
-            "$id": "supportedVideoRecordingConfiguration",
             "title": "supportedVideoRecordingConfiguration",
             "type": "string",
             "description": "The Supported Video Recording Configuration",
@@ -1969,7 +1777,6 @@ const accessorySchema =
          },
          "supportedVideoStreamConfiguration":
          {
-            "$id": "supportedVideoStreamConfiguration",
             "title": "supportedVideoStreamConfiguration",
             "type": "string",
             "description": "The Supported Video Stream Configuration",
@@ -1980,7 +1787,6 @@ const accessorySchema =
          },
          "swingMode":
          {
-            "$id": "swingMode",
             "title": "swingMode",
             "type": "integer",
             "minimum": 0,
@@ -1989,7 +1795,6 @@ const accessorySchema =
          },
          "targetAirPurifierState":
          {
-            "$id": "targetAirPurifierState",
             "title": "targetAirPurifierState",
             "type": "integer",
             "minimum": 0,
@@ -2002,7 +1807,6 @@ const accessorySchema =
          },
          "targetAirQuality":
          {
-            "$id": "targetAirQuality",
             "title": "targetAirQuality",
             "type": "integer",
             "minimum": 0,
@@ -2011,7 +1815,6 @@ const accessorySchema =
          },
          "targetControlList":
          {
-            "$id": "targetControlList",
             "title": "targetControlList",
             "type": "string",
             "description": "The Target Control List",
@@ -2022,7 +1825,6 @@ const accessorySchema =
          },
          "targetControlSupportedConfiguration":
          {
-            "$id": "targetControlSupportedConfiguration",
             "title": "targetControlSupportedConfiguration",
             "type": "string",
             "description": "The Target Supported Configuration",
@@ -2033,7 +1835,6 @@ const accessorySchema =
          },
          "targetDoorState":
          {
-            "$id": "targetDoorState",
             "title": "targetDoorState",
             "type": "integer",
             "minimum": 0,
@@ -2046,7 +1847,6 @@ const accessorySchema =
          },
          "targetFanState":
          {
-            "$id": "targetFanState",
             "title": "targetFanState",
             "type": "integer",
             "minimum": 0,
@@ -2055,7 +1855,6 @@ const accessorySchema =
          },
          "targetHeaterCoolerState":
          {
-            "$id": "targetHeaterCoolerState",
             "title": "targetHeaterCoolerState",
             "type": "integer",
             "minimum": 0,
@@ -2068,7 +1867,6 @@ const accessorySchema =
          },
          "targetHeatingCoolingState":
          {
-            "$id": "targetHeatingCoolingState",
             "title": "targetHeatingCoolingState",
             "type": "integer",
             "minimum": 0,
@@ -2081,7 +1879,6 @@ const accessorySchema =
          },
          "targetHorizontalTiltAngle":
          {
-            "$id": "targetHorizontalTiltAngle",
             "title": "targetHorizontalTiltAngle",
             "type": "integer",
             "minimum": -90,
@@ -2090,7 +1887,6 @@ const accessorySchema =
          },
          "targetHumidifierDehumidifierState":
          {
-            "$id": "targetHumidifierDehumidifierState",
             "title": "targetHumidifierDehumidifierState",
             "type": "integer",
             "minimum": 0,
@@ -2103,7 +1899,6 @@ const accessorySchema =
          },
          "targetMediaState":
          {
-            "$id": "targetMediaState",
             "title": "targetMediaState",
             "type": "integer",
             "minimum": 0,
@@ -2116,7 +1911,6 @@ const accessorySchema =
          },
          "targetPosition":
          {
-            "$id": "targetPosition",
             "title": "targetPosition",
             "type": "integer",
             "minimum": 0,
@@ -2129,7 +1923,6 @@ const accessorySchema =
          },
          "targetRelativeHumidity":
          {
-            "$id": "targetRelativeHumidity",
             "title": "targetRelativeHumidity",
             "type": "number",
             "minimum": 0,
@@ -2138,7 +1931,6 @@ const accessorySchema =
          },
          "targetSlatState":
          {
-            "$id": "targetSlatState",
             "title": "targetSlatState",
             "type": "integer",
             "minimum": 0,
@@ -2147,7 +1939,6 @@ const accessorySchema =
          },
          "targetTemperature":
          {
-            "$id": "targetTemperature",
             "title": "targetTemperature",
             "type": "number",
             "minimum": 10,
@@ -2160,7 +1951,6 @@ const accessorySchema =
          },
          "targetTiltAngle":
          {
-            "$id": "targetTiltAngle",
             "title": "targetTiltAngle",
             "type": "integer",
             "minimum": -90,
@@ -2169,7 +1959,6 @@ const accessorySchema =
          },
          "targetVerticalTiltAngle":
          {
-            "$id": "targetVerticalTiltAngle",
             "title": "targetVerticalTiltAngle",
             "type": "integer",
             "minimum": -90,
@@ -2178,7 +1967,6 @@ const accessorySchema =
          },
          "targetVisibilityState":
          {
-            "$id": "targetVisibilityState",
             "title": "targetVisibilityState",
             "type": "integer",
             "minimum": 0,
@@ -2187,7 +1975,6 @@ const accessorySchema =
          },
          "temperatureDisplayUnits":
          {
-            "$id": "temperatureDisplayUnits",
             "title": "temperatureDisplayUnits",
             "type": "integer",
             "minimum": 0,
@@ -2200,14 +1987,12 @@ const accessorySchema =
          },
          "thirdPartyCameraActive":
          {
-            "$id": "thirdPartyCameraActive",
             "title": "thirdPartyCameraActive",
             "type": "integer",
             "description": "The ON/OFF Auxiliary Camera State"
          },
          "timeUpdate":
          {
-            "$id": "timeUpdate",
             "title": "timeUpdate",
             "type": "boolean",
             "description": "Ifnthe Time Should be Updated",
@@ -2218,21 +2003,18 @@ const accessorySchema =
          },
          "transmitPower":
          {
-            "$id": "transmitPower",
             "title": "transmitPower",
             "type": "integer",
             "description": "The Devices Measured Transmit Power"
          },
          "transmitPowerMaximum":
          {
-            "$id": "transmitPowerMaximum",
             "title": "transmitPowerMaximum",
             "type": "integer",
             "description": "The Devices Maximum Power Output"
          },
          "tunnelConnectionTimeout":
          {
-            "$id": "tunnelConnectionTimeout",
             "title": "tunnelConnectionTimeout",
             "type": "integer",
             "description": "The Timeout Value of the Tunnel Connection",
@@ -2243,7 +2025,6 @@ const accessorySchema =
          },
          "tunneledAccessoryAdvertising":
          {
-            "$id": "tunneledAccessoryAdvertising",
             "title": "tunneledAccessoryAdvertising",
             "type": "boolean",
             "description": "If the Device is Currently Tunneled Advertising",
@@ -2254,7 +2035,6 @@ const accessorySchema =
          },
          "tunneledAccessoryConnected":
          {
-            "$id": "tunneledAccessoryConnected",
             "title": "tunneledAccessoryConnected",
             "type": "boolean",
             "description": "If the Device is Tunneled Connected ",
@@ -2265,7 +2045,6 @@ const accessorySchema =
          },
          "tunneledAccessoryStateNumber":
          {
-            "$id": "tunneledAccessoryStateNumber",
             "title": "tunneledAccessoryStateNumber",
             "type": "integer",
             "description": "The Tunneled Accessorys State Number",
@@ -2276,7 +2055,6 @@ const accessorySchema =
          },
          "vocDensity":
          {
-            "$id": "vocDensity",
             "title": "vocDensity",
             "type": "number",
             "minimum": 0,
@@ -2285,7 +2063,6 @@ const accessorySchema =
          },
          "valveType":
          {
-            "$id": "valveType",
             "title": "valveType",
             "type": "integer",
             "minimum": 0,
@@ -2298,7 +2075,6 @@ const accessorySchema =
          },
          "version":
          {
-            "$id": "version",
             "title": "version",
             "type": "string",
             "description": "The Devices Version String",
@@ -2309,14 +2085,12 @@ const accessorySchema =
          },
          "videoAnalysisActive":
          {
-            "$id": "videoAnalysisActive",
             "title": "videoAnalysisActive",
             "type": "integer",
             "description": "The Devices Video Analysis Active Status"
          },
          "volume":
          {
-            "$id": "volume",
             "title": "volume",
             "type": "integer",
             "minimum": 0,
@@ -2325,7 +2099,6 @@ const accessorySchema =
          },
          "volumeControlType":
          {
-            "$id": "volumeControlType",
             "title": "volumeControlType",
             "type": "integer",
             "minimum": 0,
@@ -2334,7 +2107,6 @@ const accessorySchema =
          },
          "volumeSelector":
          {
-            "$id": "volumeSelector",
             "title": "volumeSelector",
             "type": "integer",
             "minimum": 0,
@@ -2343,7 +2115,6 @@ const accessorySchema =
          },
          "wanConfigurationList":
          {
-            "$id": "wanConfigurationList",
             "title": "wanConfigurationList",
             "type": "string",
             "description": "The Devices WAN Configuration List",
@@ -2354,7 +2125,6 @@ const accessorySchema =
          },
          "wanStatusList":
          {
-            "$id": "wanStatusList",
             "title": "wanStatusList",
             "type": "string",
             "description": "The Devices WAN Status List",
@@ -2365,7 +2135,6 @@ const accessorySchema =
          },
          "wakeConfiguration":
          {
-            "$id": "wakeConfiguration",
             "title": "wakeConfiguration",
             "type": "string",
             "description": "The Devices Wake Configuration",
@@ -2376,7 +2145,6 @@ const accessorySchema =
          },
          "waterLevel":
          {
-            "$id": "waterLevel",
             "title": "waterLevel",
             "type": "number",
             "minimum": 0,
@@ -2385,21 +2153,18 @@ const accessorySchema =
          },
          "wifiCapabilities":
          {
-            "$id": "wifiCapabilities",
             "title": "wifiCapabilities",
             "type": "integer",
             "description": "The Devices WiFi Capabilities"
          },
          "wifiConfigurationControl":
          {
-            "$id": "wifiConfigurationControl",
             "title": "wifiConfigurationControl",
             "type": "string",
             "description": "The Devices WiFi Configuration Control"
          },
          "wifiSatelliteStatus":
          {
-            "$id": "wifiSatelliteStatus",
             "title": "wifiSatelliteStatus",
             "type": "integer",
             "minimum": 0,
@@ -2412,7 +2177,6 @@ const accessorySchema =
          },
          "type":
          {
-            "$id": "type",
             "type": "string",
             "title": "type",
             "description": "Select the Accessory Type.",
@@ -2490,7 +2254,6 @@ const accessorySchema =
          },
          "subType":
          {
-            "$id": "subType",
             "type": "string",
             "title": "subType",
             "description": "The accessories subType.",
@@ -2499,7 +2262,6 @@ const accessorySchema =
          },
          "displayName":
          {
-            "$id": "displayName",
             "type": "string",
             "title": "displayName",
             "description": "The accessories display name.",
@@ -2508,7 +2270,6 @@ const accessorySchema =
          },
          "queue":
          {
-            "$id": "queue",
             "title": "queue",
             "description": "A queue name",
             "type": "string",
@@ -2539,13 +2300,11 @@ const accessorySchema =
             }
          },
          "fakegato": {
-            "$id": "fakegato",
             "title": "fakegato",
             "type": "object",
             "required": "false",
             "properties": {
                "eve": {
-                  "$id": "eve",
                   "type": "string",
                   "title": "eve",
                   "description": "FakeGato Accessory Type.",
@@ -2562,7 +2321,6 @@ const accessorySchema =
                   "required": true
                },
                "power": {
-                  "$id": "power",
                   "type": "string",
                   "title": "power",
                   "description": "FakeGato Accessory Type.",
@@ -4494,7 +4252,7 @@ const accessorySchema =
          } ]
       },
       {
-         "title": " state_cmd Options",
+         "title": "state_cmd Options",
          "type": "fieldset",
          "expandable": true,
          "items":

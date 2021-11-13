@@ -35,7 +35,6 @@
          "debug":
          {
             "title": "debug",
-            "$id": "debug",
             "type": "boolean",
             "description": "Enables additional output in the log.",
             "required": false,
@@ -44,7 +43,6 @@
          "statusMsg":
          {
             "title": "statusMsg",
-            "$id": "statusMsg",
             "type": "boolean",
             "description": "Enables additional output in the log.",
             "required": false,
@@ -53,7 +51,6 @@
          "allowTLV8":
          {
             "title": "allowTLV8",
-            "$id": "allowTLV8",
             "type": "boolean",
             "description": "Enables wacky TLV8 characteristics.",
             "required": false,
@@ -62,7 +59,6 @@
          "outputConstants":
          {
             "title": "outputConstants",
-            "$id": "outputConstants",
             "type": "boolean",
             "description": "Output constants instead of values.",
             "required": false,
@@ -71,7 +67,6 @@
          "timeout":
          {
             "title": "timeout",
-            "$id": "timeout",
             "type": "integer",
             "description": "The global timeout for all polling accessories (sec).",
             "required": false,
@@ -81,7 +76,6 @@
          "stateChangeResponseTime":
          {
             "title": "stateChangeResponseTime",
-            "$id": "stateChangeResponseTime",
             "type": "integer",
             "description": "The time for the accessories to respond (msec).",
             "required": false,
@@ -90,7 +84,6 @@
          "interval":
          {
             "title": "interval",
-            "$id": "interval",
             "type": "integer",
             "description": "Polling interval of all accesssories (sec}.",
             "required": false,
@@ -100,7 +93,6 @@
          "state_cmd_prefix":
          {
             "title": "state_cmd_prefix",
-            "$id": "state_cmd_prefix",
             "type": "string",
             "description": "The global state_cmd prefix for all accessories.",
             "required": false
@@ -108,7 +100,6 @@
          "state_cmd":
          {
             "title": "state_cmd",
-            "$id": "state_cmd",
             "type": "string",
             "description": "The global state_cmd for all accessories.",
             "placeholder": ".homebridge/cmd4Scripts/",
@@ -117,7 +108,6 @@
          "state_cmd_suffix":
          {
             "title": "state_cmd_suffix",
-            "$id": "state_cmd_suffix",
             "type": "string",
             "description": "The global state_cmd suffix for all accessories.",
             "required": false
@@ -125,7 +115,6 @@
          "definitions":
          {
             "title": "definitions",
-            "$id": "definitions",
             "type": "object",
             "description": "complex data.",
             "required": false
@@ -133,7 +122,6 @@
          "queueTypes":
          {
             "title": "queueTypes",
-            "$id": "queueTypes",
             "type": "array",
             "uniqueItems": true,
             "maxItems": 0,
@@ -162,7 +150,6 @@
          },
          "accessControlLevel":
          {
-            "$id": "accessControlLevel",
             "title": "accessControlLevel",
             "type": "integer",
             "minimum": 0,
@@ -175,14 +162,12 @@
          },
          "accessoryFlags":
          {
-            "$id": "accessoryFlags",
             "title": "accessoryFlags",
             "type": "integer",
             "description": "The Devices Accessory Flags"
          },
          "accessoryIdentifier":
          {
-            "$id": "accessoryIdentifier",
             "title": "accessoryIdentifier",
             "type": "string",
             "description": "The Devices Accessory Identifier String",
@@ -193,7 +178,6 @@
          },
          "active":
          {
-            "$id": "active",
             "title": "active",
             "type": "integer",
             "minimum": 0,
@@ -206,7 +190,6 @@
          },
          "activeIdentifier":
          {
-            "$id": "activeIdentifier",
             "title": "activeIdentifier",
             "type": "integer",
             "description": "The Devices Active Identifier",
@@ -217,7 +200,6 @@
          },
          "activityInterval":
          {
-            "$id": "activityInterval",
             "title": "activityInterval",
             "type": "integer",
             "minimum": 0,
@@ -225,14 +207,12 @@
          },
          "administratorOnlyAccess":
          {
-            "$id": "administratorOnlyAccess",
             "title": "administratorOnlyAccess",
             "type": "boolean",
             "description": "If the Device has 2cwAdmin Only Access"
          },
          "airParticulateDensity":
          {
-            "$id": "airParticulateDensity",
             "title": "airParticulateDensity",
             "type": "number",
             "minimum": 0,
@@ -241,7 +221,6 @@
          },
          "airParticulateSize":
          {
-            "$id": "airParticulateSize",
             "title": "airParticulateSize",
             "type": "integer",
             "minimum": 0,
@@ -250,7 +229,6 @@
          },
          "airQuality":
          {
-            "$id": "airQuality",
             "title": "airQuality",
             "type": "integer",
             "minimum": 0,
@@ -263,21 +241,18 @@
          },
          "appMatchingIdentifier":
          {
-            "$id": "appMatchingIdentifier",
             "title": "appMatchingIdentifier",
             "type": "string",
             "description": "The Devices App Matching Identifier"
          },
          "audioFeedback":
          {
-            "$id": "audioFeedback",
             "title": "audioFeedback",
             "type": "boolean",
             "description": "If Audio Feedback is Present"
          },
          "batteryLevel":
          {
-            "$id": "batteryLevel",
             "title": "batteryLevel",
             "type": "integer",
             "minimum": 0,
@@ -290,7 +265,6 @@
          },
          "brightness":
          {
-            "$id": "brightness",
             "title": "brightness",
             "type": "integer",
             "minimum": 0,
@@ -299,7 +273,6 @@
          },
          "buttonEvent":
          {
-            "$id": "buttonEvent",
             "title": "buttonEvent",
             "type": "string",
             "description": "The Devices zbutton Event",
@@ -310,28 +283,24 @@
          },
          "ccaEnergyDetectThreshold":
          {
-            "$id": "ccaEnergyDetectThreshold",
             "title": "ccaEnergyDetectThreshold",
             "type": "integer",
             "description": "The Devices CCA Energy Detect Threshold"
          },
          "ccaSignalDetectThreshold":
          {
-            "$id": "ccaSignalDetectThreshold",
             "title": "ccaSignalDetectThreshold",
             "type": "integer",
             "description": "The Devices Signal Detect Threshold"
          },
          "cameraOperatingModeIndicator":
          {
-            "$id": "cameraOperatingModeIndicator",
             "title": "cameraOperatingModeIndicator",
             "type": "boolean",
             "description": "The State of the Camera's Operating Mode Indicator"
          },
          "carbonDioxideDetected":
          {
-            "$id": "carbonDioxideDetected",
             "title": "carbonDioxideDetected",
             "type": "integer",
             "minimum": 0,
@@ -344,7 +313,6 @@
          },
          "carbonDioxideLevel":
          {
-            "$id": "carbonDioxideLevel",
             "title": "carbonDioxideLevel",
             "type": "number",
             "minimum": 0,
@@ -353,7 +321,6 @@
          },
          "carbonDioxidePeakLevel":
          {
-            "$id": "carbonDioxidePeakLevel",
             "title": "carbonDioxidePeakLevel",
             "type": "number",
             "minimum": 0,
@@ -362,7 +329,6 @@
          },
          "carbonMonoxideDetected":
          {
-            "$id": "carbonMonoxideDetected",
             "title": "carbonMonoxideDetected",
             "type": "integer",
             "minimum": 0,
@@ -375,7 +341,6 @@
          },
          "carbonMonoxideLevel":
          {
-            "$id": "carbonMonoxideLevel",
             "title": "carbonMonoxideLevel",
             "type": "number",
             "minimum": 0,
@@ -384,7 +349,6 @@
          },
          "carbonMonoxidePeakLevel":
          {
-            "$id": "carbonMonoxidePeakLevel",
             "title": "carbonMonoxidePeakLevel",
             "type": "number",
             "minimum": 0,
@@ -393,7 +357,6 @@
          },
          "category":
          {
-            "$id": "category",
             "title": "category",
             "type": "integer",
             "minimum": 1,
@@ -406,14 +369,12 @@
          },
          "characteristicValueTransitionControl":
          {
-            "$id": "characteristicValueTransitionControl",
             "title": "characteristicValueTransitionControl",
             "type": "string",
             "description": "The Devices Characteristic Value Transition Control"
          },
          "chargingState":
          {
-            "$id": "chargingState",
             "title": "chargingState",
             "type": "integer",
             "minimum": 0,
@@ -426,7 +387,6 @@
          },
          "closedCaptions":
          {
-            "$id": "closedCaptions",
             "title": "closedCaptions",
             "type": "integer",
             "minimum": 0,
@@ -435,7 +395,6 @@
          },
          "colorTemperature":
          {
-            "$id": "colorTemperature",
             "title": "colorTemperature",
             "type": "integer",
             "minimum": 140,
@@ -444,14 +403,12 @@
          },
          "configureBridgedAccessory":
          {
-            "$id": "configureBridgedAccessory",
             "title": "configureBridgedAccessory",
             "type": "string",
             "description": "The Configured Bridge Accessory"
          },
          "configureBridgedAccessoryStatus":
          {
-            "$id": "configureBridgedAccessoryStatus",
             "title": "configureBridgedAccessoryStatus",
             "type": "string",
             "description": "The Configured Bridge Accessory Status",
@@ -462,7 +419,6 @@
          },
          "configuredName":
          {
-            "$id": "configuredName",
             "title": "configuredName",
             "type": "string",
             "description": "Name of accessory, as displayed in HomeKit",
@@ -473,7 +429,6 @@
          },
          "contactSensorState":
          {
-            "$id": "contactSensorState",
             "title": "contactSensorState",
             "type": "integer",
             "minimum": 0,
@@ -486,7 +441,6 @@
          },
          "coolingThresholdTemperature":
          {
-            "$id": "coolingThresholdTemperature",
             "title": "coolingThresholdTemperature",
             "type": "number",
             "minimum": 10,
@@ -495,7 +449,6 @@
          },
          "currentAirPurifierState":
          {
-            "$id": "currentAirPurifierState",
             "title": "currentAirPurifierState",
             "type": "integer",
             "minimum": 0,
@@ -508,7 +461,6 @@
          },
          "currentAmbientLightLevel":
          {
-            "$id": "currentAmbientLightLevel",
             "title": "currentAmbientLightLevel",
             "type": "number",
             "minimum": 0.0001,
@@ -521,7 +473,6 @@
          },
          "currentDoorState":
          {
-            "$id": "currentDoorState",
             "title": "currentDoorState",
             "type": "integer",
             "minimum": 0,
@@ -534,7 +485,6 @@
          },
          "currentFanState":
          {
-            "$id": "currentFanState",
             "title": "currentFanState",
             "type": "integer",
             "minimum": 0,
@@ -543,7 +493,6 @@
          },
          "currentHeaterCoolerState":
          {
-            "$id": "currentHeaterCoolerState",
             "title": "currentHeaterCoolerState",
             "type": "integer",
             "minimum": 0,
@@ -556,7 +505,6 @@
          },
          "currentHeatingCoolingState":
          {
-            "$id": "currentHeatingCoolingState",
             "title": "currentHeatingCoolingState",
             "type": "integer",
             "minimum": 0,
@@ -569,7 +517,6 @@
          },
          "currentHorizontalTiltAngle":
          {
-            "$id": "currentHorizontalTiltAngle",
             "title": "currentHorizontalTiltAngle",
             "type": "integer",
             "minimum": -90,
@@ -578,7 +525,6 @@
          },
          "currentHumidifierDehumidifierState":
          {
-            "$id": "currentHumidifierDehumidifierState",
             "title": "currentHumidifierDehumidifierState",
             "type": "integer",
             "minimum": 0,
@@ -591,7 +537,6 @@
          },
          "currentMediaState":
          {
-            "$id": "currentMediaState",
             "title": "currentMediaState",
             "type": "integer",
             "minimum": 0,
@@ -604,7 +549,6 @@
          },
          "currentPosition":
          {
-            "$id": "currentPosition",
             "title": "currentPosition",
             "type": "integer",
             "minimum": 0,
@@ -617,7 +561,6 @@
          },
          "currentRelativeHumidity":
          {
-            "$id": "currentRelativeHumidity",
             "title": "currentRelativeHumidity",
             "type": "number",
             "minimum": 0,
@@ -630,7 +573,6 @@
          },
          "currentSlatState":
          {
-            "$id": "currentSlatState",
             "title": "currentSlatState",
             "type": "integer",
             "minimum": 0,
@@ -643,7 +585,6 @@
          },
          "currentTemperature":
          {
-            "$id": "currentTemperature",
             "title": "currentTemperature",
             "type": "number",
             "minimum": -270,
@@ -656,7 +597,6 @@
          },
          "currentTiltAngle":
          {
-            "$id": "currentTiltAngle",
             "title": "currentTiltAngle",
             "type": "integer",
             "minimum": -90,
@@ -665,7 +605,6 @@
          },
          "currentTime":
          {
-            "$id": "currentTime",
             "title": "currentTime",
             "type": "string",
             "description": "What Time it is Now",
@@ -676,14 +615,12 @@
          },
          "currentTransport":
          {
-            "$id": "currentTransport",
             "title": "currentTransport",
             "type": "boolean",
             "description": "The Devices Current Transport"
          },
          "currentVerticalTiltAngle":
          {
-            "$id": "currentVerticalTiltAngle",
             "title": "currentVerticalTiltAngle",
             "type": "integer",
             "minimum": -90,
@@ -692,7 +629,6 @@
          },
          "currentVisibilityState":
          {
-            "$id": "currentVisibilityState",
             "title": "currentVisibilityState",
             "type": "integer",
             "minimum": 0,
@@ -705,21 +641,18 @@
          },
          "dataStreamHAPTransport":
          {
-            "$id": "dataStreamHAPTransport",
             "title": "dataStreamHAPTransport",
             "type": "string",
             "description": "The Devices Data Stream Transport"
          },
          "dataStreamHAPTransportInterrupt":
          {
-            "$id": "dataStreamHAPTransportInterrupt",
             "title": "dataStreamHAPTransportInterrupt",
             "type": "string",
             "description": "The Devices Data Stream Transport Interrupt"
          },
          "dayoftheWeek":
          {
-            "$id": "dayoftheWeek",
             "title": "dayoftheWeek",
             "type": "integer",
             "minimum": 1,
@@ -732,7 +665,6 @@
          },
          "diagonalFieldOfView":
          {
-            "$id": "diagonalFieldOfView",
             "title": "diagonalFieldOfView",
             "type": "number",
             "minimum": 0,
@@ -741,42 +673,36 @@
          },
          "digitalZoom":
          {
-            "$id": "digitalZoom",
             "title": "digitalZoom",
             "type": "number",
             "description": "The Measured Digital Zoom"
          },
          "discoverBridgedAccessories":
          {
-            "$id": "discoverBridgedAccessories",
             "title": "discoverBridgedAccessories",
             "type": "integer",
             "description": "The Discovered Bridge Accessories"
          },
          "discoveredBridgedAccessories":
          {
-            "$id": "discoveredBridgedAccessories",
             "title": "discoveredBridgedAccessories",
             "type": "integer",
             "description": "The Discovered Bridged Accessories"
          },
          "displayOrder":
          {
-            "$id": "displayOrder",
             "title": "displayOrder",
             "type": "string",
             "description": "The Display Order"
          },
          "eventRetransmissionMaximum":
          {
-            "$id": "eventRetransmissionMaximum",
             "title": "eventRetransmissionMaximum",
             "type": "integer",
             "description": "The Event Retransmission Maximum Amount"
          },
          "eventSnapshotsActive":
          {
-            "$id": "eventSnapshotsActive",
             "title": "eventSnapshotsActive",
             "type": "integer",
             "minimum": 0,
@@ -789,14 +715,12 @@
          },
          "eventTransmissionCounters":
          {
-            "$id": "eventTransmissionCounters",
             "title": "eventTransmissionCounters",
             "type": "integer",
             "description": "The Event Transmission Counters"
          },
          "filterChangeIndication":
          {
-            "$id": "filterChangeIndication",
             "title": "filterChangeIndication",
             "type": "integer",
             "minimum": 0,
@@ -809,7 +733,6 @@
          },
          "filterLifeLevel":
          {
-            "$id": "filterLifeLevel",
             "title": "filterLifeLevel",
             "type": "number",
             "minimum": 0,
@@ -818,7 +741,6 @@
          },
          "firmwareRevision":
          {
-            "$id": "firmwareRevision",
             "title": "firmwareRevision",
             "type": "string",
             "description": "The Firmwares Revision String",
@@ -829,21 +751,18 @@
          },
          "hardwareRevision":
          {
-            "$id": "hardwareRevision",
             "title": "hardwareRevision",
             "type": "string",
             "description": "The Hardwares Revision String"
          },
          "heartBeat":
          {
-            "$id": "heartBeat",
             "title": "heartBeat",
             "type": "integer",
             "description": "The Current Heart Rate"
          },
          "heatingThresholdTemperature":
          {
-            "$id": "heatingThresholdTemperature",
             "title": "heatingThresholdTemperature",
             "type": "number",
             "minimum": 0,
@@ -852,14 +771,12 @@
          },
          "holdPosition":
          {
-            "$id": "holdPosition",
             "title": "holdPosition",
             "type": "boolean",
             "description": "If Position Should Be Held"
          },
          "homeKitCameraActive":
          {
-            "$id": "homeKitCameraActive",
             "title": "homeKitCameraActive",
             "type": "integer",
             "minimum": 0,
@@ -872,7 +789,6 @@
          },
          "hue":
          {
-            "$id": "hue",
             "title": "hue",
             "type": "number",
             "minimum": 0,
@@ -881,14 +797,12 @@
          },
          "identifier":
          {
-            "$id": "identifier",
             "title": "identifier",
             "type": "integer",
             "description": "The Devices Identifier"
          },
          "identify":
          {
-            "$id": "identify",
             "title": "identify",
             "type": "boolean",
             "description": "The Devices Identify Status",
@@ -899,14 +813,12 @@
          },
          "imageMirroring":
          {
-            "$id": "imageMirroring",
             "title": "imageMirroring",
             "type": "boolean",
             "description": "Is Image Being Mirrored"
          },
          "imageRotation":
          {
-            "$id": "imageRotation",
             "title": "imageRotation",
             "type": "integer",
             "minimum": 0,
@@ -915,7 +827,6 @@
          },
          "inUse":
          {
-            "$id": "inUse",
             "title": "inUse",
             "type": "integer",
             "minimum": 0,
@@ -928,7 +839,6 @@
          },
          "inputDeviceType":
          {
-            "$id": "inputDeviceType",
             "title": "inputDeviceType",
             "type": "integer",
             "minimum": 0,
@@ -937,7 +847,6 @@
          },
          "inputSourceType":
          {
-            "$id": "inputSourceType",
             "title": "inputSourceType",
             "type": "integer",
             "minimum": 0,
@@ -950,7 +859,6 @@
          },
          "isConfigured":
          {
-            "$id": "isConfigured",
             "title": "isConfigured",
             "type": "integer",
             "minimum": 0,
@@ -963,7 +871,6 @@
          },
          "leakDetected":
          {
-            "$id": "leakDetected",
             "title": "leakDetected",
             "type": "integer",
             "minimum": 0,
@@ -976,7 +883,6 @@
          },
          "linkQuality":
          {
-            "$id": "linkQuality",
             "title": "linkQuality",
             "type": "integer",
             "minimum": 1,
@@ -989,7 +895,6 @@
          },
          "listPairings":
          {
-            "$id": "listPairings",
             "title": "listPairings",
             "type": "string",
             "description": "The Links Quality",
@@ -1000,7 +905,6 @@
          },
          "lockControlPoint":
          {
-            "$id": "lockControlPoint",
             "title": "lockControlPoint",
             "type": "string",
             "description": "The Control Point of the Lock",
@@ -1011,7 +915,6 @@
          },
          "lockCurrentState":
          {
-            "$id": "lockCurrentState",
             "title": "lockCurrentState",
             "type": "integer",
             "minimum": 0,
@@ -1024,7 +927,6 @@
          },
          "lockLastKnownAction":
          {
-            "$id": "lockLastKnownAction",
             "title": "lockLastKnownAction",
             "type": "integer",
             "minimum": 0,
@@ -1033,14 +935,12 @@
          },
          "lockManagementAutoSecurityTimeout":
          {
-            "$id": "lockManagementAutoSecurityTimeout",
             "title": "lockManagementAutoSecurityTimeout",
             "type": "integer",
             "description": "The Locks Security Timeout Value"
          },
          "lockPhysicalControls":
          {
-            "$id": "lockPhysicalControls",
             "title": "lockPhysicalControls",
             "type": "integer",
             "minimum": 0,
@@ -1049,7 +949,6 @@
          },
          "lockTargetState":
          {
-            "$id": "lockTargetState",
             "title": "lockTargetState",
             "type": "integer",
             "minimum": 0,
@@ -1062,28 +961,24 @@
          },
          "logs":
          {
-            "$id": "logs",
             "title": "logs",
             "type": "string",
             "description": "The Devices Logs"
          },
          "macRetransmissionMaximum":
          {
-            "$id": "macRetransmissionMaximum",
             "title": "macRetransmissionMaximum",
             "type": "integer",
             "description": "The Devices MAC Retransmission Maximum Amount"
          },
          "macTransmissionCounters":
          {
-            "$id": "macTransmissionCounters",
             "title": "macTransmissionCounters",
             "type": "string",
             "description": "The Devices MAC Transmission Counters"
          },
          "managedNetworkEnable":
          {
-            "$id": "managedNetworkEnable",
             "title": "managedNetworkEnable",
             "type": "integer",
             "minimum": 0,
@@ -1096,14 +991,12 @@
          },
          "manuallyDisabled":
          {
-            "$id": "manuallyDisabled",
             "title": "manuallyDisabled",
             "type": "boolean",
             "description": "Is the Device Manually Enabled/Disabled"
          },
          "manufacturer":
          {
-            "$id": "manufacturer",
             "title": "manufacturer",
             "type": "string",
             "description": "The Devices Manufacturer",
@@ -1114,7 +1007,6 @@
          },
          "model":
          {
-            "$id": "model",
             "title": "model",
             "type": "string",
             "description": "The Devices Model",
@@ -1125,7 +1017,6 @@
          },
          "motionDetected":
          {
-            "$id": "motionDetected",
             "title": "motionDetected",
             "type": "boolean",
             "description": "Is Motion Being Detected",
@@ -1136,7 +1027,6 @@
          },
          "mute":
          {
-            "$id": "mute",
             "title": "mute",
             "type": "boolean",
             "description": "Is the Device Currently Muted",
@@ -1147,7 +1037,6 @@
          },
          "name":
          {
-            "$id": "name",
             "title": "name",
             "type": "string",
             "description": "Name of accessory, as displayed in HomeKit",
@@ -1158,7 +1047,6 @@
          },
          "networkAccessViolationControl":
          {
-            "$id": "networkAccessViolationControl",
             "title": "networkAccessViolationControl",
             "type": "string",
             "description": "The Network AccessViolation Control",
@@ -1169,7 +1057,6 @@
          },
          "networkClientProfileControl":
          {
-            "$id": "networkClientProfileControl",
             "title": "networkClientProfileControl",
             "type": "string",
             "description": "The Network Client Profile Control",
@@ -1180,7 +1067,6 @@
          },
          "networkClientStatusControl":
          {
-            "$id": "networkClientStatusControl",
             "title": "networkClientStatusControl",
             "type": "string",
             "description": "The Network Client Status Control",
@@ -1191,14 +1077,12 @@
          },
          "nightVision":
          {
-            "$id": "nightVision",
             "title": "nightVision",
             "type": "boolean",
             "description": "Is Night Vision Available"
          },
          "nitrogenDioxideDensity":
          {
-            "$id": "nitrogenDioxideDensity",
             "title": "nitrogenDioxideDensity",
             "type": "number",
             "minimum": 0,
@@ -1207,7 +1091,6 @@
          },
          "obstructionDetected":
          {
-            "$id": "obstructionDetected",
             "title": "obstructionDetected",
             "type": "boolean",
             "description": "Is Obstruction Currently Detected",
@@ -1218,7 +1101,6 @@
          },
          "occupancyDetected":
          {
-            "$id": "occupancyDetected",
             "title": "occupancyDetected",
             "type": "integer",
             "minimum": 0,
@@ -1231,7 +1113,6 @@
          },
          "on":
          {
-            "$id": "on",
             "title": "on",
             "type": "boolean",
             "description": "Is the Device On",
@@ -1242,21 +1123,18 @@
          },
          "operatingStateResponse":
          {
-            "$id": "operatingStateResponse",
             "title": "operatingStateResponse",
             "type": "string",
             "description": "The Devices Operating State Response"
          },
          "opticalZoom":
          {
-            "$id": "opticalZoom",
             "title": "opticalZoom",
             "type": "number",
             "description": "The Devices Optical Zoom Factor"
          },
          "outletInUse":
          {
-            "$id": "outletInUse",
             "title": "outletInUse",
             "type": "boolean",
             "description": "Is the Outlet in Use",
@@ -1267,7 +1145,6 @@
          },
          "ozoneDensity":
          {
-            "$id": "ozoneDensity",
             "title": "ozoneDensity",
             "type": "number",
             "minimum": 0,
@@ -1276,7 +1153,6 @@
          },
          "pm10Density":
          {
-            "$id": "pm10Density",
             "title": "pm10Density",
             "type": "number",
             "minimum": 0,
@@ -1285,7 +1161,6 @@
          },
          "pm2_5Density":
          {
-            "$id": "pm2_5Density",
             "title": "pm2_5Density",
             "type": "number",
             "minimum": 0,
@@ -1294,7 +1169,6 @@
          },
          "pairSetup":
          {
-            "$id": "pairSetup",
             "title": "pairSetup",
             "type": "string",
             "description": "The Devices Pair Setup",
@@ -1305,7 +1179,6 @@
          },
          "pairVerify":
          {
-            "$id": "pairVerify",
             "title": "pairVerify",
             "type": "string",
             "description": "The Devices Pair Verify",
@@ -1316,7 +1189,6 @@
          },
          "pairingFeatures":
          {
-            "$id": "pairingFeatures",
             "title": "pairingFeatures",
             "type": "integer",
             "description": "The Devices Pairing Features",
@@ -1327,28 +1199,24 @@
          },
          "pairingPairings":
          {
-            "$id": "pairingPairings",
             "title": "pairingPairings",
             "type": "string",
             "description": "The Devices Pairing Pairings"
          },
          "passwordSetting":
          {
-            "$id": "passwordSetting",
             "title": "passwordSetting",
             "type": "string",
             "description": "The Devices Password Setting"
          },
          "periodicSnapshotsActive":
          {
-            "$id": "periodicSnapshotsActive",
             "title": "periodicSnapshotsActive",
             "type": "integer",
             "description": "Is the Periodic Snapshot Enabled/Disabled"
          },
          "pictureMode":
          {
-            "$id": "pictureMode",
             "title": "pictureMode",
             "type": "integer",
             "minimum": 0,
@@ -1357,7 +1225,6 @@
          },
          "ping":
          {
-            "$id": "ping",
             "title": "ping",
             "type": "string",
             "description": "The Devices Ping Characteristic",
@@ -1368,7 +1235,6 @@
          },
          "positionState":
          {
-            "$id": "positionState",
             "title": "positionState",
             "type": "integer",
             "minimum": 0,
@@ -1381,7 +1247,6 @@
          },
          "powerModeSelection":
          {
-            "$id": "powerModeSelection",
             "title": "powerModeSelection",
             "type": "integer",
             "minimum": 0,
@@ -1390,14 +1255,12 @@
          },
          "productData":
          {
-            "$id": "productData",
             "title": "productData",
             "type": "string",
             "description": "The Devices Product Data"
          },
          "programMode":
          {
-            "$id": "programMode",
             "title": "programMode",
             "type": "integer",
             "minimum": 0,
@@ -1410,7 +1273,6 @@
          },
          "programmableSwitchEvent":
          {
-            "$id": "programmableSwitchEvent",
             "title": "programmableSwitchEvent",
             "type": "integer",
             "minimum": 0,
@@ -1423,7 +1285,6 @@
          },
          "programmableSwitchOutputState":
          {
-            "$id": "programmableSwitchOutputState",
             "title": "programmableSwitchOutputState",
             "type": "integer",
             "minimum": 0,
@@ -1436,7 +1297,6 @@
          },
          "reachable":
          {
-            "$id": "reachable",
             "title": "reachable",
             "type": "boolean",
             "description": "If the Device is Reachable",
@@ -1447,28 +1307,24 @@
          },
          "receivedSignalStrengthIndication":
          {
-            "$id": "receivedSignalStrengthIndication",
             "title": "receivedSignalStrengthIndication",
             "type": "integer",
             "description": "The Received Signal Strength Measurement"
          },
          "receiverSensitivity":
          {
-            "$id": "receiverSensitivity",
             "title": "receiverSensitivity",
             "type": "integer",
             "description": "The Amount of Receiver Sensitivity"
          },
          "recordingAudioActive":
          {
-            "$id": "recordingAudioActive",
             "title": "recordingAudioActive",
             "type": "integer",
             "description": "Is Recordding Audio Enabled/DisAbled"
          },
          "relativeHumidityDehumidifierThreshold":
          {
-            "$id": "relativeHumidityDehumidifierThreshold",
             "title": "relativeHumidityDehumidifierThreshold",
             "type": "number",
             "minimum": 0,
@@ -1477,7 +1333,6 @@
          },
          "relativeHumidityHumidifierThreshold":
          {
-            "$id": "relativeHumidityHumidifierThreshold",
             "title": "relativeHumidityHumidifierThreshold",
             "type": "number",
             "minimum": 0,
@@ -1486,7 +1341,6 @@
          },
          "relayControlPoint":
          {
-            "$id": "relayControlPoint",
             "title": "relayControlPoint",
             "type": "string",
             "description": "The Relay Control Point",
@@ -1497,7 +1351,6 @@
          },
          "relayEnabled":
          {
-            "$id": "relayEnabled",
             "title": "relayEnabled",
             "type": "boolean",
             "description": "Is the Relay Currently Enabled",
@@ -1508,7 +1361,6 @@
          },
          "relayState":
          {
-            "$id": "relayState",
             "title": "relayState",
             "type": "integer",
             "minimum": 0,
@@ -1521,7 +1373,6 @@
          },
          "remainingDuration":
          {
-            "$id": "remainingDuration",
             "title": "remainingDuration",
             "type": "integer",
             "minimum": 0,
@@ -1530,7 +1381,6 @@
          },
          "remoteKey":
          {
-            "$id": "remoteKey",
             "title": "remoteKey",
             "type": "integer",
             "minimum": 0,
@@ -1543,7 +1393,6 @@
          },
          "resetFilterIndication":
          {
-            "$id": "resetFilterIndication",
             "title": "resetFilterIndication",
             "type": "integer",
             "minimum": 1,
@@ -1552,7 +1401,6 @@
          },
          "rotationDirection":
          {
-            "$id": "rotationDirection",
             "title": "rotationDirection",
             "type": "integer",
             "minimum": 0,
@@ -1561,7 +1409,6 @@
          },
          "rotationSpeed":
          {
-            "$id": "rotationSpeed",
             "title": "rotationSpeed",
             "type": "number",
             "minimum": 0,
@@ -1570,7 +1417,6 @@
          },
          "routerStatus":
          {
-            "$id": "routerStatus",
             "title": "routerStatus",
             "type": "integer",
             "minimum": 0,
@@ -1583,7 +1429,6 @@
          },
          "saturation":
          {
-            "$id": "saturation",
             "title": "saturation",
             "type": "number",
             "minimum": 0,
@@ -1592,7 +1437,6 @@
          },
          "securitySystemAlarmType":
          {
-            "$id": "securitySystemAlarmType",
             "title": "securitySystemAlarmType",
             "type": "integer",
             "minimum": 0,
@@ -1601,7 +1445,6 @@
          },
          "securitySystemCurrentState":
          {
-            "$id": "securitySystemCurrentState",
             "title": "securitySystemCurrentState",
             "type": "integer",
             "minimum": 0,
@@ -1614,7 +1457,6 @@
          },
          "securitySystemTargetState":
          {
-            "$id": "securitySystemTargetState",
             "title": "securitySystemTargetState",
             "type": "integer",
             "minimum": 0,
@@ -1627,14 +1469,12 @@
          },
          "selectedAudioStreamConfiguration":
          {
-            "$id": "selectedAudioStreamConfiguration",
             "title": "selectedAudioStreamConfiguration",
             "type": "string",
             "description": "The Selected Audio Stream Configuration"
          },
          "selectedCameraRecordingConfiguration":
          {
-            "$id": "selectedCameraRecordingConfiguration",
             "title": "selectedCameraRecordingConfiguration",
             "type": "string",
             "description": "The Selected Cameras Recording Configuration",
@@ -1645,7 +1485,6 @@
          },
          "selectedRTPStreamConfiguration":
          {
-            "$id": "selectedRTPStreamConfiguration",
             "title": "selectedRTPStreamConfiguration",
             "type": "string",
             "description": "The Selected RTP Stream Configuration",
@@ -1656,7 +1495,6 @@
          },
          "serialNumber":
          {
-            "$id": "serialNumber",
             "title": "serialNumber",
             "type": "string",
             "description": "The Devices Serial Number",
@@ -1667,7 +1505,6 @@
          },
          "serviceLabelIndex":
          {
-            "$id": "serviceLabelIndex",
             "title": "serviceLabelIndex",
             "type": "integer",
             "minimum": 1,
@@ -1676,7 +1513,6 @@
          },
          "serviceLabelNamespace":
          {
-            "$id": "serviceLabelNamespace",
             "title": "serviceLabelNamespace",
             "type": "integer",
             "minimum": 0,
@@ -1689,7 +1525,6 @@
          },
          "setDuration":
          {
-            "$id": "setDuration",
             "title": "setDuration",
             "type": "integer",
             "minimum": 0,
@@ -1698,14 +1533,12 @@
          },
          "setupDataStreamTransport":
          {
-            "$id": "setupDataStreamTransport",
             "title": "setupDataStreamTransport",
             "type": "string",
             "description": "The Devices Setup Stream Transport Value"
          },
          "setupEndpoints":
          {
-            "$id": "setupEndpoints",
             "title": "setupEndpoints",
             "type": "string",
             "description": "The Devices Setup End Points",
@@ -1716,7 +1549,6 @@
          },
          "setupTransferTransport":
          {
-            "$id": "setupTransferTransport",
             "title": "setupTransferTransport",
             "type": "string",
             "description": "The Devices Setup Transfer Transport",
@@ -1727,14 +1559,12 @@
          },
          "signalToNoiseRatio":
          {
-            "$id": "signalToNoiseRatio",
             "title": "signalToNoiseRatio",
             "type": "integer",
             "description": "The Measured Signal to Noise Ratio"
          },
          "siriInputType":
          {
-            "$id": "siriInputType",
             "title": "siriInputType",
             "type": "integer",
             "minimum": 0,
@@ -1747,7 +1577,6 @@
          },
          "slatType":
          {
-            "$id": "slatType",
             "title": "slatType",
             "type": "integer",
             "minimum": 0,
@@ -1760,7 +1589,6 @@
          },
          "sleepDiscoveryMode":
          {
-            "$id": "sleepDiscoveryMode",
             "title": "sleepDiscoveryMode",
             "type": "integer",
             "minimum": 0,
@@ -1773,7 +1601,6 @@
          },
          "sleepInterval":
          {
-            "$id": "sleepInterval",
             "title": "sleepInterval",
             "type": "integer",
             "minimum": 0,
@@ -1781,7 +1608,6 @@
          },
          "smokeDetected":
          {
-            "$id": "smokeDetected",
             "title": "smokeDetected",
             "type": "integer",
             "minimum": 0,
@@ -1794,21 +1620,18 @@
          },
          "softwareRevision":
          {
-            "$id": "softwareRevision",
             "title": "softwareRevision",
             "type": "string",
             "description": "The Devices Software Revision String"
          },
          "statusActive":
          {
-            "$id": "statusActive",
             "title": "statusActive",
             "type": "boolean",
             "description": "If the Device is Active or Not"
          },
          "statusFault":
          {
-            "$id": "statusFault",
             "title": "statusFault",
             "type": "integer",
             "minimum": 0,
@@ -1817,7 +1640,6 @@
          },
          "statusJammed":
          {
-            "$id": "statusJammed",
             "title": "statusJammed",
             "type": "integer",
             "minimum": 0,
@@ -1826,7 +1648,6 @@
          },
          "statusLowBattery":
          {
-            "$id": "statusLowBattery",
             "title": "statusLowBattery",
             "type": "integer",
             "minimum": 0,
@@ -1839,7 +1660,6 @@
          },
          "statusTampered":
          {
-            "$id": "statusTampered",
             "title": "statusTampered",
             "type": "integer",
             "minimum": 0,
@@ -1848,7 +1668,6 @@
          },
          "streamingStatus":
          {
-            "$id": "streamingStatus",
             "title": "streamingStatus",
             "type": "string",
             "description": "The Devices Streaming Status",
@@ -1859,7 +1678,6 @@
          },
          "sulphurDioxideDensity":
          {
-            "$id": "sulphurDioxideDensity",
             "title": "sulphurDioxideDensity",
             "type": "number",
             "minimum": 0,
@@ -1868,7 +1686,6 @@
          },
          "supportedAudioRecordingConfiguration":
          {
-            "$id": "supportedAudioRecordingConfiguration",
             "title": "supportedAudioRecordingConfiguration",
             "type": "string",
             "description": "The Supported Audio Recording Configuration",
@@ -1879,7 +1696,6 @@
          },
          "supportedAudioStreamConfiguration":
          {
-            "$id": "supportedAudioStreamConfiguration",
             "title": "supportedAudioStreamConfiguration",
             "type": "string",
             "description": "The Supported Audio Stream Configuration",
@@ -1890,7 +1706,6 @@
          },
          "supportedCameraRecordingConfiguration":
          {
-            "$id": "supportedCameraRecordingConfiguration",
             "title": "supportedCameraRecordingConfiguration",
             "type": "string",
             "description": "The Supported Audio Recording Configuration",
@@ -1901,21 +1716,18 @@
          },
          "supportedDataStreamTransportConfiguration":
          {
-            "$id": "supportedDataStreamTransportConfiguration",
             "title": "supportedDataStreamTransportConfiguration",
             "type": "string",
             "description": "The Supported Data Stream Transport Configuration"
          },
          "supportedCharacteristicValueTransitionConfiguration":
          {
-            "$id": "supportedCharacteristicValueTransitionConfiguration",
             "title": "supportedCharacteristicValueTransitionConfiguration",
             "type": "string",
             "description": "The Supported Characteristic Value Transition Configuration"
          },
          "supportedDiagnosticsSnapshot":
          {
-            "$id": "supportedDiagnosticsSnapshot",
             "title": "supportedDiagnosticsSnapshot",
             "type": "string",
             "description": "The Supported Diagnostic Snapshot",
@@ -1926,7 +1738,6 @@
          },
          "supportedRTPConfiguration":
          {
-            "$id": "supportedRTPConfiguration",
             "title": "supportedRTPConfiguration",
             "type": "string",
             "description": "The Supported RTP Configuration",
@@ -1937,7 +1748,6 @@
          },
          "supportedRouterConfiguration":
          {
-            "$id": "supportedRouterConfiguration",
             "title": "supportedRouterConfiguration",
             "type": "string",
             "description": "The Supported Router Configuration",
@@ -1948,7 +1758,6 @@
          },
          "supportedTransferTransportConfiguration":
          {
-            "$id": "supportedTransferTransportConfiguration",
             "title": "supportedTransferTransportConfiguration",
             "type": "string",
             "description": "The Supported Transfer Transport Configuration",
@@ -1959,7 +1768,6 @@
          },
          "supportedVideoRecordingConfiguration":
          {
-            "$id": "supportedVideoRecordingConfiguration",
             "title": "supportedVideoRecordingConfiguration",
             "type": "string",
             "description": "The Supported Video Recording Configuration",
@@ -1970,7 +1778,6 @@
          },
          "supportedVideoStreamConfiguration":
          {
-            "$id": "supportedVideoStreamConfiguration",
             "title": "supportedVideoStreamConfiguration",
             "type": "string",
             "description": "The Supported Video Stream Configuration",
@@ -1981,7 +1788,6 @@
          },
          "swingMode":
          {
-            "$id": "swingMode",
             "title": "swingMode",
             "type": "integer",
             "minimum": 0,
@@ -1990,7 +1796,6 @@
          },
          "targetAirPurifierState":
          {
-            "$id": "targetAirPurifierState",
             "title": "targetAirPurifierState",
             "type": "integer",
             "minimum": 0,
@@ -2003,7 +1808,6 @@
          },
          "targetAirQuality":
          {
-            "$id": "targetAirQuality",
             "title": "targetAirQuality",
             "type": "integer",
             "minimum": 0,
@@ -2012,7 +1816,6 @@
          },
          "targetControlList":
          {
-            "$id": "targetControlList",
             "title": "targetControlList",
             "type": "string",
             "description": "The Target Control List",
@@ -2023,7 +1826,6 @@
          },
          "targetControlSupportedConfiguration":
          {
-            "$id": "targetControlSupportedConfiguration",
             "title": "targetControlSupportedConfiguration",
             "type": "string",
             "description": "The Target Supported Configuration",
@@ -2034,7 +1836,6 @@
          },
          "targetDoorState":
          {
-            "$id": "targetDoorState",
             "title": "targetDoorState",
             "type": "integer",
             "minimum": 0,
@@ -2047,7 +1848,6 @@
          },
          "targetFanState":
          {
-            "$id": "targetFanState",
             "title": "targetFanState",
             "type": "integer",
             "minimum": 0,
@@ -2056,7 +1856,6 @@
          },
          "targetHeaterCoolerState":
          {
-            "$id": "targetHeaterCoolerState",
             "title": "targetHeaterCoolerState",
             "type": "integer",
             "minimum": 0,
@@ -2069,7 +1868,6 @@
          },
          "targetHeatingCoolingState":
          {
-            "$id": "targetHeatingCoolingState",
             "title": "targetHeatingCoolingState",
             "type": "integer",
             "minimum": 0,
@@ -2082,7 +1880,6 @@
          },
          "targetHorizontalTiltAngle":
          {
-            "$id": "targetHorizontalTiltAngle",
             "title": "targetHorizontalTiltAngle",
             "type": "integer",
             "minimum": -90,
@@ -2091,7 +1888,6 @@
          },
          "targetHumidifierDehumidifierState":
          {
-            "$id": "targetHumidifierDehumidifierState",
             "title": "targetHumidifierDehumidifierState",
             "type": "integer",
             "minimum": 0,
@@ -2104,7 +1900,6 @@
          },
          "targetMediaState":
          {
-            "$id": "targetMediaState",
             "title": "targetMediaState",
             "type": "integer",
             "minimum": 0,
@@ -2117,7 +1912,6 @@
          },
          "targetPosition":
          {
-            "$id": "targetPosition",
             "title": "targetPosition",
             "type": "integer",
             "minimum": 0,
@@ -2130,7 +1924,6 @@
          },
          "targetRelativeHumidity":
          {
-            "$id": "targetRelativeHumidity",
             "title": "targetRelativeHumidity",
             "type": "number",
             "minimum": 0,
@@ -2139,7 +1932,6 @@
          },
          "targetSlatState":
          {
-            "$id": "targetSlatState",
             "title": "targetSlatState",
             "type": "integer",
             "minimum": 0,
@@ -2148,7 +1940,6 @@
          },
          "targetTemperature":
          {
-            "$id": "targetTemperature",
             "title": "targetTemperature",
             "type": "number",
             "minimum": 10,
@@ -2161,7 +1952,6 @@
          },
          "targetTiltAngle":
          {
-            "$id": "targetTiltAngle",
             "title": "targetTiltAngle",
             "type": "integer",
             "minimum": -90,
@@ -2170,7 +1960,6 @@
          },
          "targetVerticalTiltAngle":
          {
-            "$id": "targetVerticalTiltAngle",
             "title": "targetVerticalTiltAngle",
             "type": "integer",
             "minimum": -90,
@@ -2179,7 +1968,6 @@
          },
          "targetVisibilityState":
          {
-            "$id": "targetVisibilityState",
             "title": "targetVisibilityState",
             "type": "integer",
             "minimum": 0,
@@ -2188,7 +1976,6 @@
          },
          "temperatureDisplayUnits":
          {
-            "$id": "temperatureDisplayUnits",
             "title": "temperatureDisplayUnits",
             "type": "integer",
             "minimum": 0,
@@ -2201,14 +1988,12 @@
          },
          "thirdPartyCameraActive":
          {
-            "$id": "thirdPartyCameraActive",
             "title": "thirdPartyCameraActive",
             "type": "integer",
             "description": "The ON/OFF Auxiliary Camera State"
          },
          "timeUpdate":
          {
-            "$id": "timeUpdate",
             "title": "timeUpdate",
             "type": "boolean",
             "description": "Ifnthe Time Should be Updated",
@@ -2219,21 +2004,18 @@
          },
          "transmitPower":
          {
-            "$id": "transmitPower",
             "title": "transmitPower",
             "type": "integer",
             "description": "The Devices Measured Transmit Power"
          },
          "transmitPowerMaximum":
          {
-            "$id": "transmitPowerMaximum",
             "title": "transmitPowerMaximum",
             "type": "integer",
             "description": "The Devices Maximum Power Output"
          },
          "tunnelConnectionTimeout":
          {
-            "$id": "tunnelConnectionTimeout",
             "title": "tunnelConnectionTimeout",
             "type": "integer",
             "description": "The Timeout Value of the Tunnel Connection",
@@ -2244,7 +2026,6 @@
          },
          "tunneledAccessoryAdvertising":
          {
-            "$id": "tunneledAccessoryAdvertising",
             "title": "tunneledAccessoryAdvertising",
             "type": "boolean",
             "description": "If the Device is Currently Tunneled Advertising",
@@ -2255,7 +2036,6 @@
          },
          "tunneledAccessoryConnected":
          {
-            "$id": "tunneledAccessoryConnected",
             "title": "tunneledAccessoryConnected",
             "type": "boolean",
             "description": "If the Device is Tunneled Connected ",
@@ -2266,7 +2046,6 @@
          },
          "tunneledAccessoryStateNumber":
          {
-            "$id": "tunneledAccessoryStateNumber",
             "title": "tunneledAccessoryStateNumber",
             "type": "integer",
             "description": "The Tunneled Accessorys State Number",
@@ -2277,7 +2056,6 @@
          },
          "vocDensity":
          {
-            "$id": "vocDensity",
             "title": "vocDensity",
             "type": "number",
             "minimum": 0,
@@ -2286,7 +2064,6 @@
          },
          "valveType":
          {
-            "$id": "valveType",
             "title": "valveType",
             "type": "integer",
             "minimum": 0,
@@ -2299,7 +2076,6 @@
          },
          "version":
          {
-            "$id": "version",
             "title": "version",
             "type": "string",
             "description": "The Devices Version String",
@@ -2310,14 +2086,12 @@
          },
          "videoAnalysisActive":
          {
-            "$id": "videoAnalysisActive",
             "title": "videoAnalysisActive",
             "type": "integer",
             "description": "The Devices Video Analysis Active Status"
          },
          "volume":
          {
-            "$id": "volume",
             "title": "volume",
             "type": "integer",
             "minimum": 0,
@@ -2326,7 +2100,6 @@
          },
          "volumeControlType":
          {
-            "$id": "volumeControlType",
             "title": "volumeControlType",
             "type": "integer",
             "minimum": 0,
@@ -2335,7 +2108,6 @@
          },
          "volumeSelector":
          {
-            "$id": "volumeSelector",
             "title": "volumeSelector",
             "type": "integer",
             "minimum": 0,
@@ -2344,7 +2116,6 @@
          },
          "wanConfigurationList":
          {
-            "$id": "wanConfigurationList",
             "title": "wanConfigurationList",
             "type": "string",
             "description": "The Devices WAN Configuration List",
@@ -2355,7 +2126,6 @@
          },
          "wanStatusList":
          {
-            "$id": "wanStatusList",
             "title": "wanStatusList",
             "type": "string",
             "description": "The Devices WAN Status List",
@@ -2366,7 +2136,6 @@
          },
          "wakeConfiguration":
          {
-            "$id": "wakeConfiguration",
             "title": "wakeConfiguration",
             "type": "string",
             "description": "The Devices Wake Configuration",
@@ -2377,7 +2146,6 @@
          },
          "waterLevel":
          {
-            "$id": "waterLevel",
             "title": "waterLevel",
             "type": "number",
             "minimum": 0,
@@ -2386,21 +2154,18 @@
          },
          "wifiCapabilities":
          {
-            "$id": "wifiCapabilities",
             "title": "wifiCapabilities",
             "type": "integer",
             "description": "The Devices WiFi Capabilities"
          },
          "wifiConfigurationControl":
          {
-            "$id": "wifiConfigurationControl",
             "title": "wifiConfigurationControl",
             "type": "string",
             "description": "The Devices WiFi Configuration Control"
          },
          "wifiSatelliteStatus":
          {
-            "$id": "wifiSatelliteStatus",
             "title": "wifiSatelliteStatus",
             "type": "integer",
             "minimum": 0,
@@ -2413,7 +2178,6 @@
          },
          "type":
          {
-            "$id": "type",
             "type": "string",
             "title": "type",
             "description": "Select the Accessory Type.",
@@ -2491,7 +2255,6 @@
          },
          "subType":
          {
-            "$id": "subType",
             "type": "string",
             "title": "subType",
             "description": "The accessories subType.",
@@ -2500,7 +2263,6 @@
          },
          "displayName":
          {
-            "$id": "displayName",
             "type": "string",
             "title": "displayName",
             "description": "The accessories display name.",
@@ -2509,7 +2271,6 @@
          },
          "queue":
          {
-            "$id": "queue",
             "title": "queue",
             "description": "A queue name",
             "type": "string",
@@ -2540,7 +2301,6 @@
             }
          },
          "accessories": {
-            "$id": "accessories",
             "title": "Accessories",
             "type": "array",
             "uniqueItems": true,
@@ -2786,13 +2546,11 @@
             }
          },
          "fakegato": {
-            "$id": "fakegato",
             "title": "fakegato",
             "type": "object",
             "required": "false",
             "properties": {
                "eve": {
-                  "$id": "eve",
                   "type": "string",
                   "title": "eve",
                   "description": "FakeGato Accessory Type.",
@@ -2809,7 +2567,6 @@
                   "required": true
                },
                "power": {
-                  "$id": "power",
                   "type": "string",
                   "title": "power",
                   "description": "FakeGato Accessory Type.",
@@ -3134,7 +2891,7 @@
          ]
       },
       {
-         "title": " QueueTypes",
+         "title": "QueueTypes",
          "type": "fieldset",
          "expandable": true,
          "items": [ {
@@ -4769,7 +4526,7 @@
          } ]
       },
       {
-         "title": " state_cmd Options",
+         "title": "state_cmd Options",
          "type": "fieldset",
          "expandable": true,
          "items":
