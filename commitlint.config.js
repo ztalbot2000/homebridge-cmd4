@@ -12,6 +12,16 @@ module.exports = {
             return [true];
          }
       ],
+      // Why twice ??
+      "header-max-length": [0, "always", 150],
+      'function-rules/header-max-length': [
+         2, // level: error
+         'always',
+         () => {
+            // The default: 100 is too short
+            return [150];
+         }
+      ],
       'body-case': [ 0 ],
       'function-rules/body-case': [
          2, // level: error

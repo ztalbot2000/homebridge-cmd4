@@ -27,7 +27,7 @@ async function createAccessorySchema( accessory )
    // so only 1 entry is added at a time
    // Note: We do this in the definitions, because in the Layout section
    //       you would have to figure out what entry has the queueTypes
-   //console.log("accessorySchema definitions.queueTypes=%s",accessorySchema.schema['$definitions'].queueTypes );
+   //console.log("accessorySchema definitions.queueTypes=%s",accessorySchema.schema['$defs'].queueTypes );
 
    let maxItems = 1;
    if ( accessory.queueTypes != undefined )
@@ -35,12 +35,12 @@ async function createAccessorySchema( accessory )
        console.log("accessory.queueTypes.length=%s",accessory.queueTypes.length );
        maxItems = accessory.queueTypes.length + 1
    }
-   accessorySchema.schema['$definitions'].queueTypes.maxItems = maxItems;
+   accessorySchema.schema['$defs'].queueTypes.maxItems = maxItems;
 
    maxItems = 1;
    if ( accessory.polling )
       maxItems = accessory.polling.length + 1;
-   accessorySchema.schema['$definitions'].polling.maxItems = maxItems
+   accessorySchema.schema['$defs'].polling.maxItems = maxItems
 
    /*
    GLOBAL.accessoryForm = homebridge.createForm( accessorySchema,
@@ -322,23 +322,23 @@ async function showConfigureGlobalsPageButtonPressed( )
    //       you would have to figure out what entry has the queueTypes
    console.log("GLOBAL.pluginConfig[0]=%s",GLOBAL.pluginConfig[0] );
    console.log("GLOBAL.pluginConfig[0].queueTypes=%s",GLOBAL.pluginConfig[0].queueTypes );
-   console.log("globalsSchema.schema['$definitions'].queueTypes.maxItems=%s",globalsSchema.schema['$definitions'].queueTypes.maxItems );
+   console.log("globalsSchema.schema['$defs'].queueTypes.maxItems=%s",globalsSchema.schema['$defs'].queueTypes.maxItems );
 
    // Set the Globals form queueTypes length to defined number + 1
    maxItems = 1;
    if ( GLOBAL.pluginConfig[0].queueTypes )
        maxItems = GLOBAL.pluginConfig[0].queueTypes.length + 1
-   globalsSchema.schema['$definitions'].queueTypes.maxItems = maxItems;
+   globalsSchema.schema['$defs'].queueTypes.maxItems = maxItems;
 
    // Set the Globals form constants length to defined number + 1
    maxItems = 1;
    if ( GLOBAL.pluginConfig[0].constants )
        maxItems = GLOBAL.pluginConfig[0].constants.length + 1
-   globalsSchema.schema['$definitions'].constants.maxItems = maxItems;
+   globalsSchema.schema['$defs'].constants.maxItems = maxItems;
 
    // Missing ?
-   //globalsSchema['$definitions'].polling.maxItems =
-   //   GLOBAL.pluginConfig[0]['$definitions'].polling.maxItems + 1;
+   //globalsSchema['$defs'].polling.maxItems =
+   //   GLOBAL.pluginConfig[0]['$defs'].polling.maxItems + 1;
 
    // js/globalsSchema.js is included by index.html
    GLOBAL.globalsForm = homebridge.createForm( globalsSchema,

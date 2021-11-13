@@ -123,20 +123,24 @@ function createAccessorySchemaFile( )
          if ( commaRequired_g == true )
             wf( `,\n` );
 
-         // ** Begin bracket definitions
-         wf( `"$definitions":\n` );
+         // ** Begin bracket defs
+         wf( `"$defs":\n` );
          wf( "+", `{\n` );
 
             commaRequired_g = false;
+
+            // These are all defs, even if not used by schema
             addGlobalsDefinitionBlock( );
             addCharacteristicDefinitionBlock( );
             addAccessoryTypeDefinitionBlock( );
             addSubTypeDefinitionBlock( );
             addDisplayNameDefinitionBlock( );
+            addQueueDefinitionBlock( );
             addPollingDefinitionBlock( );
             // addAccessoryDefinitionBlock( );
+            addFakeGatoDefinitionBlock( );
 
-         // ** End bracket definitions
+         // ** End bracket defs
          wf( `\n` );
          wf( "-", `}` );
 
@@ -144,11 +148,13 @@ function createAccessorySchemaFile( )
 
          // For Accessory Schema
          beginSchemaProperties( );
-            wf( `"${ constants.TYPE }": { "$ref": "#/$definitions/type"},\n` );
-            addGlobalsSchemaBlockWithConstantSchemaBlock( false );
-            addAccessorySchemaBlock( );
-            addPollingSchemaBlock( );
+            wf( `"${ constants.TYPE }": { "$ref": "#/$defs/type"},\n` );
+            addGlobalsSchemaBlockForSchema( "Accessory" );
+            addCharacteristicsSchemaBlock( );
+            addQueueSchemaBlock( );
+            addPollingSchemaBlock( ); // ZZZ - FIXME [33f614a] Data pointer not compatible with schema [object Object]
             addStateCmdSchemaBlock( );
+            addFakeGatoSchemaBlock( );
          endSchemaProperties( );
 
       endBracketSchema( );
@@ -167,13 +173,16 @@ function createAccessorySchemaFile( )
       // For Accessory Schema
       addTypeLayout( );
       addNameLayout( );
-      addGlobalsLayoutWithTitle( "Accessory" );
-      addFakeGatoLayoutWithTitle( "" );
-      addQueueTypesLayoutWithTitle( "" );
+      addGlobalsLayoutForSchema( "Accessory" );
+
+      // Not in Accessory Schema
+      // addQueueTypesLayoutForSchema( "Accessory" );
+
       addRequiredCharacteristicPerDeviceLayout( );
       addOptionalCharacteristicPerDeviceLayout( );
-      addPollingLayout( );
-      addStateCmdLayoutWithTitle( "" );
+      addPollingLayout( ); // ZZZ - FIXME [33f614a] Data pointer not compatible with schema [object Object]
+      addStateCmdLayoutForSchema( "" );
+      addFakeGatoLayout( );
    // * End square bracket layout:
    wf( "-", `]\n` );
 
@@ -181,6 +190,7 @@ function createAccessorySchemaFile( )
 
    closeSchemaDocument( );
 }
+
 // Create the globalsSchema.js file
 function createGlobalsSchemaFile( )
 {
@@ -213,20 +223,24 @@ function createGlobalsSchemaFile( )
          if ( commaRequired_g == true )
             wf( `,\n` );
 
-         // ** Begin bracket definitions
-         wf( `"$definitions":\n` );
+         // ** Begin bracket defs
+         wf( `"$defs":\n` );
          wf( "+", `{\n` );
 
             commaRequired_g = false;
+
+            // These are all defs, even if not used by schema
             addGlobalsDefinitionBlock( );
             //addCharacteristicDefinitionBlock( );
             //addAccessoryTypeDefinitionBlock( );
             //addSubTypeDefinitionBlock( );
             //addDisplayNameDefinitionBlock( );
+            //addQueueDefinitionBlock( );
             //addPollingDefinitionBlock( );
             //addAccessoryDefinitionBlock( );
+            //addFakeGatoDefinitionBlock( );
 
-         // ** End bracket definitions
+         // ** End bracket defs
          wf( `\n` );
          wf( "-", `}` );
 
@@ -234,11 +248,13 @@ function createGlobalsSchemaFile( )
 
          // For just Globals Schema
          beginSchemaProperties( );
-            addGlobalsSchemaBlockWithConstantSchemaBlock( true );
+            addGlobalsSchemaBlockForSchema( "Global" );
             // Not in globalsySchema
-            // addAccessorySchemaBlock( );
+            // addCharacteristicsSchemaBlock( );
+            // addQueueSchemaBlock( );
             // addPollingSchemaBlock( );
             addStateCmdSchemaBlock( );
+            // addFakeGatoSchemaBlock( );
          endSchemaProperties( );
 
       endBracketSchema( );
@@ -256,12 +272,15 @@ function createGlobalsSchemaFile( )
 
       // addTypeLayout( );
       // addNameLayout( );
-      addGlobalsLayoutWithTitle( "Global" );
-      addFakeGatoLayoutWithTitle( "Global" );
-      addQueueTypesLayoutWithTitle( "Global" );
+      addGlobalsLayoutForSchema( "Global" );
+
+      addQueueTypesLayoutForSchema( "Global" );
       // addRequiredCharacteristicPerDeviceLayout( );
       // addOptionalCharacteristicPerDeviceLayout( );
-      addStateCmdLayoutWithTitle( "Global" );
+      addStateCmdLayoutForSchema( "Global" );
+
+      // Not in Global
+      // addFakeGatoLayout( );
 
    // * End square bracket layout:
    wf( "-", `]\n` );
@@ -296,20 +315,24 @@ function createSchemaFile( )
          if ( commaRequired_g == true )
             wf( `,\n` );
 
-         // ** Begin bracket definitions
-         wf( `"$definitions":\n` );
+         // ** Begin bracket defs
+         wf( `"$defs":\n` );
          wf( "+", `{\n` );
 
             commaRequired_g = false;
+
+            // These are all defs, even if not used by schema
             addGlobalsDefinitionBlock( );
             addCharacteristicDefinitionBlock( );
             addAccessoryTypeDefinitionBlock( );
             addSubTypeDefinitionBlock( );
             addDisplayNameDefinitionBlock( );
+            addQueueDefinitionBlock( );
             addPollingDefinitionBlock( );
             addAccessoryDefinitionBlock( );
+            addFakeGatoDefinitionBlock( );
 
-         // ** End bracket definitions
+         // ** End bracket defs
          wf( `\n` );
          wf( "-", `}` );
 
@@ -317,10 +340,12 @@ function createSchemaFile( )
 
          // For Full Schema
          beginSchemaProperties( );
-            addGlobalsSchemaBlockWithConstantSchemaBlock( true );
-            addAccessorySchemaBlock( );
-            addPollingSchemaBlock( );
+            addGlobalsSchemaBlockForSchema( "Full" );
+            addCharacteristicsSchemaBlock( );
+            addQueueSchemaBlock( );
+            addPollingSchemaBlock( ); // ZZZ - FIXME [33f614a] Data pointer not compatible with schema [object Object]
             addStateCmdSchemaBlock( );
+            addFakeGatoSchemaBlock( );
          endSchemaProperties( );
 
       endBracketSchema( );
@@ -339,13 +364,13 @@ function createSchemaFile( )
       // For Full Schema
       addTypeLayout( );
       addNameLayout( );
-      addGlobalsLayoutWithTitle( "Accessory" );
-      addFakeGatoLayoutWithTitle( "" );
-      addQueueTypesLayoutWithTitle( "" );
+      addGlobalsLayoutForSchema( "Accessory" );
+      addQueueTypesLayoutForSchema( "" );
       addRequiredCharacteristicPerDeviceLayout( );
       addOptionalCharacteristicPerDeviceLayout( );
-      addPollingLayout( );
-      addStateCmdLayoutWithTitle( "" );
+      addPollingLayout( ); // ZZZ - FIXME [33f614a] Data pointer not compatible with schema [object Object]
+      addStateCmdLayoutForSchema( "" );
+      addFakeGatoLayout( );
 
    // * End square bracket layout:
    wf( "-", `]\n` );
@@ -355,7 +380,7 @@ function createSchemaFile( )
    closeSchemaDocument( );
 }
 
-function  beginJSON( )
+function beginJSON( )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
@@ -420,7 +445,7 @@ function addSubTypeDefinitionBlock( )
    // *** Begin bracket subType designation definition
    wf( `"subType":\n` );
    wf( "+", `{\n` );
-      wf( `"$id": "#subType",\n` );
+      wf( `"$id": "subType",\n` );
       wf( `"type": "string",\n` );
       wf( `"title": "subType",\n` );
       wf( `"description": "The accessories subType.",\n` );
@@ -441,7 +466,7 @@ function addDisplayNameDefinitionBlock( )
    // *** Begin bracket displayName designation definition
    wf( `"displayName":\n` );
    wf( "+", `{\n` );
-      wf( `"$id": "#displayName",\n` );
+      wf( `"$id": "displayName",\n` );
       wf( `"type": "string",\n` );
       wf( `"title": "displayName",\n` );
       wf( `"description": "The accessories display name.",\n` );
@@ -463,7 +488,7 @@ function addAccessoryTypeDefinitionBlock( )
    // *** Begin bracket Type designation definition
    wf( `"type":\n` );
    wf( "+", `{\n` );
-      wf( `"$id": "#type",\n` );
+      wf( `"$id": "type",\n` );
       wf( `"type": "string",\n` );
       wf( `"title": "${ constants.TYPE }",\n` );
       wf( `"description": "Select the Accessory Type.",\n` );
@@ -495,6 +520,24 @@ function addAccessoryTypeDefinitionBlock( )
    commaRequired_g = true;
 }
 
+function addQueueDefinitionBlock( )
+{
+   // add the comma always next time.
+   if ( commaRequired_g == true )
+      wf( `,\n` );
+
+   wf( `"queue":\n` );
+   wf( "+", `{\n` );
+      wf( `"$id": "queue",\n` );
+      wf( `"title": "queue",\n` );
+      wf( `"description": "A queue name",\n` );
+      wf( `"type": "string",\n` );
+      wf( `"required": "false"\n` );
+   wf( "-", `}` );
+
+   commaRequired_g = true;
+}
+
 function addPollingDefinitionBlock( )
 {
    // add the comma always next time.
@@ -505,7 +548,7 @@ function addPollingDefinitionBlock( )
    // *** Begin bracket Polling designation definition
    wf( `"polling":\n` );
    wf( "+", `{\n` );
-      wf( `"$id": "#polling",\n` );
+      wf( `"$id": "polling",\n` );
       wf( `"title": "${ constants.POLLING }",\n` );
       wf( `"type": "array",\n` );
       wf( `"required": false,\n` );
@@ -534,16 +577,111 @@ function addPollingDefinitionBlock( )
                wf( `"title": "stateChaneResponseTime",\n` );
                wf( `"type": "number",\n` );
                wf( `"required": "false"\n` );
-            wf( "-", `},` );
-            wf( `"queue":\n` );
-            wf( "+", `{\n` );
-               wf( `"title": "queue",\n` );
-               wf( `"type": "string",\n` );
-               wf( `"required": "false"\n` );
+            // wf( "-", `},` );
+            // wf( `"queue":\n` );
+            // wf( "+", `{\n` );
+            //    wf( `"title": "queue",\n` );
+            //    wf( `"type": "string",\n` );
+            //    wf( `"required": "false"\n` );
             wf( "-", `}\n` );
          wf( "-", `}\n` );
       wf( "-", `}\n` );
    // *** End bracket Polling designation definition
+   wf( "-", `}` );
+
+   commaRequired_g = true;
+}
+
+function addFakeGatoDefinitionBlock( )
+{
+   // add the comma always next time.
+   if ( commaRequired_g == true )
+      wf( `,\n` );
+
+   wf( `"$comment": "START OF fakegato DEFINITION",\n` );
+   // *** Begin bracket FakeGato designation definition
+
+   wf( "+", `"fakegato": {\n` );
+      wf( `"$id": "fakegato",\n` );
+      wf( `"title": "fakegato",\n` );
+      wf( `"type": "object",\n` );
+      wf( `"required": "false",\n` );
+      wf( "+", `"properties": {\n` );
+         wf( "+", `"eve": {\n` );
+            wf( `"$id": "eve",\n` );
+            wf( `"type": "string",\n` );
+            wf( `"title": "eve",\n` );
+            wf( `"description": "FakeGato Accessory Type.",\n` );
+            wf( `"default": "room",\n` );
+            wf( "+", `"oneOf": [\n` );
+               wf( `{ "title": "${ constants.FAKEGATO_TYPE_ENERGY }", "enum": ["${ constants.FAKEGATO_TYPE_ENERGY }"] },\n` );
+               wf( `{ "title": "${ constants.FAKEGATO_TYPE_ROOM }", "enum": ["${ constants.FAKEGATO_TYPE_ROOM }"] },\n` );
+               wf( `{ "title": "${ constants.FAKEGATO_TYPE_WEATHER }", "enum": ["${ constants.FAKEGATO_TYPE_WEATHER }"] },\n` );
+               wf( `{ "title": "${ constants.FAKEGATO_TYPE_DOOR }", "enum": ["${ constants.FAKEGATO_TYPE_DOOR }"] },\n` );
+               wf( `{ "title": "${ constants.FAKEGATO_TYPE_MOTION }", "enum": ["${ constants.FAKEGATO_TYPE_MOTION }"] },\n` );
+               wf( `{ "title": "${ constants.FAKEGATO_TYPE_THERMO }", "enum": ["${ constants.FAKEGATO_TYPE_THERMO }"] },\n` );
+               wf( `{ "title": "${ constants.FAKEGATO_TYPE_AQUA }", "enum": ["${ constants.FAKEGATO_TYPE_AQUA }"] }\n` );
+            wf( "-", `],\n`, "End square bracket oneOf" );
+            wf( `"required": true\n` );
+         wf( "-", `},\n`, "End bracket eve designation" );
+
+         wf( "+", `"power": {\n` );
+            wf( `"$id": "power",\n` );
+            wf( `"type": "string",\n` );
+            wf( `"title": "power",\n` );
+            wf( `"description": "FakeGato Accessory Type.",\n` );
+            wf( `"default": "room",\n` );
+            wf( "+", `"oneOf": [\n` );
+               wf( `{ "title": "${ constants.STATUS }", "enum": ["${ constants.STATUS }"] },\n` );
+               wf( `{ "title": "${ constants.TEMP }", "enum": ["${ constants.TEMP }"] },\n` );
+               wf( `{ "title": "${ constants.SETTEMP }", "enum": ["${ constants.SETTEMP }"] },\n` );
+               wf( `{ "title": "${ constants.HUMIDITY }", "enum": ["${ constants.HUMIDITY }"] },\n` );
+               wf( `{ "title": "${ constants.PPM }", "enum": ["${ constants.PPM }"] },\n` );
+               wf( `{ "title": "${ constants.POWER }", "enum": ["${ constants.POWER }"] },\n` );
+               wf( `{ "title": "${ constants.PRESSURE }", "enum": ["${ constants.PRESSURE }"] },\n` );
+               wf( `{ "title": "${ constants.CURRENTTEMP }", "enum": ["${ constants.CURRENTTEMP }"] },\n` );
+               wf( `{ "title": "${ constants.VALVEPOSITION }", "enum": ["${ constants.VALVEPOSITION }"] }\n` );
+            wf( "-", `],\n`, "end square bracket oneOf" );
+            wf( `"required": true\n` );
+         wf( "-", `},\n`, "End bracket power designation" );
+
+         wf( `"storage":\n` );
+         wf( "+", `{\n` );
+            wf( `"title": "storage",\n` );
+            wf( `"description": "The FakeGato Storage type for all accessories.",\n` );
+            wf( `"required": false,\n` );
+            wf( `"type": "string",\n` );
+            wf( `"oneOf":\n`);
+            wf( "+", `[\n` );
+              wf( `{ "title": "fs", "enum": ["fs"] },\n` );
+              wf( `{ "title": "googleDrive", "enum": [ "googleDrive" ]}\n` );
+            wf( "-", `]\n` );
+         wf( "-", `},\n` );
+         wf( `"storagePath":\n` );
+         wf( "+", `{\n` );
+            wf( `"title": "storagePath",\n` );
+            wf( `"type": "string",\n` );
+            wf( `"description": "The global FakeGato storagePath for all accessories.",\n` );
+            wf( `"required": false\n` );
+         wf( "-", `},\n` );
+         wf( `"folder":\n` );
+         wf( "+", `{\n` );
+            wf( `"title": "folder",\n` );
+            wf( `"type": "string",\n` );
+            wf( `"description": "The global FakeGato folder for all accessories.",\n` );
+            wf( `"required": false\n` );
+         wf( "-", `},\n` );
+         wf( `"keyPath":\n` );
+         wf( "+", `{\n` );
+            wf( `"title": "keyPath",\n` );
+            wf( `"type": "string",\n` );
+            wf( `"description": "The FakeGato keyPath for all accessories.",\n` );
+            wf( `"required": false\n` );
+         wf( "-", `}\n` );
+
+      wf( "-", `}\n`, "End bracket properties" );
+
+   // *** End bracket FakeGato designation definition
    wf( "-", `}` );
 
    commaRequired_g = true;
@@ -559,30 +697,25 @@ function addAccessoryDefinitionBlock( )
 
    // ** Begin bracket accessories definition block
    wf( "+", `"accessories": {\n` );
-      wf( `"$id": "#accessories",\n` );
+      wf( `"$id": "accessories",\n` );
       wf( `"title": "Accessories",\n` );
       wf( `"type": "array",\n` );
       wf( `"uniqueItems": true,\n` );
       wf( "+", `"items": {\n` );
 
-         wf( `"${ constants.TYPE }": { "$ref": "#/$definitions/type"},\n` );
+         wf( `"${ constants.TYPE }": { "$ref": "#/$defs/type"},\n` );
 
          // All the globals that can be defined at the Accessory level
-         wf( `"debug": { "$ref": "#/$definitions/debug"},\n` );
-         wf( `"allowTLV8": { "$ref": "#/$definitions/allowTLV8"},\n` );
-         wf( `"outputConstants": { "$ref": "#/$definitions/outputConstants"},\n` );
-         wf( `"statusMsg": { "$ref": "#/$definitions/statusMsg"},\n` );
-         wf( `"interval": { "$ref": "#/$definitions/interval"},\n` );
-         wf( `"timeout": { "$ref": "#/$definitions/timeout"},\n` );
-         wf( `"stateChangeResponseTime": { "$ref": "#/$definitions/stateChangeResponseTime"},\n` );
-         wf( `"queueTypes": { "$ref": "#/$definitions/queueTypes"},\n` );
+         wf( `"debug": { "$ref": "#/$defs/debug"},\n` );
+         wf( `"allowTLV8": { "$ref": "#/$defs/allowTLV8"},\n` );
+         wf( `"outputConstants": { "$ref": "#/$defs/outputConstants"},\n` );
+         wf( `"statusMsg": { "$ref": "#/$defs/statusMsg"},\n` );
+         wf( `"interval": { "$ref": "#/$defs/interval"},\n` );
+         wf( `"timeout": { "$ref": "#/$defs/timeout"},\n` );
+         wf( `"stateChangeResponseTime": { "$ref": "#/$defs/stateChangeResponseTime"},\n` );
 
-         wf( `"folder": { "$ref": "#/$definitions/folder"},\n` );
-         wf( `"storage": { "$ref": "#/$definitions/storage"},\n` );
-         wf( `"storagePath": { "$ref": "#/$definitions/storagePath"},\n` );
-         wf( `"keyPath": { "$ref": "#/$definitions/keyPath"},\n` );
-         wf( `"displayName": { "$ref": "#/$definitions/displayName"},\n` );
-         wf( `"subType": { "$ref": "#/$definitions/subType"},\n` );
+         wf( `"displayName": { "$ref": "#/$defs/displayName"},\n` );
+         wf( `"subType": { "$ref": "#/$defs/subType"},\n` );
 
          // All the characteristics
          for ( let i=0; i < CMD4_ACC_TYPE_ENUM.EOL; i ++)
@@ -590,13 +723,14 @@ function addAccessoryDefinitionBlock( )
             let properties = CMD4_ACC_TYPE_ENUM.properties[ i ];
             let characteristicString = properties.sche;
 
-            wf( `"${ characteristicString }": { "$ref": "#/$definitions/${ characteristicString }"},\n` );
+            wf( `"${ characteristicString }": { "$ref": "#/$defs/${ characteristicString }"},\n` );
          }
 
-         wf( `"${ constants.POLLING }": { "$ref": "#/$definitions/polling"},\n` );
-         wf( `"${ constants.STATE_CMD_PREFIX }": { "$ref": "#/$definitions/state_cmd_prefix"},\n` );
-         wf( `"${ constants.STATE_CMD }": { "$ref": "#/$definitions/state_cmd"},\n` );
-         wf( `"${ constants.STATE_CMD_SUFFIX }": { "$ref": "#/$definitions/state_cmd_suffix"}\n` );
+         wf( `"${ constants.QUEUE }": { "$ref": "#/$defs/queue"},\n` );
+         wf( `"${ constants.POLLING }": { "$ref": "#/$defs/polling"},\n` );
+         wf( `"${ constants.STATE_CMD_PREFIX }": { "$ref": "#/$defs/state_cmd_prefix"},\n` );
+         wf( `"${ constants.STATE_CMD }": { "$ref": "#/$defs/state_cmd"},\n` );
+         wf( `"${ constants.STATE_CMD_SUFFIX }": { "$ref": "#/$defs/state_cmd_suffix"}\n` );
       // *** End bracket items:
       wf( "-", `}\n` );
    // *** End bracket accessories:
@@ -606,8 +740,8 @@ function addAccessoryDefinitionBlock( )
 }
 /*
 
-// Under definitions  - Wrong ?
-   "$definitions":
+// Under defs  - Wrong ?
+   "$defs":
    {
       "constants":
       { "type": "object",
@@ -621,7 +755,7 @@ function addAccessoryDefinitionBlock( )
 
 // Under schema properties - Correct
  "properties": {
-    "constants": { "$ref": "#/$definitions/constants" },
+    "constants": { "$ref": "#/$defs/constants" },
     "debug":
 
 
@@ -634,7 +768,7 @@ function addAccessoryDefinitionBlock( )
 /*   TRY 2
  ^\${[^}]*}:\s*"[^"]*"
 
-     "$definitions":
+     "$defs":
      {
         "constants":
         {
@@ -650,7 +784,7 @@ function addAccessoryDefinitionBlock( )
         }
      },
 
-     "constants": { "$ref": "#/$definitions/constants" },
+     "constants": { "$ref": "#/$defs/constants" },
 
      { "key": "constants",
       "type": "section",
@@ -763,6 +897,7 @@ function addGlobalsDefinitionBlock( )
       wf( `"debug":\n` );
       wf( "+", `{\n` );
          wf( `"title": "debug",\n` );
+         wf( `"$id": "debug",\n` );
          wf( `"type": "boolean",\n` );
          wf( `"description": "Enables additional output in the log.",\n` );
          wf( `"required": false,\n` );
@@ -771,6 +906,7 @@ function addGlobalsDefinitionBlock( )
       wf( `"statusMsg":\n` );
       wf( "+", `{\n` );
          wf( `"title": "statusMsg",\n` );
+         wf( `"$id": "statusMsg",\n` );
          wf( `"type": "boolean",\n` );
          wf( `"description": "Enables additional output in the log.",\n` );
          wf( `"required": false,\n` );
@@ -779,6 +915,7 @@ function addGlobalsDefinitionBlock( )
       wf( `"allowTLV8":\n` );
       wf( "+", `{\n` );
          wf( `"title": "allowTLV8",\n` );
+         wf( `"$id": "allowTLV8",\n` );
          wf( `"type": "boolean",\n` );
          wf( `"description": "Enables wacky TLV8 characteristics.",\n` );
          wf( `"required": false,\n` );
@@ -787,6 +924,7 @@ function addGlobalsDefinitionBlock( )
       wf( `"outputConstants":\n` );
       wf( "+", `{\n` );
          wf( `"title": "outputConstants",\n` );
+         wf( `"$id": "outputConstants",\n` );
          wf( `"type": "boolean",\n` );
          wf( `"description": "Output constants instead of values.",\n` );
          wf( `"required": false,\n` );
@@ -795,6 +933,7 @@ function addGlobalsDefinitionBlock( )
       wf( `"timeout":\n` );
       wf( "+", `{\n` );
          wf( `"title": "timeout",\n` );
+         wf( `"$id": "timeout",\n` );
          wf( `"type": "integer",\n` );
          wf( `"description": "The global timeout for all polling accessories (sec).",\n` );
          wf( `"required": false,\n` );
@@ -804,6 +943,7 @@ function addGlobalsDefinitionBlock( )
       wf( `"stateChangeResponseTime":\n` );
       wf( "+", `{\n` );
          wf( `"title": "stateChangeResponseTime",\n` );
+         wf( `"$id": "stateChangeResponseTime",\n` );
          wf( `"type": "integer",\n` );
          wf( `"description": "The time for the accessories to respond (msec).",\n` );
          wf( `"required": false,\n` );
@@ -812,6 +952,7 @@ function addGlobalsDefinitionBlock( )
       wf( `"interval":\n` );
       wf( "+", `{\n` );
          wf( `"title": "interval",\n` );
+         wf( `"$id": "interval",\n` );
          wf( `"type": "integer",\n` );
          wf( `"description": "Polling interval of all accesssories (sec}.",\n` );
          wf( `"required": false,\n` );
@@ -821,6 +962,7 @@ function addGlobalsDefinitionBlock( )
       wf( `"state_cmd_prefix":\n` );
       wf( "+", `{\n` );
          wf( `"title": "state_cmd_prefix",\n` );
+         wf( `"$id": "state_cmd_prefix",\n` );
          wf( `"type": "string",\n` );
          wf( `"description": "The global state_cmd prefix for all accessories.",\n` );
          wf( `"required": false\n` );
@@ -828,6 +970,7 @@ function addGlobalsDefinitionBlock( )
       wf( `"state_cmd":\n` );
       wf( "+", `{\n` );
          wf( `"title": "state_cmd",\n` );
+         wf( `"$id": "state_cmd",\n` );
          wf( `"type": "string",\n` );
          wf( `"description": "The global state_cmd for all accessories.",\n` );
          wf( `"placeholder": ".homebridge/cmd4Scripts/",\n` );
@@ -836,46 +979,16 @@ function addGlobalsDefinitionBlock( )
       wf( `"state_cmd_suffix":\n` );
       wf( "+", `{\n` );
          wf( `"title": "state_cmd_suffix",\n` );
+         wf( `"$id": "state_cmd_suffix",\n` );
          wf( `"type": "string",\n` );
          wf( `"description": "The global state_cmd suffix for all accessories.",\n` );
          wf( `"required": false\n` );
       wf( "-", `},\n` );
-      wf( `"storage":\n` );
-      wf( "+", `{\n` );
-         wf( `"title": "storage",\n` );
-         wf( `"description": "The FakeGato Storage type for all accessories.",\n` );
-         wf( `"required": false,\n` );
-         wf( `"type": "string",\n` );
-         wf( `"oneOf":\n`);
-         wf( "+", `[\n` );
-           wf( `{"title": "fs","enum": ["fs"] },\n` );
-           wf( `{ "title": "googleDrive", "enum": ["googleDrive" ]}\n` );
-         wf( "-", `]\n` );
-      wf( "-", `},\n` );
-      wf( `"storagePath":\n` );
-      wf( "+", `{\n` );
-         wf( `"title": "storagePath",\n` );
-         wf( `"type": "string",\n` );
-         wf( `"description": "The global FakeGato storagePath for all accessories.",\n` );
-         wf( `"required": false\n` );
-      wf( "-", `},\n` );
-      wf( `"folder":\n` );
-      wf( "+", `{\n` );
-         wf( `"title": "folder",\n` );
-         wf( `"type": "string",\n` );
-         wf( `"description": "The global FakeGato folder for all accessories.",\n` );
-         wf( `"required": false\n` );
-      wf( "-", `},\n` );
-      wf( `"keyPath":\n` );
-      wf( "+", `{\n` );
-         wf( `"title": "keyPath",\n` );
-         wf( `"type": "string",\n` );
-         wf( `"description": "The FakeGato keyPath for all accessories.",\n` );
-         wf( `"required": false\n` );
-      wf( "-", `},\n` );
+
       wf( `"definitions":\n` );
       wf( "+", `{\n` );
          wf( `"title": "definitions",\n` );
+         wf( `"$id": "definitions",\n` );
          wf( `"type": "object",\n` );
          wf( `"description": "complex data.",\n` );
          wf( `"required": false\n` );
@@ -883,6 +996,7 @@ function addGlobalsDefinitionBlock( )
       wf( `"queueTypes":\n` );
       wf( "+", `{\n` );
          wf( `"title": "queueTypes",\n` );
+         wf( `"$id": "queueTypes",\n` );
          wf( `"type": "array",\n` );
          wf( `"uniqueItems": true,\n` );
          wf( `"$comment": "This will have to Increase as each added are validated",\n` );
@@ -941,7 +1055,7 @@ function addCharacteristicDefinitionBlock( )
       // *** Begin bracket characteristic definition
       wf( `"${ characteristicString }":\n` );
       wf( "+", `{\n` );
-         wf( `"$id": "#${ characteristicString }",\n` );
+         wf( `"$id": "${ characteristicString }",\n` );
          wf( `"title": "${ characteristicString }",\n` );
          switch ( accProps.format )
          {
@@ -1032,59 +1146,118 @@ function beginSchemaProperties( )
    // ** Begin bracket properties
    wf( `"properties":\n` );
    wf( "+", `{\n` );
+
+   commaRequired_g = false;
 }
 function endSchemaProperties( )
 {
+   // add the comma always next time.
+   if ( commaRequired_g == true )
+      wf( `\n` );
+
    // *** End bracket properties:
    wf( "-", `}\n` );
 
    commaRequired_g = true;
 }
 
-function addGlobalsSchemaBlockWithConstantSchemaBlock( withConstants )
+function addGlobalsSchemaBlockForSchema( forSchema )
 {
+   // add the comma always next time.
+   if ( commaRequired_g == true )
+      wf( `,\n` );
+
    // All the globals that can be used at the Accessory level
-   wf( `"debug": { "$ref": "#/$definitions/debug"},\n` );
-   if ( withConstants == true )
-      wf( `"constants": { "$ref": "#/$definitions/constants"},\n` );
+   wf( `"debug": { "$ref": "#/$defs/debug"},\n` );
 
-   wf( `"allowTLV8": { "$ref": "#/$definitions/allowTLV8"},\n` );
-   wf( `"outputConstants": { "$ref": "#/$definitions/outputConstants"},\n` );
-   wf( `"statusMsg": { "$ref": "#/$definitions/statusMsg"},\n` );
-   wf( `"interval": { "$ref": "#/$definitions/interval"},\n` );
-   wf( `"timeout": { "$ref": "#/$definitions/timeout"},\n` );
-   wf( `"stateChangeResponseTime": { "$ref": "#/$definitions/stateChangeResponseTime"},\n` );
-   wf( `"queueTypes": { "$ref": "#/$definitions/queueTypes"},\n` );
+   if ( forSchema != "Accessory" )
+      wf( `"constants": { "$ref": "#/$defs/constants"},\n` );
 
-   wf( `"folder": { "$ref": "#/$definitions/folder"},\n` );
-   wf( `"storage": { "$ref": "#/$definitions/storage"},\n` );
-   wf( `"storagePath": { "$ref": "#/$definitions/storagePath"},\n` );
-   wf( `"keyPath": { "$ref": "#/$definitions/keyPath"},\n` );
+   wf( `"allowTLV8": { "$ref": "#/$defs/allowTLV8"},\n` );
+   wf( `"outputConstants": { "$ref": "#/$defs/outputConstants"},\n` );
+   wf( `"statusMsg": { "$ref": "#/$defs/statusMsg"},\n` );
+   wf( `"interval": { "$ref": "#/$defs/interval"},\n` );
+   wf( `"timeout": { "$ref": "#/$defs/timeout"},\n` );
+   wf( `"stateChangeResponseTime": { "$ref": "#/$defs/stateChangeResponseTime"}` );
+
+   if ( forSchema != "Accessory" )
+   {
+      wf( `,\n` );
+      wf( `"queueTypes": { "$ref": "#/$defs/queueTypes"}` );
+   }
+
+   // No longer part of Global Schema
+   // wf( `"folder": { "$ref": "#/$defs/folder"},\n` );
+   // wf( `"storage": { "$ref": "#/$defs/storage"},\n` );
+   // wf( `"storagePath": { "$ref": "#/$defs/storagePath"},\n` );
+   // wf( `"keyPath": { "$ref": "#/$defs/keyPath"}` );
+
+   commaRequired_g = true;
 }
 
-function addAccessorySchemaBlock( )
+function addCharacteristicsSchemaBlock( )
 {
    // All the characteristics
    for ( let i=0; i < CMD4_ACC_TYPE_ENUM.EOL; i ++)
    {
+      // add the comma always next time.
+      if ( commaRequired_g == true )
+         wf( `,\n` );
+
       let properties = CMD4_ACC_TYPE_ENUM.properties[ i ];
       let characteristicString = properties.sche;
 
-      wf( `"${ characteristicString }": { "$ref": "#/$definitions/${ characteristicString }"},\n` );
+      wf( `"${ characteristicString }": { "$ref": "#/$defs/${ characteristicString }"}` );
+
+      commaRequired_g = true;
    }
 }
+
+function addQueueSchemaBlock( )
+{
+   // add the comma always next time.
+   if ( commaRequired_g == true )
+      wf( `,\n` );
+
+   wf( `"${ constants.QUEUE }": { "$ref": "#/$defs/queue"}` );
+
+   commaRequired_g = true;
+}
+
 function addPollingSchemaBlock( )
 {
-   wf( `"${ constants.POLLING }": { "$ref": "#/$definitions/polling"},\n` );
+   // add the comma always next time.
+   if ( commaRequired_g == true )
+      wf( `,\n` );
+
+   wf( `"${ constants.POLLING }": { "$ref": "#/$defs/polling"}` );
+
+   commaRequired_g = true;
 }
 
 function addStateCmdSchemaBlock( )
 {
-   wf( `"${ constants.STATE_CMD_PREFIX }": { "$ref": "#/$definitions/state_cmd_prefix"},\n` );
-   wf( `"${ constants.STATE_CMD }": { "$ref": "#/$definitions/state_cmd"},\n` );
-   wf( `"${ constants.STATE_CMD_SUFFIX }": { "$ref": "#/$definitions/state_cmd_suffix"}\n` );
+   // add the comma always next time.
+   if ( commaRequired_g == true )
+      wf( `,\n` );
+
+   wf( `"${ constants.STATE_CMD_PREFIX }": { "$ref": "#/$defs/state_cmd_prefix"},\n` );
+   wf( `"${ constants.STATE_CMD }": { "$ref": "#/$defs/state_cmd"},\n` );
+   wf( `"${ constants.STATE_CMD_SUFFIX }": { "$ref": "#/$defs/state_cmd_suffix"}` );
+
+   commaRequired_g = true;
 }
 
+function addFakeGatoSchemaBlock( )
+{
+   // add the comma always next time.
+   if ( commaRequired_g == true )
+      wf( `,\n` );
+
+   wf( `"${ constants.FAKEGATO }": { "$ref": "#/$defs/fakegato"}` );
+
+   commaRequired_g = true;
+}
 
 // $$$$$$$$  LAYOUT  $$$$$$$$$$
 
@@ -1096,7 +1269,7 @@ function addTypeLayout( )
 
       wf( "+", `{\n` );
         wf( `"key": "${ constants.TYPE }",\n` );
-        wf( `"$ref": "#/$definitions/type"\n` );
+        wf( `"$ref": "#/$defs/type"\n` );
       wf( "-", `}` );
 
    commaRequired_g = true;
@@ -1119,24 +1292,24 @@ function addNameLayout( )
    commaRequired_g = true;
 }
 
-function addGlobalsLayoutWithTitle( title )
+function addGlobalsLayoutForSchema( forSchema )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
       wf( `,\n` );
 
    wf( "+", `{\n` );
-      wf( `"title": "${ title } Options",\n` );
+      wf( `"title": "${ forSchema } Options",\n` );
       wf( `"type": "fieldset",\n` );
       wf( `"expandable": true,\n` );
       wf( `"items":\n` );
       wf( "+", `[\n` );
          wf( `"debug",\n` );
 
-         if ( title == "Global" )
+         if ( forSchema == "Global" )
          {
             wf( "+", `{\n` );
-               wf( `"title": "${ title } Constants",\n` );
+               wf( `"title": "${ forSchema } Constants",\n` );
                wf( `"type": "fieldset",\n` );
                wf( `"expandable": true,\n` );
                wf( "+", `"items": [ {\n` );
@@ -1175,14 +1348,14 @@ function addGlobalsLayoutWithTitle( title )
 }
 
 
-function addStateCmdLayoutWithTitle( title )
+function addStateCmdLayoutForSchema( forSchema )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
       wf( `,\n` );
 
    wf( "+", `{\n` );
-      wf( `"title": "${ title } state_cmd Options",\n` );
+      wf( `"title": "${ forSchema } state_cmd Options",\n` );
       wf( `"type": "fieldset",\n` );
       wf( `"expandable": true,\n` );
       wf( `"items":\n` );
@@ -1196,33 +1369,32 @@ function addStateCmdLayoutWithTitle( title )
    commaRequired_g = true;
 }
 
-
-function addFakeGatoLayoutWithTitle( title )
+function addFakeGatoLayout( )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
       wf( `,\n` );
 
    wf( "+", `{\n` );
-      wf( `"title": "${ title } FakeGato Options",\n` );
+      wf( `"title": "FakeGato Options",\n` );
       wf( `"type": "fieldset",\n` );
       wf( `"expandable": true,\n` );
       wf( `"items":\n` );
       wf( "+", `[\n` );
          wf( "+", `{\n` );
-            wf( `"key": "storage", "flex": "1 1 50px",\n` );
+            wf( `"key": "fakegato.storage", "flex": "1 1 50px",\n` );
             wf( `"notitle": false, "placeholder": "fs"\n` );
          wf( "-", `},\n` );
          wf( "+", `{\n` );
-            wf( `"key": "storagePath", "flex": "1 1 50px",\n` );
+            wf( `"key": "fakegato.storagePath", "flex": "1 1 50px",\n` );
             wf( `"notitle": false\n` );
          wf( "-", `},\n` );
          wf( "+", `{\n` );
-            wf( `"key": "folder", "flex": "1 1 50px",\n` );
+            wf( `"key": "fakegato.folder", "flex": "1 1 50px",\n` );
             wf( `"notitle": false\n` );
          wf( "-", `},\n` );
          wf( "+", `{\n` );
-            wf( `"key": "keyPath", "flex": "1 1 50px",\n` );
+            wf( `"key": "fakegato.keyPath", "flex": "1 1 50px",\n` );
             wf( `"notitle": false\n` );
          wf( "-", `}\n` );
       wf( "-", `]\n` );
@@ -1347,7 +1519,7 @@ function addOptionalCharacteristicPerDeviceLayout( )
    commaRequired_g = true;
 }
 
-function addQueueTypesLayoutWithTitle( title )
+function addQueueTypesLayoutForSchema( forSchema )
 {
    wf( `"$comment": "START OF QUEUE TYPES LAYOUT BLOCK",\n` );
 
@@ -1359,12 +1531,12 @@ function addQueueTypesLayoutWithTitle( title )
    }
 
    wf( "+", `{\n` );
-      wf( `"title": "${ title } QueueTypes",\n` );
+      wf( `"title": "${ forSchema } QueueTypes",\n` );
       wf( `"type": "fieldset",\n` );
       wf( `"expandable": true,\n` );
       wf( "+", `"items": [ {\n` );
          wf( `"key": "queueTypes",\n` );
-         wf( `"$ref": "#/$definitions/queueTypes",\n` );
+         wf( `"$ref": "#/$defs/queueTypes",\n` );
          wf( `"type": "array",\n` );
          wf( `"uniqueItems": true,\n` );
          wf( `"listItems": "3",\n` );
@@ -1384,7 +1556,7 @@ function addQueueTypesLayoutWithTitle( title )
             wf( "-", `]\n` );
          wf( "-", `} ]\n` );
       wf( "-", `} ]\n` );
-   wf( "-", `}\n` );
+   wf( "-", `}` );
 
    commaRequired_g = true;
 }
@@ -1406,7 +1578,7 @@ function addPollingLayout( )
       wf( `"expandable": true,\n` );
       wf( "+", `"items": [ {\n` );
          wf( `"key": "polling",\n` );
-         wf( `"$ref": "#/$definitions/polling",\n` );
+         wf( `"$ref": "#/$defs/polling",\n` );
          wf( `"type": "array",\n` );
          wf( `"uniqueItems": true,\n` );
          wf( `"listItems": "3",\n` );
@@ -1426,15 +1598,11 @@ function addPollingLayout( )
                wf( "+", `{\n` );
                    wf( `"key": "polling[].stateChangeResponseTime", "flex": "2 2 auto",\n` );
                    wf( `"notitle": false, "placeholder": "5000"\n` );
-               wf( "-", `},\n` );
-               wf( "+", `{\n` );
-                   wf( `"key": "polling[].queue", "flex": "1 1 auto",\n` );
-                   wf( `"notitle": false, "placeholder": "a queue name"\n` );
                wf( "-", `}\n` );
             wf( "-", `]\n` );
          wf( "-", `} ]\n` );
       wf( "-", `} ]\n` );
-   wf( "-", `}\n` );
+   wf( "-", `}` );
 
    commaRequired_g = true;
 }
@@ -1522,6 +1690,7 @@ function wf( level, text = undefined, comment = undefined )
          } else
             // For vi % balance: {
             // The schema.js files close with };
+            // For vi % balance: {
             if ( level == "-" && text.match( /};\n*$/ ) )
             {
                // noop
@@ -1567,6 +1736,9 @@ function wf( level, text = undefined, comment = undefined )
          }
          case validatorStates.COMMA_HANGING:
          {
+            if ( text.match( /^\s*,/ ) )
+               throw new Error( `With COMMA_HANGING next char Cannot be a , text: ${ text }\npreviousText: ${ previousText }` );
+
             // must start with " or {
             // For vi % balance: }
             if ( text.match( /^\s*["{]{1}/ ) ) // for vi % balance: }
