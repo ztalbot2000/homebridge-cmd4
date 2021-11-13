@@ -130,7 +130,9 @@ function createAccessorySchemaFile( )
             commaRequired_g = false;
 
             // These are all defs, even if not used by schema
+            addDefinitionBlock(); // incomplete (just returns)
             addGlobalsDefinitionBlock( );
+            addPublishExternallyDefinitionBlock( );
             addCharacteristicDefinitionBlock( );
             addAccessoryTypeDefinitionBlock( );
             addSubTypeDefinitionBlock( );
@@ -231,6 +233,7 @@ function createGlobalsSchemaFile( )
 
             // These are all defs, even if not used by schema
             addGlobalsDefinitionBlock( );
+            //addPublishExternallyDefinitionBlock( );
             //addCharacteristicDefinitionBlock( );
             //addAccessoryTypeDefinitionBlock( );
             //addSubTypeDefinitionBlock( );
@@ -323,6 +326,7 @@ function createSchemaFile( )
 
             // These are all defs, even if not used by schema
             addGlobalsDefinitionBlock( );
+            addPublishExternallyDefinitionBlock( );
             addCharacteristicDefinitionBlock( );
             addAccessoryTypeDefinitionBlock( );
             addSubTypeDefinitionBlock( );
@@ -433,6 +437,26 @@ function startSchema( )
    //w ( `"schema": "https://json-schema.org/draft/2020-12/schema",\n`);
 
    commaRequired_g = false;
+}
+
+function addPublishExternallyDefinitionBlock( )
+{
+   // add the comma always next time.
+   if ( commaRequired_g == true )
+      wf( `,\n` );
+
+   wf( `"$comment": "START OF PublishExternally DEFINITION",\n` );
+   // *** Begin bracket PublishExternally definition
+   wf( `"publishExternally":\n` );
+   wf( "+", `{\n` );
+      wf( `"type": "boolean",\n` );
+      wf( `"title": "publishExternally",\n` );
+      wf( `"description": "Publish accessory externally.",\n` );
+      wf( `"default": false,\n` );
+      wf( `"required": false\n` );
+   wf( "-", `}`, "end bracket PublishExternally definition" );
+
+   commaRequired_g = true;
 }
 
 function addSubTypeDefinitionBlock( )
@@ -838,6 +862,50 @@ function addAccessoryDefinitionBlock( )
     "constants": [{"IP":"172"}],
     "first_name": "Jane",
  */
+function addDefinitionBlock( )
+{
+   if ( commaRequired_g == true || commaRequired_g == false )
+      return;
+
+   // add the comma always next time.
+   if ( commaRequired_g == true )
+      wf( `,\n` );
+   wf( `"format":\n` );
+   wf( "+", `{\n` );
+      wf( `"title": "format",\n` );
+      wf( `"description": "Characteristic Formats",\n` );
+      wf( `"default": "string",\n` );
+      wf( "+",`"oneOf": {\n` );
+            wf( `{"Format": "boolean","enum": ["boolean"] },\n` );
+            wf( `{"Format": "integer","enum": ["integer"] },\n` );
+            wf( `{"Format": "number","enum": ["number"] },\n` );
+            wf( `{"Format": "string","enum": ["string"] }\n` );
+         wf( "-", `}` );
+      wf( "-", `}` );
+   wf( "-", `}` );
+
+   wf( `"definitions":\n` );
+   wf( "+", `{\n` );
+      wf( `"title": "definitions",\n` );
+      wf( `"description": "A New Characteristic Definition",\n` );
+      wf( `"type": "array",\n` );
+      wf( `"uniqueItems": true,\n` );
+      wf( `"$comment": "This will have to Increase as each added are validated",\n` );
+      wf( `"maxItems": 0,\n` );
+      wf( `"required": false,\n` );
+      wf( `"items":\n` );
+      wf( "+", `{\n` );
+         wf( `"type": "object",\n` );
+         wf( `"properties":\n` );
+         wf( "+", `{\n` );
+           wf( `"format": { "$ref": "#/$defs/format"},\n` );
+         wf( "-", `}` );
+   wf( "-", `}` );
+
+   commaRequired_g = true;
+}
+
+
 function addGlobalsDefinitionBlock( )
 {
    // add the comma always next time.
@@ -989,7 +1057,6 @@ function addGlobalsDefinitionBlock( )
       wf( "-", `}\n` );
    wf( "-", `}` );
 
-
    commaRequired_g = true;
 }
 
@@ -1136,6 +1203,11 @@ function addGlobalsSchemaBlockForSchema( forSchema )
    if ( forSchema != "Accessory" )
       wf( `"constants": { "$ref": "#/$defs/constants"},\n` );
 
+   if ( forSchema == "Accessory" )
+   {
+      wf( `"publishAccessory": { "$ref": "#/$defs/publishAccessory"},\n` );
+   }
+
    wf( `"allowTLV8": { "$ref": "#/$defs/allowTLV8"},\n` );
    wf( `"outputConstants": { "$ref": "#/$defs/outputConstants"},\n` );
    wf( `"statusMsg": { "$ref": "#/$defs/statusMsg"},\n` );
@@ -1249,6 +1321,21 @@ function addNameLayout( )
    commaRequired_g = true;
 }
 
+/*
+function addPublishExternallyLayout( )
+{
+   // add the comma always next time.
+   if ( commaRequired_g == true )
+      wf( `,\n` );
+
+   wf( "+", `{\n` );
+     wf( `"publishExternally": {"$ref": "#/defs/publishExternally"}\n` );
+   wf( "-", `}` );
+
+   commaRequired_g = true;
+}
+*/
+
 function addGlobalsLayoutForSchema( forSchema )
 {
    // add the comma always next time.
@@ -1292,6 +1379,9 @@ function addGlobalsLayoutForSchema( forSchema )
                wf( "-", `} ]\n` );
             wf( "-", `},\n` );
          }
+         if ( forSchema == "Accessory" )
+            wf( `"publishExternally",\n` );
+
          wf( `"statusMsg",\n` );
          wf( `"allowTLV8",\n` );
          wf( `"outputConstants",\n` );

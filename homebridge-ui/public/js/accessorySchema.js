@@ -147,6 +147,14 @@ const accessorySchema =
                }
             }
          },
+         "publishExternally":
+         {
+            "type": "boolean",
+            "title": "publishExternally",
+            "description": "Publish accessory externally.",
+            "default": false,
+            "required": false
+         },
          "accessControlLevel":
          {
             "title": "accessControlLevel",
@@ -2378,6 +2386,7 @@ const accessorySchema =
       {
          "type": { "$ref": "#/$defs/type"},
          "debug": { "$ref": "#/$defs/debug"},
+         "publishAccessory": { "$ref": "#/$defs/publishAccessory"},
          "allowTLV8": { "$ref": "#/$defs/allowTLV8"},
          "outputConstants": { "$ref": "#/$defs/outputConstants"},
          "statusMsg": { "$ref": "#/$defs/statusMsg"},
@@ -2635,6 +2644,7 @@ const accessorySchema =
          "items":
          [
             "debug",
+            "publishExternally",
             "statusMsg",
             "allowTLV8",
             "outputConstants",

@@ -148,6 +148,14 @@
                }
             }
          },
+         "publishExternally":
+         {
+            "type": "boolean",
+            "title": "publishExternally",
+            "description": "Publish accessory externally.",
+            "default": false,
+            "required": false
+         },
          "accessControlLevel":
          {
             "title": "accessControlLevel",
@@ -2882,6 +2890,7 @@
          "items":
          [
             "debug",
+            "publishExternally",
             "statusMsg",
             "allowTLV8",
             "outputConstants",
