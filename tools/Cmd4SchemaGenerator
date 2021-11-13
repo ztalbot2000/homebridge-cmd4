@@ -446,7 +446,7 @@ function addPublishExternallyDefinitionBlock( )
       wf( `,\n` );
 
    wf( `"$comment": "START OF PublishExternally DEFINITION",\n` );
-   // *** Begin bracket PublishExternally definition
+   // *** Begin bracket PublishExternally definition Block
    wf( `"publishExternally":\n` );
    wf( "+", `{\n` );
       wf( `"type": "boolean",\n` );
@@ -466,7 +466,7 @@ function addSubTypeDefinitionBlock( )
       wf( `,\n` );
 
    wf( `"$comment": "START OF subType DEFINITION",\n` );
-   // *** Begin bracket subType designation definition
+   // *** Begin bracket subType designation definition Block
    wf( `"subType":\n` );
    wf( "+", `{\n` );
       wf( `"type": "string",\n` );
@@ -486,7 +486,7 @@ function addDisplayNameDefinitionBlock( )
       wf( `,\n` );
 
    wf( `"$comment": "START OF displayName DEFINITION",\n` );
-   // *** Begin bracket displayName designation definition
+   // *** Begin bracket displayName definition Block
    wf( `"displayName":\n` );
    wf( "+", `{\n` );
       wf( `"type": "string",\n` );
@@ -507,7 +507,7 @@ function addAccessoryTypeDefinitionBlock( )
       wf( `,\n` );
 
    wf( `"$comment": "START OF type DEFINITION",\n` );
-   // *** Begin bracket Type designation definition
+   // *** Begin bracket Type definition Block
    wf( `"type":\n` );
    wf( "+", `{\n` );
       wf( `"type": "string",\n` );
@@ -565,7 +565,7 @@ function addPollingDefinitionBlock( )
       wf( `,\n` );
 
    wf( `"$comment": "START OF polling DEFINITION",\n` );
-   // *** Begin bracket Polling designation definition
+   // *** Begin bracket Polling definition Block
    wf( `"polling":\n` );
    wf( "+", `{\n` );
       wf( `"title": "${ constants.POLLING }",\n` );
@@ -590,7 +590,7 @@ function addPollingDefinitionBlock( )
             wf( `"stateChangeResponseTime": {"$ref": "#/$defs/stateChangeResponseTime"}\n` );
          wf( "-", `}\n` );
       wf( "-", `}\n` );
-   // *** End bracket Polling designation definition
+   // *** End bracket Polling definition Block
    wf( "-", `}` );
 
    commaRequired_g = true;
@@ -603,7 +603,7 @@ function addFakeGatoDefinitionBlock( )
       wf( `,\n` );
 
    wf( `"$comment": "START OF fakegato DEFINITION",\n` );
-   // *** Begin bracket FakeGato designation definition
+   // *** Begin bracket FakeGato definition Block
 
    wf( "+", `"fakegato": {\n` );
       wf( `"title": "fakegato",\n` );
@@ -682,7 +682,7 @@ function addFakeGatoDefinitionBlock( )
 
       wf( "-", `}\n`, "End bracket properties" );
 
-   // *** End bracket FakeGato designation definition
+   // *** End bracket FakeGato definition Block
    wf( "-", `}` );
 
    commaRequired_g = true;
@@ -696,7 +696,7 @@ function addAccessoryDefinitionBlock( )
 
    wf( `"$comment": "START OF accessories DEFINITION",\n` );
 
-   // ** Begin bracket accessories definition block
+   // ** Begin bracket accessories block
    wf( "+", `"accessories": {\n` );
       wf( `"title": "Accessories",\n` );
       wf( `"type": "array",\n` );
