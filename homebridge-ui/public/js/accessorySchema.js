@@ -2516,7 +2516,6 @@ const accessorySchema =
          },
          "polling":
          {
-            "$id": "polling",
             "title": "polling",
             "type": "array",
             "required": false,
@@ -2532,17 +2531,10 @@ const accessorySchema =
                      "title": "characteristic",
                      "type": "string",
                      "required": "true"
-                  },"interval":
-                  {
-                     "title": "interval",
-                     "type": "number",
-                     "required": "false"
-                  },"stateChaneResponseTime":
-                  {
-                     "title": "stateChaneResponseTime",
-                     "type": "number",
-                     "required": "false"
-                  }
+                  },
+                  "timeout": {"$ref": "#/$defs/timeout"},
+                  "interval": { "$ref": "#/$defs/interval"},
+                  "stateChangeResponseTime": {"$ref": "#/$defs/stateChangeResponseTime"}
                }
             }
          },
@@ -4488,6 +4480,10 @@ const accessorySchema =
                   {
                      "key": "polling[].timeout", "flex": "1 1 auto",
                      "notitle": false, "placeholder": "3000"
+                  },
+                  {
+                     "key": "polling[].interval", "flex": "1 1 auto",
+                     "notitle": false, "placeholder": "180"
                   },
                   {
                      "key": "polling[].stateChangeResponseTime", "flex": "2 2 auto",

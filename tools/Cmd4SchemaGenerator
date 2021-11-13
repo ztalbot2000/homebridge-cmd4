@@ -548,7 +548,6 @@ function addPollingDefinitionBlock( )
    // *** Begin bracket Polling designation definition
    wf( `"polling":\n` );
    wf( "+", `{\n` );
-      wf( `"$id": "polling",\n` );
       wf( `"title": "${ constants.POLLING }",\n` );
       wf( `"type": "array",\n` );
       wf( `"required": false,\n` );
@@ -565,25 +564,10 @@ function addPollingDefinitionBlock( )
                wf( `"title": "characteristic",\n` );
                wf( `"type": "string",\n` );
                wf( `"required": "true"\n` );
-            wf( "-", `},` );
-            wf( `"interval":\n` );
-            wf( "+", `{\n` );
-               wf( `"title": "interval",\n` );
-               wf( `"type": "number",\n` );
-               wf( `"required": "false"\n` );
-            wf( "-", `},` );
-            wf( `"stateChaneResponseTime":\n` );
-            wf( "+", `{\n` );
-               wf( `"title": "stateChaneResponseTime",\n` );
-               wf( `"type": "number",\n` );
-               wf( `"required": "false"\n` );
-            // wf( "-", `},` );
-            // wf( `"queue":\n` );
-            // wf( "+", `{\n` );
-            //    wf( `"title": "queue",\n` );
-            //    wf( `"type": "string",\n` );
-            //    wf( `"required": "false"\n` );
-            wf( "-", `}\n` );
+            wf( "-", `},\n` );
+            wf( `"timeout": {"$ref": "#/$defs/timeout"},\n` );
+            wf( `"interval": { "$ref": "#/$defs/interval"},\n` );
+            wf( `"stateChangeResponseTime": {"$ref": "#/$defs/stateChangeResponseTime"}\n` );
          wf( "-", `}\n` );
       wf( "-", `}\n` );
    // *** End bracket Polling designation definition
@@ -1594,6 +1578,10 @@ function addPollingLayout( )
                wf( "+", `{\n` );
                    wf( `"key": "polling[].timeout", "flex": "1 1 auto",\n` );
                    wf( `"notitle": false, "placeholder": "3000"\n` );
+               wf( "-", `},\n` );
+               wf( "+", `{\n` );
+                   wf( `"key": "polling[].interval", "flex": "1 1 auto",\n` );
+                   wf( `"notitle": false, "placeholder": "180"\n` );
                wf( "-", `},\n` );
                wf( "+", `{\n` );
                    wf( `"key": "polling[].stateChangeResponseTime", "flex": "2 2 auto",\n` );
