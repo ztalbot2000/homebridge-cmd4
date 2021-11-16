@@ -412,7 +412,11 @@ const accessorySchema =
          {
             "title": "configureBridgedAccessory",
             "type": "string",
-            "description": "The Configured Bridge Accessory"
+            "description": "The Configured Bridge Accessory",
+            "condition":
+            {
+               "functionBody": "return ['BridgeConfiguration'].includes(model.type) && model.allowTLV8 == true;"
+            }
          },
          "configureBridgedAccessoryStatus":
          {
@@ -688,13 +692,21 @@ const accessorySchema =
          {
             "title": "discoverBridgedAccessories",
             "type": "integer",
-            "description": "The Discovered Bridge Accessories"
+            "description": "The Discovered Bridge Accessories",
+            "condition":
+            {
+               "functionBody": "return ['BridgeConfiguration'].includes(model.type);"
+            }
          },
          "discoveredBridgedAccessories":
          {
             "title": "discoveredBridgedAccessories",
             "type": "integer",
-            "description": "The Discovered Bridged Accessories"
+            "description": "The Discovered Bridged Accessories",
+            "condition":
+            {
+               "functionBody": "return ['BridgeConfiguration'].includes(model.type);"
+            }
          },
          "displayOrder":
          {
@@ -2741,7 +2753,7 @@ const accessorySchema =
          },
          "items":
          [
-            "configureBridgedAccessoryStatus"
+            "configureBridgedAccessoryStatus","discoverBridgedAccessories","discoveredBridgedAccessories","configureBridgedAccessory"
          ]
       },
       {
@@ -3587,19 +3599,6 @@ const accessorySchema =
          "items":
          [
             "name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "BridgeConfiguration Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['BridgeConfiguration'].includes(model.type);"
-         },
-         "items":
-         [
-            "configureBridgedAccessoryStatus","discoverBridgedAccessories","discoveredBridgedAccessories","configureBridgedAccessory"
          ]
       },
       {

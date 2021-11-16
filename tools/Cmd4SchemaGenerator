@@ -14,6 +14,7 @@ const CMD4_CONFIG_FILE = "Extras/config.json";
 
 const CMD4_SCHEMA_FILE = "config.schema.json";
 const CMD4_ACCESSORY_SCHEMA_FILE = "homebridge-ui/public/js/accessorySchema.js";
+const CMD4_ACCESSORY_SCHEMA_FILE2 = "homebridge-ui/public/js/accessorySchema2.js";
 const CMD4_GLOBALS_SCHEMA_FILE = "homebridge-ui/public/js/globalsSchema.js";
 
 const schemaVersionSupport = 6;
@@ -134,6 +135,7 @@ function createAccessorySchemaFile( )
             addGlobalsDefinitionBlock( );
             addPublishExternallyDefinitionBlock( );
             addCharacteristicDefinitionBlock( );
+
             addAccessoryTypeDefinitionBlock( );
             addSubTypeDefinitionBlock( );
             addDisplayNameDefinitionBlock( );
@@ -185,6 +187,117 @@ function createAccessorySchemaFile( )
       addPollingLayout( );
       addStateCmdLayoutForSchema( );
       addFakeGatoLayout( );
+   // * End square bracket layout:
+   wf( "-", `]\n` );
+
+   commaRequired_g = true;
+
+   closeSchemaDocument( );
+}
+
+// Create the accessorySchema.js file
+function createAccessorySchemaFile2( )
+{
+   reInit( );
+
+   let schemaFile = `${ CMD4_BASE_PATH }/${ CMD4_ACCESSORY_SCHEMA_FILE2 }`;
+   console.log( `\nCreating ${ CMD4_ACCESSORY_SCHEMA_FILE2 }  file: ${ schemaFile }` );
+   // Open the Schema file for writing
+   fid = fs.openSync( schemaFile, "w" ); // Open for write
+
+// fid.on("error", ( err ) =>
+// {
+//    console.log( "dserror: %s", err );
+//    process.exit( err );
+// });
+
+   wf( `/*eslint no-unused-vars: ["error", { "varsIgnorePattern": "accessorySchema" }]*/\n\n` );
+
+   wf( `const accessorySchema =\n` );
+   wf( "+", `{\n` );   // For vi % balance: }
+      commaRequired_g = false;
+
+      // Not in accessorySchema
+      //  beginJSON( );
+      // addSchemaHeader( );
+
+      startSchema( );
+
+         // add the comma always next time.
+         if ( commaRequired_g == true )
+            wf( `,\n` );
+
+         // ** Begin bracket defs
+         wf( `"$defs":\n` );
+         wf( "+", `{\n` );
+
+            commaRequired_g = false;
+
+   // Accessory2
+            // These are all defs, even if not used by schema
+            addDefinitionBlock(); // incomplete (just returns)
+            addGlobalsDefinitionBlock( );
+            addPublishExternallyDefinitionBlock( );
+            addCharacteristicDefinitionBlock( );
+
+            // addAccessoryTypeDefinitionBlock( );
+            addSubTypeDefinitionBlock( );
+            addDisplayNameDefinitionBlock( );
+            addQueueDefinitionBlock( );
+            addPollingDefinitionBlock( );
+            // addAccessoryDefinitionBlock( );
+            addFakeGatoDefinitionBlock( );
+
+   addIndividualCompleteAccessoryDefinitionBlocks( );
+
+         // ** End bracket defs
+         wf( `\n` );
+         wf( "-", `}` );
+
+         commaRequired_g = true;
+
+         // For Accessory Schema
+         beginSchemaProperties( );
+            for ( let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++)
+            {
+               if ( commaRequired_g == true )
+                  wf( `,\n` );
+
+               let deviceName = CMD4_DEVICE_TYPE_ENUM.properties[ index ].deviceName;
+
+               wf( `"${ deviceName }": { "$ref": "#/$defs/${ deviceName }"}` );
+               commaRequired_g = true;
+            }
+         endSchemaProperties( );
+
+      endBracketSchema( );
+
+   // addLayout( ); // for accessorySchema
+   // add the comma always next time.
+   if ( commaRequired_g == true )
+      wf( `,\n` );
+
+   // * Begin square bracket layout:
+   wf( `"layout":\n` );
+   wf( "+", `[\n` );
+
+      commaRequired_g = false;
+
+      // For ** Accessory2 ** Layout
+      addConditionalLayoutForDeviceType( );
+      //addNameLayout( );
+
+      //addTypeLayout( );
+      //addGlobalsLayoutForSchema( "Accessory" );
+
+      // Not in Accessory Schema
+      // addQueueTypesLayoutForSchema( "Accessory" );
+
+      //addRequiredCharacteristicPerDeviceLayout( );
+      //addOptionalCharacteristicPerDeviceLayout( );
+      //addPollingLayout( );
+      //addStateCmdLayoutForSchema( );
+      //addFakeGatoLayout( );
    // * End square bracket layout:
    wf( "-", `]\n` );
 
@@ -686,6 +799,72 @@ function addFakeGatoDefinitionBlock( )
    wf( "-", `}` );
 
    commaRequired_g = true;
+}
+function addIndividualCompleteAccessoryDefinitionBlocks( )
+{
+   wf( `"$comment": "START OF each accessories DEFINITION",\n` );
+   // All the characteristics
+   for ( let i=0; i < CMD4_DEVICE_TYPE_ENUM.EOL; i ++)
+   {
+      let devProps = CMD4_DEVICE_TYPE_ENUM.properties[ i ];
+      let deviceName = CMD4_DEVICE_TYPE_ENUM.devEnumIndexToC( i );
+
+      // add the comma always next time.
+      if ( commaRequired_g == true )
+         wf( `,\n` );
+
+      wf( "+", `"${ deviceName }" :{\n` );
+         wf( `"condition":\n` );
+         wf( "+", `{\n` );
+            wf( `"functionBody": "return ['${ deviceName }'].includes(model.type);"\n` );
+         wf( "-", `},\n` );
+         wf( "+", `"items": {\n` );
+
+            wf( `"${ constants.TYPE }": { "$ref": "#/defs/${ deviceName }"},\n` );
+            wf( `"name": { "$ref": "#/$defs/name"},\n` );
+            wf( `"displayName": { "$ref": "#/$defs/displayName"},\n` );
+            wf( `"subType": { "$ref": "#/$defs/subType"},\n` );
+
+            wf( `"debug": { "$ref": "#/$defs/debug"},\n` );
+            wf( `"publishExternally": { "$ref": "#/$defs/publishExternally"},\n` );
+            wf( `"allowTLV8": { "$ref": "#/$defs/allowTLV8"},\n` );
+            wf( `"outputConstants": { "$ref": "#/$defs/outputConstants"},\n` );
+            wf( `"statusMsg": { "$ref": "#/$defs/statusMsg"},\n` );
+            wf( `"interval": { "$ref": "#/$defs/interval"},\n` );
+            wf( `"timeout": { "$ref": "#/$defs/timeout"},\n` );
+            wf( `"stateChangeResponseTime": { "$ref": "#/$defs/stateChangeResponseTime"},\n` );
+            wf( `"${ constants.QUEUE }": { "$ref": "#/$defs/queue"},\n` );
+
+            devProps.requiredCharacteristics.forEach( ( reqProps ) =>
+            {
+               let characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToLC( reqProps.type );
+               if ( characteristicString == "name" )
+                  return;
+
+               wf( `"${ characteristicString }": { "$ref": "#/$defs/${ characteristicString }"},\n` );
+            });
+            devProps.optionalCharacteristics.forEach( ( optPropIndex ) =>
+            {
+               let characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToLC( optPropIndex );
+               if ( characteristicString == "name" )
+
+                  return;
+               wf( `"${ characteristicString }": { "$ref": "#/$defs/${ characteristicString }"},\n` );
+            });
+
+            // Create the polling optional characteristics for the device
+            wf( `"${ constants.POLLING }": { "$ref": "#/$defs/polling"},\n` );
+            wf( `"${ constants.STATE_CMD_PREFIX }": { "$ref": "#/$defs/state_cmd_prefix"},\n` );
+            wf( `"${ constants.STATE_CMD }": { "$ref": "#/$defs/state_cmd"},\n` );
+            wf( `"${ constants.STATE_CMD_SUFFIX }": { "$ref": "#/$defs/state_cmd_suffix"},\n` );
+            wf( `"${ constants.FAKEGATO }": { "$ref": "#/$defs/fakegato"}` );
+
+         wf( "-", `}\n` );
+      // ** End device block
+      wf( "-", `}` );
+
+      commaRequired_g = true;
+   }
 }
 
 function addAccessoryDefinitionBlock( )
@@ -1289,6 +1468,39 @@ function addFakeGatoSchemaBlock( )
 }
 
 // $$$$$$$$  LAYOUT  $$$$$$$$$$
+
+function addConditionalLayoutForDeviceType( )
+{
+   for ( let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++)
+   {
+      if ( commaRequired_g == true )
+         wf( `,\n` );
+
+      let deviceName = CMD4_DEVICE_TYPE_ENUM.properties[ index ].deviceName;
+
+
+      wf( "+", `{\n` );
+      wf( `"key": "${ deviceName }",\n` );
+         wf( `"title": "${ deviceName } Options",\n` );
+         wf( `"condition":\n` );
+         wf( "+", `{\n` );
+            wf( `"functionBody": "return ['${ deviceName }'].includes(model.type);"\n` );
+         wf( "-", `},\n` );
+         wf( `"type": "fieldset",\n` );
+         wf( `"expandable": true,\n` );
+         wf( `"items":\n` );
+         wf( "+", `[\n` );
+            commaRequired_g = false;
+            addGlobalsLayoutForSchema( "Accessory" );
+            addPollingLayout( );
+            addStateCmdLayoutForSchema( );
+            addFakeGatoLayout( );
+         wf( "-", `]\n` );
+      wf( "-", `}` );
+   }
+
+   commaRequired_g = true;
+}
 
 function addTypeLayout( )
 {
@@ -1997,7 +2209,10 @@ createSchemaFile( );
 
 // Create the accessorySchema.js file
 if ( options.accessory )
+{
    createAccessorySchemaFile( );
+   createAccessorySchemaFile2( );
+}
 // Create the globalsSchema.js file
 if ( options.globals )
    createGlobalsSchemaFile( );
