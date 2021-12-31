@@ -241,7 +241,13 @@ class Cmd4Accessory
 
       // Add the global constants to the listOfConstants
       if ( this.parentInfo && this.parentInfo.globalConstants != null )
+      {
          this.processConstants( this.parentInfo.globalConstants );
+         // Since linked accessories get processed first, The parentInfo they
+         // get is actually "this" and we need for the linked accessory to
+         // process the constants first in order to see them. i.e. ${IP}
+         this.globalConstants = this.parentInfo.globalConstants;
+      }
 
       // Direct if polling should be set or false.
       // You cannot copy polling from the parent because you would be copying the array
@@ -1345,6 +1351,8 @@ class Cmd4Accessory
          valueToAdd.replace(/^'/, "")
          valueToAdd.replace(/'$/, "")
 
+         // Do not check for duplicates. Linked accessories add the same
+         // ${IP} for example
          this.listOfConstants[ keyToAdd ] = valueToAdd;
       }
    }

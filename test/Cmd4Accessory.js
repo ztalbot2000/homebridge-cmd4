@@ -1326,6 +1326,89 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
 
    });
 
+   it( `Test linked accessory gets \${IP} constant sent to it.`, ( done ) =>
+   {
+      let platformConfig =
+      {
+         platform:                  "Cmd4",
+         constants: [ { key: "${IP}", value: "192.168.2.65"} ],
+         queueTypes: [ { queueType: "WoRm", queue: "A"} ],
+         accessories: [
+         {
+            type: "Thermostat",
+            displayName: "Aircon",
+            currentHeatingCoolingState: "OFF",
+            targetHeatingCoolingState: "OFF",
+            currentTemperature: 24,
+            targetTemperature: 24,
+            temperatureDisplayUnits: "CELSIUS",
+            name: "Aircon",
+            manufacturer: "Advantage Air Australia",
+            model: "e-zone",
+            serialNumber: "Daikin e-zone",
+            queue: "A",
+            polling: [
+                 { characteristic: "currentHeatingCoolingState" },
+                 { characteristic: "targetHeatingCoolingState" },
+                 { characteristic: "currentTemperature" },
+                 { characteristic: "targetTemperature" }
+             ],
+             state_cmd: "'/usr/local/lib/node_modules/homebridge-cmd4-advantageair/AdvAir.sh'",
+             state_cmd_suffix: "${IP} noSensors",
+             linkedTypes: [
+             {
+                 type: "Fan",
+                 displayName: "Fan Speed",
+                 on: "FALSE",
+                 rotationSpeed: 100,
+                 name: "Fan Speed",
+                 manufacturer: "Advantage Air Australia",
+                 model: "e-zone",
+                 serialNumber: "Daikin e-zone",
+                 queue: "A",
+                 polling: [
+                     { characteristic: "on" },
+                     { characteristic: "rotationSpeed" }
+                 ],
+                 state_cmd: "'/usr/local/lib/node_modules/homebridge-cmd4-advantageair/AdvAir.sh'",
+                 state_cmd_suffix: "fanspeed ${IP}"
+             }]
+         }]
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
+
+      assert.equal( cmd4Platform.createdCmd4Accessories.length, 2, ` Cmd4Platform did not create the cmd4Accessory` );
+
+      // The linked accessory is actually at index 0
+      let lightbulbAccessory = cmd4Platform.createdCmd4Accessories[0];
+      // The main accessory is actually at index 1
+      let thermostatAccessory = cmd4Platform.createdCmd4Accessories[1];
+
+
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : Aircon LEVEL: 0`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `Creating linked accessories for: Aircon`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Linked Platform Accessory type for : Fan Speed LEVEL: 1`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+
+
+      assert.equal( thermostatAccessory.displayName, "Aircon", ` Thermostat has incorrect displayName` );
+      assert.equal( lightbulbAccessory.displayName, "Fan Speed", ` Lightbulb has incorrect displayName` );
+      assert.equal( thermostatAccessory.state_cmd_suffix, " 192.168.2.65 noSensors", ` Accessory has incorrect state_cmd_suffix` );
+      assert.equal( lightbulbAccessory.state_cmd_suffix, " fanspeed 192.168.2.65", ` Linked accessory has incorrect state_cmd_suffix` );
+
+      done( );
+
+   });
+
    it( `Test Polling generates log for linked accessory if related characteristic not polled also`, ( ) =>
    {
       let thermostatConfig =

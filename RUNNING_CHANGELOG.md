@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-6-0-4">**Whats new in 6.0.4**</a>
 * <a href="#Whats-new-in-6-0-3">**Whats new in 6.0.3**</a>
 * <a href="#Whats-new-in-6-0-2">**Whats new in 6.0.2**</a>
 * <a href="#Whats-new-in-6-0-1">**Whats new in 6.0.1**</a>
@@ -77,6 +78,14 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-6-0-4">## Whats new in 6.0.4</a>
+#### 6.0.4 (2021-12-31)
+
+##### Bug Fixes
+
+*  Constants were not getting passed down to linked types ([b7252bf9](https://github.com/ztalbot2000/homebridge-cmd4/commit/b7252bf934e26535047008f343f4d6b627dd6ddb))
+
 
 <a name="Whats-new-in-6-0-3">## Whats new in 6.0.3</a>
 ### 6.0.3 (2021-11-11)

@@ -1,4 +1,11 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
+#### 6.0.4 (2021-12-31)
+
+##### Bug Fixes
+
+*  Constants were not getting passed down to linked types ([b7252bf9](https://github.com/ztalbot2000/homebridge-cmd4/commit/b7252bf934e26535047008f343f4d6b627dd6ddb))
+
+# Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
 ### 6.0.3 (2021-11-11)
 
 ##### Bug Fix
