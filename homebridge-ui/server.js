@@ -14,6 +14,8 @@ const cmd4Constants = require( "../cmd4Constants" );
 let CMD4_ACC_TYPE_ENUM = settings.CMD4_ACC_TYPE_ENUM;
 let CMD4_DEVICE_TYPE_ENUM = settings.CMD4_DEVICE_TYPE_ENUM;
 
+let DEBUG_OVERRIDE=true;
+
 class UiServer extends HomebridgePluginUiServer
 {
    constructor ()
@@ -31,7 +33,6 @@ class UiServer extends HomebridgePluginUiServer
       this.onRequest('/backButtonPressed', this.backButtonPressed.bind(this));
       this.onRequest('/showConfigureGlobalsPageButtonPressed', this.showConfigureGlobalsPageButtonPressed.bind(this));
       this.onRequest('/showAddAccessoryPageButtonPressed', this.showAddAccessoryPageButtonPressed.bind(this));
-      this.onRequest('/showAddAccessoryPage2ButtonPressed', this.showAddAccessoryPage2ButtonPressed.bind(this));
       this.onRequest('/showEditAccessoryPageButtonPressed', this.showEditAccessoryPageButtonPressed.bind(this));
       this.onRequest('/updateCmd4Globals', this.updateCmd4Globals.bind(this));
       this.onRequest('/showQueueGlobalsPage', this.showQueueGlobalsPage.bind(this));
@@ -297,18 +298,6 @@ class UiServer extends HomebridgePluginUiServer
                                      }
                     );
    }
-   async showAddAccessoryPage2ButtonPressed( )
-   {
-      let fromPage = this.pages[ this.pages.length -1];
-      let toPage = "#addAccessoryPage2";
-      console.log("Server.js in main() toPage: %s fromPage", toPage, fromPage );
-
-      this.pages.push( toPage );
-      this.pushEvent('my-pageEvent', { from: fromPage,       // from: is hide
-                                       to:   toPage          // to:   is show
-                                     }
-                    );
-   }
    async showEditAccessoryPageButtonPressed( )
    {
       let fromPage = this.pages[ this.pages.length -1];
@@ -378,6 +367,9 @@ class UiServer extends HomebridgePluginUiServer
          delete this.pluginConfig[ "stateCmdSuffix" ];
       else
          this.pluginConfig.stateCmdSuffix = Cmd4Globals.stateCmdSuffix;
+
+      if ( DEBUG_OVERRIDE )
+         this.pluginConfig[ "debug" ] = DEBUG_OVERRIDE;
    }
 }
 

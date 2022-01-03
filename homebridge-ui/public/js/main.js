@@ -1,4 +1,4 @@
-/*global $, Option, homebridge, globalsSchema, accessorySchema*/
+/*global $, homebridge, globalsSchema, accessorySchema*/
 
 
 
@@ -9,7 +9,6 @@ const GLOBAL =
    accessoryForm: false,
    accessory: false,
    accessoryName: false,
-   accessoryIsNew: false,
    globalsForm: false,
    newGlobalQueueBeingAdded: false,
    constants: null
@@ -18,8 +17,32 @@ const GLOBAL =
 
 async function createAccessorySchema( accessory )
 {
-   homebridge.request( "/consoleLog",  `In CreateAccessorySchema for: ${ accessory.name } ${ accessory.displayName }` );
-   homebridge.request( "/consoleLog",  `In CreateAccessorySchema accessory: ${ accessory }` );
+   // Defaults
+   accessorySchema.schema['$defs'].polling.maxItems = 1;
+   accessorySchema.schema['$defs'].queueTypes.maxItems = 1;
+
+   if ( accessory == null )
+   {
+      homebridge.request( "/consoleLog",  `In CreateAccessorySchema *NEW*` );
+   }
+   else
+   {
+      homebridge.request( "/consoleLog",  `In CreateAccessorySchema accessory.name: ${ accessory.name }` );
+
+      if ( accessory.queueTypes != undefined )
+      {
+          console.log("accessory.queueTypes.length=%s",accessory.queueTypes.length );
+          accessorySchema.schema['$defs'].queueTypes.maxItems = accessory.queueTypes.length + 1;
+      }
+
+      if ( accessory.polling )
+         accessorySchema.schema['$defs'].polling.maxItems = accessory.polling.length + 1;
+
+      // Just in case the name is changed, know which one is being worked on.
+      GLOBAL.accessoryName = accessory.name;
+
+   }
+
    //let settings = await homebridge.request( "/cmd4StaticVariable", "settings" );
 
    // Need to set globalSchema.queueTypes and polling
@@ -29,18 +52,7 @@ async function createAccessorySchema( accessory )
    //       you would have to figure out what entry has the queueTypes
    //console.log("accessorySchema definitions.queueTypes=%s",accessorySchema.schema['$defs'].queueTypes );
 
-   let maxItems = 1;
-   if ( accessory.queueTypes != undefined )
-   {
-       console.log("accessory.queueTypes.length=%s",accessory.queueTypes.length );
-       maxItems = accessory.queueTypes.length + 1
-   }
-   accessorySchema.schema['$defs'].queueTypes.maxItems = maxItems;
 
-   maxItems = 1;
-   if ( accessory.polling )
-      maxItems = accessory.polling.length + 1;
-   accessorySchema.schema['$defs'].polling.maxItems = maxItems
 
    /*
    GLOBAL.accessoryForm = homebridge.createForm( accessorySchema,
@@ -67,14 +79,9 @@ async function createAccessorySchema( accessory )
    }, "Update", "Cancel" ); // UPDATE CANCEL (Auto Capitalized)
    */
 
-
-   // Just in case the name is changed, know which one is being worked on.
-   GLOBAL.accessoryName = accessory.name;
-
    // Create the accessory Form using the data from the passed in accesory
    GLOBAL.accessoryForm = homebridge.createForm( accessorySchema, accessory,
    "Update", "Cancel" ); // UPDATE CANCEL (Auto Capitalized)
-
 
 
    GLOBAL.accessoryForm.onChange( async config =>
@@ -99,7 +106,7 @@ async function createAccessorySchema( accessory )
       catch( err )
       {
 
-         homebridge.toast.error( err.message, 'Error' );
+         homebridge.toast.error( err.message, 'updateError' );
 
       }
 
@@ -219,7 +226,7 @@ async function addNewDeviceToConfig( accessory )
    catch( err )
    {
 
-      homebridge.toast.error( err.message, 'Error' );
+      homebridge.toast.error( err.message, 'addnewDevError' );
 
    }
 
@@ -384,7 +391,7 @@ async function showConfigureGlobalsPageButtonPressed( )
          // Update the plugin config (Does not save )
          await homebridge.updatePluginConfig(GLOBAL.pluginConfig);
        } catch(err) {
-         homebridge.toast.error(err.message, 'Error');
+         homebridge.toast.error(err.message, 'updatePluginError');
        }
    });
    console.log( `GLOBAL.globalsForm:` );
@@ -547,6 +554,7 @@ function addGlobalQueueEntryItem( queueName, selectedQueueType )
       GLOBAL.constants = await homebridge.request( "/cmd4StaticVariable", "cmd4Constants" );
 
       // UPDATE accessoryTypeSelect
+      /* There is no one for addAccessory any more. Its done by the schema
       let select = document.getElementById( "accessoryTypeSelect" );
       homebridge.request( "/consoleLog", `main.js select= ${ select }` );
 
@@ -559,9 +567,10 @@ function addGlobalQueueEntryItem( queueName, selectedQueueType )
             homebridge.request( "/consoleLog",  `Setting default selection to true at: ${ key }` );
             defaultSelection = true;
          }
-         //homebridge.request( "/consoleLog",  `In Cmd4.js select appending ${ CMD4_DEVICE_TYPE_ENUM.properties[key].deviceName }` );
+         homebridge.request( "/consoleLog",  `In main.js select appending ${ CMD4_DEVICE_TYPE_ENUM.properties[key].deviceName }` );
          select.appendChild( new Option( CMD4_DEVICE_TYPE_ENUM.properties[key].deviceName, CMD4_DEVICE_TYPE_ENUM.properties[key].deviceName, defaultSelection, defaultSelection ) );
       } );
+      */
 
 
       GLOBAL.pluginConfig = await homebridge.getPluginConfig( );
@@ -598,6 +607,7 @@ function addGlobalQueueEntryItem( queueName, selectedQueueType )
 
          GLOBAL.pluginConfig[0].accessories.forEach( accessory =>
          {
+            homebridge.request( "/consoleLog",  `In main.js forEach accessory.name: ${ accessory.name }` );
             $( '#accessorySelect' ).append( '<option value="' + accessory.name + '">'+ accessory.name + '</option>' );
          } );
          homebridge.request( "/consoleLog", `GLOBAL.pluginConfig[0]=${ GLOBAL.pluginConfig[0] }` );
@@ -611,6 +621,7 @@ function addGlobalQueueEntryItem( queueName, selectedQueueType )
 
             GLOBAL.pluginConfig[0].queueTypes.forEach( entry =>
             {
+               homebridge.request( "/consoleLog",  `In main.js forEach entry.queue ${ entry.queue }` );
                addGlobalQueueEntryItem( entry.queue, entry.queueType );
             });
          } else {
@@ -621,7 +632,7 @@ function addGlobalQueueEntryItem( queueName, selectedQueueType )
    }
    catch( err )
    {
-      homebridge.toast.error( err.message, 'Error' );
+      homebridge.toast.error( err.message, 'init Error' );
    }
 
 } )( );
@@ -667,6 +678,7 @@ $( '.configureNewQueuePageButton' ).on( 'click', ( ) =>
 
 $(document.body).on('click','.deleteGlobalQueueButton', deleteGlobalQueueButtonPressed);
 
+/*
 async function populateSelect( )
 {
    homebridge.request( "/consoleLog",  `In populate select` );
@@ -696,34 +708,19 @@ async function populateSelect( )
          select.appendChild( new Option( deviceName, deviceName, defaultSelection, defaultSelection ) );
       } );
    }
-
 }
+*/
 
 $( '#showAddAccessoryPageButton' ).on( 'click', ( ) =>
 {
    resetUI( );
 
-   populateSelect( );
+   createAccessorySchema( null );
 
+   // Go to the page
    homebridge.request( "/showAddAccessoryPageButtonPressed" );
 
 } );
-$( '#addAccessoryPage2Button' ).on( 'click', ( ) =>
-{
-   let accessory = {
-      name: $('#accessoryName').val(),
-      type : $('#accessoryTypeSelect').val(),
-   };
-   resetUI( );
-
-   GLOBAL.accessory = accessory;
-   GLOBAL.accessoryIsNew = true;
-   createAccessorySchema( accessory );
-
-   homebridge.request( "/showAddAccessoryPage2ButtonPressed" );
-
-} );
-
 
 // This is called when an existing Accessory is to be edited
 $( '#showEditAccessoryPageButton' ).on( 'click', ( ) =>
@@ -739,7 +736,6 @@ $( '#showEditAccessoryPageButton' ).on( 'click', ( ) =>
 
    homebridge.request( "/consoleLog", `EDIT ACCESSORY INCOMPLETE` );
    GLOBAL.accessory = accessory;
-   GLOBAL.accessoryIsNew = false;
    createAccessorySchema( accessory );
 
    homebridge.request( "/showEditAccessoryPageButtonPressed" );

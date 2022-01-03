@@ -45,6 +45,8 @@ var validatorStates = { CLEAR: 0,
                       };
 var validator_g = validatorStates.CLEAR;
 
+// Verbosity
+let verbose = 0;
 
 // This should be clled if another schema document is to be created.
 function reInit()
@@ -70,7 +72,8 @@ function getHomebridgeVars( )
    {
       let dirname = path.dirname( homebridgePath );
 
-      console.log( "Found homebridge in path %s", dirname );
+      if ( verbose > 0 )
+         console.log( "Found homebridge in path %s", dirname );
       apiPath = `${ dirname }/../lib/node_modules/homebridge/lib/api`;
       HomebridgeAPI = require( apiPath ).HomebridgeAPI;
 
@@ -85,7 +88,8 @@ function getHomebridgeVars( )
       console.log( "homebridge not found !!!" );
       process.exit( 10 );
    }
-   console.log( "Found api in %s", apiPath );
+   if ( verbose > 0 )
+      console.log( "Found api in %s", apiPath );
 
    _api = new HomebridgeAPI( ); // object we feed to Plugins
    hapFormats = _api.hap.Formats;
@@ -97,7 +101,10 @@ function createAccessorySchemaFile( )
    reInit( );
 
    let schemaFile = `${ CMD4_BASE_PATH }/${ CMD4_ACCESSORY_SCHEMA_FILE }`;
-   console.log( `\nCreating ${ CMD4_ACCESSORY_SCHEMA_FILE }  file: ${ schemaFile }` );
+
+   if ( verbose > 0 )
+      console.log( `\nCreating ${ CMD4_ACCESSORY_SCHEMA_FILE }  file: ${ schemaFile }` );
+
    // Open the Schema file for writing
    fid = fs.openSync( schemaFile, "w" ); // Open for write
 
@@ -192,6 +199,8 @@ function createAccessorySchemaFile( )
    commaRequired_g = true;
 
    closeSchemaDocument( );
+
+   console.log( `Created ${ schemaFile }` );
 }
 
 // Create the globalsSchema.js file
@@ -200,9 +209,12 @@ function createGlobalsSchemaFile( )
    reInit( );
 
    let schemaFile = `${ CMD4_BASE_PATH }/${ CMD4_GLOBALS_SCHEMA_FILE }`;
+
+   if ( verbose > 0)
+      console.log( `\nCreating ${ CMD4_GLOBALS_SCHEMA_FILE }  file: ${ schemaFile }` );
+
    // Open the Schema file for writing
    fid = fs.openSync( schemaFile, "w" ); // Open for write
-   console.log( `\nCreating ${ CMD4_GLOBALS_SCHEMA_FILE }  file: ${ schemaFile }` );
 
 // fid.on("error", ( err ) =>
 // {
@@ -292,14 +304,19 @@ function createGlobalsSchemaFile( )
    commaRequired_g = true;
 
    closeSchemaDocument( );
+
+   console.log( `Created ${ schemaFile }` );
 }
 
 function createSchemaFile( )
 {
    let schemaFile = `${ CMD4_BASE_PATH }/${CMD4_SCHEMA_FILE }`;
+
+   if ( verbose > 0)
+      console.log( `\nCreating ${ CMD4_SCHEMA_FILE }  file: ${ schemaFile }` );
+
    // Open the Schema file for writing
    fid = fs.openSync( schemaFile, "w" ); // Open for write
-   console.log( `\nCreating Schema file: ${ schemaFile }` );
 
 // fid.on("error", ( err ) =>
 // {
@@ -383,6 +400,8 @@ function createSchemaFile( )
    commaRequired_g = true;
 
    closeSchemaDocument( );
+
+   console.log( `Created ${ schemaFile }` );
 }
 
 function beginJSON( )
@@ -943,6 +962,14 @@ function addGlobalsDefinitionBlock( )
          wf( `"title": "debug",\n` );
          wf( `"type": "boolean",\n` );
          wf( `"description": "Enables additional output in the log.",\n` );
+         wf( `"required": false,\n` );
+         wf( `"placeholder": false\n` );
+      wf( "-", `},\n` );
+      wf( `"publishAccessory":\n` );
+      wf( "+", `{\n` );
+         wf( `"title": "publishAccessory",\n` );
+         wf( `"type": "boolean",\n` );
+         wf( `"description": "Publishes accesory (Usually for TV's).",\n` );
          wf( `"required": false,\n` );
          wf( `"placeholder": false\n` );
       wf( "-", `},\n` );
@@ -1687,14 +1714,18 @@ function closeSchemaDocument( )
 
    // After it is closed, check if it was properly aligned
    if ( bracketLevel == 0)
+   {
+      if ( verbose > 0 )
        console.log( `Yahoo !  Bracket Level All lined up.` );
-   else
+   } else
       console.log( `Booo ... alignment failed: [ ${ Number(bracketLevel > 0) + bracketLevel } ]` );
 
    // Check if finished properly with closing bracket
    if (  validator_g == validatorStates.CLOSED_SQUIGGLY_BRACKET_HANGING )
-      console.log( `Yahoo !  Finished with closing bracket.` );
-   else
+   {
+      if ( verbose > 0 )
+         console.log( `Yahoo !  Finished with closing bracket.` );
+   } else
       console.log( `Booo ... validator left hanging ${ validator_g }` );
 }
 
@@ -1975,10 +2006,13 @@ program
   .description( 'Generate Cmd4 config.schema.json and associated .js files if requested' )
   //.requiredOption( '-c, --constant <constant value>', 'Constant to search for>' )
 
+  .option( '-v, --verbose', `< level [0-5]. Default 0 > ` )
   .option( '-g, --globals', `Create the globalsSchema.js file` )
   .option( '-a, --accessory', `Create the accessorySchema.js file.` )
   .option( '-b, --base', `base Path to read/write config files from.\nDefault: ${ CMD4_BASE_PATH }` )
-  .option( '-t, --test', `test against our config.json` );
+  .option( '-t, --test', `test against our config.json` )
+  .addHelpText('after', `\n Typical usage:
+     $ ${ path.basename( process.argv[1] ) } -g -a\n`);
 
 
 // Parse the arguments passed into this program.
@@ -1987,10 +2021,15 @@ program.parse( process.argv );
 // Get the options passed in based on the commander getOpts definitions.
 let options = program.opts( );
 
+if ( options.verbose )
+   verbose = options.verbose;
+
+
 if ( options.base )
    CMD4_BASE_PATH = options.base;
 
-console.log( `basePath: ${ CMD4_BASE_PATH }` );
+if ( verbose > 0 )
+   console.log( `basePath: ${ CMD4_BASE_PATH }` );
 
 // Always create the config.schema.json file
 createSchemaFile( );
