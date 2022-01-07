@@ -39,14 +39,6 @@ const accessorySchema =
             "required": false,
             "placeholder": false
          },
-         "publishAccessory":
-         {
-            "title": "publishAccessory",
-            "type": "boolean",
-            "description": "Publishes accesory (Usually for TV's).",
-            "required": false,
-            "placeholder": false
-         },
          "statusMsg":
          {
             "title": "statusMsg",
@@ -2303,11 +2295,23 @@ const accessorySchema =
             "type": "string",
             "required": "false"
          },
+         "pollingSwitch":
+         {
+            "type": "boolean",
+            "title": "Polling",
+            "description": "Polling is on/off.",
+            "default": false,
+            "required": false
+         },
          "polling":
          {
             "title": "polling",
             "type": "array",
             "required": false,
+            "condition":
+            {
+               "functionBody": "return model.pollingSwitch && model.pollingSwitch == true;"
+            },
             "uniqueItems": true,
             "maxItems": 0,
             "items":
@@ -2406,7 +2410,7 @@ const accessorySchema =
       {
          "type": { "$ref": "#/$defs/type"},
          "debug": { "$ref": "#/$defs/debug"},
-         "publishAccessory": { "$ref": "#/$defs/publishAccessory"},
+         "publishExternally": { "$ref": "#/$defs/publishExternally"},
          "allowTLV8": { "$ref": "#/$defs/allowTLV8"},
          "outputConstants": { "$ref": "#/$defs/outputConstants"},
          "statusMsg": { "$ref": "#/$defs/statusMsg"},
@@ -2637,6 +2641,7 @@ const accessorySchema =
          "wifiConfigurationControl": { "$ref": "#/$defs/wifiConfigurationControl"},
          "wifiSatelliteStatus": { "$ref": "#/$defs/wifiSatelliteStatus"},
          "queue": { "$ref": "#/$defs/queue"},
+         "pollingSwitch": { "$ref": "#/$defs/pollingSwitch"},
          "polling": { "$ref": "#/$defs/polling"},
          "state_cmd_prefix": { "$ref": "#/$defs/state_cmd_prefix"},
          "state_cmd": { "$ref": "#/$defs/state_cmd"},
@@ -4235,7 +4240,16 @@ const accessorySchema =
       },
       {
          "title": "Polling",
+         "key": "pollingSwitch",
+         "$ref": "#/$defs/pollingSwitch"
+      },
+      {
+         "title": "Custom Polling",
          "type": "fieldset",
+         "condition":
+         {
+            "functionBody": "return model.pollingSwitch && model.pollingSwitch == true;"
+         },
          "expandable": true,
          "items": [ {
             "key": "polling",

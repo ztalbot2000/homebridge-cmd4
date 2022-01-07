@@ -146,7 +146,8 @@ function createAccessorySchemaFile( )
             addSubTypeDefinitionBlock( );
             addDisplayNameDefinitionBlock( );
             addQueueDefinitionBlock( );
-            addPollingDefinitionBlock( );
+            addPollingSwitchDefinitionBlock( );
+            addCustomPollingDefinitionBlock( );
             // addAccessoryDefinitionBlock( );
             addFakeGatoDefinitionBlock( );
 
@@ -162,7 +163,9 @@ function createAccessorySchemaFile( )
             addGlobalsSchemaBlockForSchema( "Accessory" );
             addCharacteristicsSchemaBlock( );
             addQueueSchemaBlock( );
-            addPollingSchemaBlock( );
+            // To be removed when saving config
+            addPollingSwitchSchemaBlock( );
+            addCustomPollingSchemaBlock( );
             addStateCmdSchemaBlock( );
             addFakeGatoSchemaBlock( );
          endSchemaProperties( );
@@ -190,7 +193,8 @@ function createAccessorySchemaFile( )
 
       addRequiredCharacteristicPerDeviceLayout( );
       addOptionalCharacteristicPerDeviceLayout( );
-      addPollingLayout( );
+      addPollingSwitchLayout( );
+      addCustomPollingLayout( );
       addStateCmdLayoutForSchema( );
       addFakeGatoLayout( );
    // * End square bracket layout:
@@ -252,7 +256,8 @@ function createGlobalsSchemaFile( )
             //addSubTypeDefinitionBlock( );
             //addDisplayNameDefinitionBlock( );
             //addQueueDefinitionBlock( );
-            //addPollingDefinitionBlock( );
+            //addPollingSwitchDefinitionBlock( );
+            //addCustomPollingDefinitionBlock( );
             //addAccessoryDefinitionBlock( );
             //addFakeGatoDefinitionBlock( );
 
@@ -268,7 +273,8 @@ function createGlobalsSchemaFile( )
             // Not in globalsySchema
             // addCharacteristicsSchemaBlock( );
             // addQueueSchemaBlock( );
-            // addPollingSchemaBlock( );
+            // addPollingSwitchSchemaBlock( );
+            // addCustomPollingSchemaBlock( );
             addStateCmdSchemaBlock( );
             // addFakeGatoSchemaBlock( );
          endSchemaProperties( );
@@ -286,13 +292,17 @@ function createGlobalsSchemaFile( )
 
       commaRequired_g = false;
 
+      // Not in Global
       // addTypeLayout( );
       // addNameLayout( );
       addGlobalsLayoutForSchema( "Global" );
 
       addQueueTypesLayoutForSchema( "Global" );
+      // Not in Global
       // addRequiredCharacteristicPerDeviceLayout( );
       // addOptionalCharacteristicPerDeviceLayout( );
+      // addPollingSwitchLayout( );
+      // addCustomPollingLayout( );
       addStateCmdLayoutForSchema( "Global" );
 
       // Not in Global
@@ -350,7 +360,8 @@ function createSchemaFile( )
             addSubTypeDefinitionBlock( );
             addDisplayNameDefinitionBlock( );
             addQueueDefinitionBlock( );
-            addPollingDefinitionBlock( );
+            addPollingSwitchDefinitionBlock( );
+            addCustomPollingDefinitionBlock( );
             addAccessoryDefinitionBlock( );
             addFakeGatoDefinitionBlock( );
 
@@ -365,7 +376,9 @@ function createSchemaFile( )
             addGlobalsSchemaBlockForSchema( "Full" );
             addCharacteristicsSchemaBlock( );
             addQueueSchemaBlock( );
-            addPollingSchemaBlock( );
+            // To be removed when saving config
+            addPollingSwitchSchemaBlock( );
+            addCustomPollingSchemaBlock( );
             addStateCmdSchemaBlock( );
             addFakeGatoSchemaBlock( );
          endSchemaProperties( );
@@ -390,7 +403,8 @@ function createSchemaFile( )
       addQueueTypesLayoutForSchema( );
       addRequiredCharacteristicPerDeviceLayout( );
       addOptionalCharacteristicPerDeviceLayout( );
-      addPollingLayout( );
+      addPollingSwitchLayout( );
+      addCustomPollingLayout( );
       addStateCmdLayoutForSchema( );
       addFakeGatoLayout( );
 
@@ -519,7 +533,6 @@ function addDisplayNameDefinitionBlock( )
    commaRequired_g = true;
 }
 
-
 function addAccessoryTypeDefinitionBlock( )
 {
    // add the comma always next time.
@@ -578,7 +591,28 @@ function addQueueDefinitionBlock( )
    commaRequired_g = true;
 }
 
-function addPollingDefinitionBlock( )
+function addPollingSwitchDefinitionBlock( )
+{
+   // add the comma always next time.
+   if ( commaRequired_g == true )
+      wf( `,\n` );
+
+   wf( `"$comment": "START OF PollingSwitch DEFINITION",\n` );
+   // *** Begin bracket pollingSwitch definition Block
+   wf( `"pollingSwitch":\n` );
+   wf( "+", `{\n` );
+      wf( `"type": "boolean",\n` );
+      wf( `"title": "Polling",\n` );
+      wf( `"description": "Polling is on/off.",\n` );
+      wf( `"default": false,\n` );
+      wf( `"required": false\n` );
+   wf( "-", `}`, "end bracket pollingSwitch definition" );
+
+   commaRequired_g = true;
+}
+
+
+function addCustomPollingDefinitionBlock( )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
@@ -586,11 +620,16 @@ function addPollingDefinitionBlock( )
 
    wf( `"$comment": "START OF polling DEFINITION",\n` );
    // *** Begin bracket Polling definition Block
+   // Note: This is called polling as main.js modifies it for add/del characteristics
    wf( `"polling":\n` );
    wf( "+", `{\n` );
       wf( `"title": "${ constants.POLLING }",\n` );
       wf( `"type": "array",\n` );
       wf( `"required": false,\n` );
+      wf( `"condition":\n` );
+      wf( "+", `{\n` );
+         wf( `"functionBody": "return model.pollingSwitch && model.pollingSwitch == true;"\n` );
+      wf( "-", `},\n` );
       wf( `"uniqueItems": true,\n` );
       wf( `"$comment": "This will have to Increase as each added are validated",\n` );
       wf( `"maxItems": 0,\n` );
@@ -965,14 +1004,6 @@ function addGlobalsDefinitionBlock( )
          wf( `"required": false,\n` );
          wf( `"placeholder": false\n` );
       wf( "-", `},\n` );
-      wf( `"publishAccessory":\n` );
-      wf( "+", `{\n` );
-         wf( `"title": "publishAccessory",\n` );
-         wf( `"type": "boolean",\n` );
-         wf( `"description": "Publishes accesory (Usually for TV's).",\n` );
-         wf( `"required": false,\n` );
-         wf( `"placeholder": false\n` );
-      wf( "-", `},\n` );
       wf( `"statusMsg":\n` );
       wf( "+", `{\n` );
          wf( `"title": "statusMsg",\n` );
@@ -1232,7 +1263,7 @@ function addGlobalsSchemaBlockForSchema( forSchema )
 
    if ( forSchema == "Accessory" )
    {
-      wf( `"publishAccessory": { "$ref": "#/$defs/publishAccessory"},\n` );
+      wf( `"publishExternally": { "$ref": "#/$defs/publishExternally"},\n` );
    }
 
    wf( `"allowTLV8": { "$ref": "#/$defs/allowTLV8"},\n` );
@@ -1280,13 +1311,25 @@ function addQueueSchemaBlock( )
    commaRequired_g = true;
 }
 
-function addPollingSchemaBlock( )
+function addPollingSwitchSchemaBlock( )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
       wf( `,\n` );
 
-   wf( `"${ constants.POLLING }": { "$ref": "#/$defs/polling"}` );
+   wf( `"pollingSwitch": { "$ref": "#/$defs/pollingSwitch"}` );
+
+   commaRequired_g = true;
+}
+
+function addCustomPollingSchemaBlock( )
+{
+   // add the comma always next time.
+   if ( commaRequired_g == true )
+      wf( `,\n` );
+
+   // Note: This is called polling as main.js modifies it for add/del characteristics
+   wf( `"polling": { "$ref": "#/$defs/polling"}` );
 
    commaRequired_g = true;
 }
@@ -1641,8 +1684,27 @@ function addQueueTypesLayoutForSchema( forSchema = null )
 
    commaRequired_g = true;
 }
+function addPollingSwitchLayout( )
+{
+   wf( `"$comment": "START OF BOOL POLLING LAYOUT BLOCK",\n` );
 
-function addPollingLayout( )
+   // add the comma always next time.
+   if ( commaRequired_g == true )
+   {
+      wf( `,\n` );
+      commaRequired_g = false;
+   }
+
+   wf( "+", `{\n` );
+      wf( `"title": "Polling",\n` );
+      wf( `"key": "pollingSwitch",\n` );
+      wf( `"$ref": "#/$defs/pollingSwitch"\n` );
+   wf( "-", `}` );
+
+   commaRequired_g = true;
+}
+
+function addCustomPollingLayout( )
 {
    wf( `"$comment": "START OF POLLING LAYOUT BLOCK",\n` );
 
@@ -1654,10 +1716,15 @@ function addPollingLayout( )
    }
 
    wf( "+", `{\n` );
-      wf( `"title": "Polling",\n` );
+      wf( `"title": "Custom Polling",\n` );
       wf( `"type": "fieldset",\n` );
+      wf( `"condition":\n` );
+      wf( "+", `{\n` );
+         wf( `"functionBody": "return model.pollingSwitch && model.pollingSwitch == true;"\n` );
+      wf( "-", `},\n` );
       wf( `"expandable": true,\n` );
       wf( "+", `"items": [ {\n` );
+         // Note: This is called polling as main.js modifies it for add/del characteristics
          wf( `"key": "polling",\n` );
          wf( `"$ref": "#/$defs/polling",\n` );
          wf( `"type": "array",\n` );

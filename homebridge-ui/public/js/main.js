@@ -15,6 +15,8 @@ const GLOBAL =
 };
 
 
+// This is called for new and editted accessories.
+// New accessories   accessory = null
 async function createAccessorySchema( accessory )
 {
    // Defaults
@@ -36,7 +38,10 @@ async function createAccessorySchema( accessory )
       }
 
       if ( accessory.polling )
+      {
+         accessory.pollingSwitch = true;
          accessorySchema.schema['$defs'].polling.maxItems = accessory.polling.length + 1;
+      }
 
       // Just in case the name is changed, know which one is being worked on.
       GLOBAL.accessoryName = accessory.name;
@@ -86,20 +91,29 @@ async function createAccessorySchema( accessory )
 
    GLOBAL.accessoryForm.onChange( async config =>
    {
-      homebridge.request( "/consoleLog",  `In customSchema.onChange config: ${ config }` );
+      homebridge.request( "/consoleLog",  `In createAccessory.onChange config: ${ config }` );
 
       GLOBAL.pluginConfig[0].accessories = GLOBAL.pluginConfig[0].accessories.map( accessory =>
       {
          if ( accessory.name === config.name )
          {
+            if ( accessory.name == null )
+               homebridge.request( "/consoleLog",  `In createAccessory found null accessory: ${ accessory }` );
+            else
+               homebridge.request( "/consoleLog",  `In createAccessory found accessory: ${ accessory.name }` );
             accessory = config;
          }
+         homebridge.request( "/consoleLog",  `In createAccessory returning accessory: ${ accessory }` );
          return accessory;
       } );
-
+/* Why is this being updated ?
       try
       {
 
+         if ( accessory.name == null )
+            homebridge.request( "/consoleLog",  `In createAccessory updatePluginConfig for null accessory: ${ accessory }` );
+         else
+            homebridge.request( "/consoleLog",  `In createAccessory updatePluginConfig for accessory: ${ accessory.name }` );
          await homebridge.updatePluginConfig( GLOBAL.pluginConfig );
 
       }
@@ -109,6 +123,7 @@ async function createAccessorySchema( accessory )
          homebridge.toast.error( err.message, 'updateError' );
 
       }
+*/
 
    } );
 

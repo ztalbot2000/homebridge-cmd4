@@ -39,14 +39,6 @@ const globalsSchema =
             "required": false,
             "placeholder": false
          },
-         "publishAccessory":
-         {
-            "title": "publishAccessory",
-            "type": "boolean",
-            "description": "Publishes accesory (Usually for TV's).",
-            "required": false,
-            "placeholder": false
-         },
          "statusMsg":
          {
             "title": "statusMsg",
