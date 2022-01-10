@@ -45,6 +45,7 @@ class UiServer extends HomebridgePluginUiServer
       this.onRequest('/consoleLog', this.consoleLog.bind(this));
       this.onRequest('/ACC_Info', this.cmd4AccInfo.bind(this));
       this.onRequest('/DEVICE_Info', this.cmd4DeviceInfo.bind(this));
+      this.onRequest('/DEVICE_TypeInfo', this.cmd4DeviceTypeInfo.bind(this));
 
       // Init the page back/forward stack
       this.pages = [ ];
@@ -239,6 +240,14 @@ class UiServer extends HomebridgePluginUiServer
    {
       return CMD4_DEVICE_TYPE_ENUM.properties[ deviceTypeEnumIndex ];
    }
+   cmd4DeviceTypeInfo( deviceType )
+   {
+      let index = CMD4_DEVICE_TYPE_ENUM.indexOfEnum( deviceType );
+      if ( index < 0 )
+         return null;
+      return CMD4_DEVICE_TYPE_ENUM.properties[ index ];
+   }
+
 
    async startButtonPressed( pluginConfig )
    {

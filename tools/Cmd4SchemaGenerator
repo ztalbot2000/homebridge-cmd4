@@ -160,14 +160,14 @@ function createAccessorySchemaFile( )
          // For Accessory Schema
          beginSchemaProperties( );
             wf( `"${ constants.TYPE }": { "$ref": "#/$defs/type"},\n` );
-            addGlobalsSchemaBlockForSchema( "Accessory" );
-            addCharacteristicsSchemaBlock( );
-            addQueueSchemaBlock( );
+            addGlobalsForSchema( "Accessory" );
+            addCharacteristicsForSchema( );
+            addQueueForSchema( );
             // To be removed when saving config
-            addPollingSwitchSchemaBlock( );
-            addCustomPollingSchemaBlock( );
-            addStateCmdSchemaBlock( );
-            addFakeGatoSchemaBlock( );
+            addPollingSwitchForSchema( );
+            addCustomPollingForSchema( );
+            addStateCmdForSchema( );
+            addFakeGatoForSchema( );
          endSchemaProperties( );
 
       endBracketSchema( );
@@ -192,7 +192,6 @@ function createAccessorySchemaFile( )
       // addQueueTypesLayoutForSchema( "Accessory" );
 
       addRequiredCharacteristicPerDeviceLayout( );
-      addOptionalCharacteristicPerDeviceLayout( );
       addPollingSwitchLayout( );
       addCustomPollingLayout( );
       addStateCmdLayoutForSchema( );
@@ -269,14 +268,14 @@ function createGlobalsSchemaFile( )
 
          // For just Globals Schema
          beginSchemaProperties( );
-            addGlobalsSchemaBlockForSchema( "Global" );
+            addGlobalsForSchema( "Global" );
             // Not in globalsySchema
-            // addCharacteristicsSchemaBlock( );
-            // addQueueSchemaBlock( );
-            // addPollingSwitchSchemaBlock( );
-            // addCustomPollingSchemaBlock( );
-            addStateCmdSchemaBlock( );
-            // addFakeGatoSchemaBlock( );
+            // addCharacteristicsForSchema( );
+            // addQueueForSchema( );
+            // addPollingSwitchForSchema( );
+            // addCustomPollingForSchema( );
+            addStateCmdForSchema( );
+            // addFakeGatoForSchema( );
          endSchemaProperties( );
 
       endBracketSchema( );
@@ -300,7 +299,6 @@ function createGlobalsSchemaFile( )
       addQueueTypesLayoutForSchema( "Global" );
       // Not in Global
       // addRequiredCharacteristicPerDeviceLayout( );
-      // addOptionalCharacteristicPerDeviceLayout( );
       // addPollingSwitchLayout( );
       // addCustomPollingLayout( );
       addStateCmdLayoutForSchema( "Global" );
@@ -373,14 +371,14 @@ function createSchemaFile( )
 
          // For Full Schema
          beginSchemaProperties( );
-            addGlobalsSchemaBlockForSchema( "Full" );
-            addCharacteristicsSchemaBlock( );
-            addQueueSchemaBlock( );
+            addGlobalsForSchema( "Full" );
+            addCharacteristicsForSchema( );
+            addQueueForSchema( );
             // To be removed when saving config
-            addPollingSwitchSchemaBlock( );
-            addCustomPollingSchemaBlock( );
-            addStateCmdSchemaBlock( );
-            addFakeGatoSchemaBlock( );
+            addPollingSwitchForSchema( );
+            addCustomPollingForSchema( );
+            addStateCmdForSchema( );
+            addFakeGatoForSchema( );
          endSchemaProperties( );
 
       endBracketSchema( );
@@ -402,7 +400,6 @@ function createSchemaFile( )
       addGlobalsLayoutForSchema( "Accessory" );
       addQueueTypesLayoutForSchema( );
       addRequiredCharacteristicPerDeviceLayout( );
-      addOptionalCharacteristicPerDeviceLayout( );
       addPollingSwitchLayout( );
       addCustomPollingLayout( );
       addStateCmdLayoutForSchema( );
@@ -1249,7 +1246,7 @@ function endSchemaProperties( )
    commaRequired_g = true;
 }
 
-function addGlobalsSchemaBlockForSchema( forSchema )
+function addGlobalsForSchema( forSchema )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
@@ -1282,7 +1279,7 @@ function addGlobalsSchemaBlockForSchema( forSchema )
    commaRequired_g = true;
 }
 
-function addCharacteristicsSchemaBlock( )
+function addCharacteristicsForSchema( )
 {
    // All the characteristics
    for ( let i=0; i < CMD4_ACC_TYPE_ENUM.EOL; i ++)
@@ -1300,7 +1297,7 @@ function addCharacteristicsSchemaBlock( )
    }
 }
 
-function addQueueSchemaBlock( )
+function addQueueForSchema( )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
@@ -1311,7 +1308,7 @@ function addQueueSchemaBlock( )
    commaRequired_g = true;
 }
 
-function addPollingSwitchSchemaBlock( )
+function addPollingSwitchForSchema( )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
@@ -1322,7 +1319,7 @@ function addPollingSwitchSchemaBlock( )
    commaRequired_g = true;
 }
 
-function addCustomPollingSchemaBlock( )
+function addCustomPollingForSchema( )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
@@ -1334,7 +1331,7 @@ function addCustomPollingSchemaBlock( )
    commaRequired_g = true;
 }
 
-function addStateCmdSchemaBlock( )
+function addStateCmdForSchema( )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
@@ -1347,7 +1344,7 @@ function addStateCmdSchemaBlock( )
    commaRequired_g = true;
 }
 
-function addFakeGatoSchemaBlock( )
+function addFakeGatoForSchema( )
 {
    // add the comma always next time.
    if ( commaRequired_g == true )
@@ -1535,26 +1532,28 @@ function addRequiredCharacteristicPerDeviceLayout( )
       let properties = CMD4_DEVICE_TYPE_ENUM.properties[ index ];
       let deviceName = properties.deviceName;
       let requiredCharacteristics = properties.requiredCharacteristics;
-      let requireStarted  = false;
+      let optionalCharacteristics = properties.optionalCharacteristics;
+      let itemsStarted = false;
 
       requiredCharacteristics.forEach( ( entry ) =>
       {
          // add the comma always next time.
          if ( commaRequired_g == true )
          {
-             wf( `,\n` );
+            wf( `,\n` );
             commaRequired_g = false;
          }
+
          let requiredCharacteristic = CMD4_ACC_TYPE_ENUM.accEnumIndexToLC( entry.type );
          // add the comma always next time.
-         if ( requireStarted == false )
+         if ( itemsStarted == false )
          {
-            requireStarted = true;
+            itemsStarted = true;
 
             wf( "+", `{\n` );
                wf( `"type": "fieldset",\n`);
                wf( `"expandable": true,\n`);
-               wf( `"title": "${ deviceName } Required Characteristics",\n`);
+               wf( `"title": "${ deviceName } Characteristics (Initial Values)",\n`);
                wf( `"condition":\n` );
                wf( "+", `{\n` );
                   wf( `"functionBody": "return ['${ deviceName }'].includes(model.type);"\n` );
@@ -1562,70 +1561,43 @@ function addRequiredCharacteristicPerDeviceLayout( )
                wf( `"items":\n` );
                wf( "+", `[\n` );
                   wf( `"${ requiredCharacteristic }"` );
-          } else
-          {
-                  wf( `,"${ requiredCharacteristic }"` );
           }
       })
-      if ( requireStarted == true )
-      {
-               wf( `\n` );
-               wf( "-", `]\n` );
-             wf( "-", `}` );
-
-             commaRequired_g = true;
-      }
-
-   }
-
-   commaRequired_g = true;
-}
-
-function addOptionalCharacteristicPerDeviceLayout( )
-{
-
-   wf( `"$comment": "START OF REQUIRED CHARACTERISTIC LAYOUT PER DEVICE BLOCK",\n` );
-
-
-   // Over the Cmd4 Devices, create pre-definitions
-   for ( let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++ )
-   {
-      let properties = CMD4_DEVICE_TYPE_ENUM.properties[ index ];
-      let deviceName = properties.deviceName;
-      let optionalCharacteristics = properties.optionalCharacteristics;
-      let optionalStarted  = false;
 
       optionalCharacteristics.forEach( ( entry ) =>
       {
-         // add the comma always next time.
-         if ( commaRequired_g == true )
-         {
-             wf( `,\n` );
-            commaRequired_g = false;
-         }
          let optionalCharacteristic = CMD4_ACC_TYPE_ENUM.accEnumIndexToLC( entry );
          // add the comma always next time.
-         if ( optionalStarted == false )
+         if ( itemsStarted == false )
          {
-            optionalStarted = true;
+            itemsStarted = true;
+
+            // add the comma always next time.
+            if ( commaRequired_g == true )
+            {
+               wf( `,\n` );
+               commaRequired_g = false;
+            }
 
             wf( "+", `{\n` );
                wf( `"type": "fieldset",\n`);
                wf( `"expandable": true,\n`);
-               wf( `"title": "${ deviceName } Optional Characteristics",\n`);
+               wf( `"title": "${ deviceName } Characteristics (Initial Values)",\n`);
                wf( `"condition":\n` );
                wf( "+", `{\n` );
-                  wf( `"functionBody": "return ['${ deviceName }'].includes(model.type);"\n` );
+                  wf( `"functionBody": "return ['${ deviceName }'].includes(model.type)"\n` );
                wf( "-", `},\n` );
                wf( `"items":\n` );
                wf( "+", `[\n` );
                   wf( `"${ optionalCharacteristic }"` );
           } else
           {
-                  wf( `,"${ optionalCharacteristic }"` );
+                  wf( `,\n` );
+                  wf( `"${ optionalCharacteristic }"` );
           }
       })
-      if ( optionalStarted == true )
+
+      if ( itemsStarted == true )
       {
                wf( `\n` );
                wf( "-", `]\n` );
@@ -1999,14 +1971,25 @@ function wf( level, text = undefined, comment = undefined )
    // Anything not previously a new line gets indented
    if ( previousText.match( /\n$/ ) )
    {
+      if ( verbose > 2 )
+         process.stdout.write( " ".repeat( bracketLevel * INDENT ).concat( text ) );
+
       fs.writeSync( fid, " ".repeat( bracketLevel * INDENT ).concat( text ) );
    } else
    {
+      if ( verbose > 2 )
+         process.stdout.write( text );
+
       fs.writeSync( fid, text );
    }
    // Ignore comments that are only available in version 7+
    if ( schemaVersionSupport >= 7 && comment != undefined )
+   {
+      if ( verbose > 2 )
+         process.stdout.write( `"$comment": "${comment}"` );
+
       fs.writeSync( fid, `"$comment": "${comment}"\n` );
+   }
 
 
    // ******** UPDATE VALIDATOR FOR NEXT WRITE OF TEXT
@@ -2073,13 +2056,13 @@ program
   .description( 'Generate Cmd4 config.schema.json and associated .js files if requested' )
   //.requiredOption( '-c, --constant <constant value>', 'Constant to search for>' )
 
-  .option( '-v, --verbose', `< level [0-5]. Default 0 > ` )
+  .option( '-v, --verbose < level [0-5 Default 0]>', `Set verbosity` )
   .option( '-g, --globals', `Create the globalsSchema.js file` )
   .option( '-a, --accessory', `Create the accessorySchema.js file.` )
-  .option( '-b, --base', `base Path to read/write config files from.\nDefault: ${ CMD4_BASE_PATH }` )
-  .option( '-t, --test', `test against our config.json` )
-  .addHelpText('after', `\n Typical usage:
-     $ ${ path.basename( process.argv[1] ) } -g -a\n`);
+  .option( '-b, --base < path >', `base Path to read/write config files from.\nDefault: ${ CMD4_BASE_PATH }` )
+  .option( '-t, --test', `test against our config.json` );
+//.addHelpText('after', `\n Typical usage:
+//   $ ${ path.basename( process.argv[1] ) } -g -a\n`);
 
 
 // Parse the arguments passed into this program.
@@ -2089,7 +2072,10 @@ program.parse( process.argv );
 let options = program.opts( );
 
 if ( options.verbose )
+{
    verbose = options.verbose;
+   console.log( `Set verbose to: ${ verbose }\n`);
+}
 
 
 if ( options.base )

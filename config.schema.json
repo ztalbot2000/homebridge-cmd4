@@ -2954,202 +2954,263 @@
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "AccessControl Required Characteristics",
+         "title": "AccessControl Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['AccessControl'].includes(model.type);"
          },
          "items":
          [
-            "accessControlLevel"
+            "accessControlLevel",
+            "passwordSetting"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "AccessoryRuntimeInformation Required Characteristics",
+         "title": "AccessoryRuntimeInformation Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['AccessoryRuntimeInformation'].includes(model.type);"
          },
          "items":
          [
-            "ping"
+            "ping",
+            "activityInterval",
+            "heartBeat",
+            "sleepInterval"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "AccessoryInformation Required Characteristics",
+         "title": "AccessoryInformation Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['AccessoryInformation'].includes(model.type);"
          },
          "items":
          [
-            "identify","manufacturer","model","name","serialNumber","firmwareRevision"
+            "identify",
+            "hardwareRevision",
+            "accessoryFlags"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "AirPurifier Required Characteristics",
+         "title": "AirPurifier Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['AirPurifier'].includes(model.type);"
          },
          "items":
          [
-            "active","currentAirPurifierState","targetAirPurifierState"
+            "active",
+            "lockPhysicalControls",
+            "name",
+            "swingMode",
+            "rotationSpeed"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "AirQualitySensor Required Characteristics",
+         "title": "AirQualitySensor Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['AirQualitySensor'].includes(model.type);"
          },
          "items":
          [
-            "airQuality"
+            "airQuality",
+            "statusActive",
+            "statusFault",
+            "statusTampered",
+            "statusLowBattery",
+            "name",
+            "ozoneDensity",
+            "nitrogenDioxideDensity",
+            "sulphurDioxideDensity",
+            "pm2_5Density",
+            "pm10Density",
+            "vocDensity",
+            "carbonMonoxideLevel",
+            "carbonDioxideLevel"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "BatteryService Required Characteristics",
+         "title": "BatteryService Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['BatteryService'].includes(model.type);"
          },
          "items":
          [
-            "batteryLevel","chargingState","statusLowBattery"
+            "batteryLevel",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "BridgeConfiguration Required Characteristics",
+         "title": "BridgeConfiguration Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['BridgeConfiguration'].includes(model.type);"
          },
          "items":
          [
-            "configureBridgedAccessoryStatus","discoverBridgedAccessories","discoveredBridgedAccessories","configureBridgedAccessory"
+            "configureBridgedAccessoryStatus"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "BridgingState Required Characteristics",
+         "title": "BridgingState Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['BridgingState'].includes(model.type);"
          },
          "items":
          [
-            "reachable","linkQuality","accessoryIdentifier","category"
+            "reachable",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "CameraEventRecordingManagement Required Characteristics",
+         "title": "CameraEventRecordingManagement Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['CameraEventRecordingManagement'].includes(model.type);"
          },
          "items":
          [
-            "active","supportedCameraRecordingConfiguration","supportedVideoRecordingConfiguration","supportedAudioRecordingConfiguration","selectedCameraRecordingConfiguration"
+            "active",
+            "recordingAudioActive"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "CameraControl Required Characteristics",
+         "title": "CameraControl Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['CameraControl'].includes(model.type);"
          },
          "items":
          [
-            "on"
+            "on",
+            "currentHorizontalTiltAngle",
+            "currentVerticalTiltAngle",
+            "targetHorizontalTiltAngle",
+            "targetVerticalTiltAngle",
+            "nightVision",
+            "opticalZoom",
+            "digitalZoom",
+            "imageRotation",
+            "imageMirroring",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "CameraRTPStreamManagement Required Characteristics",
+         "title": "CameraRTPStreamManagement Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['CameraRTPStreamManagement'].includes(model.type);"
          },
          "items":
          [
-            "supportedVideoStreamConfiguration","supportedAudioStreamConfiguration","supportedRTPConfiguration","selectedRTPStreamConfiguration","streamingStatus","setupEndpoints"
+            "supportedVideoStreamConfiguration",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "CameraOperatingMode Required Characteristics",
+         "title": "CameraOperatingMode Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['CameraOperatingMode'].includes(model.type);"
          },
          "items":
          [
-            "eventSnapshotsActive","homeKitCameraActive"
+            "eventSnapshotsActive",
+            "manuallyDisabled",
+            "nightVision",
+            "thirdPartyCameraActive",
+            "cameraOperatingModeIndicator",
+            "periodicSnapshotsActive"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "CarbonDioxideSensor Required Characteristics",
+         "title": "CarbonDioxideSensor Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['CarbonDioxideSensor'].includes(model.type);"
          },
          "items":
          [
-            "carbonDioxideDetected"
+            "carbonDioxideDetected",
+            "statusActive",
+            "statusFault",
+            "statusLowBattery",
+            "statusTampered",
+            "carbonDioxideLevel",
+            "carbonDioxidePeakLevel",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "CarbonMonoxideSensor Required Characteristics",
+         "title": "CarbonMonoxideSensor Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['CarbonMonoxideSensor'].includes(model.type);"
          },
          "items":
          [
-            "carbonMonoxideDetected"
+            "carbonMonoxideDetected",
+            "statusActive",
+            "statusFault",
+            "statusLowBattery",
+            "statusTampered",
+            "carbonMonoxideLevel",
+            "carbonMonoxidePeakLevel",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "ContactSensor Required Characteristics",
+         "title": "ContactSensor Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['ContactSensor'].includes(model.type);"
          },
          "items":
          [
-            "contactSensorState"
+            "contactSensorState",
+            "statusActive",
+            "statusFault",
+            "statusTampered",
+            "statusLowBattery",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "Diagnostics Required Characteristics",
+         "title": "Diagnostics Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['Diagnostics'].includes(model.type);"
@@ -3162,306 +3223,396 @@
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "Door Required Characteristics",
+         "title": "Door Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['Door'].includes(model.type);"
          },
          "items":
          [
-            "currentPosition","positionState","targetPosition"
+            "currentPosition",
+            "holdPosition",
+            "obstructionDetected",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "DoorBell Required Characteristics",
+         "title": "DoorBell Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['DoorBell'].includes(model.type);"
          },
          "items":
          [
-            "programmableSwitchEvent"
+            "programmableSwitchEvent",
+            "brightness",
+            "volume",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "Fan Required Characteristics",
+         "title": "Fan Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['Fan'].includes(model.type);"
          },
          "items":
          [
-            "on"
+            "on",
+            "rotationDirection",
+            "rotationSpeed",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "Fanv1 Required Characteristics",
+         "title": "Fanv1 Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['Fanv1'].includes(model.type);"
          },
          "items":
          [
-            "on"
+            "on",
+            "rotationDirection",
+            "rotationSpeed",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "Fanv2 Required Characteristics",
+         "title": "Fanv2 Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['Fanv2'].includes(model.type);"
          },
          "items":
          [
-            "active"
+            "active",
+            "currentFanState",
+            "targetFanState",
+            "lockPhysicalControls",
+            "name",
+            "rotationDirection",
+            "rotationSpeed",
+            "swingMode"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "Faucet Required Characteristics",
+         "title": "Faucet Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['Faucet'].includes(model.type);"
          },
          "items":
          [
-            "active"
+            "active",
+            "name",
+            "statusFault"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "FilterMaintenance Required Characteristics",
+         "title": "FilterMaintenance Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['FilterMaintenance'].includes(model.type);"
          },
          "items":
          [
-            "filterChangeIndication"
+            "filterChangeIndication",
+            "filterLifeLevel",
+            "resetFilterIndication",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "GarageDoorOpener Required Characteristics",
+         "title": "GarageDoorOpener Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['GarageDoorOpener'].includes(model.type);"
          },
          "items":
          [
-            "currentDoorState","targetDoorState","obstructionDetected"
+            "currentDoorState",
+            "lockCurrentState",
+            "lockTargetState",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "HeaterCooler Required Characteristics",
+         "title": "HeaterCooler Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['HeaterCooler'].includes(model.type);"
          },
          "items":
          [
-            "active","currentHeaterCoolerState","targetHeaterCoolerState","currentTemperature"
+            "active",
+            "lockPhysicalControls",
+            "name",
+            "swingMode",
+            "coolingThresholdTemperature",
+            "heatingThresholdTemperature",
+            "temperatureDisplayUnits",
+            "rotationSpeed"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "HumidifierDehumidifier Required Characteristics",
+         "title": "HumidifierDehumidifier Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['HumidifierDehumidifier'].includes(model.type);"
          },
          "items":
          [
-            "currentRelativeHumidity","currentHumidifierDehumidifierState","targetHumidifierDehumidifierState","active"
+            "currentRelativeHumidity",
+            "lockPhysicalControls",
+            "name",
+            "swingMode",
+            "waterLevel",
+            "relativeHumidityDehumidifierThreshold",
+            "relativeHumidityHumidifierThreshold",
+            "rotationSpeed"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "HumiditySensor Required Characteristics",
+         "title": "HumiditySensor Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['HumiditySensor'].includes(model.type);"
          },
          "items":
          [
-            "currentRelativeHumidity"
+            "currentRelativeHumidity",
+            "statusActive",
+            "statusFault",
+            "statusTampered",
+            "statusLowBattery",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "InputSource Required Characteristics",
+         "title": "InputSource Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['InputSource'].includes(model.type);"
          },
          "items":
          [
-            "configuredName","inputSourceType","isConfigured","currentVisibilityState"
+            "configuredName",
+            "identifier",
+            "inputDeviceType",
+            "targetVisibilityState",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "IrrigationSystem Required Characteristics",
+         "title": "IrrigationSystem Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['IrrigationSystem'].includes(model.type);"
          },
          "items":
          [
-            "active","programMode","inUse"
+            "active",
+            "name",
+            "remainingDuration",
+            "statusFault"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "LeakSensor Required Characteristics",
+         "title": "LeakSensor Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['LeakSensor'].includes(model.type);"
          },
          "items":
          [
-            "leakDetected"
+            "leakDetected",
+            "statusActive",
+            "statusFault",
+            "statusTampered",
+            "statusLowBattery",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "LightSensor Required Characteristics",
+         "title": "LightSensor Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['LightSensor'].includes(model.type);"
          },
          "items":
          [
-            "currentAmbientLightLevel"
+            "currentAmbientLightLevel",
+            "statusActive",
+            "statusFault",
+            "statusTampered",
+            "statusLowBattery",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "Lightbulb Required Characteristics",
+         "title": "Lightbulb Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['Lightbulb'].includes(model.type);"
          },
          "items":
          [
-            "on"
+            "on",
+            "brightness",
+            "hue",
+            "saturation",
+            "name",
+            "colorTemperature"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "LockManagement Required Characteristics",
+         "title": "LockManagement Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['LockManagement'].includes(model.type);"
          },
          "items":
          [
-            "lockControlPoint","version"
+            "lockControlPoint",
+            "logs",
+            "audioFeedback",
+            "lockManagementAutoSecurityTimeout",
+            "administratorOnlyAccess",
+            "lockLastKnownAction",
+            "currentDoorState",
+            "motionDetected",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "LockMechanism Required Characteristics",
+         "title": "LockMechanism Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['LockMechanism'].includes(model.type);"
          },
          "items":
          [
-            "lockCurrentState","lockTargetState"
+            "lockCurrentState",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "Microphone Required Characteristics",
+         "title": "Microphone Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['Microphone'].includes(model.type);"
          },
          "items":
          [
-            "mute"
+            "mute",
+            "volume",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "MotionSensor Required Characteristics",
+         "title": "MotionSensor Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['MotionSensor'].includes(model.type);"
          },
          "items":
          [
-            "motionDetected"
+            "motionDetected",
+            "statusActive",
+            "statusFault",
+            "statusTampered",
+            "statusLowBattery",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "OccupancySensor Required Characteristics",
+         "title": "OccupancySensor Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['OccupancySensor'].includes(model.type);"
          },
          "items":
          [
-            "occupancyDetected"
+            "occupancyDetected",
+            "statusActive",
+            "statusFault",
+            "statusTampered",
+            "statusLowBattery",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "Outlet Required Characteristics",
+         "title": "Outlet Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['Outlet'].includes(model.type);"
          },
          "items":
          [
-            "on","outletInUse"
+            "on",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "Pairing Required Characteristics",
+         "title": "Pairing Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['Pairing'].includes(model.type);"
          },
          "items":
          [
-            "listPairings","pairSetup","pairVerify","pairingFeatures"
+            "listPairings"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "PowerManagement Required Characteristics",
+         "title": "PowerManagement Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['PowerManagement'].includes(model.type);"
@@ -3474,7 +3625,7 @@
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "ProtocolInformation Required Characteristics",
+         "title": "ProtocolInformation Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['ProtocolInformation'].includes(model.type);"
@@ -3487,46 +3638,51 @@
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "Relay Required Characteristics",
+         "title": "Relay Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['Relay'].includes(model.type);"
          },
          "items":
          [
-            "relayEnabled","relayState","relayControlPoint"
+            "relayEnabled"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "SecuritySystem Required Characteristics",
+         "title": "SecuritySystem Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['SecuritySystem'].includes(model.type);"
          },
          "items":
          [
-            "securitySystemCurrentState","securitySystemTargetState"
+            "securitySystemCurrentState",
+            "statusFault",
+            "statusTampered",
+            "securitySystemAlarmType",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "ServiceLabel Required Characteristics",
+         "title": "ServiceLabel Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['ServiceLabel'].includes(model.type);"
          },
          "items":
          [
-            "serviceLabelNamespace"
+            "serviceLabelNamespace",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "Siri Required Characteristics",
+         "title": "Siri Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['Siri'].includes(model.type);"
@@ -3539,241 +3695,290 @@
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "Slat Required Characteristics",
+         "title": "Slat Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['Slat'].includes(model.type);"
          },
          "items":
          [
-            "slatType","currentSlatState"
+            "slatType",
+            "name",
+            "currentTiltAngle",
+            "targetTiltAngle",
+            "swingMode"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "SmartSpeaker Required Characteristics",
+         "title": "SmartSpeaker Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['SmartSpeaker'].includes(model.type);"
          },
          "items":
          [
-            "currentMediaState","targetMediaState"
+            "currentMediaState",
+            "name",
+            "configuredName",
+            "volume",
+            "mute"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "SmokeSensor Required Characteristics",
+         "title": "SmokeSensor Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['SmokeSensor'].includes(model.type);"
          },
          "items":
          [
-            "smokeDetected"
+            "smokeDetected",
+            "statusActive",
+            "statusFault",
+            "statusTampered",
+            "statusLowBattery",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "Speaker Required Characteristics",
+         "title": "Speaker Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['Speaker'].includes(model.type);"
          },
          "items":
          [
-            "mute"
+            "mute",
+            "volume",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "StatefulProgrammableSwitch Required Characteristics",
+         "title": "StatefulProgrammableSwitch Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['StatefulProgrammableSwitch'].includes(model.type);"
          },
          "items":
          [
-            "programmableSwitchEvent","programmableSwitchOutputState"
+            "programmableSwitchEvent",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "StatelessProgrammableSwitch Required Characteristics",
+         "title": "StatelessProgrammableSwitch Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['StatelessProgrammableSwitch'].includes(model.type);"
          },
          "items":
          [
-            "programmableSwitchEvent"
+            "programmableSwitchEvent",
+            "name",
+            "serviceLabelIndex"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "Switch Required Characteristics",
+         "title": "Switch Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['Switch'].includes(model.type);"
          },
          "items":
          [
-            "on"
+            "on",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "TargetControl Required Characteristics",
+         "title": "TargetControl Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['TargetControl'].includes(model.type);"
          },
          "items":
          [
-            "activeIdentifier","active","buttonEvent"
+            "activeIdentifier",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "TargetControlManagement Required Characteristics",
+         "title": "TargetControlManagement Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['TargetControlManagement'].includes(model.type);"
          },
          "items":
          [
-            "targetControlSupportedConfiguration","targetControlList"
+            "targetControlSupportedConfiguration"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "Television Required Characteristics",
+         "title": "Television Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['Television'].includes(model.type);"
          },
          "items":
          [
-            "active","activeIdentifier","configuredName","remoteKey","sleepDiscoveryMode"
+            "active",
+            "brightness",
+            "closedCaptions",
+            "displayOrder",
+            "currentMediaState",
+            "targetMediaState",
+            "pictureMode",
+            "powerModeSelection"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "TelevisionSpeaker Required Characteristics",
+         "title": "TelevisionSpeaker Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['TelevisionSpeaker'].includes(model.type);"
          },
          "items":
          [
-            "mute"
+            "mute",
+            "active",
+            "volume",
+            "volumeControlType",
+            "volumeSelector",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "TemperatureSensor Required Characteristics",
+         "title": "TemperatureSensor Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['TemperatureSensor'].includes(model.type);"
          },
          "items":
          [
-            "currentTemperature"
+            "currentTemperature",
+            "statusActive",
+            "statusFault",
+            "statusLowBattery",
+            "statusTampered",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "Thermostat Required Characteristics",
+         "title": "Thermostat Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['Thermostat'].includes(model.type);"
          },
          "items":
          [
-            "currentHeatingCoolingState","targetHeatingCoolingState","currentTemperature","targetTemperature","temperatureDisplayUnits"
+            "currentHeatingCoolingState",
+            "currentRelativeHumidity",
+            "targetRelativeHumidity",
+            "coolingThresholdTemperature",
+            "heatingThresholdTemperature",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "TimeInformation Required Characteristics",
+         "title": "TimeInformation Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['TimeInformation'].includes(model.type);"
          },
          "items":
          [
-            "currentTime","dayoftheWeek","timeUpdate"
+            "currentTime",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "TransferTransportManagement Required Characteristics",
+         "title": "TransferTransportManagement Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['TransferTransportManagement'].includes(model.type);"
          },
          "items":
          [
-            "supportedTransferTransportConfiguration","setupTransferTransport"
+            "supportedTransferTransportConfiguration"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "TunneledBTLEAccessoryService Required Characteristics",
+         "title": "TunneledBTLEAccessoryService Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['TunneledBTLEAccessoryService'].includes(model.type);"
          },
          "items":
          [
-            "name","accessoryIdentifier","tunneledAccessoryStateNumber","tunneledAccessoryConnected","tunneledAccessoryAdvertising","tunnelConnectionTimeout"
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "Valve Required Characteristics",
+         "title": "Valve Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['Valve'].includes(model.type);"
          },
          "items":
          [
-            "active","inUse","valveType"
+            "active",
+            "setDuration",
+            "remainingDuration",
+            "isConfigured",
+            "serviceLabelIndex",
+            "statusFault",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "WiFiRouter Required Characteristics",
+         "title": "WiFiRouter Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['WiFiRouter'].includes(model.type);"
          },
          "items":
          [
-            "configuredName","managedNetworkEnable","networkAccessViolationControl","networkClientProfileControl","networkClientStatusControl","routerStatus","supportedRouterConfiguration","wanConfigurationList","wanStatusList"
+            "configuredName"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "WiFiSatellite Required Characteristics",
+         "title": "WiFiSatellite Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['WiFiSatellite'].includes(model.type);"
@@ -3786,729 +3991,37 @@
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "Window Required Characteristics",
+         "title": "Window Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['Window'].includes(model.type);"
          },
          "items":
          [
-            "currentPosition","positionState","targetPosition"
+            "currentPosition",
+            "holdPosition",
+            "obstructionDetected",
+            "name"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "WindowCovering Required Characteristics",
+         "title": "WindowCovering Characteristics (Initial Values)",
          "condition":
          {
             "functionBody": "return ['WindowCovering'].includes(model.type);"
          },
          "items":
          [
-            "currentPosition","positionState","targetPosition"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "AccessControl Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['AccessControl'].includes(model.type);"
-         },
-         "items":
-         [
-            "passwordSetting"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "AccessoryRuntimeInformation Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['AccessoryRuntimeInformation'].includes(model.type);"
-         },
-         "items":
-         [
-            "activityInterval","heartBeat","sleepInterval"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "AccessoryInformation Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['AccessoryInformation'].includes(model.type);"
-         },
-         "items":
-         [
-            "hardwareRevision","accessoryFlags"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "AirPurifier Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['AirPurifier'].includes(model.type);"
-         },
-         "items":
-         [
-            "lockPhysicalControls","name","swingMode","rotationSpeed"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "AirQualitySensor Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['AirQualitySensor'].includes(model.type);"
-         },
-         "items":
-         [
-            "statusActive","statusFault","statusTampered","statusLowBattery","name","ozoneDensity","nitrogenDioxideDensity","sulphurDioxideDensity","pm2_5Density","pm10Density","vocDensity","carbonMonoxideLevel","carbonDioxideLevel"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "BatteryService Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['BatteryService'].includes(model.type);"
-         },
-         "items":
-         [
+            "currentPosition",
+            "holdPosition",
+            "targetHorizontalTiltAngle",
+            "targetVerticalTiltAngle",
+            "currentHorizontalTiltAngle",
+            "currentVerticalTiltAngle",
+            "obstructionDetected",
             "name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "BridgingState Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['BridgingState'].includes(model.type);"
-         },
-         "items":
-         [
-            "name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "CameraEventRecordingManagement Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['CameraEventRecordingManagement'].includes(model.type);"
-         },
-         "items":
-         [
-            "recordingAudioActive"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "CameraControl Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['CameraControl'].includes(model.type);"
-         },
-         "items":
-         [
-            "currentHorizontalTiltAngle","currentVerticalTiltAngle","targetHorizontalTiltAngle","targetVerticalTiltAngle","nightVision","opticalZoom","digitalZoom","imageRotation","imageMirroring","name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "CameraRTPStreamManagement Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['CameraRTPStreamManagement'].includes(model.type);"
-         },
-         "items":
-         [
-            "name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "CameraOperatingMode Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['CameraOperatingMode'].includes(model.type);"
-         },
-         "items":
-         [
-            "manuallyDisabled","nightVision","thirdPartyCameraActive","cameraOperatingModeIndicator","periodicSnapshotsActive"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "CarbonDioxideSensor Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['CarbonDioxideSensor'].includes(model.type);"
-         },
-         "items":
-         [
-            "statusActive","statusFault","statusLowBattery","statusTampered","carbonDioxideLevel","carbonDioxidePeakLevel","name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "CarbonMonoxideSensor Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['CarbonMonoxideSensor'].includes(model.type);"
-         },
-         "items":
-         [
-            "statusActive","statusFault","statusLowBattery","statusTampered","carbonMonoxideLevel","carbonMonoxidePeakLevel","name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "ContactSensor Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['ContactSensor'].includes(model.type);"
-         },
-         "items":
-         [
-            "statusActive","statusFault","statusTampered","statusLowBattery","name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "Door Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['Door'].includes(model.type);"
-         },
-         "items":
-         [
-            "holdPosition","obstructionDetected","name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "DoorBell Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['DoorBell'].includes(model.type);"
-         },
-         "items":
-         [
-            "brightness","volume","name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "Fan Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['Fan'].includes(model.type);"
-         },
-         "items":
-         [
-            "rotationDirection","rotationSpeed","name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "Fanv1 Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['Fanv1'].includes(model.type);"
-         },
-         "items":
-         [
-            "rotationDirection","rotationSpeed","name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "Fanv2 Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['Fanv2'].includes(model.type);"
-         },
-         "items":
-         [
-            "currentFanState","targetFanState","lockPhysicalControls","name","rotationDirection","rotationSpeed","swingMode"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "Faucet Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['Faucet'].includes(model.type);"
-         },
-         "items":
-         [
-            "name","statusFault"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "FilterMaintenance Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['FilterMaintenance'].includes(model.type);"
-         },
-         "items":
-         [
-            "filterLifeLevel","resetFilterIndication","name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "GarageDoorOpener Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['GarageDoorOpener'].includes(model.type);"
-         },
-         "items":
-         [
-            "lockCurrentState","lockTargetState","name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "HeaterCooler Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['HeaterCooler'].includes(model.type);"
-         },
-         "items":
-         [
-            "lockPhysicalControls","name","swingMode","coolingThresholdTemperature","heatingThresholdTemperature","temperatureDisplayUnits","rotationSpeed"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "HumidifierDehumidifier Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['HumidifierDehumidifier'].includes(model.type);"
-         },
-         "items":
-         [
-            "lockPhysicalControls","name","swingMode","waterLevel","relativeHumidityDehumidifierThreshold","relativeHumidityHumidifierThreshold","rotationSpeed"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "HumiditySensor Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['HumiditySensor'].includes(model.type);"
-         },
-         "items":
-         [
-            "statusActive","statusFault","statusTampered","statusLowBattery","name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "InputSource Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['InputSource'].includes(model.type);"
-         },
-         "items":
-         [
-            "identifier","inputDeviceType","targetVisibilityState","name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "IrrigationSystem Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['IrrigationSystem'].includes(model.type);"
-         },
-         "items":
-         [
-            "name","remainingDuration","statusFault"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "LeakSensor Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['LeakSensor'].includes(model.type);"
-         },
-         "items":
-         [
-            "statusActive","statusFault","statusTampered","statusLowBattery","name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "LightSensor Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['LightSensor'].includes(model.type);"
-         },
-         "items":
-         [
-            "statusActive","statusFault","statusTampered","statusLowBattery","name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "Lightbulb Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['Lightbulb'].includes(model.type);"
-         },
-         "items":
-         [
-            "brightness","hue","saturation","name","colorTemperature"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "LockManagement Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['LockManagement'].includes(model.type);"
-         },
-         "items":
-         [
-            "logs","audioFeedback","lockManagementAutoSecurityTimeout","administratorOnlyAccess","lockLastKnownAction","currentDoorState","motionDetected","name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "LockMechanism Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['LockMechanism'].includes(model.type);"
-         },
-         "items":
-         [
-            "name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "Microphone Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['Microphone'].includes(model.type);"
-         },
-         "items":
-         [
-            "volume","name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "MotionSensor Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['MotionSensor'].includes(model.type);"
-         },
-         "items":
-         [
-            "statusActive","statusFault","statusTampered","statusLowBattery","name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "OccupancySensor Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['OccupancySensor'].includes(model.type);"
-         },
-         "items":
-         [
-            "statusActive","statusFault","statusTampered","statusLowBattery","name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "Outlet Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['Outlet'].includes(model.type);"
-         },
-         "items":
-         [
-            "name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "SecuritySystem Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['SecuritySystem'].includes(model.type);"
-         },
-         "items":
-         [
-            "statusFault","statusTampered","securitySystemAlarmType","name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "ServiceLabel Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['ServiceLabel'].includes(model.type);"
-         },
-         "items":
-         [
-            "name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "Slat Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['Slat'].includes(model.type);"
-         },
-         "items":
-         [
-            "name","currentTiltAngle","targetTiltAngle","swingMode"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "SmartSpeaker Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['SmartSpeaker'].includes(model.type);"
-         },
-         "items":
-         [
-            "name","configuredName","volume","mute"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "SmokeSensor Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['SmokeSensor'].includes(model.type);"
-         },
-         "items":
-         [
-            "statusActive","statusFault","statusTampered","statusLowBattery","name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "Speaker Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['Speaker'].includes(model.type);"
-         },
-         "items":
-         [
-            "volume","name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "StatefulProgrammableSwitch Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['StatefulProgrammableSwitch'].includes(model.type);"
-         },
-         "items":
-         [
-            "name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "StatelessProgrammableSwitch Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['StatelessProgrammableSwitch'].includes(model.type);"
-         },
-         "items":
-         [
-            "name","serviceLabelIndex"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "Switch Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['Switch'].includes(model.type);"
-         },
-         "items":
-         [
-            "name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "TargetControl Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['TargetControl'].includes(model.type);"
-         },
-         "items":
-         [
-            "name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "Television Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['Television'].includes(model.type);"
-         },
-         "items":
-         [
-            "brightness","closedCaptions","displayOrder","currentMediaState","targetMediaState","pictureMode","powerModeSelection"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "TelevisionSpeaker Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['TelevisionSpeaker'].includes(model.type);"
-         },
-         "items":
-         [
-            "active","volume","volumeControlType","volumeSelector","name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "TemperatureSensor Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['TemperatureSensor'].includes(model.type);"
-         },
-         "items":
-         [
-            "statusActive","statusFault","statusLowBattery","statusTampered","name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "Thermostat Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['Thermostat'].includes(model.type);"
-         },
-         "items":
-         [
-            "currentRelativeHumidity","targetRelativeHumidity","coolingThresholdTemperature","heatingThresholdTemperature","name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "TimeInformation Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['TimeInformation'].includes(model.type);"
-         },
-         "items":
-         [
-            "name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "Valve Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['Valve'].includes(model.type);"
-         },
-         "items":
-         [
-            "setDuration","remainingDuration","isConfigured","serviceLabelIndex","statusFault","name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "Window Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['Window'].includes(model.type);"
-         },
-         "items":
-         [
-            "holdPosition","obstructionDetected","name"
-         ]
-      },
-      {
-         "type": "fieldset",
-         "expandable": true,
-         "title": "WindowCovering Optional Characteristics",
-         "condition":
-         {
-            "functionBody": "return ['WindowCovering'].includes(model.type);"
-         },
-         "items":
-         [
-            "holdPosition","targetHorizontalTiltAngle","targetVerticalTiltAngle","currentHorizontalTiltAngle","currentVerticalTiltAngle","obstructionDetected","name"
          ]
       },
       {

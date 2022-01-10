@@ -93,8 +93,23 @@ async function createAccessorySchema( accessory )
    {
       homebridge.request( "/consoleLog",  `In createAccessory.onChange config: ${ config }` );
 
-      GLOBAL.pluginConfig[0].accessories = GLOBAL.pluginConfig[0].accessories.map( accessory =>
+         homebridge.request( "/consoleLog",  `config.type: ${ config.type }` );
+         if ( config.type != null )
+         {
+            let deviceInfo = await homebridge.request( "/DEVICE_TypeInfo", config.type );
+            homebridge.request( "/consoleLog",  `deviceInfo: ${ deviceInfo }` );
+            homebridge.request( "/consoleLog",  `deviceInfo.optionalCharacteristics: ${ deviceInfo.optionalCharacteristics }` );
+            if ( deviceInfo && deviceInfo.optionalCharacteristics.length > 0 )
+            {
+               homebridge.request( "/consoleLog",  `deviceInfo.optionalCharacteristics.length: ${ deviceInfo.optionalCharacteristics.length }` );
+            }
+         }
+
+      // this iterates over every accessory
+      GLOBAL.pluginConfig[0].accessories = GLOBAL.pluginConfig[0].accessories.map( async accessory =>
       {
+          homebridge.request( "/consoleLog",  `In createAccessory.onChange AFTER MAP` );
+
          if ( accessory.name === config.name )
          {
             if ( accessory.name == null )
@@ -103,6 +118,7 @@ async function createAccessorySchema( accessory )
                homebridge.request( "/consoleLog",  `In createAccessory found accessory: ${ accessory.name }` );
             accessory = config;
          }
+
          homebridge.request( "/consoleLog",  `In createAccessory returning accessory: ${ accessory }` );
          return accessory;
       } );
@@ -574,7 +590,6 @@ function addGlobalQueueEntryItem( queueName, selectedQueueType )
       homebridge.request( "/consoleLog", `main.js select= ${ select }` );
 
       homebridge.request( "/consoleLog",  `In Cmd4.js select` );
-      let CMD4_DEVICE_TYPE_ENUM = await homebridge.request( "/cmd4StaticVariable", "CMD4_DEVICE_TYPE_ENUM" );
       Object.keys( CMD4_DEVICE_TYPE_ENUM.properties ).forEach( key => {
          let defaultSelection = false;
          if ( key == CMD4_DEVICE_TYPE_ENUM.Switch )
