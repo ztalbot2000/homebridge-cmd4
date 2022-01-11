@@ -186,9 +186,11 @@ const accessorySchema =
          "active":
          {
             "title": "active",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "INACTIVE", "enum": ["INACTIVE"] },
+               { "title": "ACTIVE", "enum": ["ACTIVE"] }
+            ],
             "description": "If the Device is ACTIVE/INACTIVE",
             "condition":
             {
@@ -215,7 +217,11 @@ const accessorySchema =
          "administratorOnlyAccess":
          {
             "title": "administratorOnlyAccess",
-            "type": "boolean",
+            "type": "string",
+            "oneOf": [
+               { "title": "FALSE", "enum": ["FALSE"] },
+               { "title": "TRUE", "enum": ["TRUE"] }
+            ],
             "description": "If the Device has 2cwAdmin Only Access"
          },
          "airParticulateDensity":
@@ -229,17 +235,25 @@ const accessorySchema =
          "airParticulateSize":
          {
             "title": "airParticulateSize",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "_2_5_M", "enum": ["_2_5_M"] },
+               { "title": "_10_M", "enum": ["_10_M"] }
+            ],
             "description": "The Measured Air Particulate Size"
          },
          "airQuality":
          {
             "title": "airQuality",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 5,
+            "type": "string",
+            "oneOf": [
+               { "title": "UNKNOWN", "enum": ["UNKNOWN"] },
+               { "title": "EXCELLENT", "enum": ["EXCELLENT"] },
+               { "title": "GOOD", "enum": ["GOOD"] },
+               { "title": "FAIR", "enum": ["FAIR"] },
+               { "title": "INFERIOR", "enum": ["INFERIOR"] },
+               { "title": "POOR", "enum": ["POOR"] }
+            ],
             "description": "The Current Air Quality",
             "condition":
             {
@@ -255,7 +269,11 @@ const accessorySchema =
          "audioFeedback":
          {
             "title": "audioFeedback",
-            "type": "boolean",
+            "type": "string",
+            "oneOf": [
+               { "title": "FALSE", "enum": ["FALSE"] },
+               { "title": "TRUE", "enum": ["TRUE"] }
+            ],
             "description": "If Audio Feedback is Present"
          },
          "batteryLevel":
@@ -303,15 +321,21 @@ const accessorySchema =
          "cameraOperatingModeIndicator":
          {
             "title": "cameraOperatingModeIndicator",
-            "type": "boolean",
+            "type": "string",
+            "oneOf": [
+               { "title": "DISABLE", "enum": ["DISABLE"] },
+               { "title": "ENABLE", "enum": ["ENABLE"] }
+            ],
             "description": "The State of the Camera's Operating Mode Indicator"
          },
          "carbonDioxideDetected":
          {
             "title": "carbonDioxideDetected",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "CO2_LEVELS_NORMAL", "enum": ["CO2_LEVELS_NORMAL"] },
+               { "title": "CO2_LEVELS_ABNORMAL", "enum": ["CO2_LEVELS_ABNORMAL"] }
+            ],
             "description": "If Carbon Dioxide has been Detected",
             "condition":
             {
@@ -337,9 +361,11 @@ const accessorySchema =
          "carbonMonoxideDetected":
          {
             "title": "carbonMonoxideDetected",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "CO_LEVELS_NORMAL", "enum": ["CO_LEVELS_NORMAL"] },
+               { "title": "CO_LEVELS_ABNORMAL", "enum": ["CO_LEVELS_ABNORMAL"] }
+            ],
             "description": "Indication of CO Detected",
             "condition":
             {
@@ -383,9 +409,12 @@ const accessorySchema =
          "chargingState":
          {
             "title": "chargingState",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 2,
+            "type": "string",
+            "oneOf": [
+               { "title": "NOT_CHARGING", "enum": ["NOT_CHARGING"] },
+               { "title": "CHARGING", "enum": ["CHARGING"] },
+               { "title": "NOT_CHARGEABLE", "enum": ["NOT_CHARGEABLE"] }
+            ],
             "description": "The Current Charging State",
             "condition":
             {
@@ -395,9 +424,11 @@ const accessorySchema =
          "closedCaptions":
          {
             "title": "closedCaptions",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "DISABLED", "enum": ["DISABLED"] },
+               { "title": "ENABLED", "enum": ["ENABLED"] }
+            ],
             "description": "If Closed Captioning is Enabled"
          },
          "colorTemperature":
@@ -441,9 +472,11 @@ const accessorySchema =
          "contactSensorState":
          {
             "title": "contactSensorState",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "CONTACT_DETECTED", "enum": ["CONTACT_DETECTED"] },
+               { "title": "CONTACT_NOT_DETECTED", "enum": ["CONTACT_NOT_DETECTED"] }
+            ],
             "description": "The Current RState of a Contact Sensor",
             "condition":
             {
@@ -461,9 +494,12 @@ const accessorySchema =
          "currentAirPurifierState":
          {
             "title": "currentAirPurifierState",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 2,
+            "type": "string",
+            "oneOf": [
+               { "title": "INACTIVE", "enum": ["INACTIVE"] },
+               { "title": "IDLE", "enum": ["IDLE"] },
+               { "title": "PURIFYING_AIR", "enum": ["PURIFYING_AIR"] }
+            ],
             "description": "The Current Target Air Purification State",
             "condition":
             {
@@ -485,9 +521,14 @@ const accessorySchema =
          "currentDoorState":
          {
             "title": "currentDoorState",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 4,
+            "type": "string",
+            "oneOf": [
+               { "title": "OPEN", "enum": ["OPEN"] },
+               { "title": "CLOSED", "enum": ["CLOSED"] },
+               { "title": "OPENING", "enum": ["OPENING"] },
+               { "title": "CLOSING", "enum": ["CLOSING"] },
+               { "title": "STOPPED", "enum": ["STOPPED"] }
+            ],
             "description": "The Doors Current Operating State",
             "condition":
             {
@@ -497,17 +538,24 @@ const accessorySchema =
          "currentFanState":
          {
             "title": "currentFanState",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 2,
+            "type": "string",
+            "oneOf": [
+               { "title": "INACTIVE", "enum": ["INACTIVE"] },
+               { "title": "IDLE", "enum": ["IDLE"] },
+               { "title": "BLOWING_AIR", "enum": ["BLOWING_AIR"] }
+            ],
             "description": "The Fans Current Operating State"
          },
          "currentHeaterCoolerState":
          {
             "title": "currentHeaterCoolerState",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 3,
+            "type": "string",
+            "oneOf": [
+               { "title": "INACTIVE", "enum": ["INACTIVE"] },
+               { "title": "IDLE", "enum": ["IDLE"] },
+               { "title": "HEATING", "enum": ["HEATING"] },
+               { "title": "COOLING", "enum": ["COOLING"] }
+            ],
             "description": "The Heater/Coolers  Current Operating State",
             "condition":
             {
@@ -517,9 +565,13 @@ const accessorySchema =
          "currentHeatingCoolingState":
          {
             "title": "currentHeatingCoolingState",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 3,
+            "type": "string",
+            "oneOf": [
+               { "title": "OFF", "enum": ["OFF"] },
+               { "title": "HEAT", "enum": ["HEAT"] },
+               { "title": "COOL", "enum": ["COOL"] },
+               { "title": "AUTO", "enum": ["AUTO"] }
+            ],
             "description": "The Current Mode of the Heating/Cooling Device",
             "condition":
             {
@@ -537,9 +589,13 @@ const accessorySchema =
          "currentHumidifierDehumidifierState":
          {
             "title": "currentHumidifierDehumidifierState",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 3,
+            "type": "string",
+            "oneOf": [
+               { "title": "INACTIVE", "enum": ["INACTIVE"] },
+               { "title": "IDLE", "enum": ["IDLE"] },
+               { "title": "HUMIDIFYING", "enum": ["HUMIDIFYING"] },
+               { "title": "DEHUMIDIFYING", "enum": ["DEHUMIDIFYING"] }
+            ],
             "description": "The Humidifier or Dehumidifier Current State",
             "condition":
             {
@@ -549,9 +605,14 @@ const accessorySchema =
          "currentMediaState":
          {
             "title": "currentMediaState",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 5,
+            "type": "string",
+            "oneOf": [
+               { "title": "PLAY", "enum": ["PLAY"] },
+               { "title": "PAUSE", "enum": ["PAUSE"] },
+               { "title": "STOP", "enum": ["STOP"] },
+               { "title": "LOADING", "enum": ["LOADING"] },
+               { "title": "INTERRUPTED", "enum": ["INTERRUPTED"] }
+            ],
             "description": "The Medias Current State",
             "condition":
             {
@@ -585,9 +646,12 @@ const accessorySchema =
          "currentSlatState":
          {
             "title": "currentSlatState",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 2,
+            "type": "string",
+            "oneOf": [
+               { "title": "FIXED", "enum": ["FIXED"] },
+               { "title": "JAMMED", "enum": ["JAMMED"] },
+               { "title": "SWINGING", "enum": ["SWINGING"] }
+            ],
             "description": "The Slats Current State",
             "condition":
             {
@@ -627,7 +691,11 @@ const accessorySchema =
          "currentTransport":
          {
             "title": "currentTransport",
-            "type": "boolean",
+            "type": "string",
+            "oneOf": [
+               { "title": "FALSE", "enum": ["FALSE"] },
+               { "title": "TRUE", "enum": ["TRUE"] }
+            ],
             "description": "The Devices Current Transport"
          },
          "currentVerticalTiltAngle":
@@ -641,9 +709,11 @@ const accessorySchema =
          "currentVisibilityState":
          {
             "title": "currentVisibilityState",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "SHOWN", "enum": ["SHOWN"] },
+               { "title": "HIDDEN", "enum": ["HIDDEN"] }
+            ],
             "description": "Is a Device Currently Being Shown or Hidden",
             "condition":
             {
@@ -723,9 +793,11 @@ const accessorySchema =
          "eventSnapshotsActive":
          {
             "title": "eventSnapshotsActive",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "DISABLE", "enum": ["DISABLE"] },
+               { "title": "ENABLE", "enum": ["ENABLE"] }
+            ],
             "description": "Is the Event Snapshot Enabled",
             "condition":
             {
@@ -741,9 +813,11 @@ const accessorySchema =
          "filterChangeIndication":
          {
             "title": "filterChangeIndication",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "FILTER_OK", "enum": ["FILTER_OK"] },
+               { "title": "CHANGE_FILTER", "enum": ["CHANGE_FILTER"] }
+            ],
             "description": "An Filters Current Quality",
             "condition":
             {
@@ -791,15 +865,21 @@ const accessorySchema =
          "holdPosition":
          {
             "title": "holdPosition",
-            "type": "boolean",
+            "type": "string",
+            "oneOf": [
+               { "title": "FALSE", "enum": ["FALSE"] },
+               { "title": "TRUE", "enum": ["TRUE"] }
+            ],
             "description": "If Position Should Be Held"
          },
          "homeKitCameraActive":
          {
             "title": "homeKitCameraActive",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "OFF", "enum": ["OFF"] },
+               { "title": "ON", "enum": ["ON"] }
+            ],
             "description": "Is the HomeKit Camera ON/OFF",
             "condition":
             {
@@ -823,7 +903,11 @@ const accessorySchema =
          "identify":
          {
             "title": "identify",
-            "type": "boolean",
+            "type": "string",
+            "oneOf": [
+               { "title": "FALSE", "enum": ["FALSE"] },
+               { "title": "TRUE", "enum": ["TRUE"] }
+            ],
             "description": "The Devices Identify Status",
             "condition":
             {
@@ -833,7 +917,11 @@ const accessorySchema =
          "imageMirroring":
          {
             "title": "imageMirroring",
-            "type": "boolean",
+            "type": "string",
+            "oneOf": [
+               { "title": "FALSE", "enum": ["FALSE"] },
+               { "title": "TRUE", "enum": ["TRUE"] }
+            ],
             "description": "Is Image Being Mirrored"
          },
          "imageRotation":
@@ -847,9 +935,11 @@ const accessorySchema =
          "inUse":
          {
             "title": "inUse",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "NOT_IN_USE", "enum": ["NOT_IN_USE"] },
+               { "title": "IN_USE", "enum": ["IN_USE"] }
+            ],
             "description": "Is the Device In Use",
             "condition":
             {
@@ -859,17 +949,35 @@ const accessorySchema =
          "inputDeviceType":
          {
             "title": "inputDeviceType",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 6,
+            "type": "string",
+            "oneOf": [
+               { "title": "OTHER", "enum": ["OTHER"] },
+               { "title": "TV", "enum": ["TV"] },
+               { "title": "RECORDING", "enum": ["RECORDING"] },
+               { "title": "TUNER", "enum": ["TUNER"] },
+               { "title": "PLAYBACK", "enum": ["PLAYBACK"] },
+               { "title": "AUDIO_SYSTEM", "enum": ["AUDIO_SYSTEM"] },
+               { "title": "UNKNOWN_6", "enum": ["UNKNOWN_6"] }
+            ],
             "description": "The Input Devices Type"
          },
          "inputSourceType":
          {
             "title": "inputSourceType",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 10,
+            "type": "string",
+            "oneOf": [
+               { "title": "OTHER", "enum": ["OTHER"] },
+               { "title": "HOME_SCREEN", "enum": ["HOME_SCREEN"] },
+               { "title": "TUNER", "enum": ["TUNER"] },
+               { "title": "HDMI", "enum": ["HDMI"] },
+               { "title": "COMPOSITE_VIDEO", "enum": ["COMPOSITE_VIDEO"] },
+               { "title": "S_VIDEO", "enum": ["S_VIDEO"] },
+               { "title": "COMPONENT_VIDEO", "enum": ["COMPONENT_VIDEO"] },
+               { "title": "DVI", "enum": ["DVI"] },
+               { "title": "AIRPLAY", "enum": ["AIRPLAY"] },
+               { "title": "USB", "enum": ["USB"] },
+               { "title": "APPLICATION", "enum": ["APPLICATION"] }
+            ],
             "description": "The Input Devices Source Type",
             "condition":
             {
@@ -879,9 +987,11 @@ const accessorySchema =
          "isConfigured":
          {
             "title": "isConfigured",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "NOT_CONFIGURED", "enum": ["NOT_CONFIGURED"] },
+               { "title": "CONFIGURED", "enum": ["CONFIGURED"] }
+            ],
             "description": "Is the device Configured",
             "condition":
             {
@@ -891,9 +1001,11 @@ const accessorySchema =
          "leakDetected":
          {
             "title": "leakDetected",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "LEAK_NOT_DETECTED", "enum": ["LEAK_NOT_DETECTED"] },
+               { "title": "LEAK_DETECTED", "enum": ["LEAK_DETECTED"] }
+            ],
             "description": "Is There a Leak Detected",
             "condition":
             {
@@ -935,9 +1047,13 @@ const accessorySchema =
          "lockCurrentState":
          {
             "title": "lockCurrentState",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 3,
+            "type": "string",
+            "oneOf": [
+               { "title": "UNSECURED", "enum": ["UNSECURED"] },
+               { "title": "SECURED", "enum": ["SECURED"] },
+               { "title": "JAMMED", "enum": ["JAMMED"] },
+               { "title": "UNKNOWN", "enum": ["UNKNOWN"] }
+            ],
             "description": "The Locks Current State",
             "condition":
             {
@@ -947,9 +1063,20 @@ const accessorySchema =
          "lockLastKnownAction":
          {
             "title": "lockLastKnownAction",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 10,
+            "type": "string",
+            "oneOf": [
+               { "title": "SECURED_PHYSICALLY_INTERIOR", "enum": ["SECURED_PHYSICALLY_INTERIOR"] },
+               { "title": "UNSECURED_PHYSICALLY_INTERIOR", "enum": ["UNSECURED_PHYSICALLY_INTERIOR"] },
+               { "title": "SECURED_PHYSICALLY_EXTERIOR", "enum": ["SECURED_PHYSICALLY_EXTERIOR"] },
+               { "title": "UNSECURED_PHYSICALLY_EXTERIOR", "enum": ["UNSECURED_PHYSICALLY_EXTERIOR"] },
+               { "title": "SECURED_BY_KEYPAD", "enum": ["SECURED_BY_KEYPAD"] },
+               { "title": "UNSECURED_BY_KEYPAD", "enum": ["UNSECURED_BY_KEYPAD"] },
+               { "title": "SECURED_REMOTELY", "enum": ["SECURED_REMOTELY"] },
+               { "title": "UNSECURED_REMOTELY", "enum": ["UNSECURED_REMOTELY"] },
+               { "title": "SECURED_BY_AUTO_SECURE_TIMEOUT", "enum": ["SECURED_BY_AUTO_SECURE_TIMEOUT"] },
+               { "title": "SECURED_PHYSICALLY", "enum": ["SECURED_PHYSICALLY"] },
+               { "title": "UNSECURED_PHYSICALLY", "enum": ["UNSECURED_PHYSICALLY"] }
+            ],
             "description": "The Locks Last known Action"
          },
          "lockManagementAutoSecurityTimeout":
@@ -961,17 +1088,21 @@ const accessorySchema =
          "lockPhysicalControls":
          {
             "title": "lockPhysicalControls",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "CONTROL_LOCK_DISABLED", "enum": ["CONTROL_LOCK_DISABLED"] },
+               { "title": "CONTROL_LOCK_ENABLED", "enum": ["CONTROL_LOCK_ENABLED"] }
+            ],
             "description": "Is the Lock Physically Enabled/Disabled"
          },
          "lockTargetState":
          {
             "title": "lockTargetState",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "UNSECURED", "enum": ["UNSECURED"] },
+               { "title": "SECURED", "enum": ["SECURED"] }
+            ],
             "description": "The Locks Requested State",
             "condition":
             {
@@ -999,9 +1130,12 @@ const accessorySchema =
          "managedNetworkEnable":
          {
             "title": "managedNetworkEnable",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "DISABLED", "enum": ["DISABLED"] },
+               { "title": "ENABLED", "enum": ["ENABLED"] },
+               { "title": "UNKNOWN", "enum": ["UNKNOWN"] }
+            ],
             "description": "The Networks Current State",
             "condition":
             {
@@ -1011,7 +1145,11 @@ const accessorySchema =
          "manuallyDisabled":
          {
             "title": "manuallyDisabled",
-            "type": "boolean",
+            "type": "string",
+            "oneOf": [
+               { "title": "ENABLED", "enum": ["ENABLED"] },
+               { "title": "DISABLED", "enum": ["DISABLED"] }
+            ],
             "description": "Is the Device Manually Enabled/Disabled"
          },
          "manufacturer":
@@ -1037,7 +1175,11 @@ const accessorySchema =
          "motionDetected":
          {
             "title": "motionDetected",
-            "type": "boolean",
+            "type": "string",
+            "oneOf": [
+               { "title": "FALSE", "enum": ["FALSE"] },
+               { "title": "TRUE", "enum": ["TRUE"] }
+            ],
             "description": "Is Motion Being Detected",
             "condition":
             {
@@ -1047,7 +1189,11 @@ const accessorySchema =
          "mute":
          {
             "title": "mute",
-            "type": "boolean",
+            "type": "string",
+            "oneOf": [
+               { "title": "FALSE", "enum": ["FALSE"] },
+               { "title": "TRUE", "enum": ["TRUE"] }
+            ],
             "description": "Is the Device Currently Muted",
             "condition":
             {
@@ -1097,7 +1243,11 @@ const accessorySchema =
          "nightVision":
          {
             "title": "nightVision",
-            "type": "boolean",
+            "type": "string",
+            "oneOf": [
+               { "title": "FALSE", "enum": ["FALSE"] },
+               { "title": "TRUE", "enum": ["TRUE"] }
+            ],
             "description": "Is Night Vision Available"
          },
          "nitrogenDioxideDensity":
@@ -1111,7 +1261,11 @@ const accessorySchema =
          "obstructionDetected":
          {
             "title": "obstructionDetected",
-            "type": "boolean",
+            "type": "string",
+            "oneOf": [
+               { "title": "FALSE", "enum": ["FALSE"] },
+               { "title": "TRUE", "enum": ["TRUE"] }
+            ],
             "description": "Is Obstruction Currently Detected",
             "condition":
             {
@@ -1121,9 +1275,11 @@ const accessorySchema =
          "occupancyDetected":
          {
             "title": "occupancyDetected",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "OCCUPANCY_NOT_DETECTED", "enum": ["OCCUPANCY_NOT_DETECTED"] },
+               { "title": "OCCUPANCY_DETECTED", "enum": ["OCCUPANCY_DETECTED"] }
+            ],
             "description": "Is Occupancy Currently Detected",
             "condition":
             {
@@ -1133,7 +1289,11 @@ const accessorySchema =
          "on":
          {
             "title": "on",
-            "type": "boolean",
+            "type": "string",
+            "oneOf": [
+               { "title": "FALSE", "enum": ["FALSE"] },
+               { "title": "TRUE", "enum": ["TRUE"] }
+            ],
             "description": "Is the Device On",
             "condition":
             {
@@ -1155,7 +1315,11 @@ const accessorySchema =
          "outletInUse":
          {
             "title": "outletInUse",
-            "type": "boolean",
+            "type": "string",
+            "oneOf": [
+               { "title": "FALSE", "enum": ["FALSE"] },
+               { "title": "TRUE", "enum": ["TRUE"] }
+            ],
             "description": "Is the Outlet in Use",
             "condition":
             {
@@ -1231,15 +1395,33 @@ const accessorySchema =
          "periodicSnapshotsActive":
          {
             "title": "periodicSnapshotsActive",
-            "type": "integer",
+            "type": "string",
+            "oneOf": [
+               { "title": "DISABLE", "enum": ["DISABLE"] },
+               { "title": "ENABLE", "enum": ["ENABLE"] }
+            ],
             "description": "Is the Periodic Snapshot Enabled/Disabled"
          },
          "pictureMode":
          {
             "title": "pictureMode",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 13,
+            "type": "string",
+            "oneOf": [
+               { "title": "OTHER", "enum": ["OTHER"] },
+               { "title": "STANDARD", "enum": ["STANDARD"] },
+               { "title": "CALIBRATED", "enum": ["CALIBRATED"] },
+               { "title": "CALIBRATED_DARK", "enum": ["CALIBRATED_DARK"] },
+               { "title": "VIVID", "enum": ["VIVID"] },
+               { "title": "GAME", "enum": ["GAME"] },
+               { "title": "COMPUTER", "enum": ["COMPUTER"] },
+               { "title": "CUSTOM", "enum": ["CUSTOM"] },
+               { "title": "UNKNOWN8", "enum": ["UNKNOWN8"] },
+               { "title": "UNKNOWN9", "enum": ["UNKNOWN9"] },
+               { "title": "UNKNOWN10", "enum": ["UNKNOWN10"] },
+               { "title": "UNKNOWN11", "enum": ["UNKNOWN11"] },
+               { "title": "UNKNOWN12", "enum": ["UNKNOWN12"] },
+               { "title": "UNKNOWN13", "enum": ["UNKNOWN13"] }
+            ],
             "description": "The Current Picture Mode"
          },
          "ping":
@@ -1255,9 +1437,12 @@ const accessorySchema =
          "positionState":
          {
             "title": "positionState",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 2,
+            "type": "string",
+            "oneOf": [
+               { "title": "DECREASING", "enum": ["DECREASING"] },
+               { "title": "INCREASING", "enum": ["INCREASING"] },
+               { "title": "STOPPED", "enum": ["STOPPED"] }
+            ],
             "description": "The Devices Position State",
             "condition":
             {
@@ -1267,9 +1452,11 @@ const accessorySchema =
          "powerModeSelection":
          {
             "title": "powerModeSelection",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "SHOW", "enum": ["SHOW"] },
+               { "title": "HIDE", "enum": ["HIDE"] }
+            ],
             "description": "The Devices Power Mode Selection"
          },
          "productData":
@@ -1281,9 +1468,12 @@ const accessorySchema =
          "programMode":
          {
             "title": "programMode",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 2,
+            "type": "string",
+            "oneOf": [
+               { "title": "NO_PROGRAM_SCHEDULED", "enum": ["NO_PROGRAM_SCHEDULED"] },
+               { "title": "PROGRAM_SCHEDULED", "enum": ["PROGRAM_SCHEDULED"] },
+               { "title": "PROGRAM_SCHEDULED_MANUAL_MODE_", "enum": ["PROGRAM_SCHEDULED_MANUAL_MODE_"] }
+            ],
             "description": "The Devices Program Mode",
             "condition":
             {
@@ -1293,9 +1483,12 @@ const accessorySchema =
          "programmableSwitchEvent":
          {
             "title": "programmableSwitchEvent",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 2,
+            "type": "string",
+            "oneOf": [
+               { "title": "SINGLE_PRESS", "enum": ["SINGLE_PRESS"] },
+               { "title": "DOUBLE_PRESS", "enum": ["DOUBLE_PRESS"] },
+               { "title": "LONG_PRESS", "enum": ["LONG_PRESS"] }
+            ],
             "description": "The Devices Current Position State",
             "condition":
             {
@@ -1317,7 +1510,11 @@ const accessorySchema =
          "reachable":
          {
             "title": "reachable",
-            "type": "boolean",
+            "type": "string",
+            "oneOf": [
+               { "title": "FALSE", "enum": ["FALSE"] },
+               { "title": "TRUE", "enum": ["TRUE"] }
+            ],
             "description": "If the Device is Reachable",
             "condition":
             {
@@ -1339,7 +1536,11 @@ const accessorySchema =
          "recordingAudioActive":
          {
             "title": "recordingAudioActive",
-            "type": "integer",
+            "type": "string",
+            "oneOf": [
+               { "title": "DISABLE", "enum": ["DISABLE"] },
+               { "title": "ENABLE", "enum": ["ENABLE"] }
+            ],
             "description": "Is Recordding Audio Enabled/DisAbled"
          },
          "relativeHumidityDehumidifierThreshold":
@@ -1371,7 +1572,11 @@ const accessorySchema =
          "relayEnabled":
          {
             "title": "relayEnabled",
-            "type": "boolean",
+            "type": "string",
+            "oneOf": [
+               { "title": "FALSE", "enum": ["FALSE"] },
+               { "title": "TRUE", "enum": ["TRUE"] }
+            ],
             "description": "Is the Relay Currently Enabled",
             "condition":
             {
@@ -1401,9 +1606,26 @@ const accessorySchema =
          "remoteKey":
          {
             "title": "remoteKey",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 16,
+            "type": "string",
+            "oneOf": [
+               { "title": "REWIND", "enum": ["REWIND"] },
+               { "title": "FAST_FORWARD", "enum": ["FAST_FORWARD"] },
+               { "title": "NEXT_TRACK", "enum": ["NEXT_TRACK"] },
+               { "title": "PREVIOUS_TRACK", "enum": ["PREVIOUS_TRACK"] },
+               { "title": "ARROW_UP", "enum": ["ARROW_UP"] },
+               { "title": "ARROW_DOWN", "enum": ["ARROW_DOWN"] },
+               { "title": "ARROW_LEFT", "enum": ["ARROW_LEFT"] },
+               { "title": "ARROW_RIGHT", "enum": ["ARROW_RIGHT"] },
+               { "title": "SELECT", "enum": ["SELECT"] },
+               { "title": "BACK", "enum": ["BACK"] },
+               { "title": "EXIT", "enum": ["EXIT"] },
+               { "title": "PLAY_PAUSE", "enum": ["PLAY_PAUSE"] },
+               { "title": "UNKNOWN12", "enum": ["UNKNOWN12"] },
+               { "title": "UNKNOWN13", "enum": ["UNKNOWN13"] },
+               { "title": "UNKNOWN14", "enum": ["UNKNOWN14"] },
+               { "title": "INFORMATION", "enum": ["INFORMATION"] },
+               { "title": "UNKNOWN16", "enum": ["UNKNOWN16"] }
+            ],
             "description": "The Remote Key",
             "condition":
             {
@@ -1421,9 +1643,11 @@ const accessorySchema =
          "rotationDirection":
          {
             "title": "rotationDirection",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "CLOCKWISE", "enum": ["CLOCKWISE"] },
+               { "title": "COUNTER_CLOCKWISE", "enum": ["COUNTER_CLOCKWISE"] }
+            ],
             "description": "The Current Direction of Rotation"
          },
          "rotationSpeed":
@@ -1437,9 +1661,11 @@ const accessorySchema =
          "routerStatus":
          {
             "title": "routerStatus",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "READY", "enum": ["READY"] },
+               { "title": "NOT_READY", "enum": ["NOT_READY"] }
+            ],
             "description": "The Current Router Status",
             "condition":
             {
@@ -1465,9 +1691,14 @@ const accessorySchema =
          "securitySystemCurrentState":
          {
             "title": "securitySystemCurrentState",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 4,
+            "type": "string",
+            "oneOf": [
+               { "title": "STAY_ARM", "enum": ["STAY_ARM"] },
+               { "title": "AWAY_ARM", "enum": ["AWAY_ARM"] },
+               { "title": "NIGHT_ARM", "enum": ["NIGHT_ARM"] },
+               { "title": "DISARMED", "enum": ["DISARMED"] },
+               { "title": "ALARM_TRIGGERED", "enum": ["ALARM_TRIGGERED"] }
+            ],
             "description": "The Security Systems Currently Armed State",
             "condition":
             {
@@ -1477,9 +1708,13 @@ const accessorySchema =
          "securitySystemTargetState":
          {
             "title": "securitySystemTargetState",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 3,
+            "type": "string",
+            "oneOf": [
+               { "title": "STAY_ARM", "enum": ["STAY_ARM"] },
+               { "title": "AWAY_ARM", "enum": ["AWAY_ARM"] },
+               { "title": "NIGHT_ARM", "enum": ["NIGHT_ARM"] },
+               { "title": "DISARM", "enum": ["DISARM"] }
+            ],
             "description": "The Target Armed State of the Security System",
             "condition":
             {
@@ -1533,9 +1768,11 @@ const accessorySchema =
          "serviceLabelNamespace":
          {
             "title": "serviceLabelNamespace",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "DOTS", "enum": ["DOTS"] },
+               { "title": "ARABIC_NUMERALS", "enum": ["ARABIC_NUMERALS"] }
+            ],
             "description": "The Devices Service Label NameSpace",
             "condition":
             {
@@ -1585,9 +1822,10 @@ const accessorySchema =
          "siriInputType":
          {
             "title": "siriInputType",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 0,
+            "type": "string",
+            "oneOf": [
+               { "title": "PUSH_BUTTON_TRIGGERED_APPLE_TV", "enum": ["PUSH_BUTTON_TRIGGERED_APPLE_TV"] }
+            ],
             "description": "siri's Input Type",
             "condition":
             {
@@ -1597,9 +1835,11 @@ const accessorySchema =
          "slatType":
          {
             "title": "slatType",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "HORIZONTAL", "enum": ["HORIZONTAL"] },
+               { "title": "VERTICAL", "enum": ["VERTICAL"] }
+            ],
             "description": "The Slat Type",
             "condition":
             {
@@ -1609,9 +1849,11 @@ const accessorySchema =
          "sleepDiscoveryMode":
          {
             "title": "sleepDiscoveryMode",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "NOT_DISCOVERABLE", "enum": ["NOT_DISCOVERABLE"] },
+               { "title": "ALWAYS_DISCOVERABLE", "enum": ["ALWAYS_DISCOVERABLE"] }
+            ],
             "description": "The Devices Discoverable Sleep Mode",
             "condition":
             {
@@ -1628,9 +1870,11 @@ const accessorySchema =
          "smokeDetected":
          {
             "title": "smokeDetected",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "SMOKE_NOT_DETECTED", "enum": ["SMOKE_NOT_DETECTED"] },
+               { "title": "SMOKE_DETECTED", "enum": ["SMOKE_DETECTED"] }
+            ],
             "description": "If Smoke is Detected or Not",
             "condition":
             {
@@ -1646,31 +1890,41 @@ const accessorySchema =
          "statusActive":
          {
             "title": "statusActive",
-            "type": "boolean",
+            "type": "string",
+            "oneOf": [
+               { "title": "FALSE", "enum": ["FALSE"] },
+               { "title": "TRUE", "enum": ["TRUE"] }
+            ],
             "description": "If the Device is Active or Not"
          },
          "statusFault":
          {
             "title": "statusFault",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "NO_FAULT", "enum": ["NO_FAULT"] },
+               { "title": "GENERAL_FAULT", "enum": ["GENERAL_FAULT"] }
+            ],
             "description": "If the Device has a Status Fault"
          },
          "statusJammed":
          {
             "title": "statusJammed",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "NOT_JAMMED", "enum": ["NOT_JAMMED"] },
+               { "title": "JAMMED", "enum": ["JAMMED"] }
+            ],
             "description": "If the Device is in Jammed Status"
          },
          "statusLowBattery":
          {
             "title": "statusLowBattery",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "BATTERY_LEVEL_NORMAL", "enum": ["BATTERY_LEVEL_NORMAL"] },
+               { "title": "BATTERY_LEVEL_LOW", "enum": ["BATTERY_LEVEL_LOW"] }
+            ],
             "description": "The Status of the Battery Level",
             "condition":
             {
@@ -1680,9 +1934,11 @@ const accessorySchema =
          "statusTampered":
          {
             "title": "statusTampered",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "NOT_TAMPERED", "enum": ["NOT_TAMPERED"] },
+               { "title": "TAMPERED", "enum": ["TAMPERED"] }
+            ],
             "description": "If the Device is Tampered"
          },
          "streamingStatus":
@@ -1808,17 +2064,21 @@ const accessorySchema =
          "swingMode":
          {
             "title": "swingMode",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "SWING_DISABLED", "enum": ["SWING_DISABLED"] },
+               { "title": "SWING_ENABLED", "enum": ["SWING_ENABLED"] }
+            ],
             "description": "The DevicesnCurrent Swing Mode"
          },
          "targetAirPurifierState":
          {
             "title": "targetAirPurifierState",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "MANUAL", "enum": ["MANUAL"] },
+               { "title": "AUTO", "enum": ["AUTO"] }
+            ],
             "description": "The Requested Target Air Purification State",
             "condition":
             {
@@ -1828,9 +2088,12 @@ const accessorySchema =
          "targetAirQuality":
          {
             "title": "targetAirQuality",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 2,
+            "type": "string",
+            "oneOf": [
+               { "title": "EXCELLENT", "enum": ["EXCELLENT"] },
+               { "title": "GOOD", "enum": ["GOOD"] },
+               { "title": "FAIR", "enum": ["FAIR"] }
+            ],
             "description": "The Requested Target Air Quality"
          },
          "targetControlList":
@@ -1856,9 +2119,11 @@ const accessorySchema =
          "targetDoorState":
          {
             "title": "targetDoorState",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "OPEN", "enum": ["OPEN"] },
+               { "title": "CLOSED", "enum": ["CLOSED"] }
+            ],
             "description": "The Doors Requested State",
             "condition":
             {
@@ -1868,17 +2133,22 @@ const accessorySchema =
          "targetFanState":
          {
             "title": "targetFanState",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "MANUAL", "enum": ["MANUAL"] },
+               { "title": "AUTO", "enum": ["AUTO"] }
+            ],
             "description": "The Fans Requested State"
          },
          "targetHeaterCoolerState":
          {
             "title": "targetHeaterCoolerState",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 2,
+            "type": "string",
+            "oneOf": [
+               { "title": "AUTO", "enum": ["AUTO"] },
+               { "title": "HEAT", "enum": ["HEAT"] },
+               { "title": "COOL", "enum": ["COOL"] }
+            ],
             "description": "The Heaters Requested Cooling State",
             "condition":
             {
@@ -1888,9 +2158,13 @@ const accessorySchema =
          "targetHeatingCoolingState":
          {
             "title": "targetHeatingCoolingState",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 3,
+            "type": "string",
+            "oneOf": [
+               { "title": "OFF", "enum": ["OFF"] },
+               { "title": "HEAT", "enum": ["HEAT"] },
+               { "title": "COOL", "enum": ["COOL"] },
+               { "title": "AUTO", "enum": ["AUTO"] }
+            ],
             "description": "The Heaters Requested Heating State",
             "condition":
             {
@@ -1908,9 +2182,12 @@ const accessorySchema =
          "targetHumidifierDehumidifierState":
          {
             "title": "targetHumidifierDehumidifierState",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 2,
+            "type": "string",
+            "oneOf": [
+               { "title": "HUMIDIFIER_OR_DEHUMIDIFIER", "enum": ["HUMIDIFIER_OR_DEHUMIDIFIER"] },
+               { "title": "HUMIDIFIER", "enum": ["HUMIDIFIER"] },
+               { "title": "DEHUMIDIFIER", "enum": ["DEHUMIDIFIER"] }
+            ],
             "description": "The Requested Humidifier/DeHumidifier State",
             "condition":
             {
@@ -1920,9 +2197,12 @@ const accessorySchema =
          "targetMediaState":
          {
             "title": "targetMediaState",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 2,
+            "type": "string",
+            "oneOf": [
+               { "title": "PLAY", "enum": ["PLAY"] },
+               { "title": "PAUSE", "enum": ["PAUSE"] },
+               { "title": "STOP", "enum": ["STOP"] }
+            ],
             "description": "The Requested Media State",
             "condition":
             {
@@ -1952,9 +2232,11 @@ const accessorySchema =
          "targetSlatState":
          {
             "title": "targetSlatState",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "MANUAL", "enum": ["MANUAL"] },
+               { "title": "AUTO", "enum": ["AUTO"] }
+            ],
             "description": "The Devices Requested Slat State"
          },
          "targetTemperature":
@@ -1988,17 +2270,21 @@ const accessorySchema =
          "targetVisibilityState":
          {
             "title": "targetVisibilityState",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "SHOWN", "enum": ["SHOWN"] },
+               { "title": "HIDDEN", "enum": ["HIDDEN"] }
+            ],
             "description": "The Devices Requested Visibility State"
          },
          "temperatureDisplayUnits":
          {
             "title": "temperatureDisplayUnits",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "CELSIUS", "enum": ["CELSIUS"] },
+               { "title": "FAHRENHEIT", "enum": ["FAHRENHEIT"] }
+            ],
             "description": "The Units to Display the Temperature in",
             "condition":
             {
@@ -2008,13 +2294,21 @@ const accessorySchema =
          "thirdPartyCameraActive":
          {
             "title": "thirdPartyCameraActive",
-            "type": "integer",
+            "type": "string",
+            "oneOf": [
+               { "title": "OFF", "enum": ["OFF"] },
+               { "title": "ON", "enum": ["ON"] }
+            ],
             "description": "The ON/OFF Auxiliary Camera State"
          },
          "timeUpdate":
          {
             "title": "timeUpdate",
-            "type": "boolean",
+            "type": "string",
+            "oneOf": [
+               { "title": "FALSE", "enum": ["FALSE"] },
+               { "title": "TRUE", "enum": ["TRUE"] }
+            ],
             "description": "Ifnthe Time Should be Updated",
             "condition":
             {
@@ -2046,7 +2340,11 @@ const accessorySchema =
          "tunneledAccessoryAdvertising":
          {
             "title": "tunneledAccessoryAdvertising",
-            "type": "boolean",
+            "type": "string",
+            "oneOf": [
+               { "title": "FALSE", "enum": ["FALSE"] },
+               { "title": "TRUE", "enum": ["TRUE"] }
+            ],
             "description": "If the Device is Currently Tunneled Advertising",
             "condition":
             {
@@ -2056,7 +2354,11 @@ const accessorySchema =
          "tunneledAccessoryConnected":
          {
             "title": "tunneledAccessoryConnected",
-            "type": "boolean",
+            "type": "string",
+            "oneOf": [
+               { "title": "FALSE", "enum": ["FALSE"] },
+               { "title": "TRUE", "enum": ["TRUE"] }
+            ],
             "description": "If the Device is Tunneled Connected ",
             "condition":
             {
@@ -2084,9 +2386,13 @@ const accessorySchema =
          "valveType":
          {
             "title": "valveType",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 3,
+            "type": "string",
+            "oneOf": [
+               { "title": "GENERIC_VALVE", "enum": ["GENERIC_VALVE"] },
+               { "title": "IRRIGATION", "enum": ["IRRIGATION"] },
+               { "title": "SHOWER_HEAD", "enum": ["SHOWER_HEAD"] },
+               { "title": "WATER_FAUCET", "enum": ["WATER_FAUCET"] }
+            ],
             "description": "The Devices Valve Type",
             "condition":
             {
@@ -2120,17 +2426,23 @@ const accessorySchema =
          "volumeControlType":
          {
             "title": "volumeControlType",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 3,
+            "type": "string",
+            "oneOf": [
+               { "title": "NONE", "enum": ["NONE"] },
+               { "title": "RELATIVE", "enum": ["RELATIVE"] },
+               { "title": "RELATIVE_WITH_CURRENT", "enum": ["RELATIVE_WITH_CURRENT"] },
+               { "title": "ABSOLUTE", "enum": ["ABSOLUTE"] }
+            ],
             "description": "The Devices Volume Control Type"
          },
          "volumeSelector":
          {
             "title": "volumeSelector",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1,
+            "type": "string",
+            "oneOf": [
+               { "title": "INCREMENT", "enum": ["INCREMENT"] },
+               { "title": "DECREMENT", "enum": ["DECREMENT"] }
+            ],
             "description": "The Devices Volume Selector"
          },
          "wanConfigurationList":
@@ -2186,9 +2498,12 @@ const accessorySchema =
          "wifiSatelliteStatus":
          {
             "title": "wifiSatelliteStatus",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 2,
+            "type": "string",
+            "oneOf": [
+               { "title": "UNKNOWN", "enum": ["UNKNOWN"] },
+               { "title": "CONNECTED", "enum": ["CONNECTED"] },
+               { "title": "NOT_CONNECTED", "enum": ["NOT_CONNECTED"] }
+            ],
             "description": "The Devices WiFi Satellite Status",
             "condition":
             {

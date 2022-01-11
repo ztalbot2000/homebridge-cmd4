@@ -1133,6 +1133,7 @@ function addCharacteristicDefinitionBlock( )
       let characteristicString = properties.sche;
       let description = properties.description;
       let accProps = properties.props;
+      let validValues = properties.validValues;
 
       // add the comma always next time.
       if ( characteristicCommaRequired == true )
@@ -1142,34 +1143,60 @@ function addCharacteristicDefinitionBlock( )
       wf( `"${ characteristicString }":\n` );
       wf( "+", `{\n` );
          wf( `"title": "${ characteristicString }",\n` );
-         switch ( accProps.format )
+         if ( Object.keys( validValues ).length <= 0 )
          {
-            case hapFormats.BOOL:
-               wf( `"type": "boolean",\n` );
-               break;
-            case hapFormats.INT:
-            case hapFormats.UINT8:
-            case hapFormats.UINT16:
-            case hapFormats.UINT32:
-            case hapFormats.UINT64:
-               wf( `"type": "integer",\n` );
-               break;
-            case hapFormats.FLOAT:
-               wf( `"type": "number",\n` );
-               break;
-            case hapFormats.STRING:
-               wf( `"type": "string",\n` );
-               break;
-            case hapFormats.DATA:
-            case hapFormats.TLV8:
-            case hapFormats.DICT:
-               wf( `"type": "string",\n` );
-               break;
+            switch ( accProps.format )
+            {
+               case hapFormats.BOOL:
+                  wf( `"type": "boolean",\n` );
+                  break;
+               case hapFormats.INT:
+               case hapFormats.UINT8:
+               case hapFormats.UINT16:
+               case hapFormats.UINT32:
+               case hapFormats.UINT64:
+                  wf( `"type": "integer",\n` );
+                     break;
+               case hapFormats.FLOAT:
+                  wf( `"type": "number",\n` );
+                  break;
+               case hapFormats.STRING:
+                  wf( `"type": "string",\n` );
+                  break;
+               case hapFormats.DATA:
+               case hapFormats.TLV8:
+               case hapFormats.DICT:
+                  wf( `"type": "string",\n` );
+                  break;
+            }
+            if ( accProps.minValue != undefined )
+               wf( `"minimum": ${ accProps.minValue },\n` );
+            if ( accProps.maxValue != undefined )
+               wf( `"maximum": ${ accProps.maxValue },\n` );
+         } else
+         {
+            let firstTime = true;
+            Object.keys( validValues ).forEach( ( key ) =>
+            {
+               if ( firstTime )
+               {
+                  wf( `"type": "string",\n` );
+                  //wf( `"default": "${ key }",` );
+                  wf( "+", `"oneOf": [\n` );
+                     wf( `{ "title": "${ key }", "enum": ["${ key }"] }` );
+
+                  firstTime = false;
+               } else
+               {
+                     wf( `,\n` );
+                     wf( `{ "title": "${ key }", "enum": ["${ key }"] }` );
+                     //wf( `, "${ key }"` );
+               }
+            });
+                  wf( `\n` );
+                  wf( "-", `],\n` );
+            //wf( `],\n` );
          }
-         if ( accProps.minValue != undefined )
-            wf( `"minimum": ${ accProps.minValue },\n` );
-         if ( accProps.maxValue != undefined )
-            wf( `"maximum": ${ accProps.maxValue },\n` );
 
          wf( `"description": "${ description }"` );
 
