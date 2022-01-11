@@ -249,16 +249,16 @@ function createGlobalsSchemaFile( )
 
             // These are all defs, even if not used by schema
             addGlobalsDefinitionBlock( );
-            //addPublishExternallyDefinitionBlock( );
-            //addCharacteristicDefinitionBlock( );
-            //addAccessoryTypeDefinitionBlock( );
-            //addSubTypeDefinitionBlock( );
-            //addDisplayNameDefinitionBlock( );
-            //addQueueDefinitionBlock( );
-            //addPollingSwitchDefinitionBlock( );
-            //addCustomPollingDefinitionBlock( );
-            //addAccessoryDefinitionBlock( );
-            //addFakeGatoDefinitionBlock( );
+            // addPublishExternallyDefinitionBlock( );
+            // addCharacteristicDefinitionBlock( );
+            // addAccessoryTypeDefinitionBlock( );
+            // addSubTypeDefinitionBlock( );
+            // addDisplayNameDefinitionBlock( );
+            // addQueueDefinitionBlock( );
+            // addPollingSwitchDefinitionBlock( );
+            // addCustomPollingDefinitionBlock( );
+            // addAccessoryDefinitionBlock( );
+            // addFakeGatoDefinitionBlock( );
 
          // ** End bracket defs
          wf( `\n` );
@@ -1181,7 +1181,6 @@ function addCharacteristicDefinitionBlock( )
                if ( firstTime )
                {
                   wf( `"type": "string",\n` );
-                  //wf( `"default": "${ key }",` );
                   wf( "+", `"oneOf": [\n` );
                      wf( `{ "title": "${ key }", "enum": ["${ key }"] }` );
 
@@ -1190,12 +1189,10 @@ function addCharacteristicDefinitionBlock( )
                {
                      wf( `,\n` );
                      wf( `{ "title": "${ key }", "enum": ["${ key }"] }` );
-                     //wf( `, "${ key }"` );
                }
             });
                   wf( `\n` );
                   wf( "-", `],\n` );
-            //wf( `],\n` );
          }
 
          wf( `"description": "${ description }"` );
@@ -1683,9 +1680,10 @@ function addQueueTypesLayoutForSchema( forSchema = null )
 
    commaRequired_g = true;
 }
+
 function addPollingSwitchLayout( )
 {
-   wf( `"$comment": "START OF BOOL POLLING LAYOUT BLOCK",\n` );
+   wf( `"$comment": "START OF POLLING SWITCH LAYOUT",\n` );
 
    // add the comma always next time.
    if ( commaRequired_g == true )
@@ -1695,17 +1693,24 @@ function addPollingSwitchLayout( )
    }
 
    wf( "+", `{\n` );
-      wf( `"title": "Polling",\n` );
-      wf( `"key": "pollingSwitch",\n` );
-      wf( `"$ref": "#/$defs/pollingSwitch"\n` );
-   wf( "-", `}` );
+      wf( `"type": "fieldset",\n`);
+      wf( `"expandable": true,\n`);
+      wf( `"title": "Polling",\n`);
+      wf( "+", `"items": [\n` );
+         wf( "+", `{\n` );
+            wf( `"title": "Polling",\n` );
+            wf( `"key": "pollingSwitch",\n` );
+            wf( `"$ref": "#/$defs/pollingSwitch"\n` );
+         wf( "-", `}` );
+      wf( "-", `]\n` );
+    wf( "-", `}` );
 
    commaRequired_g = true;
 }
 
 function addCustomPollingLayout( )
 {
-   wf( `"$comment": "START OF POLLING LAYOUT BLOCK",\n` );
+   wf( `"$comment": "START OF CUSTOM POLLING LAYOUT BLOCK",\n` );
 
    // add the comma always next time.
    if ( commaRequired_g == true )

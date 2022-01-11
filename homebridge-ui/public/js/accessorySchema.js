@@ -4067,9 +4067,15 @@ const accessorySchema =
          ]
       },
       {
+         "type": "fieldset",
+         "expandable": true,
          "title": "Polling",
-         "key": "pollingSwitch",
-         "$ref": "#/$defs/pollingSwitch"
+         "items": [
+            {
+               "title": "Polling",
+               "key": "pollingSwitch",
+               "$ref": "#/$defs/pollingSwitch"
+            }]
       },
       {
          "title": "Custom Polling",
