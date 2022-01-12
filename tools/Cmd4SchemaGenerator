@@ -126,15 +126,11 @@ function createAccessorySchemaFile( )
 
       startSchema( );
 
-         // add the comma always next time.
-         if ( commaRequired_g == true )
-            wf( `,\n` );
+         wfComma( );
 
          // ** Begin bracket defs
          wf( `"$defs":\n` );
          wf( "+", `{\n` );
-
-            commaRequired_g = false;
 
             // These are all defs, even if not used by schema
             addDefinitionBlock(); // incomplete (just returns)
@@ -173,15 +169,11 @@ function createAccessorySchemaFile( )
       endBracketSchema( );
 
    // addLayout( ); // for accessorySchema
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
    // * Begin square bracket layout:
    wf( `"layout":\n` );
    wf( "+", `[\n` );
-
-      commaRequired_g = false;
 
       // For Accessory Schema
       addTypeLayout( );
@@ -237,15 +229,11 @@ function createGlobalsSchemaFile( )
 
       startSchema( );
 
-         // add the comma always next time.
-         if ( commaRequired_g == true )
-            wf( `,\n` );
+         wfComma( );
 
          // ** Begin bracket defs
          wf( `"$defs":\n` );
          wf( "+", `{\n` );
-
-            commaRequired_g = false;
 
             // These are all defs, even if not used by schema
             addGlobalsDefinitionBlock( );
@@ -281,15 +269,11 @@ function createGlobalsSchemaFile( )
       endBracketSchema( );
 
    // addLayout( ); // for globalsSchema
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
    // * Begin square bracket layout:
    wf( `"layout":\n` );
    wf( "+", `[\n` );
-
-      commaRequired_g = false;
 
       // Not in Global
       // addTypeLayout( );
@@ -340,15 +324,11 @@ function createSchemaFile( )
 
       startSchema( );
 
-         // add the comma always next time.
-         if ( commaRequired_g == true )
-            wf( `,\n` );
+         wfComma( );
 
          // ** Begin bracket defs
          wf( `"$defs":\n` );
          wf( "+", `{\n` );
-
-            commaRequired_g = false;
 
             // These are all defs, even if not used by schema
             addGlobalsDefinitionBlock( );
@@ -384,15 +364,11 @@ function createSchemaFile( )
       endBracketSchema( );
 
    // addLayout( ); // for config.schema.json
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
    // * Begin square bracket layout:
    wf( `"layout":\n` );
    wf( "+", `[\n` );
-
-      commaRequired_g = false;
 
       // For Full Schema
       addTypeLayout( );
@@ -417,14 +393,11 @@ function createSchemaFile( )
 
 function beginJSON( )
 {
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
    // Begin bracket JSON
    wf( "+", `{\n` );   // For vi % balance: }
 
-   commaRequired_g = false;
 }
 
 //
@@ -432,8 +405,7 @@ function beginJSON( )
 //
 function  addSchemaHeader( )
 {
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
    // pluginAlias: The plugin identifier.
    wf( `"pluginAlias": "${ settings.PLATFORM_NAME }",\n` );
@@ -458,23 +430,18 @@ function  addSchemaHeader( )
 
 function startSchema( )
 {
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
    // * Begin bracket Schema
    wf( `"schema":\n` );
    wf( "+", `{\n` );   // For vi % balance: }
    //w ( `"schema": "https://json-schema.org/draft/2020-12/schema",\n`);
 
-   commaRequired_g = false;
 }
 
 function addPublishExternallyDefinitionBlock( )
 {
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
    wf( `"$comment": "START OF PublishExternally DEFINITION",\n` );
    // *** Begin bracket PublishExternally definition Block
@@ -492,9 +459,7 @@ function addPublishExternallyDefinitionBlock( )
 
 function addSubTypeDefinitionBlock( )
 {
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
    wf( `"$comment": "START OF subType DEFINITION",\n` );
    // *** Begin bracket subType designation definition Block
@@ -512,9 +477,7 @@ function addSubTypeDefinitionBlock( )
 
 function addDisplayNameDefinitionBlock( )
 {
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
    wf( `"$comment": "START OF displayName DEFINITION",\n` );
    // *** Begin bracket displayName definition Block
@@ -532,9 +495,7 @@ function addDisplayNameDefinitionBlock( )
 
 function addAccessoryTypeDefinitionBlock( )
 {
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
    wf( `"$comment": "START OF type DEFINITION",\n` );
    // *** Begin bracket Type definition Block
@@ -573,9 +534,7 @@ function addAccessoryTypeDefinitionBlock( )
 
 function addQueueDefinitionBlock( )
 {
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
    wf( `"queue":\n` );
    wf( "+", `{\n` );
@@ -590,9 +549,7 @@ function addQueueDefinitionBlock( )
 
 function addPollingSwitchDefinitionBlock( )
 {
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
    wf( `"$comment": "START OF PollingSwitch DEFINITION",\n` );
    // *** Begin bracket pollingSwitch definition Block
@@ -611,9 +568,7 @@ function addPollingSwitchDefinitionBlock( )
 
 function addCustomPollingDefinitionBlock( )
 {
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
    wf( `"$comment": "START OF polling DEFINITION",\n` );
    // *** Begin bracket Polling definition Block
@@ -654,9 +609,7 @@ function addCustomPollingDefinitionBlock( )
 
 function addFakeGatoDefinitionBlock( )
 {
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
    wf( `"$comment": "START OF fakegato DEFINITION",\n` );
    // *** Begin bracket FakeGato definition Block
@@ -745,9 +698,7 @@ function addFakeGatoDefinitionBlock( )
 }
 function addAccessoryDefinitionBlock( )
 {
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
    wf( `"$comment": "START OF accessories DEFINITION",\n` );
 
@@ -922,9 +873,8 @@ function addDefinitionBlock( )
    if ( commaRequired_g == true || commaRequired_g == false )
       return;
 
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
+
    wf( `"format":\n` );
    wf( "+", `{\n` );
       wf( `"title": "format",\n` );
@@ -960,12 +910,9 @@ function addDefinitionBlock( )
    commaRequired_g = true;
 }
 
-
 function addGlobalsDefinitionBlock( )
 {
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
       wf( `"constants":\n` );
       wf( "+", `{\n` );
@@ -1118,9 +1065,7 @@ function addGlobalsDefinitionBlock( )
 
 function addCharacteristicDefinitionBlock( )
 {
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
    wf( `"$comment": "START OF CHARACTERISTIC DEFINITIONS",\n` );
    // Over the Cmd4 Characteristics, create pre-definitions
@@ -1248,16 +1193,14 @@ function addCharacteristicDefinitionBlock( )
 
 function beginSchemaProperties( )
 {
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
    // ** Begin bracket properties
    wf( `"properties":\n` );
    wf( "+", `{\n` );
 
-   commaRequired_g = false;
 }
+
 function endSchemaProperties( )
 {
    // add the comma always next time.
@@ -1272,9 +1215,7 @@ function endSchemaProperties( )
 
 function addGlobalsForSchema( forSchema )
 {
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
    // All the globals that can be used at the Accessory level
    wf( `"debug": { "$ref": "#/$defs/debug"},\n` );
@@ -1308,9 +1249,7 @@ function addCharacteristicsForSchema( )
    // All the characteristics
    for ( let i=0; i < CMD4_ACC_TYPE_ENUM.EOL; i ++)
    {
-      // add the comma always next time.
-      if ( commaRequired_g == true )
-         wf( `,\n` );
+      wfComma( );
 
       let properties = CMD4_ACC_TYPE_ENUM.properties[ i ];
       let characteristicString = properties.sche;
@@ -1323,9 +1262,7 @@ function addCharacteristicsForSchema( )
 
 function addQueueForSchema( )
 {
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
    wf( `"${ constants.QUEUE }": { "$ref": "#/$defs/queue"}` );
 
@@ -1334,9 +1271,7 @@ function addQueueForSchema( )
 
 function addPollingSwitchForSchema( )
 {
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
    wf( `"pollingSwitch": { "$ref": "#/$defs/pollingSwitch"}` );
 
@@ -1345,9 +1280,7 @@ function addPollingSwitchForSchema( )
 
 function addCustomPollingForSchema( )
 {
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
    // Note: This is called polling as main.js modifies it for add/del characteristics
    wf( `"polling": { "$ref": "#/$defs/polling"}` );
@@ -1357,9 +1290,7 @@ function addCustomPollingForSchema( )
 
 function addStateCmdForSchema( )
 {
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
    wf( `"${ constants.STATE_CMD_PREFIX }": { "$ref": "#/$defs/state_cmd_prefix"},\n` );
    wf( `"${ constants.STATE_CMD }": { "$ref": "#/$defs/state_cmd"},\n` );
@@ -1370,9 +1301,7 @@ function addStateCmdForSchema( )
 
 function addFakeGatoForSchema( )
 {
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
    wf( `"${ constants.FAKEGATO }": { "$ref": "#/$defs/fakegato"}` );
 
@@ -1383,23 +1312,19 @@ function addFakeGatoForSchema( )
 
 function addTypeLayout( )
 {
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
-      wf( "+", `{\n` );
-        wf( `"key": "${ constants.TYPE }",\n` );
-        wf( `"$ref": "#/$defs/type"\n` );
-      wf( "-", `}` );
+   wf( "+", `{\n` );
+     wf( `"key": "${ constants.TYPE }",\n` );
+     wf( `"$ref": "#/$defs/type"\n` );
+   wf( "-", `}` );
 
    commaRequired_g = true;
 }
 
 function addNameLayout( )
 {
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
    wf( "+", `{\n` );
      wf( `"key": "name",\n` );
@@ -1415,9 +1340,7 @@ function addNameLayout( )
 /*
 function addPublishExternallyLayout( )
 {
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
    wf( "+", `{\n` );
      wf( `"publishExternally": {"$ref": "#/defs/publishExternally"}\n` );
@@ -1429,9 +1352,7 @@ function addPublishExternallyLayout( )
 
 function addGlobalsLayoutForSchema( forSchema )
 {
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
    wf( "+", `{\n` );
       wf( `"title": "${ forSchema } Options",\n` );
@@ -1488,9 +1409,7 @@ function addGlobalsLayoutForSchema( forSchema )
 
 function addStateCmdLayoutForSchema( forSchema = null )
 {
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
    wf( "+", `{\n` );
       if ( forSchema == null )
@@ -1512,9 +1431,7 @@ function addStateCmdLayoutForSchema( forSchema = null )
 
 function addFakeGatoLayout( )
 {
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-      wf( `,\n` );
+   wfComma( );
 
    wf( "+", `{\n` );
       wf( `"title": "FakeGato Options",\n` );
@@ -1561,12 +1478,7 @@ function addRequiredCharacteristicPerDeviceLayout( )
 
       requiredCharacteristics.forEach( ( entry ) =>
       {
-         // add the comma always next time.
-         if ( commaRequired_g == true )
-         {
-            wf( `,\n` );
-            commaRequired_g = false;
-         }
+         wfComma( );
 
          let requiredCharacteristic = CMD4_ACC_TYPE_ENUM.accEnumIndexToLC( entry.type );
          // add the comma always next time.
@@ -1596,12 +1508,7 @@ function addRequiredCharacteristicPerDeviceLayout( )
          {
             itemsStarted = true;
 
-            // add the comma always next time.
-            if ( commaRequired_g == true )
-            {
-               wf( `,\n` );
-               commaRequired_g = false;
-            }
+            wfComma( );
 
             wf( "+", `{\n` );
                wf( `"type": "fieldset",\n`);
@@ -1639,12 +1546,7 @@ function addQueueTypesLayoutForSchema( forSchema = null )
 {
    wf( `"$comment": "START OF QUEUE TYPES LAYOUT BLOCK",\n` );
 
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-   {
-      wf( `,\n` );
-      commaRequired_g = false;
-   }
+   wfComma( );
 
    wf( "+", `{\n` );
       if ( forSchema == null )
@@ -1685,12 +1587,7 @@ function addPollingSwitchLayout( )
 {
    wf( `"$comment": "START OF POLLING SWITCH LAYOUT",\n` );
 
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-   {
-      wf( `,\n` );
-      commaRequired_g = false;
-   }
+   wfComma( );
 
    wf( "+", `{\n` );
       wf( `"type": "fieldset",\n`);
@@ -1712,12 +1609,7 @@ function addCustomPollingLayout( )
 {
    wf( `"$comment": "START OF CUSTOM POLLING LAYOUT BLOCK",\n` );
 
-   // add the comma always next time.
-   if ( commaRequired_g == true )
-   {
-      wf( `,\n` );
-      commaRequired_g = false;
-   }
+   wfComma( );
 
    wf( "+", `{\n` );
       wf( `"title": "Custom Polling",\n` );
@@ -1814,6 +1706,13 @@ function testGeneratedSchema( )
 
 }
 
+function wfComma()
+{
+   if ( commaRequired_g == true )
+      wf( `,\n` );
+
+   commaRequired_g = false;
+}
 
 // Write to fid the given text, increasing or decreasing bracketLevel.
 function wf( level, text = undefined, comment = undefined )
