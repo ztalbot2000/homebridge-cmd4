@@ -1206,7 +1206,7 @@ class Cmd4Accessory
             this.loggingService = new FakeGatoHistoryService
             (
                this.eve,
-               this,
+               this.platform,
                { [ constants.STORAGE ] : constants.FS,
                  [ constants.PATH ]   : this.storagePath
                }
@@ -1218,7 +1218,7 @@ class Cmd4Accessory
             this.loggingService = new FakeGatoHistoryService
             (
                this.eve,
-               this,
+               this.platform,
                { [ constants.STORAGE ] : constants.GOOGLE_DRIVE,
                  [ constants.FOLDER ]  : this.folder,
                  [ constants.KEYPATH ] : this.keyPath }
