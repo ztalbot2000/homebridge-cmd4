@@ -122,10 +122,13 @@ class Cmd4PriorityPollingQueue
       let storedValue = self.cmd4Storage.getStoredValueForIndex( accTypeEnumIndex );
       callback( 0, storedValue );
 
-      // When the value is returned, it will update homebridge
-      self.queue.highPriorityQueue.push( { [ constants.IS_SET_lv ]: false, [ constants.QUEUE_GET_IS_UPDATE_lv ]: true, [ constants.ACCESSORY_lv ]: self, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: null, [ constants.VALUE_lv ]: null, [ constants.CALLBACK_lv ]: callback } );
+      if ( self.queue.queueType != constants.QUEUETYPE_WORM2 )
+      {
+         // When the value is returned, it will update homebridge
+         self.queue.highPriorityQueue.push( { [ constants.IS_SET_lv ]: false, [ constants.QUEUE_GET_IS_UPDATE_lv ]: true, [ constants.ACCESSORY_lv ]: self, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: null, [ constants.VALUE_lv ]: null, [ constants.CALLBACK_lv ]: callback } );
 
-      self.queue.processQueueFunc( HIGH_PRIORITY_GET, self.queue );
+         self.queue.processQueueFunc( HIGH_PRIORITY_GET, self.queue );
+      }
    }
 
    addLowPriorityGetPolledQueueEntry( accessory, accTypeEnumIndex, characteristicString, interval, timeout )
@@ -232,7 +235,9 @@ class Cmd4PriorityPollingQueue
          } else  // getValue failed
          {
             // High Priority Get failed. We need to keep trying (WoRm queue only )
-            if ( queue.queueType == constants.QUEUETYPE_WORM )
+            if ( queue.queueType == constants.QUEUETYPE_WORM ||
+                 queue.queueType == constants.QUEUETYPE_WORM2
+               )
                queue.highPriorityQueue.push( entry );
 
             queue.errorCountSinceLastGoodTransaction++;
@@ -798,7 +803,9 @@ class Cmd4PriorityPollingQueue
             setTimeout( ( ) =>
             {
                if ( entryIndex == 0 && settings.cmd4Dbg )
-                  if ( queue.queueType == constants.QUEUETYPE_WORM )
+                  if ( queue.queueType == constants.QUEUETYPE_WORM ||
+                       queue.queueType == constants.QUEUETYPE_WORM2
+                     )
                      entry.accessory.log.debug( `Started staggered kick off of ${ queue.lowPriorityQueue.length } polled characteristics for queue: "${ entry.accessory.queue.queueName }"` );
                   else
                      entry.accessory.log.debug( `Started staggered kick off of ${ queue.lowPriorityQueue.length } polled characteristics for "${ entry.accessory.displayName }"` );
@@ -810,7 +817,9 @@ class Cmd4PriorityPollingQueue
                if ( entryIndex == queue.lowPriorityQueue.length -1 )
                {
                   if ( settings.cmd4Dbg )
-                     if ( queue.queueType == constants.QUEUETYPE_WORM )
+                     if ( queue.queueType == constants.QUEUETYPE_WORM ||
+                          queue.queueType == constants.QUEUETYPE_WORM2
+                        )
                         entry.accessory.log.debug( `All characteristics are now being polled for queue: "${ queue.queueName }"` );
                      else
                         entry.accessory.log.debug( `All characteristics are now being polled for "${ entry.accessory.displayName }"` );
@@ -853,6 +862,7 @@ class Cmd4PriorityPollingQueue
             this.processQueueFunc = this.processSequentialQueue;
             break;
          case constants.QUEUETYPE_WORM:
+         case constants.QUEUETYPE_WORM2:
             this.processQueueFunc = this.processWormQueue;
             // When not in debug mode, do not echo errors for the WoRm queue
             // as errors are handled through retries.
@@ -941,9 +951,10 @@ var parseAddQueueTypes = function ( log, entrys )
                break;
             case constants.QUEUETYPE:
                if ( value != constants.QUEUETYPE_WORM &&
+                    value != constants.QUEUETYPE_WORM2 &&
                     value != constants.QUEUETYPE_SEQUENTIAL )
                {
-                  throw new Error( `QueueType: ${ entry.queueType } is not valid at index: ${ entryIndex }. Expected: ${ constants.QUEUETYPE_WORM } or ${ constants.QUEUETYPE_SEQUENTIAL }` );
+                  throw new Error( `QueueType: ${ entry.queueType } is not valid at index: ${ entryIndex }. Expected: ${ constants.QUEUETYPE_WORM }, ${ constants.QUEUETYPE_WORM2 } or ${ constants.QUEUETYPE_SEQUENTIAL }` );
                }
 
                queueType = value;

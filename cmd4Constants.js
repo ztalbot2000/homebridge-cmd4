@@ -81,6 +81,7 @@ var cmd4Constants = {
    // Queue Types
    QUEUETYPE_SEQUENTIAL:      "Sequential",
    QUEUETYPE_WORM:            "WoRm",
+   QUEUETYPE_WORM2:           "WoRm2",
    // Used internally to mean only polled entries go straight through the queue
    QUEUETYPE_STANDARD:        "StandarD",
    // Used internally to mean entries go straight through the queue
