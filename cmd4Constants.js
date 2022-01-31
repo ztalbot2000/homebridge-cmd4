@@ -117,6 +117,11 @@ var cmd4Constants = {
    DEFINITIONS:              "definitions",
    PROPS:                    "props",
 
+   // While also characteristics, they are also used by
+   // the infomation service
+   MANUFACTURER:             "manufacturer",
+   SERIALNUMBER:             "serialNumber",
+   MODEL:                    "model",
 
    // Internal list variables
    ACCESSORY_lv:                    "accessory",
