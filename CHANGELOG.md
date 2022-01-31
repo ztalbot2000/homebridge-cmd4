@@ -1,13 +1,8 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
-### 6.1.0 (2022-01-30)
-
-##### New Features
-
-*  See if WoRm2 Queue can resolve large scale AirCon accessories ([61b164ae](https://github.com/ztalbot2000/homebridge-cmd4/commit/61b164ae11ffb4731da0ac60bba51d7fbeefff94))
+#### 6.1.1 (2022-01-31)
 
 ##### Bug Fixes
 
-*  bug [#124](https://github.com/ztalbot2000/homebridge-cmd4/pull/124), Eve graph not being displayed ([929da3e3](https://github.com/ztalbot2000/homebridge-cmd4/commit/929da3e39548df645d316365ab1273d6b5ed250d))
-*  PROGRAM_SCHEDULED_MANUAL_MODE_ constant remove trailing underscore ([52e1fd3f](https://github.com/ztalbot2000/homebridge-cmd4/commit/52e1fd3f100e18588a171c96b8ef9f511180c1bd))
+*  bug [#125](https://github.com/ztalbot2000/homebridge-cmd4/pull/125) Manufacturer, serialNumber and Model not displaying in Home ([715a2127](https://github.com/ztalbot2000/homebridge-cmd4/commit/715a21275229ffb395b98a2e7c4f9f3d3fd785dd))
 
 
