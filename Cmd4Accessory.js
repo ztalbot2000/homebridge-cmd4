@@ -1209,7 +1209,7 @@ class Cmd4Accessory
             this.loggingService = new FakeGatoHistoryService
             (
                this.eve,
-               this,
+               this.platform,
                { [ constants.STORAGE ] : constants.FS,
                  [ constants.PATH ]   : this.storagePath
                }
@@ -1221,7 +1221,7 @@ class Cmd4Accessory
             this.loggingService = new FakeGatoHistoryService
             (
                this.eve,
-               this,
+               this.platform,
                { [ constants.STORAGE ] : constants.GOOGLE_DRIVE,
                  [ constants.FOLDER ]  : this.folder,
                  [ constants.KEYPATH ] : this.keyPath }
@@ -1485,6 +1485,24 @@ class Cmd4Accessory
             }
             case constants.SUBTYPE:
                this.subType = value;
+
+               break;
+            case constants.MODEL:
+               // createAccessorysInformationService uses these
+               // to add to existing information service, when defined
+               this.model = value;
+
+               break;
+            case constants.MANUFACTURER:
+               // createAccessorysInformationService uses these
+               // to add to existing information service, when defined
+               this.manufacturer = value;
+
+               break;
+            case constants.SERIALNUMBER:
+               // createAccessorysInformationService uses these
+               // to add to existing information service, when defined
+               this.serialNumber = value;
 
                break;
             case constants.DISPLAYNAME:
