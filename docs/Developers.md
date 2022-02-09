@@ -7,12 +7,11 @@
 * [**Where to Begin**](#where-to-begin)
 * [**Homebridge API**](#homebridge-api)
 * [**Platform Accessories**](#platform-accessories)
-* [***Television Accessories***](#television-accessories)
+* [**Television Accessories**](#television-accessories)
 * [**Standard Accessories**](#standard-accessories)
 * [**Cmd4 Directives**](#cmd4-directives)
 * [**Cmd4 Devices and Characteristics**](#cmd4-devices-and-characteristics)
 * [**Priority Queued Polling**](#priority-queued-polling)
-* [**Migrating from Homebridge-cmdswitch2**](#migrating-from-homebridge-cmdswitch2)
 * [**Developer Notes**](#developer-notes)
 * [**Adding in Fakegato history**](#adding-in-fakegato-history)
 * [**Unit Testing**](#unit-testing)
@@ -28,7 +27,8 @@
 * [**basic_ping.sh**](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/Extras/Cmd4Scripts/Examples/basic_ping.sh)
 * [**advanced_ping.sh**](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/Extras/Cmd4Scripts/Examples/advanced_ping.sh)
 * [**wakeonlan.sh**](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/Extras/Cmd4Scripts/Examples/wakeonlan.sh)
-* [**cmd4-E-Zone-MyAir**](https://github.com/mitch7391/cmd4-E-Zone-MyAir/blob/master/Temperature%20Sensors/One%20Constant%20Zone/ezone.sh)
+* [**homebridge-cmd4-AdvantageAir**](https://github.com/mitch7391/homebridge-cmd4-AdvantageAir/blob/master/AdvAir.sh)
+* [**cmd4-HisenseTV**](https://github.com/mitch7391/cmd4-HisenseTV/blob/main/HisenseTV.sh)   
 
 ## Homebridge API
 &nbsp;&nbsp;&nbsp; Cmd4 is not possible without Homebridge. Prior to Cmd4 Version 3, Cmd4 just created Standard Plugin Accessories. With Version 3 of Cmd4, Cmd4 follows the Hombridge API as defined on [Homebridge API](https://developers.homebridge.io/#/) to be followed exactly. Both Platform and Accessory Plugins can be created. In fact the examples can be recreated exactly.<BR>
