@@ -1,3 +1,10 @@
+<span align="center">
+  
+[![npm](https://badgen.net/npm/v/homebridge-cmd4/latest?icon=npm&label)](https://www.npmjs.com/package/homebridge-cmd4)
+[![npm](https://badgen.net/npm/dt/homebridge-cmd4?label=downloads)](https://www.npmjs.com/package/homebridge-cmd4)
+  
+</span>
+
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics, Custom Characteristics and Priority Queued Polling too!!
 <base _target="_self">
 
@@ -183,8 +190,8 @@ Based on the best of:
 * [homebridge-cmdswitch2]https://github.com/luisiam/homebridge-cmdswitch2.git
 * [homebridge-real-fake-garage-doors]https://github.com/plasticrake/homebridge-real-fake-garage-doors.git
 * [homebridge-homeseer]https://github.com/jrhubott/homebridge-homeseer.git
-* Thanks to TimofeyK for all his help with fakegato and for suggesting it.
-* Thanks to Mitch Williams for his endless encouragement.
+* Thanks to [TimofeyK](https://github.com/TimofeyK) for all his help with fakegato and for suggesting it.
+* Thanks to [Mitch Williams](https://github.com/mitch7391) for his endless encouragement.
 * Thanks especially to those who continue to work on Homebridge and those who make it better.
 * And most importantly my Wife.
 
