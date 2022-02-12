@@ -74,6 +74,9 @@ function checkForUpdates( )
 
    ( async( ) =>
    {
+      // Fix for #127, constant crash loops when no internet connection
+      // trying to get latest Cmd4 version.
+      // thx nano9g
       try
       {
          let lv = await getLatestVersion( );
@@ -82,7 +85,7 @@ function checkForUpdates( )
          {
             console.log( chalk.green( `[UPDATE AVAILABLE] ` ) + `Version ${lv} of ${myPkg.name} is available. Any release notes can be found here: ` + chalk.underline( `${myPkg.changelog}` ) );
          }
-      
+
       }
       catch( error )
       {

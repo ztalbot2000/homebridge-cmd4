@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-6-1-2">**Whats new in 6.1.2**</a>
 * <a href="#Whats-new-in-6-1-1">**Whats new in 6.1.1**</a>
 * <a href="#Whats-new-in-6-1-0">**Whats new in 6.1.0**</a>
 * <a href="#Whats-new-in-6-0-4">**Whats new in 6.0.4**</a>
@@ -80,6 +81,14 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-6-1-2">## Whats new in 6.1.2</a>
+#### 6.1.2 (2022-02-12)
+
+##### Bug Fixes
+
+*  bug [#127](https://github.com/ztalbot2000/homebridge-cmd4/pull/127") Resolve crash when no internet connection
+
 
 <a name="Whats-new-in-6-1-1">## Whats new in 6.1.1</a>
 #### 6.1.1 (2022-01-31)
