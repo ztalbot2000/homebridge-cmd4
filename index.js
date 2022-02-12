@@ -74,11 +74,19 @@ function checkForUpdates( )
 
    ( async( ) =>
    {
-      let lv = await getLatestVersion( );
-
-      if ( isVersionNewerThanPackagedVersion( lv ) )
+      try
       {
-         console.log( chalk.green( `[UPDATE AVAILABLE] ` ) + `Version ${lv} of ${myPkg.name} is available. Any release notes can be found here: ` + chalk.underline( `${myPkg.changelog}` ) );
+         let lv = await getLatestVersion( );
+
+         if ( isVersionNewerThanPackagedVersion( lv ) )
+         {
+            console.log( chalk.green( `[UPDATE AVAILABLE] ` ) + `Version ${lv} of ${myPkg.name} is available. Any release notes can be found here: ` + chalk.underline( `${myPkg.changelog}` ) );
+         }
+      
+      }
+      catch( error )
+      {
+         console.log( chalk.yellow( `[UPDATE CHECK FAILED] ` ) + `Could not check for newer versions of ${myPkg.name} due to error ${error.name}: ${error.message}`)
       }
    })( );
 }
