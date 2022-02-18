@@ -361,7 +361,8 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
 
       let accessory = new Cmd4Accessory( log, config, _api, [ ] );
 
-      expect ( ( ) => accessory.cmd4Storage.setStoredValueForIndex( -1, 0 ) ).to.throw(/setStoredValue - Characteristic index: -1 not between 0 and 223\nCheck your config.json file for unknown characteristic./);
+      let errMsg=`setStoredValue - Characteristic index: -1 not between 0 and ${ ACC_EOL }\nCheck your config.json file for unknown characteristic.`;
+      expect ( ( ) => accessory.cmd4Storage.setStoredValueForIndex( -1, 0 ) ).to.throw(errMsg);
 
    });
 
@@ -382,7 +383,8 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
 
       let accessory = new Cmd4Accessory( log, config, _api, [ ] );
 
-      expect ( ( ) => accessory.cmd4Storage.setStoredValueForIndex( CMD4_ACC_TYPE_ENUM.EOL, 0 ) ).to.throw(/setStoredValue - Characteristic index: 223 not between 0 and 223\nCheck your config.json file for unknown characteristic./);
+      let errMsg=`setStoredValue - Characteristic index: ${ ACC_EOL } not between 0 and ${ ACC_EOL }\nCheck your config.json file for unknown characteristic.`;
+      expect ( ( ) => accessory.cmd4Storage.setStoredValueForIndex( CMD4_ACC_TYPE_ENUM.EOL, 0 ) ).to.throw(errMsg);
 
    });
 
@@ -446,7 +448,8 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
 
       let accessory = new Cmd4Accessory( log, config, _api, [ ] );
 
-      expect ( ( ) => accessory.cmd4Storage.getStoredValueForIndex( -1 ) ).to.throw(/getStoredValue - Characteristic index: -1 not between 0 and 223\nCheck your config.json file for unknown characteristic./);
+      let errMsg=`getStoredValue - Characteristic index: -1 not between 0 and ${ ACC_EOL }\nCheck your config.json file for unknown characteristic.`;
+      expect ( ( ) => accessory.cmd4Storage.getStoredValueForIndex( -1 ) ).to.throw(errMsg);
 
    });
 
@@ -466,7 +469,8 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
 
       let accessory = new Cmd4Accessory( log, config, _api, [ ] );
 
-      expect ( ( ) => accessory.cmd4Storage.getStoredValueForIndex( CMD4_ACC_TYPE_ENUM.EOL ) ).to.throw(/getStoredValue - Characteristic index: 223 not between 0 and 223\nCheck your config.json file for unknown characteristic./);
+      let errMsg=`setStoredValue - Characteristic index: ${ ACC_EOL } not between 0 and ${ ACC_EOL }\nCheck your config.json file for unknown characteristic.`;
+      expect ( ( ) => accessory.cmd4Storage.setStoredValueForIndex( CMD4_ACC_TYPE_ENUM.EOL, 0 ) ).to.throw(errMsg);
 
    });
 

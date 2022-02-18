@@ -163,19 +163,9 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( `1` ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000E5-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.accessory-properties
-            // Permissions: Paired Read, Paired Write, Notify
-
-            // Format: uint16
-
-            // Minimum Value: 0
-            // Maximum Value: 2
-            // Step Value: 1
-            // Valid Values
-            // 0x0000        "TBD"
-            // 0x0001 (bit0) "TBD"
-            // 0x0002 - 0xFFFF "Reserved"
+            // To avoid hard coding values, characteristic definitions can be found in:
+            // Cmd4 Github pages -> http://ztalbot2000.github.io/homebridge-cmd4
+            // Homebridge developer documentation -> https://developers.homebridge.io/#/
 
             break;
          }
@@ -185,16 +175,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000A6-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.accessory-properties
-            // Permissions: Paired Read, Notify
-
-            // Format: uint32
-
-            // Valid Values
-            // 0x0001 (bit0) "Requires additional setup"
-            // 0x0002 - 0xFFFF "Reserved"
-
             break;
          }
          case "AccessoryIdentifier":   // 2
@@ -202,14 +182,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "TLB" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000057-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.accessoryIdentifier
-            // Permissions: Paired Read
-
-            // Format: string
-
-            // Maximum Length: 64
 
             break;
          }
@@ -219,20 +191,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000B0-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.active
-            // Permissions: Paired Write, Paired Read, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 1
-            // Step Value: 1
-
-            // Valid Values
-            // 0 - "INACTIVE"
-            // 1 - "ACTIVE"
-
             break;
          }
          case "ActiveIdentifier":   // 4
@@ -240,13 +198,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 000000E7-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.activeIdentifier
-            // Permissions: Paired Write, Paired Read, Notify
-            // Found in HomeKitTypes-Television.js
-
-            // Format: uint32
 
             break;
          }
@@ -256,16 +207,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000021E-0000-1000-8000-0000023B
-            // Type: public.hap.characteristic.activityInterval
-            // Permissions: Paired Read, Notify
-            // Found in HomeKit.js  - Checked 11-19-2020
-
-            // Format: uint32
-
-            // Minimum Value: 0
-            // Step Value: 1
-
             break;
          }
          case "AdministratorOnlyAccess":   // 6
@@ -273,16 +214,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000001-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.administrator-only-access
-            // Permissions: Paired Read, Paired Write, Notify
-
-            // Format: bool
-
-            // Values
-            // This mode implies that when enabled, the device will only accept
-            // administrator access.
 
             break;
          }
@@ -292,19 +223,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "30" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000064-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.air-particulate.density
-            // Permissions: Paired Read, Notify
-
-            // Format: float
-
-            // Minimum Value: 0
-            // Maximum Value: 1000
-
-            // Values
-            // This characteristic indicates the current air particulate matter
-            // density in micrograms/m3.
-
             break;
          }
          case "AirParticulateSize":   // 8
@@ -312,21 +230,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000065-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.air-particulate.size
-            // Permissions: Paired Read, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 1
-            // Step Value: 1
-
-            // Valid Values
-            // 0     - "2.5 Micrometers"
-            // 1     - "10 Micrometers"
-            // 2-255 - "Reserved"
 
             break;
          }
@@ -336,24 +239,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000095-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.air-quality
-            // Permissions: Paired Read, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 5
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - "UNKNOWN"
-            // 1 - "EXCELLENT"
-            // 2 - "GOOD"
-            // 3 - "FAIR"
-            // 4 - "INFERIOR"
-            // 5 - "POOR"
-
             break;
          }
          case "AppMatchingIdentifier":   // 10
@@ -361,14 +246,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 000000A4-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.AppMatchingIdentifier
-            // Permissions: Read
-
-            // Format: TLV8
-
-            // Values
 
             break;
          }
@@ -378,16 +255,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000005-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.audio-feedback
-            // Permissions: Paired Read, Paired Write, Notify
-
-            // Format: bool
-
-            // Values
-            // This characteristic describes whether audio feedback
-            // (e.g. a beep, or other external sound mechanism) is enabled.
-
             break;
          }
          case "BatteryLevel":   // 12
@@ -395,17 +262,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "50" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000068-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.battery-level
-            // Permissions: Paired Read, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 100
-            // Step Value: 1
-            // Unit: percentage
 
             break;
          }
@@ -415,16 +271,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "100" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000008-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.brightness
-            // Permissions: Paired Read, Paired Write, Notify
-
-            // Format: int
-
-            // Min Value: 0
-            // Max Value: 100
-            // Unit: Percentage
-
             break;
          }
          case "ButtonEvent":   // 14
@@ -432,12 +278,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000123-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.battery-level
-            // Permissions: Paired Read
-
-            // Format: TLV8
 
             break;
          }
@@ -447,13 +287,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000021E-0000-1000-8000-00000246
-            // Type: public.hap.characteristic.CCASignalDetectThreshold
-            // Permissions: Paired Read
-            // Found in HomeKit.js  - Checked 11-20-2020
-
-            // Format: int
-
             break;
          }
          case "CCASignalDetectThreshold":   // 16
@@ -461,13 +294,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000021E-0000-1000-8000-00000245
-            // Type: public.hap.characteristic.CCASignalDetectThreshold
-            // Permissions: Paired Read
-            // Found in HomeKit.js  - Checked 11-20-2020
-
-            // Format: int
 
             break;
          }
@@ -477,17 +303,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "100" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000008-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.brightness
-            // Permissions: Read, Write, Notify, Timed Write
-            // Found in HomeKit.js  - Checked 11-20-2020
-
-            // Format: UINT8
-
-            // Valid Values:
-            // 0 - "DISABLE"
-            // 1 - "ENABLE"
-
             break;
          }
          case "CarbonDioxideDetected":   // 18
@@ -495,20 +310,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000092-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.carbon-dioxide.detected
-            // Permissions: Paired Read, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 1
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - "CO2_LEVELS_NORMAL"
-            // 1 - "CO2_LEVELS_ABNORMAL"
 
             break;
          }
@@ -518,15 +319,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000093-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.carbon-dioxide.level
-            // Permissions: Paired Read, Notify
-
-            // Format: float
-
-            // Minimum Value: 0
-            // Maximum Value: 100000
-
             break;
          }
          case "CarbonDioxidePeakLevel":   // 20
@@ -534,15 +326,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000094-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.carbon-dioxide.peak-level
-            // Permissions: Paired Read, Notify
-
-            // Format: float
-
-            // Minimum Value: 0
-            // Maximum Value: 100000
 
             break;
          }
@@ -552,19 +335,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000069-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.carbon-monoxide.detected`
-            // Permissions: Paired Read, Notify
-
-            // Format: uint8
-
-            // Min Value: 0
-            // Max Value: 1
-
-            // Valid Values:
-            // 0 - "CO_LEVELS_NORMAL"
-            // 1 - "CO_LEVELS_ABNORMAL"
-
             break;
          }
          case "CarbonMonoxideLevel":   // 22
@@ -572,15 +342,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000090-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.carbon-monoxide.level
-            // Permissions: Paired Read, Notify
-
-            // Format: float
-
-            // Minimum Value: 0
-            // Maximum Value: 100
 
             break;
          }
@@ -590,15 +351,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000091-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.carbon-monoxide.peak-level
-            // Permissions: Paired Read, Notify
-
-            // Format: float
-
-            // Minimum Value: 0
-            // Maximum Value: 100
-
             break;
          }
          case "Category":   // 24
@@ -606,16 +358,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 000000A3-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.category
-            // Permissions: Paired Read, Notify
-
-            // Format: uint16
-
-            // Minimum Value: 1
-            // Maximum Value: 16
-            // Step Value: 1
 
             break;
          }
@@ -625,12 +367,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000021E-0000-1000-8000-00000143
-            // Type: public.hap.characteristic.CharacteristicValueTransitionControl
-            // Permissions: Paired Read, Paired Write, Notify
-
-            // Format: tlv8
-
             break;
          }
          case "ChargingState":   // 26
@@ -638,21 +374,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000008F-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.charging-state
-            // Permissions: Paired Read, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 2
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - "NOT_CHARGING"
-            // 1 - "CHARGING"
-            // 2 - "NOT_CHARGEABLE"
 
             break;
          }
@@ -662,20 +383,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000DD-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.closedCaptions
-            // Permissions: Paired Write, Paired Read, Notify
-            // Found in HomeKitTypes-Television.js
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 1
-
-            // Valid Values
-            // 0 - "DISABLED"
-            // 1 - "ENSABLED"
-
             break;
          }
          case "ColorTemperature":   // 28
@@ -683,16 +390,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "50" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 000000CE-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.color-temperature
-            // Permissions: Paired Read, Paired Write, Notify
-
-            // Format: uint32
-
-            // Minimum Value: 50
-            // Maximum Value: 400
-            // Step Value: 1
 
             break;
          }
@@ -702,12 +399,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000A0-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.configureBridgedAccessory
-            // Permissions: Paired Write
-
-            // Format: TLV8
-
             break;
          }
          case "ConfigureBridgedAccessoryStatus":   // 30
@@ -715,12 +406,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000009D-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.configureBridgedAccessoryStatus
-            // Permissions: Paired Read, Notify
-
-            // Format: TLV8
 
             break;
          }
@@ -730,12 +415,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( `"${ device }"` ); else process.stdout.write(`"${ c }"` );
 
-            // UUID: 000000E3-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.configuredName
-            // Permissions: Paired Write, Paired Read, Notify
-
-            // Format: string
-
             break;
          }
          case "ContactSensorState":   // 32
@@ -743,20 +422,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000006A-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.contact-state
-            // Permissions: Paired Read, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 1
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - "CONTACT_DETECTED"
-            // 1 - "CONTACT_NOT_DETECTED"
 
             break;
          }
@@ -766,17 +431,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "32.4" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000000D-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.temperature.cooling-threshold
-            // Permissions: Paired Read, Paired Write, Notify
-
-            // Format: float
-
-            // Minimum Value: 10
-            // Maximum Value: 35
-            // Step Value: 0.1
-            // Unit: celcius
-
             break;
          }
          case "CurrentAirPurifierState":   // 34
@@ -784,21 +438,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "2" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 000000A9-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.air-purifier.state.current
-            // Permissions: Paired Read, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 2
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - "INACTIVE"
-            // 1 - "IDLE"
-            // 2 - "PURIFYING_AIR"
 
             break;
          }
@@ -808,16 +447,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000006B-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.light-level.current
-            // Permissions: Paired Read, Notify
-
-            // Format: float
-
-            // Minimum Value: 0.0001
-            // Maximum Value: 100000
-            // Unit: lux
-
             break;
          }
          case "CurrentDoorState":   // 36
@@ -826,24 +455,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000000E-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.door-state.current
-            // Permissions: Paired Read, Notify
-
-            // Format: uint8
-            // Minimum Value: 0
-            // Maximum Value: 4
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - "OPEN"    -  The door is fully open."
-            // 1 - "CLOSED"  -  The door is fully closed."
-            // 2 - "OPENING" -  The door is actively opening."
-            // 3 - "CLOSING" -  The door is actively closing."
-            // 4 - "STOPPED" -  The door is not moving, and it is not fully
-            //      open nor fully closed."
-            // 5-255 - "Reserved"
-
             break;
          }
          case "CurrentFanState":   // 37
@@ -851,21 +462,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 000000AF-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.fan.state.current
-            // Permissions: Paired Read, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 2
-            // Step Value: 1
-
-            // Valid Values
-            // 0 - "INACTIVE"
-            // 1 - "IDLE"
-            // 2 - "BLOWING_AIR"
 
             break;
          }
@@ -877,22 +473,6 @@ switch( io )
 
             process.exit(0);
 
-            // UUID: 000000B1-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.heater-cooler.current
-            // Permissions: Paired Read, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 3
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - "INACTIVE"
-            // 1 - "IDLE"
-            // 2 - "HEATING"
-            // 3 - "COOLING"
-
             break;
          }
          case "CurrentHeatingCoolingState":   // 39
@@ -903,21 +483,6 @@ switch( io )
 
             process.exit(0);
 
-            // UUID: 0000000F-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.heating-cooling.current
-            // Permissions: Paired Read, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 2
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - "OFF"  - The unit is off
-            // 1 - "HEAT" - The Heater is currently on.
-            // 2 - "COOL" - Cooler is currently on.
-
             break;
          }
          case "CurrentHorizontalTiltAngle":   // 40
@@ -925,17 +490,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000006C-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.horizontal-tilt.current
-            // Permissions: Paired Read, Notify
-
-            // Format: int
-
-            // Minimum Value: -90
-            // Maximum Value: 90
-            // Step Value: 1
-            // Unit: arcdegrees
 
             break;
          }
@@ -945,22 +499,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000B3-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.currentHumidifierDehumidifierState
-            // Permissions: Paired Write, Paired Read, Notify
-            // Found in HomekitTypes.js
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 3
-
-            // Valid Values
-            // 0 - "INACTIVE"
-            // 1 - "IDLE"
-            // 2 - "HUMIDIFYING"
-            // 3 - "DEHUMIDIFYING"
-
             break;
          }
          case "CurrentMediaState":   // 42
@@ -968,24 +506,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "2" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 000000E0-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.currentMediaState
-            // Permissions: Paired Read, Notify
-            // Found in HomeKitTypes-Television.js
-
-            // Format: uint32
-
-            // Minimum Value: 0
-            // Maximum Value: 3
-
-            // Valid Values
-            // 0 - "PLAY"
-            // 1 - "PAUSE"
-            // 2 - "STOP"
-            // 3 - "UNKNOWN3" - Reserved ????
-            // 4 - "LOADING"
-            // 3 - "INTERRUPTED'
 
             break;
          }
@@ -995,17 +515,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000006D-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.position.current
-            // Permissions: Paired Read, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 100
-            // Step Value: 1
-            // Unit: percentage
-
             break;
          }
          case "CurrentRelativeHumidity":   // 44
@@ -1013,17 +522,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "60.2" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000010-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.relative-humidity.current
-            // Permissions: Paired Read, Notify
-
-            // Format: float
-
-            // Minimum Value: 0
-            // Maximum Value: 100
-            // Step Value: 1
-            // Unit: percentage
 
             break;
          }
@@ -1033,21 +531,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000AA-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.slat.state.current
-            // Permissions: Paired Read, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 2
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - "FIXED"
-            // 1 - "JAMMED"
-            // 2 - "SWINGING"
-
             break;
          }
          case "CurrentTemperature":   // 46
@@ -1055,17 +538,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "22.2" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000011-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.temperature.current
-            // Permissions: Paired Read, Notify
-
-            // Format: float
-
-            // Minimum Value 0
-            // Maximum Value 100
-            // Step Value 0.1
-            // Unit celsius
 
             break;
          }
@@ -1075,17 +547,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000C1-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.tilt.current
-            // Permissions: Paired Read, Notify
-
-            // Format: int
-
-            // Minimum Value: -90
-            // Maximum Value: 90
-            // Step Value: 1
-            // Unit: arcdegrees
-
             break;
          }
          case "CurrentTime":   // 48
@@ -1093,12 +554,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "11.5" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000009B-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.currentTime
-            // Permissions: Paired Read, Paired Write
-
-            // Format: string
 
             break;
          }
@@ -1108,13 +563,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000021E-0000-1000-8000-00000245
-            // Type: public.hap.characteristic.currentTransport
-            // Permissions: Read
-            // Found in HomeKit.js  - Checked 11-19-2020
-
-            // Format: bool, 0 (false) and 1 (true)
-
             break;
          }
          case "CurrentVerticalTiltAngle": // 50
@@ -1123,35 +571,13 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000006E-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.vertical-tilt.current
-            // Permissions: Paired Read, Notify
-
-            // Format: int
-
-            // Minimum Value: -90
-            // Maximum Value: 90
-            // Step Value: 1
-            // Unit: arcdegrees
-
             break;
          }
-            case "CurrentVisibilityState":   // 51
-            {
+         case "CurrentVisibilityState":   // 51
+         {
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000135-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.currentVisibilityState
-            // Permissions: Paired Read, Notify
-            // Found in  HomeKitTypes-Television.js
-
-            // Format: uint8
-
-            // Valid Values
-            // 0 - "SHOWN"
-            // 1 - "HIDDEN"
 
             break;
          }
@@ -1161,13 +587,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000021E-0000-1000-8000-00000138
-            // Type: public.hap.characteristic.dataStreamHAPTransport
-            // Permissions: Read, Write, Write Response
-            // Found in  HomeKit.js - Checked 11/19/2020
-
-            // Format: TV8
-
             break;
          }
          case "DataStreamHAPTransportInterrupt":   // 53
@@ -1175,13 +594,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000021E-0000-1000-8000-00000139
-            // Type: public.hap.characteristic.dataStreamHAPTransportInterrupt
-            // Permissions: Paired Read, Notify
-            // Found in  HomeKit.js - Checked 11/19/2020
-
-            // Format: TV8
 
             break;
          }
@@ -1191,16 +603,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000098-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.zoom-digital
-            // Permissions: Paired Write, Paired Read
-
-            // Format: uint8
-
-            // Minimum Value: 1
-            // Maximum Value: 7
-            // Step Value: 1
-
             break;
          }
          case "DiagonalFieldOfView":   // 55
@@ -1208,17 +610,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "50" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000224-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.diagonalFieldOfView
-            // Permissions: Read, Notify
-
-            // Format: float
-
-            // Minimum Value: 0
-            // Maximum Value: 360
-            // Step Value: 1
-            // Unit: arcdegrees
 
             break;
          }
@@ -1228,17 +619,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000011D-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.zoom-digital
-            // Permissions: Read, Write, Notify
-
-            // Format: float
-
-            // Valid Values
-            // The value of this characteristic represents the digital zoom
-            // multiplier to be applied on the image sourced by the video
-            // RTP service that is sourcing the input image.
-
             break;
          }
          case "DiscoverBridgedAccessories":   // 57
@@ -1246,17 +626,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000009E-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.discoverBridgedAccessories
-            // Permissions: Paired Write, Paired Read, Notify
-            // Found in HomeKitTypes-Bridge.js
-
-            // Format: uint8
-
-            // Valid Values
-            // 0 - START_DISCOVERY
-            // 1 - STOP_DISCOVERY
 
             break;
          }
@@ -1266,15 +635,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000009F-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.discoveredBridgedAccessories
-            // Permissions: Paired Read, Notify
-            // Found in HomeKitTypes-Bridge.js (Values ???)
-
-            // Format: uint16
-
-            // Valid Values
-
             break;
          }
          case "DisplayOrder":   // 59
@@ -1282,15 +642,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 000000E7-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.displayOrder
-            // Permissions: Paired Write, Paired Read, Notify
-            // Found in HomeKitTypes-Television.js (Values ???)
-
-            // Format: TLV8
-
-            // Valid Values
 
             break;
          }
@@ -1300,15 +651,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000021E-0000-1000-8000-0000023D
-            // Type: public.hap.characteristic.EventRetransmissionMaximum
-            // Permissions: Read, Write, Notify
-            // Found in HomeKitTypes.js  - Checked 11/19/2020
-
-            // Format: uint8
-
-            // Valid Values
-
             break;
          }
          case "EventSnapshotsActive":   // 61
@@ -1316,17 +658,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000223-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.eventSnapshotsActive
-            // Permissions: Read, Write, Notify
-            // Found in HomeKitTypes.js  - Checked 11/19/2020
-
-            // Format: uint8
-
-            // Valid Values
-            // 0 - "DISABLE" - Disable Snapshot
-            // 1 - "ENABLE"  - Enable Snapshot
 
             break;
          }
@@ -1336,15 +667,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000021E-0000-1000-8000-0000023E
-            // Type: public.hap.characteristic.EventTransmissionCounters
-            // Permissions: Paired Read
-            // Found in HomeKitTypes.js  - Checked 11/19/2020
-
-            // Format: uint32
-
-            // Valid Values
-
             break;
          }
          case "FilterChangeIndication":   // 63
@@ -1352,20 +674,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 000000AC-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.filter.change-indication
-            // Permissions: Paired Read, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 1
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - " FILTER_OK" - Filter does not need to be changed
-            // 1 - "CHANGE_FILTER" - Filter needs to be changed
 
             break;
          }
@@ -1375,16 +683,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "50" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000AB-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.filter.life-level
-            // Permissions: Paired Read, Notify
-
-            // Format: float
-
-            // Minimum Value: 0
-            // Maximum Value: 100
-            // Step Value: 1
-
             break;
          }
          case "FirmwareRevision":   // 65
@@ -1392,29 +690,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "100.1.1" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000052-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.firmware.revision
-            // Permissions: Paired Read
-
-            // Format: string
-
-            // Valid Values
-            // This characteristic describes a hardware revision string x[.y[.z]]
-            // (e.g. "100.1.1") and tracked when the board or components of the same
-            // accessory is changed :
-            // <x> is the major version number, required.
-            // <y> is the minor version number, required if it is non-zero or
-            // if <z> is present. <z> is the revision version number, required if non-zero.
-            //
-            // The hardware revision must follow the below rules:
-            // <x> is incremented when there is significant change. e.g.,1.0.0, 2.0.0, 3.0.0, etc.
-            // <y> is incremented when minor changes are introduced such as 1.1.0, 2.1.0, 3.1.0 etc.
-            // <z> is incremented when bug-fixes are introduced such as 1.0.1, 2.0.1, 3.0.1 etc.
-            //
-            // Subsequent firmware updates can have a lower <y> version only
-            // if <x> is incremented Subsequent firmware updates can have a
-            // lower <z> version only if <x> or <y> is incremented
 
             break;
          }
@@ -1424,29 +699,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "100.1.1" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000053-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.hardware.revision
-            // Permissions: Paired Read
-
-            // Format: string
-
-            // Valid Values
-            // This characteristic describes a hardware revision string x[.y[.z]]
-            // (e.g. "100.1.1") and tracked when the board or components of the same
-            // accessory is changed :
-            // <x> is the major version number, required.
-            // <y> is the minor version number, required if it is non-zero or
-            // if <z> is present. <z> is the revision version number, required if non-zero.
-            //
-            // The hardware revision must follow the below rules:
-            // <x> is incremented when there is significant change. e.g.,1.0.0, 2.0.0, 3.0.0, etc.
-            // <y> is incremented when minor changes are introduced such as 1.1.0, 2.1.0, 3.1.0 etc.
-            // <z> is incremented when bug-fixes are introduced such as 1.0.1, 2.0.1, 3.0.1 etc.
-            //
-            // Subsequent firmware updates can have a lower <y> version only
-            // if <x> is incremented Subsequent firmware updates can have a
-            // lower <z> version only if <x> or <y> is incremented
-
             break;
          }
          case "HeartBeat":   // 67
@@ -1454,13 +706,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "64" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000021E-0000-1000-8000-0000024A
-            // Type: public.hap.characteristic.heartBeat
-            // Permissions: Notify, Paired Read
-            // Found in HomeKit.js - Checked 11/19/2020
-
-            // Format: uint32
 
             break;
          }
@@ -1470,18 +715,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "25.2" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000012-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.temperature.heating-threshold
-            // Permissions: Read, Write, Notify
-            // Found in HomeKit.js - Checked 11/19/2020
-
-            // Format: float
-
-            // Minimum Value: 0
-            // Maximum Value: 25
-            // Step Value: 0.1
-            // Unit: celcius
-
             break;
          }
          case "HoldPosition": // 69
@@ -1489,12 +722,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000006F-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.position.hold
-            // Permissions: Paired Write
-
-            // Format: bool, 0 (false) and 1 (true)
 
             break;
          }
@@ -1504,17 +731,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000006F-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.position.hold
-            // Permissions: Read, Write, Notify, Timed Write
-            // Found in HomeKit.js - Checked 11/19/2020
-
-            // Format: uint8
-
-            // Valid Values:
-            // 0 - "OFF" - The Camera is (off)
-            // 1 - "ON"  - The Camera is (on)
-
             break;
          }
          case "Hue":   // 71
@@ -1522,16 +738,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "50" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000013-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.hue
-            // Permissions: Paired Read, Paired Write, Notify
-
-            // Format: float
-
-            // Min Value: 0
-            // Max Value: 360
-            // Unit: arcdegrees
 
             break;
          }
@@ -1566,16 +772,6 @@ switch( io )
                   process.stdout.write( `"${ c }"` );
             }
 
-            // UUID: 000000E6-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.identifier
-            // Permissions: Paired Read
-            // Found in HomeKitTypes-Television.js
-
-            // Format: uint32
-
-            // Min Value: 0
-            // Min Step: 1
-
             break;
          }
          case "Identify":   // 73
@@ -1583,13 +779,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 000000E6-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.identifier
-            // Permissions: Paired Write
-            // Found in HomeKitTypes.js
-
-            // Format: Bool
 
             break;
          }
@@ -1599,18 +788,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000011F-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.image-mirror
-            // Permissions: Paired Write, Paired Read, Notify
-
-            // Format: uint32
-
-            // Valid Values
-            // 0 - "FALSE" - Image is not mirrored
-            // 1 - "TRUE" - Image is mirrored
-
-            // Unit arcdegrees
-
             break;
          }
          case "ImageRotation":   // 75
@@ -1618,18 +795,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000011E-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.image-rotation
-            // Permissions: Paired Write, Paired Read, Notify
-
-            // Format: float
-
-            // Valid Values
-            // 0   - No rotation
-            // 90  - Rotated 90 degrees to the right
-            // 180 - Rotated 180 degrees to the right (flipped vertically)
-            // 270 - Rotated 270 degrees to the right
 
             break;
          }
@@ -1639,20 +804,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000D2-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.inUse
-            // Permissions: Paired Read, Notify
-            // Found in HomeKitTypes.js
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 1
-
-            // Valid Values
-            // 0 - "NOT_IN_USE"
-            // 1 - "IN_USE"
-
             break;
          }
          case "InputDeviceType":   // 77
@@ -1660,25 +811,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 000000DC-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.inputDeviceType
-            // Permissions: Paired Read, Notify
-            // Found in HomeKitTypes-Television.js
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 6
-
-            // Valid Values
-            // 0 - "OTHER"
-            // 1 - "TV"
-            // 2 - "RECORDING"
-            // 3 - "TUNER"
-            // 4 - "PLAYBACK"
-            // 5 - "AUDIO_SYSTEM"
-            // 6 - "UNKNOWN_6" - (Added in IOS 14)
 
             break;
          }
@@ -1688,29 +820,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000DB-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.inputSourceType
-            // Permissions: Paired Read, Notify
-            // Found in HomeKitTypes-Television.js
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 10
-
-            // Valid Values
-            // 0  - "OTHER"
-            // 1  - "HOME_SCREEN"
-            // 2  - "TUNER"
-            // 3  - "HDMI"
-            // 4  - "COMPOSITE_VIDEO"
-            // 5  - "S_VIDEO"
-            // 6  - "COMPONENT_VIDEO"
-            // 7  - "DVI"
-            // 8  - "AIRPLAY"
-            // 9  - "USB"
-            // 10 - "APPLICATION"
-
             break;
          }
          case "IsConfigured":   // 79
@@ -1718,20 +827,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 000000D6-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.isConfigured
-            // Permissions: Paired Write, Paired Read, Notify
-            // Found in HomeKitTypes.js
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 1
-
-            // Valid Values
-            // 0 - "NOT_CONFIGURED"
-            // 1 - "CONFIGURED"
 
             break;
          }
@@ -1741,20 +836,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000070-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.leak-detected
-            // Permissions: Paired Read, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 1
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - "LEAK_NOT_DETECTED" - Leak is not detected
-            // 1 - "LEAK_DETECTED"  - Leak is detected
-
             break;
          }
          case "LinkQuality":   // 81
@@ -1762,19 +843,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000009C-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.linkQuality
-            // Permissions: Paired Read, Notify
-            // Found in HomeKitTypes-Bridge.js (Values ???)
-
-            // Format: uint8
-
-            // Minimum Value: 1
-            // Maximum Value: 4
-            // Step Value: 1
-
-            // Valid Values:
 
             break;
          }
@@ -1784,13 +852,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000050-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.linkPairings
-            // Permissions: Paired Write, Paired Read
-            // Found in HomeKitTypes.js (Values ???)
-
-            // Format: TLV8
-
             break;
          }
          case "LockControlPoint":   // 83
@@ -1798,11 +859,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000019-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.lock-management.control-point
-            // Permissions: Paired Write
-            // Format: tlv8
 
             break;
          }
@@ -1812,23 +868,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000001D-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.lock-mechanism.current-state
-            // Permissions: Paired Read, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 3
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - "UNSECURED" - Unsecured
-            // 1 - "SECURED"   - Secured
-            // 2 - "JAMMED"    - Jammed
-            // 3 - "Unknown"   - unknown
-            // 4-255 - "Reserved"
-
             break;
          }
          case "LockLastKnownAction":   // 85
@@ -1836,26 +875,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // Permissions: Paired Read, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 8
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - "SECURED_PHYSICALLY_INTERIOR" - Secured using physical movement, interior
-            // 1 - "UNSECURED_PHYSICALLY_INTERIOR" - Unsecured using physical movement, interior
-            // 2 - "UNSECURED_PHYSICALLY_INTERIOR" - Secured using physical movement, exterior
-            // 3 - "UNSECURED_PHYSICALLY_EXTERIOR" - Unsecured using physical movement, exterior
-            // 4 - "SECURED_BY_KEYPAD" - Secured with keypad
-            // 5 - "UNSECURED_BY_KEYPAD" - Unsecured with keypad
-            // 6 - "SECURED_REMOTELY" - Secured remotely
-            // 7 - "UNSECURED_REMOTELY" - Unsecured remotely
-            // 8 - "SECURED_BY_AUTO_SECURE_TIMEOUT" - Secured with Automatic Secure timeout
-            // 9-255 - "Reserved"
 
             break;
          }
@@ -1865,12 +884,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "26" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000001A-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.lock-management.auto-secure-timeout
-            // Permissions: Paired Read, Paired Write, Notify
-            // Format: uint32
-            // Unit: seconds
-
             break;
          }
          case "LockPhysicalControls":   // 87
@@ -1878,20 +891,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 000000A7-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.lock-physical-controls
-            // Permissions: Paired Write,Paired Read, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 1
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - "CONTROL_LOCK_DISABLED" - Control lock disabled
-            // 1 - "CONTROL_LOCK_ENABLED" - Control lock enabled
 
             break;
          }
@@ -1901,21 +900,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000001E-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.lock-mechanism.target-state
-            // Permissions: Paired Read, Paired Write, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 1
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - "UNSECURED"
-            // 1 - "SECURED"
-            // 2-255 - "Reserved"
-
             break;
          }
          case "Logs":   // 89
@@ -1923,12 +907,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000001F-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.logs
-            // Permissions: Paired Read, Notify
-
-            // Format: tlv8
 
             break;
          }
@@ -1938,13 +916,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "100" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000021E-0000-1000-8000-00000247
-            // Type: public.hap.characteristic.MACRetransmissionMaximum
-            // Permissions: Paired Read
-            // Found in HomeKit.js - Checked 11/19/2020
-
-            // Format: uint8
-
             break;
          }
          case "MACTransmissionCounters":   // 91
@@ -1952,13 +923,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "100" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000021E-0000-1000-8000-00000248
-            // Type: public.hap.characteristic.MACTransmissionCounters
-            // Permissions: Paired Read
-            // Found in HomeKit.js - Checked 11/19/2020
-
-            // Format: DATA
 
             break;
          }
@@ -1968,17 +932,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000020-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.ManagedNetworkEnable
-            // Permissions: Read, Write, Notify, Timed Write
-            // Found in HomeKit.js - Checked 11/19/2020
-
-            // Format: uint8
-            // Valid Values:
-            // 0 - "DISABLED"  - Network is Disabled
-            // 1 - "ENABLED"   - Network is Enabled
-            // 2 - "UNKNOWN"   - Network is unknown
-
             break;
          }
          case "ManuallyDisabled":   // 93
@@ -1986,17 +939,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000227-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.manuallyDisabled
-            // Permissions: Read, Notify
-            // Found in HomeKit.js - Checked 11/19/2020
-
-            // Format: Bool
-
-            // Valid Values:
-            // 0 - "ENABLED"  - Device has been Manually Disabled
-            // 1 - "DISABLED" - Device has been Manually Enabled
 
             break;
          }
@@ -2006,14 +948,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "Homebridge" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000020-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.manufacturer
-            // Permissions: Paired Read
-
-            // Format: string
-
-            // Maximum Length: 64
-
             break;
          }
          case "Model": // 95
@@ -2021,14 +955,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 000000E7-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.model
-            // Permissions: Paired Read
-
-            // Format: string
-
-            // Maximum Length: 64
 
             break;
          }
@@ -2038,12 +964,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000022-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.motion-detected
-            // Permissions: Paired Read, Notify
-
-            // Format: bool
-
             break;
          }
          case "Mute":   // 97
@@ -2051,16 +971,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000011A-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.mute
-            // Permissions: Paired Write, Paired Read, Notify
-
-            // Format: bool
-
-            // Valid Values:
-            // 0 - "FALSE - Mute is Off / Audio is On
-            // 1 - "TRUE" - Mute is On / There is no Audio
 
             break;
          }
@@ -2070,14 +980,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( `"${ device }"` ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000023-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.name
-            // Permissions: Paired Read, Notify
-
-            // Format: string
-
-            // Maximum Length: 64
-
             break;
          }
          case "NetworkAccessViolationControl":   // 99
@@ -2085,13 +987,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000023-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.networkAccessViolationControl
-            // Permissions: Read, Write, Notify, Timed Write, Write Response
-            // Found in HomeKit.js - Checked 11/19/2020
-
-            // Format: TLV8
 
             break;
          }
@@ -2101,13 +996,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000020C-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.NetworkClientProfileControl
-            // Permissions: Read, Write, Notify, Timed Write, Write Response
-            // Found in HomeKit.js - Checked 11/19/2020
-
-            // Format: TLV8
-
             break;
          }
          case "NetworkClientStatusControl":   // 101
@@ -2115,13 +1003,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000020D-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.NetworkClientStatusControl
-            // Permissions: Read, Write, Write Response
-            // Found in HomeKit.js - Checked 11/19/2020
-
-            // Format: TLV8
 
             break;
          }
@@ -2131,16 +1012,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000011B-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.nightVision
-            // Permissions: Paired Write, Paired Read, Notify
-
-            // Format: bool (false) and 1 (true)
-
-            // Valid Values
-            // 0 - "FALSE" - Disable night-vision mode
-            // 1 - "TRUE"  - Enable night-vision mode
-
             break;
          }
          case "NitrogenDioxideDensity":   // 103
@@ -2148,15 +1019,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "50.0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 000000C4-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.density.no2
-            // Permissions: Paired Read, Notify
-
-            // Format: float
-
-            // Minimum Value: 0
-            // Maximum Value: 1000
 
             break;
          }
@@ -2166,12 +1028,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000024-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.obstruction-detected
-            // Permissions: Paired Read, Notify
-
-            // Format: bool, 0 (false) and 1 (true)
-
             break;
          }
          case "OccupancyDetected":   // 105
@@ -2179,20 +1035,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000071-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.occupancy-detected
-            // Permissions: Paired Read, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 1
-            // Step Value: 1
-
-            // Valid Values
-            // 0 - "FALSE" - Occupancy is not detected
-            // 1 - "TRUE" - Occupancy is detected
 
             break;
          }
@@ -2202,12 +1044,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000025-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.on
-            // Permissions: Paired Read, Paired Write, Notify
-
-            // Format: bool, 0 (false) and 1 (true)
-
             break;
          }
          case "OperatingStateResponse":   // 107
@@ -2215,13 +1051,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000021E-0000-1000-8000-00000232
-            // Type: public.hap.characteristic.OperatingStateResponse
-            // Permissions: Paired Read, Notify
-            // Found in HomeKit.js - Checked 11/19/2020
-
-            // Format: TLV8
 
             break;
          }
@@ -2231,16 +1060,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "1.0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000011C-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.opticalZoom
-            // Permissions: Paired Write, Paired Read, Notify
-
-            // Format: float
-
-            // Valid Values
-            // The value of this characteristic represents the optical zoom
-            // setting of the camera service that is sourcing the input image.
-
             break;
          }
          case "OutletInUse":   // 109
@@ -2248,12 +1067,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000026-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.outlet-in-use
-            // Permissions: Paired Read, Notify
-
-            // Format: bool, 0 (false) and 1 (true)
 
             break;
          }
@@ -2263,15 +1076,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "50.0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000C3-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.density.ozone
-            // Permissions: Paired Read, Notify
-
-            // Format: float
-
-            // Minimum Value: 0
-            // Maximum Value: 1000k
-
             break;
          }
          case "PM10Density":   // 111
@@ -2279,15 +1083,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "50.0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 000000C7-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.density.pm10
-            // Permissions: Paired Read, Notify
-
-            // Format: float
-
-            // Minimum Value: 0
-            // Maximum Value: 1000
 
             break;
          }
@@ -2297,15 +1092,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "50.0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000C6-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.density.pm25
-            // Permissions: Paired Read, Notify
-
-            // Format: float
-
-            // Minimum Value: 0
-            // Maximum Value: 1000
-
             break;
          }
          case "PairSetup":   // 113
@@ -2313,13 +1099,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000004C-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.pairSetup
-            // Permissions: Paired Write, Paired Read
-            // Found in HomeKitTypes.js (Values ???)
-
-            // Format: TLV8
 
             break;
          }
@@ -2329,13 +1108,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000004E-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.pairVerify
-            // Permissions: Paired Write, Paired Read
-            // Found in HomeKitTypes.js (Values ???)
-
-            // Format: TLV8
-
             break;
          }
          case "PairingFeatures":   // 115
@@ -2343,13 +1115,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000004F-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.pairingFeatures
-            // Permissions: Paired Read,
-            // Found in HomeKitTypes.js (Values ???)
-
-            // Format: uint8
 
             break;
          }
@@ -2359,13 +1124,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000050-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.pairingPairings
-            // Permissions: Paired Write, Paired Read
-            // Found in HomeKitTypes.js (Values ???)
-
-            // Format: TLV8
-
             break;
          }
          case "PasswordSetting":   // 117
@@ -2373,13 +1131,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 000000DA-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.passwordSetting
-            // Permissions: Notify, Paired Read, Paired Write
-            // Found in HomeKit.js - Checked 11/19/2020
-
-            // Format: TLV8
 
             break;
          }
@@ -2389,17 +1140,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000225-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.periodicSnapshotsActive
-            // Permissions: Read, Write, Notify
-            // Found in HomeKit.js - Checked 11/19/2020
-
-            // Format: uint8
-
-            // Valid Values:
-            // "DISABLE": 0   -
-            // "ENABLE":  1   -
-
             break;
          }
          case "PictureMode":   // 119
@@ -2407,23 +1147,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 000000E2-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.pictureMode
-            // Permissions: Paired Write, Paired Read, Notify
-            // Found in HomeKitTypes-Television.js
-
-            // Format: uint16
-
-            // Valid Values
-            // 0 - "OTHER"
-            // 1 - "STANDARD"
-            // 2 - "CALIBRATED"
-            // 3 - "CALIBRATED_DARK"
-            // 4 - "VIVID"
-            // 5 - "GAME"
-            // 6 - "COMPUTER"
-            // 7 - "CUSTOM"
 
             break;
          }
@@ -2433,12 +1156,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000021E-0000-1000-8000-0000023C
-            // Type: public.hap.characteristic.ping
-            // Permissions: Paired Read
-
-            // Format: DATA ????
-
             break;
          }
          case "PositionState":   // 121
@@ -2446,22 +1163,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "2" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000072-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.position.state
-            // Permissions: Paired Read, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 2
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - "DECREASING" - Going to the minimum value specified in metadata
-            // 1 - "INCREASING" - Going to the maximum value specified in metadata
-            // 2 - "STOPPED"
-            // 3-255 "Reserved"
 
             break;
          }
@@ -2471,17 +1172,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000DF-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.powerModeSelection
-            // Permissions: Paired Write
-            // Found in HomeKitTypes-Television.js
-
-            // Format: uint8
-
-            // Valid Values
-            // 0 - "SHOW"
-            // 1 - "HIDE"
-
             break;
          }
          case "ProductData":   // 123
@@ -2489,15 +1179,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000220-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.productData
-            // Permissions: Read
-            // Found in HomeKitT.js - Checked 11/19/2020
-
-            // Format: DATA ???
-
-            // Valid Values
 
             break;
          }
@@ -2507,17 +1188,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000E7-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.programMode
-            // Permissions: Paired Read, Notify
-
-            // Format: uint8
-
-            // Valid Values
-            // 0 - "NO_PROGRAM_SCHEDULED"
-            // 1 - "PROGRAM_SCHEDULED"
-            // 1 - "PROGRAM_SCHEDULED_MANUAL_MODE"
-
             break;
          }
          case "ProgrammableSwitchEvent":   // 125
@@ -2525,22 +1195,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000073-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.input-event
-            // Permissions: Paired Read, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 2
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - "SINGLE_PRESS"
-            // 1 - "DOUBLE_PRESS"
-            // 2 - "LONG_PRESS"
-            // 3-255 - "Reserved"
 
             break;
          }
@@ -2550,19 +1204,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000074-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.programmableSwitchOutputState
-            // Permissions: Paired Read, Notify
-            // Found in HomeKitTypes-Bridge.js (Values ???)
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 1
-            // Step Value: 1
-
-            // Valid Values:
-
             break;
          }
          case "Reachable":   // 127
@@ -2570,15 +1211,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000063-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.reachable
-            // Permissions: Paired Read, Notify
-            // Found in HomeKitTypes-Bridge.js (Values ???)
-
-            // Format: bool
-
-            // Valid Values:
 
             break;
          }
@@ -2588,15 +1220,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000021E-0000-1000-8000-0000023F
-            // Type: public.hap.characteristic.ReceivedSignalStrengthIndication
-            // Permissions: Paired Read
-            // Found in HomeKit.js - Checked 11/19/2020
-
-            // Format: int
-
-            // Valid Values:
-
             break;
          }
          case "ReceiverSensitivity":   // 129
@@ -2604,15 +1227,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000021E-0000-1000-8000-00000244
-            // Type: public.hap.characteristic.receiverSensitivity
-            // Permissions: Paired Read
-            // Found in HomeKit.js - Checked 11/19/2020
-
-            // Format: int
-
-            // Valid Values:
 
             break;
          }
@@ -2622,17 +1236,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000226-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.recordingAudioActive
-            // Permissions: Read, Write, Notify
-            // Found in HomeKit.js - Checked 11/19/2020
-
-            // Format: uint8
-
-            // Valid Values:
-            // 0 - "DISABLE"
-            // 1 - "ENABLE"
-
             break;
          }
          case "RelativeHumidityDehumidifierThreshold":   // 131
@@ -2640,16 +1243,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 000000C9-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.relativeHumidityDehumidifierThreshold
-            // Permissions: Paired Write, Paired Read, Notify
-
-            // Format: float
-
-            // Minimum Value: 0
-            // Maximum Value: 100
-            // Minimum Step: 1
 
             break;
          }
@@ -2659,18 +1252,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000CA-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.relativeHumidityHumidifierThreshold
-            // Permissions: Paired Write, Paired Read, Notify
-
-            // Format: uint32
-
-            // Units: Percentage
-
-            // Minimum Value: 0
-            // Maximum Value: 100
-            // Minimum Step: 1
-
             break;
          }
          case "RelayControlPoint":   // 133
@@ -2678,13 +1259,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000005E-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.reachable
-            // Permissions: Paired Read, Notify
-            // Found in HomeKitTypes-Bridge.js (Values ???)
-
-            // Format: TLV8
 
             break;
          }
@@ -2694,15 +1268,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000005B-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.relayEnabled
-            // Permissions: Paired Write, Paired Read, Notify
-            // Found in HomeKitTypes-Bridge.js (Values ???)
-
-            // Format: bool
-
-            // Valid Values:
-
             break;
          }
          case "RelayState":   // 135
@@ -2710,15 +1275,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000005C-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.relayState
-            // Permissions: Paired Read, Notify
-            // Found in HomeKitTypes-Bridge.js (Values ???)
-
-            // Format: uint8
-
-            // Valid Values:
 
             break;
          }
@@ -2728,17 +1284,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000D4-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.remainingDuration
-            // Permissions: Paired Read, Notify
-            // Found in HomeKitTypes.js
-
-            // Format: uint32
-
-            // Minimum Value: 0
-            // Maximum Value: 3600
-            // Minimum Step: 1
-
             break;
          }
          case "RemoteKey":   // 137
@@ -2746,28 +1291,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 000000E1-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.remoteKey
-            // Permissions: Paired Write
-            // Found in HomeKitTypes-Television.js
-
-            // Format: uint8
-
-            // Valid Values
-            // 0  - "REWIND"
-            // 1  - "FAST_FORWARD"
-            // 2  - "NEXT_TRACK"
-            // 3  - "PREVIOUS_TRACK"
-            // 4  - "ARROW_UP"
-            // 5  - "ARROW_DOWN"
-            // 6  - "ARROW_LEFT"
-            // 7  - "ARROW_RIGHT"
-            // 8  - "SELECT"
-            // 9  - "BACK"
-            // 10 - "EXIT"
-            // 11 - "PLAY_PAUSE"
-            // 12 - "INFORMATION"
 
             break;
          }
@@ -2777,15 +1300,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000AD-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.filter.reset-indication
-            // Permissions: Paired Write
-
-            // Format: uint8
-
-            // Minimum Value: 1
-            // Maximum Value: 1
-
             break;
          }
          case "RotationDirection":   // 139
@@ -2793,17 +1307,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID:00000028-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.rotation.direction
-            // Permissions: Paired Read, Paired Write, Notify
-            // Format: int
-
-            // Step Value: 1
-            // Valid Values
-            // 0 - "CLOCKWISE"
-            // 1 - "COUNTER_CLOCKWISE"
-            // 2-255 "Reserved"
 
             break;
          }
@@ -2813,17 +1316,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "100" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000029-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.rotation.speed
-            // Permissions: Paired Read, Paired Write, Notify
-
-            // Format: float
-
-            // Minimum Value: 0
-            // Maximum Value: 100
-            // Step Value: 1
-            // Unit: percentage
-
             break;
          }
          case "RouterStatus":   // 141
@@ -2831,20 +1323,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "100" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000020E-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.routerStatus
-            // Permissions: Read, Notify
-            // Found in HomeKit.js - Checked 11/19/2020
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 1
-
-            // Valid Values:
-            // 0 - "READY"
-            // 1 - "NOT_READY"
 
             break;
          }
@@ -2854,17 +1332,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "50" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000002F-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.saturation
-            // Permissions: Paired Read, Paired Write, Notify
-
-            // Format: float
-
-            // Minimum Value: 0
-            // Maximum Value: 100
-            // Step Value: 1
-            // Unit: percentage
-
             break;
          }
          case "SecuritySystemAlarmType":   // 143
@@ -2872,20 +1339,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000008E-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.security-system.alarm-type
-            // Permissions: Paired Read, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 1
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - When alert cleared
-            // 1 - Unknown Cause
 
             break;
          }
@@ -2895,25 +1348,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "3" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000066-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.security-system-state.current
-            // Permissions: Paired Read, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 4
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - "STAY_ARM"  - The home is occupied and the residents are
-            //      active. e.g. morning or evenings"
-            // 1 - "AWAY_ARM"  -  The home is unoccupied"
-            // 2 - "NIGHT ARM" -  The home is occupied and the residents are sleeping"
-            // 3 - "DISARMED"
-            // 4 - "ALARM_TRIGGERED"
-            // 5 - 255 - Reserved
-
             break;
          }
          case "SecuritySystemTargetState":   // 145
@@ -2921,24 +1355,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000067-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.security-system-state.target
-            // Permissions: Paired Read, Paired Write, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 3
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - "StAY_ARM"  - The home is occupied and the residents
-            //      are active. e.g. morning or evenings
-            // 1 - "AWAY_ARM"  - The home is unoccupied
-            // 2 - "NIGHT_ARM" - The home is occupied and the residents are sleeping
-            //
-            // 3 - 255 - Reserved
 
             break;
          }
@@ -2948,13 +1364,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: SelectedAudioStreamConfiguration
-            // Type: public.hap.characteristic.SelectedAudioStreamConfiguration
-            // Permissions: Paired Read, Paired Write
-            // Found in HomeKitTypes.js - Checked 11/19/2020
-
-            // Format: TLV8
-
             break;
          }
          case "SelectedCameraRecordingConfiguration":   // 147
@@ -2962,13 +1371,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000209-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.selectedCameraRecordingConfiguration
-            // Permissions: Read, Write
-            // Found in HomeKitTypes.js - Checked 11/19/2020
-
-            // Format: TLV8
 
             break;
          }
@@ -2978,12 +1380,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000117-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.selected-rtp-stream-configuration
-            // Permissions: Paired Write
-
-            // Format: TLV8
-
             break;
          }
          case "SerialNumber":   // 149
@@ -2991,14 +1387,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "ABC001" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000030-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.serial-number
-            // Permissions: Paired Read
-
-            // Format: string
-
-            // Max Length: 64
 
             break;
          }
@@ -3008,15 +1396,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000CB-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.service-label-index
-            // Permissions: Paired Read
-
-            // Format: uint8
-
-            // Minimum Value: 1
-            // Step Value: 1
-
             break;
          }
          case "ServiceLabelNamespace":   // 151
@@ -3024,21 +1403,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 000000CD-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.service-label-namespace
-            // Permissions: Paired Read
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 1
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - "DOTS" -  For example, "." ".." "..." "....""
-            // 1 - "ARABIC_NUMERALS" . For example, "0,1,2,3"
-            // 2-255 - "Reserved"
 
             break;
          }
@@ -3048,16 +1412,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000D3-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.setDuration
-            // Permissions: Paired Write, Paired Read, Notify
-
-            // Format: uint32
-
-            // Minimum Value: 0
-            // Maximum Value: 3600
-            // Step Value: 1
-
             break;
          }
          case "SetupDataStreamTransport":   // 153
@@ -3065,15 +1419,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: SetupDataStreamTransport
-            // Type: public.hap.characteristic.SetupDataStreamTransport
-            // Permissions: Paired Read, Paired Write, Write Response
-            //  Found in HomeKit.js - Checked 11/19/2020
-
-            // Format: TLV8
-
-            // Valid Values:
 
             break;
          }
@@ -3083,15 +1428,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000118-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.setup-endpoints
-            // Permissions: Paired Write, Paired Read
-
-            // Format: TLV8
-
-            // Valid Values:
-            // See Hap Spec
-
             break;
          }
          case "SetupTransferTransport":   // 155
@@ -3099,15 +1435,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000201-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.setupTransferTransport
-            // Permissions: Paired Write, Write Response
-            //  Found in HomeKit.js - Checked 11/19/2020
-
-            // Format: TLV8
-
-            // Valid Values:
 
             break;
          }
@@ -3117,12 +1444,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: SignalToNoiseRatio
-            // Type: public.hap.characteristic.SignalToNoiseRatio
-            // Permissions: Paired Read
-
-            // Format: int
-
             break;
          }
          case "SiriInputType":   // 157
@@ -3130,18 +1451,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000068-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.SiriInputType
-            // Permissions: Paired Read
-
-            // Format: uint8
-
-            // minValue: 0
-            // maxValue: 0
-
-            // Valid Values:
-            // 0 - "PUSH_BUTTON_TRIGGERED_APPLE_TV"
 
             break;
          }
@@ -3151,20 +1460,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000C0-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.type.slat
-            // Permissions: Paired Read
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 1
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - "HORIZONTAL"
-            // 1 - "VERTICAL"
-
             break;
          }
          case "SleepDiscoveryMode":   // 159
@@ -3172,19 +1467,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 000000E8-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.sleepDiscoveryMode
-            // Permissions: Paired Write, Paired Read, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 1
-
-            // Valid Values
-            // 0 - "NOT_DISCOVERABLE"
-            // 1 - "ALWAYS_DISCOVERABLE"
 
             break;
          }
@@ -3194,17 +1476,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000E8-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.sleepInterval
-            // Permissions: Paired Read, Notify
-
-            // Format: uint32
-
-            // Minimum Value: 0
-            // Min Step: 1
-
-            // Valid Values
-
             break;
          }
          case "SmokeDetected":   // 161
@@ -3212,20 +1483,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000076-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.smoke-detected
-            // Permissions: Paired Read, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 1
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - "SMOKE_NOT_DETECTED" - Smoke is not detected
-            // 1 - "SMOKE_DETECTED" - Smoke is detected
 
             break;
          }
@@ -3235,12 +1492,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "50" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: SoftwareRevision
-            // Type: public.hap.characteristic.SoftwareRevision
-            // Permissions: Read
-
-            // Format: string
-
             break;
          }
          case "StatusActive":   // 163
@@ -3248,12 +1499,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000075-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.status-active
-            // Permissions: Paired Read, Notify
-
-            // Format: bool, 0 (false) and 1 (true)
 
             break;
          }
@@ -3263,18 +1508,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000077-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.status-fault
-            // Permissions: Paired Read, Notify
-            // Format: uint8
-            // Minimum Value: 0
-            // Maximum Value: 1
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - "NO_FAULT"
-            // 1 - "GENERAL_FAULT"
-
             break;
          }
          case "StatusJammed":   // 165
@@ -3282,17 +1515,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000078-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.statusJammed
-            // Permissions: Paired Read, Notify
-            // Found in HomeKitTypes.js
-
-            // Format: uint8
-
-            // Valid Values
-            // 0 - "NOT_JAMMED"
-            // 1 - "JAMMED"
 
             break;
          }
@@ -3302,20 +1524,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000079-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.status-lo-batt
-            // Permissions: Paired Read, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 1
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - "BATTERY_LEVEL_NORMAL" - Battery level is normal
-            // 1 - "BATTERY_LEVEL_LOW"    - Battery level is low
-
             break;
          }
          case "StatusTampered":   // 167
@@ -3323,16 +1531,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000007A-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.status-tampered
-            // Permissions: Paired Read, Notify
-
-            // Format: uint8
-
-            // Valid Values:
-            // 0 - "NOT_TAMPERED" - Accessory is not tampered"
-            // 1 - "TAMPERED"     - Accessory is tampered with
 
             break;
          }
@@ -3342,16 +1540,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000120-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.streamingStatus
-            // Permissions: Paired Read, Notify
-            // Found in HomeKitTypes.js  (Values ???)
-
-            // Format: TLV8
-
-            // Valid Values
-            //
-
             break;
          }
          case "SulphurDioxideDensity":   // 169
@@ -3359,15 +1547,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "50.0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 000000C5-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.density.so2
-            // Permissions: Paired Read, Notify
-
-            // Format: float
-
-            // Minimum Value: 0
-            // Maximum Value: 1000
 
             break;
          }
@@ -3377,13 +1556,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000207-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.SupportedAudioRecordingConfiguration
-            // Permissions: Paired Read, notify
-            // Found in HomeKit
-
-            // Format: TLV8
-
             break;
          }
          case "SupportedAudioStreamConfiguration":   // 171
@@ -3391,15 +1563,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000115-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.supportedAudioStreamConfiguration
-            // Permissions: Paired Read
-            // Found in HomeKit
-
-            // Format: TLV8
-
-            // Valid Values
 
             break;
          }
@@ -3409,15 +1572,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000205-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.SupportedCameraRecordingConfiguration
-            // Permissions: Paired Read, Notify
-            // Found in HomeKit
-
-            // Format: TLV8
-
-            // Valid Values
-
             break;
          }
          case "SupportedDataStreamTransportConfiguration":   // 173
@@ -3425,15 +1579,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000130-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.SupportedDataStreamTransportConfiguration
-            // Permissions: Paired Read
-            // Found in HomeKit
-
-            // Format: TLV8
-
-            // Valid Values
 
             break;
          }
@@ -3443,15 +1588,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000021E-0000-1000-8000-00000144
-            // Type: public.hap.characteristic.SupportedCharacteristicValueTransitionConfiguration
-            // Permissions: Paired Read
-            // Found in HomeKit
-
-            // Format: TLV8
-
-            // Valid Values
-
             break;
          }
          case "SupportedDiagnosticsSnapshot":   // 175
@@ -3459,15 +1595,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000021E-0000-1000-8000-00000238
-            // Type: public.hap.characteristic.SupportedDiagnosticsSnapshot
-            // Permissions: Paired Read
-            // Found in HomeKit
-
-            // Format: TLV8
-
-            // Valid Values
 
             break;
          }
@@ -3477,13 +1604,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000116-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.supportedRTPConfiguration
-            // Permissions: Paired Read,
-            // Found in HomeKitTypes.js
-
-            // Format: TLV8
-
             break;
          }
          case "SupportedRouterConfiguration":   // 177
@@ -3491,13 +1611,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000210-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.supportedRouterConfiguration
-            // Permissions: Read,
-            // Found in HomeKitTypes.js - Checked 11/19/2020
-
-            // Format: TLV8
 
             break;
          }
@@ -3507,13 +1620,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000202-0000-1000-8000-0026BB765291'
-            // Type: public.hap.characteristic.supportedTransferTransportConfiguration
-            // Permissions: Paired Read,
-            // Found in HomeKitTypes.js
-
-            // Format: TLV8
-
             break;
          }
          case "SupportedVideoRecordingConfiguration":   // 179
@@ -3521,13 +1627,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000206-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.SupportedVideoRecordingConfiguration
-            // Permissions: Paired Read, Notify
-            // Found in HomeKit
-
-            // Format: TLV8
 
             break;
          }
@@ -3537,13 +1636,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000E7-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.supportedVideoStreamConfiguration
-            // Permissions: Paired Read
-            // Found in HomeKitTypes.js (Values ???)
-
-            // Format: TLV8
-
             break;
          }
          case "SwingMode":   // 181
@@ -3551,20 +1643,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "100" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 000000B6-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.swing-mode
-            // Permissions: Paired Read, Notify, Paired Write
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 1
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - "SWING_DISABLED"
-            // 1 - "SWING_ENABLED"
 
             break;
          }
@@ -3574,20 +1652,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000A8-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.air-purifier.state.target
-            // Permissions: Paired Write,Paired Read, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 1
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - "MANUAL"
-            // 1 - "AUTO"
-
             break;
          }
          case "TargetAirQuality":   // 183
@@ -3595,20 +1659,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 000000AE-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.targetAirQuality
-            // Permissions: Paired Write, Paired Read, Notify
-
-            // Format: uint32
-
-            // Minimum Value: 0
-            // Maximum Value: 0
-
-            // Valid Values
-            // 0 - "EXCELLENT"
-            // 1 - "GOOD"
-            // 2 - "FAIR"
 
             break;
          }
@@ -3618,12 +1668,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000124-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.TargetControlList
-            // Permissions: Read, Write
-
-            // Format: tlv8
-
             break;
          }
          case "TargetControlSupportedConfiguration":   // 185
@@ -3631,12 +1675,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000123-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.TargetControlSupportedConfiguration
-            // Permissions: Paired Read
-
-            // Format: tlv8
 
             break;
          }
@@ -3646,21 +1684,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000032-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.door-state.target
-            // Permissions: Paired Read, Paired Write, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 1
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - "OPEN"
-            // 1 - "CLOSED"
-            // 2-255 - "Reserved"
-
             break;
          }
          case "TargetFanState":   // 187
@@ -3668,20 +1691,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 000000BF-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.fan.state.target
-            // Permissions: Paired Write,Paired Read, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 1
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - "MANUAL"
-            // 1 - "AUTO"
 
             break;
          }
@@ -3691,21 +1700,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000B2-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.targetHeaterCoolerState
-            // Permissions: Paired Write, Paired Read, Notify
-            // Found in HomeKitTypes.js
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 2
-
-            // Valid Values
-            // 0 - "AUTO"
-            // 1 - "HEAT"
-            // 2 - "COOL"
-
             break;
          }
          case "TargetHeatingCoolingState":   // 189
@@ -3713,23 +1707,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000033-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.heating-cooling.target
-            // Permissions: Paired Read, Paired Write, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 3
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - "OFF"
-            // 1 - "HEAT" -  If the current temperature is below the target
-            //               temperature then turn on heating.
-            // 2 - "COOL" -  If the current temperature is above the target
-            //               temperature then turn on cooling.
 
             break;
          }
@@ -3739,17 +1716,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000007B-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.horizontal-tilt.target
-            // Permissions: Paired Read, Paired Write, Notify
-
-            // Format: int
-
-            // Minimum Value: -90
-            // Maximum Value: 90
-            // Step Value: 1
-            // Unit: arcdegrees
-
             break;
          }
          case "TargetHumidifierDehumidifierState":   // 191
@@ -3758,21 +1724,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000B4-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.targetHumidifierDehumidifierState
-            // Permissions: Paired Write, Paired Read, Notify
-            // Found in HomeKitTypes.js
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 2
-
-            // Valid Values
-            // 0 - "HUMIDIFIER_OR_DEHUMIDIFIER"
-            // 1 - "HUMIDIFIER"
-            // 2 - "DEHUMIDIFIER"
-
             break;
          }
          case "TargetMediaState":   // 192
@@ -3780,22 +1731,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "2" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000137-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.targetMediaState
-            // Permissions: Paired Read, Paired Write, Notify
-            // Found in HomeKitTypes-Television.js
-
-            // Format: uint32
-
-            // Minimum Value: 0
-            // Maximum Value: 3
-
-            // Valid Values
-            // 0 - "PLAY"
-            // 1 - "PAUSE"
-            // 2 - "STOP"
-            // 3 - Reserved ????
 
             break;
          }
@@ -3806,17 +1741,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID 0000007C-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.position.target
-            // Permissions: Paired Read, Paired Write, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 100
-            // Step Value: 1
-            // Unit: percentage
-
             break;
          }
          case "TargetRelativeHumidity":   // 194
@@ -3824,17 +1748,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "50.0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000010-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.relative-humidity.current
-            // Permissions: Paaired Write, Paired Read, Notify
-
-            // Format: float
-
-            // Minimum Value: 0
-            // Maximum Value: 100
-            // Step Value: 1
-            // Unit: percentage
 
             break;
          }
@@ -3844,20 +1757,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000BE-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.targetSlatState
-            // Permissions: Paired Write, Paired Read, Notify
-            // Found in HomeKitTypes.js
-
-            // Format: uint32
-
-            // Minimum Value: 0
-            // Maximum Value: 1
-
-            // Valid Values
-            // 0 - "MANUAL"
-            // 1 - "AUTO"
-
             break;
          }
          case "TargetTemperature":   // 196
@@ -3865,17 +1764,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "22.2" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000035-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.temperature.target
-            // Permissions: Paired Read, Paired Write, Notify
-
-            // Format: float
-
-            // Minimum Value 10
-            // Maximum Value 38
-            // Step Value 0.1
-            // Unit celsius
 
             break;
          }
@@ -3885,17 +1773,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000C2-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.tilt.target
-            // Permissions: Paired Read, Paired Write, Notify
-
-            // Format: int
-
-            // Minimum Value: -90
-            // Maximum Value: 90
-            // Step Value: 1
-            // Unit: arcdegrees
-
             break;
          }
          case "TargetVerticalTiltAngle":   // 198
@@ -3903,17 +1780,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000007D-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.vertical-tilt.target
-            // Permissions: Paired Read, Paired Write, Notify
-
-            // Format: int
-
-            // Minimum Value: -90
-            // Maximum Value: 90
-            // Step Value: 1
-            // Unit: arcdegrees
 
             break;
          }
@@ -3923,20 +1789,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000134-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.targetVisibilityState
-            // Permissions: Paired Read, Paired Write, Notify
-            // Found in  HomeKitTypes-Television.js
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 1
-
-            // Valid Values
-            // 0 - "SHOWN"
-            // 1 - "HIDDEN"
-
             break;
          }
          case "TemperatureDisplayUnits":   // 200
@@ -3944,20 +1796,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000036-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.temperature.units
-            // Permissions: Paired Read, Paired Write, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 1
-            // Step Value: 1
-
-            // Valid Values:
-            // 0 - "CELCIUS"
-            // 1 - "FEHRENHEIT"
 
             break;
          }
@@ -3967,17 +1805,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000021C-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.thirdPartyCameraActive
-            // Permissions: Read, Notify
-            // Found in  HomeKit.js - Checked 11/19/2020
-
-            // Format: uint8
-
-            // Valid Values
-            // 0 - "OFF"
-            // 1 - "ON"
-
             break;
          }
          case "TimeUpdate":   // 202
@@ -3985,15 +1812,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000009A-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.timeUpdate
-            // Permissions: Paired Read, Notify
-            // found in HomeKitTypes-Bridge.js (Values ????)
-
-            // Format: Bool
-
-            // Valid Values
 
             break;
          }
@@ -4003,29 +1821,13 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000021E-0000-1000-8000-00000242
-            // Type: public.hap.characteristic.TransmitPower
-            // Permissions: Paired Read
-
-            // Format: INT
-
-            // Valid Values
-
             break;
          }
-         case "TransmitPowerMaximum":   // 204
+         case "MaximumTransmitPower":   // 204
          {
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000021E-0000-1000-8000-00000243
-            // Type: public.hap.characteristic.TransmitPowerMaximum
-            // Permissions: Paired Read
-
-            // Format: INT
-
-            // Valid Values
 
             break;
          }
@@ -4035,13 +1837,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "5000" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000061-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.timeUpdate
-            // Permissions: Paired Write, Paired Read, Notify
-            // found in HomeKitTypes-Bridge.js (Values ????)
-
-            // Format: uint32
-
             break;
          }
          case "TunneledAccessoryAdvertising":   // 206
@@ -4049,15 +1844,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000009A-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.timeUpdate
-            // Permissions: Paired Read, Notify
-            // found in HomeKitTypes-Bridge.js (Values ????)
-
-            // Format: Bool
-
-            // Valid Values
 
             break;
          }
@@ -4067,15 +1853,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000059-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.tunneledAccessoryConnected
-            // Permissions: Paired Write, Paired Read, Notify
-            // found in HomeKitTypes-Bridge.js (Values ????)
-
-            // Format: Bool
-
-            // Valid Values
-
             break;
          }
          case "TunneledAccessoryStateNumber":   // 208
@@ -4083,15 +1860,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0.0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000058-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.timeUpdate
-            // Permissions: Paired Read, Notify
-            // found in HomeKitTypes-Bridge.js (Values ????)
-
-            // Format: float
-
-            // Valid Values
 
             break;
          }
@@ -4101,15 +1869,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "50.0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000C8-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.density.voc
-            // Permissions: Paired Read, Notify
-
-            // Format: float
-
-            // Minimum Value: 0
-            // Maximum Value: 1000
-
             break;
          }
          case "ValveType":   // 210
@@ -4117,22 +1876,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 000000D5-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.valveType
-            // Permissions: Paired Read, Notify
-            // found in HomeKitTypes.js
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 3
-
-            // Valid Values
-            // 0 - "GENERIC_VALVE"
-            // 1 - "IRRIGATION"
-            // 2 - "SHOWER_HEAD"
-            // 3 - "WATER_FAUCET?"
 
             break;
          }
@@ -4142,14 +1885,6 @@ switch( io )
 
             if ( c == "LockVersion" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000037-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.version
-            // Permissions: Paired Read
-
-            // Format: string
-
-            // Maximum Length: 64
-
             break;
          }
          case "VideoAnalysisActive":   // 212
@@ -4157,12 +1892,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "50" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000021E-0000-1000-8000-00000229
-            // Type: public.hap.characteristic.VideoAnalysisActive
-            // Permissions: Paired Read, Paired Write, Notify
-
-            // Format: uint8
 
             break;
          }
@@ -4172,17 +1901,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 00000119-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.volume
-            // Permissions: Paired Write, Paired Read, Notify
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 100
-            // Step Value: 1
-            // Unit: percentage
-
             break;
          }
          case "VolumeControlType":   // 214
@@ -4190,22 +1908,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 000000E9-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.volumeControlyype
-            // Permissions: Paired Read, Notify
-            // Found in HomeKitTypes-Television.js
-
-            // Format: uint8
-
-            // Minimum Value: 0
-            // Maximum Value: 1
-
-            // Valid Values
-            // 0 - "NONE"
-            // 1 - "RELATIVE"
-            // 2 - "RELATIVE_WITH_CURRENT"
-            // 3 - "ABSOLUTE"
 
             break;
          }
@@ -4215,17 +1917,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "1" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000EA-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.volumeSelector
-            // Permissions: Paired Write
-            // Found in HomeKitTypes-Television.js
-
-            // Format: uint8
-
-            // Valid Values
-            // 0 - "INCREMENT"
-            // 1 - "DECREMENT"
-
             break;
          }
          case "WANConfigurationList":   // 216
@@ -4233,15 +1924,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 00000211-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.WANConfigurationList
-            // Permissions: Read, Notify
-            // Found in HomeKit.js - Checked 11/23/2020
-
-            // Format: TLV8
-
-            // Valid Values
 
             break;
          }
@@ -4251,15 +1933,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000212-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.WANStatusList
-            // Permissions: Read, Notify
-            // Found in HomeKit.js - Checked 11/23/2020
-
-            // Format: TLV8
-
-            // Valid Values
-
             break;
          }
          case "WakeConfiguration":   // 218
@@ -4267,15 +1940,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 000000EA-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.wakeConfiguration
-            // Permissions: Paired Write
-            // Found in HomeKit.js - Checked 11/23/2020
-
-            // Format: TLV8
-
-            // Valid Values
 
             break;
          }
@@ -4285,15 +1949,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000B5-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.waterLevel
-            // Permissions: Paired Read
-
-            // Format: float
-
-            // Minimum: 0
-            // Maximum: 100
-
             break;
          }
          case "WiFiCapabilities":   // 220
@@ -4301,12 +1956,6 @@ switch( io )
             c = readData( device, characteristic );
 
             if ( c == "" ) process.stdout.write( "50" ); else process.stdout.write( `"${ c }"` );
-
-            // UUID: 0000021E-0000-1000-8000-0000022C
-            // Type: public.hap.characteristic.WiFiCapabilities
-            // Permissions: Paired Read
-
-            // Format: uint32
 
             break;
          }
@@ -4316,12 +1965,6 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 0000021E-0000-1000-8000-0000022D
-            // Type: public.hap.characteristic.WiFiCapabilities
-            // Permissions: Paired Read, Paired Write, Notify, Timed Write, Write Response
-
-            // Format: tlv8
-
             break;
          }
          case "WiFiSatelliteStatus":  // 222
@@ -4330,25 +1973,95 @@ switch( io )
 
             if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
-            // UUID: 000000B5-0000-1000-8000-0026BB765291
-            // Type: public.hap.characteristic.WiFiSatelliteStatus
-            // Permissions: Paired Read, Notify
+            break;
+         }
+         case "AssetUpdateReadiness":  // 223
+         {
+            c = readData( device, characteristic );
 
-            // Format: uint8
-
-            // Minimum: 0
-            // Maximum: 2
-
-            // Valid Values
-            // 0 - "UNKNOWN"
-            // 1 - "CONNECTED"
-            // 2 - "NOT_CONNECTED"
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
 
             break;
          }
-            default:
-                process.stderr.write( `Unknown Characteristic for: ${ io } Device: ${ device } Characteristic: ${ characteristic }` );
-                process.exit( -1 );
+         case "SupportedAssetTypes":  // 224
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "ConfigurationState":  // 225
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "NFCAccessControlPoint":  // 226
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "NFCAccessSupportedConfiguration":  // 227
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "SiriEndpointSessionStatus":  // 228
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "ThreadControlPoint":  // 229
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "ThreadNodeCapabilities":  // 230
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "ThreadStatus":  // 231
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            // To avoid hard coding values, characteristic definitions can be found in:
+            // Cmd4 Github pages -> http://ztalbot2000.github.io/homebridge-cmd4
+            // Homebridge developer documentation -> https://developers.homebridge.io/#/
+
+            break;
+         }
+         case "ThreadOpenThreadVersion":  // 232
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         default:
+            process.stderr.write( `Unknown Characteristic for: ${ io } Device: ${ device } Characteristic: ${ characteristic }` );
+            process.exit( -1 );
        }
 
        break;
@@ -5744,7 +3457,7 @@ switch( io )
             // Not settable in Hap Spec, here for debugging.
             break;
          }
-         case "TransmitPowerMaximum":   // 204
+         case "MaximumTransmitPower":   // 204
          {
             writeData( device, characteristic, option );
 
@@ -5870,6 +3583,87 @@ switch( io )
             writeData( device, characteristic, option );
 
             // Not settable in Hap Spec, here for debugging.
+            break;
+         }
+
+         case "AssetUpdateReadiness":  // 223
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "SupportedAssetTypes":  // 224
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "ConfigurationState":  // 225
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "NFCAccessControlPoint":  // 226
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "NFCAccessSupportedConfiguration":  // 227
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "SiriEndpointSessionStatus":  // 228
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "ThreadControlPoint":  // 229
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "ThreadNodeCapabilities":  // 230
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "ThreadStatus":  // 231
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "ThreadOpenThreadVersion":  // 232
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
             break;
          }
          default:

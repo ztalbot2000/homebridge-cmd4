@@ -61,6 +61,17 @@ describe( `Testing INITIALIZED CMD4_ACC_TYPE_ENUM`, ( ) =>
 
             // Make sure our properties are defined
             assert.isNotNull( result, `CMD4_ACC_TYPE_ENUM.properties[${ index }] is null. result: ${ result }` );
+
+            for (let jIndex=0; jIndex < CMD4_ACC_TYPE_ENUM.EOL; jIndex ++ )
+            {
+               if ( index == jIndex) continue;
+
+               it( `CMD4_ACC_TYPE_ENUM.properties[ ${ index } ].type should not be duplicated`, ( ) =>
+               {
+                  assert.equal( CMD4_ACC_TYPE_ENUM.properties[ index ].type,
+                                CMD4_ACC_TYPE_ENUM.properties[ jIndex ].type, ` Duplicate ACC type ${ CMD4_ACC_TYPE_ENUM.properties[ index ].type }` );
+               });
+            }
          }
       });
    });
@@ -81,13 +92,6 @@ describe( `Testing INITIALIZED CMD4_ACC_TYPE_ENUM`, ( ) =>
           // Problem occured with hap-nodejs 0.9.2, but not 0.8.5 &&
           //                      homebridge 1.3.1, but not 1.1.7
           if ( accTypeEnumIndex == CMD4_ACC_TYPE_ENUM.PairingPairings )
-             continue;
-
-          // Do not understand why Charateristic.TransmitPowerMaximum is
-          // undefined, but is okay in Cmd4
-          // Problem occured with hap-nodejs 0.9.2, but not 0.8.5 &&
-          //                      homebridge 1.3.1, but not 1.1.7
-          if ( accTypeEnumIndex == CMD4_ACC_TYPE_ENUM.TransmitPowerMaximum )
              continue;
 
           it( `CMD4_ACC_TYPE_ENUM.properties[ ${ accTypeEnumIndex } ].type should be a string`, ( ) =>
