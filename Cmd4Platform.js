@@ -658,7 +658,9 @@ class Cmd4Platform
          if ( fromExisting == true )
          {
             if ( settings.cmd4Dbg ) this.log.debug( `Platform (AddedAccessory-existing) Step 3, ${ addedAccessory.displayName }.service = accessory.platform.getService( Service.${ devProperties.deviceName }, ${ addedAccessory.name }, ${ addedAccessory.subType }` );
-            addedAccessory.service = addedAccessory.platform.getService( devProperties.service, addedAccessory.name, addedAccessory.subType );
+            // If you have added more than one service of the same type to an accessory, you will need to get the service using the name you defined when adding it.
+            //addedAccessory.service = addedAccessory.platform.getService( devProperties.service, addedAccessory.name, addedAccessory.subType );
+            addedAccessory.service = addedAccessory.platform.getService( addedAccessory.name, addedAccessory.subType );
          } else
          {
 
@@ -697,8 +699,10 @@ class Cmd4Platform
          if ( fromExisting == true )
          {
             if ( settings.cmd4Dbg ) this.log.debug( `Platform (LinkedAccessory-existing) Step 4. ${ linkedAccessory.displayName }.service = ${ cmd4PlatformAccessory.displayName }.getService:( ${ devProperties.deviceName }.service, ${linkedAccessory.name }, ${linkedAccessory.subType } )` );
+            // If you have added more than one service of the same type to an accessory, you will need to get the service using the name you defined when adding it.
 
-            linkedAccessory.service = linkedAccessory.platform.getService( devProperties.service, linkedAccessory.name, linkedAccessory.subType );
+            //linkedAccessory.service = linkedAccessory.platform.getService( devProperties.service, linkedAccessory.name, linkedAccessory.subType );
+            linkedAccessory.service = linkedAccessory.platform.getService( linkedAccessory.name, linkedAccessory.subType );
          } else
          {
             if ( settings.cmd4Dbg ) this.log.debug( `Platform (LinkedAccessory-new) Step 4. ${ linkedAccessory.displayName }.service = ${ cmd4PlatformAccessory.displayName }.addService:( ${ devProperties.deviceName }.service, ${linkedAccessory.name }, ${linkedAccessory.subType } )` );
