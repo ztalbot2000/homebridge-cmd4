@@ -3,6 +3,7 @@
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
 ## ChangeLog
+* <a href="#Whats-new-in-6-3-0">**Whats new in 6.3.0**</a>
 * <a href="#Whats-new-in-6-2-0">**Whats new in 6.2.0**</a>
 * <a href="#Whats-new-in-6-1-2">**Whats new in 6.1.2**</a>
 * <a href="#Whats-new-in-6-1-1">**Whats new in 6.1.1**</a>
@@ -82,6 +83,14 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-6-3-0">## Whats new in 6.3.0</a>
+### 6.3.0 (2022-04-12)
+
+##### Bug Fixes
+
+*  Bug [#130](https://github.com/ztalbot2000/homebridge-cmd4/pull/130), linked accessories not accesible after restart ([aeab5a40](https://github.com/ztalbot2000/homebridge-cmd4/commit/aeab5a40340631910ae6ac19f9af8453f46faa55))
+
 
 <a name="Whats-new-in-6-2-0">## Whats new in 6.2.0</a>
 ## 6.2.0 (2022-02-18)
