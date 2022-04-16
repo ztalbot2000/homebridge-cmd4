@@ -72,9 +72,6 @@ function saveCachedPlatformAccessoriesOnDisk( cachedPlatformAccessories, accesso
 
 var _api = new HomebridgeAPI(); // object we feed to Plugins
 
-// The Library files that know all.
-var ACC_DATA = require( "../lib/CMD4_ACC_TYPE_ENUM" );
-var DEVICE_DATA = require( "../lib/CMD4_DEVICE_TYPE_ENUM" );
 
 // Init the library for all to use
 let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
@@ -87,9 +84,8 @@ let TVConfig =
 {
    platform:                      "Cmd4",
    outputConstants:               false,
-   restartRecover:                true,
-   cmd4_Mode:                    "Demo",
-   accessories :
+   cmd4_Mode:                     "Demo",
+   accessories:
    [
       {   type:                   "Television",
           category:               "TELEVISION",
@@ -201,7 +197,7 @@ describe( "Testing Cmd4Platform Setup", function( )
       let log = new Logger( );
       log.setBufferEnabled( );
       log.setOutputEnabled( false );
-      log.setDebugEnabled( );
+      log.setDebugEnabled( true );
 
       let cmd4Platform = new Cmd4Platform( log, TVConfig, _api );
 
@@ -271,12 +267,9 @@ describe( "Testing Cmd4Platform", function( )
       let cmd4Platform=new Cmd4Platform( log, TVConfig, _api );
       expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
 
-      // Instead of emitting didFinishLaunching which would cause other instances to
-      // also do the didFinishLaunching and start their polling as well,
-      // Call cmd4Platform.discoverDevices instead.
-      // apiInstance.emit("didFinishLaunching");
-      // let expectedOutput = `Cmd4Platform didFinishLaunching`;
-      // assert.include( log.logBuf, expectedOutput, `didFinishLaunching not called result: ${ log.logBuf }` );
+      // Instead of emitting didFinishLaunching which would cause other
+      // instances to also do the didFinishLaunching and start their polling
+      // as well,
       cmd4Platform.discoverDevices( );
 
 
@@ -287,24 +280,20 @@ describe( "Testing Cmd4Platform", function( )
       loadCachedPlatformAccessoriesFromDisk( accessoryStorage );
    });
 
-   it.skip( "Test reload of saved Platforms with value change to disk", function( )
+   it( "Test reload of saved Platforms with value change to disk", function( )
    {
       let log = new Logger( );
       log.setBufferEnabled( );
-      log.setOutputEnabled( true );
+      log.setOutputEnabled( false );
       log.setDebugEnabled( true );
 
       // We need our own instance as emitting "didFinishLaunching" triggers other testcases
 
       let cmd4Platform = new Cmd4Platform( log, TVConfig, _api );
 
-      // Instead of emitting didFinishLaunching which would cause other instances to
-      // also do the didFinishLaunching and start their polling as well,
-      // Call cmd4Platform.discoverDevices instead.
-      //apiInstance.emit("didFinishLaunching");
-      //let expectedOutput = `Cmd4Platform didFinishLaunching`;
-      //assert.include( log.logBuf, expectedOutput,
-      //                `didFinishLaunching not called result: ${ log.logBuf }` );
+      // Instead of emitting didFinishLaunching which would cause other
+      // instances to also do the didFinishLaunching and start their polling
+      // as well,
       cmd4Platform.discoverDevices( );
 
       assert.equal(cmd4Platform.createdCmd4Platforms.length, 1, `Incorrect number of Cmd4Platforms created. result: ${ cmd4Platform.createdCmd4Platforms.length }` );
@@ -320,7 +309,7 @@ describe( "Testing Cmd4Platform", function( )
 
 
       log.reset( );
-      log.setOutputEnabled( true );
+      log.setOutputEnabled( false );
       log.setDebugEnabled( true );
       cmd4Accessory.setCachedValue( acc, "ConfiguredName", newValue, function( rc )
       {
@@ -339,6 +328,7 @@ describe( "Testing Cmd4Platform", function( )
          // Simulate a restart of homebridge with a new Cmd4Platform instance and the stored date reloaded.
          let cachedPlatformAccessories = loadCachedPlatformAccessoriesFromDisk( accessoryStorage );
 
+         log.debug(" *****  RUNNING NEXT PLATFORM *****  " );
          let cmd4Platform2 = new Cmd4Platform( log, TVConfig, _api );
 
          cachedPlatformAccessories.forEach( ( entry ) =>
@@ -346,10 +336,9 @@ describe( "Testing Cmd4Platform", function( )
             restoreCachedPlatformAccessories( cmd4Platform2, entry );
          });
 
-         // Instead of emitting didFinishLaunching which would cause other instances to
-         // also do the didFinishLaunching and start their polling as well,
-         // Call cmd4Platform.discoverDevices instead.
-         // apiInstance2.emit("didFinishLaunching");
+         // Instead of emitting didFinishLaunching which would cause other
+         // instances to also do the didFinishLaunching and start their polling
+         // as well,
          cmd4Platform2.discoverDevices( );
 
          cmd4Accessory = cmd4Platform2.createdCmd4Accessories[4];
@@ -383,20 +372,16 @@ describe( "Testing Cmd4Platform", function( )
 
       let log = new Logger( );
       log.setBufferEnabled( );
-      log.setOutputEnabled( true );
+      log.setOutputEnabled( false );
       log.setDebugEnabled( true );
 
       // We need our own instance as emitting "didFinishLaunching" triggers other testcases
 
       let cmd4Platform = new Cmd4Platform( log, SwitchConfig, _api );
 
-      // Instead of emitting didFinishLaunching which would cause other instances to
-      // also do the didFinishLaunching and start their polling as well,
-      // Call cmd4Platform.discoverDevices instead.
-      //apiInstance.emit("didFinishLaunching");
-      //let expectedOutput = `Cmd4Platform didFinishLaunching`;
-      //assert.include( log.logBuf, expectedOutput,
-      //                `didFinishLaunching not called result: ${ log.logBuf }` );
+      // Instead of emitting didFinishLaunching which would cause other
+      // instances to also do the didFinishLaunching and start their polling
+      // as well,
       cmd4Platform.discoverDevices( );
 
       assert.equal(cmd4Platform.createdCmd4Platforms.length, 1, `Incorrect number of Cmd4Platforms created. result: ${ cmd4Platform.createdCmd4Platforms.length }` );
@@ -412,7 +397,7 @@ describe( "Testing Cmd4Platform", function( )
 
 
       log.reset( );
-      log.setOutputEnabled( true );
+      log.setOutputEnabled( false );
       log.setDebugEnabled( true );
       cmd4Accessory.setCachedValue( acc, "ConfiguredName", newValue, function( rc )
       {
@@ -440,10 +425,9 @@ describe( "Testing Cmd4Platform", function( )
             restoreCachedPlatformAccessories( cmd4Platform2, entry );
          });
 
-         // Instead of emitting didFinishLaunching which would cause other instances to
-         // also do the didFinishLaunching and start their polling as well,
-         // Call cmd4Platform.discoverDevices instead.
-         // apiInstance2.emit("didFinishLaunching");
+         // Instead of emitting didFinishLaunching which would cause other
+         // instances to also do the didFinishLaunching and start their polling
+         // as well,
          cmd4Platform2.discoverDevices( );
 
          cmd4Accessory = cmd4Platform2.createdCmd4Accessories[0];
@@ -457,6 +441,88 @@ describe( "Testing Cmd4Platform", function( )
       //cmd4Platform.configureAccessory( cachedPlatformAccessories );
 
       //expect( cmd4Platform.createdCmd4Accessories.length ).to.equal( 1, "cmd4Platform.createdCmd4Accessories.length is not 1. Found:" + cmd4Platform.createdCmd4Accessories.length );
+
+   });
+
+   it( "Test fix of bug#130, Linked types not accessable after restart", function( )
+   {
+      // Note: I tested this by changing Cmd4Platform.js and putting back the old code and it failed. so this test is valid. the code being:
+      // ** WRONG **
+      // linkedAccessory.service = linkedAccessory.platform.getService( devProperties.service, linkedAccessory.name, linkedAccessory.subType );
+      // ** CORRECT **
+      // linkedAccessory.service = linkedAccessory.platform.getService( linkedAccessory.name, linkedAccessory.subType );
+      let LightConfig =
+      {
+         platform:  "Cmd4",
+         accessories:
+         [{
+             type: "Lightbulb",
+             displayName: "Light1",
+             on: 0,
+             stateChangeResponseTime: 1,
+             brightness: 100,
+             hue: 200,
+             saturation: 100,
+             state_cmd: "node .homebridge/Cmd4Scripts/State.js",
+//           polling: [ { characteristic: "on" },
+//                        { characteristic: "brightness" }
+//                    ],
+             linkedTypes: [{
+                 type: "Lightbulb",
+                 displayName: "Light2",
+                 on: 0,
+                 brightness: 0,
+                 stateChangeResponseTime: 1,
+                 state_cmd: "node .homebridge/Cmd4Scripts/State.js",
+//               polling: [ { characteristic: "on" },
+//                          { characteristic: "brightness" }
+//                        ]
+              }]
+
+         }]
+      }
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+      // We need our own instance as emitting "didFinishLaunching" triggers other testcases
+
+      let cmd4Platform = new Cmd4Platform( log, LightConfig, _api );
+
+      // Instead of emitting didFinishLaunching which would cause other
+      // instances to also do the didFinishLaunching and start their polling
+      // as well,
+      cmd4Platform.discoverDevices( );
+
+      assert.include( log.logBuf, `Creating linked accessories for: Light1`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `Adding getCachedValue for Light2 characteristic: Brightness`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+
+      log.reset( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+      saveCachedPlatformAccessoriesOnDisk( cmd4Platform.createdCmd4Platforms, accessoryStorage  )
+
+      // Simulate a restart of homebridge with a new Cmd4Platform instance and the stored date reloaded.
+      let cachedPlatformAccessories = loadCachedPlatformAccessoriesFromDisk( accessoryStorage );
+
+      log.debug(" *****  RUNNING NEXT PLATFORM *****  " );
+      let cmd4Platform2 = new Cmd4Platform( log, LightConfig, _api );
+
+      cachedPlatformAccessories.forEach( ( entry ) =>
+      {
+         restoreCachedPlatformAccessories( cmd4Platform2, entry );
+      });
+
+      // Instead of emitting didFinishLaunching which would cause other
+      // instances to also do the didFinishLaunching and start their polling
+      // as well,
+      cmd4Platform2.discoverDevices( );
+
+      assert.include( log.logBuf, `Creating linked accessories for: Light1`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `Adding getCachedValue for Light2 characteristic: Brightness`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
 
    });
 

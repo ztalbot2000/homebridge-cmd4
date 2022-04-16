@@ -158,8 +158,6 @@ describe( `Testing index.js plugin Initialized variables.`, ( ) =>
       {
           "platform": "Cmd4",
           "name": "Cmd4",
-          "restartRecover": true,
-          "fetch": "Cached",
           "accessories":
           [
              {

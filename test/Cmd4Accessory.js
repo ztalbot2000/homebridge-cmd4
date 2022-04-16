@@ -1541,7 +1541,6 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
          {
             platform:                  "Cmd4",
             outputConstants:            false,
-            restartRecover:            true,
             accessories: [
             {
                type:                        "Thermostat",
