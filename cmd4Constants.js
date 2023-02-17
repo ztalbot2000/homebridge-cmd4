@@ -149,6 +149,6 @@ var cmd4Constants = {
 
 
    // Static Messages
-   DBUSY:                          "Perhaps your device is busy?"
+   DBUSY:                          "Perhaps your device is busy or offine!"
 };
 module.exports = cmd4Constants;

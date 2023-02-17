@@ -2,7 +2,7 @@
 
 // 3rd Party includes
 const exec = require( "child_process" ).exec;
-
+const fs = require('fs');
 
 // These would already be initialized by index.js
 let CMD4_ACC_TYPE_ENUM = require( "./lib/CMD4_ACC_TYPE_ENUM" ).CMD4_ACC_TYPE_ENUM;
@@ -28,6 +28,9 @@ var { transposeConstantToValidValue,
 let HIGH_PRIORITY_SET = 0;
 let HIGH_PRIORITY_GET = 1;
 let LOW_PRIORITY_GET = 2;
+
+let Name = "";
+let filename = "";
 
 class Cmd4PriorityPollingQueue
 {
@@ -118,9 +121,17 @@ class Cmd4PriorityPollingQueue
    {
       let self = this;
 
-      // return the cached value
+      // return the required characteristics and "Name" cached values
       let storedValue = self.cmd4Storage.getStoredValueForIndex( accTypeEnumIndex );
-      callback( 0, storedValue );
+      Name = self.cmd4Storage.getStoredValueForIndex( 98 );
+      // initialize errorCode = 0 for online devices, 1 for offline devices. Offline devices do not communicate with Homekit.
+      let errorCode = 0;
+      filename = "cmd4Accessory-" + Name.replace(/ /g, "_") + ".offline" // The presence of this 'filename' is a flag for an offline device 
+      if ( fs.existsSync( filename ) ) {
+         errorCode = 1;
+         if ( settings.cmd4Dbg ) this.log.debug( chalk.red(`An offline flag ${ filename } has been detected for accessory ${Name}. It is most likely offline!`) );
+      }
+      callback( errorCode, storedValue );
 
       if ( self.queue.queueType != constants.QUEUETYPE_WORM2 )
       {
@@ -341,13 +352,30 @@ class Cmd4PriorityPollingQueue
                callback( constants.ERROR_TIMER_EXPIRED );
 
                return;
+            } else {
+               if ( queue.echoE  ) self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed. Error: ${ code }. ${ constants.DBUSY }` ) );
+               // set the offline flag
+               Name = self.displayName.replace(/ /g, "_");
+               filename = "cmd4Accessory-" + Name + ".offline";
+               if ( !fs.existsSync( filename ) ) {
+                  fs.writeFileSync( filename, "" ); 
+                  if ( queue.echoE  ) self.log.error( chalk.yellow( `An offline flag ${ filename } has now been set for accessory: ${ self.displayName }` ) );
+               } else {
+                  if ( queue.echoE  ) self.log.error( chalk.yellow( `An offline flag ${ filename } has already been set for accessory: ${ self.displayName }` ) );
+               }
+               callback( code );
+
+               return;
             }
-            if ( queue.echoE  ) self.log.error( chalk.red( `getValue ${ characteristicString } function failed for ${ self.displayName } cmd: ${ cmd } Failed. Error: ${ code }. ${ constants.DBUSY }` ) );
-
-            callback( code );
-
-            return;
+         } else { 
+            // remove the offline flag if return code = 0
+            filename = "cmd4Accessory-" + self.displayName.replace(/ /g, "_") + ".offline";
+            if ( fs.existsSync( filename ) ) {
+               fs.unlinkSync( filename );
+               if ( queue.echoE  ) self.log.error( chalk.yellow( `${ self.displayName } is now back online! The offline flag ${ filename } has now been removed! ` ) );
+            }
          }
+
 
          if ( reply == "NxN" )
          {
