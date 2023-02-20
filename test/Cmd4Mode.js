@@ -39,7 +39,7 @@ describe( "Quick Test load of CMD4_DEVICE_TYPE_ENUM", ( ) =>
   });
 });
 
-describe( "Testing Cmd4Accessory", function( )
+describe( "Testing Demo Mode", function( )
 {
 
    beforeEach( function( )
@@ -77,7 +77,7 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories:
          [{
-            name:                         "My_Switch",
+            name:                         "MySwitch",
             type:                         "Switch",
             on:                            false,
            }]
@@ -94,8 +94,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Platform.discoverDevices( );
 
-      assert.include( log.logBuf, `[35mConfiguring platformAccessory: \u001b[39mMy_Switch`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
-      assert.include( log.logBuf, `[33mAdding getCachedValue for My_Switch characteristic: On`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
+      assert.include( log.logBuf, `[35mConfiguring platformAccessory: \u001b[39mMySwitch`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
+      assert.include( log.logBuf, `[33mAdding getCachedValue for MySwitch characteristic: On`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
 
@@ -112,7 +112,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout( ( ) =>
       {
-         assert.include( log.logBuf, `[90mgetCachedValue On for: My_Switch returned (CACHED) value: false`, ` getValue incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetCachedValue On for: MySwitch returned (CACHED) value: false`, ` getValue incorrect stdout: ${ log.logBuf }` );
          assert.equal( log.errBuf, "", ` getValue Unexpected stderr: ${ log.errBuf }` );
 
          done( );
@@ -121,160 +121,4 @@ describe( "Testing Cmd4Accessory", function( )
 
    }).timeout( 2000 );
 
-   it( "Test that Cmd4_Mode Demo generates depricated warning", function( done )
-   {
-      let switchConfig =
-      {
-         cmd4_Mode:                    "Demo",
-         name:                         "Test Switch",
-         type:                         "Switch",
-         on:                            false,
-      };
-
-      const log = new Logger( );
-      log.setBufferEnabled( );
-      log.setOutputEnabled( false );
-      log.setDebugEnabled( false );
-
-      let switchAccessory = new Cmd4Accessory( log, switchConfig, _api, [ ] );
-      expect( switchAccessory ).to.be.a.instanceOf( Cmd4Accessory, "Cmd4Accessory is not an instance of Cmd4Accessory" );
-
-      assert.include( log.logBuf, `[34mCmd4 is running in Demo Mode`, ` Cmd4Accessory: incorrect stdout: ${ log.logBuf }` );
-
-      assert.include( log.errBuf, `[33mWarning: cmd4_Mode has been deprecated.`, ` Cmd4Accessory: incorrect stderr: ${ log.errBuf }` );
-
-      done( );
-   });
-
-   it( "Test that Cmd4_Mode Polled with polling generates proper warnings", function( done )
-   {
-      let platformConfig =
-      {
-         accessories:
-         [{
-            cmd4_Mode:                    "Polled",
-            name:                         "Test Switch",
-            type:                         "Switch",
-            on:                            false,
-            polling:                       true,
-            state_cmd:                    "./test/echoScripts/echo_1"
-         }]
-      };
-
-      const log = new Logger( );
-      log.setBufferEnabled( );
-      log.setOutputEnabled( false );
-      log.setDebugEnabled( false );
-
-      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
-
-      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
-
-      cmd4Platform.discoverDevices( );
-
-      assert.include( log.errBuf, `[33mWarning: cmd4_Mode has been deprecated.`, ` Cmd4Accessory: incorrect stderr: ${ log.errBuf }` );
-      assert.include( log.errBuf, `[33mTo remove this message, just remove "Cmd4_Mode" from your config.json`, ` Cmd4Accessory: incorrect stderr: ${ log.errBuf }` );
-
-      assert.include( log.errBuf, `[33mCmd4 has been simplified and optimized as per: https://git.io/JtMGR`, ` Cmd4Accessory: incorrect stderr: ${ log.errBuf }` );
-      assert.equal( log.errLineCount, 3, ` Cmd4Accessory: incorrect number of lines to stderr: ${ log.errBuf }` );
-
-
-      done( );
-
-   });
-
-   it( "Test that Cmd4_Mode Demo with polling throws an error", function( done )
-   {
-      let platformConfig =
-      {
-         accessories:
-         [{
-            cmd4_Mode:                    "Demo",
-            name:                         "Test Switch",
-            type:                         "Switch",
-            on:                            false,
-            polling:                       true,
-            state_cmd:                    "./test/echoScripts/echo_1"
-         }]
-      };
-
-      const log = new Logger( );
-      log.setBufferEnabled( );
-      log.setOutputEnabled( false );
-      log.setDebugEnabled( false );
-
-      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
-
-      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
-
-      expect ( ( ) => cmd4Platform.discoverDevices( ) ).to.throw(/Demo mode is achieved when there are no polling entries in your config.json/);
-
-      done( );
-
-   });
-
-   it( "Test Cmd4Mode=Demo generates a warning", ( done ) =>
-   {
-      let config =
-      {
-         name:                         "Test Switch",
-         type:                         "Switch",
-         on:                            false,
-         cmd4_Mode:                    "Demo"
-      };
-
-      const log = new Logger( );
-      log.setBufferEnabled( true );
-      log.setOutputEnabled( false );
-      log.setDebugEnabled( false );
-
-
-      let accessory = new Cmd4Accessory( log, config, _api, [ ] );
-
-      assert.instanceOf( accessory , Cmd4Accessory, "Expected accessory to be instance of Cmd4Accessory. Found %s" , accessory );
-
-      assert.include( log.logBuf, `[34mCmd4 is running in Demo Mode`, ` Cmd4Accessory: incorrect stdout: ${ log.logBuf }` );
-      assert.equal( log.logLineCount, 1 , `Cmd4Accessory: unexpected number of lines to stdout ${ log.logBuf }` );
-
-      assert.include( log.errBuf, `[33mWarning: cmd4_Mode has been deprecated.`, ` Cmd4Accessory: incorrect stderr: ${ log.errBuf }` );
-      assert.equal( log.errLineCount, 1 , `Cmd4Accessory: unexpected number of lines to stderr ${ log.errBuf }` );
-
-      done( );
-   });
-
-   it( "Test no Cmd4Mode with proper polling should not generate a log", function( done )
-   {
-      let thermostatConfig =
-      {
-         type:                         "Thermostat",
-         name:                         "Thermostat",
-         displayName:                  "Thermostat",
-         temperatureDisplayUnits:      "CELSIUS",
-         active:                       "Inactive",
-         currentTemperature:            20.0,
-         targetTemperature:             20.0,
-         currentHeatingCoolingState:    0,
-         targetHeatingCoolingState:     0,
-         polling:                      [{characteristic: "currentTemperature",
-                                         interval: 60,
-                                         timeout:2000},
-                                        {characteristic: "targetTemperature",
-                                         interval: 60,
-                                         timeout:2000}],
-         state_cmd:                    "./test/echoScripts/echo_quoted0"
-      };
-
-
-      const log = new Logger( );
-      log.setBufferEnabled( );
-      log.setOutputEnabled( false );
-      log.setDebugEnabled( false );
-
-      new Cmd4Accessory( log, thermostatConfig, _api, [ ], { } );
-
-      assert.equal( log.logBuf, "", ` Cmd4Accessory: incorrect stdout: ${ log.logBuf }` );
-      assert.equal( log.errBuf, ``, ` Cmd4Accessory: unexpected stderr: ${ log.errBuf }` );
-
-      done( );
-   });
 });

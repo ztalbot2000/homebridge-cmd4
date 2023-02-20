@@ -238,68 +238,13 @@ class Cmd4Platform
                this.outputConstants = value;
 
                break;
-            case "RestartRecover":
-               this.log.warn( `Warning: ${ key } has been deprecated. Not having restart recovery could mean your device would turn on/off over a restart; Therefore ${ key } is now always enabled.` );
-               this.log.warn( `To remove this message, just remove ${ key } from your config.json` );
-               break;
             case constants.STATUSMSG:
               if ( value === false )
                  this.statusMsg = "FALSE";
 
                break;
-            case "QueueStatMsgInterval":
-            case "QueueMsg":
-
-               // Never put into production
-               this.log.warn( `Warning: ${ key } has been deprecated. It was never even used.` );
-               this.log.warn( `To remove this message, just remove ${ key } from your config.json` );
-
-               break;
             case constants.QUEUETYPES:
                parseAddQueueTypes( this.log, value );
-
-               break;
-            case "Cmd4_Mode":
-            case "cmd4_Mode":
-               this.log.warn( `Warning: ${ key } has been deprecated.` );
-               if ( value == "Demo" )
-               {
-                  this.log.warn( `Demo mode is achieved when there is not any polling entries in your config.json.` );
-               } else
-               {
-                  this.log.warn( `Cmd4 has been simplified and optimized as per: https://git.io/JtMGR.` );
-               }
-               this.log.warn( `To remove this message, just remove "${ key }" from your config.json` );
-               break;
-            case constants.STORAGE:
-               this.log.warn( `Warning: ${ key } will soon been deprecated at the Platform level. It was always meant to just be a fakegato config option only.` );
-               this.log.warn( `This message will disappear when you have done so.` );
-
-               if ( value == constants.FS || value == constants.GOOGLEDRIVEl )
-                  this.storage = value;
-               else
-                  this.log.warn( chalk.yellow( `WARNING` ) + `: Cmd4 Unknown platform.config.storage:{ this.storage } Expected:${ constants.FS } or ${ constants.GOOGLEDRIVE }` );
-
-               break;
-            case constants.STORAGEPATH:
-               this.log.warn( `Warning: ${ key } will soon been deprecated at the Platform level. It was always meant to just be a fakegato config option only.` );
-               this.log.warn( `This message will disappear when you have done so.` );
-
-               this.storagePath = value;
-
-               break;
-            case constants.FOLDER:
-               this.log.warn( `Warning: ${ key } will soon been deprecated at the Platform level. It was always meant to just be a fakegato config option only.` );
-               this.log.warn( `This message will disappear when you have done so.` );
-
-               this.folder = value;
-
-               break;
-            case constants.KEYPATH:
-               this.log.warn( `Warning: ${ key } will soon been deprecated at the Platform level. It was always meant to just be a fakegato config option only.` );
-               this.log.warn( `This message will disappear when you have done so.` );
-
-               this.keyPath = value;
 
                break;
             case constants.DEFINITIONS:

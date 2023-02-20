@@ -31,7 +31,7 @@ let LOW_PRIORITY_GET = 2;
 
 class Cmd4PriorityPollingQueue
 {
-   constructor( log, queueName, queueType = constants.DEFAULT_QUEUE_TYPE )
+   constructor( log, queueName, queueType = constants.DEFAULT_QUEUE_TYPE, queueRetryCount = constants.DEFAULT_WORM_QUEUE_RETRY_COUNT )
    {
       this.log = log;
 
@@ -40,6 +40,7 @@ class Cmd4PriorityPollingQueue
 
       this.queueName = queueName;
       this.queueType = queueType;
+      this.queueRetryCount = queueRetryCount;
       this.queueStarted = false;
       this.highPriorityQueue = [ ];
       this.lowPriorityQueue = [ ];
@@ -193,8 +194,8 @@ class Cmd4PriorityPollingQueue
             queue.errorCountSinceLastGoodTransaction++;
             let count = queue.errorCountSinceLastGoodTransaction;
 
-            if ( count != 0 && count % 50 == 0 )
-               queue.log.warn( `More than *${ count }* errors were encountered in a row for "${ entry.accessory.displayName }" setValue. Last error found Setting: "${ entry.characteristicString}". Perhaps you should run in debug mode to find out what the problem might be.` );
+            if ( count != 0 && count % queue.queueRetryCount == 0 )
+               queue.log.warn( `*${ count }* error(s) were encountered for "${ entry.accessory.displayName }" getValue. Last error found Getting: "${ entry.characteristicString}". Perhaps you should run in debug mode to find out what the problem might be.` );
 
             entry.accessory.queue.pauseQueue( entry.accessory.queue );
          }
@@ -204,7 +205,7 @@ class Cmd4PriorityPollingQueue
          // created.
 
          // Note 2.
-         // We cannot release the queue for further processing as the 
+         // We cannot release the queue for further processing as the
          // statechangeResponseTime has not completed. This must be
          // done first or any next "Get" or "Set" would interfere
          // with the device
@@ -234,16 +235,22 @@ class Cmd4PriorityPollingQueue
 
          } else  // getValue failed
          {
-            // High Priority Get failed. We need to keep trying (WoRm queue only )
-            if ( queue.queueType == constants.QUEUETYPE_WORM ||
-                 queue.queueType == constants.QUEUETYPE_WORM2
-               )
-               queue.highPriorityQueue.push( entry );
 
             queue.errorCountSinceLastGoodTransaction++;
             let count = queue.errorCountSinceLastGoodTransaction;
-            if ( count != 0 && count % 50 == 0 )
-               queue.log.warn( `More than *${ count }* errors were encountered in a row for "${ entry.accessory.displayName }" getValue. Last error found Getting: "${ entry.characteristicString}". Perhaps you should run in debug mode to find out what the problem might be.` );
+            if ( count != 0 && count % queue.queueRetryCount == 0 )
+            {
+               queue.log.warn( `*${ count }* error(s) were encountered for "${ entry.accessory.displayName }" getValue. Last error found Getting: "${ entry.characteristicString}". Perhaps you should run in debug mode to find out what the problem might be.` );
+
+               // Call updateValue with new Error so device will become unavailable
+               // entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( null, new Error( constants.errorString( error ) ) );
+            } else
+            {
+               // High Priority Get failed. We keep retrying until the mod of
+               // queueRetryCount reaches zero, which is WoRm only as it has more than 1
+               // default retry count.
+               queue.highPriorityQueue.push( entry );
+            }
 
             entry.accessory.queue.pauseQueue( entry.accessory.queue );
          }
@@ -901,15 +908,15 @@ var queueExists = function( queueName )
    return settings.listOfCreatedPriorityQueues[ queueName ];
 }
 
-var addQueue = function( log, queueName, queueType = constants.DEFAULT_QUEUE_TYPE )
+var addQueue = function( log, queueName, queueType = constants.DEFAULT_QUEUE_TYPE, queueRetryCount = constants.DEFAULT_WORM_QUEUE_RETRY_COUNT )
 {
    let queue = queueExists( queueName );
    if ( queue != undefined )
       return queue;
 
-   log.debug( `Creating new Priority Polled Queue "${ queueName }" with QueueType of: "${ queueType }"` );
+   log.debug( `Creating new Priority Polled Queue "${ queueName }" with QueueType of: "${ queueType }" retryCount: ${queueRetryCount}` );
 
-   queue = new Cmd4PriorityPollingQueue( log, queueName, queueType );
+   queue = new Cmd4PriorityPollingQueue( log, queueName, queueType, queueRetryCount );
    settings.listOfCreatedPriorityQueues[ queueName ] = queue;
 
    return queue;
@@ -927,6 +934,7 @@ var parseAddQueueTypes = function ( log, entrys )
    {
       let queueName = null;
       let queueType = constants.DEFAULT_QUEUE_TYPE;
+      let queueRetryCount = constants.DEFAULT_WORM_QUEUE_RETRY_COUNT;
 
       for ( let key in entry )
       {
@@ -950,25 +958,33 @@ var parseAddQueueTypes = function ( log, entrys )
 
                break;
             case constants.QUEUETYPE:
-               if ( value != constants.QUEUETYPE_WORM &&
-                    value != constants.QUEUETYPE_WORM2 &&
-                    value != constants.QUEUETYPE_SEQUENTIAL )
+               // Set the default Queue Retry Count based on QueueType
+               switch ( value )
                {
-                  throw new Error( `QueueType: ${ entry.queueType } is not valid at index: ${ entryIndex }. Expected: ${ constants.QUEUETYPE_WORM }, ${ constants.QUEUETYPE_WORM2 } or ${ constants.QUEUETYPE_SEQUENTIAL }` );
+                  case constants.QUEUETYPE_WORM:
+                     queueRetryCount = constants.DEFAULT_WORM_QUEUE_RETRY_COUNT;
+                     queueType = value;
+                     break;
+                  case constants.QUEUETYPE_WORM2:
+                     queueRetryCount = constants.DEFAULT_WORM_QUEUE_RETRY_COUNT;
+                     queueType = value;
+                     break;
+                  case constants.QUEUETYPE_SEQUENTIAL:
+                     queueRetryCount = constants.DEFAULT_STANDARD_QUEUE_RETRY_COUNT;
+                     queueType = value;
+                     break;
+                  case constants.QUEUETYPE_STANDARD:
+                     queueRetryCount = constants.DEFAULT_STANDARD_QUEUE_RETRY_COUNT;
+                     queueType = value;
+                     break;
+                  default:
+                     throw new Error( `QueueType: ${ entry.queueType } is not valid at index: ${ entryIndex }. Expected: ${ constants.QUEUETYPE_WORM }, ${ constants.QUEUETYPE_WORM2 } or ${ constants.QUEUETYPE_SEQUENTIAL }` );
                }
 
-               queueType = value;
-
                break;
-            case "QueueInterval":
-            case "QueueMsg":
-            case "QueueStatMsgInterval":
-
-               // Never put into production
-               log.warn( `Warning: ${ key } has been deprecated. It was never really used anyway.` );
-               log.warn( `To remove this message, just remove ${ key } from your config.json` );
-
-              break;
+            case constants.QUEUE_RETRY:
+               queueRetryCount = value;
+               break;
             default:
                throw new Error( `Unknown Queue option"${ key }  not provided at index ${ entryIndex }` );
          }
@@ -978,8 +994,9 @@ var parseAddQueueTypes = function ( log, entrys )
       if ( queueName == null )
          throw new Error( `"${ constants.QUEUE }"  not provided at index ${ entryIndex }` );
 
-      if ( settings.cmd4Dbg ) log.debug( `calling addQueue: ${ queueName } type: ${ queueType }` );
-      addQueue( log, queueName, queueType );
+      if ( settings.cmd4Dbg ) log.debug( `calling addQueue: ${ queueName } type: ${ queueType } retryCount: ${ queueRetryCount }` );
+
+      addQueue( log, queueName, queueType, queueRetryCount );
    } );
 }
 

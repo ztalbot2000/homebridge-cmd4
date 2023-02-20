@@ -5,6 +5,7 @@
 
 let { Cmd4Platform } = require( "../Cmd4Platform" );
 let { Cmd4Accessory } = require( "../Cmd4Accessory" );
+const constants = require( "../cmd4Constants" );
 
 
 var _api = new HomebridgeAPI( ); // object we feed to Plugins
@@ -56,15 +57,14 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories:
          [{
-            name:                        "My_Television",
+            name:                        "MyTelevision",
             type:                        "Television",
-            cmd4_Mode:                   "Demo",
             category:                    "TELEVISION",
             publishExternally:           true,
             active:                      "ACTIVE",
             activeIdentifier:             1234,
             mute:                        true,
-            configuredName:              "My_Television",
+            configuredName:              "MyTelevision",
             sleepDiscoveryMode:          "ALWAYS_DISCOVERABLE",
             brightness:                   8,
             closedCaptions:              "DISABLED",
@@ -87,8 +87,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Platform.discoverDevices( );
 
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: My_Television`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: MyTelevision`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -101,14 +101,14 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories:
          [{
-            name:                     "My_Television",
+            name:                     "MyTelevision",
             type:                     "Television",
             category:                 "TELEVISION",
             publishExternally:        true,
             active:                   "ACTIVE",
             activeIdentifier:          1234,
             mute:                     true,
-            configuredName:           "My_Television",
+            configuredName:           "MyTelevision",
             sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
             brightness:                8,
             closedCaptions:           "DISABLED",
@@ -133,8 +133,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Platform.discoverDevices( );
 
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: My_Television`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: MyTelevision`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -149,14 +149,14 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories:
          [{
-            name:                     "My_Television",
+            name:                     "MyTelevision",
             type:                     "Television",
             category:                 "TELEVISION",
             publishExternally:        true,
             active:                   "ACTIVE",
             activeIdentifier:          1234,
             mute:                     true,
-            configuredName:           "My_Television",
+            configuredName:           "MyTelevision",
             sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
             brightness:                8,
             closedCaptions:           "DISABLED",
@@ -181,8 +181,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Platform.discoverDevices( );
 
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: My_Television`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: MyTelevision`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -213,14 +213,14 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories:
          [{
-            name:                     "My_Television",
+            name:                     "MyTelevision",
             type:                     "Television",
             category:                 "TELEVISION",
             publishExternally:        true,
             active:                   "ACTIVE",
             activeIdentifier:          1234,
             mute:                     true,
-            configuredName:           "My_Television",
+            configuredName:           "MyTelevision",
             sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
             brightness:                8,
             closedCaptions:           "DISABLED",
@@ -245,8 +245,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Platform.discoverDevices( );
 
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: My_Television`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: MyTelevision`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -260,8 +260,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout( ( ) =>
       {
-         assert.include( log.logBuf, `[90mgetValue: Active function for: My_Television returned: INACTIVE`, ` getValue incorrect stdout: ${ log.logBuf }` );
-         assert.include( log.logBuf, `[90mgetValue: Active for: My_Television transposed: 0`, ` getValue incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: Active function for: MyTelevision returned: INACTIVE`, ` getValue incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: Active for: MyTelevision transposed: 0`, ` getValue incorrect stdout: ${ log.logBuf }` );
          assert.equal( "", log.errBuf, ` getValue unexpected stderr: ${ log.errBuf }` );
 
          done( );
@@ -274,14 +274,14 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories:
          [{
-            name:                     "My_Television",
+            name:                     "MyTelevision",
             type:                     "Television",
             category:                 "TELEVISION",
             publishExternally:        true,
             active:                   "ACTIVE",
             activeIdentifier:          1234,
             mute:                     true,
-            configuredName:           "My_Television",
+            configuredName:           "MyTelevision",
             sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
             brightness:                8,
             closedCaptions:           "DISABLED",
@@ -306,8 +306,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Platform.discoverDevices( );
 
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: My_Television`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: MyTelevision`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -321,7 +321,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout( ( ) =>
       {
-         assert.include( log.logBuf, `[90mgetValue: Active function for: My_Television returned: 0`, ` getValue incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: Active function for: MyTelevision returned: 0`, ` getValue incorrect stdout: ${ log.logBuf }` );
          assert.equal( "", log.errBuf, ` getCachedValue unexpected stderr: ${ log.errBuf }` );
 
 
@@ -335,14 +335,14 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories:
          [{
-            name:                     "My_Television",
+            name:                     "MyTelevision",
             type:                     "Television",
             category:                 "TELEVISION",
             publishExternally:        true,
             active:                   "ACTIVE",
             activeIdentifier:          1234,
             mute:                     true,
-            configuredName:           "My_Television",
+            configuredName:           "MyTelevision",
             sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
             brightness:                8,
             closedCaptions:           "DISABLED",
@@ -367,8 +367,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Platform.discoverDevices( );
 
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: My_Television`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: MyTelevision`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -382,8 +382,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout( ( ) =>
       {
-         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-         assert.include( log.logBuf, `[90mgetValue: Active function for: My_Television returned: 1`, ` getValue incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: Active function for: MyTelevision returned: 1`, ` getValue incorrect stdout: ${ log.logBuf }` );
 
          assert.equal( log.errBuf, "", ` getValue Unexpected stderr: ${ log.errBuf }` );
 
@@ -397,14 +397,14 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories:
          [{
-            name:                     "My_Television",
+            name:                     "MyTelevision",
             type:                     "Television",
             category:                 "TELEVISION",
             publishExternally:        true,
             active:                   "ACTIVE",
             activeIdentifier:          1234,
             mute:                     true,
-            configuredName:           "My_Television",
+            configuredName:           "MyTelevision",
             sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
             brightness:                8,
             closedCaptions:           "DISABLED",
@@ -429,8 +429,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Platform.discoverDevices( );
 
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: My_Television`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: MyTelevision`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -444,8 +444,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout( ( ) =>
       {
-         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-         assert.include( log.logBuf, `[90mgetValue: Active function for: My_Television returned: 0`, ` getValue incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: Active function for: MyTelevision returned: 0`, ` getValue incorrect stdout: ${ log.logBuf }` );
 
          assert.equal( log.errBuf, "", ` getValue Unexpected stderr: ${ log.errBuf }` );
 
@@ -459,14 +459,14 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories:
          [{
-            name:                     "My_Television",
+            name:                     "MyTelevision",
             type:                     "Television",
             category:                 "TELEVISION",
             publishExternally:        true,
             active:                   "ACTIVE",
             activeIdentifier:          1234,
             mute:                     true,
-            configuredName:           "My_Television",
+            configuredName:           "MyTelevision",
             sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
             brightness:                8,
             closedCaptions:           "DISABLED",
@@ -491,8 +491,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Platform.discoverDevices( );
 
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: My_Television`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: MyTelevision`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -506,8 +506,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout( ( ) =>
       {
-         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-         assert.include( log.logBuf, `[90mgetValue: Active function for: My_Television returned: 1`, ` getValue incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: Active function for: MyTelevision returned: 1`, ` getValue incorrect stdout: ${ log.logBuf }` );
 
          assert.equal( log.errBuf, "", ` getValue Unexpected stderr: ${ log.errBuf }` );
 
@@ -521,14 +521,14 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories:
          [{
-            name:                     "My_Television",
+            name:                     "MyTelevision",
             type:                     "Television",
             category:                 "TELEVISION",
             publishExternally:        true,
             active:                   "ACTIVE",
             activeIdentifier:          1234,
             mute:                     true,
-            configuredName:           "My_Television",
+            configuredName:           "MyTelevision",
             sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
             brightness:                8,
             closedCaptions:           "DISABLED",
@@ -553,8 +553,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Platform.discoverDevices( );
 
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: My_Television`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: MyTelevision`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -568,9 +568,9 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout( ( ) =>
       {
-         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-         assert.include( log.logBuf, `[90mgetValue: Active function for: My_Television returned: INACTIVE`, ` getValue incorrect stdout: ${ log.logBuf }` );
-         assert.include( log.logBuf, `[90mgetValue: Active for: My_Television transposed: 0`, ` getValue incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: Active function for: MyTelevision returned: INACTIVE`, ` getValue incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: Active for: MyTelevision transposed: 0`, ` getValue incorrect stdout: ${ log.logBuf }` );
 
          assert.equal( log.errBuf, "", ` getValue Unexpected stderr: ${ log.errBuf }` );
 
@@ -584,14 +584,14 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories:
          [{
-            name:                     "My_Television",
+            name:                     "MyTelevision",
             type:                     "Television",
             category:                 "TELEVISION",
             publishExternally:        true,
             active:                   "ACTIVE",
             activeIdentifier:          1234,
             mute:                     true,
-            configuredName:           "My_Television",
+            configuredName:           "MyTelevision",
             sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
             brightness:                8,
             closedCaptions:           "DISABLED",
@@ -617,8 +617,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Platform.discoverDevices( );
 
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: My_Television`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: MyTelevision`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -632,9 +632,9 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout( ( ) =>
       {
-         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-         assert.include( log.logBuf, `[90mgetValue: Mute function for: My_Television returned: true`, ` getValue incorrect stdout: ${ log.logBuf }` );
-         assert.include( log.logBuf, `[90mgetValue: Mute for: My_Television transposed: 1`, ` getValue incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: Mute function for: MyTelevision returned: true`, ` getValue incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: Mute for: MyTelevision transposed: 1`, ` getValue incorrect stdout: ${ log.logBuf }` );
 
          assert.equal( log.errBuf, "", ` getValue Unexpected stderr: ${ log.errBuf }` );
 
@@ -648,14 +648,14 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories:
          [{
-            name:                     "My_Television",
+            name:                     "MyTelevision",
             type:                     "Television",
             category:                 "TELEVISION",
             publishExternally:        true,
             active:                   "ACTIVE",
             activeIdentifier:          1234,
             mute:                     true,
-            configuredName:           "My_Television",
+            configuredName:           "MyTelevision",
             sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
             brightness:                8,
             closedCaptions:           "DISABLED",
@@ -681,8 +681,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Platform.discoverDevices( );
 
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: My_Television`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: MyTelevision`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -696,8 +696,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout( ( ) =>
       {
-         assert.include( log.logBuf, `[90mgetValue: Mute function for: My_Television returned: 0`, ` getValue incorrect stdout: ${ log.logBuf }` );
-         assert.include( log.logBuf, `[90mgetValue: Mute function for: My_Television returned: 0`, ` getValue incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: Mute function for: MyTelevision returned: 0`, ` getValue incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: Mute function for: MyTelevision returned: 0`, ` getValue incorrect stdout: ${ log.logBuf }` );
 
          assert.equal( log.errBuf, "", ` getValue Unexpected stderr: ${ log.errBuf }` );
 
@@ -711,14 +711,14 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories:
          [{
-            name:                     "My_Television",
+            name:                     "MyTelevision",
             type:                     "Television",
             category:                 "TELEVISION",
             publishExternally:        true,
             active:                   "ACTIVE",
             activeIdentifier:          1234,
             mute:                     true,
-            configuredName:           "My_Television",
+            configuredName:           "MyTelevision",
             sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
             brightness:                8,
             closedCaptions:           "DISABLED",
@@ -744,8 +744,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Platform.discoverDevices( );
 
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: My_Television`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: MyTelevision`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -759,8 +759,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout( ( ) =>
       {
-         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-         assert.include( log.logBuf, `[90mgetValue: Mute function for: My_Television returned: 1`, ` getValue incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: Mute function for: MyTelevision returned: 1`, ` getValue incorrect stdout: ${ log.logBuf }` );
 
          assert.equal( log.errBuf, "", ` getValue Unexpected stderr: ${ log.errBuf }` );
 
@@ -774,14 +774,14 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories:
          [{
-            name:                     "My_Television",
+            name:                     "MyTelevision",
             type:                     "Television",
             category:                 "TELEVISION",
             publishExternally:        true,
             active:                   "ACTIVE",
             activeIdentifier:          1234,
             mute:                     true,
-            configuredName:           "My_Television",
+            configuredName:           "MyTelevision",
             sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
             brightness:                8,
             closedCaptions:           "DISABLED",
@@ -807,8 +807,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Platform.discoverDevices( );
 
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: My_Television`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: MyTelevision`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -822,9 +822,9 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout( ( ) =>
       {
-         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-         assert.include( log.logBuf, `[90mgetValue: Mute function for: My_Television returned: False`, ` getValue incorrect stdout: ${ log.logBuf }` );
-         assert.include( log.logBuf, `[90mgetValue: Mute for: My_Television transposed: 0`, ` getValue incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: Mute function for: MyTelevision returned: False`, ` getValue incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: Mute for: MyTelevision transposed: 0`, ` getValue incorrect stdout: ${ log.logBuf }` );
 
          assert.equal( log.errBuf, "", ` getValue Unexpected stderr: ${ log.errBuf }` );
 
@@ -838,14 +838,14 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories:
          [{
-            name:                     "My_Television",
+            name:                     "MyTelevision",
             type:                     "Television",
             category:                 "TELEVISION",
             publishExternally:        true,
             active:                   "ACTIVE",
             activeIdentifier:          1234,
             mute:                     true,
-            configuredName:           "My_Television",
+            configuredName:           "MyTelevision",
             sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
             brightness:                8,
             closedCaptions:           "DISABLED",
@@ -871,8 +871,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Platform.discoverDevices( );
 
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: My_Television`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: MyTelevision`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -886,9 +886,9 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout( ( ) =>
       {
-         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-         assert.include( log.logBuf, `[90mgetValue: Mute function for: My_Television returned: True`, ` getValue incorrect stdout: ${ log.logBuf }` );
-         assert.include( log.logBuf, `[90mgetValue: Mute for: My_Television transposed: 1`, ` getValue incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: Mute function for: MyTelevision returned: True`, ` getValue incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: Mute for: MyTelevision transposed: 1`, ` getValue incorrect stdout: ${ log.logBuf }` );
 
          assert.equal( log.errBuf, "", ` getValue Unexpected stderr: ${ log.errBuf }` );
          done( );
@@ -901,14 +901,14 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories:
          [{
-            name:                     "My_Television",
+            name:                     "MyTelevision",
             type:                     "Television",
             category:                 "TELEVISION",
             publishExternally:        true,
             active:                   "ACTIVE",
             activeIdentifier:          1234,
             mute:                     true,
-            configuredName:           "My_Television",
+            configuredName:           "MyTelevision",
             sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
             brightness:                8,
             closedCaptions:           "DISABLED",
@@ -934,8 +934,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Platform.discoverDevices( );
 
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: My_Television`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: MyTelevision`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -949,9 +949,9 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout( ( ) =>
       {
-         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-         assert.include( log.logBuf, `[90mgetValue: ClosedCaptions function for: My_Television returned: DISABLED`, ` getValue incorrect stdout: ${ log.logBuf }` );
-         assert.include( log.logBuf, `[90mgetValue: ClosedCaptions for: My_Television transposed: 0`, ` getValue incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: ClosedCaptions function for: MyTelevision returned: DISABLED`, ` getValue incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mgetValue: ClosedCaptions for: MyTelevision transposed: 0`, ` getValue incorrect stdout: ${ log.logBuf }` );
 
          assert.equal( log.errBuf, "", ` getValue Unexpected stderr: ${ log.errBuf }` );
 
@@ -959,20 +959,21 @@ describe( "Testing Cmd4Accessory", function( )
       }, 1500);
    });
 
+   //HERE
    it( "getValue of empty response should fail correctly", function ( done )
    {
       let platformConfig =
       {
          accessories:
          [{
-            name:                     "My_Television",
+            name:                     "MyTelevision",
             type:                     "Television",
             category:                 "TELEVISION",
             publishExternally:        true,
             active:                   "ACTIVE",
             activeIdentifier:          1234,
             mute:                     true,
-            configuredName:           "My_Television",
+            configuredName:           "MyTelevision",
             sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
             brightness:                8,
             closedCaptions:           "DISABLED",
@@ -999,8 +1000,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Platform.discoverDevices( );
 
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: My_Television`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: MyTelevision`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -1014,10 +1015,11 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout( ( ) =>
       {
-         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
 
-         assert.include( log.errBuf, `getValue: Mute function for: My_Television returned an empty string ""`, ` getValue Incorrect stderr: ${ log.errBuf }` );
-         assert.equal( log.errLineCount, 1, `getValue: to many lines to stderr ${ log.errBuf }` );
+         assert.include( log.errBuf, `getValue: Mute function for: MyTelevision returned an empty string ""`, ` getValue Incorrect stderr: ${ log.errBuf }` );
+         assert.include( log.errBuf, `[33m*${ constants.DEFAULT_STANDARD_QUEUE_RETRY_COUNT }* error(s) were encountered for "MyTelevision" getValue. Last error found Getting: "Mute". Perhaps you should run in debug mode to find out what the problem might be.\u001b`, `queue Incorrect stderr: ${ log.errBuf }` );
+         assert.equal( log.errLineCount, 2, `getValue: to many lines to stderr ${ log.errBuf }` );
 
          done( );
       }, 1500);
@@ -1030,14 +1032,14 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories:
          [{
-            name:                     "My_Television",
+            name:                     "MyTelevision",
             type:                     "Television",
             category:                 "TELEVISION",
             publishExternally:        true,
             active:                   "ACTIVE",
             activeIdentifier:          1234,
             mute:                     true,
-            configuredName:           "My_Television",
+            configuredName:           "MyTelevision",
             sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
             brightness:                8,
             closedCaptions:           "DISABLED",
@@ -1064,8 +1066,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Platform.discoverDevices( );
 
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: My_Television`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: MyTelevision`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -1079,10 +1081,11 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout( ( ) =>
       {
-         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
 
-         assert.include( log.errBuf, `getValue: "null" returned from stdout for Mute My_Television`, ` getValue Incorrect stderr: ${ log.errBuf }` );
-         assert.equal( log.errLineCount, 1, `getValue: to many lines to stderr ${ log.errBuf }` );
+         assert.include( log.errBuf, `getValue: "null" returned from stdout for Mute MyTelevision`, ` getValue Incorrect stderr: ${ log.errBuf }` );
+         assert.include( log.errBuf, `[33m*${ constants.DEFAULT_STANDARD_QUEUE_RETRY_COUNT }* error(s) were encountered for "MyTelevision" getValue. Last error found Getting: "Mute". Perhaps you should run in debug mode to find out what the problem might be.\u001b`, `queue Incorrect stderr: ${ log.errBuf }` );
+         assert.equal( log.errLineCount, 2, `getValue: to many lines to stderr ${ log.errBuf }` );
 
 
          done( );
@@ -1095,14 +1098,14 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories:
          [{
-            name:                     "My_Television",
+            name:                     "MyTelevision",
             type:                     "Television",
             category:                 "TELEVISION",
             publishExternally:        true,
             active:                   "ACTIVE",
             activeIdentifier:          1234,
             mute:                     true,
-            configuredName:           "My_Television",
+            configuredName:           "MyTelevision",
             sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
             brightness:                8,
             closedCaptions:           "DISABLED",
@@ -1129,8 +1132,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Platform.discoverDevices( );
 
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: My_Television`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: MyTelevision`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -1144,14 +1147,15 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout( ( ) =>
       {
-         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
 
          // The script error
-         assert.include( log.errBuf, `[31m\u001b[31mgetValue Mute function failed for My_Television cmd: ./test/echoScripts/echo_true_withRcOf1 Get 'My_Television' 'Mute' Failed. Error: 1`, ` getValue Incorrect stderr: ${ log.errBuf }` );
+         assert.include( log.errBuf, `[31m\u001b[31mgetValue Mute function failed for MyTelevision cmd: ./test/echoScripts/echo_true_withRcOf1 Get 'MyTelevision' 'Mute' Failed. Error: 1`, ` getValue Incorrect stderr: ${ log.errBuf }` );
 
          // The ( error ) returned from exec
-         assert.include( log.errBuf, `[31mgetValue Mute function failed for My_Television cmd: ./test/echoScripts/echo_true_withRcOf1 Get 'My_Television' 'Mute' Failed.  Generated Error: Error: Command failed: ./test/echoScripts/echo_true_withRcOf1 Get 'My_Television' 'Mute'`, ` getValue Incorrect stderr: ${ log.errBuf }` );
-         assert.equal( log.errLineCount, 2, `getValue: to many lines to stderr ${ log.errBuf }` );
+         assert.include( log.errBuf, `[31mgetValue Mute function failed for MyTelevision cmd: ./test/echoScripts/echo_true_withRcOf1 Get 'MyTelevision' 'Mute' Failed.  Generated Error: Error: Command failed: ./test/echoScripts/echo_true_withRcOf1 Get 'MyTelevision' 'Mute'`, ` getValue Incorrect stderr: ${ log.errBuf }` );
+         assert.include( log.errBuf, `[33m*${ constants.DEFAULT_STANDARD_QUEUE_RETRY_COUNT }* error(s) were encountered for "MyTelevision" getValue. Last error found Getting: "Mute". Perhaps you should run in debug mode to find out what the problem might be.\u001b`, `queue Incorrect stderr: ${ log.errBuf }` );
+         assert.equal( log.errLineCount, 3, `getValue: to many lines to stderr ${ log.errBuf }` );
 
          done( );
       }, 1500);
@@ -1164,14 +1168,14 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories:
          [{
-            name:                     "My_Television",
+            name:                     "MyTelevision",
             type:                     "Television",
             category:                 "TELEVISION",
             publishExternally:        true,
             active:                   "ACTIVE",
             activeIdentifier:          1234,
             mute:                     true,
-            configuredName:           "My_Television",
+            configuredName:           "MyTelevision",
             sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
             brightness:                8,
             closedCaptions:           "DISABLED",
@@ -1198,8 +1202,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Platform.discoverDevices( );
 
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: My_Television`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: MyTelevision`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -1213,10 +1217,11 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout( ( ) =>
       {
-         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
 
-         assert.include( log.errBuf, `getValue: Mute function for My_Television returned the string ""NULL""`, ` getValue Incorrect stderr: ${ log.errBuf }` );
-         assert.equal( log.errLineCount, 1, `getValue: to many lines to stderr ${ log.errBuf }` );
+         assert.include( log.errBuf, `getValue: Mute function for MyTelevision returned the string ""NULL""`, ` getValue Incorrect stderr: ${ log.errBuf }` );
+         assert.include( log.errBuf, `[33m*${ constants.DEFAULT_STANDARD_QUEUE_RETRY_COUNT }* error(s) were encountered for "MyTelevision" getValue. Last error found Getting: "Mute". Perhaps you should run in debug mode to find out what the problem might be.\u001b`, `queue Incorrect stderr: ${ log.errBuf }` );
+         assert.equal( log.errLineCount, 2, `getValue: to many lines to stderr ${ log.errBuf }` );
 
          done( );
       }, 1500);
@@ -1228,14 +1233,14 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories:
          [{
-            name:                     "My_Television",
+            name:                     "MyTelevision",
             type:                     "Television",
             category:                 "TELEVISION",
             publishExternally:        true,
             active:                   "ACTIVE",
             activeIdentifier:          1234,
             mute:                     true,
-            configuredName:           "My_Television",
+            configuredName:           "MyTelevision",
             sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
             brightness:                8,
             closedCaptions:           "DISABLED",
@@ -1262,8 +1267,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Platform.discoverDevices( );
 
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: My_Television`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: MyTelevision`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -1277,10 +1282,11 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout( ( ) =>
       {
-         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
 
-         assert.include( log.errBuf, `getValue: Mute function for: My_Television returned an empty string "" ""`, ` getValue Incorrect stdout: ${ log.errBuf }` );
-         assert.equal( log.errLineCount, 1, `getValue: to many lines to stderr ${ log.errBuf }` );
+         assert.include( log.errBuf, `getValue: Mute function for: MyTelevision returned an empty string "" ""`, ` getValue Incorrect stdout: ${ log.errBuf }` );
+         assert.include( log.errBuf, `[33m*${ constants.DEFAULT_STANDARD_QUEUE_RETRY_COUNT }* error(s) were encountered for "MyTelevision" getValue. Last error found Getting: "Mute". Perhaps you should run in debug mode to find out what the problem might be.\u001b`, `queue Incorrect stderr: ${ log.errBuf }` );
+         assert.equal( log.errLineCount, 2, `getValue: to many lines to stderr ${ log.errBuf }` );
 
          done( );
       }, 1500);
@@ -1292,14 +1298,14 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories:
          [{
-            name:                     "My_Television",
+            name:                     "MyTelevision",
             type:                     "Television",
             category:                 "TELEVISION",
             publishExternally:        true,
             active:                   "ACTIVE",
             activeIdentifier:          1234,
             mute:                     true,
-            configuredName:           "My_Television",
+            configuredName:           "MyTelevision",
             sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
             brightness:                8,
             closedCaptions:           "DISABLED",
@@ -1326,8 +1332,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Platform.discoverDevices( );
 
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: My_Television`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: MyTelevision`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -1341,10 +1347,11 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout( ( ) =>
       {
-         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-         assert.include( log.errBuf, "[31mgetValue: Mute function for My_Television streamed to stderr: This message goes to stderr", ` getValue Incorrect stderr: ${ log.errBuf }` );
-         assert.include( log.errBuf, `[31mgetValue: Mute function for: My_Television returned an empty string ""`, ` getValue Incorrect stderr: ${ log.errBuf }` );
-         assert.equal( log.errLineCount, 2, `getValue: to many lines to stderr ${ log.errBuf }` );
+         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.errBuf, "[31mgetValue: Mute function for MyTelevision streamed to stderr: This message goes to stderr", ` getValue Incorrect stderr: ${ log.errBuf }` );
+         assert.include( log.errBuf, `[31mgetValue: Mute function for: MyTelevision returned an empty string ""`, ` getValue Incorrect stderr: ${ log.errBuf }` );
+         assert.include( log.errBuf, `[33m*${ constants.DEFAULT_STANDARD_QUEUE_RETRY_COUNT }* error(s) were encountered for "MyTelevision" getValue. Last error found Getting: "Mute". Perhaps you should run in debug mode to find out what the problem might be.\u001b`, `queue Incorrect stderr: ${ log.errBuf }` );
+         assert.equal( log.errLineCount, 3, `getValue: to many lines to stderr ${ log.errBuf }` );
 
 
          done( );
@@ -1357,14 +1364,14 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories:
          [{
-            name:                     "My_Television",
+            name:                     "MyTelevision",
             type:                     "Television",
             category:                 "TELEVISION",
             publishExternally:        true,
             active:                   "ACTIVE",
             activeIdentifier:          1234,
             mute:                     true,
-            configuredName:           "My_Television",
+            configuredName:           "MyTelevision",
             sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
             brightness:                8,
             closedCaptions:           "DISABLED",
@@ -1391,8 +1398,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Platform.discoverDevices( );
 
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: My_Television`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: MyTelevision`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -1406,10 +1413,11 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout( ( ) =>
       {
-         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
 
-         assert.include( log.errBuf, `[31mgetValue: Mute function for: My_Television returned an empty string ""`, ` getValue incorrect stderr: ${ log.errBuf }` );
-         assert.equal( log.errLineCount, 1, `getValue: to many lines to stderr ${ log.errBuf }` );
+         assert.include( log.errBuf, `[31mgetValue: Mute function for: MyTelevision returned an empty string ""`, ` getValue incorrect stderr: ${ log.errBuf }` );
+         assert.include( log.errBuf, `[33m*${ constants.DEFAULT_STANDARD_QUEUE_RETRY_COUNT }* error(s) were encountered for "MyTelevision" getValue. Last error found Getting: "Mute". Perhaps you should run in debug mode to find out what the problem might be.\u001b`, `queue Incorrect stderr: ${ log.errBuf }` );
+         assert.equal( log.errLineCount, 2, `getValue: to many lines to stderr ${ log.errBuf }` );
 
          done( );
       }, 1500);
@@ -1421,14 +1429,14 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories:
          [{
-            name:                     "My_Television",
+            name:                     "MyTelevision",
             type:                     "Television",
             category:                 "TELEVISION",
             publishExternally:        true,
             active:                   "ACTIVE",
             activeIdentifier:          1234,
             mute:                     true,
-            configuredName:           "My_Television",
+            configuredName:           "MyTelevision",
             sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
             brightness:                8,
             closedCaptions:           "DISABLED",
@@ -1455,8 +1463,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Platform.discoverDevices( );
 
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: My_Television`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: MyTelevision`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -1470,9 +1478,9 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout( ( ) =>
       {
-         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
 
-         assert.include( log.errBuf, `[31mgetValue: Mute function for: My_Television returned an empty string ""`, ` getValue incorrect stderr: ${ log.errBuf }` );
+         assert.include( log.errBuf, `[31mgetValue: Mute function for: MyTelevision returned an empty string ""`, ` getValue incorrect stderr: ${ log.errBuf }` );
 
          cmd4Accessory.state_cmd = "./test/echoScripts/justExitWithRCof1";
          cmd4Accessory.timeout = 400;
@@ -1485,7 +1493,7 @@ describe( "Testing Cmd4Accessory", function( )
          setTimeout( ( ) =>
          {
 
-            assert.include( log.errBuf, `getValue Mute function failed for My_Television cmd: ./test/echoScripts/justExitWithRCof1 Get 'My_Television' 'Mute' Failed.`, ` getValue incorrect stderr: ${ log.errBuf }` );
+            assert.include( log.errBuf, `getValue Mute function failed for MyTelevision cmd: ./test/echoScripts/justExitWithRCof1 Get 'MyTelevision' 'Mute' Failed.`, ` getValue incorrect stderr: ${ log.errBuf }` );
 
             done( );
 
@@ -1499,14 +1507,14 @@ describe( "Testing Cmd4Accessory", function( )
       {
          accessories:
          [{
-            name:                     "My_Television",
+            name:                     "MyTelevision",
             type:                     "Television",
             category:                 "TELEVISION",
             publishExternally:        true,
             active:                   "ACTIVE",
             activeIdentifier:          1234,
             mute:                     true,
-            configuredName:           "My_Television",
+            configuredName:           "MyTelevision",
             sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
             brightness:                8,
             closedCaptions:           "DISABLED",
@@ -1532,8 +1540,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       cmd4Platform.discoverDevices( );
 
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : My_Television`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: My_Television`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
+      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mCreated platformAccessory: MyTelevision`, ` cmd4Accessory incorrect stdout": ${ log.logBuf }` );
 
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "cmd4Accessory is not an instance of Cmd4Accessory" );
@@ -1551,7 +1559,7 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout( ( ) =>
       {
-         assert.include( log.errBuf, `[31mgetValue Mute function timed out 400ms for My_Television cmd: ./test/echoScripts/runToTimeoutRcOf0 Get 'My_Television' 'Mute' Failed`, ` getValue incorrect stderr: ${ log.errBuf }` );
+         assert.include( log.errBuf, `[31mgetValue Mute function timed out 400ms for MyTelevision cmd: ./test/echoScripts/runToTimeoutRcOf0 Get 'MyTelevision' 'Mute' Failed`, ` getValue incorrect stderr: ${ log.errBuf }` );
 
          done( );
       }, 1500 );

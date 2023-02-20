@@ -57,7 +57,6 @@ describe( "Testing Cmd4Accessory", function( )
          [{
              name:                     "Television",
              type:                     "Television",
-             cmd4_Mode:                "Demo",
              displayName:              "Television",
              category:                 "TELEVISION",
              publishExternally:        true,
@@ -386,7 +385,6 @@ describe( "Testing Cmd4Accessory", function( )
          {
             type:                      "Thermostat",
             name:                      "Thermostat",
-            cmd4_Mode:                 "Demo",
             displayName:               "Thermostat",
             temperatureDisplayUnits:   "CELSIUS",
             active:                    "INACTIVE",
@@ -453,7 +451,6 @@ describe( "Testing Cmd4Accessory", function( )
       {
          type:                         "Thermostat",
          name:                         "Thermostat",
-         cmd4_Mode:                    "Demo",
          displayName:                  "Thermostat",
          temperatureDisplayUnits:      "CELSIUS",
          active:                       "INACTIVE",
@@ -576,7 +573,6 @@ describe( "Testing Cmd4Accessory", function( )
       {
          type:                         "Thermostat",
          name:                         "Thermostat",
-         cmd4_Mode:                    "Demo",
          displayName:                  "Thermostat",
          temperatureDisplayUnits:      "CELSIUS",
          active:                       "INACTIVE",
@@ -600,8 +596,8 @@ describe( "Testing Cmd4Accessory", function( )
       assert.equal( 1, log.logLineCount, ` setCachedValue logged lines than one: ${ log.logBuf }` );
       assert.include( log.errBuf, `m**** Adding required characteristic TargetTemperature for Thermostat`, ` setCachedValue incorrect stdout:${ log.errBuf }` );
       assert.include( log.errBuf, `Not defining a required characteristic can be problematic`, ` setCachedValue incorrect stdout: ${ log.errBuf }` );
-      // Hmmmmmm was 2
-      assert.equal( 3, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
+
+      assert.equal( 2, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
 
       let defaultValue = CMD4_DEVICE_TYPE_ENUM.properties[ cmd4Accessory.typeIndex ].requiredCharacteristics.find( key => key.type ===  acc ).defaultValue;
 
@@ -618,7 +614,6 @@ describe( "Testing Cmd4Accessory", function( )
       {
          type:                         "Thermostat",
          name:                         "Thermostat",
-         cmd4_Mode:                    "Demo",
          displayName:                  "Thermostat",
          temperatureDisplayUnits:      "CELSIUS",
          active:                       "INACTIVE",
@@ -642,9 +637,8 @@ describe( "Testing Cmd4Accessory", function( )
       assert.equal( 1, log.logLineCount, ` setCachedValue logged lines than one: ${ log.logBuf }` );
       assert.include( log.errBuf, `**** Adding required characteristic TargetHeatingCoolingState for Thermostat`, ` setCachedValue incorrect stderr: ${ log.errBuf }` );
       assert.include( log.errBuf, `Not defining a required characteristic can be problematic`, ` setCachedValue incorrect stderr: ${ log.errBuf }` );
-      assert.include( log.errBuf, `[33mWarning: cmd4_Mode has been deprecated.`, ` Cmd4Accessory: incorrect stderr: ${ log.errBuf }` );
 
-      assert.equal( 3, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
+      assert.equal( 2, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
       done( );
    });
 
@@ -693,7 +687,6 @@ describe( "Testing Cmd4Accessory", function( )
       {
          type:                         "TemperatureSensor",
          name:                         "TemperatureSensor",
-         cmd4_Mode:                    "Demo",
          displayName:                  "TemperatureSensor",
          temperatureDisplayUnits:      "CELSIUS",
          active:                       "INACTIVE",
@@ -802,14 +795,14 @@ describe( "Testing Cmd4Accessory", function( )
       // A config file to play with.
       let TVConfig =
       {
-          name:                     "My_Television",
+          name:                     "MyTelevision",
           type:                     "Television",
           category:                 "TELEVISION",
           publishExternally:        true,
           active:                   "ACTIVE",
           activeIdentifier:          1234,
           mute:                     true,
-          configuredName:           "My_Television",
+          configuredName:           "MyTelevision",
           sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
           brightness:                8,
           closedCaptions:           "DISABLED",
@@ -838,8 +831,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout( ( ) =>
       {
-         assert.include( log.logBuf, `[34mSetting My_Television Mute\u001b[39m 0`, ` setValue output something to stdout: ${ log.logBuf }` );
-         assert.include( log.errBuf, `[31m\u001b[31msetValue Mute function failed for My_Television cmd: ./test/echoScripts/runToTimeoutRcOf0 Set 'My_Television' 'Mute' '0' Failed`, ` setValue incorrect stderr: ${ log.errBuf }` );
+         assert.include( log.logBuf, `[34mSetting MyTelevision Mute\u001b[39m 0`, ` setValue output something to stdout: ${ log.logBuf }` );
+         assert.include( log.errBuf, `[31m\u001b[31msetValue Mute function failed for MyTelevision cmd: ./test/echoScripts/runToTimeoutRcOf0 Set 'MyTelevision' 'Mute' '0' Failed`, ` setValue incorrect stderr: ${ log.errBuf }` );
 
          done( );
       }, 1000 );

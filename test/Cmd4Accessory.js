@@ -1269,8 +1269,8 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
       {
          accessories: [
          {
-            name:                      "My_Door",
-            displayName:               "My_Door",
+            name:                      "MyDoor",
+            displayName:               "MyDoor",
             statusMsg:                 true,
             type:                      "Door",
             currentPosition:            0,
@@ -1729,8 +1729,8 @@ describe('Test Cmd4Accessory change characteristic Props', ( ) =>
          accessories: [
          {
             type:                            "TemperatureSensor",
-            displayName:                     "My_TemperatureSensor",
-            name:                            "My_TemperatureSensor",
+            displayName:                     "MyTemperatureSensor",
+            name:                            "MyTemperatureSensor",
             currentTemperature:               25,
             statusFault:                     "NO_FAULT",
             props: { CurrentTemperature: { maxValue: 100,
@@ -1758,7 +1758,7 @@ describe('Test Cmd4Accessory change characteristic Props', ( ) =>
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       assert.instanceOf( cmd4Accessory , Cmd4Accessory, `Expected cmd4Accessory to be instance of Cmd4Accessory.` );
 
-      assert.include( log.logBuf, `[90mOverriding characteristic CurrentTemperature props for: My_TemperatureSensor`, `Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mOverriding characteristic CurrentTemperature props for: MyTemperatureSensor`, `Incorrect stdout: ${ log.logBuf }` );
 
       done( );
    });

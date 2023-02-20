@@ -92,8 +92,8 @@ describe('Testing FakeGato gets created', ( ) =>
       {
          accessories: [
             {
-               name:                         "My_Light",
-               displayName:                  "My_Light",
+               name:                         "MyLight",
+               displayName:                  "MyLight",
                statusMsg:                    true,
                type:                         "Lightbulb",
                on:                           0,
@@ -161,8 +161,8 @@ describe('Testing FakeGato gets created', ( ) =>
       {
          accessories: [
             {
-               name:                         "My_Light",
-               displayName:                  "My_Light",
+               name:                         "MyLight",
+               displayName:                  "MyLight",
                statusMsg:                    true,
                type:                         "Lightbulb",
                on:                           0,
@@ -229,8 +229,8 @@ describe('Testing FakeGato gets created', ( ) =>
       {
          accessories: [
             {
-               name:                         "My_Light",
-               displayName:                  "My_Light",
+               name:                         "MyLight",
+               displayName:                  "MyLight",
                statusMsg:                    true,
                type:                         "Lightbulb",
                on:                           0,
@@ -242,7 +242,7 @@ describe('Testing FakeGato gets created', ( ) =>
             },
             {
                  type:                       "Door",
-                 name:                       "My_Door",
+                 name:                       "MyDoor",
                  currentPosition:             0,
                  targetPosition:              0,
                  contactSensorState:         "CONTACT_DETECTED",
@@ -295,8 +295,8 @@ describe('Testing FakeGato gets created', ( ) =>
       {
          accessories: [
             {
-               name:                         "My_Light",
-               displayName:                  "My_Light",
+               name:                         "MyLight",
+               displayName:                  "MyLight",
                statusMsg:                    true,
                type:                         "Lightbulb",
                on:                           0,
@@ -308,7 +308,7 @@ describe('Testing FakeGato gets created', ( ) =>
             },
             {
                type:                         "Fan",
-               name:                         "My_v1Fan",
+               name:                         "Myv1Fan",
                rotationDirection:             1,
                rotationSpeed:                 100,
                stateChangeResponseTime:       1,
@@ -359,8 +359,8 @@ describe('Testing FakeGato gets created', ( ) =>
       {
          accessories: [
             {
-               name:                         "My_Light",
-               displayName:                  "My_Light",
+               name:                         "MyLight",
+               displayName:                  "MyLight",
                statusMsg:                    true,
                type:                         "Lightbulb",
                on:                           0,
@@ -372,7 +372,7 @@ describe('Testing FakeGato gets created', ( ) =>
             },
             {
                type:                         "Fan",
-               name:                         "My_v1Fan",
+               name:                         "Myv1Fan",
                rotationDirection:             1,
                rotationSpeed:                 100,
                stateChangeResponseTime:       1,
@@ -410,8 +410,8 @@ describe('Testing FakeGato gets created', ( ) =>
       {
          accessories: [
             {
-               name:                         "My_Light",
-               displayName:                  "My_Light",
+               name:                         "MyLight",
+               displayName:                  "MyLight",
                statusMsg:                    true,
                type:                         "Lightbulb",
                on:                           0,
@@ -423,7 +423,7 @@ describe('Testing FakeGato gets created', ( ) =>
             },
             {
                type:                         "Fan",
-               name:                         "My_v1Fan",
+               name:                         "Myv1Fan",
                rotationDirection:             1,
                rotationSpeed:                 100,
                stateChangeResponseTime:       1,
@@ -463,7 +463,7 @@ describe('Testing FakeGato gets created', ( ) =>
          accessories: [
             {
                type:                         "Fan",
-               name:                         "My_v1Fan",
+               name:                         "Myv1Fan",
                rotationDirection:             1,
                rotationSpeed:                 100,
                stateChangeResponseTime:       1,
@@ -504,7 +504,7 @@ describe('Testing FakeGato gets created', ( ) =>
          accessories: [
             {
                type:                         "Fan",
-               name:                         "My_v1Fan",
+               name:                         "Myv1Fan",
                rotationDirection:             1,
                rotationSpeed:                 100,
                stateChangeResponseTime:       1,
@@ -534,7 +534,7 @@ describe('Testing FakeGato gets created', ( ) =>
 
       let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
 
-      expect ( ( ) => cmd4Platform.discoverDevices( ) ).to.throw(/Invalid fakegato key: "badKey" in json.config for: "My_v1Fan"./);
+      expect ( ( ) => cmd4Platform.discoverDevices( ) ).to.throw(/Invalid fakegato key: "badKey" in json.config for: "Myv1Fan"./);
 
       done( );
    });
@@ -546,7 +546,7 @@ describe('Testing FakeGato gets created', ( ) =>
          accessories: [
             {
                type:                         "Fan",
-               name:                         "My_v1Fan",
+               name:                         "Myv1Fan",
                rotationDirection:             1,
                rotationSpeed:                 100,
                stateChangeResponseTime:       1,
@@ -590,7 +590,7 @@ describe('Testing FakeGato gets created', ( ) =>
          accessories: [
             {
                type:                         "Fan",
-               name:                         "My_v1Fan",
+               name:                         "Myv1Fan",
                rotationDirection:             1,
                rotationSpeed:                 100,
                stateChangeResponseTime:       1,
@@ -642,8 +642,8 @@ describe('Testing FakeGato gets created', ( ) =>
          accessories: [
             {
                type:                        "Thermostat",
-               name:                        "My_Thermostat",
-               displayName:                 "My_Thermostat",
+               name:                        "MyThermostat",
+               displayName:                 "MyThermostat",
                currentHeatingCoolingState:  "OFF",
                targetHeatingCoolingState:   "OFF",
                currentTemperature:          22.2,
@@ -686,8 +686,8 @@ describe('Testing FakeGato gets created', ( ) =>
 
 
 
-      assert.include( log.logBuf, `[39m Adding new platformAccessory: My_Thermostat` );
-      assert.include( log.logBuf, `35mConfiguring platformAccessory: \u001b[39mMy_Thermostat` );
+      assert.include( log.logBuf, `[39m Adding new platformAccessory: MyThermostat` );
+      assert.include( log.logBuf, `35mConfiguring platformAccessory: \u001b[39mMyThermostat` );
       assert.equal( 2, log.logLineCount, ` Unexpected number of stdout lines:  ${ log.logBuf }` );
       //assert.equal( "", log.logBuf, ` Unexpected stdout: ${ log.logBuf }` );
       assert.equal( 0, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );

@@ -76,8 +76,8 @@ describe('Testing Cmd4Accessory polling', ( ) =>
    {
       let config =
       {
-         name:                         "My_Switch",
-         displayName:                  "My_Switch",
+         name:                         "MySwitch",
+         displayName:                  "MySwitch",
          statusMsg:                     true,
          type:                         "Switch",
          on:                            0,
@@ -97,7 +97,7 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       expect( cmd4Accessory ).to.be.a.instanceOf( Cmd4Accessory, "Cmd4Accessory is not an instance of Cmd4Accessory" );
 
       assert.include( log.logBuf, "[90mPolling config is Default Polling. Nothing to check for unset polling characteristics\u001b" , `Incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, "[90mSetting up which characteristics will be polled for My_Switch\u001b" , `Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, "[90mSetting up which characteristics will be polled for MySwitch\u001b" , `Incorrect stdout: ${ log.logBuf }` );
       assert.equal( log.errBuf, "" , `Unexpected stderr: ${ log.errBuf }` );
 
       done( );
@@ -108,8 +108,8 @@ describe('Testing Cmd4Accessory polling', ( ) =>
    {
       let config =
       {
-         name:                         "My_Switch",
-         displayName:                  "My_Switch",
+         name:                         "MySwitch",
+         displayName:                  "MySwitch",
          statusMsg:                    true,
          type:                         "Switch",
          on:                           0,
@@ -130,12 +130,12 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       cmd4Accessory.determineCharacteristicsToPollForAccessory( cmd4Accessory );
       assert.equal( Object.keys(cmd4Accessory.listOfPollingCharacteristics).length, 1, `Incorrect number of listOfPollingCharacteristics` );
 
-      let queue = settings.listOfCreatedPriorityQueues[ "Q:My_Switch" ];
+      let queue = settings.listOfCreatedPriorityQueues[ "Q:MySwitch" ];
       expect( queue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PriorityPollingQueue" );
       assert.equal( queue.lowPriorityQueue.length, 1, `Incorrect number of lowPriorityQueue Entries` );
 
 
-      assert.include( log.logBuf, `[90mSetting up accessory: My_Switch for polling of: On timeout: 3000 interval: 1000 queueName: "Q:My_Switch"\u001b` , `Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mSetting up accessory: MySwitch for polling of: On timeout: 3000 interval: 1000 queueName: "Q:MySwitch"\u001b` , `Incorrect stdout: ${ log.logBuf }` );
       assert.equal( log.errBuf, "" , `Unexpected stderr: ${ log.errBuf }` );
 
       done( );
@@ -145,8 +145,8 @@ describe('Testing Cmd4Accessory polling', ( ) =>
    {
       let config =
       {
-         name:                         "My_Switch",
-         displayName:                  "My_Switch",
+         name:                         "MySwitch",
+         displayName:                  "MySwitch",
          statusMsg:                    true,
          type:                         "Switch",
          on:                           0,
@@ -167,7 +167,7 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       cmd4Accessory.determineCharacteristicsToPollForAccessory( cmd4Accessory );
 
 
-      assert.include( log.logBuf, `[90mSetting up accessory: My_Switch for polling of: On timeout: 1234 interval: 99000 queueName: "Q:My_Switch"\u001b` , `Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mSetting up accessory: MySwitch for polling of: On timeout: 1234 interval: 99000 queueName: "Q:MySwitch"\u001b` , `Incorrect stdout: ${ log.logBuf }` );
       assert.equal( log.errBuf, "" , `Unexpected stderr: ${ log.errBuf }` );
 
       done( );
@@ -177,8 +177,8 @@ describe('Testing Cmd4Accessory polling', ( ) =>
    {
       let config =
       {
-         name:                         "My_Switch",
-         displayName:                  "My_Switch",
+         name:                         "MySwitch",
+         displayName:                  "MySwitch",
          statusMsg:                    true,
          type:                         "Switch",
          timeout:                      5500,
@@ -201,7 +201,7 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       cmd4Accessory.determineCharacteristicsToPollForAccessory( cmd4Accessory );
 
 
-      assert.include( log.logBuf, `[90mSetting up accessory: My_Switch for polling of: On timeout: 5500 interval: 44000 queueName: "Q:My_Switch"\u001b` , `Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mSetting up accessory: MySwitch for polling of: On timeout: 5500 interval: 44000 queueName: "Q:MySwitch"\u001b` , `Incorrect stdout: ${ log.logBuf }` );
       assert.equal( log.errBuf, "" , `Unexpected stderr: ${ log.errBuf }` );
 
       done( );
@@ -211,8 +211,8 @@ describe('Testing Cmd4Accessory polling', ( ) =>
    {
       let config =
       {
-         name:                         "My_Switch",
-         displayName:                  "My_Switch",
+         name:                         "MySwitch",
+         displayName:                  "MySwitch",
          statusMsg:                    true,
          type:                         "Switch",
          on:                           0,
@@ -236,7 +236,7 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       cmd4Accessory.determineCharacteristicsToPollForAccessory( cmd4Accessory );
 
 
-      assert.include( log.logBuf, `[90mSetting up accessory: My_Switch for polling of: On timeout: 77000 interval: 22000 queueName: "Q:My_Switch"\u001b` , `Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mSetting up accessory: MySwitch for polling of: On timeout: 77000 interval: 22000 queueName: "Q:MySwitch"\u001b` , `Incorrect stdout: ${ log.logBuf }` );
       assert.equal( log.errBuf, "" , `Unexpected stderr: ${ log.errBuf }` );
 
       done( );
@@ -246,8 +246,8 @@ describe('Testing Cmd4Accessory polling', ( ) =>
    {
       let config =
       {
-         name:                         "My_Switch",
-         displayName:                  "My_Switch",
+         name:                         "MySwitch",
+         displayName:                  "MySwitch",
          statusMsg:                    true,
          type:                         "Switch",
          on:                           0,
@@ -271,7 +271,7 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       cmd4Accessory.determineCharacteristicsToPollForAccessory( cmd4Accessory );
 
 
-      assert.include( log.logBuf, `[90mAdding My_Switch On  record.timeout: 88000 record.interval: 41000  to Polled Queue Q:My_Switch\u001b` , `Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mAdding MySwitch On  record.timeout: 88000 record.interval: 41000  to Polled Queue Q:MySwitch\u001b` , `Incorrect stdout: ${ log.logBuf }` );
       assert.equal( log.errBuf, "" , `Unexpected stderr: ${ log.errBuf }` );
 
       done( );
@@ -281,8 +281,8 @@ describe('Testing Cmd4Accessory polling', ( ) =>
    {
       let config =
       {
-         name:                         "My_Switch",
-         displayName:                  "My_Switch",
+         name:                         "MySwitch",
+         displayName:                  "MySwitch",
          statusMsg:                    true,
          type:                         "Switch",
          on:                           0,
@@ -299,8 +299,8 @@ describe('Testing Cmd4Accessory polling', ( ) =>
 
       cmd4Accessory = new Cmd4Accessory( log, config, _api, [ ], parentInfo );
 
-      assert.include( log.logBuf, `[90mSetting up accessory: My_Switch for polling of: On timeout: 2 interval: 99000 queueName: "Q:My_Switch"` , `Incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.errBuf, `[33mTimeout for: My_Switch is in milliseconds. A value of: 2 seems pretty low.\u001b[39m` , `Incorrect stderr: ${ log.errBuf }` );
+      assert.include( log.logBuf, `[90mSetting up accessory: MySwitch for polling of: On timeout: 2 interval: 99000 queueName: "Q:MySwitch"` , `Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.errBuf, `[33mTimeout for: MySwitch is in milliseconds. A value of: 2 seems pretty low.\u001b[39m` , `Incorrect stderr: ${ log.errBuf }` );
 
       done( );
    });
@@ -311,8 +311,8 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       {
          accessories: [
          {
-            name:                      "My_Switch",
-            displayName:               "My_Switch",
+            name:                      "MySwitch",
+            displayName:               "MySwitch",
             statusMsg:                 true,
             type:                      "Switch",
             on:                        0,
@@ -335,7 +335,7 @@ describe('Testing Cmd4Accessory polling', ( ) =>
 
       assert.equal( Object.keys(settings.listOfCreatedPriorityQueues).length, 1, `Incorrect number of listOfCreatedPriorityPollingQueues` );
 
-      let queue = settings.listOfCreatedPriorityQueues[ "Q:My_Switch" ];
+      let queue = settings.listOfCreatedPriorityQueues[ "Q:MySwitch" ];
       expect( queue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PriorityPollingQueue" );
       assert.equal( queue.lowPriorityQueue.length, 1, `Incorrect number of lowPriorityQueue Entries` );
 
@@ -347,7 +347,7 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       setTimeout( () =>
       {
 
-         assert.include( log.logBuf, `[90mKicking off polling for: My_Switch On interval:310000, staggered:3000\u001b` , `Incorrect stdout: ${ log.logBuf }` );
+         assert.include( log.logBuf, `[90mKicking off polling for: MySwitch On interval:310000, staggered:3000\u001b` , `Incorrect stdout: ${ log.logBuf }` );
          assert.include( log.logBuf, "Started staggered kick off of 1 polled characteristics" , `Incorrect stdout: ${ log.logBuf }` );
 
 

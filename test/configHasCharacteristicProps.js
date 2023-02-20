@@ -48,8 +48,8 @@ describe('Test configHasCharacteristicProps.', ( ) =>
       let config =
       {
          type:                            "TemperatureSensor",
-         displayName:                     "My_TemperatureSensor",
-         name:                            "My_TemperatureSensor",
+         displayName:                     "MyTemperatureSensor",
+         name:                            "MyTemperatureSensor",
          currentTemperature:               25,
          statusFault:                     "NO_FAULT",
       };
@@ -65,7 +65,7 @@ describe('Test configHasCharacteristicProps.', ( ) =>
 
       assert.isFunction(accessory.configHasCharacteristicProps, "configHasCharacteristicProps is not a function" );
 
-      assert.include( log.logBuf, "[34mCmd4 is running in Demo Mode for My_TemperatureSensor", ` Cmd4Accessory Unxexpected stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, "[34mCmd4 is running in Demo Mode for MyTemperatureSensor", ` Cmd4Accessory Unxexpected stdout: ${ log.logBuf }` );
       assert.equal( log.logLineCount, 1 , `unexpected number of lines to stdout` );
 
 
@@ -78,8 +78,8 @@ describe('Test configHasCharacteristicProps.', ( ) =>
       let config =
       {
          type:                            "TemperatureSensor",
-         displayName:                     "My_TemperatureSensor",
-         name:                            "My_TemperatureSensor",
+         displayName:                     "MyTemperatureSensor",
+         name:                            "MyTemperatureSensor",
          currentTemperature:               25,
          statusFault:                     "NO_FAULT",
       };
@@ -104,7 +104,7 @@ describe('Test configHasCharacteristicProps.', ( ) =>
 
       assert.isObject(CMD4_ACC_TYPE_ENUM, "configHasCharacteristicProps of valid data with full properties returned incorrect result: " + result );
 
-      assert.include( log.logBuf, "[34mCmd4 is running in Demo Mode for My_TemperatureSensor", ` Cmd4Accessory Unxexpected stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, "[34mCmd4 is running in Demo Mode for MyTemperatureSensor", ` Cmd4Accessory Unxexpected stdout: ${ log.logBuf }` );
       assert.equal( log.logLineCount, 1 , `unexpected number of lines to stdout` );
 
 
@@ -116,8 +116,8 @@ describe('Test configHasCharacteristicProps.', ( ) =>
       let config =
       {
          type:                            "TemperatureSensor",
-         displayName:                     "My_TemperatureSensor",
-         name:                            "My_TemperatureSensor",
+         displayName:                     "MyTemperatureSensor",
+         name:                            "MyTemperatureSensor",
          currentTemperature:               25,
          statusFault:                     "NO_FAULT",
       };
@@ -142,7 +142,7 @@ describe('Test configHasCharacteristicProps.', ( ) =>
 
       assert.isObject(CMD4_ACC_TYPE_ENUM, "configHasCharacteristicProps of valid data in small Caps returned incorrect result: " + result );
 
-      assert.include( log.logBuf, "[34mCmd4 is running in Demo Mode for My_TemperatureSensor", ` Cmd4Accessory Unxexpected stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, "[34mCmd4 is running in Demo Mode for MyTemperatureSensor", ` Cmd4Accessory Unxexpected stdout: ${ log.logBuf }` );
       assert.equal( log.logLineCount, 1 , `unexpected number of lines to stdout` );
 
 
@@ -154,8 +154,8 @@ describe('Test configHasCharacteristicProps.', ( ) =>
       let config =
       {
          type:                            "TemperatureSensor",
-         displayName:                     "My_TemperatureSensor",
-         name:                            "My_TemperatureSensor",
+         displayName:                     "MyTemperatureSensor",
+         name:                            "MyTemperatureSensor",
          currentTemperature:               25,
          statusFault:                     "NO_FAULT",
       };
@@ -175,7 +175,7 @@ describe('Test configHasCharacteristicProps.', ( ) =>
 
       assert.isObject(result, "configHasCharacteristicProps of valid data with one propertyreturned incorrect result: " + result );
 
-      assert.include( log.logBuf, "[34mCmd4 is running in Demo Mode for My_TemperatureSensor", ` Cmd4Accessory Unxexpected stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, "[34mCmd4 is running in Demo Mode for MyTemperatureSensor", ` Cmd4Accessory Unxexpected stdout: ${ log.logBuf }` );
       assert.equal( log.logLineCount, 1 , `unexpected number of lines to stdout` );
 
 
@@ -187,8 +187,8 @@ describe('Test configHasCharacteristicProps.', ( ) =>
       let config =
       {
          type:                            "TemperatureSensor",
-         displayName:                     "My_TemperatureSensor",
-         name:                            "My_TemperatureSensor",
+         displayName:                     "MyTemperatureSensor",
+         name:                            "MyTemperatureSensor",
          currentTemperature:               25,
          statusFault:                     "NO_FAULT",
       };
@@ -209,7 +209,7 @@ describe('Test configHasCharacteristicProps.', ( ) =>
 
       assert.isObject(result, "configHasCharacteristicProps of valid data with two characteristicsreturned incorrect result: " + result );
 
-      assert.include( log.logBuf, "[34mCmd4 is running in Demo Mode for My_TemperatureSensor", ` Cmd4Accessory Unxexpected stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, "[34mCmd4 is running in Demo Mode for MyTemperatureSensor", ` Cmd4Accessory Unxexpected stdout: ${ log.logBuf }` );
       assert.equal( log.logLineCount, 1 , `unexpected number of lines to stdout` );
 
 
@@ -221,8 +221,8 @@ describe('Test configHasCharacteristicProps.', ( ) =>
       let config =
       {
          type:                            "TemperatureSensor",
-         displayName:                     "My_TemperatureSensor",
-         name:                            "My_TemperatureSensor",
+         displayName:                     "MyTemperatureSensor",
+         name:                            "MyTemperatureSensor",
          currentTemperature:               25,
          statusFault:                     "NO_FAULT",
       };
@@ -245,7 +245,7 @@ describe('Test configHasCharacteristicProps.', ( ) =>
       expect ( ( ) => accessory.configHasCharacteristicProps( accTypeEnumIndex  ) ).to.throw(/props for key "uhoh" not in definition of "targetTemperature"/);
 
 
-      assert.include( log.logBuf, "[34mCmd4 is running in Demo Mode for My_TemperatureSensor", ` Cmd4Accessory Unxexpected stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, "[34mCmd4 is running in Demo Mode for MyTemperatureSensor", ` Cmd4Accessory Unxexpected stdout: ${ log.logBuf }` );
       assert.equal( log.logLineCount, 1 , `unexpected number of lines to stdout` );
 
 
@@ -258,8 +258,8 @@ describe('Test configHasCharacteristicProps.', ( ) =>
       let config =
       {
          type:                            "TemperatureSensor",
-         displayName:                     "My_TemperatureSensor",
-         name:                            "My_TemperatureSensor",
+         displayName:                     "MyTemperatureSensor",
+         name:                            "MyTemperatureSensor",
          currentTemperature:               25,
          statusFault:                     "NO_FAULT",
       };
