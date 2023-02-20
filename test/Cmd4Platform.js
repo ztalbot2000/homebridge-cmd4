@@ -99,28 +99,28 @@ describe('Testing Cmd4Platform Init', ( ) =>
       {
          accessories: [
             {
-               name:         "MyLight",
-               displayName:  "MyLight",
-               statusMsg:    true,
-               type:         "Lightbulb",
-               on:           0,
-               brightness:   100,
-               polling:      [ { characteristic: "on", interval: 310 },
-                               { characteristic: "brightness" }
-                             ],
-               state_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+               name:                   "MyLight",
+               displayName:            "MyLight",
+               statusMsg:              true,
+               type:                   "Lightbulb",
+               on:                     0,
+               brightness:             100,
+               polling:                [ { characteristic: "on", interval: 310 },
+                                         { characteristic: "brightness" }
+                                       ],
+               state_cmd:              "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
             },
             {
-               name:         "MySwitch",
-               displayName:  "MySwitch",
-               statusMsg:    true,
-               type:         "Switch",
-               on:           0,
-               active:       0,
-               polling: [{ characteristic: "on" },
-                         { characteristic: "active" }
-                        ],
-               state_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+               name:                   "MySwitch",
+               displayName:            "MySwitch",
+               statusMsg:              true,
+               type:                   "Switch",
+               on:                     0,
+               active:                 0,
+               polling:                [ { characteristic: "on" },
+                                         { characteristic: "active" }
+                                       ],
+               state_cmd:              "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
             }
          ]
       }
@@ -146,18 +146,18 @@ describe('Testing Cmd4Platform Init', ( ) =>
       {
          accessories: [
             {
-               name:         "MyDoor",
-               displayName:  "MyDoor",
-               statusMsg:    true,
-               type:         "Door",
-               currentPosition:          0,
-               targetPosition:           0,
-               positionState:            0,
-               polling:      [ { characteristic: "currentPosition" },
-                               { characteristic: "targetPosition" },
-                               { characteristic: "positionState" }
-                             ],
-               state_cmd:    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+               name:                   "MyDoor",
+               displayName:            "MyDoor",
+               statusMsg:              true,
+               type:                   "Door",
+               currentPosition:        0,
+               targetPosition:         0,
+               positionState:          0,
+               polling:                [ { characteristic: "currentPosition" },
+                                         { characteristic: "targetPosition" },
+                                         { characteristic: "positionState" }
+                                       ],
+               state_cmd:              "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
             }
          ]
       }
@@ -240,7 +240,7 @@ describe('Testing Cmd4Platform Init', ( ) =>
             outputConstants:           false,
             name:                      "MyDoor",
             displayName:               "MyDoor",
-            statusMsg:                  true,
+            statusMsg:                 true,
             type:                      "Door",
             currentPosition:           0,
             targetPosition:            0,
@@ -279,23 +279,23 @@ describe('Testing Cmd4Platform Init', ( ) =>
    {
       let platformConfig =
       {
-         timeout:                       12345,
-         interval:                      12,
-         stateChangeResponseTime:       18,
-         outputConstants:               true,
+         timeout:                      12345,
+         interval:                     12,
+         stateChangeResponseTime:      18,
+         outputConstants:              true,
          accessories: [
          {
             name:                      "MyDoor",
             displayName:               "MyDoor",
-            statusMsg:                  true,
+            statusMsg:                 true,
             type:                      "Door",
-            currentPosition:            0,
-            targetPosition:             0,
-            positionState:              0,
-            polling:                    [ { characteristic: "currentPosition" },
-                                          { characteristic: "targetPosition" },
-                                          { characteristic: "positionState" } ],
-            state_cmd:                  "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+            currentPosition:           0,
+            targetPosition:            0,
+            positionState:             0,
+            polling:                   [ { characteristic: "currentPosition" },
+                                         { characteristic: "targetPosition" },
+                                         { characteristic: "positionState" } ],
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]
       }
 
@@ -345,10 +345,10 @@ describe('Testing Cmd4Platform Init', ( ) =>
             displayName:               "MyDoor",
             statusMsg:                 true,
             type:                      "Door",
-            outputConstants:              true,
-            currentPosition:            0,
-            targetPosition:             0,
-            positionState:              0,
+            outputConstants:           true,
+            currentPosition:           0,
+            targetPosition:            0,
+            positionState:             0,
             polling:                   [ { characteristic: "currentPosition" },
                                          { characteristic: "targetPosition" },
                                          { characteristic: "positionState" } ],
@@ -396,17 +396,17 @@ describe('Testing Cmd4Platform Init', ( ) =>
    {
       let platformConfig =
       {
-         timeout:                       12345,
-         interval:                      12,
+         timeout:                      12345,
+         interval:                     12,
          accessories: [
          {
             name:                      "MyDoor",
             displayName:               "MyDoor",
-            statusMsg:                  true,
+            statusMsg:                 true,
             type:                      "Door",
-            currentPosition:            0,
-            targetPosition:             0,
-            positionState:              0,
+            currentPosition:           0,
+            targetPosition:            0,
+            positionState:             0,
             polling:                   [ { characteristic: "currentPosition" },
                                          { characteristic: "targetPosition" },
                                          { characteristic: "positionState" } ],
@@ -451,13 +451,13 @@ describe('Testing Cmd4Platform Init', ( ) =>
       let platformConfig =
       {
          timeout:                      12345,
-         interval:                      12,
+         interval:                     12,
          accessories: [
          {
             name:                      "MySwitch",
             displayName:               "MySwitch",
             type:                      "Switch",
-            on:                         0,
+            on:                        0,
             polling:                   [ { characteristic: "on" } ],
             state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          },
@@ -466,9 +466,9 @@ describe('Testing Cmd4Platform Init', ( ) =>
             displayName:               "MyDoor",
             statusMsg:                 true,
             type:                      "Door",
-            currentPosition:            0,
-            targetPosition:             0,
-            positionState:              0,
+            currentPosition:           0,
+            targetPosition:            0,
+            positionState:             0,
             polling:                   [ { characteristic: "currentPosition" },
                                          { characteristic: "targetPosition" },
                                          { characteristic: "positionState" } ],
@@ -526,11 +526,11 @@ describe('Testing Cmd4Platform Init', ( ) =>
          {
             name:                      "MyDoor",
             displayName:               "MyDoor",
-            statusMsg:                  true,
+            statusMsg:                 true,
             type:                      "Door",
-            currentPosition:            0,
-            targetPosition:             0,
-            positionState:              0,
+            currentPosition:           0,
+            targetPosition:            0,
+            positionState:             0,
             polling:                   [ { characteristic: "currentPosition" },
                                          { characteristic: "targetPosition" },
                                          { characteristic: "positionState" } ],
@@ -576,11 +576,11 @@ describe('Testing Cmd4Platform Init', ( ) =>
          {
             name:                      "MyDoor",
             displayName:               "MyDoor",
-            statusMsg:                  true,
+            statusMsg:                 true,
             type:                      "Door",
-            currentPosition:            0,
-            targetPosition:             0,
-            positionState:              0,
+            currentPosition:           0,
+            targetPosition:            0,
+            positionState:             0,
             polling:                   [ { characteristic: "currentPosition" },
                                          { characteristic: "targetPosition" },
                                          { characteristic: "positionState" } ],
@@ -626,11 +626,11 @@ describe('Testing Cmd4Platform Init', ( ) =>
          {
             name:                      "MyDoor",
             displayName:               "MyDoor",
-            statusMsg:                  true,
+            statusMsg:                 true,
             type:                      "Door",
-            currentPosition:            0,
-            targetPosition:             0,
-            positionState:              0,
+            currentPosition:           0,
+            targetPosition:            0,
+            positionState:             0,
             polling:                   [ { characteristic: "currentPosition" },
                                          { characteristic: "targetPosition" },
                                          { characteristic: "positionState" } ],
@@ -665,11 +665,11 @@ describe('Testing Cmd4Platform Init', ( ) =>
          {
             name:                      "MyDoor",
             displayName:               "MyDoor",
-            statusMsg:                  true,
+            statusMsg:                 true,
             type:                      "Door",
-            currentPosition:            0,
-            targetPosition:             0,
-            positionState:              0,
+            currentPosition:           0,
+            targetPosition:            0,
+            positionState:             0,
             polling:                   [ { characteristic: "currentPosition" },
                                          { characteristic: "targetPosition" },
                                          { characteristic: "positionState" } ],
@@ -701,11 +701,11 @@ describe('Testing Cmd4Platform Init', ( ) =>
          {
             name:                      "MyDoor",
             displayName:               "MyDoor",
-            statusMsg:                  true,
+            statusMsg:                 true,
             type:                      "Door",
-            currentPosition:            0,
-            targetPosition:             0,
-            positionState:              0,
+            currentPosition:           0,
+            targetPosition:            0,
+            positionState:             0,
             polling:                   [ { characteristic: "currentPosition" },
                                          { characteristic: "targetPosition" },
                                          { characteristic: "positionState" } ],
@@ -741,11 +741,11 @@ describe('Testing Cmd4Platform Init', ( ) =>
          {
             name:                      "MyDoor",
             displayName:               "MyDoor",
-            statusMsg:                  true,
+            statusMsg:                 true,
             type:                      "Door",
-            currentPosition:            0,
-            targetPosition:             0,
-            positionState:              0,
+            currentPosition:           0,
+            targetPosition:            0,
+            positionState:             0,
             polling:                   [ { characteristic: "currentPosition" },
                                          { characteristic: "targetPosition" },
                                          { characteristic: "positionState" } ],
@@ -781,11 +781,11 @@ describe('Testing Cmd4Platform Init', ( ) =>
          {
             name:                      "MyDoor",
             displayName:               "MyDoor",
-            statusMsg:                  true,
+            statusMsg:                 true,
             type:                      "Door",
-            currentPosition:            0,
-            targetPosition:             0,
-            positionState:              0,
+            currentPosition:           0,
+            targetPosition:            0,
+            positionState:             0,
             polling:                   [ { characteristic: "currentPosition" },
                                          { characteristic: "targetPosition" },
                                          { characteristic: "positionState" } ],
@@ -821,11 +821,11 @@ describe('Testing Cmd4Platform Init', ( ) =>
          {
             name:                      "MyDoor",
             displayName:               "MyDoor",
-            statusMsg:                  true,
+            statusMsg:                 true,
             type:                      "Door",
-            currentPosition:            0,
-            targetPosition:             0,
-            positionState:              0,
+            currentPosition:           0,
+            targetPosition:            0,
+            positionState:             0,
             polling:                   [ { characteristic: "currentPosition" },
                                          { characteristic: "targetPosition" },
                                          { characteristic: "positionState" } ],

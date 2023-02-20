@@ -88,7 +88,7 @@ var cmd4Constants = {
    QUEUETYPE_PASSTHRU:        "None",
    DEFAULT_STANDARD_QUEUE_RETRY_COUNT: 1,
    DEFAULT_WORM_QUEUE_RETRY_COUNT: 50,
-   QUEUE_RETRY:               "Retry",
+   QUEUE_RETRIES:             "retries",
 
 
 

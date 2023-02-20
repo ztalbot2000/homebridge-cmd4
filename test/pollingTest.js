@@ -78,10 +78,10 @@ describe('Testing Cmd4Accessory polling', ( ) =>
       {
          name:                         "MySwitch",
          displayName:                  "MySwitch",
-         statusMsg:                     true,
+         statusMsg:                    true,
          type:                         "Switch",
-         on:                            0,
-         polling:                       true,
+         on:                           0,
+         polling:                      true,
          state_cmd:                    "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
       }
       let parentInfo={ "CMD4": constants.PLATFORM, "LEVEL": -1 };

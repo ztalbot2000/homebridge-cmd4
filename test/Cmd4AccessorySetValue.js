@@ -114,13 +114,13 @@ describe( "Testing Cmd4Accessory", function( )
             sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
             brightness:                8,
             closedCaptions:           "DISABLED",
-            polling: [{ characteristic: "ClosedCaptions" }],
+            polling:                  [{ characteristic: "ClosedCaptions" }],
             currentMediaState:        "STOP",
             targetMediaState:         "STOP",
             pictureMode:              "STANDARD",
             remoteKey:                "SELECT",
             state_cmd_suffix:         fn,
-            state_cmd:  `node ${ process.cwd( ) }/${ getSetValueScript }`
+            state_cmd:                `node ${ process.cwd( ) }/${ getSetValueScript }`
          }]
       };
 
@@ -191,7 +191,7 @@ describe( "Testing Cmd4Accessory", function( )
              sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
              brightness:                8,
              closedCaptions:           "DISABLED",
-             polling: [{ characteristic: "ClosedCaptions" }],
+             polling:                  [{ characteristic: "ClosedCaptions" }],
              currentMediaState:        "STOP",
              targetMediaState:         "STOP",
              pictureMode:              "STANDARD",
@@ -514,13 +514,13 @@ describe( "Testing Cmd4Accessory", function( )
          displayName:                  "Thermostat",
          temperatureDisplayUnits:      "CELSIUS",
          active:                       "INACTIVE",
-         currentTemperature:            20.0,
-         targetTemperature:             20.0,
-         currentHeatingCoolingState:    0,
-         targetHeatingCoolingState:     0,
-         stateChangeResponseTime:       1,
-         polling: true,
-         state_cmd: "./Extras/Cmd4Scripts/Examples/AnyDevice"
+         currentTemperature:           20.0,
+         targetTemperature:            20.0,
+         currentHeatingCoolingState:   0,
+         targetHeatingCoolingState:    0,
+         stateChangeResponseTime:      1,
+         polling:                      true,
+         state_cmd:                    "./Extras/Cmd4Scripts/Examples/AnyDevice"
       };
 
       const log = new Logger( );
@@ -652,12 +652,12 @@ describe( "Testing Cmd4Accessory", function( )
          displayName:                  "Thermostat",
          temperatureDisplayUnits:      "CELSIUS",
          active:                       "INACTIVE",
-         currentTemperature:            20.0,
-         targetTemperature:             20.0,
-         currentHeatingCoolingState:    0,
-         // targetHeatingCoolingState:  0,
-         stateChangeResponseTime:       3,
-         polling:                       true,
+         currentTemperature:           20.0,
+         targetTemperature:            20.0,
+         currentHeatingCoolingState:   0,
+         // targetHeatingCoolingState: 0,
+         stateChangeResponseTime:      3,
+         polling:                      true,
          state_cmd:                    "./test/echoScripts/echo_1"
       };
 
@@ -744,9 +744,9 @@ describe( "Testing Cmd4Accessory", function( )
          displayName:                  "TemperatureSensor",
          temperatureDisplayUnits:      "CELSIUS",
          active:                       "INACTIVE",
-         currentTemperature:            20.0,
-         polling: true,
-         state_cmd: "./Extras/Cmd4Scripts/Examples/AnyDevice"
+         currentTemperature:           20.0,
+         polling:                      true,
+         state_cmd:                    "./Extras/Cmd4Scripts/Examples/AnyDevice"
       };
 
       const log = new Logger( );
@@ -810,9 +810,9 @@ describe( "Testing Cmd4Accessory", function( )
           targetMediaState:         "STOP",
           pictureMode:              "STANDARD",
           remoteKey:                "SELECT",
-          timeout:  401,
+          timeout:                  401,
           polling:                  [{ characteristic: "Mute" }],
-          state_cmd: "./test/echoScripts/runToTimeoutRcOf0"
+          state_cmd:                "./test/echoScripts/runToTimeoutRcOf0"
       };
 
       const log = new Logger( );

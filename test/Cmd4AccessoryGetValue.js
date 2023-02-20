@@ -165,7 +165,7 @@ describe( "Testing Cmd4Accessory", function( )
             pictureMode:              "STANDARD",
             remoteKey:                "SELECT",
             polling:                  true,
-            state_cmd: "./test/echoScripts/echo_ACTIVE"
+            state_cmd:                "./test/echoScripts/echo_ACTIVE"
          }]
       };
 
@@ -984,7 +984,7 @@ describe( "Testing Cmd4Accessory", function( )
                                       // Since Mute is optional
             polling:                  [{ characteristic: "mute" }],
             state_cmd:                "./test/echoScripts/echo_nothing",
-            timeout:                   500
+            timeout:                  500
          }]
       };
 
@@ -1379,10 +1379,10 @@ describe( "Testing Cmd4Accessory", function( )
             targetMediaState:         "STOP",
             pictureMode:              "STANDARD",
             remoteKey:                "SELECT",
-            timeout:                   500,
+            timeout:                  500,
                                       // Since Mute is optional
             polling:                  [{ characteristic: "mute" }],
-            state_cmd: "./test/echoScripts/justExitWithRCof0"
+            state_cmd:                "./test/echoScripts/justExitWithRCof0"
          }]
       };
 
@@ -1444,10 +1444,10 @@ describe( "Testing Cmd4Accessory", function( )
             targetMediaState:         "STOP",
             pictureMode:              "STANDARD",
             remoteKey:                "SELECT",
-            timeout:                   500,
+            timeout:                  500,
                                       // Since Mute is optional
             polling:                  [{ characteristic: "mute" }],
-            state_cmd: "./test/echoScripts/justExitWithRCof0"
+            state_cmd:                "./test/echoScripts/justExitWithRCof0"
          }]
       };
 
@@ -1522,7 +1522,7 @@ describe( "Testing Cmd4Accessory", function( )
             targetMediaState:         "STOP",
             pictureMode:              "STANDARD",
             remoteKey:                "SELECT",
-            timeout:                   400,
+            timeout:                  400,
                                       // Since Mute is optional
             polling:                  [{ characteristic: "mute" }],
             state_cmd:                "./test/echoScripts/runToTimeoutRcOf0"

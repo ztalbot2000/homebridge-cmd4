@@ -65,7 +65,7 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
       {
          accessories: [
          {
-            statusMsg:                  true,
+            statusMsg:                 true,
             type:                      "TemperatureSensor",
             displayName:               "TemperatureSensor",
             name:                      "TemperatureSensor",
@@ -158,10 +158,10 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
    {
       let platformConfig =
       {
-         queueTypes:                [{ queue: "A", queueType: "WoRm" }],
+         queueTypes:                   [{ queue: "A", queueType: "WoRm" }],
          accessories: [
          {
-            statusMsg:                  true,
+            statusMsg:                 true,
             type:                      "TemperatureSensor",
             displayName:               "TemperatureSensor",
             name:                      "TemperatureSensor",
@@ -207,10 +207,10 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
    {
       let platformConfig =
       {
-         queueTypes:                [{ queue: "A", queueType: "WoRm" }],
+         queueTypes:                   [{ queue: "A", queueType: "WoRm" }],
          accessories: [
          {
-            statusMsg:                  true,
+            statusMsg:                 true,
             type:                      "CameraControl",
             displayName:               "CameraControl",
             name:                      "CameraControl",
@@ -261,11 +261,11 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
             displayName:               "Door",
             statusMsg:                 true,
             type:                      "Door",
-            currentPosition:            0,
-            targetPosition:             0,
-            positionState:              0,
+            currentPosition:           0,
+            targetPosition:            0,
+            positionState:             0,
             polling:                   [ { characteristic: "currentPosition" },
-                                       // { characteristic: "TargetPosition" },
+                                         // { characteristic: "TargetPosition" },
                                          { characteristic: "positionState" } ],
             state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]

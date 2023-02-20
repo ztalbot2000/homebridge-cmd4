@@ -982,7 +982,7 @@ var parseAddQueueTypes = function ( log, entrys )
                }
 
                break;
-            case constants.QUEUE_RETRY:
+            case constants.QUEUE_RETRIES:
                queueRetryCount = value;
                break;
             default:

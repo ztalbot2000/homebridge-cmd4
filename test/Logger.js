@@ -136,8 +136,8 @@ describe('A simple logger Test', ( ) =>
       {
          name:                         "Test Switch",
          type:                         "Switch",
-         on:                            false,
-         polling:                       true,
+         on:                           false,
+         polling:                      true,
          state_cmd:                    "./test/echoScripts/echo_1"
       };
 
@@ -164,8 +164,8 @@ describe('A simple logger Test', ( ) =>
       {
          name:                         "Test Switch",
          type:                         "Switch",
-         on:                            false,
-         polling:                       true,
+         on:                           false,
+         polling:                      true,
          state_cmd:                    "./test/echoScripts/echo_1"
       };
 

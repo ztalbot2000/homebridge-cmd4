@@ -456,27 +456,27 @@ describe( "Testing Cmd4Platform", function( )
          platform:  "Cmd4",
          accessories:
          [{
-             type: "Lightbulb",
-             displayName: "Light1",
-             on: 0,
-             stateChangeResponseTime: 1,
-             brightness: 100,
-             hue: 200,
-             saturation: 100,
-             state_cmd: "node .homebridge/Cmd4Scripts/State.js",
-//           polling: [ { characteristic: "on" },
-//                        { characteristic: "brightness" }
-//                    ],
+             type:                     "Lightbulb",
+             displayName:              "Light1",
+             on:                       0,
+             stateChangeResponseTime:  1,
+             brightness:               100,
+             hue:                      200,
+             saturation:               100,
+             state_cmd:                "node .homebridge/Cmd4Scripts/State.js",
+//           polling:                  [ { characteristic: "on" },
+//                                       { characteristic: "brightness" }
+//                                     ],
              linkedTypes: [{
-                 type: "Lightbulb",
-                 displayName: "Light2",
-                 on: 0,
-                 brightness: 0,
-                 stateChangeResponseTime: 1,
-                 state_cmd: "node .homebridge/Cmd4Scripts/State.js",
-//               polling: [ { characteristic: "on" },
-//                          { characteristic: "brightness" }
-//                        ]
+                type:                  "Lightbulb",
+                displayName:           "Light2",
+                on:                    0,
+                brightness:            0,
+                stateChangeResponseTime: 1,
+                state_cmd:             "node .homebridge/Cmd4Scripts/State.js",
+//              polling:               [ { characteristic: "on" },
+//                                       { characteristic: "brightness" }
+//                                     ]
               }]
 
          }]
