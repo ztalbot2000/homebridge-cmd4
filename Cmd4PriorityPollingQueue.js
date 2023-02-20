@@ -188,14 +188,22 @@ class Cmd4PriorityPollingQueue
             // The "Set" is complete, even if it failed.
             queue.inProgressSets --;
 
-            // Set failed. We need to keep trying
-            queue.highPriorityQueue.push( entry );
-
             queue.errorCountSinceLastGoodTransaction++;
             let count = queue.errorCountSinceLastGoodTransaction;
 
             if ( count != 0 && count % queue.queueRetryCount == 0 )
+            {
                queue.log.warn( `*${ count }* error(s) were encountered for "${ entry.accessory.displayName }" getValue. Last error found Getting: "${ entry.characteristicString}". Perhaps you should run in debug mode to find out what the problem might be.` );
+
+               // Call updateValue with new Error so device will become unavailable
+               entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( null, new Error( constants.errorString( error ) ) );
+
+            } else
+            {
+               // Set failed. We need to keep trying
+               queue.highPriorityQueue.push( entry );
+
+            }
 
             entry.accessory.queue.pauseQueue( entry.accessory.queue );
          }
@@ -243,7 +251,8 @@ class Cmd4PriorityPollingQueue
                queue.log.warn( `*${ count }* error(s) were encountered for "${ entry.accessory.displayName }" getValue. Last error found Getting: "${ entry.characteristicString}". Perhaps you should run in debug mode to find out what the problem might be.` );
 
                // Call updateValue with new Error so device will become unavailable
-               // entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( null, new Error( constants.errorString( error ) ) );
+               entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( null, new Error( constants.errorString( error ) ) );
+
             } else
             {
                // High Priority Get failed. We keep retrying until the mod of
