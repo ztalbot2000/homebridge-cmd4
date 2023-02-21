@@ -195,8 +195,11 @@ class Cmd4PriorityPollingQueue
             {
                queue.log.warn( `*${ count }* error(s) were encountered for "${ entry.accessory.displayName }" getValue. Last error found Getting: "${ entry.characteristicString}". Perhaps you should run in debug mode to find out what the problem might be.` );
 
-               // Call updateValue with new Error so device will become unavailable
-               entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( null, new Error( constants.errorString( error ) ) );
+               // queue.log.warn( "processHighPrioritySetQueue calling updateCharacteristic");
+               // Call updateCharacteristic with new Error so device will become unavailable
+               //entry.accessory.service.updateCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic, new Error( constants.errorString( error ) ) );
+               let storedValue = entry.accessory.cmd4Storage.getStoredValueForIndex( entry.accTypeEnumIndex );
+               entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( storedValue, new Error( constants.errorString( error ) ) );
 
             } else
             {
@@ -250,8 +253,11 @@ class Cmd4PriorityPollingQueue
             {
                queue.log.warn( `*${ count }* error(s) were encountered for "${ entry.accessory.displayName }" getValue. Last error found Getting: "${ entry.characteristicString}". Perhaps you should run in debug mode to find out what the problem might be.` );
 
-               // Call updateValue with new Error so device will become unavailable
-               entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( null, new Error( constants.errorString( error ) ) );
+               // queue.log.warn( "processHighPriorityGetQueue calling updateCharacteristic");
+               // Call updateCharacteristic with new Error so device will become unavailable
+               //entry.accessory.service.updateCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic, new Error( constants.errorString( error ) ) );
+               let storedValue = entry.accessory.cmd4Storage.getStoredValueForIndex( entry.accTypeEnumIndex );
+               entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( storedValue, new Error( constants.errorString( error ) ) );
 
             } else
             {
@@ -294,6 +300,12 @@ class Cmd4PriorityPollingQueue
             queue.errorCountSinceLastGoodTransaction = 0;
 
          } else {
+            // queue.log.warn( "processEntryFromLowPriorityQueue calling updateCharacteristic");
+            // Call updateCharacteristic with new Error so device will become unavailable
+            //entry.accessory.service.updateCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic, new Error( constants.errorString( error ) ) );
+            let storedValue = entry.accessory.cmd4Storage.getStoredValueForIndex( entry.accTypeEnumIndex );
+            entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( storedValue, new Error( constants.errorString( error ) ) );
+
             queue.pauseQueue( entry.accessory.queue );
          }
 

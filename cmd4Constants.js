@@ -87,7 +87,7 @@ var cmd4Constants = {
    // Used internally to mean entries go straight through the queue
    QUEUETYPE_PASSTHRU:        "None",
    DEFAULT_STANDARD_QUEUE_RETRY_COUNT: 1,
-   DEFAULT_WORM_QUEUE_RETRY_COUNT: 50,
+   DEFAULT_WORM_QUEUE_RETRY_COUNT: 3,
    QUEUE_RETRIES:             "retries",
 
 
