@@ -124,11 +124,20 @@ class Cmd4PriorityPollingQueue
 
       // return the cached value
       let storedValue = self.cmd4Storage.getStoredValueForIndex( accTypeEnumIndex );
+      let x = typeof storedValue;
+      self.log.warn(`priorityGetValue, TYPEOF ERROR IS is ${ x }`);
 
       if ( typeof storedValue == Error )
       {
          self.log.warn(`priorityGetValue, homebridgeCallback returning error: ${ storedValue }`);
-         homebridgeCallback( storedValue );
+         if ( typeof storedValue == String )
+         {
+             self.log.warn(`priorityGetValue, TYPEOF ERROR IS STRING`);
+         } else
+         {
+            self.log.warn(`priorityGetValue, TYPEOF ERROR IS not string`);
+         }
+         homebridgeCallback( 1 );
       } else
       {
          self.log.warn(`priorityGetValue, homebridgeCallback returning storedValue: ${ storedValue }`);
@@ -213,7 +222,7 @@ class Cmd4PriorityPollingQueue
                let errorValue = new Error( constants.errorString( error ) );
 
                queue.log.warn( "processHighPrioritySetQueue calling updateCharacteristic errorValue: ${ errorValue }");
-               entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( errorValue );
+               //entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( errorValue );
 
                // Since the setValue failed, store the error
                entry.accessory.cmd4Storage.setStoredValueForIndex( entry.accTypeEnumIndex, errorValue );
@@ -280,8 +289,8 @@ class Cmd4PriorityPollingQueue
                // Save the error value
                entry.accessory.cmd4Storage.setStoredValueForIndex( entry.accTypeEnumIndex, errorValue );
 
-               queue.log.warn( "processHighPriorityGetQueue calling updateCharacteristic errorValue: ${ errorValue }");
-               entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( errorValue );
+               //queue.log.warn( "processHighPriorityGetQueue calling updateCharacteristic errorValue: ${ errorValue }");
+               // entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( errorValue );
 
             } else
             {
@@ -322,6 +331,7 @@ class Cmd4PriorityPollingQueue
             entry.accessory.cmd4Storage.setStoredValueForIndex( entry.accTypeEnumIndex, properValue );
 
             // Update the new value in homebridge
+            entry.accessory.log.warn( "processEntryFromLowPriorityQueue calling updateValue properValue: ${ properValue }");
             entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( properValue );
 
              // A good anything, updates the lastGoodTransactionTime
@@ -332,9 +342,13 @@ class Cmd4PriorityPollingQueue
             // Convert the errorValue into an errorString
             let errorValue = new Error( constants.errorString( error ));
 
+            // Save the error value
+            entry.accessory.cmd4Storage.setStoredValueForIndex( entry.accTypeEnumIndex, errorValue );
+
+
             // Call updateValue with new Error so device will become unavailable
-            queue.log.warn( "processEntryFromLowPriorityQueue calling updateCharacteristic errorValue: ${ errorValue }");
-            entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( errorValue );
+            queue.log.warn( `processEntryFromLowPriorityQueue calling updateCharacteristic errorValue: ${ errorValue }`);
+            //entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( errorValue );
 
             queue.pauseQueue( entry.accessory.queue );
          }
