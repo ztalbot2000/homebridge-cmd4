@@ -124,19 +124,10 @@ class Cmd4PriorityPollingQueue
 
       // return the cached value
       let storedValue = self.cmd4Storage.getStoredValueForIndex( accTypeEnumIndex );
-      let x = typeof storedValue;
-      self.log.warn(`priorityGetValue, TYPEOF ERROR IS is ${ x }`);
 
-      if ( typeof storedValue == Error )
+      if ( storedValue instanceof Error )
       {
          self.log.warn(`priorityGetValue, homebridgeCallback returning error: ${ storedValue }`);
-         if ( typeof storedValue == String )
-         {
-             self.log.warn(`priorityGetValue, TYPEOF ERROR IS STRING`);
-         } else
-         {
-            self.log.warn(`priorityGetValue, TYPEOF ERROR IS not string`);
-         }
          homebridgeCallback( 1 );
       } else
       {
@@ -226,6 +217,8 @@ class Cmd4PriorityPollingQueue
 
                // Since the setValue failed, store the error
                entry.accessory.cmd4Storage.setStoredValueForIndex( entry.accTypeEnumIndex, errorValue );
+
+               // throw new entry.accessory.api.hap.HapStatusError(entry.accessory.api.hap.HAPStatus.SERVICE_COMMUNICATION_FAILURE);
 
 
             } else

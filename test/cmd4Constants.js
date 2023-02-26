@@ -83,6 +83,38 @@ describe( "Testing cmd4Constants", function( )
 });
 describe( "Testing cmd4Constants ErrorStrings", function( )
 {
+   it( "Test typeof Error.", function ( done )
+   {
+      let e = new Error("Some Error String");
+      //let t = typeof e;
+      console.log("typeof e is -->%s<--", typeof e );
+      //console.log("typeof Error is -->%s<--", t );
+      if ( e instanceof Error )
+         console.log("instanceof Error is Error" );
+      else
+         console.log("instanceof Error is not Error" );
+
+      if ( e instanceof Object )
+         console.log("instanceof Error is Object" );
+      else
+         console.log("instanceof Error is not Object" );
+
+      if ( e instanceof Number )
+         console.log("instanceof Error is Number" );
+      else
+         console.log("instanceof Error is not Number" );
+
+      if ( e instanceof String )
+         console.log("instanceof Error is String" );
+      else
+         console.log("instanceof Error is not String" );
+
+      assert.instanceOf( e , Error, "Expected e to be instance of Error. Found %s" , e );
+
+      done();
+
+   });
+
    it( "All cmd4Constants error Strings should be declared correctly.", function ( done )
    {
       let len = Object.keys( constants.ERROR_STRINGS ).length;
