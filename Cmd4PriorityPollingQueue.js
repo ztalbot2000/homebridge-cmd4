@@ -324,7 +324,7 @@ class Cmd4PriorityPollingQueue
             entry.accessory.cmd4Storage.setStoredValueForIndex( entry.accTypeEnumIndex, properValue );
 
             // Update the new value in homebridge
-            entry.accessory.log.warn( "processEntryFromLowPriorityQueue calling updateValue properValue: ${ properValue }");
+            entry.accessory.log.warn( `processEntryFromLowPriorityQueue calling updateValue properValue: ${ properValue }`);
             entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( properValue );
 
              // A good anything, updates the lastGoodTransactionTime
