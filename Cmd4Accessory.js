@@ -127,6 +127,10 @@ class Cmd4Accessory
       this.listOfVariables = { };
       this.listOfConstants = { };
 
+      // Determines if the accessory is communicable
+      this.errorValue = 0;
+      this.errorString = "init";
+
       // Used to determine missing related characteristics and
       // to determine if the related characteristic is also polled.
       this.listOfPollingCharacteristics = { };

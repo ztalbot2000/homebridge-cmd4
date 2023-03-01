@@ -70,80 +70,97 @@ class Cmd4PriorityPollingQueue
       this.changeQueueType( this, queueType );
    }
 
+   // This function is called by homebridge to *PUT AN ENTRY INTO THE HIGHEST PRIORITY SET QUEUE*.
+   // We immediately return success if the device is accessible. Either way the Set is attempted
+   // above everything else except other SetValue requests.
    prioritySetValue( accTypeEnumIndex, characteristicString, timeout, stateChangeResponseTime,  value, homebridgeCallback )
    {
-      let self = this;
-      self.log.warn(`prioritySetValue, asked to set: ${ characteristicString } to ${ value }`);
+      // this is Accessory
+      this.log.warn(`prioritySetValue, asked to set: ${ characteristicString } to ${ value }`);
 
       // Save the value to cache. The set will come later
-      //self.cmd4Storage.setStoredValueForIndex( accTypeEnumIndex, value );
-      self.log.warn(`prioritySetValue, homebridgeCallback returning default success 0`);
-      homebridgeCallback( 0 );
+      // this.cmd4Storage.setStoredValueForIndex( accTypeEnumIndex, value );
 
-      let newEntry = { [ constants.IS_SET_lv ]: true, [ constants.ACCESSORY_lv ]: self, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.CALLBACK_lv ]: homebridgeCallback, [ constants.VALUE_lv ]: value };
+      if ( this.errorValue != 0 )
+      {
+         this.log.warn(`prioritySetValue for ${ this.displayName }, homebridgeCallback returning error ${ this.errorValue } ${ this.errorString }`);
+         homebridgeCallback( this.errorValue );
+      } else
+      {
+         this.log.warn(`prioritySetValue for ${ this.displayName }, homebridgeCallback returning default success 0`);
+         homebridgeCallback( 0 );
+      }
+
+      let newEntry = { [ constants.IS_SET_lv ]: true, [ constants.ACCESSORY_lv ]: this, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.CALLBACK_lv ]: homebridgeCallback, [ constants.VALUE_lv ]: value };
 
       // Determine where to put the entry in the queue
-      if ( self.queue.highPriorityQueue.length == 0 )
+      if ( this.queue.highPriorityQueue.length == 0 )
       {
          // No entries, then it goes on top
-         self.queue.highPriorityQueue.push( newEntry );
+         this.queue.highPriorityQueue.push( newEntry );
 
       } else {
 
          // Make sure that this is the latest "Set" of this entry
-         let index = self.queue.highPriorityQueue.findIndex( ( entry ) => entry.accessory.uuid == self.uuid && entry.isSet == true && entry.accTypeEnumIndex == accTypeEnumIndex );
+         let index = this.queue.highPriorityQueue.findIndex( ( entry ) => entry.accessory.uuid == this.uuid && entry.isSet == true && entry.accTypeEnumIndex == accTypeEnumIndex );
 
          if ( index == -1 )
          {
             // It doesn't exist in the queue, It needs to be placed after any "Sets".
             // First Determine the first "Get"
-            let getIndex = self.queue.highPriorityQueue.findIndex( ( entry ) => entry.isSet == false );
+            let getIndex = this.queue.highPriorityQueue.findIndex( ( entry ) => entry.isSet == false );
 
             if ( getIndex == -1 )
             {
                // No "Get" entrys, it goes at the end after everything.
-               self.queue.highPriorityQueue.push( newEntry );
+               this.queue.highPriorityQueue.push( newEntry );
 
             } else
             {
                // Insert before the first "Get" entry
-               self.queue.highPriorityQueue.splice( getIndex, 0, newEntry );
+               this.queue.highPriorityQueue.splice( getIndex, 0, newEntry );
             }
          } else
          {
-            self.queue.highPriorityQueue[ index ] = newEntry;
+            this.queue.highPriorityQueue[ index ] = newEntry;
          }
       }
-      self.queue.processQueueFunc( HIGH_PRIORITY_SET, self.queue );
+      this.queue.processQueueFunc( HIGH_PRIORITY_SET, this.queue );
    }
 
+   // This function is called by homebridge to *PUT AN ENTRY INTO THE HIGHEST PRIORITY GET QUEUE*.
+   // We immediately return with success and the last known value if the device is accessible, otherwise
+   // the last failure error code.
+   // The Get is attempted no matter the devices availability. This is done after every Set
+   // request and at the bottom of the hightPrioritySetValue queue, but above any polling.
    priorityGetValue( accTypeEnumIndex, characteristicString, timeout, homebridgeCallback )
    {
-      let self = this;
-      self.log.warn(`priorityGetValue, asked to Get: ${ characteristicString }`);
+      // this is Accessory
+      this.log.warn(`priorityGetValue for ${ this.displayName }, asked to Get: ${ characteristicString }`);
 
-      // return the cached value
-      let storedValue = self.cmd4Storage.getStoredValueForIndex( accTypeEnumIndex );
-
-      if ( storedValue instanceof Error )
+      if ( this.errorValue != 0 )
       {
-         self.log.warn(`priorityGetValue, homebridgeCallback returning error: ${ storedValue }`);
-         homebridgeCallback( 1 );
+         this.log.warn(`priorityGetValue for ${ this.displayName }, homebridgeCallback returning error ${ this.errorValue } ${ this.errorString}`);
+         homebridgeCallback( this.errorValue );
       } else
       {
-         self.log.warn(`priorityGetValue, homebridgeCallback returning storedValue: ${ storedValue }`);
+         // return the cached value
+         let storedValue = this.cmd4Storage.getStoredValueForIndex( accTypeEnumIndex );
+
+         this.log.warn(`priorityGetValue for ${ this.displayName }, homebridgeCallback returning storedValue: ${ storedValue }`);
          homebridgeCallback( 0, storedValue );
       }
 
-      if ( self.queue.queueType != constants.QUEUETYPE_WORM2 )
+      if ( this.queue.queueType != constants.QUEUETYPE_WORM2 )
       {
          // When the value is returned, it will update homebridge
-         self.queue.highPriorityQueue.push( { [ constants.IS_SET_lv ]: false, [ constants.QUEUE_GET_IS_UPDATE_lv ]: true, [ constants.ACCESSORY_lv ]: self, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: null, [ constants.VALUE_lv ]: null, [ constants.CALLBACK_lv ]: homebridgeCallback } );
+         this.queue.highPriorityQueue.push( { [ constants.IS_SET_lv ]: false, [ constants.QUEUE_GET_IS_UPDATE_lv ]: true, [ constants.ACCESSORY_lv ]: this, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: null, [ constants.VALUE_lv ]: null, [ constants.CALLBACK_lv ]: homebridgeCallback } );
 
-         self.queue.processQueueFunc( HIGH_PRIORITY_GET, self.queue );
+         this.queue.processQueueFunc( HIGH_PRIORITY_GET, this.queue );
       }
    }
 
+   // This function is called by polling to *PUT AN ENTRY INTO THE LOW PRIORITY POLLING QUEUE*.
    addLowPriorityGetPolledQueueEntry( accessory, accTypeEnumIndex, characteristicString, interval, timeout )
    {
       // These are all gets from polling
@@ -160,6 +177,9 @@ class Cmd4PriorityPollingQueue
       {
 
          let queue = entry.accessory.queue;
+
+         // Save the error code - Pass or fail
+         entry.accessory.errorValue = error;
 
          if ( error == 0 )
          {
@@ -210,15 +230,12 @@ class Cmd4PriorityPollingQueue
                queue.log.warn( `*${ count }* error(s) were encountered for "${ entry.accessory.displayName }" getValue. Last error found Getting: "${ entry.characteristicString}". Perhaps you should run in debug mode to find out what the problem might be.` );
 
                // Convert the errorValue into an errorString
-               let errorValue = new Error( constants.errorString( error ) );
+               entry.accessory.errorString = new Error( constants.errorString( error ) );
 
-               queue.log.warn( "processHighPrioritySetQueue calling updateCharacteristic errorValue: ${ errorValue }");
-               //entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( errorValue );
-
-               // Since the setValue failed, store the error
-               entry.accessory.cmd4Storage.setStoredValueForIndex( entry.accTypeEnumIndex, errorValue );
-
-               // throw new entry.accessory.api.hap.HapStatusError(entry.accessory.api.hap.HAPStatus.SERVICE_COMMUNICATION_FAILURE);
+               // This does not work - Nothing happens to HomeKit !
+               // queue.log.warn( `START processHighPrioritySetQueue calling updateCharacteristic errorValue: ${ entry.accessory.errorValue} errorString: ${ entry.accessory.errorString }`);
+               // entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( entry.accessory.errorString );
+               // queue.log.warn( `END processHighPrioritySetQueue calling updateCharacteristic errorValue: ${ entry.accessory.errorValue} errorString: ${ entry.accessory.errorString }`);
 
 
             } else
@@ -254,13 +271,16 @@ class Cmd4PriorityPollingQueue
       {
          let queue = entry.accessory.queue;
 
+         // Save the error code - Pass or fail
+         entry.accessory.errorValue = error;
+
          // Nothing special was done for casing on errors, so omit it.
          if ( error == 0 )
          {
-             // Save the new returned value
-             entry.accessory.cmd4Storage.setStoredValueForIndex( entry.accTypeEnumIndex, properValue );
+            // Save the new returned value
+            entry.accessory.cmd4Storage.setStoredValueForIndex( entry.accTypeEnumIndex, properValue );
 
-            if ( entry.queueGetIsUpdate == true )
+            // hmmm if ( entry.queueGetIsUpdate == true )
                entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( properValue );
 
              // A good anything, updates the lastGoodTransactionTime
@@ -277,13 +297,12 @@ class Cmd4PriorityPollingQueue
                queue.log.warn( `*${ count }* error(s) were encountered for "${ entry.accessory.displayName }" getValue. Last error found Getting: "${ entry.characteristicString}". Perhaps you should run in debug mode to find out what the problem might be.` );
 
                // Convert the errorValue into an errorString
-               let errorValue = new Error( constants.errorString( error ) );
+               entry.accessory.errorString = new Error( constants.errorString( error ) );
 
-               // Save the error value
-               entry.accessory.cmd4Storage.setStoredValueForIndex( entry.accTypeEnumIndex, errorValue );
-
-               //queue.log.warn( "processHighPriorityGetQueue calling updateCharacteristic errorValue: ${ errorValue }");
-               // entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( errorValue );
+               // This does not work - Nothing happens to HomeKit !
+               // queue.log.warn( `START processHighPriorityGetQueue calling updateCharacteristic errorValue: ${ entry.accessory.errorValue} errorString: ${ entry.accessory.errorString }`);
+               // entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( entry.accessory.errorString );
+               // queue.log.warn( `END processHighPriorityGetQueue calling updateCharacteristic errorValue: ${ entry.accessory.errorValue} errorString: ${ entry.accessory.errorString }`);
 
             } else
             {
@@ -317,6 +336,9 @@ class Cmd4PriorityPollingQueue
          // For the next one
          queue.inProgressGets --;
 
+         // Save the error code - Pass or fail
+         entry.accessory.errorValue = error;
+
          // Nothing special was done for casing on errors, so omit it.
          if ( error == 0 )
          {
@@ -333,20 +355,18 @@ class Cmd4PriorityPollingQueue
 
          } else {
             // Convert the errorValue into an errorString
-            let errorValue = new Error( constants.errorString( error ));
+            entry.accessory.errorString = new Error( constants.errorString( error ));
 
-            // Save the error value
-            entry.accessory.cmd4Storage.setStoredValueForIndex( entry.accTypeEnumIndex, errorValue );
-
-
+            // This does not work - Nothing happens to HomeKit !
             // Call updateValue with new Error so device will become unavailable
-            queue.log.warn( `processEntryFromLowPriorityQueue calling updateCharacteristic errorValue: ${ errorValue }`);
-            //entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( errorValue );
+            // queue.log.warn( `START processEntryFromLowPriorityQueue calling updateCharacteristic errorValue: ${ entry.accessory.errorValue } errorString: ${ entry.accessory.errorString }`);
+            // entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( entry.accessory.errorString );
+            // queue.log.warn( `END processEntryFromLowPriorityQueue calling updateCharacteristic errorValue: ${ entry.accessory.errorValue } errorString: ${ entry.accessory.errorString }`);
 
             queue.pauseQueue( entry.accessory.queue );
          }
 
-         // Now that this one has been processed, schedule it again.
+         // Now that this one has been processed, schedule it again for next time
          queue.scheduleLowPriorityEntry( entry )
 
       });
@@ -787,22 +807,22 @@ class Cmd4PriorityPollingQueue
 
    scheduleLowPriorityEntry( entry )
    {
-      let self = entry.accessory;
+      let accessory = entry.accessory;
       let queue = entry.accessory.queue;
 
-      if ( settings.cmd4Dbg ) self.log.debug( `Scheduling Poll of index: ${ entry.accTypeEnumIndex } characteristic: ${ entry.characteristicString } for: ${ self.displayName } timeout: ${ entry.timeout } interval: ${ entry.interval }` );
+      if ( settings.cmd4Dbg ) accessory.log.debug( `Scheduling Poll of index: ${ entry.accTypeEnumIndex } characteristic: ${ entry.characteristicString } for: ${ accessory.displayName } timeout: ${ entry.timeout } interval: ${ entry.interval }` );
 
       // Clear polling
       if ( queue.listOfRunningPolls &&
-           queue.listOfRunningPolls[ self.displayName + entry.accTypeEnumIndex ] == undefined )
-              clearTimeout( queue.listOfRunningPolls[ self.displayName + entry.accTypeEnumIndex ] );
+           queue.listOfRunningPolls[ accessory.displayName + entry.accTypeEnumIndex ] == undefined )
+              clearTimeout( queue.listOfRunningPolls[ accessory.displayName + entry.accTypeEnumIndex ] );
 
-      queue.listOfRunningPolls[ self.displayName + entry.accTypeEnumIndex ] = setTimeout( ( ) =>
+      queue.listOfRunningPolls[ accessory.displayName + entry.accTypeEnumIndex ] = setTimeout( ( ) =>
       {
          // If the queue was busy/not available, schedule the entry at a later time
          if ( queue.processQueueFunc( LOW_PRIORITY_GET, queue, entry ) == false )
          {
-            if ( settings.cmd4Dbg ) self.log.debug( `processsQueue returned false` );
+            if ( settings.cmd4Dbg ) accessory.log.debug( `processsQueue returned false` );
 
             queue.scheduleLowPriorityEntry( entry );
          }

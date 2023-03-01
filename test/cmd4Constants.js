@@ -87,8 +87,25 @@ describe( "Testing cmd4Constants ErrorStrings", function( )
    {
       let e = new Error("Some Error String");
       //let t = typeof e;
+      let s = 3
+      s.status = "error";
+      console.log("HERE" );
+      if ( s.status instanceof Object )
+         console.log( "S.status is an Object" );
+      else
+         console.log( "S.status is an *NOT* an Object" );
+
       console.log("typeof e is -->%s<--", typeof e );
+      console.log(JSON.stringify(e, null, 4));
       //console.log("typeof Error is -->%s<--", t );
+      //
+      //if ( e instanceof Error )
+      //{
+         Object.keys( e ).forEach( ( key ) =>
+         {
+            console.log( "Checking: " + key + " e[key]: " + e[key] );
+         });
+      //}
       if ( e instanceof Error )
          console.log("instanceof Error is Error" );
       else
