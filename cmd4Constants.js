@@ -152,35 +152,48 @@ var cmd4Constants = {
    ERROR_NO_DATA_REPLY:            -158,
    ERROR_STRING_MAX:               -158,
    ERROR_STRINGS:
-   [ // cmd4Constants.ERROR_TIMER_EXPIRED
+   [ // cmd4Constants.ERROR_TIMER_EXPIRED -151
      "Timer expired contacting accessory",
-     // cmd4Constants.ERROR_CMD_FAILED_REPLY
+     // cmd4Constants.ERROR_CMD_FAILED_REPLY -152
      "Command failed",
-     // cmd4Constants.ERROR_NULL_REPLY
+     // cmd4Constants.ERROR_NULL_REPLY -153
      "Reply is NULL",
-     // cmd4Constants.ERROR_NULL_STRING_REPLY
+     // cmd4Constants.ERROR_NULL_STRING_REPLY -154
      "Reply is NULL string",
-     // cmd4Constants.ERROR_EMPTY_STRING_REPLY
+     // cmd4Constants.ERROR_EMPTY_STRING_REPLY -155
      "Reply is an empty string",
-     // cmd4Constants.ERROR_2ND_NULL_STRING_REPLY
+     // cmd4Constants.ERROR_2ND_NULL_STRING_REPLY -156
      "Reply is still NULL",
-     // cmd4Constants.ERROR_NON_CONVERTABLE_REPLY
+     // cmd4Constants.ERROR_NON_CONVERTABLE_REPLY -157
      "Cannot convert characteristic string",
-     // cmd4Constants.ERROR_NO_DATA_REPLY
+     // cmd4Constants.ERROR_NO_DATA_REPLY -158
      "No data returned from accessory"
    ],
+
+   // Convert our known Error Codes to strings
    errorString: function( index )
    {
       let offset = - index + cmd4Constants.ERROR_STRING_MIN ;
       let max = cmd4Constants.ERROR_STRING_MIN - cmd4Constants.ERROR_STRING_MAX;
 
+      //console.log(" index is " + index );
       //console.log(" offset is " + offset );
       //console.log(" max is " + max );
       // i.e 0-7
+      if ( index == 0 )
+         return "Device returned SUCCESS; " + index;
+
       //if ( offset < 0  || offset > max )
+      if ( index > cmd4Constants.ERROR_STRING_MIN )
+         return "Device returned its own error; " + index;
+      if ( index < cmd4Constants.ERROR_STRING_MAX )
+         return "Device returned its own error; " + index;
+
+      // Should not happen because of the above checks
       if ( offset < 0 )
          return "Invalid Error min index: " + index;
 
+      // Should not happen because of the above checks
       if ( offset > max )
          return "Invalid Error max index: " + index;
 

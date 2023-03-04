@@ -21,7 +21,7 @@ let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, _api.hap.Servi
 // ******** QUICK TEST CMD4_ACC_TYPE_ENUM *************
 describe( "Quick Test load of CMD4_ACC_TYPE_ENUM", ( ) =>
 {
-   it( "CMD4_ACC_TYPE_ENUM.EOL =" + ACC_EOL, ( ) =>
+  it( "CMD4_ACC_TYPE_ENUM.EOL =" + ACC_EOL, ( ) =>
    {
      expect( CMD4_ACC_TYPE_ENUM.EOL ).to.equal( ACC_EOL );
    });
@@ -32,7 +32,7 @@ describe( "Quick Test load of CMD4_ACC_TYPE_ENUM", ( ) =>
 // ******** QUICK TEST CMD4_DEVICE_TYPE_ENUM *************
 describe( "Quick Test load of CMD4_DEVICE_TYPE_ENUM", ( ) =>
 {
-   it( "CMD4_DEVICE_TYPE_ENUM.EOL =" + DEVICE_EOL, ( ) =>
+  it( "CMD4_DEVICE_TYPE_ENUM.EOL =" + DEVICE_EOL, ( ) =>
   {
      expect( CMD4_DEVICE_TYPE_ENUM.EOL ).to.equal( DEVICE_EOL );
   });
@@ -46,12 +46,12 @@ describe( "Testing Cmd4Accessory", function( )
       _api.removeAllListeners();
    });
 
-   it( "Test if Cmd4Accessory exists", function ( )
+  it( "Test if Cmd4Accessory exists", function ( )
    {
       expect( Cmd4Accessory ).not.to.be.a( "null", "Cmd4Accessory was null" );
    });
 
-   it( "Test init Cmd4Accessory", function( )
+  it( "Test init Cmd4Accessory", function( )
    {
       let platformConfig =
       {
@@ -95,7 +95,7 @@ describe( "Testing Cmd4Accessory", function( )
 
    });
 
-   it( "Test Cmd4Accessory.queue.priorityGetValue", function( )
+  it( "Test Cmd4Accessory.queue.priorityGetValue", function( )
    {
       let platformConfig =
       {
@@ -143,7 +143,7 @@ describe( "Testing Cmd4Accessory", function( )
 
    });
 
-   it( "getValue active should inject 1 to Hombridge for ACTIVE response", function ( done )
+  it( "getValue active should inject 1 to Hombridge for ACTIVE response", function ( done )
    {
       let platformConfig =
       {
@@ -207,7 +207,7 @@ describe( "Testing Cmd4Accessory", function( )
       }, 2000 );
    }).timeout( 3000 );
 
-   it( "getValue Active should inject 0 to Hombridge for INACTIVE response", function ( done )
+  it( "getValue Active should inject 0 to Hombridge for INACTIVE response", function ( done )
    {
       let platformConfig =
       {
@@ -268,7 +268,7 @@ describe( "Testing Cmd4Accessory", function( )
       }, 1900);
    });
 
-   it( "getValue active should inject 0 to Hombridge for 0 response", function ( done )
+  it( "getValue active should inject 0 to Hombridge for 0 response", function ( done )
    {
       let platformConfig =
       {
@@ -329,7 +329,7 @@ describe( "Testing Cmd4Accessory", function( )
       }, 1500);
    });
 
-   it( "getValue Active should inject 1 to Hombridge for 1 response", function ( done )
+  it( "getValue Active should inject 1 to Hombridge for 1 response", function ( done )
    {
       let platformConfig =
       {
@@ -391,7 +391,7 @@ describe( "Testing Cmd4Accessory", function( )
       }, 1500);
    });
 
-   it( "getValue Active should inject 0 to Hombridge for quoted0 response", function ( done )
+  it( "getValue Active should inject 0 to Hombridge for quoted0 response", function ( done )
    {
       let platformConfig =
       {
@@ -453,7 +453,7 @@ describe( "Testing Cmd4Accessory", function( )
       }, 1500);
    });
 
-   it( "getValue Active should inject 1 to Hombridge for quoted1 response", function ( done )
+  it( "getValue Active should inject 1 to Hombridge for quoted1 response", function ( done )
    {
       let platformConfig =
       {
@@ -515,7 +515,7 @@ describe( "Testing Cmd4Accessory", function( )
       }, 1500);
    });
 
-   it( "getValue Mute should inject false to Hombridge for false response", function ( done )
+  it( "getValue Mute should inject false to Hombridge for false response", function ( done )
    {
       let platformConfig =
       {
@@ -578,7 +578,7 @@ describe( "Testing Cmd4Accessory", function( )
       }, 1500);
    });
 
-   it( "getValue Mute should inject true to Hombridge for true response", function ( done )
+  it( "getValue Mute should inject true to Hombridge for true response", function ( done )
    {
       let platformConfig =
       {
@@ -642,7 +642,7 @@ describe( "Testing Cmd4Accessory", function( )
       }, 1500);
    });
 
-   it( "getValue Mute should inject false to Hombridge for 0 response", function ( done )
+  it( "getValue Mute should inject false to Hombridge for 0 response", function ( done )
    {
       let platformConfig =
       {
@@ -705,7 +705,7 @@ describe( "Testing Cmd4Accessory", function( )
       }, 1500);
    });
 
-   it( "getValue Mute should inject true to Hombridge for 1 response", function ( done )
+  it( "getValue Mute should inject true to Hombridge for 1 response", function ( done )
    {
       let platformConfig =
       {
@@ -768,7 +768,7 @@ describe( "Testing Cmd4Accessory", function( )
       }, 1500);
    });
 
-   it( "getValue Mute should inject false to Hombridge for quotedFalse response", function ( done )
+  it( "getValue Mute should inject false to Hombridge for quotedFalse response", function ( done )
    {
       let platformConfig =
       {
@@ -832,7 +832,7 @@ describe( "Testing Cmd4Accessory", function( )
       }, 1500);
    });
 
-   it( "getValue Mute should inject true to Hombridge for quotedTrue response", function ( done )
+  it( "getValue Mute should inject true to Hombridge for quotedTrue response", function ( done )
    {
       let platformConfig =
       {
@@ -895,7 +895,7 @@ describe( "Testing Cmd4Accessory", function( )
       }, 1500);
    });
 
-   it( "getValue ClosedCaptions should inject 0 to Hombridge for DISABLED response", function ( done )
+  it( "getValue ClosedCaptions should inject 0 to Hombridge for DISABLED response", function ( done )
    {
       let platformConfig =
       {
@@ -960,7 +960,7 @@ describe( "Testing Cmd4Accessory", function( )
    });
 
    //HERE
-   it( "getValue of empty response should fail correctly", function ( done )
+  it( "getValue of empty response should fail correctly", function ( done )
    {
       let platformConfig =
       {
@@ -1017,7 +1017,7 @@ describe( "Testing Cmd4Accessory", function( )
       {
          assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
 
-         assert.include( log.errBuf, `getValue: Mute function for: MyTelevision returned an empty string ""`, ` getValue Incorrect stderr: ${ log.errBuf }` );
+         assert.include( log.errBuf, `[31mgetValue: Mute function for: MyTelevision returned an empty string ""`, ` getValue Incorrect stderr: ${ log.errBuf }` );
          assert.include( log.errBuf, `[33m*${ constants.DEFAULT_STANDARD_QUEUE_RETRY_COUNT }* error(s) were encountered for "MyTelevision" getValue. Last error found Getting: "Mute". Perhaps you should run in debug mode to find out what the problem might be.\u001b`, `queue Incorrect stderr: ${ log.errBuf }` );
          assert.equal( log.errLineCount, 2, `getValue: to many lines to stderr ${ log.errBuf }` );
 
@@ -1026,7 +1026,7 @@ describe( "Testing Cmd4Accessory", function( )
 
    });
 
-   it( "getValue of null response should fail correctly", function ( done )
+  it( "getValue of null response should fail correctly", function ( done )
    {
       let platformConfig =
       {
@@ -1092,7 +1092,7 @@ describe( "Testing Cmd4Accessory", function( )
       }, 1500);
    });
 
-   it( "getValue of echo true rc=1 response pass with error message", function ( done )
+  it( "getValue of echo true rc=1 response pass with error message", function ( done )
    {
       let platformConfig =
       {
@@ -1162,7 +1162,7 @@ describe( "Testing Cmd4Accessory", function( )
 
    });
 
-   it( "getValue of quoted Null should fail correctly", function ( done )
+  it( "getValue of quoted Null should fail correctly", function ( done )
    {
       let platformConfig =
       {
@@ -1227,7 +1227,7 @@ describe( "Testing Cmd4Accessory", function( )
       }, 1500);
    });
 
-   it( "getValue of quoted Nothing should fail correctly", function ( done )
+  it( "getValue of quoted Nothing should fail correctly", function ( done )
    {
       let platformConfig =
       {
@@ -1292,7 +1292,7 @@ describe( "Testing Cmd4Accessory", function( )
       }, 1500);
    });
 
-   it( "getValue of Nothing to stdout and something to stderr should show error message", function ( done )
+  it( "getValue of Nothing to stdout and something to stderr should show error message", function ( done )
    {
       let platformConfig =
       {
@@ -1358,7 +1358,7 @@ describe( "Testing Cmd4Accessory", function( )
       }, 1500);
    });
 
-   it( "getValue of Nothing to stdout and rc=0 should show error message", function ( done )
+  it( "getValue of Nothing to stdout and rc=0 should show error message", function ( done )
    {
       let platformConfig =
       {
@@ -1423,7 +1423,7 @@ describe( "Testing Cmd4Accessory", function( )
       }, 1500);
    });
 
-   it( "getValue of Nothing to stdout and rc=1 should show error message", function ( done )
+  it( "getValue of Nothing to stdout and rc=1 should show error message", function ( done )
    {
       let platformConfig =
       {
@@ -1501,7 +1501,7 @@ describe( "Testing Cmd4Accessory", function( )
       }, 1500 );
    }).timeout( 2500 );
 
-   it( "getValue of timeout response should fail correctly", function ( done )
+  it( "getValue of timeout response should fail correctly", function ( done )
    {
       let platformConfig =
       {

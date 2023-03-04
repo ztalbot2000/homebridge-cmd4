@@ -83,55 +83,6 @@ describe( "Testing cmd4Constants", function( )
 });
 describe( "Testing cmd4Constants ErrorStrings", function( )
 {
-   it( "Test typeof Error.", function ( done )
-   {
-      let e = new Error("Some Error String");
-      //let t = typeof e;
-      let s = 3
-      s.status = "error";
-      console.log("HERE" );
-      if ( s.status instanceof Object )
-         console.log( "S.status is an Object" );
-      else
-         console.log( "S.status is an *NOT* an Object" );
-
-      console.log("typeof e is -->%s<--", typeof e );
-      console.log(JSON.stringify(e, null, 4));
-      //console.log("typeof Error is -->%s<--", t );
-      //
-      //if ( e instanceof Error )
-      //{
-         Object.keys( e ).forEach( ( key ) =>
-         {
-            console.log( "Checking: " + key + " e[key]: " + e[key] );
-         });
-      //}
-      if ( e instanceof Error )
-         console.log("instanceof Error is Error" );
-      else
-         console.log("instanceof Error is not Error" );
-
-      if ( e instanceof Object )
-         console.log("instanceof Error is Object" );
-      else
-         console.log("instanceof Error is not Object" );
-
-      if ( e instanceof Number )
-         console.log("instanceof Error is Number" );
-      else
-         console.log("instanceof Error is not Number" );
-
-      if ( e instanceof String )
-         console.log("instanceof Error is String" );
-      else
-         console.log("instanceof Error is not String" );
-
-      assert.instanceOf( e , Error, "Expected e to be instance of Error. Found %s" , e );
-
-      done();
-
-   });
-
    it( "All cmd4Constants error Strings should be declared correctly.", function ( done )
    {
       let len = Object.keys( constants.ERROR_STRINGS ).length;
@@ -160,7 +111,7 @@ describe( "Testing cmd4Constants ErrorStrings", function( )
                     "ERROR_TIMER_EXPIRED not defined correctly" );
       assert.equal( constants.errorString( constants.ERROR_NO_DATA_REPLY ),
                     "No data returned from accessory",
-                    ".ERROR_NO_DATA_REPLY not defined correctly" );
+                    "ERROR_NO_DATA_REPLY not defined correctly" );
 
       done();
 
@@ -169,10 +120,10 @@ describe( "Testing cmd4Constants ErrorStrings", function( )
    it( "cmd4Constants errorString limits.", function ( done )
    {
       assert.equal( constants.errorString( constants.ERROR_STRING_MIN +1  ),
-                    "Invalid Error min index: " + ( constants.ERROR_STRING_MIN +1 ),
+                    "Device returned its own error; " + ( constants.ERROR_STRING_MIN +1 ),
                     ".errorString MIN limit error" );
       assert.equal( constants.errorString( constants.ERROR_STRING_MAX -1  ),
-                    "Invalid Error max index: " + ( constants.ERROR_STRING_MAX -1 ),
+                    "Device returned its own error; " + ( constants.ERROR_STRING_MAX -1 ),
                     ".errorString MAX limit error" );
 
       done();

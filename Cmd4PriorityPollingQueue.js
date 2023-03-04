@@ -76,18 +76,19 @@ class Cmd4PriorityPollingQueue
    prioritySetValue( accTypeEnumIndex, characteristicString, timeout, stateChangeResponseTime,  value, homebridgeCallback )
    {
       // this is Accessory
-      this.log.warn(`prioritySetValue, asked to set: ${ characteristicString } to ${ value }`);
+      //
+      //if ( settings.cmd4Dbg ) this.log.debug(`prioritySetValue, asked to set: ${ characteristicString } to ${ value }`);
 
       // Save the value to cache. The set will come later
       // this.cmd4Storage.setStoredValueForIndex( accTypeEnumIndex, value );
 
       if ( this.errorValue != 0 )
       {
-         this.log.warn(`prioritySetValue for ${ this.displayName }, homebridgeCallback returning error ${ this.errorValue } ${ this.errorString }`);
+         if ( settings.cmd4Dbg ) this.log.debug(`prioritySetValue for ${ this.displayName }, homebridgeCallback returning error ${ this.errorValue } ${ this.errorString }`);
          homebridgeCallback( this.errorValue );
       } else
       {
-         this.log.warn(`prioritySetValue for ${ this.displayName }, homebridgeCallback returning default success 0`);
+         if ( settings.cmd4Dbg ) this.log.debug(`prioritySetValue for ${ this.displayName }, homebridgeCallback returning default success 0`);
          homebridgeCallback( 0 );
       }
 
@@ -136,18 +137,19 @@ class Cmd4PriorityPollingQueue
    priorityGetValue( accTypeEnumIndex, characteristicString, timeout, homebridgeCallback )
    {
       // this is Accessory
-      this.log.warn(`priorityGetValue for ${ this.displayName }, asked to Get: ${ characteristicString }`);
+
+      // if ( settings.cmd4Dbg ) this.log.debug(`priorityGetValue for ${ this.displayName }, asked to Get: ${ characteristicString }`);
 
       if ( this.errorValue != 0 )
       {
-         this.log.warn(`priorityGetValue for ${ this.displayName }, homebridgeCallback returning error ${ this.errorValue } ${ this.errorString}`);
+         // if ( settings.cmd4Dbg ) this.log.debug(`priorityGetValue for ${ this.displayName }, homebridgeCallback returning error ${ this.errorValue } ${ this.errorString}`);
          homebridgeCallback( this.errorValue );
       } else
       {
          // return the cached value
          let storedValue = this.cmd4Storage.getStoredValueForIndex( accTypeEnumIndex );
 
-         this.log.warn(`priorityGetValue for ${ this.displayName }, homebridgeCallback returning storedValue: ${ storedValue }`);
+         // if ( settings.cmd4Dbg ) this.log.debug(`priorityGetValue for ${ this.displayName }, homebridgeCallback returning storedValue: ${ storedValue }`);
          homebridgeCallback( 0, storedValue );
       }
 
@@ -623,7 +625,8 @@ class Cmd4PriorityPollingQueue
       // "WoRm", No matter what, only one "Set" allowed
       if ( queue.inProgressSets > 0 )
       {
-         queue.log.warn(`processWormQueue queue.inProgressSets > 0 : ${queue.inProgressSets}`);
+         // if ( settings.cmd4Dbg ) queue.log.debug(`processWormQueue queue.inProgressSets > 0 : ${queue.inProgressSets}`);
+ 
          // We are *NOT* processing the low prioirity queue entry
          return false;
       }
@@ -631,7 +634,8 @@ class Cmd4PriorityPollingQueue
       // It is not a good time to do a anything, so skip it
       if ( queue.lastGoodTransactionTime == 0 )
       {
-         queue.log.warn(`processWormQueue queue.lastGoodTransactionTime == 0`);
+         // if ( settings.cmd4Dbg ) queue.log.debug(`processWormQueue queue.lastGoodTransactionTime == 0`);
+
          // We are *NOT* processing the low prioirity queue entry
          return false;
       }
@@ -650,7 +654,8 @@ class Cmd4PriorityPollingQueue
             {
                // Return as queue is busy.
                // Return false as we are *NOT* processing the low prioirity queue entry
-               queue.log.warn(`processWormQueue queue.inProgressSets> 0 ${ nextEntry.accessory.queue.inProgressSets } ${ nextEntry.accessory.queue.inProgressGets }`);
+               // if ( settings.cmd4Dbg ) queue.log.debug(`processWormQueue queue.inProgressSets> 0 ${ nextEntry.accessory.queue.inProgressSets } ${ nextEntry.accessory.queue.inProgressGets }`);
+
                return false;
             }
 
