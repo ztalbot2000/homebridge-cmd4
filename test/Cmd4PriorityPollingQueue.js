@@ -31,7 +31,7 @@ function dummyCallback( )
 // ******** QUICK TEST CMD4_ACC_TYPE_ENUM *************
 describe( "Quick Test of CMD4_DEVICE_TYPE_ENUM", ( ) =>
 {
-   it.skip( "CMD4_DEVICE_TYPE_ENUM.EOL =" + DEVICE_EOL, ( ) =>
+   it( "CMD4_DEVICE_TYPE_ENUM.EOL =" + DEVICE_EOL, ( ) =>
    {
      expect( CMD4_DEVICE_TYPE_ENUM.EOL ).to.equal( DEVICE_EOL );
    });
@@ -40,7 +40,7 @@ describe( "Quick Test of CMD4_DEVICE_TYPE_ENUM", ( ) =>
 // ******** QUICK TEST CMD4_ACC_TYPE_ENUM *************
 describe( "Quick Test of CMD4_ACC_TYPE_ENUM", ( ) =>
 {
-   it.skip( "CMD4_ACC_TYPE_ENUM.EOL =" + ACC_EOL, ( ) =>
+   it( "CMD4_ACC_TYPE_ENUM.EOL =" + ACC_EOL, ( ) =>
    {
      expect( CMD4_ACC_TYPE_ENUM.EOL ).to.equal( ACC_EOL );
    });
@@ -90,7 +90,7 @@ describe('WoRm - Testing Cmd4PriorityPollingQueue polling', ( ) =>
       _api.removeAllListeners();
    });
 
-   it.skip( "WoRm - Test if Cmd4PriorityPollingQueue exists", function ( )
+   it( "WoRm - Test if Cmd4PriorityPollingQueue exists", function ( )
    {
       expect( Cmd4PriorityPollingQueue ).not.to.be.a( "null", "Cmd4PriorityPollingQueue was null" );
    });
@@ -129,7 +129,7 @@ describe('WoRm - Testing Cmd4PriorityPollingQueue polling', ( ) =>
 
    });
 
-   it.skip( "WoRm - Test creation of Default Cmd4PriorityPollingQueue", function( )
+   it( "WoRm - Test creation of Default Cmd4PriorityPollingQueue", function( )
    {
       let log = new Logger( );
       log.setBufferEnabled( );
@@ -153,7 +153,7 @@ describe('WoRm - Testing Cmd4PriorityPollingQueue polling', ( ) =>
 
    });
 
-   it.skip( "WoRm - Test creation of Default Cmd4PriorityPollingQueue from config.json", function( )
+   it( "WoRm - Test creation of Default Cmd4PriorityPollingQueue from config.json", function( )
    {
       let platformConfig =
       {
@@ -215,7 +215,7 @@ describe('WoRm - Testing Cmd4PriorityPollingQueue polling', ( ) =>
       assert.equal( cmd4PriorityPollingQueue.queueType, constants.DEFAULT_QUEUE_TYPE, ` incorrect default queue type. Should be WoRm` );
    });
 
-   it.skip( "WoRm - Test creation of Default Cmd4PriorityPollingQueue retryCount from config.json", function( )
+   it( "WoRm - Test creation of Default Cmd4PriorityPollingQueue retryCount from config.json", function( )
    {
       let platformConfig =
       {
@@ -278,7 +278,7 @@ describe('WoRm - Testing Cmd4PriorityPollingQueue polling', ( ) =>
       assert.equal( cmd4PriorityPollingQueue.queueRetryCount, 12, ` incorrect queue retries` );
    });
 
-   it.skip( "WoRm - Test creation of Default Cmd4PriorityPollingQueue retryCount from config.json", function( )
+   it( "WoRm - Test creation of Default Cmd4PriorityPollingQueue retryCount from config.json", function( )
    {
       let platformConfig =
       {
@@ -341,7 +341,7 @@ describe('WoRm - Testing Cmd4PriorityPollingQueue polling', ( ) =>
       assert.equal( cmd4PriorityPollingQueue.queueRetryCount, constants.DEFAULT_WORM_QUEUE_RETRY_COUNT, ` incorrect default queueRetryCount` );
    });
 
-   it.skip( "WoRm - Test existance of prioritySetValue", function( )
+   it( "WoRm - Test existance of prioritySetValue", function( )
    {
       let platformConfig =
       {
@@ -381,7 +381,7 @@ describe('WoRm - Testing Cmd4PriorityPollingQueue polling', ( ) =>
 
    });
 
-   it.skip( "WoRm - Test existance of priorityGetValue", function( )
+   it( "WoRm - Test existance of priorityGetValue", function( )
    {
       let platformConfig =
       {
@@ -424,7 +424,7 @@ describe('WoRm - Testing Cmd4PriorityPollingQueue polling', ( ) =>
 
    });
 
-   it.skip( "WoRm - Test addLowPriorityGetPolledQueueEntry goes to low priority queue", function( )
+   it( "WoRm - Test addLowPriorityGetPolledQueueEntry goes to low priority queue", function( )
    {
       let platformConfig =
       {
@@ -475,7 +475,7 @@ describe('WoRm - Testing Cmd4PriorityPollingQueue polling', ( ) =>
 
    });
 
-   it.skip( "WoRm - Test processEntryFromLowPriorityQueue", function( done  )
+   it( "WoRm - Test processEntryFromLowPriorityQueue", function( done  )
    {
       let platformConfig =
       {
@@ -553,7 +553,7 @@ describe('WoRm - Testing Cmd4PriorityPollingQueue polling', ( ) =>
 
    });
 
-   it.skip('WoRm - Cmd4Platform created pollingQueue.', ( done ) =>
+   it('WoRm - Cmd4Platform created pollingQueue.', ( done ) =>
    {
       let platformConfig =
       {
@@ -642,7 +642,7 @@ describe('WoRm - Testing Cmd4PriorityPollingQueue polling', ( ) =>
       done( );
    });
 
-   it.skip('WoRm - PollingQueue getValue.', ( done ) =>
+   it('WoRm - PollingQueue getValue.', ( done ) =>
    {
       let platformConfig =
       {
@@ -756,12 +756,12 @@ describe('QUEUETYPE: STANDARD (Passthru ) -  Testing Cmd4PriorityPollingQueue po
       _api.removeAllListeners();
    });
 
-   it.skip( "Standard - Test if Cmd4PriorityPollingQueue exists", function ( )
+   it( "Standard - Test if Cmd4PriorityPollingQueue exists", function ( )
    {
       expect( Cmd4PriorityPollingQueue ).not.to.be.a( "null", "Cmd4PriorityPollingQueue was null" );
    });
 
-   it.skip( "Standard - Test creation of Standard ( Passthrue )  Cmd4PriorityPollingQueue", function( )
+   it( "Standard - Test creation of Standard ( Passthrue )  Cmd4PriorityPollingQueue", function( )
    {
       let log = new Logger( );
       log.setBufferEnabled( );
@@ -785,7 +785,7 @@ describe('QUEUETYPE: STANDARD (Passthru ) -  Testing Cmd4PriorityPollingQueue po
 
    });
 
-   it.skip( "Standard - Test existance of prioritySetValue", function( )
+   it( "Standard - Test existance of prioritySetValue", function( )
    {
       let platformConfig =
       {
@@ -823,7 +823,7 @@ describe('QUEUETYPE: STANDARD (Passthru ) -  Testing Cmd4PriorityPollingQueue po
 
    });
 
-   it.skip( "Standard - Test existance of priorityGetValue", function( )
+   it( "Standard - Test existance of priorityGetValue", function( )
    {
       let platformConfig =
       {
@@ -864,7 +864,7 @@ describe('QUEUETYPE: STANDARD (Passthru ) -  Testing Cmd4PriorityPollingQueue po
 
    });
 
-   it.skip( "Standard - Test addLowPriorityGetPolledQueueEntry goes to low priority queue", function( )
+   it( "Standard - Test addLowPriorityGetPolledQueueEntry goes to low priority queue", function( )
    {
       let platformConfig =
       {
@@ -915,7 +915,7 @@ describe('QUEUETYPE: STANDARD (Passthru ) -  Testing Cmd4PriorityPollingQueue po
 
    });
 
-   it.skip( "Standard - Test processEntryFromLowPriorityQueue", function( done  )
+   it( "Standard - Test processEntryFromLowPriorityQueue", function( done  )
    {
       let platformConfig =
       {
@@ -989,7 +989,7 @@ describe('QUEUETYPE: STANDARD (Passthru ) -  Testing Cmd4PriorityPollingQueue po
 
    });
 
-   it.skip('Standard - Cmd4Platform created pollingQueue.', ( done ) =>
+   it('Standard - Cmd4Platform created pollingQueue.', ( done ) =>
    {
       let platformConfig =
       {
@@ -1074,7 +1074,7 @@ describe('QUEUETYPE: STANDARD (Passthru ) -  Testing Cmd4PriorityPollingQueue po
       done( );
    });
 
-   it.skip('Standard - PollingQueue getValue.', ( done ) =>
+   it('Standard - PollingQueue getValue.', ( done ) =>
    {
       let platformConfig =
       {
@@ -1207,7 +1207,7 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
 
    });
 
-   it.skip( `WoRM - Test Cmd4PriorityPollingQueue queue can be started`, function( done )
+   it( `WoRM - Test Cmd4PriorityPollingQueue queue can be started`, function( done )
    {
       let log = new Logger( );
       log.setBufferEnabled( );
@@ -1235,7 +1235,7 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       done( );
    });
 
-   it.skip( `WoRM - Test Cmd4PriorityPollingQueue adds an entry to the highPriorityQueue`, function( done )
+   it( `WoRM - Test Cmd4PriorityPollingQueue adds an entry to the highPriorityQueue`, function( done )
    {
       let platformConfig =
       {
@@ -1302,7 +1302,7 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
 
    });
 
-   it.skip( `WoRM - Test Cmd4PriorityPollingQueue adds multiple entries to the highPriorityQueue`, function( done )
+   it( `WoRM - Test Cmd4PriorityPollingQueue adds multiple entries to the highPriorityQueue`, function( done )
    {
       let platformConfig =
       {
@@ -1374,7 +1374,7 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
 
    });
 
-   it.skip( `WoRM - Test Cmd4PriorityPollingQueue Adds "Set" after existing "set" in queue`, function( done )
+   it( `WoRM - Test Cmd4PriorityPollingQueue Adds "Set" after existing "set" in queue`, function( done )
    {
       let platformConfig =
       {
@@ -1446,7 +1446,7 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
 
    });
 
-   it.skip( `WoRM - Test Cmd4PriorityPollingQueue Adds "Get" after existing "set" in queue`, function( done )
+   it( `WoRM - Test Cmd4PriorityPollingQueue Adds "Get" after existing "set" in queue`, function( done )
    {
       let platformConfig =
       {
@@ -1518,7 +1518,7 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
 
    });
 
-   it.skip( `WoRM - Test Cmd4PriorityPollingQueue same "Set" replaces old in queue`, function( done )
+   it( `WoRM - Test Cmd4PriorityPollingQueue same "Set" replaces old in queue`, function( done )
    {
       let platformConfig =
       {
@@ -1604,7 +1604,7 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
 
    });
 
-   it.skip( `WoRM - Test "Get" Entry From High Priority Queue`, ( done  ) =>
+   it( `WoRM - Test "Get" Entry From High Priority Queue`, ( done  ) =>
    {
       let platformConfig =
       {
@@ -1679,7 +1679,7 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       }, 1000 );
    });
 
-   it.skip( `WoRM - Test "Get" Entry From High Priority Queue Failure >` + constants.DEFAULT_WORM_QUEUE_RETRY_COUNT + ` times`, ( done  ) =>
+   it( `WoRM - Test "Get" Entry From High Priority Queue Failure >` + constants.DEFAULT_WORM_QUEUE_RETRY_COUNT + ` times`, ( done  ) =>
    {
       let platformConfig =
       {
@@ -1779,7 +1779,7 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
 
    }).timeout( 2000 );
 
-   it.skip( `WoRM - Test "Set" Entry From High Priority Queue`, ( done  ) =>
+   it( `WoRM - Test "Set" Entry From High Priority Queue`, ( done  ) =>
    {
       let platformConfig =
       {
@@ -1853,7 +1853,7 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
    });
 
    // HERE
-   it.skip( `WoRM - Test "Set" Entry From High Priority Queue Failure >*` + constants.DEFAULT_WORM_QUEUE_RETRY_COUNT + ` times`, ( done  ) =>
+   it( `WoRM - Test "Set" Entry From High Priority Queue Failure >*` + constants.DEFAULT_WORM_QUEUE_RETRY_COUNT + ` times`, ( done  ) =>
    {
       let platformConfig =
       {
@@ -1950,7 +1950,7 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
 
    }).timeout( 2000 );
 
-   it.skip( `WoRM - Test "Set" Entry With Related CharacteristicFrom High Priority Queue`, ( done  ) =>
+   it( `WoRM - Test "Set" Entry With Related CharacteristicFrom High Priority Queue`, ( done  ) =>
    {
       let platformConfig =
       {
@@ -2079,7 +2079,7 @@ describe('Standard - Testing Cmd4PriorityPollingQueue recovery correction', ( ) 
 
    });
 
-   it.skip( `Standard - Test Cmd4PriorityPollingQueue queue can be started`, function( done )
+   it( `Standard - Test Cmd4PriorityPollingQueue queue can be started`, function( done )
    {
       let log = new Logger( );
       log.setBufferEnabled( );
@@ -2107,7 +2107,7 @@ describe('Standard - Testing Cmd4PriorityPollingQueue recovery correction', ( ) 
       done( );
    });
 
-   it.skip( `Standard - Test "Get" Entry From High Priority Queue`, ( done  ) =>
+   it( `Standard - Test "Get" Entry From High Priority Queue`, ( done  ) =>
    {
       let platformConfig =
       {
@@ -2177,7 +2177,7 @@ describe('Standard - Testing Cmd4PriorityPollingQueue recovery correction', ( ) 
       }, 1000 );
    });
 
-   it.skip( `Standard - Test "Set" Entry From High Priority Queue`, ( done  ) =>
+   it( `Standard - Test "Set" Entry From High Priority Queue`, ( done  ) =>
    {
       let platformConfig =
       {
@@ -2244,7 +2244,7 @@ describe('Standard - Testing Cmd4PriorityPollingQueue recovery correction', ( ) 
       }, 1000 );
    });
 
-   it.skip( `Standard - Test "Set" Entry With Related CharacteristicFrom High Priority Queue`, ( done  ) =>
+   it( `Standard - Test "Set" Entry With Related CharacteristicFrom High Priority Queue`, ( done  ) =>
    {
       let platformConfig =
       {
