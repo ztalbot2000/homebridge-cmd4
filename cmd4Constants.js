@@ -86,8 +86,8 @@ var cmd4Constants = {
    QUEUETYPE_STANDARD:        "StandarD",
    // Used internally to mean entries go straight through the queue
    QUEUETYPE_PASSTHRU:        "None",
-   DEFAULT_STANDARD_QUEUE_RETRY_COUNT: 1,
-   DEFAULT_WORM_QUEUE_RETRY_COUNT: 1,
+   DEFAULT_STANDARD_QUEUE_RETRY_COUNT: 0,
+   DEFAULT_WORM_QUEUE_RETRY_COUNT: 0,
    QUEUE_RETRIES:             "retries",
 
 
@@ -204,5 +204,6 @@ var cmd4Constants = {
 
    // Static Messages
    DBUSY:                          "Perhaps your device is busy?"
+   //DUNAVAILABLE:                   "Your device is unavailable"
 };
 module.exports = cmd4Constants;

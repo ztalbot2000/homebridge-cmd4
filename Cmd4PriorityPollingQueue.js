@@ -65,9 +65,25 @@ class Cmd4PriorityPollingQueue
       // The WoRm queue needs error messages to be silenced as
       // they are inevitable, but are handled through retries
       // By default non WoRm queues are allowed to echo errors
-      this.echoE = true;
+
+      if ( this.queueRetryCount == 0 || settings.debug )
+         this.echoE = true;
+      else
+         this.echoE = true;
 
       this.changeQueueType( this, queueType );
+   }
+
+   echoRetryErrors( currentRetryCount )
+   {
+      // If debug then the default is true
+      if ( settings.cmd4Debug )
+         return true;
+
+      if ( currentRetryCount == this.queueRetryCount )
+         return true;
+
+      return false;
    }
 
    // This function is called by homebridge to *PUT AN ENTRY INTO THE HIGHEST PRIORITY SET QUEUE*.
@@ -224,12 +240,12 @@ class Cmd4PriorityPollingQueue
             // The "Set" is complete, even if it failed.
             queue.inProgressSets --;
 
-            queue.errorCountSinceLastGoodTransaction++;
-            let count = queue.errorCountSinceLastGoodTransaction;
+            let currentRetryCount = queue.errorCountSinceLastGoodTransaction;
 
-            if ( count != 0 && count % queue.queueRetryCount == 0 )
+            if ( currentRetryCount >= queue.queueRetryCount )
             {
-               queue.log.warn( `*${ count }* error(s) were encountered for "${ entry.accessory.displayName }" getValue. Last error found Getting: "${ entry.characteristicString}". Perhaps you should run in debug mode to find out what the problem might be.` );
+               if ( queue.echoRetryErrors( currentRetryCount ) )
+                  queue.log.warn( `*${ currentRetryCount }* error(s) were encountered for "${ entry.accessory.displayName }" getValue. Last error found Getting: "${ entry.characteristicString}". Perhaps you should run in debug mode to find out what the problem might be.` );
 
                // Convert the errorValue into an errorString
                entry.accessory.errorString = new Error( constants.errorString( error ) );
@@ -242,6 +258,9 @@ class Cmd4PriorityPollingQueue
 
             } else
             {
+               // Increment the errorCount/currentRetryCount
+               queue.errorCountSinceLastGoodTransaction++;
+
                // Set failed. We need to keep trying
                queue.highPriorityQueue.push( entry );
 
@@ -289,14 +308,15 @@ class Cmd4PriorityPollingQueue
             queue.lastGoodTransactionTime = Date.now( );
             queue.errorCountSinceLastGoodTransaction = 0;
 
-         } else  // getValue failed
+         } else  // highPriority getValue failed
          {
 
-            queue.errorCountSinceLastGoodTransaction++;
-            let count = queue.errorCountSinceLastGoodTransaction;
-            if ( count != 0 && count % queue.queueRetryCount == 0 )
+            let currentRetryCount = queue.errorCountSinceLastGoodTransaction;
+
+            if ( currentRetryCount >= queue.queueRetryCount )
             {
-               queue.log.warn( `*${ count }* error(s) were encountered for "${ entry.accessory.displayName }" getValue. Last error found Getting: "${ entry.characteristicString}". Perhaps you should run in debug mode to find out what the problem might be.` );
+               if ( queue.echoRetryErrors( currentRetryCount ) )
+                  queue.log.warn( `*${ currentRetryCount }* error(s) were encountered for "${ entry.accessory.displayName }" getValue. Last error found Getting: "${ entry.characteristicString}". Perhaps you should run in debug mode to find out what the problem might be.` );
 
                // Convert the errorValue into an errorString
                entry.accessory.errorString = new Error( constants.errorString( error ) );
@@ -308,6 +328,9 @@ class Cmd4PriorityPollingQueue
 
             } else
             {
+               // Increment the errorCount/currentRetryCount
+               queue.errorCountSinceLastGoodTransaction++;
+
                // High Priority Get failed. We keep retrying until the mod of
                // queueRetryCount reaches zero, which is WoRm only as it has more than 1
                // default retry count.
@@ -355,7 +378,9 @@ class Cmd4PriorityPollingQueue
             queue.lastGoodTransactionTime = Date.now( );
             queue.errorCountSinceLastGoodTransaction = 0;
 
-         } else {
+         } else { // LowPriority getValue failed
+            queue.errorCountSinceLastGoodTransaction++;
+
             // Convert the errorValue into an errorString
             entry.accessory.errorString = new Error( constants.errorString( error ));
 
@@ -904,12 +929,17 @@ class Cmd4PriorityPollingQueue
             setTimeout( ( ) =>
             {
                if ( entryIndex == 0 && settings.cmd4Dbg )
+               {
                   if ( queue.queueType == constants.QUEUETYPE_WORM ||
                        queue.queueType == constants.QUEUETYPE_WORM2
                      )
+                  {
                      entry.accessory.log.debug( `Started staggered kick off of ${ queue.lowPriorityQueue.length } polled characteristics for queue: "${ entry.accessory.queue.queueName }"` );
-                  else
+                  } else
+                  {
                      entry.accessory.log.debug( `Started staggered kick off of ${ queue.lowPriorityQueue.length } polled characteristics for "${ entry.accessory.displayName }"` );
+                  }
+               }
 
                if ( settings.cmd4Dbg ) entry.accessory.log.debug( `Kicking off polling for: ${ entry.accessory.displayName } ${ entry.characteristicString } interval:${ entry.interval }, staggered:${ staggeredDelays[ staggeredDelayIndex ] }` );
 
@@ -918,12 +948,18 @@ class Cmd4PriorityPollingQueue
                if ( entryIndex == queue.lowPriorityQueue.length -1 )
                {
                   if ( settings.cmd4Dbg )
+                  {
                      if ( queue.queueType == constants.QUEUETYPE_WORM ||
                           queue.queueType == constants.QUEUETYPE_WORM2
                         )
+                     {
                         entry.accessory.log.debug( `All characteristics are now being polled for queue: "${ queue.queueName }"` );
+                     }
                      else
+                     {
                         entry.accessory.log.debug( `All characteristics are now being polled for "${ entry.accessory.displayName }"` );
+                     }
+                  }
                   allDoneCallback( allDoneCount );
                }
 
