@@ -201,30 +201,25 @@ Notice that there is no Platform definition. Otherwise everything is the same. Y
 
 &nbsp;&nbsp;&nbsp; Typically polling is pretty much a free for all.  While Cmd4 tries to eleviate this with staggered polling, Cmd4 supports two kinds of Priority Queued Polling; that being "Sequential" and "WoRm" ( Write Once Read Many).  If configured correctly, only one Set characteristic value can be sent or either one or multiple Gets from a device at a time. The priority given to requests from IOS first and background polling second.<BR>
 <BR>
-  Priority Queued Polling is only available when a queue is defined. The default "QueueType" being "WoRm". To configure Priority Queued Polling every characteristic to the device must be configured to be in the same queue. as an Example of the default WoRm is:
+  Priority Queued Polling is only available when a queue is defined. The default "QueueType" being "WoRm". To configure Priority Queued Polling every characteristic to the device must be configured to be in the same queue.<BR>
+  The retries defaults to zero for "Get" commands from homebridge. You can alter this value as you like.<BR>
+For Example of the default WoRm is:
 
 ```json
-"interval": 5,
-"polling": [ { "characteristic": "currentTemperature", "queue": "A" },
-             { "characteristic": "targetTemperature", "queue": "A" }
-           ]
+"queueTypes": [ { "queue": "A", "queueType": "WoRm", "retries": 0 } ],
+"accessories": [
+{
+   "interval": 5,
+   "queue:    "A",
+   "polling": [ { "characteristic": "currentTemperature"  },
+                { "characteristic": "targetTemperature", "interval": 15 }
+              ]
+}
 ```
   The interval of the characteristic is defined through the heirarch of the Platform/Accessory and then the Characteristic, as always.<BR>
-  A simpler solution would be to re-define the queues and the queue characteristics ahead of time and then just specify which accessory is going to use Priority Queue Polling. Example 2:
+Example 2:
 
 ```json
-"queueTypes: [ { "queue": "A" : "queueType": "WoRm"  }
-             ],
-"queue": "A",
-"interval": 10,
-"polling": [ { "characteristic": "currentTemperature" },
-             { "characteristic": "targetTemperature", "interval": 15 }
-           ]
-```
-Example 3:
-
-```json
-"queueTypes: [ { "queue": "A" : "queueType": "WoRm"  }
 "platforms":
  [ { "platform": "Cmd4",
      "interval": "10",
@@ -232,7 +227,6 @@ Example 3:
                     { "queue": "B" : "queueType": "Sequential" }
                     { "queue": "C" } // Defaults to "WoRm"
                   ],
-
      "accessories": [
      {
         "name": "My_Thermostat",
@@ -262,7 +256,8 @@ Example 3:
      {
         "name": "Switch2",
         "type": "Switch",
-        "polling": [ { "characteristic": "on", "queue": "D" } ],   // Defaults to "WoRm"
+        "queue": "D", // Defaults to WoRm
+        "polling": [ { "characteristic": "on" } ],
         ...
      }
 
@@ -292,8 +287,9 @@ Example 3:
                     "manufacturer": "Advantage Air Australia",
                     "model": "e-zone",
                     "serialNumber": "Fujitsu e-zone2",
+                    "queue": "A",
                     "polling": [
-                        { "characteristic": "currentTemperature", "queue": "A"  }
+                        { "characteristic": "currentTemperature" }
                     ],
                     "props": {
                         "currentTemperature": {
@@ -313,8 +309,9 @@ Example 3:
                     "manufacturer": "Advantage Air Australia",
                     "model": "e-zone",
                     "serialNumber": "Fujitsu e-zone2",
+                    "queue": "A",
                     "polling": [
-                        { "characteristic": "On", "queue": "A" }
+                        { "characteristic": "On" }
                     ],
                     "state_cmd": "bash /home/pi/zones.sh",
                     "state_cmd_suffix": "z05"
@@ -327,8 +324,9 @@ Example 3:
                     "manufacturer": "Advantage Air Australia",
                     "model": "e-zone",
                     "serialNumber": "Fujitsu e-zone2",
+                    "queue": "A",
                     "polling": [
-                        { "characteristic": "on", "queue": "A" }
+                        { "characteristic": "on" }
                     ],
                     "stateChangeResponseTime": 1,
                     "state_cmd": "bash /home/pi/ezone.sh"
