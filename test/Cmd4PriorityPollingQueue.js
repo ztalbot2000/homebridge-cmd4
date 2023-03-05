@@ -1767,7 +1767,7 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       setTimeout( ( ) =>
       {
 
-         assert.include( log.errBuf, `[33m*${ constants.DEFAULT_WORM_QUEUE_RETRY_COUNT }* error(s) were encountered for "MySwitch" getValue. Last error found Getting: "On". Perhaps you should run in debug mode to find out what the problem might be.\u001b`, `queue Incorrect stderr: ${ log.errBuf }` );
+         assert.include( log.errBuf, `[33m*1* error(s) were encountered for "MySwitch" getValue. Last error found Getting: "On". Perhaps you should run in debug mode to find out what the problem might be.\u001b`, `queue Incorrect stderr: ${ log.errBuf }` );
 
          // A quick way to stop the queue. For whatever reason, if the above fails,
          // the testcase will not do this command and the testcase runs forever
@@ -1778,6 +1778,110 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       }, 1500 );
 
    }).timeout( 2000 );
+
+   it( `WoRM - Test "Get" Entry RetryCount = 1 fails twice`, ( done  ) =>
+   {
+      let platformConfig =
+      {
+         queueTypes:                   [ { queue: "A", queueType: "WoRm", retries: 1 } ],
+         accessories: [
+         {
+            name:                      "MySwitch",
+            displayName:               "MySwitch",
+            statusMsg:                 true,
+            type:                      "Switch",
+            on:                        0,
+            active:                    0,
+            queue:                     "A",
+            timeout:                   10, // Need to change the record we add for this
+            polling:                   [ { characteristic: "on" },
+                                         { characteristic: "active" } ],
+            state_cmd:                 "./test/echoScripts/runToTimeoutRcOf1"
+         }]
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
+
+      cmd4Platform.discoverDevices( );
+
+      assert.equal( Object.keys(settings.listOfCreatedPriorityQueues).length, 1, `Incorrect number of polling queues created` );
+
+      let queue = settings.listOfCreatedPriorityQueues[ "A" ];
+
+      expect( queue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "queue is not an instance of Cmd4PollingQueue" );
+      assert.equal( queue.queueRetryCount, 1, `Incorrect queueRetryCount` );
+
+      assert.equal( queue.lowPriorityQueue.length, 2, `Incorrect number of low level polling characteristics` );
+      queue.lowPriorityQueue = [];
+
+      //Make sure no polling happens
+      assert.equal( queue.lowPriorityQueue.length, 0, `Incorrect number of low level polling characteristics` );
+      Object.keys(queue.listOfRunningPolls).forEach( (key) =>
+      {
+         let timer = queue.listOfRunningPolls[ key ];
+         clearTimeout( timer );
+      });
+
+      clearTimeout( queue.pauseTimer );
+      queue.pauseTimerTimeout = 0;
+
+
+
+      let cmd4SwitchAccessory = cmd4Platform.createdCmd4Accessories[0];
+
+      let cmd4PriorityPollingQueue = cmd4SwitchAccessory.queue;
+      expect( cmd4PriorityPollingQueue ).to.be.a.instanceOf( Cmd4PriorityPollingQueue, "Cmd4PriorityPollingQueue is not an instance of Cmd4Accessory" );
+
+      log.reset( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( false );
+
+      // The queue getValue will just return the cached value
+      // and call updateValue later
+      var dummyCallback = function( rc, result )
+      {
+         assert.equal( rc, 0, ` getValue incorrect rc: ${ rc }` );
+         assert.equal( result, true, ` getValue incorrect result: ${ result }` );
+      };
+
+      var allDoneCallback = function( allDoneCount )
+      {
+         assert.equal( allDoneCount, 0, ` startQueue incorrect allDoneCount` );
+         log.debug( "Test Cmd4PriorityQueue startQueue - allDone called" );
+      };
+
+      assert.equal( cmd4PriorityPollingQueue.queueType, constants.DEFAULT_QUEUE_TYPE, ` incorrect default queue type. Should be WoRm` );
+
+      cmd4PriorityPollingQueue.highPriorityQueue.push( { [ constants.IS_SET_lv ]: false, [ constants.QUEUE_GET_IS_UPDATE_lv ]: false, [ constants.ACCESSORY_lv ]: cmd4SwitchAccessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: CMD4_ACC_TYPE_ENUM.On, [ constants.CHARACTERISTIC_STRING_lv ]: "On", [ constants.TIMEOUT_lv ]: 10, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: null, [ constants.VALUE_lv ]: null, [ constants.CALLBACK_lv ]: dummyCallback } );
+
+      //cmd4PriorityPollingQueue.processQueueFunc( HIGH_PRIORITY_GET, cmd4PriorityPollingQueue );
+      cmd4PriorityPollingQueue.startQueue( cmd4PriorityPollingQueue, allDoneCallback );
+
+      // Wait for the 1st entry in the Queue to be processed
+      setTimeout( ( ) =>
+      {
+
+         assert.include( log.errBuf, `[33m*2* error(s) were encountered for "MySwitch" getValue. Last error found Getting: "On". Perhaps you should run in debug mode to find out what the problem might be.\u001b`, `queue Incorrect stderr: ${ log.errBuf }` );
+
+
+         assert.equal( cmd4PriorityPollingQueue.queueRetryCount, 1, `incorrect queueReturyCount. Should be 1` );
+         // A quick way to stop the queue. For whatever reason, if the above fails,
+         // the testcase will not do this command and the testcase runs forever
+         cmd4SwitchAccessory.queue.inProgressSets = 10;
+
+         done( );
+
+      }, 2500 );
+
+   }).timeout( 3000 );
 
    it( `WoRM - Test "Set" Entry From High Priority Queue`, ( done  ) =>
    {
@@ -1852,7 +1956,6 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       }, 1000 );
    });
 
-   // HERE
    it( `WoRM - Test "Set" Entry From High Priority Queue Failure >*` + constants.DEFAULT_WORM_QUEUE_RETRY_COUNT + ` times`, ( done  ) =>
    {
       let platformConfig =
@@ -1938,7 +2041,8 @@ describe('WoRM - Testing Cmd4PriorityPollingQueue recovery correction', ( ) =>
       // Wait for the Queue to be processed
       setTimeout( ( ) =>
       {
-         assert.include( log.errBuf, `[33m*${ constants.DEFAULT_WORM_QUEUE_RETRY_COUNT }* error(s) were encountered for "MySwitch" getValue. Last error found Getting: "On". Perhaps you should run in debug mode to find out what the problem might be.\u001b`, `queue Incorrect stderr: ${ log.errBuf }` );
+         // Counting starts from zero, i.e queueRetries = 0, so add 1
+         assert.include( log.errBuf, `[33m*${ constants.DEFAULT_WORM_QUEUE_RETRY_COUNT +1 }* error(s) were encountered for "MySwitch" getValue. Last error found Getting: "On". Perhaps you should run in debug mode to find out what the problem might be.\u001b`, `queue Incorrect stderr: ${ log.errBuf }` );
 
          // A quick way to stop the queue. For whatever reason, if the above fails,
          // the testcase will not do this command and the testcase runs forever

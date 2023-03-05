@@ -80,6 +80,7 @@ class Cmd4PriorityPollingQueue
       if ( settings.cmd4Debug )
          return true;
 
+      // Since this is the last retry, echo the error
       if ( currentRetryCount == this.queueRetryCount )
          return true;
 
@@ -245,7 +246,10 @@ class Cmd4PriorityPollingQueue
             if ( currentRetryCount >= queue.queueRetryCount )
             {
                if ( queue.echoRetryErrors( currentRetryCount ) )
-                  queue.log.warn( `*${ currentRetryCount }* error(s) were encountered for "${ entry.accessory.displayName }" getValue. Last error found Getting: "${ entry.characteristicString}". Perhaps you should run in debug mode to find out what the problem might be.` );
+               {
+                  // Counting starts from zero, i.e queueRetries = 0, so add 1
+                  queue.log.warn( `*${ currentRetryCount + 1 }* error(s) were encountered for "${ entry.accessory.displayName }" getValue. Last error found Getting: "${ entry.characteristicString}". Perhaps you should run in debug mode to find out what the problem might be.` );
+               }
 
                // Convert the errorValue into an errorString
                entry.accessory.errorString = new Error( constants.errorString( error ) );
@@ -316,7 +320,7 @@ class Cmd4PriorityPollingQueue
             if ( currentRetryCount >= queue.queueRetryCount )
             {
                if ( queue.echoRetryErrors( currentRetryCount ) )
-                  queue.log.warn( `*${ currentRetryCount }* error(s) were encountered for "${ entry.accessory.displayName }" getValue. Last error found Getting: "${ entry.characteristicString}". Perhaps you should run in debug mode to find out what the problem might be.` );
+                  queue.log.warn( `*${ currentRetryCount + 1}* error(s) were encountered for "${ entry.accessory.displayName }" getValue. Last error found Getting: "${ entry.characteristicString}". Perhaps you should run in debug mode to find out what the problem might be.` );
 
                // Convert the errorValue into an errorString
                entry.accessory.errorString = new Error( constants.errorString( error ) );

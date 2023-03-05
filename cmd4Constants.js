@@ -203,7 +203,6 @@ var cmd4Constants = {
 
 
    // Static Messages
-   DBUSY:                          "Perhaps your device is busy?"
-   //DUNAVAILABLE:                   "Your device is unavailable"
+   DBUSY:                          "Perhaps your device is busy or unavailable?"
 };
 module.exports = cmd4Constants;

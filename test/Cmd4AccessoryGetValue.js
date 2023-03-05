@@ -1018,7 +1018,8 @@ describe( "Testing Cmd4Accessory", function( )
          assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
 
          assert.include( log.errBuf, `[31mgetValue: Mute function for: MyTelevision returned an empty string ""`, ` getValue Incorrect stderr: ${ log.errBuf }` );
-         assert.include( log.errBuf, `[33m*${ constants.DEFAULT_STANDARD_QUEUE_RETRY_COUNT }* error(s) were encountered for "MyTelevision" getValue. Last error found Getting: "Mute". Perhaps you should run in debug mode to find out what the problem might be.\u001b`, `queue Incorrect stderr: ${ log.errBuf }` );
+         // Counting starts from zero, i.e queueRetries = 0, so add 1
+         assert.include( log.errBuf, `[33m*${ constants.DEFAULT_STANDARD_QUEUE_RETRY_COUNT +1 }* error(s) were encountered for "MyTelevision" getValue. Last error found Getting: "Mute". Perhaps you should run in debug mode to find out what the problem might be.\u001b`, `queue Incorrect stderr: ${ log.errBuf }` );
          assert.equal( log.errLineCount, 2, `getValue: to many lines to stderr ${ log.errBuf }` );
 
          done( );
@@ -1084,7 +1085,8 @@ describe( "Testing Cmd4Accessory", function( )
          assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
 
          assert.include( log.errBuf, `getValue: "null" returned from stdout for Mute MyTelevision`, ` getValue Incorrect stderr: ${ log.errBuf }` );
-         assert.include( log.errBuf, `[33m*${ constants.DEFAULT_STANDARD_QUEUE_RETRY_COUNT }* error(s) were encountered for "MyTelevision" getValue. Last error found Getting: "Mute". Perhaps you should run in debug mode to find out what the problem might be.\u001b`, `queue Incorrect stderr: ${ log.errBuf }` );
+         // Counting starts from zero, i.e queueRetries = 0, so add 1
+         assert.include( log.errBuf, `[33m*${ constants.DEFAULT_STANDARD_QUEUE_RETRY_COUNT +1 }* error(s) were encountered for "MyTelevision" getValue. Last error found Getting: "Mute". Perhaps you should run in debug mode to find out what the problem might be.\u001b`, `queue Incorrect stderr: ${ log.errBuf }` );
          assert.equal( log.errLineCount, 2, `getValue: to many lines to stderr ${ log.errBuf }` );
 
 
@@ -1154,7 +1156,8 @@ describe( "Testing Cmd4Accessory", function( )
 
          // The ( error ) returned from exec
          assert.include( log.errBuf, `[31mgetValue Mute function failed for MyTelevision cmd: ./test/echoScripts/echo_true_withRcOf1 Get 'MyTelevision' 'Mute' Failed.  Generated Error: Error: Command failed: ./test/echoScripts/echo_true_withRcOf1 Get 'MyTelevision' 'Mute'`, ` getValue Incorrect stderr: ${ log.errBuf }` );
-         assert.include( log.errBuf, `[33m*${ constants.DEFAULT_STANDARD_QUEUE_RETRY_COUNT }* error(s) were encountered for "MyTelevision" getValue. Last error found Getting: "Mute". Perhaps you should run in debug mode to find out what the problem might be.\u001b`, `queue Incorrect stderr: ${ log.errBuf }` );
+         // Counting starts from zero, i.e queueRetries = 0, so add 1
+         assert.include( log.errBuf, `[33m*${ constants.DEFAULT_STANDARD_QUEUE_RETRY_COUNT +1 }* error(s) were encountered for "MyTelevision" getValue. Last error found Getting: "Mute". Perhaps you should run in debug mode to find out what the problem might be.\u001b`, `queue Incorrect stderr: ${ log.errBuf }` );
          assert.equal( log.errLineCount, 3, `getValue: to many lines to stderr ${ log.errBuf }` );
 
          done( );
@@ -1220,7 +1223,8 @@ describe( "Testing Cmd4Accessory", function( )
          assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
 
          assert.include( log.errBuf, `getValue: Mute function for MyTelevision returned the string ""NULL""`, ` getValue Incorrect stderr: ${ log.errBuf }` );
-         assert.include( log.errBuf, `[33m*${ constants.DEFAULT_STANDARD_QUEUE_RETRY_COUNT }* error(s) were encountered for "MyTelevision" getValue. Last error found Getting: "Mute". Perhaps you should run in debug mode to find out what the problem might be.\u001b`, `queue Incorrect stderr: ${ log.errBuf }` );
+         // Counting starts from zero, i.e queueRetries = 0, so add 1
+         assert.include( log.errBuf, `[33m*${ constants.DEFAULT_STANDARD_QUEUE_RETRY_COUNT +1 }* error(s) were encountered for "MyTelevision" getValue. Last error found Getting: "Mute". Perhaps you should run in debug mode to find out what the problem might be.\u001b`, `queue Incorrect stderr: ${ log.errBuf }` );
          assert.equal( log.errLineCount, 2, `getValue: to many lines to stderr ${ log.errBuf }` );
 
          done( );
@@ -1285,7 +1289,8 @@ describe( "Testing Cmd4Accessory", function( )
          assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
 
          assert.include( log.errBuf, `getValue: Mute function for: MyTelevision returned an empty string "" ""`, ` getValue Incorrect stdout: ${ log.errBuf }` );
-         assert.include( log.errBuf, `[33m*${ constants.DEFAULT_STANDARD_QUEUE_RETRY_COUNT }* error(s) were encountered for "MyTelevision" getValue. Last error found Getting: "Mute". Perhaps you should run in debug mode to find out what the problem might be.\u001b`, `queue Incorrect stderr: ${ log.errBuf }` );
+         // Counting starts from zero, i.e queueRetries = 0, so add 1
+         assert.include( log.errBuf, `[33m*${ constants.DEFAULT_STANDARD_QUEUE_RETRY_COUNT +1 }* error(s) were encountered for "MyTelevision" getValue. Last error found Getting: "Mute". Perhaps you should run in debug mode to find out what the problem might be.\u001b`, `queue Incorrect stderr: ${ log.errBuf }` );
          assert.equal( log.errLineCount, 2, `getValue: to many lines to stderr ${ log.errBuf }` );
 
          done( );
@@ -1350,7 +1355,8 @@ describe( "Testing Cmd4Accessory", function( )
          assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
          assert.include( log.errBuf, "[31mgetValue: Mute function for MyTelevision streamed to stderr: This message goes to stderr", ` getValue Incorrect stderr: ${ log.errBuf }` );
          assert.include( log.errBuf, `[31mgetValue: Mute function for: MyTelevision returned an empty string ""`, ` getValue Incorrect stderr: ${ log.errBuf }` );
-         assert.include( log.errBuf, `[33m*${ constants.DEFAULT_STANDARD_QUEUE_RETRY_COUNT }* error(s) were encountered for "MyTelevision" getValue. Last error found Getting: "Mute". Perhaps you should run in debug mode to find out what the problem might be.\u001b`, `queue Incorrect stderr: ${ log.errBuf }` );
+         // Counting starts from zero, i.e queueRetries = 0, so add 1
+         assert.include( log.errBuf, `[33m*${ constants.DEFAULT_STANDARD_QUEUE_RETRY_COUNT +1 }* error(s) were encountered for "MyTelevision" getValue. Last error found Getting: "Mute". Perhaps you should run in debug mode to find out what the problem might be.\u001b`, `queue Incorrect stderr: ${ log.errBuf }` );
          assert.equal( log.errLineCount, 3, `getValue: to many lines to stderr ${ log.errBuf }` );
 
 
@@ -1416,7 +1422,8 @@ describe( "Testing Cmd4Accessory", function( )
          assert.include( log.logBuf, `[34mCreating Platform Accessory type for : MyTelevision`, ` cmd4Accessory incorrect stdout: ${ log.logBuf }` );
 
          assert.include( log.errBuf, `[31mgetValue: Mute function for: MyTelevision returned an empty string ""`, ` getValue incorrect stderr: ${ log.errBuf }` );
-         assert.include( log.errBuf, `[33m*${ constants.DEFAULT_STANDARD_QUEUE_RETRY_COUNT }* error(s) were encountered for "MyTelevision" getValue. Last error found Getting: "Mute". Perhaps you should run in debug mode to find out what the problem might be.\u001b`, `queue Incorrect stderr: ${ log.errBuf }` );
+         // Counting starts from zero, i.e queueRetries = 0, so add 1
+         assert.include( log.errBuf, `[33m*${ constants.DEFAULT_STANDARD_QUEUE_RETRY_COUNT +1 }* error(s) were encountered for "MyTelevision" getValue. Last error found Getting: "Mute". Perhaps you should run in debug mode to find out what the problem might be.\u001b`, `queue Incorrect stderr: ${ log.errBuf }` );
          assert.equal( log.errLineCount, 2, `getValue: to many lines to stderr ${ log.errBuf }` );
 
          done( );
