@@ -208,23 +208,23 @@ class Cmd4PriorityPollingQueue
             // Since the "Set" passed, do the stateChangeResponseTime
             setTimeout( ( ) =>
             {
-               // A set with no error means the queue is sane to do reading
-               queue.lastGoodTransactionTime = Date.now( );
-               queue.errorCountSinceLastGoodTransaction = 0;
+            // A set with no error means the queue is sane to do reading
+            queue.lastGoodTransactionTime = Date.now( );
+            queue.errorCountSinceLastGoodTransaction = 0;
 
-               // After the stateChangeResponseTime, do the related characteristic ( if any )
-               let relatedCurrentAccTypeEnumIndex = entry.accessory.getDevicesRelatedCurrentAccTypeEnumIndex( entry.accTypeEnumIndex );
+            // After the stateChangeResponseTime, do the related characteristic ( if any )
+            let relatedCurrentAccTypeEnumIndex = entry.accessory.getDevicesRelatedCurrentAccTypeEnumIndex( entry.accTypeEnumIndex );
 
                if ( relatedCurrentAccTypeEnumIndex != null )
-               {
-                  let relatedCurrentCharacteristicString = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].type;
-                  // Change the entry to a get and set queueGetIsUpdate to true
-                  // Use unshift to make it next in line
-                  entry.isSet = false;
-                  entry.accTypeEnumIndex = relatedCurrentAccTypeEnumIndex;
-                  entry.characteristicString = relatedCurrentCharacteristicString;
-                  entry.queueGetIsUpdate = true;
-                  queue.highPriorityQueue.unshift( entry );
+            {
+            let relatedCurrentCharacteristicString = CMD4_ACC_TYPE_ENUM.properties[ relatedCurrentAccTypeEnumIndex ].type;
+            // Change the entry to a get and set queueGetIsUpdate to true
+            // Use unshift to make it next in line
+            entry.isSet = false;
+            entry.accTypeEnumIndex = relatedCurrentAccTypeEnumIndex;
+            entry.characteristicString = relatedCurrentCharacteristicString;
+            entry.queueGetIsUpdate = true;
+            queue.highPriorityQueue.unshift( entry );
                }
 
                // The "Set" is now complete after its stateChangeResponseTime.
@@ -232,7 +232,7 @@ class Cmd4PriorityPollingQueue
 
                setTimeout( ( ) => { queue.processQueueFunc( HIGH_PRIORITY_GET, queue ); }, 0 );
 
-               return;
+            return;
 
             }, entry.stateChangeResponseTime );
 
@@ -374,8 +374,9 @@ class Cmd4PriorityPollingQueue
             // Save the new value
             entry.accessory.cmd4Storage.setStoredValueForIndex( entry.accTypeEnumIndex, properValue );
 
+            if ( settings.cmd4Dbg ) entry.accessory.log.debug( `processEntryFromLowPriorityQueue calling updateValue properValue: ${ properValue }`);
+
             // Update the new value in homebridge
-            entry.accessory.log.warn( `processEntryFromLowPriorityQueue calling updateValue properValue: ${ properValue }`);
             entry.accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ entry.accTypeEnumIndex ].characteristic ).updateValue( properValue );
 
              // A good anything, updates the lastGoodTransactionTime
@@ -832,10 +833,14 @@ class Cmd4PriorityPollingQueue
          let nextEntry = queue.highPriorityQueue[ 0 ];
 
          if ( nextEntry.isSet == true )
+         {
 
             queue.processHighPrioritySetQueue( queue.highPriorityQueue.shift( ) );
+         }
          else
+         {
             queue.processHighPriorityGetQueue( queue.highPriorityQueue.shift( ) );
+         }
       }
    }
 
