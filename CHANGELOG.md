@@ -19,8 +19,18 @@
 
 *  add retries. Also formatting issues ([b8ddf9ce](https://github.com/ztalbot2000/homebridge-cmd4/commit/b8ddf9ceda8ace3a6e820bfad0c4a03c656cf419))
 
+##### Documentation Changes
+
+Beta2
+*  Update documentation for v7.0.0 ([12b6482a](https://github.com/ztalbot2000/homebridge-cmd4/commit/12b6482ac8e6d431e011f6f92c2d6f03a2ebe2ed))
+
 ##### Bug Fixes
 
+Beta2
+*  remove unwanted debug message and test so that it cannot reoccur ([97b6b318](https://github.com/ztalbot2000/homebridge-cmd4/commit/97b6b31861ab34d04b798ec409b1f2e8c56244c2))
+*  Homebridge does not like underscores of accessory names. Remove from default config.json ([15f2170b](https://github.com/ztalbot2000/homebridge-cmd4/commit/15f2170be492b6dfb56e4eed5d76da0cd4d74419))
+
+Beta1
 *  retry logging starts from zero, but for user count starts from 1 ([38cdf417](https://github.com/ztalbot2000/homebridge-cmd4/commit/38cdf417feebeef2b75dcfec247e6bdfd4739604))
 *  By nature retryCount should start from zero ([b8e82ffe](https://github.com/ztalbot2000/homebridge-cmd4/commit/b8e82ffe262c092a301636993544be828a7a34a4))
 *  log message in wrong quotes ([6fc555b0](https://github.com/ztalbot2000/homebridge-cmd4/commit/6fc555b0d7bdc20bfc3a38310e3d4f66b968d55d))
