@@ -1,5 +1,5 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
-#### 7.0.0 (2023-03-05)
+#### 7.0.1 (2023-06-11)
 
 * The reason for the major version numbering update was to for deprecation warnings to throw an error.
   These warnings were there for many major versions and are finally removed.
@@ -15,6 +15,10 @@
   "queueTypes"            - Obsolete inside accessory definition.
 
 
+##### Chores
+
+*  Correct version to 7.0.1 ([62504e68](https://github.com/ztalbot2000/homebridge-cmd4/commit/62504e689a9483a9512a414d994514b04cbadcd5))
+
 ##### New Features
 
 *  add retries. Also formatting issues ([b8ddf9ce](https://github.com/ztalbot2000/homebridge-cmd4/commit/b8ddf9ceda8ace3a6e820bfad0c4a03c656cf419))
@@ -25,6 +29,8 @@ Beta2
 *  Update documentation for v7.0.0 ([12b6482a](https://github.com/ztalbot2000/homebridge-cmd4/commit/12b6482ac8e6d431e011f6f92c2d6f03a2ebe2ed))
 
 ##### Bug Fixes
+
+*  bug[#139](https://github.com/ztalbot2000/homebridge-cmd4/pull/139), add in link checkers to documentation ([f4a1ae79](https://github.com/ztalbot2000/homebridge-cmd4/commit/f4a1ae79fd8da2e0dc80181ab98dbc4817da6e78))
 
 Beta2
 *  remove unwanted debug message and test so that it cannot reoccur ([97b6b318](https://github.com/ztalbot2000/homebridge-cmd4/commit/97b6b31861ab34d04b798ec409b1f2e8c56244c2))

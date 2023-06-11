@@ -2,8 +2,11 @@
 <base _target="_self">
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
+
 ## ChangeLog
-* <a href="#Whats-new-in-6-3-1">**Whats new in 7.0.0**</a>
+<a name="Whats-new-in-7-0-1">## Whats new in 7.0.0</a>
+#### 7.0.0 (2023-06-11)
+* <a href="#Whats-new-in-7.0.0">**Whats new in 7.0.0**</a>
 * <a href="#Whats-new-in-6-3-0">**Whats new in 6.3.0**</a>
 * <a href="#Whats-new-in-6-2-0">**Whats new in 6.2.0**</a>
 * <a href="#Whats-new-in-6-1-2">**Whats new in 6.1.2**</a>
@@ -85,7 +88,19 @@
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
 
-<a name="Whats-new-in-6-3-1">## Whats new in 6.3.1</a>
+## ChangeLog
+* <a href="#Whats-new-in-7-0-1">**Whats new in 7.0.1**</a>
+
+
+##### Chores
+
+*  Correct version to 7.0.1 ([62504e68](https://github.com/ztalbot2000/homebridge-cmd4/commit/62504e689a9483a9512a414d994514b04cbadcd5))
+
+##### Bug Fixes
+
+*  bug[#139](https://github.com/ztalbot2000/homebridge-cmd4/pull/139), add in link checkers to documentation ([f4a1ae79](https://github.com/ztalbot2000/homebridge-cmd4/commit/f4a1ae79fd8da2e0dc80181ab98dbc4817da6e78))
+
+<a name="Whats-new-in-7-0-0">## Whats new in 7.0.0</a>
 #### 7.0.0 (2023-03-05)
 
 * The reason for the major version numbering update was to for deprecation warnings to throw an error.
