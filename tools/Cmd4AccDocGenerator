@@ -1253,7 +1253,7 @@ function addCmd4AccessoryDirectivePages_WithinMain( )
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.CATEGORY }">${ constants.CATEGORY }</a><TD> < CATEGORY > <TD> <TD> See <a href="https://developers.homebridge.io/#/categories">Homebridge Categories</a> for a complete list of possible categories.  </TR>\n` );
 
    // fakegato - AccessoryDirectives
-   wfs( `<TR ALIGN="left"><TD><a name="${ constants.FAKEGATO }">${ constants.FAKEGATO }</a><TD>  < JSON >  <TD> <TD> See the section, <a href="https://github.com/ztalbot2000/homebridge-cmd4/README.md#fakegatotag"> "Adding in Fakegato history"</a> below.</TR>\n` );
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.FAKEGATO }">${ constants.FAKEGATO }</a><TD>  < JSON >  <TD> <TD> See the section, <a href="https://github.com/ztalbot2000/homebridge-cmd4/docs/Developers.md#fakegatotag"> "Adding in Fakegato history"</a> below.</TR>\n` );
 
    // linkedTypes - AccessoryDirectives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.LINKEDTYPES }">${ constants.LINKEDTYPES }</a><TD>  < JSON >  <TD> <TD> Other Cmd4 Accessories like Input Source for HDMI inputs. </TR>\n` );
@@ -1268,7 +1268,7 @@ function addCustomCharacteristicPages_withinMain( )
 {
    wf( "+", `<div id="CustomCharacteristics" class="section">\n` );
 
-   wfs( `<h2><a name="CUSTOMCHARACTERISTICS">Custom Characteristics</a></h2>\n` );
+   wfs( `<h2><a name="CUSTOM_CHARACTERISTICS">Custom Characteristics</a></h2>\n` );
    wfs( `<p>These directives appear within the Cmd4 Platform section</p><BR>\n` );
    wfs( `<p>IMPORTANT - It is unlikely that adding custom characteristics will be supported by any GUI or SIRI<BR>\n` );
    wfs( `<BR><BR>\n` );
