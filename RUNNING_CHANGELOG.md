@@ -4,6 +4,7 @@
 
 
 ## ChangeLog
+* <a href="#Whats-new-in-7-0-2">**Whats new in 7.0.2**</a>
 <a name="Whats-new-in-7-0-1">## Whats new in 7.0.0</a>
 #### 7.0.0 (2023-06-11)
 * <a href="#Whats-new-in-7.0.0">**Whats new in 7.0.0**</a>
@@ -87,6 +88,14 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-7-1-0">## Whats new in 7.0.2</a>
+### 7.0.2 (2023-12-24)
+
+##### Change affectng AdvAir by their request
+
+*  For AdvAir.sh put accessory name in double quotes so it can contain a single quote ([023e91c0](https://github.com/ztalbot2000/homebridge-cmd4/commit/023e91c0bf1794a64bf0e18dec7d31b178ecb6d1))
+
 
 ## ChangeLog
 * <a href="#Whats-new-in-7-0-1">**Whats new in 7.0.1**</a>
