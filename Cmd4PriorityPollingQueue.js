@@ -426,7 +426,14 @@ class Cmd4PriorityPollingQueue
       let self = accessory;
       let queue = accessory.queue;
 
-      let cmd = self.state_cmd_prefix + self.state_cmd + " Get '" + self.displayName + "' '" + characteristicString  + "'" + self.state_cmd_suffix;
+      let cmd = self.state_cmd_prefix + self.state_cmd + " Get '" + self.displayName + "' '" + characteristicString + "'" + self.state_cmd_suffix;
+
+      // My AdvAir friends want to allow single quotes in accessory names, which
+      // may have consequences with globbing for others.
+      if ( self.state_cmd.match( /AdvAir.sh/ ) )
+      {
+          cmd = self.state_cmd_prefix + self.state_cmd + ' Get "' + self.displayName + '" ' + "'" + characteristicString + "'" + self.state_cmd_suffix;
+      }
 
       if ( settings.cmd4Dbg ) self.log.debug( `getValue: accTypeEnumIndex:( ${ accTypeEnumIndex } )-"${ characteristicString }" function for: ${ self.displayName } cmd: ${ cmd } timeout: ${ timeout }` );
 
@@ -608,7 +615,14 @@ class Cmd4PriorityPollingQueue
          value = transposeBoolToValue( value );
       }
 
-      let cmd = accessory.state_cmd_prefix + accessory.state_cmd + " Set '" + accessory.displayName + "' '" + characteristicString  + "' '" + value  + "'" + accessory.state_cmd_suffix;
+      let cmd = accessory.state_cmd_prefix + accessory.state_cmd + " Set '" + accessory.displayName + "' '" + characteristicString + "' '" + value + "'" + accessory.state_cmd_suffix;
+
+      // My AdvAir friends want to allow single quotes in accessory names, which
+      // may have consequences with globbing for others.
+      if ( accessory.state_cmd.match( /AdvAir.sh/ ) )
+      {
+          cmd = accessory.state_cmd_prefix + accessory.state_cmd + ' Set "' + accessory.displayName + '" ' + "'" + characteristicString + "' '" + value + "'" + accessory.state_cmd_suffix;
+      }
 
       if ( accessory.hV.statusMsg == "TRUE" )
          self.log.info( chalk.blue( `Setting ${ self.displayName } ${ characteristicString }` ) + ` ${ value }` );
