@@ -382,6 +382,43 @@ Example 2:
 ### Step 4.  Sending constants to your script.
 &nbsp;&nbsp;&nbsp; By placing in your config.json file the tag "outputConstants": true, instead of values, your script will receive constants instead of values (Where Applicable). Homebridge-Cmd4 will except constants or values as input.  See the config.min.json file for the defined constants.
 
+### Step 5. Changing characteristic properties.
+&nbsp;&nbsp;&nbsp; Cmd4 will allow you to change a characteristics property range, However the HomeKit GUI will most likely ignore it. The change is for those who create their own GUI's. For Example:
+```json
+    "platforms": [
+        {
+            "platform": "Cmd4",
+            "debug": false,
+            "outputConstants": false,
+            "timeout": 4000,
+            "stateChangeResponseTime": 3,
+            "accessories": [
+                {
+                    "type": "Thermostat",
+                    "displayName": "MyThermostat",
+                    "name": "MyThermostat",
+                    "currentTemperature": 25,
+                    "targetTemperature": 25,
+                    "props": {
+                        "currentTemperature": {
+                            "maxValue": 32,
+                            "minValue": 16,
+                            "minStep": 1
+                        },
+                        "targetTemperature": {
+                            "maxValue": 32,
+                            "minValue": 16,
+                            "minStep": 1
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
+```
+
+
 ***Important***
 &nbsp;&nbsp;&nbsp; Homebridge-cmd4 just outputs the value to be set.  For whatever reason the lower layers of homebridge set on/off to be "true" and "false" instead of 0 & 1, which is incorrect, but changing it would break others scripts.
 &nbsp;&nbsp;&nbsp;  Homebridge-cmd4 has always recognized either 0/1 or true/false when receiving the devices value.

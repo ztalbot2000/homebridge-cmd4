@@ -811,17 +811,13 @@ class Cmd4Accessory
              let props = accessory.configHasCharacteristicProps( accTypeEnumIndex );
              if ( props )
              {
-                //if ( settings.cmd4Dbg ) accessory.log.debug( "Overriding characteristic %s props for: %s ", CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, this.displayName );
-                if ( settings.cmd4Dbg ) accessory.log.debug( "Overriding characteristic %s props for: %s ", uCCharacteristicString, this.displayName );
+                if ( settings.cmd4Dbg ) accessory.log.debug( "Overriding characteristic %s props for: %s ", CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, this.displayName );
                   accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].
                          characteristic )
                   .setProps(
-                  {
-                    // minValue: 18,
-                    // maxValue: 30,
-                    // minStep: 1
-                    props
-                });
+                     // props is an object of name value pairs (characteristics)
+                     props
+                  );
              }
 
              // Get the permissions of characteristic ( Read/Write ... )
