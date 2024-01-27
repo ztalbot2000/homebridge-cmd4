@@ -4,6 +4,7 @@
 
 
 ## ChangeLog
+* <a href="#Whats-new-in-7-0-3">**Whats new in 7.0.3**</a>
 * <a href="#Whats-new-in-7-0-2">**Whats new in 7.0.2**</a>
 <a name="Whats-new-in-7-0-1">## Whats new in 7.0.0</a>
 #### 7.0.0 (2023-06-11)
@@ -88,6 +89,14 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-7-0-3">## Whats new in 7.0.3</a>
+#### 7.0.3 (2024-01-27)
+
+##### Bug Fixes
+
+*  props is already an object. Also test setProps is called for more than one characteristic. Affects only those who change a characteristics property range ([276d0c0d](https://github.com/ztalbot2000/homebridge-cmd4/commit/276d0c0d58b435c59fb3c1fdfd322f55f6b24434))
+
 
 <a name="Whats-new-in-7-1-0">## Whats new in 7.0.2</a>
 ### 7.0.2 (2023-12-24)
