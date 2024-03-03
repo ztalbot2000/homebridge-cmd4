@@ -66,6 +66,7 @@ describe( "Testing INITIALIZED CMD4_DEVICE_TYPE_ENUM", ( ) =>
          for (let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++ )
          {
             let service = CMD4_DEVICE_TYPE_ENUM.properties[ index ].service;
+            assert.isNotNull( service, ` CMD4_DEVICE_TYPE_ENUM.properties[${ index } ].service is null` );
             let hapUUID = service.UUID;
             let result = CMD4_DEVICE_TYPE_ENUM.properties[ index ].UUID;
 
@@ -297,7 +298,7 @@ describe( "Testing INITIALIZED CMD4_DEVICE_TYPE_ENUM", ( ) =>
 
                let accTypeEnumIndex = CMD4_DEVICE_TYPE_ENUM.properties[index].optionalCharacteristics[rindex];
 
-               testCharacteristicIndex(accTypeEnumIndex );
+               testCharacteristicIndex(accTypeEnumIndex, rindex );
             }
          });
       }
@@ -316,7 +317,7 @@ describe( "Testing INITIALIZED CMD4_DEVICE_TYPE_ENUM", ( ) =>
 
                let defaultPollingAccTypeEnumIndex = CMD4_DEVICE_TYPE_ENUM.properties[accTypeEnumIndex].defaultPollingCharacteristics[rindex];
 
-               testCharacteristicIndex(defaultPollingAccTypeEnumIndex );
+               testCharacteristicIndex(defaultPollingAccTypeEnumIndex, rindex );
 
 
                // Check that polled characteristic is in required characteristics
@@ -341,14 +342,20 @@ describe( "Testing INITIALIZED CMD4_DEVICE_TYPE_ENUM", ( ) =>
    });
 });
 
-function testCharacteristicIndex ( accTypeEnumIndex )
+function testCharacteristicIndex ( accTypeEnumIndex, rindex )
 {
    describe('Testing accTypeEnumIndex:' + accTypeEnumIndex, () =>
    {
+      it('rindex should be valid', ( ) =>
+      {
+          assert.isNotNull(rindex, `rindex must not be null accTypeEnumIndex: ${accTypeEnumIndex}` );
+      });
+
       it('accTypeEnumIndex should be valid', ( ) =>
       {
-          assert.isNotNull(accTypeEnumIndex, 'accTypeEnumIndex must not be null' );
+          assert.isNotNull(accTypeEnumIndex, `accTypeEnumIndex must not be null rindex: ${rindex}` );
       });
+
 
       // AccessoryFlags is enum 0. However node.js inerpets 0 as false
       // So if it is a number or a bool, then it is okay.

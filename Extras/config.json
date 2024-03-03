@@ -463,8 +463,8 @@
                "stateChangeResponseTime":   3
             },
             {
-               "type":                     "Slat",
-               "displayName":              "MySlat",
+               "type":                     "Slats",
+               "displayName":              "MySlats",
                "slatType":                 "HORIZONTAL",
                "currentSlatState":         "FIXED",
                "name":                     "MySlat",

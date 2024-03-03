@@ -2059,6 +2059,191 @@ switch( io )
 
             break;
          }
+         // New Mar 2024
+         case "AccessCodeControlPoint":  // 233
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "AccessCodeSupportedConfiguration":  // 234
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "AirPlayEnable":  // 235
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "CharacteristicValueActiveTransitionCount":  // 236
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "CryptoHash":  // 237
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "FirmwareUpdateReadiness":  // 238
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "FirmwareUpdateStatus":  // 239
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "HardwareFinish":  // 240
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "MetricsBufferFullState":  // 241
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "MultifunctionButton":  // 242
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "NetworkAccessViolationControl":  // 243
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "SelectedDiagnosticsModes":  // 244
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "SelectedSleepConfiguration":  // 245
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "SiriEnable":  // 246
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "SiriEngineVersion":  // 247
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "SiriLightOnUse":  // 248
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "SiriListening":  // 249
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "SiriTouchToUse":  // 250
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "StagedFirmwareVersion":  // 251
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "SupportedMetrics":  // 252
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "SupportedFirmwareUpdateConfiguration":  // 253
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "TapType":  // 254
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "Token":  // 255
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
          default:
             process.stderr.write( `Unknown Characteristic for: ${ io } Device: ${ device } Characteristic: ${ characteristic }` );
             process.exit( -1 );
@@ -3659,6 +3844,191 @@ switch( io )
             break;
          }
          case "ThreadOpenThreadVersion":  // 232
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         // New Mar 2024
+         case "AccessCodeControlPoint":  // 233
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "AccessCodeSupportedConfiguration":  // 234
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "AirPlayEnable":  // 235
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "CharacteristicValueActiveTransitionCount":  // 236
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "CryptoHash":  // 237
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "FirmwareUpdateReadiness":  // 238
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "FirmwareUpdateStatus":  // 239
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "HardwareFinish":  // 240
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "MetricsBufferFullState":  // 241
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "MultifunctionButton":  // 242
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "NetworkAccessViolationControl":  // 243
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "SelectedDiagnosticsModes":  // 244
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "SelectedSleepConfiguration":  // 245
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "SiriEnable":  // 246
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "SiriEngineVersion":  // 247
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "SiriLightOnUse":  // 248
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "SiriListening":  // 249
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "SiriTouchToUse":  // 250
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "StagedFirmwareVersion":  // 251
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "SupportedMetrics":  // 252
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "SupportedFirmwareUpdateConfiguration":  // 253
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "TapType":  // 254
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "Token":  // 255
          {
             c = readData( device, characteristic );
 
