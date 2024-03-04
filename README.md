@@ -55,7 +55,7 @@
 
 &nbsp;&nbsp;&nbsp; Cmd4 supports Fakegato History and retaining previous state over restarts.
 
-&nbsp;&nbsp;&nbsp; Cmd4 Version 2.0 supported linked Accessories and the latest 3.0 Version supports both Platform plugin and Accessory plugin configurations as documented on [developers.homebridge.io](https://developers.homebridge.io).
+&nbsp;&nbsp;&nbsp; Since version 2.0 Cmd4 has supported linked Accessories and the latest 3.0 Version supports both Platform plugin and Accessory plugin configurations as documented on [developers.homebridge.io](https://developers.homebridge.io).
 
 &nbsp;&nbsp;&nbsp; Cmd4 Version 3.5 adds in support for Custom Characteristics.
 

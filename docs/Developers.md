@@ -468,7 +468,7 @@ The value "0" should be used for any characteristics value which is not possible
 ```
 
 ## Unit Testing
-&nbsp;&nbsp;&nbsp; Unit testing is done using the Mocha framework for Javascript and was introduced in homebridge-cmd4 version 2.1.2. There are 2796 test cases and they all run successfully.  They test the homebridge-Cmd4 module to make sure that all characteristics, services and names are correct. The provided config.json is also tested for proper definitions of all the homebridge-cmd4 config parameters.
+&nbsp;&nbsp;&nbsp; Unit testing is done using the Mocha framework for Javascript and was introduced in homebridge-cmd4 version 2.1.2. There are 11708 test cases and they all run successfully.  They test the homebridge-Cmd4 module to make sure that all characteristics, services and names are correct. The provided config.json is also tested for proper definitions of all the homebridge-cmd4 config parameters.
 
 &nbsp;&nbsp;&nbsp; Unit testing is only possible in a development environment and can be achieved in the following manner.
 
