@@ -4,6 +4,7 @@
 
 
 ## ChangeLog
+* <a href="#Whats-new-in-7-1-0">**Whats new in 7.1.0**</a>
 * <a href="#Whats-new-in-7-0-3">**Whats new in 7.0.3**</a>
 * <a href="#Whats-new-in-7-0-2">**Whats new in 7.0.2**</a>
 <a name="Whats-new-in-7-0-1">## Whats new in 7.0.0</a>
@@ -89,6 +90,18 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-7-1-0">## Whats new in 7.1.0</a>
+### 7.1.0 (2024-03-04)
+
+##### Documentation Changes
+
+*  Update for newest characteristics ([fccb9ebd](https://github.com/ztalbot2000/homebridge-cmd4/commit/fccb9ebdc18a2cd876b1512e0da2d5d28e8019b0))
+
+##### New Features
+
+*  Add in latest new characteristics and devices ([545112f0](https://github.com/ztalbot2000/homebridge-cmd4/commit/545112f0fa2122abf51d3217707012879db723b7))
+
 
 <a name="Whats-new-in-7-0-3">## Whats new in 7.0.3</a>
 #### 7.0.3 (2024-01-27)

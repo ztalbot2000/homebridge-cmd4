@@ -158,12 +158,7 @@ Note: For Homebridge-config-ui-x, you only need to write Cmd4 in the Environment
 
 <BR><BR>
 ## Todo
-* [X] Linked characteristics, i.e. a smoke detectors battery is not yet linked.
-* [X] Support for custom characteristics for an accessory. *Warning, May Not possible to be displayed by any GUI*
-* [X] Support multi word device names. (Technically done, but scripting is hard for newbies).
-* [ ] Scripting language to avoid creating new Homebridge modules.
-* [ ] HTTP commands. *Might be just to many options*
-* [ ] Become Homebridge Certified. ( The schema file would be very difficult )
+* [ ] Become Homebridge Certified. ( The schema file for Homebridg-ui  would be very difficult )
 
 <BR><BR>
 ## Contributing

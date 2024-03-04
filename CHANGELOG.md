@@ -1,8 +1,12 @@
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics too!!
-#### 7.0.3 (2024-01-27)
+### 7.1.0 (2024-03-04)
 
-##### Bug Fixes
+##### Documentation Changes
 
-*  props is already an object. Also test setProps is called for more than one characteristic. Affects only those who change a characteristics property range ([276d0c0d](https://github.com/ztalbot2000/homebridge-cmd4/commit/276d0c0d58b435c59fb3c1fdfd322f55f6b24434))
+*  Update for newest characteristics ([fccb9ebd](https://github.com/ztalbot2000/homebridge-cmd4/commit/fccb9ebdc18a2cd876b1512e0da2d5d28e8019b0))
+
+##### New Features
+
+*  Add in latest new characteristics and devices ([545112f0](https://github.com/ztalbot2000/homebridge-cmd4/commit/545112f0fa2122abf51d3217707012879db723b7))
 
 
