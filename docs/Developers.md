@@ -154,7 +154,8 @@ See the [Cmd4 Developers Guide](https://github.com/ztalbot2000/homebridge-cmd4/b
 
 ## Standard Accessories
 &nbsp;&nbsp;&nbsp;A Standard Accessory does not need a Platform. The Homebridge example given is. [Homebridge Switch](https://developers.homebridge.io/#/api/accessory-plugins). Cmd4 Version 3 can recreate the exact same configuration as:
-<BLINK> For upcoming Cmd4 version 8.0 this will no longer be supported. This is because of <a href="https://developers.homebridge.io/#/">Homebridge deprecated templates</a></BLINK>This will also make homebridge-ui easier to implement.
+<BR>
+For upcoming Cmd4 version 8.0 this will no longer be supported. This is because of <a href="https://developers.homebridge.io/#/">Homebridge deprecated templates</a>.This will also make homebridge-ui easier to implement.
 
 ```json
 {
