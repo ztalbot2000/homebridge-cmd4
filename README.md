@@ -86,16 +86,16 @@ Only for polled characteristics the statecmd is called. ok. it is simpler than i
    1  {
    2      "platform": "Cmd4", 
    3      "name": "Cmd4",
-   4      "debug": true,   // true here to see more clearly whats happening
+   4      "debug": true,    true here to see more clearly whats happening
    5      "accessories": [
    6      {
-   7          "type": "Lightbulb",    // Type of Accessory or Device
+   7          "type": "Lightbulb",     -Type of Accessory or Device
    8          "name": "TestLight",
    9          "displayName": "TestLight",
-  10          "on": "0",    // for Lightbulbs on is a Required Characteristic see docs
-  11          "brightness": 10,    // for Lightbulbs brightness is an Optional Characteristic see docs 
-  12          "state_cmd": "python3 script.py",    // see below state cmd
-  13          "polling": true    // see below polling
+  10          "on": "0",     #for Lightbulbs on is a Required Characteristic see docs
+  11          "brightness": 10,     for Lightbulbs brightness is an Optional Characteristic see docs 
+  12          "state_cmd": "python3 script.py",     see below state cmd
+  13          "polling": true     see below polling
   14      }
   15      ]
   16  },
