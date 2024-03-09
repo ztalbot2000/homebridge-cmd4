@@ -1,12 +1,23 @@
 <span align="center">
   
-[![npm](https://badgen.net/npm/v/homebridge-cmd4/latest?icon=npm&label)](https://www.npmjs.com/package/homebridge-cmd4)
-[![npm](https://badgen.net/npm/dt/homebridge-cmd4?label=downloads)](https://www.npmjs.com/package/homebridge-cmd4)
+[![npm](https://badgen.net/npm/v/homebridge-cmd4/latest)](https://www.npmjs.com/package/homebridge-cmd4)
+[![npm](https://badgen.net/npm/dt/homebridge-cmd4)](https://www.npmjs.com/package/homebridge-cmd4)
   
 </span>
 
-# Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics, Custom Characteristics and Priority Queued Polling too!!
+# Homebridges Cmd4
 <base _target="_self">
+
+[Homrbridge Cmd4](https://www.npmjs.com/package/homebridge-cmd4) makes it easy to integrate any accesory into [Homebridge](https://github.com/homebridge/homebridge)
+
+> [!TIP]
+> Helpful advice for doing things better or more easily.
+
+
+> [!NOTE]
+> Useful information that users should know, even when skimming content.
+
+<details><summary>test info</summary>content</details>
 
 <BR><BR>
 ## &nbsp;&nbsp;&nbsp; **Cmd4** is a plugin for [Homebridge] that lets you see what Homebridge and Homekit are all about, without actually owning a single accessory!  For the more advanced user, Cmd4 brings CLI support for all device types (Accessories) and characteristics.
