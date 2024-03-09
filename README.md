@@ -171,7 +171,7 @@ eg. this fails `"state_cmd": "python -c 'print("true")'"` but this works `"state
 
 
 ### TODO
-&emsp; - [ ] Become Homebridge Certified. ( The schema file for Homebridg-ui  would be very difficult )
+&emsp; -[ ] Become Homebridge Certified. ( The schema file for Homebridg-ui  would be very difficult )
 <br><br><br><br>
 
 
