@@ -104,6 +104,7 @@ Only for polled characteristics the statecmd is called. ok. it is simpler than i
 in the [docs][docs] all required & optional characteristics are listed for each Accessory
 
 > [!IMPORTANT]
+> #### &emsp; &emsp; &emsp; &emsp; required & optional Characteristics
 > in the [docs][docs] all required & optional characteristics are listed for each Accessory
 
 #### &emsp; &emsp; &emsp; &emsp; state cmd
@@ -118,6 +119,7 @@ your script has to handle the arguments accordingly see script [templates & exam
 
 
 > [!IMPORTANT]
+> #### &emsp; &emsp; &emsp; &emsp; state cmd
 > this command is called with some arguments for all **polled** characteristics. the arguments are either<br>
 > &emsp;  `'set'` `'characteristic'` `'value'` or<br>
 > &emsp; `'get'` `'characteristic'`<br><br>
