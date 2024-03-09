@@ -27,11 +27,11 @@
 <br>
 
 ### <p>usage scenarios</p>
-perhaps you want to see what homebridge is all about, without actually owning a single accessory!<br>
+you want to see what homebridge is all about, without actually owning a single accessory!<br>
 just [Install](#installation) and use the [demo config](#Configuration) and you can try out pretty much all homebridge has to offer<br>
 <br>
-or perhaps you want to integrate a device into homebridge without writing your own plugin!<br>
-with a Cmd4 brings cli support for all [Supported Accessories][docs]. Use a [Custom config](#Configuration) plus a simple script in any language.
+or you want to integrate a device into homebridge without writing your own plugin!<br>
+Cmd4 brings cli support for all [Supported Accessories][docs]. Use a [Custom config](#Configuration) plus a simple script in your preferd language.
 <br><br><br><br>
 
 
@@ -39,17 +39,16 @@ with a Cmd4 brings cli support for all [Supported Accessories][docs]. Use a [Cus
 
 ### <p style="font-size: 23px; font-weight: 700;">Gallery</p>
 <p float="left">
-&emsp; &emsp;
 <a href="#Configuration">
-<img src="screenshots/Homekit_screenshot.png" width="30%">
+<img src="screenshots/Homekit_screenshot.png" width="48%">
 </a>
-&emsp; &emsp;
+&nbsp;
 <a href="#Advanced-Features">
-<img src="screenshots/grouped-fan.png" width="10.4%">
+<img src="screenshots/grouped-fan.png" width="16.4%">
 </a>
-&emsp; &emsp;
+&nbsp;
 <a href="#Advanced-Features">
-<img src="screenshots/Eve_screenshot.png" width="17%">
+<img src="screenshots/Eve_screenshot.png" width=27%">
 </a>
 </p>´
 <br><br><br><br>
@@ -87,13 +86,13 @@ Only for polled characteristics the statecmd is called. ok. it is simpler than i
    4      "debug": true,    # true here to see more clearly whats happening
    5      "accessories": [
    6      {
-   7          "type": "Lightbulb",     # Type of Accessory or Device
+   7          "type": "Lightbulb",           # Type of Accessory or Device
    8          "name": "TestLight",
    9          "displayName": "TestLight",
-  10          "on": "0",     # for Lightbulbs on is a Required Characteristic see docs
-  11          "brightness": 10,     # for Lightbulbs brightness is an Optional Characteristic see docs 
+  10          "on": "0",                     # for Lightbulbs on is a Required Characteristic see docs
+  11          "brightness": 10,              # for Lightbulbs brightness is an Optional Characteristic see docs 
   12          "state_cmd": "python3 script.py",     # see below state cmd
-  13          "polling": true     # see below polling
+  13          "polling": true                       # see below polling
   14      }
   15      ]
   16  },
@@ -104,20 +103,20 @@ Only for polled characteristics the statecmd is called. ok. it is simpler than i
 
 
 > [!IMPORTANT]
-> **state cmd** is called with some arguments for all **polled** characteristics. the arguments are either<br>
-> &emsp;  `'set'` `'characteristic'` `'value'` or<br>
-> &emsp; `'get'` `'characteristic'`<br><br>
+> **state cmd** is called with some arguments for each **polled** characteristics. the arguments are either<br>
+> &emsp; `'set'` `'characteristic'` `'value'` or<br>
+> &emsp; `'get'` `'characteristic'` here a return value is expected<br><br>
 
 > [!NOTE]
 > **so scenario** you open the home app - this causes cmd4 to `get` the `on` Characteristic via <br>
-> &emsp;`python3 script.py 'get' 'on'` plus it expects a return value either here `1` or `0`<br>
-> **or** you tap the lightbulb in the home app - this causes cmd4 to `set` the `on` Characteristic via<br>
+> &emsp;`python3 script.py 'get' 'on'` and it expects a return value here `1` or `0`<br>
+> **then** you tap the lightbulb in the home app - this causes cmd4 to `set` the `on` Characteristic via<br>
 > &emsp;`python3 script.py 'set' 'on' '1'`<br>
 > your script has to handle the arguments accordingly see script [templates & examples](Extras/Cmd4Scripts/Examples) and [docs][docs] under Script Templates <br>
 
 > [!IMPORTANT]
 > The **`"polling": true`** enables the statecmd only for **Required Characteristics** so here only for `on` the state cmd is called see scenario above<br>
-> to poll, alias enable the state cmd, for **optional** Characteristics you have to impement polling per characteristic<br>
+> to poll, alias enable the state cmd, for **optional** Characteristics too you have to implement polling per characteristic<br>
 > ```json
 >   13          "polling": [
 >                   {"characteristic": "on", "interval": 2},  // interval in seconds
@@ -163,7 +162,7 @@ With Homebridge ui you only need to write Cmd4 in the Environmental variable sec
 <br>
 
 #### &emsp; &emsp; &emsp; &emsp; Statecmd Formatting
-when ever you have `"` or `'` in side your statecmd escape the parenthesis with a backslash ` \" ` 
+when ever you have `"` or `'` in side your statecmd. escape the parenthesis with a backslash ` \" ` 
 eg. this fails `"state_cmd": "python -c 'print("true")'"` but this works `"state_cmd": "python -c 'print(\"true\")'"`
 <br><br><br><br>
 
