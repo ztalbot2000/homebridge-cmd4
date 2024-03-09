@@ -113,7 +113,9 @@ with [grouped Accessories or linked Types](https://github.com/ztalbot2000/homebr
 
 <p float="left">
 &emsp; &emsp; &emsp; &emsp;
-<a href="[https://github.com/crbyxwpzfl/homebridge-cmd4/tree/newreadme?tab%253Dreadme-ov-file#----grouped-accessories)" ><img src="./screenshots/grouped-fan.png" width="10%"> </a>
+<a href="#----grouped-accessories">
+<img src="./screenshots/grouped-fan.png" width="10%">
+</a>
 </p>´
 
 
