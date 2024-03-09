@@ -117,11 +117,12 @@ Only for polled characteristics the statecmd is called. ok. it is simpler than i
 > [!IMPORTANT]
 > The **`"polling": true`** enables the statecmd only for **Required Characteristics** so here only for `on` the state cmd is called see scenario above<br>
 > to poll, alias enable the state cmd, for **optional** Characteristics too you have to implement polling per characteristic<br>
-> ```json
->   13          "polling": [
->                   {"characteristic": "on", "interval": 2},  // interval in seconds
->                   {"characteristic": "brightness", "interval": 2}
->               ]
+> ```yaml    
+>   ...
+>   13    "polling": [
+>             {"characteristic": "on", "interval": 2},  # interval in seconds
+>             {"characteristic": "brightness", "interval": 2, "timeout": 500}
+>         ]
 > ```
 <br><br><br><br>
 
