@@ -39,15 +39,15 @@ with a Cmd4 brings cli support for all [Supported Accessories][docs]. Use a [Cus
 
 ### <p style="font-size: 23px; font-weight: 700;">Gallery</p>
 <p float="left">
-&emsp; &emsp; &emsp; &emsp;
+&emsp; &emsp;
 <a href="#Configuration">
 <img src="screenshots/Homekit_screenshot.png" width="30%">
 </a>
-&emsp; &emsp; &emsp; &emsp;
+&emsp; &emsp;
 <a href="#Advanced-Features">
 <img src="screenshots/grouped-fan.png" width="10.4%">
 </a>
-&emsp; &emsp; &emsp; &emsp;
+&emsp; &emsp;
 <a href="#Advanced-Features">
 <img src="screenshots/Eve_screenshot.png" width="17%">
 </a>
