@@ -16,8 +16,7 @@
 
 > [!NOTE]
 > Useful information that users should know, even when skimming content.
-
-<details><summary>test info</summary>content</details>
+> <details><summary>test info</summary>content</details>
 
 <BR><BR>
 ## &nbsp;&nbsp;&nbsp; **Cmd4** is a plugin for [Homebridge] that lets you see what Homebridge and Homekit are all about, without actually owning a single accessory!  For the more advanced user, Cmd4 brings CLI support for all device types (Accessories) and characteristics.
