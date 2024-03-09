@@ -18,7 +18,7 @@
 [Homrbridge Cmd4](https://www.npmjs.com/package/homebridge-cmd4) makes it easy to integrate [many accessorys][docs] into [Homebridge](https://github.com/homebridge/homebridge)
 
 
-> [!IMORTANT]
+> [!IMPORTANT]
 > Homebridge UI Users. Do not click on any inline links. Homebridge UI does not supprt them. Bug [#90](https://github.com/ztalbot2000/homebridge-cmd4/issues/90)
 
 
@@ -30,10 +30,10 @@
 
 ### <p style="font-size: 23px; font-weight: 700;">usage scenarios</p>
 perhaps you want to see what homebridge is all about, without actually owning a single accessory!<br>
-&emsp; just [Install](#installation) and use the [demo config](#Configuration) and you can try out pretty much all homebridge has to offer<br>
+just [Install](#installation) and use the [demo config](#Configuration) and you can try out pretty much all homebridge has to offer<br>
 <br>
 or perhaps you want to integrate a device into homebridge without writing your own plugin!<br>
-&emsp; with a [Custom config](#Configuration) cmd4 brings cli support for all [Supported Accessories][docs] so you can write simple scripts in any language.
+with a Cmd4 brings cli support for all [Supported Accessories][docs]. Use a [Custom config](#Configuration) plus a simple script in any language.
 <br><br><br><br>
 
 
@@ -111,10 +111,10 @@ Only for polled characteristics the statecmd is called. ok. it is simpler than i
 > &emsp; `'get'` `'characteristic'`<br><br>
 
 > [!NOTE]
-> **so scenario** you open the home app - this causes cmd4 to `get` the `on` Characteristic - and the command looks like<br>
-> &emsp;`python3 script.py 'get' 'on'` and cmd4 expects a return value either `1` or `0`<br><br>
-> **or** you tap the lightbulb in the home app - this causes cmd4 to `set` the `on` Characteristic - and the command looks like<br>
-> &emsp;`python3 script.py 'set' 'on' '1'`<br><br>
+> **so scenario** you open the home app - this causes cmd4 to `get` the `on` Characteristic via <br>
+> &emsp;`python3 script.py 'get' 'on'` plus it expects a return value either here `1` or `0`<br>
+> **or** you tap the lightbulb in the home app - this causes cmd4 to `set` the `on` Characteristic via<br>
+> &emsp;`python3 script.py 'set' 'on' '1'`<br>
 > your script has to handle the arguments accordingly see script [templates & examples](Extras/Cmd4Scripts/Examples) and [docs][docs] under Script Templates <br>
 
 > [!IMPORTANT]
@@ -143,6 +143,7 @@ Plus many more posebileties with [**Fakegato History**](https://github.com/ztalb
 ### <p style="font-size: 23px; font-weight: 700;">Basic Troubleshooting</p>
 #### &emsp; &emsp; &emsp; &emsp;  Error: Command failed
 This error is indicative to many situations. The most common is that the command took to long to run.
+Check that the command exists, but also that the timeout value in your config.json for that accessory is not too low.
 
 ```
   Error: Command failed: /homebridge/Server.sh Get 'Server' 'On'
@@ -157,14 +158,13 @@ This error is indicative to many situations. The most common is that the command
   cmd: "/homebridge/Server.sh Get Server On"
 
 ```
-Check that the command exists, but also that the timeout value in your config.json for that accessory is not too low.
 <br>
 
 #### &emsp; &emsp; &emsp; &emsp; Debug Flag
 New in Cmd4 v4.0.0 is how to enable Debug mode. The logs are 100% the same, except that now that Cmd4 has its own logging system ( Copied from Homebridge for compatability ); Enabling Debug logs will not enable Debug logs in other plugins. <br>
 &emsp; There are two ways to enable Cmd4 Debug logs. Either set `"debug": true` in the [Config](#Configuration) or add `DEBUG` environmntal variable
 > [!NOTE]
-> Homebridge ui you only need to write Cmd4 in the Environmental variable section
+> with Homebridge ui you only need to write Cmd4 in the Environmental variable section
 <br>
 
 #### &emsp; &emsp; &emsp; &emsp; Statecmd Formatting
@@ -193,11 +193,11 @@ when ever you have `"` or `'` in side your statecmd escape the parenthesis with 
 
 
 ### <p style="font-size: 23px; font-weight: 700;">Inspiration and special thanks</p>
-Based on the best of:<br>
-&emsp; [homebridge-cmd]https://github.com/senyoltw/homebridge-cmd.git<br>
-&emsp; [homebridge-cmdswitch2]https://github.com/luisiam/homebridge-cmdswitch2.git<br>
-&emsp; [homebridge-real-fake-garage-doors]https://github.com/plasticrake/homebridge-real-fake-garage-doors.git<br>
-&emsp; [homebridge-homeseer]https://github.com/jrhubott/homebridge-homeseer.git<br>
+&emsp; Based on the best of:<br>
+&emsp; [homebridge-cmd](https://github.com/senyoltw/homebridge-cmd.git)<br>
+&emsp; [homebridge-cmdswitch2](https://github.com/luisiam/homebridge-cmdswitch2.git)<br>
+&emsp; [homebridge-real-fake-garage-doors](https://github.com/plasticrake/homebridge-real-fake-garage-doors.git)<br>
+&emsp; [homebridge-homeseer](https://github.com/jrhubott/homebridge-homeseer.git)<br>
 &emsp; Thanks to [TimofeyK](https://github.com/TimofeyK) for all his help with fakegato and for suggesting it.<br>
 &emsp; Thanks to [Mitch Williams](https://github.com/mitch7391) for his endless encouragement.<br>
 &emsp; Thanks especially to those who continue to work on Homebridge and those who make it better.<br>
