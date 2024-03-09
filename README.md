@@ -1,22 +1,23 @@
-<span align="center">
-  
-[![npm](https://badgen.net/npm/v/homebridge-cmd4/latest)](https://www.npmjs.com/package/homebridge-cmd4)
-[![npm](https://badgen.net/npm/dt/homebridge-cmd4)](https://www.npmjs.com/package/homebridge-cmd4)
-  
-</span>
 
-# Homebridges Cmd4
+
+[npm]:https://www.npmjs.com/package/homebridge-cmd4
+[dl]:https://flat.badgen.net/npm/dt/homebridge-cmd4?scale=1
+[v]:https://flat.badgen.net/npm/v/homebridge-cmd4?icon=npm&label&scale=1
+[license]:https://flat.badgen.net/npm/license/homebridge-cmd4?icon=npm&scale=1
+
+
+### <p style="text-align: left; width:49%; display: inline-block; font-size: 23px; font-weight: 1000;">Homebridges Cmd4</p> <p style="text-align: right; width:50%;  display: inline-block;">[![][dl]][npm] [![][license]][npm] [![][v]][npm]</p>
+
 <base _target="_self">
 
-[Homrbridge Cmd4](https://www.npmjs.com/package/homebridge-cmd4) makes it easy to integrate any accesory into [Homebridge](https://github.com/homebridge/homebridge)
+[Homrbridge Cmd4](https://www.npmjs.com/package/homebridge-cmd4) makes it easy to integrate [any accesory]() into [Homebridge](https://github.com/homebridge/homebridge)
 
-> [!TIP]
-> Helpful advice for doing things better or more easily.
+test<br>
 
+asdasdasd
 
-> [!NOTE]
-> Useful information that users should know, even when skimming content.
-> <details><summary>test info</summary>content</details>
+&emsp;sadf
+
 
 <BR><BR>
 ## &nbsp;&nbsp;&nbsp; **Cmd4** is a plugin for [Homebridge] that lets you see what Homebridge and Homekit are all about, without actually owning a single accessory!  For the more advanced user, Cmd4 brings CLI support for all device types (Accessories) and characteristics.
