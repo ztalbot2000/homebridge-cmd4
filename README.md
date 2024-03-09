@@ -5,6 +5,11 @@
 [v]:https://flat.badgen.net/npm/v/homebridge-cmd4?icon=npm&label&scale=1
 [license]:https://flat.badgen.net/npm/license/homebridge-cmd4?icon=npm&scale=1
 
+[Install]:
+[Config]:
+[Accessories]:
+[Advanced]:
+
 
 ### <p style="text-align: left; width:49%; display: inline-block; font-size: 23px; font-weight: 1000;">Homebridges Cmd4</p> <p style="text-align: right; width:50%;  display: inline-block;">[![][dl]][npm] [![][license]][npm] [![][v]][npm]</p>
 
@@ -12,11 +17,23 @@
 
 [Homrbridge Cmd4](https://www.npmjs.com/package/homebridge-cmd4) makes it easy to integrate [any accesory]() into [Homebridge](https://github.com/homebridge/homebridge)
 
-test<br>
+&emsp;Installation<br>
+&emsp;Configuration<br>
+&emsp;Supported Accessories<br>
+&emsp;Advaced usage<br>
 
-asdasdasd
+### <p style="font-size: 23px; font-weight: 700;">usage scenarios</p>
+perhaps you want to see what homebridge is all about, without actually owning a single accessory!<br>
+or perhaps you want to integrate a device into homebridge without writing your own plugin!<br>
 
-&emsp;sadf
+### <p style="font-size: 23px; font-weight: 700;">Installation</p>
+
+### <p style="font-size: 23px; font-weight: 700;">Configuration</p>
+
+### <p style="font-size: 23px; font-weight: 700;">Supported Accesories</p>
+
+### <p style="font-size: 23px; font-weight: 700;">Advanced usage</p>
+
 
 
 <BR><BR>
