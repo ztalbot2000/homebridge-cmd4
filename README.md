@@ -5,10 +5,10 @@
 [v]:https://flat.badgen.net/npm/v/homebridge-cmd4?icon=npm&label&scale=1
 [license]:https://flat.badgen.net/npm/license/homebridge-cmd4?icon=npm&scale=1
 
-[Install]:
-[Config]:
-[Accessories]:
-[Advanced]:
+[Install]:https://github.com/crbyxwpzfl/homebridge-cmd4/tree/newreadme#installation
+[Config]:https://github.com/crbyxwpzfl/homebridge-cmd4/tree/newreadme?tab%253Dreadme-ov-file#installation
+[Accessories]:https://github.com/crbyxwpzfl/homebridge-cmd4/tree/newreadme?tab%253Dreadme-ov-file#installation
+[Advanced]:https://github.com/crbyxwpzfl/homebridge-cmd4/tree/newreadme?tab%253Dreadme-ov-file#installation
 
 
 ### <p style="text-align: left; width:49%; display: inline-block; font-size: 23px; font-weight: 1000;">Homebridges Cmd4</p> <p style="text-align: right; width:50%;  display: inline-block;">[![][dl]][npm] [![][license]][npm] [![][v]][npm]</p>
@@ -17,10 +17,10 @@
 
 [Homrbridge Cmd4](https://www.npmjs.com/package/homebridge-cmd4) makes it easy to integrate [any accesory]() into [Homebridge](https://github.com/homebridge/homebridge)
 
-&emsp;Installation<br>
-&emsp;Configuration<br>
-&emsp;Supported Accessories<br>
-&emsp;Advaced usage<br>
+&emsp;[Installation](#installation)<br>
+&emsp;[Configuration](#Configuration)<br>
+&emsp;[Supported Accessories](#Supported Accessories)<br>
+&emsp;[Advaced usage](#Advanced usage)<br>
 
 ### <p style="font-size: 23px; font-weight: 700;">usage scenarios</p>
 perhaps you want to see what homebridge is all about, without actually owning a single accessory!<br>
@@ -30,7 +30,7 @@ or perhaps you want to integrate a device into homebridge without writing your o
 
 ### <p style="font-size: 23px; font-weight: 700;">Configuration</p>
 
-### <p style="font-size: 23px; font-weight: 700;">Supported Accesories</p>
+### <p style="font-size: 23px; font-weight: 700;">Supported Accessories</p>
 
 ### <p style="font-size: 23px; font-weight: 700;">Advanced usage</p>
 
