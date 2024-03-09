@@ -100,48 +100,32 @@ Only for polled characteristics the statecmd is called. ok. it is simpler than i
   15      ]
   16  },
 ```
-#### &emsp; &emsp; &emsp; &emsp; required & optional Characteristics
-in the [docs][docs] all required & optional characteristics are listed for each Accessory
 
 > [!IMPORTANT]
-> #### &emsp; &emsp; &emsp; &emsp; required & optional Characteristics
-> in the [docs][docs] all required & optional characteristics are listed for each Accessory
-
-#### &emsp; &emsp; &emsp; &emsp; state cmd
-this command is called with some arguments for all **polled** characteristics. the arguments are either<br>
-&emsp;  `'set'` `'characteristic'` `'value'` or<br>
-&emsp; `'get'` `'characteristic'`<br><br>
-**so scenario** you open the home app - this causes cmd4 to `get` the `on` Characteristic - and the command looks like<br>
-&emsp;`python3 script.py 'get' 'on'` and cmd4 expects a return value either `1` or `0`<br><br>
-or you tap the lightbulb in the home app - this causes cmd4 to `set` the `on` Characteristic - and the command looks like<br>
-&emsp;`python3 script.py 'set' 'on' '1'`<br><br>
-your script has to handle the arguments accordingly see script [templates & examples](Extras/Cmd4Scripts/Examples) and [docs][docs] under Script Templates <br>
+> **required & optional Characteristics** are listed for each Accessory in the [docs][docs]
 
 
 > [!IMPORTANT]
-> #### &emsp; &emsp; &emsp; &emsp; state cmd
-> this command is called with some arguments for all **polled** characteristics. the arguments are either<br>
+> **state cmd** is called with some arguments for all **polled** characteristics. the arguments are either<br>
 > &emsp;  `'set'` `'characteristic'` `'value'` or<br>
 > &emsp; `'get'` `'characteristic'`<br><br>
+
+> [!NOTE]
 > **so scenario** you open the home app - this causes cmd4 to `get` the `on` Characteristic - and the command looks like<br>
 > &emsp;`python3 script.py 'get' 'on'` and cmd4 expects a return value either `1` or `0`<br><br>
-> or you tap the lightbulb in the home app - this causes cmd4 to `set` the `on` Characteristic - and the command looks like<br>
+> **or** you tap the lightbulb in the home app - this causes cmd4 to `set` the `on` Characteristic - and the command looks like<br>
 > &emsp;`python3 script.py 'set' 'on' '1'`<br><br>
-> your script has to handle the arguments accordingly see script [templates & examples](Extras/Cmd4Scripts/Examples) and [docs][docs] under Script
-Templates <br>
+> your script has to handle the arguments accordingly see script [templates & examples](Extras/Cmd4Scripts/Examples) and [docs][docs] under Script Templates <br>
 
-
-
-
-#### &emsp; &emsp; &emsp; &emsp; polling
-The **`"polling": true`** enables the statecmd only for **Required Characteristics** so here only for `on` the state cmd is called see scenario above<br>
-to poll, alias enable the state cmd, for **optional** Characteristics you have to impement polling per characteristic<br>
-```json
-  13          "polling": [
-                  {"characteristic": "on", "interval": 2},  // interval in seconds
-                  {"characteristic": "brightness", "interval": 2}
-              ]
-```
+> [!IMPORTANT]
+> The **`"polling": true`** enables the statecmd only for **Required Characteristics** so here only for `on` the state cmd is called see scenario above<br>
+> to poll, alias enable the state cmd, for **optional** Characteristics you have to impement polling per characteristic<br>
+> ```json
+>   13          "polling": [
+>                   {"characteristic": "on", "interval": 2},  // interval in seconds
+>                   {"characteristic": "brightness", "interval": 2}
+>               ]
+> ```
 <br><br><br><br>
 
 
