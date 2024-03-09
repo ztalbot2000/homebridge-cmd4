@@ -110,10 +110,11 @@ to poll, alias enable the state cmd, for **optional** Characteristics you have t
 ### <p style="font-size: 23px; font-weight: 700;">Advanced Features</p>
 #### &emsp; &emsp; &emsp; &emsp; Grouped Accessories
 with [grouped Accessories or linked Types](https://github.com/ztalbot2000/homebridge-cmd4/issues/121#issuecomment-1010596136) you can combine multible accessories into one tile in the home app. like<br>
+
 <p float="left">
 &emsp; &emsp; &emsp; &emsp;
-<img src="./screenshots/grouped-fan.png" width="10%">
-</p>
+<a herf="[https://github.com/crbyxwpzfl/homebridge-cmd4/tree/newreadme?tab%253Dreadme-ov-file#----grouped-accessories)" ><img src="./screenshots/grouped-fan.png" width="10%"> </a>
+</p>´
 
 
 and many more posebileties with [**Fakegato History**](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/Developers.md#adding-in-fakegato-history) and [**Priority & Queued Polling**](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/Developers.md#priority-queued-polling)
