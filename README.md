@@ -59,8 +59,8 @@ with a Cmd4 brings cli support for all [Supported Accessories][docs]. Use a [Cus
 
 
 ### <p style="font-size: 23px; font-weight: 700;">Installation</p>
-####  &emsp; &emsp; 1. Install [Homebridge](https://github.com/homebridge/homebridge?tab%253Dreadme-ov-file#installation)
-####  &emsp; &emsp; 2. Install Homebridge Cmd4 plugin either via the [homebridge ui](http://localhost:8581/plugins) or via npm
+####  &emsp; &emsp; Install [Homebridge](https://github.com/homebridge/homebridge?tab%253Dreadme-ov-file#installation)
+####  &emsp; &emsp; Install Homebridge Cmd4 plugin either via the [homebridge ui](http://localhost:8581/plugins) or via npm
 ```bash
    sudo npm install -g --unsafe-perm homebridge-cmd4
 ```
@@ -133,7 +133,7 @@ Only for polled characteristics the statecmd is called. ok. it is simpler than i
 
 ### <p style="font-size: 23px; font-weight: 700;">Advanced Features</p>
 with [**grouped Accessories or linked Types**](https://github.com/ztalbot2000/homebridge-cmd4/issues/121#issuecomment-1010596136) you can combine multible accessories into one tile in the home app.<br>
-Plus many more posebileties with [**Fakegato History**](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/Developers.md#adding-in-fakegato-history) and [**Priority & Queued Polling**](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/Developers.md#priority-queued-polling)
+Plus many more posebileties with [**Custom Caracteristics**](docs/Developers.md#developer-notes), [**Fakegato History**](docs/Developers.md#adding-in-fakegato-history) and [**Priority Queued Polling**](docs/Developers.md#priority-queued-polling)
 <br><br><br><br>
 
 
@@ -161,15 +161,13 @@ Check that the command exists, but also that the timeout value in your config.js
 <br>
 
 #### &emsp; &emsp; &emsp; &emsp; Debug Flag
-New in Cmd4 v4.0.0 is how to enable Debug mode. The logs are 100% the same, except that now that Cmd4 has its own logging system ( Copied from Homebridge for compatability ); Enabling Debug logs will not enable Debug logs in other plugins. <br>
-&emsp; There are two ways to enable Cmd4 Debug logs. Either set `"debug": true` in the [Config](#Configuration) or add `DEBUG` environmntal variable
-> [!NOTE]
-> with Homebridge ui you only need to write Cmd4 in the Environmental variable section
+There are two ways to enable Cmd4 Debug logs. Either set `"debug": true` in the [Config](#Configuration) or add `DEBUG` environmntal variable.
+With Homebridge ui you only need to write Cmd4 in the Environmental variable section.
 <br>
 
 #### &emsp; &emsp; &emsp; &emsp; Statecmd Formatting
-when ever you have `"` or `'` in side your statecmd escape the parenthesis with a backslash ` \" ` [#118](https://github.com/ztalbot2000/homebridge-cmd4/issues/118)<br> 
-&emsp; eg. this fails `"state_cmd": "python -c 'print("true")'"` but this works `"state_cmd": "python -c 'print(\"true\")'"`
+when ever you have `"` or `'` in side your statecmd escape the parenthesis with a backslash ` \" ` 
+eg. this fails `"state_cmd": "python -c 'print("true")'"` but this works `"state_cmd": "python -c 'print(\"true\")'"`
 <br><br><br><br>
 
 
