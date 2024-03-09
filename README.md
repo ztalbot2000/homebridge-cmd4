@@ -82,7 +82,7 @@ with a Cmd4 brings cli support for all [Supported Accessories][docs]. Use a [Cus
 ####  &emsp; &emsp; Custom config via [homebridge ui editor](http://localhost:8581/config)
 The Demo config has no polling defined. When no polling is defined for that accessory all values are retrieved and set from cache.<br>
 Only for polled characteristics the statecmd is called. ok. it is simpler than it sounds lets see a basic example
-```py
+```yaml
    1  {
    2      "platform": "Cmd4", 
    3      "name": "Cmd4",
@@ -145,7 +145,7 @@ Plus many more posebileties with [**Custom Caracteristics**](docs/Developers.md#
 This error is indicative to many situations. The most common is that the command took to long to run.
 Check that the command exists, but also that the timeout value in your config.json for that accessory is not too low.
 
-```
+```sh
   Error: Command failed: /homebridge/Server.sh Get 'Server' 'On'
 
     at ChildProcess.exithandler (child_process.js:297:12)
