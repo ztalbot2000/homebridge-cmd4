@@ -15,22 +15,41 @@
 
 <base _target="_self">
 
-[Homrbridge Cmd4](https://www.npmjs.com/package/homebridge-cmd4) makes it easy to integrate [any accesory]() into [Homebridge](https://github.com/homebridge/homebridge)
+
+[Homrbridge Cmd4](https://www.npmjs.com/package/homebridge-cmd4) makes it easy to integrate [many accesorys](#Supported-Accessories) into [Homebridge](https://github.com/homebridge/homebridge)
+
+
+> [!IMORTANT]
+> Homebridge UI Users. Do not click on any inline links. Homebridge UI does not supprt them. Bug [#90](https://github.com/ztalbot2000/homebridge-cmd4/issues/90)
+
 
 &emsp;[Installation](#installation)<br>
 &emsp;[Configuration](#Configuration)<br>
 &emsp;[Supported Accessories](#Supported-Accessories)<br>
 &emsp;[Advaced usage](#Advanced-usage)<br>
 
+
 ### <p style="font-size: 23px; font-weight: 700;">usage scenarios</p>
 perhaps you want to see what homebridge is all about, without actually owning a single accessory!<br>
 or perhaps you want to integrate a device into homebridge without writing your own plugin!<br>
 
+
 ### <p style="font-size: 23px; font-weight: 700;">Installation</p>
+#### 1. Install [Homebridge](https://github.com/homebridge/homebridge?tab%253Dreadme-ov-file#installation)
+#### 2. Install Homebridge Cmd4 plugin either via the [homebridge ui](http://localhost:8581/plugins) or via npm
+```bash
+   sudo npm install -g --unsafe-perm homebridge-cmd4
+```
+#### 3. [Configure](#Configuration) your Homebridge config either via [homebridge ui editor](http://localhost:8581/config) or use the provided [example config](Extras/config.json)
+```bash
+   cp /usr/local/lib/node_modules/homebridge-cmd4/Extras/config.json $HOME/.homebridge/
+``` 
 
 ### <p style="font-size: 23px; font-weight: 700;">Configuration</p>
 
+
 ### <p style="font-size: 23px; font-weight: 700;">Supported Accessories</p>
+
 
 ### <p style="font-size: 23px; font-weight: 700;">Advanced usage</p>
 
