@@ -19,8 +19,8 @@
 
 &emsp;[Installation](#installation)<br>
 &emsp;[Configuration](#Configuration)<br>
-&emsp;[Supported Accessories](#Supported Accessories)<br>
-&emsp;[Advaced usage](#Advanced usage)<br>
+&emsp;[Supported Accessories](#Supported-Accessories)<br>
+&emsp;[Advaced usage](#Advanced-usage)<br>
 
 ### <p style="font-size: 23px; font-weight: 700;">usage scenarios</p>
 perhaps you want to see what homebridge is all about, without actually owning a single accessory!<br>
