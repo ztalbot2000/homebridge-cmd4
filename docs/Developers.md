@@ -8,7 +8,6 @@
 * [**Homebridge API**](#homebridge-api)
 * [**Platform Accessories**](#platform-accessories)
 * [**Television Accessories**](#television-accessories)
-* [**Standard Accessories**](#standard-accessories)
 * [**Cmd4 Directives**](#cmd4-directives)
 * [**Cmd4 Devices and Characteristics**](#cmd4-devices-and-characteristics)
 * [**Priority Queued Polling**](#priority-queued-polling)
@@ -31,12 +30,11 @@
 * [**cmd4-HisenseTV**](https://github.com/mitch7391/cmd4-HisenseTV/blob/main/HisenseTV.sh)   
 
 ## Homebridge API
-&nbsp;&nbsp;&nbsp; Cmd4 is not possible without Homebridge. Prior to Cmd4 Version 3, Cmd4 just created Standard Plugin Accessories. With Version 3 of Cmd4, Cmd4 follows the Hombridge API as defined on [Homebridge API](https://developers.homebridge.io/#/) to be followed exactly. Both Platform and Accessory Plugins can be created. In fact the examples can be recreated exactly.<BR>
-<BR>Note: The major difference in CMD4 Version 3 is that the default accessory created is a Platform Plugin as compared to an Accessory Plugin. This is beneficial as many more Platform with the same type can be created and they can be published externally as we shall see.
+&nbsp;&nbsp;&nbsp; Cmd4 is not possible without Homebridge. As of Cmd4 Version >= 8, Cmd4 only follows the Platform template definition as dictated by Homebridge. See: [deprecated templates](https://developers.homebridge.io/#/). This was everyone anyway and makes homebridge-ui easier to implement for Cmd4..<BR>
 
 
 ## Platform Accessories
-&nbsp;&nbsp;&nbsp; The best way to explain the difference is to understand how the Homebridge API defines a Television as a Platform Accessory. [Homebridge Television](https://developers.homebridge.io/#/service/Television). Cmd4 Version 3 can recreate the exact same configuration as:<as:
+&nbsp;&nbsp;&nbsp; An example Cmd4 Platform accessory for a Homebridge Television as described by: [Homebridge Television](https://developers.homebridge.io/#/service/Television) is:
 
 ```json
 {
@@ -151,44 +149,6 @@ As per the Homebridge API, this allows the Platform Accessory to be published se
 </UL>
 
 See the [Cmd4 Developers Guide](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/Developers.md) for further information.
-
-## Standard Accessories
-&nbsp;&nbsp;&nbsp;A Standard Accessory does not need a Platform. The Homebridge example given is. [Homebridge Switch](https://developers.homebridge.io/#/api/accessory-plugins). Cmd4 Version 3 can recreate the exact same configuration as:
-<BR>
-For upcoming Cmd4 version 8.0 this will no longer be supported. This is because of <a href="https://developers.homebridge.io/#/">Homebridge deprecated templates</a>.This will also make homebridge-ui easier to implement.
-
-```json
-{
-    "bridge": {
-        "name": "MAC Test Homebridge",
-        "username": "CC:22:3D:E3:CE:30",
-        "port": 51826,
-        "pin": "555-55-555"
-    },
-    "accessories": [
-       {
-          "accessory":                "Cmd4",
-          "type":                     "Switch",
-          "outputConstants":          false,
-          "displayName":              "My_Switch",
-          "name":                     "My_Switch",
-          "on":                       "FALSE",
-          "manufacturer":             "Custom Manufacturer",
-          "model":                    "Custom Model",
-          "stateChangeResponseTime":   3,
-          "state_cmd": "node .homebridge/YourScriptHere.js"
-       }
-    ]
-}
-```
-
-This configuration defines a Cmd4 Standard Accessory with the designation:
-
-```json
-   "accessory": "Cmd4"
-```
-<BR>
-Notice that there is no Platform definition. Otherwise everything is the same. You can even add linked accessories as before.<BR>
 
 
 ## Cmd4 Directives

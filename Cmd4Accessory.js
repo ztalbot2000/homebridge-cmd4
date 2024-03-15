@@ -1515,7 +1515,10 @@ class Cmd4Accessory
 
                break;
            case constants.ACCESSORY:
-               // Do nothing as this is a key for homebridge, not us
+               // For 8.0 this is no longer supported.  Homebridge has deprecated
+               // the template and only wants Platform templates which makes
+               // it easier for Cmd4 to support homebridge-ui as well..
+               throw new Error( `Accessory: has been deprecated by homebridge. Only Platform confgurations are supported by Cmd4 >= 8.0 for: "${ this.displayName }".` );
                break;
            case constants.CATEGORY:
                // For those who define there own Category
