@@ -195,7 +195,7 @@
             "description": "If the Device is ACTIVE/INACTIVE",
             "condition":
             {
-               "functionBody": "return ['AirPurifier','CameraEventRecordingManagement','Fanv2','Faucet','HeaterCooler','HumidifierDehumidifier','IrrigationSystem','TargetControl','Television','Valve'].includes(model.type);"
+               "functionBody": "return ['AirPurifier','CameraEventRecordingManagement','Fanv2','Faucet','HeaterCooler','HumidifierDehumidifier','IrrigationSystem','TargetControl','Television','Valve','AccessoryMetrics','Assistant','CameraRecordingManagement','TapManagement'].includes(model.type);"
             }
          },
          "activeIdentifier":
@@ -444,11 +444,7 @@
          {
             "title": "configureBridgedAccessory",
             "type": "string",
-            "description": "The Configured Bridge Accessory",
-            "condition":
-            {
-               "functionBody": "return ['BridgeConfiguration'].includes(model.type) && model.allowTLV8 == true;"
-            }
+            "description": "The Configured Bridge Accessory"
          },
          "configureBridgedAccessoryStatus":
          {
@@ -656,7 +652,7 @@
             "description": "The Slats Current State",
             "condition":
             {
-               "functionBody": "return ['Slat'].includes(model.type);"
+               "functionBody": "return ['Slats'].includes(model.type);"
             }
          },
          "currentTemperature":
@@ -697,7 +693,11 @@
                { "title": "FALSE", "enum": ["FALSE"] },
                { "title": "TRUE", "enum": ["TRUE"] }
             ],
-            "description": "The Devices Current Transport"
+            "description": "The Devices Current Transport",
+            "condition":
+            {
+               "functionBody": "return ['ThreadTransport','WiFiTransport'].includes(model.type);"
+            }
          },
          "currentVerticalTiltAngle":
          {
@@ -763,21 +763,13 @@
          {
             "title": "discoverBridgedAccessories",
             "type": "integer",
-            "description": "The Discovered Bridge Accessories",
-            "condition":
-            {
-               "functionBody": "return ['BridgeConfiguration'].includes(model.type);"
-            }
+            "description": "The Discovered Bridge Accessories"
          },
          "discoveredBridgedAccessories":
          {
             "title": "discoveredBridgedAccessories",
             "type": "integer",
-            "description": "The Discovered Bridged Accessories",
-            "condition":
-            {
-               "functionBody": "return ['BridgeConfiguration'].includes(model.type);"
-            }
+            "description": "The Discovered Bridged Accessories"
          },
          "displayOrder":
          {
@@ -899,7 +891,11 @@
          {
             "title": "identifier",
             "type": "integer",
-            "description": "The Devices Identifier"
+            "description": "The Devices Identifier",
+            "condition":
+            {
+               "functionBody": "return ['Assistant'].includes(model.type);"
+            }
          },
          "identify":
          {
@@ -1208,7 +1204,7 @@
             "description": "Name of accessory, as displayed in HomeKit",
             "condition":
             {
-               "functionBody": "return ['AccessoryInformation','TunneledBTLEAccessoryService'].includes(model.type);"
+               "functionBody": "return ['AccessoryInformation','TunneledBTLEAccessoryService','Assistant'].includes(model.type);"
             }
          },
          "networkAccessViolationControl":
@@ -1473,7 +1469,7 @@
             "oneOf": [
                { "title": "NO_PROGRAM_SCHEDULED", "enum": ["NO_PROGRAM_SCHEDULED"] },
                { "title": "PROGRAM_SCHEDULED", "enum": ["PROGRAM_SCHEDULED"] },
-               { "title": "PROGRAM_SCHEDULED_MANUAL_MODE_", "enum": ["PROGRAM_SCHEDULED_MANUAL_MODE_"] }
+               { "title": "PROGRAM_SCHEDULED_MANUAL_MODE", "enum": ["PROGRAM_SCHEDULED_MANUAL_MODE"] }
             ],
             "description": "The Devices Program Mode",
             "condition":
@@ -1567,7 +1563,7 @@
             "description": "The Relay Control Point",
             "condition":
             {
-               "functionBody": "return ['Relay'].includes(model.type) && model.allowTLV8 == true;"
+               "functionBody": "return ['Relay','CloudRelay'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "relayEnabled":
@@ -1581,7 +1577,7 @@
             "description": "Is the Relay Currently Enabled",
             "condition":
             {
-               "functionBody": "return ['Relay'].includes(model.type);"
+               "functionBody": "return ['Relay','CloudRelay'].includes(model.type);"
             }
          },
          "relayState":
@@ -1593,7 +1589,7 @@
             "description": "The Relays Current State",
             "condition":
             {
-               "functionBody": "return ['Relay'].includes(model.type);"
+               "functionBody": "return ['Relay','CloudRelay'].includes(model.type);"
             }
          },
          "remainingDuration":
@@ -1726,7 +1722,11 @@
          {
             "title": "selectedAudioStreamConfiguration",
             "type": "string",
-            "description": "The Selected Audio Stream Configuration"
+            "description": "The Selected Audio Stream Configuration",
+            "condition":
+            {
+               "functionBody": "return ['AudioStreamManagement'].includes(model.type) && model.allowTLV8 == true;"
+            }
          },
          "selectedCameraRecordingConfiguration":
          {
@@ -1735,7 +1735,7 @@
             "description": "The Selected Cameras Recording Configuration",
             "condition":
             {
-               "functionBody": "return ['CameraEventRecordingManagement'].includes(model.type) && model.allowTLV8 == true;"
+               "functionBody": "return ['CameraEventRecordingManagement','CameraRecordingManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "selectedRTPStreamConfiguration":
@@ -1792,7 +1792,11 @@
          {
             "title": "setupDataStreamTransport",
             "type": "string",
-            "description": "The Devices Setup Stream Transport Value"
+            "description": "The Devices Setup Stream Transport Value",
+            "condition":
+            {
+               "functionBody": "return ['DataStreamTransportManagement'].includes(model.type) && model.allowTLV8 == true;"
+            }
          },
          "setupEndpoints":
          {
@@ -1844,7 +1848,7 @@
             "description": "The Slat Type",
             "condition":
             {
-               "functionBody": "return ['Slat'].includes(model.type);"
+               "functionBody": "return ['Slats'].includes(model.type);"
             }
          },
          "sleepDiscoveryMode":
@@ -1929,7 +1933,7 @@
             "description": "The Status of the Battery Level",
             "condition":
             {
-               "functionBody": "return ['BatteryService'].includes(model.type);"
+               "functionBody": "return ['BatteryService','Battery'].includes(model.type);"
             }
          },
          "statusTampered":
@@ -1967,7 +1971,7 @@
             "description": "The Supported Audio Recording Configuration",
             "condition":
             {
-               "functionBody": "return ['CameraEventRecordingManagement'].includes(model.type) && model.allowTLV8 == true;"
+               "functionBody": "return ['CameraEventRecordingManagement','CameraRecordingManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "supportedAudioStreamConfiguration":
@@ -1977,7 +1981,7 @@
             "description": "The Supported Audio Stream Configuration",
             "condition":
             {
-               "functionBody": "return ['CameraRTPStreamManagement'].includes(model.type) && model.allowTLV8 == true;"
+               "functionBody": "return ['CameraRTPStreamManagement','AudioStreamManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "supportedCameraRecordingConfiguration":
@@ -1987,7 +1991,7 @@
             "description": "The Supported Audio Recording Configuration",
             "condition":
             {
-               "functionBody": "return ['CameraEventRecordingManagement'].includes(model.type) && model.allowTLV8 == true;"
+               "functionBody": "return ['CameraEventRecordingManagement','CameraRecordingManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "supportedDataStreamTransportConfiguration":
@@ -2000,7 +2004,11 @@
          {
             "title": "supportedCharacteristicValueTransitionConfiguration",
             "type": "string",
-            "description": "The Supported Characteristic Value Transition Configuration"
+            "description": "The Supported Characteristic Value Transition Configuration",
+            "condition":
+            {
+               "functionBody": "return ['DataStreamTransportManagement'].includes(model.type) && model.allowTLV8 == true;"
+            }
          },
          "supportedDiagnosticsSnapshot":
          {
@@ -2049,7 +2057,7 @@
             "description": "The Supported Video Recording Configuration",
             "condition":
             {
-               "functionBody": "return ['CameraEventRecordingManagement'].includes(model.type) && model.allowTLV8 == true;"
+               "functionBody": "return ['CameraEventRecordingManagement','CameraRecordingManagement'].includes(model.type) && model.allowTLV8 == true;"
             }
          },
          "supportedVideoStreamConfiguration":
@@ -2322,11 +2330,11 @@
             "type": "integer",
             "description": "The Devices Measured Transmit Power"
          },
-         "transmitPowerMaximum":
+         "MaximumTransmitPower":
          {
-            "title": "transmitPowerMaximum",
+            "title": "MaximumTransmitPower",
             "type": "integer",
-            "description": "The Devices Maximum Power Output"
+            "description": "The Devices Maximum Transmit Power"
          },
          "tunnelConnectionTimeout":
          {
@@ -2407,7 +2415,7 @@
             "description": "The Devices Version String",
             "condition":
             {
-               "functionBody": "return ['LockManagement','ProtocolInformation'].includes(model.type);"
+               "functionBody": "return ['LockManagement','ProtocolInformation','DataStreamTransportManagement','SiriEndpoint'].includes(model.type);"
             }
          },
          "videoAnalysisActive":
@@ -2488,7 +2496,11 @@
          {
             "title": "wifiCapabilities",
             "type": "integer",
-            "description": "The Devices WiFi Capabilities"
+            "description": "The Devices WiFi Capabilities",
+            "condition":
+            {
+               "functionBody": "return ['WiFiTransport'].includes(model.type);"
+            }
          },
          "wifiConfigurationControl":
          {
@@ -2509,6 +2521,286 @@
             "condition":
             {
                "functionBody": "return ['WiFiSatellite'].includes(model.type);"
+            }
+         },
+         "assetUpdateReadiness":
+         {
+            "title": "assetUpdateReadiness",
+            "type": "integer",
+            "description": "The Devices Asset Update Readiness",
+            "condition":
+            {
+               "functionBody": "return ['AssetUpdate'].includes(model.type);"
+            }
+         },
+         "supportedAssetTypes":
+         {
+            "title": "supportedAssetTypes",
+            "type": "integer",
+            "description": "The Devices Supported Asset types",
+            "condition":
+            {
+               "functionBody": "return ['AssetUpdate'].includes(model.type);"
+            }
+         },
+         "configurationState":
+         {
+            "title": "configurationState",
+            "type": "integer",
+            "description": "The Devices Configuration State",
+            "condition":
+            {
+               "functionBody": "return ['NFCAccess','AccessCode'].includes(model.type);"
+            }
+         },
+         "NFCAccessControlPoint":
+         {
+            "title": "NFCAccessControlPoint",
+            "type": "string",
+            "description": "The NFC Access Point",
+            "condition":
+            {
+               "functionBody": "return ['NFCAccess'].includes(model.type) && model.allowTLV8 == true;"
+            }
+         },
+         "NFCAccessSupportedConfiguration":
+         {
+            "title": "NFCAccessSupportedConfiguration",
+            "type": "string",
+            "description": "The Devices NFC Access Support Configuration",
+            "condition":
+            {
+               "functionBody": "return ['NFCAccess'].includes(model.type) && model.allowTLV8 == true;"
+            }
+         },
+         "SiriEndpointSessionStatus":
+         {
+            "title": "SiriEndpointSessionStatus",
+            "type": "string",
+            "description": "The Devices Siri endpoint",
+            "condition":
+            {
+               "functionBody": "return ['SiriEndpoint'].includes(model.type) && model.allowTLV8 == true;"
+            }
+         },
+         "threadControlPoint":
+         {
+            "title": "threadControlPoint",
+            "type": "string",
+            "description": "The Devices thread control point",
+            "condition":
+            {
+               "functionBody": "return ['ThreadTransport'].includes(model.type) && model.allowTLV8 == true;"
+            }
+         },
+         "threadNodeCapabilities":
+         {
+            "title": "threadNodeCapabilities",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 31,
+            "description": "The Devices thread node capabilities",
+            "condition":
+            {
+               "functionBody": "return ['ThreadTransport'].includes(model.type);"
+            }
+         },
+         "threadStatus":
+         {
+            "title": "threadStatus",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 6,
+            "description": "The Devices thread status",
+            "condition":
+            {
+               "functionBody": "return ['ThreadTransport'].includes(model.type);"
+            }
+         },
+         "threadOpenThreadVersion":
+         {
+            "title": "threadOpenThreadVersion",
+            "type": "string",
+            "description": "The Devices thread version"
+         },
+         "accessCodeControlPoint":
+         {
+            "title": "accessCodeControlPoint",
+            "type": "string",
+            "description": "Access Code Control Point",
+            "condition":
+            {
+               "functionBody": "return ['AccessCode'].includes(model.type) && model.allowTLV8 == true;"
+            }
+         },
+         "accessCodeSupportedConfiguration":
+         {
+            "title": "accessCodeSupportedConfiguration",
+            "type": "string",
+            "description": "Access Code Supported Configuration",
+            "condition":
+            {
+               "functionBody": "return ['AccessCode'].includes(model.type) && model.allowTLV8 == true;"
+            }
+         },
+         "airPlayEnable":
+         {
+            "title": "airPlayEnable",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Airplay Enable"
+         },
+         "characteristicValueActiveTransitionCount":
+         {
+            "title": "characteristicValueActiveTransitionCount",
+            "type": "integer",
+            "description": "Characteristic Value Active Transition Count"
+         },
+         "cryptoHash":
+         {
+            "title": "cryptoHash",
+            "type": "string",
+            "description": "Crypto Hash",
+            "condition":
+            {
+               "functionBody": "return ['TapManagement'].includes(model.type) && model.allowTLV8 == true;"
+            }
+         },
+         "firmwareUpdateReadiness":
+         {
+            "title": "firmwareUpdateReadiness",
+            "type": "string",
+            "description": "Firmware Update Readiness",
+            "condition":
+            {
+               "functionBody": "return ['FirmwareUpdate'].includes(model.type) && model.allowTLV8 == true;"
+            }
+         },
+         "firmwareUpdateStatus":
+         {
+            "title": "firmwareUpdateStatus",
+            "type": "string",
+            "description": "The Devices firmware update status",
+            "condition":
+            {
+               "functionBody": "return ['FirmwareUpdate'].includes(model.type) && model.allowTLV8 == true;"
+            }
+         },
+         "hardwareFinish":
+         {
+            "title": "hardwareFinish",
+            "type": "string",
+            "description": "Hardware Finish"
+         },
+         "MetricsBufferFullState":
+         {
+            "title": "MetricsBufferFullState",
+            "type": "boolean",
+            "description": "Metrics Buffer Full State",
+            "condition":
+            {
+               "functionBody": "return ['AccessoryMetrics'].includes(model.type);"
+            }
+         },
+         "multiFunctionButton":
+         {
+            "title": "multiFunctionButton",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Multifunction Button"
+         },
+         "selectedDiagnosticsModes":
+         {
+            "title": "selectedDiagnosticsModes",
+            "type": "integer",
+            "description": "Selected Diagnostics Modes"
+         },
+         "selectedSleepConfiguration":
+         {
+            "title": "selectedSleepConfiguration",
+            "type": "string",
+            "description": "Selected Sleep Configuration"
+         },
+         "siriEnable":
+         {
+            "title": "siriEnable",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Siri Enable"
+         },
+         "siriEngineVersion":
+         {
+            "title": "siriEngineVersion",
+            "type": "string",
+            "description": "Siri's engine version"
+         },
+         "siriLightOnUse":
+         {
+            "title": "siriLightOnUse",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Siri Light on Use"
+         },
+         "siriListening":
+         {
+            "title": "siriListening",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Siri Listening"
+         },
+         "siriTouchToUse":
+         {
+            "title": "siriTouchToUse",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Siri Touch to use"
+         },
+         "StagedFirmwareVersion":
+         {
+            "title": "StagedFirmwareVersion",
+            "type": "string",
+            "description": "Staged Firmware Version"
+         },
+         "supportedMetrics":
+         {
+            "title": "supportedMetrics",
+            "type": "string",
+            "description": "Supported Metrics",
+            "condition":
+            {
+               "functionBody": "return ['AccessoryMetrics'].includes(model.type) && model.allowTLV8 == true;"
+            }
+         },
+         "supportedFirmwareUpdateConfiguration":
+         {
+            "title": "supportedFirmwareUpdateConfiguration",
+            "type": "string",
+            "description": "Supported Firmware Update Configuration"
+         },
+         "tapType":
+         {
+            "title": "tapType",
+            "type": "integer",
+            "description": "The devices Tap Type",
+            "condition":
+            {
+               "functionBody": "return ['TapManagement'].includes(model.type);"
+            }
+         },
+         "token":
+         {
+            "title": "token",
+            "type": "string",
+            "description": "The devices Token",
+            "condition":
+            {
+               "functionBody": "return ['TapManagement'].includes(model.type);"
             }
          },
          "type":
@@ -2564,7 +2856,7 @@
                { "title": "SecuritySystem", "enum": ["SecuritySystem"] },
                { "title": "ServiceLabel", "enum": ["ServiceLabel"] },
                { "title": "Siri", "enum": ["Siri"] },
-               { "title": "Slat", "enum": ["Slat"] },
+               { "title": "Slats", "enum": ["Slats"] },
                { "title": "SmartSpeaker", "enum": ["SmartSpeaker"] },
                { "title": "SmokeSensor", "enum": ["SmokeSensor"] },
                { "title": "Speaker", "enum": ["Speaker"] },
@@ -2584,7 +2876,22 @@
                { "title": "WiFiRouter", "enum": ["WiFiRouter"] },
                { "title": "WiFiSatellite", "enum": ["WiFiSatellite"] },
                { "title": "Window", "enum": ["Window"] },
-               { "title": "WindowCovering", "enum": ["WindowCovering"] }
+               { "title": "WindowCovering", "enum": ["WindowCovering"] },
+               { "title": "AccessoryMetrics", "enum": ["AccessoryMetrics"] },
+               { "title": "AssetUpdate", "enum": ["AssetUpdate"] },
+               { "title": "Assistant", "enum": ["Assistant"] },
+               { "title": "AudioStreamManagement", "enum": ["AudioStreamManagement"] },
+               { "title": "Battery", "enum": ["Battery"] },
+               { "title": "CameraRecordingManagement", "enum": ["CameraRecordingManagement"] },
+               { "title": "CloudRelay", "enum": ["CloudRelay"] },
+               { "title": "DataStreamTransportManagement", "enum": ["DataStreamTransportManagement"] },
+               { "title": "NFCAccess", "enum": ["NFCAccess"] },
+               { "title": "SiriEndpoint", "enum": ["SiriEndpoint"] },
+               { "title": "ThreadTransport", "enum": ["ThreadTransport"] },
+               { "title": "AccessCode", "enum": ["AccessCode"] },
+               { "title": "FirmwareUpdate", "enum": ["FirmwareUpdate"] },
+               { "title": "TapManagement", "enum": ["TapManagement"] },
+               { "title": "WiFiTransport", "enum": ["WiFiTransport"] }
             ],
             "required": true
          },
@@ -2866,7 +3173,7 @@
                "thirdPartyCameraActive": { "$ref": "#/$defs/thirdPartyCameraActive"},
                "timeUpdate": { "$ref": "#/$defs/timeUpdate"},
                "transmitPower": { "$ref": "#/$defs/transmitPower"},
-               "transmitPowerMaximum": { "$ref": "#/$defs/transmitPowerMaximum"},
+               "MaximumTransmitPower": { "$ref": "#/$defs/MaximumTransmitPower"},
                "tunnelConnectionTimeout": { "$ref": "#/$defs/tunnelConnectionTimeout"},
                "tunneledAccessoryAdvertising": { "$ref": "#/$defs/tunneledAccessoryAdvertising"},
                "tunneledAccessoryConnected": { "$ref": "#/$defs/tunneledAccessoryConnected"},
@@ -2885,6 +3192,38 @@
                "wifiCapabilities": { "$ref": "#/$defs/wifiCapabilities"},
                "wifiConfigurationControl": { "$ref": "#/$defs/wifiConfigurationControl"},
                "wifiSatelliteStatus": { "$ref": "#/$defs/wifiSatelliteStatus"},
+               "assetUpdateReadiness": { "$ref": "#/$defs/assetUpdateReadiness"},
+               "supportedAssetTypes": { "$ref": "#/$defs/supportedAssetTypes"},
+               "configurationState": { "$ref": "#/$defs/configurationState"},
+               "NFCAccessControlPoint": { "$ref": "#/$defs/NFCAccessControlPoint"},
+               "NFCAccessSupportedConfiguration": { "$ref": "#/$defs/NFCAccessSupportedConfiguration"},
+               "SiriEndpointSessionStatus": { "$ref": "#/$defs/SiriEndpointSessionStatus"},
+               "threadControlPoint": { "$ref": "#/$defs/threadControlPoint"},
+               "threadNodeCapabilities": { "$ref": "#/$defs/threadNodeCapabilities"},
+               "threadStatus": { "$ref": "#/$defs/threadStatus"},
+               "threadOpenThreadVersion": { "$ref": "#/$defs/threadOpenThreadVersion"},
+               "accessCodeControlPoint": { "$ref": "#/$defs/accessCodeControlPoint"},
+               "accessCodeSupportedConfiguration": { "$ref": "#/$defs/accessCodeSupportedConfiguration"},
+               "airPlayEnable": { "$ref": "#/$defs/airPlayEnable"},
+               "characteristicValueActiveTransitionCount": { "$ref": "#/$defs/characteristicValueActiveTransitionCount"},
+               "cryptoHash": { "$ref": "#/$defs/cryptoHash"},
+               "firmwareUpdateReadiness": { "$ref": "#/$defs/firmwareUpdateReadiness"},
+               "firmwareUpdateStatus": { "$ref": "#/$defs/firmwareUpdateStatus"},
+               "hardwareFinish": { "$ref": "#/$defs/hardwareFinish"},
+               "MetricsBufferFullState": { "$ref": "#/$defs/MetricsBufferFullState"},
+               "multiFunctionButton": { "$ref": "#/$defs/multiFunctionButton"},
+               "selectedDiagnosticsModes": { "$ref": "#/$defs/selectedDiagnosticsModes"},
+               "selectedSleepConfiguration": { "$ref": "#/$defs/selectedSleepConfiguration"},
+               "siriEnable": { "$ref": "#/$defs/siriEnable"},
+               "siriEngineVersion": { "$ref": "#/$defs/siriEngineVersion"},
+               "siriLightOnUse": { "$ref": "#/$defs/siriLightOnUse"},
+               "siriListening": { "$ref": "#/$defs/siriListening"},
+               "siriTouchToUse": { "$ref": "#/$defs/siriTouchToUse"},
+               "StagedFirmwareVersion": { "$ref": "#/$defs/StagedFirmwareVersion"},
+               "supportedMetrics": { "$ref": "#/$defs/supportedMetrics"},
+               "supportedFirmwareUpdateConfiguration": { "$ref": "#/$defs/supportedFirmwareUpdateConfiguration"},
+               "tapType": { "$ref": "#/$defs/tapType"},
+               "token": { "$ref": "#/$defs/token"},
                "queue": { "$ref": "#/$defs/queue"},
                "polling": { "$ref": "#/$defs/polling"},
                "state_cmd_prefix": { "$ref": "#/$defs/state_cmd_prefix"},
@@ -3182,7 +3521,7 @@
          "thirdPartyCameraActive": { "$ref": "#/$defs/thirdPartyCameraActive"},
          "timeUpdate": { "$ref": "#/$defs/timeUpdate"},
          "transmitPower": { "$ref": "#/$defs/transmitPower"},
-         "transmitPowerMaximum": { "$ref": "#/$defs/transmitPowerMaximum"},
+         "MaximumTransmitPower": { "$ref": "#/$defs/MaximumTransmitPower"},
          "tunnelConnectionTimeout": { "$ref": "#/$defs/tunnelConnectionTimeout"},
          "tunneledAccessoryAdvertising": { "$ref": "#/$defs/tunneledAccessoryAdvertising"},
          "tunneledAccessoryConnected": { "$ref": "#/$defs/tunneledAccessoryConnected"},
@@ -3201,6 +3540,38 @@
          "wifiCapabilities": { "$ref": "#/$defs/wifiCapabilities"},
          "wifiConfigurationControl": { "$ref": "#/$defs/wifiConfigurationControl"},
          "wifiSatelliteStatus": { "$ref": "#/$defs/wifiSatelliteStatus"},
+         "assetUpdateReadiness": { "$ref": "#/$defs/assetUpdateReadiness"},
+         "supportedAssetTypes": { "$ref": "#/$defs/supportedAssetTypes"},
+         "configurationState": { "$ref": "#/$defs/configurationState"},
+         "NFCAccessControlPoint": { "$ref": "#/$defs/NFCAccessControlPoint"},
+         "NFCAccessSupportedConfiguration": { "$ref": "#/$defs/NFCAccessSupportedConfiguration"},
+         "SiriEndpointSessionStatus": { "$ref": "#/$defs/SiriEndpointSessionStatus"},
+         "threadControlPoint": { "$ref": "#/$defs/threadControlPoint"},
+         "threadNodeCapabilities": { "$ref": "#/$defs/threadNodeCapabilities"},
+         "threadStatus": { "$ref": "#/$defs/threadStatus"},
+         "threadOpenThreadVersion": { "$ref": "#/$defs/threadOpenThreadVersion"},
+         "accessCodeControlPoint": { "$ref": "#/$defs/accessCodeControlPoint"},
+         "accessCodeSupportedConfiguration": { "$ref": "#/$defs/accessCodeSupportedConfiguration"},
+         "airPlayEnable": { "$ref": "#/$defs/airPlayEnable"},
+         "characteristicValueActiveTransitionCount": { "$ref": "#/$defs/characteristicValueActiveTransitionCount"},
+         "cryptoHash": { "$ref": "#/$defs/cryptoHash"},
+         "firmwareUpdateReadiness": { "$ref": "#/$defs/firmwareUpdateReadiness"},
+         "firmwareUpdateStatus": { "$ref": "#/$defs/firmwareUpdateStatus"},
+         "hardwareFinish": { "$ref": "#/$defs/hardwareFinish"},
+         "MetricsBufferFullState": { "$ref": "#/$defs/MetricsBufferFullState"},
+         "multiFunctionButton": { "$ref": "#/$defs/multiFunctionButton"},
+         "selectedDiagnosticsModes": { "$ref": "#/$defs/selectedDiagnosticsModes"},
+         "selectedSleepConfiguration": { "$ref": "#/$defs/selectedSleepConfiguration"},
+         "siriEnable": { "$ref": "#/$defs/siriEnable"},
+         "siriEngineVersion": { "$ref": "#/$defs/siriEngineVersion"},
+         "siriLightOnUse": { "$ref": "#/$defs/siriLightOnUse"},
+         "siriListening": { "$ref": "#/$defs/siriListening"},
+         "siriTouchToUse": { "$ref": "#/$defs/siriTouchToUse"},
+         "StagedFirmwareVersion": { "$ref": "#/$defs/StagedFirmwareVersion"},
+         "supportedMetrics": { "$ref": "#/$defs/supportedMetrics"},
+         "supportedFirmwareUpdateConfiguration": { "$ref": "#/$defs/supportedFirmwareUpdateConfiguration"},
+         "tapType": { "$ref": "#/$defs/tapType"},
+         "token": { "$ref": "#/$defs/token"},
          "queue": { "$ref": "#/$defs/queue"},
          "pollingSwitch": { "$ref": "#/$defs/pollingSwitch"},
          "polling": { "$ref": "#/$defs/polling"},
@@ -3378,7 +3749,11 @@
          },
          "items":
          [
-            "configureBridgedAccessoryStatus"
+            "configureBridgedAccessoryStatus",
+            "configureBridgedAccessoryStatus",
+            "discoverBridgedAccessories",
+            "discoveredBridgedAccessories",
+            "configureBridgedAccessory"
          ]
       },
       {
@@ -3457,11 +3832,12 @@
          "items":
          [
             "eventSnapshotsActive",
+            "cameraOperatingModeIndicator",
             "manuallyDisabled",
             "nightVision",
+            "periodicSnapshotsActive",
             "thirdPartyCameraActive",
-            "cameraOperatingModeIndicator",
-            "periodicSnapshotsActive"
+            "diagonalFieldOfView"
          ]
       },
       {
@@ -3563,8 +3939,10 @@
          [
             "programmableSwitchEvent",
             "brightness",
+            "mute",
+            "name",
             "volume",
-            "name"
+            "operatingStateResponse"
          ]
       },
       {
@@ -3679,11 +4057,11 @@
             "active",
             "lockPhysicalControls",
             "name",
+            "rotationSpeed",
             "swingMode",
             "coolingThresholdTemperature",
             "heatingThresholdTemperature",
-            "temperatureDisplayUnits",
-            "rotationSpeed"
+            "temperatureDisplayUnits"
          ]
       },
       {
@@ -3699,11 +4077,11 @@
             "currentRelativeHumidity",
             "lockPhysicalControls",
             "name",
-            "swingMode",
-            "waterLevel",
             "relativeHumidityDehumidifierThreshold",
             "relativeHumidityHumidifierThreshold",
-            "rotationSpeed"
+            "rotationSpeed",
+            "swingMode",
+            "waterLevel"
          ]
       },
       {
@@ -3717,11 +4095,11 @@
          "items":
          [
             "currentRelativeHumidity",
+            "name",
             "statusActive",
             "statusFault",
             "statusTampered",
-            "statusLowBattery",
-            "name"
+            "statusLowBattery"
          ]
       },
       {
@@ -3822,12 +4200,12 @@
          "items":
          [
             "lockControlPoint",
-            "logs",
-            "audioFeedback",
-            "lockManagementAutoSecurityTimeout",
             "administratorOnlyAccess",
-            "lockLastKnownAction",
+            "audioFeedback",
             "currentDoorState",
+            "lockManagementAutoSecurityTimeout",
+            "lockLastKnownAction",
+            "logs",
             "motionDetected",
             "name"
          ]
@@ -3872,11 +4250,11 @@
          "items":
          [
             "motionDetected",
+            "name",
             "statusActive",
             "statusFault",
-            "statusTampered",
             "statusLowBattery",
-            "name"
+            "statusTampered"
          ]
       },
       {
@@ -3974,10 +4352,10 @@
          "items":
          [
             "securitySystemCurrentState",
-            "statusFault",
-            "statusTampered",
+            "name",
             "securitySystemAlarmType",
-            "name"
+            "statusFault",
+            "statusTampered"
          ]
       },
       {
@@ -4004,24 +4382,30 @@
          },
          "items":
          [
-            "siriInputType"
+            "siriInputType",
+            "multiFunctionButton",
+            "siriEnable",
+            "siriEngineVersion",
+            "siriLightOnUse",
+            "siriListening",
+            "siriTouchToUse"
          ]
       },
       {
          "type": "fieldset",
          "expandable": true,
-         "title": "Slat Characteristics (Initial Values)",
+         "title": "Slats Characteristics (Initial Values)",
          "condition":
          {
-            "functionBody": "return ['Slat'].includes(model.type);"
+            "functionBody": "return ['Slats'].includes(model.type);"
          },
          "items":
          [
-            "slatType",
+            "currentSlatState",
             "name",
+            "swingMode",
             "currentTiltAngle",
-            "targetTiltAngle",
-            "swingMode"
+            "targetTiltAngle"
          ]
       },
       {
@@ -4035,10 +4419,11 @@
          "items":
          [
             "currentMediaState",
-            "name",
+            "airPlayEnable",
             "configuredName",
-            "volume",
-            "mute"
+            "mute",
+            "name",
+            "volume"
          ]
       },
       {
@@ -4052,11 +4437,11 @@
          "items":
          [
             "smokeDetected",
+            "name",
             "statusActive",
             "statusFault",
-            "statusTampered",
             "statusLowBattery",
-            "name"
+            "statusTampered"
          ]
       },
       {
@@ -4070,6 +4455,7 @@
          "items":
          [
             "mute",
+            "active",
             "volume",
             "name"
          ]
@@ -4127,7 +4513,7 @@
          },
          "items":
          [
-            "activeIdentifier",
+            "active",
             "name"
          ]
       },
@@ -4160,6 +4546,7 @@
             "displayOrder",
             "currentMediaState",
             "targetMediaState",
+            "name",
             "pictureMode",
             "powerModeSelection"
          ]
@@ -4193,11 +4580,11 @@
          "items":
          [
             "currentTemperature",
+            "name",
             "statusActive",
             "statusFault",
             "statusLowBattery",
-            "statusTampered",
-            "name"
+            "statusTampered"
          ]
       },
       {
@@ -4211,11 +4598,11 @@
          "items":
          [
             "currentHeatingCoolingState",
+            "name",
             "currentRelativeHumidity",
             "targetRelativeHumidity",
             "coolingThresholdTemperature",
-            "heatingThresholdTemperature",
-            "name"
+            "heatingThresholdTemperature"
          ]
       },
       {
@@ -4269,12 +4656,12 @@
          "items":
          [
             "active",
-            "setDuration",
-            "remainingDuration",
             "isConfigured",
+            "name",
+            "remainingDuration",
             "serviceLabelIndex",
-            "statusFault",
-            "name"
+            "setDuration",
+            "statusFault"
          ]
       },
       {
@@ -4314,9 +4701,9 @@
          "items":
          [
             "currentPosition",
-            "holdPosition",
+            "name",
             "obstructionDetected",
-            "name"
+            "holdPosition"
          ]
       },
       {
@@ -4330,13 +4717,229 @@
          "items":
          [
             "currentPosition",
-            "holdPosition",
-            "targetHorizontalTiltAngle",
-            "targetVerticalTiltAngle",
             "currentHorizontalTiltAngle",
-            "currentVerticalTiltAngle",
+            "targetHorizontalTiltAngle",
+            "name",
             "obstructionDetected",
+            "holdPosition",
+            "currentVerticalTiltAngle",
+            "targetVerticalTiltAngle"
+         ]
+      },
+      {
+         "type": "fieldset",
+         "expandable": true,
+         "title": "AccessoryMetrics Characteristics (Initial Values)",
+         "condition":
+         {
+            "functionBody": "return ['AccessoryMetrics'].includes(model.type);"
+         },
+         "items":
+         [
+            "active"
+         ]
+      },
+      {
+         "type": "fieldset",
+         "expandable": true,
+         "title": "AssetUpdate Characteristics (Initial Values)",
+         "condition":
+         {
+            "functionBody": "return ['AssetUpdate'].includes(model.type);"
+         },
+         "items":
+         [
+            "assetUpdateReadiness"
+         ]
+      },
+      {
+         "type": "fieldset",
+         "expandable": true,
+         "title": "Assistant Characteristics (Initial Values)",
+         "condition":
+         {
+            "functionBody": "return ['Assistant'].includes(model.type);"
+         },
+         "items":
+         [
+            "active"
+         ]
+      },
+      {
+         "type": "fieldset",
+         "expandable": true,
+         "title": "AudioStreamManagement Characteristics (Initial Values)",
+         "condition":
+         {
+            "functionBody": "return ['AudioStreamManagement'].includes(model.type);"
+         },
+         "items":
+         [
+            "supportedAudioStreamConfiguration"
+         ]
+      },
+      {
+         "type": "fieldset",
+         "expandable": true,
+         "title": "Battery Characteristics (Initial Values)",
+         "condition":
+         {
+            "functionBody": "return ['Battery'].includes(model.type);"
+         },
+         "items":
+         [
+            "statusLowBattery",
+            "batteryLevel",
+            "chargingState",
             "name"
+         ]
+      },
+      {
+         "type": "fieldset",
+         "expandable": true,
+         "title": "CameraRecordingManagement Characteristics (Initial Values)",
+         "condition":
+         {
+            "functionBody": "return ['CameraRecordingManagement'].includes(model.type);"
+         },
+         "items":
+         [
+            "active",
+            "recordingAudioActive"
+         ]
+      },
+      {
+         "type": "fieldset",
+         "expandable": true,
+         "title": "CloudRelay Characteristics (Initial Values)",
+         "condition":
+         {
+            "functionBody": "return ['CloudRelay'].includes(model.type);"
+         },
+         "items":
+         [
+            "relayControlPoint"
+         ]
+      },
+      {
+         "type": "fieldset",
+         "expandable": true,
+         "title": "DataStreamTransportManagement Characteristics (Initial Values)",
+         "condition":
+         {
+            "functionBody": "return ['DataStreamTransportManagement'].includes(model.type);"
+         },
+         "items":
+         [
+            "setupDataStreamTransport"
+         ]
+      },
+      {
+         "type": "fieldset",
+         "expandable": true,
+         "title": "NFCAccess Characteristics (Initial Values)",
+         "condition":
+         {
+            "functionBody": "return ['NFCAccess'].includes(model.type);"
+         },
+         "items":
+         [
+            "configurationState"
+         ]
+      },
+      {
+         "type": "fieldset",
+         "expandable": true,
+         "title": "SiriEndpoint Characteristics (Initial Values)",
+         "condition":
+         {
+            "functionBody": "return ['SiriEndpoint'].includes(model.type);"
+         },
+         "items":
+         [
+            "SiriEndpointSessionStatus",
+            "activeIdentifier",
+            "manuallyDisabled"
+         ]
+      },
+      {
+         "type": "fieldset",
+         "expandable": true,
+         "title": "ThreadTransport Characteristics (Initial Values)",
+         "condition":
+         {
+            "functionBody": "return ['ThreadTransport'].includes(model.type);"
+         },
+         "items":
+         [
+            "currentTransport",
+            "ccaEnergyDetectThreshold",
+            "ccaSignalDetectThreshold",
+            "eventRetransmissionMaximum",
+            "eventTransmissionCounters",
+            "macRetransmissionMaximum",
+            "macTransmissionCounters",
+            "receiverSensitivity",
+            "receivedSignalStrengthIndication",
+            "signalToNoiseRatio",
+            "threadOpenThreadVersion",
+            "transmitPower",
+            "MaximumTransmitPower"
+         ]
+      },
+      {
+         "type": "fieldset",
+         "expandable": true,
+         "title": "AccessCode Characteristics (Initial Values)",
+         "condition":
+         {
+            "functionBody": "return ['AccessCode'].includes(model.type);"
+         },
+         "items":
+         [
+            "accessCodeControlPoint"
+         ]
+      },
+      {
+         "type": "fieldset",
+         "expandable": true,
+         "title": "FirmwareUpdate Characteristics (Initial Values)",
+         "condition":
+         {
+            "functionBody": "return ['FirmwareUpdate'].includes(model.type);"
+         },
+         "items":
+         [
+            "firmwareUpdateReadiness",
+            "StagedFirmwareVersion",
+            "supportedFirmwareUpdateConfiguration"
+         ]
+      },
+      {
+         "type": "fieldset",
+         "expandable": true,
+         "title": "TapManagement Characteristics (Initial Values)",
+         "condition":
+         {
+            "functionBody": "return ['TapManagement'].includes(model.type);"
+         },
+         "items":
+         [
+            "active"
+         ]
+      },
+      {
+         "type": "fieldset",
+         "expandable": true,
+         "title": "WiFiTransport Characteristics (Initial Values)",
+         "condition":
+         {
+            "functionBody": "return ['WiFiTransport'].includes(model.type);"
+         },
+         "items":
+         [
+            "currentTransport",
+            "wifiConfigurationControl"
          ]
       },
       {

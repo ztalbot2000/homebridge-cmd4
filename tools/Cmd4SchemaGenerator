@@ -1,11 +1,62 @@
 #!/usr/bin/env node
 
 
-// Cmd4 Constants and Settings
-const constants = require( "../cmd4Constants" );
-const settings = require( "../cmd4Settings" );
+const which = require('which');
 const path = require( "path" );
+
+const settings = require( "../cmd4Settings" );
+
+// Get the real path of homebridge instead of a dev dependancy,
+// which caused issues if you forget to update dependancies but
+// upgrade homebridge.
+const homebridgePath = which.sync( 'homebridge', { nothrow: true } )
+
+let apiPath;
+let HomebridgeAPI;
+if ( homebridgePath )
+{
+   let dirname = path.dirname( homebridgePath );
+
+   console.log( "Found homebridge in path %s", dirname );
+   apiPath = `${ dirname }/../lib/node_modules/homebridge/lib/api`;
+   HomebridgeAPI = require( apiPath ).HomebridgeAPI;
+
+   if ( ! HomebridgeAPI )
+   {
+      console.log( "homebridgeAPI not available !!!" );
+      process.exit( 10 );
+   }
+
+} else
+{
+   console.log( "homebridge not found !!!" );
+   process.exit( 10 );
+}
+console.log( "Found api in %s", apiPath );
+
+
+
+// Cmd4 Constants
+const constants = require( "../cmd4Constants" );
+
+// Required to initialize CMD4 Accessory & Device lookup tables.
+let _api = new HomebridgeAPI( ); // object we feed to Plugins
+let hapFormats = _api.hap.Formats;
+
+
+// These would be the uninitialized values.
+let ACC_DATA = require('../lib/CMD4_ACC_TYPE_ENUM');
+let DEVICE_DATA = require('../lib/CMD4_DEVICE_TYPE_ENUM');
+
+// Init the library for all to use
+let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
+let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, _api.hap.Service, _api.hap.Characteristic, _api.hap.Categories );
+
+// File System utilities
 let fs = require( "fs" );
+
+
+//To here
 
 //const CMD4_SCHEMA_FILE = "./config.schema.json";
 let CMD4_BASE_PATH = ".";
@@ -17,13 +68,7 @@ const CMD4_ACCESSORY_SCHEMA_FILE = "homebridge-ui/public/js/accessorySchema.js";
 const CMD4_GLOBALS_SCHEMA_FILE = "homebridge-ui/public/js/globalsSchema.js";
 
 const schemaVersionSupport = 6;
-let _api;
-let hapFormats;
 
-
-// These would be the uninitialized values.
-let CMD4_ACC_TYPE_ENUM = require( '../lib/CMD4_ACC_TYPE_ENUM' );
-let CMD4_DEVICE_TYPE_ENUM = require( '../lib/CMD4_DEVICE_TYPE_ENUM' );
 
 // Formatting stuff
 var fid;
@@ -59,40 +104,7 @@ function reInit()
 
 function getHomebridgeVars( )
 {
-   const which = require('which');
-   let apiPath;
-   let HomebridgeAPI;
 
-   // Get the real path of homebridge instead of a dev dependancy,
-   // which caused issues if you forget to update dependancies but
-   // upgrade homebridge.
-   const homebridgePath = which.sync( 'homebridge', { nothrow: true } )
-
-   if ( homebridgePath )
-   {
-      let dirname = path.dirname( homebridgePath );
-
-      if ( verbose > 0 )
-         console.log( "Found homebridge in path %s", dirname );
-      apiPath = `${ dirname }/../lib/node_modules/homebridge/lib/api`;
-      HomebridgeAPI = require( apiPath ).HomebridgeAPI;
-
-      if ( ! HomebridgeAPI )
-      {
-         console.log( "homebridgeAPI not available !!!" );
-         process.exit( 10 );
-      }
-
-   } else
-   {
-      console.log( "homebridge not found !!!" );
-      process.exit( 10 );
-   }
-   if ( verbose > 0 )
-      console.log( "Found api in %s", apiPath );
-
-   _api = new HomebridgeAPI( ); // object we feed to Plugins
-   hapFormats = _api.hap.Formats;
 }
 
 // Create the accessorySchema.js file
@@ -1973,10 +1985,6 @@ function wf( level, text = undefined, comment = undefined )
 // MAIN STUFF STARTS HERE
 
 getHomebridgeVars( );
-
-// Init the library for all to use
-CMD4_ACC_TYPE_ENUM.init( _api.hap );
-CMD4_DEVICE_TYPE_ENUM.init( _api.hap, _api.hap.Service );
 
 // Command line parser
 const { Command } = require( "commander" );
