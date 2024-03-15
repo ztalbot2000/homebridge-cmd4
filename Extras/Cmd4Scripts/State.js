@@ -505,7 +505,14 @@ switch( io )
          {
             c = readData( device, characteristic );
 
-            if ( c == "" ) process.stdout.write( "2" ); else process.stdout.write( `"${ c }"` );
+            //validValues:
+            //  "PLAY"
+            //  "PAUSE"
+            //  "STOP"
+            //  "LOADING"
+            //  "INTERRUPTED"
+
+            if ( c == "" ) process.stdout.write( "STOP" ); else process.stdout.write( `"${ c }"` );
 
             break;
          }

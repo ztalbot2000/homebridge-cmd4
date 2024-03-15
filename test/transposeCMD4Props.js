@@ -136,6 +136,18 @@ describe( `Testing transposeConstantToValidValue`, ( ) =>
 
       expect( transposed ).to.equal( expectedResult, `transposeConstantToValidValue from ${ constantToBeChecked } returned ${ transposed } instead of ${ expectedResult } for ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
    });
+
+   it( `transposeConstantToValidValue should return correct value 4 for constant "INTERUPTED"`, ( ) =>
+   {
+      // has { "FALSE" & "TRUE"} for validValues
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AdministratorOnlyAccess;
+      let constantToBeChecked = "TRUE";
+      let expectedResult = 1;
+
+      let transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, constantToBeChecked );
+
+      expect( transposed ).to.equal( expectedResult, `transposeConstantToValidValue from ${ constantToBeChecked } returned ${ transposed } instead of ${ expectedResult } for ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
+   });
 });
 
 
