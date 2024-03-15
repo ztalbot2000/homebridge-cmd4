@@ -3,7 +3,7 @@
 let ucFirst = require( "../utils/ucFirst" );
 
 
-let CMD4_DEVICE_TYPE_ENUM = require( "../lib/CMD4_DEVICE_TYPE_ENUM" );
+let CMD4_DEVICE_TYPE_ENUM = require( "../lib/CMD4_DEVICE_TYPE_ENUM" ).CMD4_DEVICE_TYPE_ENUM;
 
 
 // Description:

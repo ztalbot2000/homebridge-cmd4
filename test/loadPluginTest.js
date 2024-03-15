@@ -4,8 +4,8 @@
 
 
 var pluginModule = require( "../index" );
-var CMD4_ACC_TYPE_ENUM = pluginModule.CMD4_ACC_TYPE_ENUM;
-var CMD4_DEVICE_TYPE_ENUM = pluginModule.CMD4_DEVICE_TYPE_ENUM;
+var CMD4_ACC_TYPE_ENUM = pluginModule.ACC_DATA.CMD4_ACC_TYPE_ENUM;
+var CMD4_DEVICE_TYPE_ENUM = pluginModule.DEVICE_DATA.CMD4_DEVICE_TYPE_ENUM;
 
 // While the above method is better, It doesn't check that
 // the key values are sequential.

@@ -1,18 +1,18 @@
 'use strict';
 
-var _api = new HomebridgeAPI.HomebridgeAPI; // object we feed to Plugins
+var _api = new HomebridgeAPI(); // object we feed to Plugins
 
 
 describe( "Testing require of CMD4_DEVICE_TYPE_ENUM.js", ( ) =>
 {
    it( "CMD4_DEVICE_TYPE_ENUM should be defined ( required correctly)", ( ) =>
    {
-      assert.isNotNull( CMD4_DEVICE_TYPE_ENUM, "CMD4_DEVICE_TYPE_ENUM is null" );
+      assert.isNotNull( DEVICE_DATA, "CMD4_DEVICE_TYPE_ENUM is null" );
    });
 
    it( "DEVICE_DATA.init should be a function", ( ) =>
    {
-      assert.isFunction( CMD4_DEVICE_TYPE_ENUM.init, ".init is not a function" );
+      assert.isFunction( DEVICE_DATA.init, ".init is not a function" );
    });
 
    // ************ TEST UNINITIALIZED CMD4_DEVICE_TYPE_ENUM EOL **************
@@ -42,7 +42,8 @@ describe( "Testing require of CMD4_DEVICE_TYPE_ENUM.js", ( ) =>
 describe( "Testing INITIALIZED CMD4_DEVICE_TYPE_ENUM", ( ) =>
 {
    // Init the library for all to use
-   CMD4_DEVICE_TYPE_ENUM.init( _api.hap, _api.hap.Service );
+   let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
+   let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, _api.hap.Service, _api.hap.Characteristic, _api.hap.Categories );
 
 
    // *** TEST CMD4_DEVICE_TYPE_ENUM.properties[].UUID *******
@@ -65,6 +66,7 @@ describe( "Testing INITIALIZED CMD4_DEVICE_TYPE_ENUM", ( ) =>
          for (let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++ )
          {
             let service = CMD4_DEVICE_TYPE_ENUM.properties[ index ].service;
+            assert.isNotNull( service, ` CMD4_DEVICE_TYPE_ENUM.properties[${ index } ].service is null` );
             let hapUUID = service.UUID;
             let result = CMD4_DEVICE_TYPE_ENUM.properties[ index ].UUID;
 
@@ -296,7 +298,7 @@ describe( "Testing INITIALIZED CMD4_DEVICE_TYPE_ENUM", ( ) =>
 
                let accTypeEnumIndex = CMD4_DEVICE_TYPE_ENUM.properties[index].optionalCharacteristics[rindex];
 
-               testCharacteristicIndex(accTypeEnumIndex );
+               testCharacteristicIndex(accTypeEnumIndex, rindex );
             }
          });
       }
@@ -315,7 +317,7 @@ describe( "Testing INITIALIZED CMD4_DEVICE_TYPE_ENUM", ( ) =>
 
                let defaultPollingAccTypeEnumIndex = CMD4_DEVICE_TYPE_ENUM.properties[accTypeEnumIndex].defaultPollingCharacteristics[rindex];
 
-               testCharacteristicIndex(defaultPollingAccTypeEnumIndex );
+               testCharacteristicIndex(defaultPollingAccTypeEnumIndex, rindex );
 
 
                // Check that polled characteristic is in required characteristics
@@ -340,14 +342,20 @@ describe( "Testing INITIALIZED CMD4_DEVICE_TYPE_ENUM", ( ) =>
    });
 });
 
-function testCharacteristicIndex ( accTypeEnumIndex )
+function testCharacteristicIndex ( accTypeEnumIndex, rindex )
 {
    describe('Testing accTypeEnumIndex:' + accTypeEnumIndex, () =>
    {
+      it('rindex should be valid', ( ) =>
+      {
+          assert.isNotNull(rindex, `rindex must not be null accTypeEnumIndex: ${accTypeEnumIndex}` );
+      });
+
       it('accTypeEnumIndex should be valid', ( ) =>
       {
-          assert.isNotNull(accTypeEnumIndex, 'accTypeEnumIndex must not be null' );
+          assert.isNotNull(accTypeEnumIndex, `accTypeEnumIndex must not be null rindex: ${rindex}` );
       });
+
 
       // AccessoryFlags is enum 0. However node.js inerpets 0 as false
       // So if it is a number or a bool, then it is okay.

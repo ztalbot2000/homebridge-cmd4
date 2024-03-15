@@ -86,6 +86,10 @@ var cmd4Constants = {
    QUEUETYPE_STANDARD:        "StandarD",
    // Used internally to mean entries go straight through the queue
    QUEUETYPE_PASSTHRU:        "None",
+   DEFAULT_STANDARD_QUEUE_RETRY_COUNT: 0,
+   DEFAULT_WORM_QUEUE_RETRY_COUNT: 0,
+   QUEUE_RETRIES:             "retries",
+
 
 
    // Platform/Accessory Config Constants
@@ -137,18 +141,68 @@ var cmd4Constants = {
    VALUE_lv:                        "value",
    CMD4_STORAGE_lv:                 "cmd4Storage",
 
+   ERROR_STRING_MIN:               -151,
    ERROR_TIMER_EXPIRED:            -151,
-   //Exports.ERROR_CMD_FAILED_REPLY:         -152,
+   // ERROR_CMD_FAILED_REPLY:         -152,
    ERROR_NULL_REPLY:               -153,
    ERROR_NULL_STRING_REPLY:        -154,
    ERROR_EMPTY_STRING_REPLY:       -155,
    ERROR_2ND_NULL_STRING_REPLY:    -156,
    ERROR_NON_CONVERTABLE_REPLY:    -157,
    ERROR_NO_DATA_REPLY:            -158,
+   ERROR_STRING_MAX:               -158,
+   ERROR_STRINGS:
+   [ // cmd4Constants.ERROR_TIMER_EXPIRED -151
+     "Timer expired contacting accessory",
+     // cmd4Constants.ERROR_CMD_FAILED_REPLY -152
+     "Command failed",
+     // cmd4Constants.ERROR_NULL_REPLY -153
+     "Reply is NULL",
+     // cmd4Constants.ERROR_NULL_STRING_REPLY -154
+     "Reply is NULL string",
+     // cmd4Constants.ERROR_EMPTY_STRING_REPLY -155
+     "Reply is an empty string",
+     // cmd4Constants.ERROR_2ND_NULL_STRING_REPLY -156
+     "Reply is still NULL",
+     // cmd4Constants.ERROR_NON_CONVERTABLE_REPLY -157
+     "Cannot convert characteristic string",
+     // cmd4Constants.ERROR_NO_DATA_REPLY -158
+     "No data returned from accessory"
+   ],
+
+   // Convert our known Error Codes to strings
+   errorString: function( index )
+   {
+      let offset = - index + cmd4Constants.ERROR_STRING_MIN ;
+      let max = cmd4Constants.ERROR_STRING_MIN - cmd4Constants.ERROR_STRING_MAX;
+
+      //console.log(" index is " + index );
+      //console.log(" offset is " + offset );
+      //console.log(" max is " + max );
+      // i.e 0-7
+      if ( index == 0 )
+         return "Device returned SUCCESS; " + index;
+
+      //if ( offset < 0  || offset > max )
+      if ( index > cmd4Constants.ERROR_STRING_MIN )
+         return "Device returned its own error; " + index;
+      if ( index < cmd4Constants.ERROR_STRING_MAX )
+         return "Device returned its own error; " + index;
+
+      // Should not happen because of the above checks
+      if ( offset < 0 )
+         return "Invalid Error min index: " + index;
+
+      // Should not happen because of the above checks
+      if ( offset > max )
+         return "Invalid Error max index: " + index;
+
+      return cmd4Constants.ERROR_STRINGS[ offset ];
+   },
 
 
 
    // Static Messages
-   DBUSY:                          "Perhaps your device is busy?"
+   DBUSY:                          "Perhaps your device is busy or unavailable?"
 };
 module.exports = cmd4Constants;

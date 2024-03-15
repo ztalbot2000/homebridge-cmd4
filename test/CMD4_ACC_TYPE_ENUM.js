@@ -1,6 +1,6 @@
 'use strict';
 
-var _api = new HomebridgeAPI.HomebridgeAPI; // object we feed to Plugins
+var _api = new HomebridgeAPI(); // object we feed to Plugins
 var Service = _api.hap.Service;
 var Characteristic = _api.hap.Characteristic;
 
@@ -9,7 +9,12 @@ describe( `Testing require of CMD4_ACC_TYPE_ENUM.js`, ( ) =>
 {
    it( `CMD4_ACC_TYPE_ENUM should be defined ( required correctly )`, ( ) =>
    {
-      assert.isNotNull( CMD4_ACC_TYPE_ENUM, `CMD4_ACC_TYPE_ENUM is null` );
+      assert.isNotNull( ACC_DATA, `CMD4_ACC_TYPE_ENUM is null` );
+   });
+
+   it( `ACC_DATA.init should be a function`, ( ) =>
+   {
+      assert.isFunction( ACC_DATA.init, `.init is not a function` );
    });
 
    // ************ TEST UNINITIALIZED CMD4_ACC_TYPE_ENUM EOL **************
@@ -32,22 +37,20 @@ describe( `Testing require of CMD4_ACC_TYPE_ENUM.js`, ( ) =>
             assert.notEqual( CMD4_ACC_TYPE_ENUM[index], index );
          }
       });
-      it( `CMD4_ACC_TYPE_ENUM.init is function`, ( ) =>
-      {
-         assert.isFunction( CMD4_ACC_TYPE_ENUM.init, `CMD4_ACC_TYPE_ENUM.init not found` );
-      });
    });
 })
 
 describe( `Testing INITIALIZED CMD4_ACC_TYPE_ENUM`, ( ) =>
 {
+   // Init the library for all to use
+   let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
+
+
    describe(`Testing Initialized CMD4_ACC_TYPE_ENUM.properties[]`, ( ) =>
    {
-      CMD4_ACC_TYPE_ENUM.init( _api.hap );
-
       it('CMD4_ACC_TYPE_ENUM.properties should be an object', ( ) =>
       {
-         assert.isObject(CMD4_ACC_TYPE_ENUM.properties, `CMD4_ACC_TYPE_ENUM.properties is not an object` );
+         assert.isObject(CMD4_ACC_TYPE_ENUM.properties, `CMD4_DEVICE_TYPE_ENUM.properties is not an object` );
       });
 
       it(`Testing CMD4_ACC_TYPE_ENUM.properties[]`, ( ) =>
@@ -58,6 +61,17 @@ describe( `Testing INITIALIZED CMD4_ACC_TYPE_ENUM`, ( ) =>
 
             // Make sure our properties are defined
             assert.isNotNull( result, `CMD4_ACC_TYPE_ENUM.properties[${ index }] is null. result: ${ result }` );
+
+            for (let jIndex=0; jIndex < CMD4_ACC_TYPE_ENUM.EOL; jIndex ++ )
+            {
+               if ( index == jIndex) continue;
+
+               it( `CMD4_ACC_TYPE_ENUM.properties[ ${ index } ].type should not be duplicated`, ( ) =>
+               {
+                  assert.equal( CMD4_ACC_TYPE_ENUM.properties[ index ].type,
+                                CMD4_ACC_TYPE_ENUM.properties[ jIndex ].type, ` Duplicate ACC type ${ CMD4_ACC_TYPE_ENUM.properties[ index ].type }` );
+               });
+            }
          }
       });
    });
@@ -78,13 +92,6 @@ describe( `Testing INITIALIZED CMD4_ACC_TYPE_ENUM`, ( ) =>
           // Problem occured with hap-nodejs 0.9.2, but not 0.8.5 &&
           //                      homebridge 1.3.1, but not 1.1.7
           if ( accTypeEnumIndex == CMD4_ACC_TYPE_ENUM.PairingPairings )
-             continue;
-
-          // Do not understand why Charateristic.TransmitPowerMaximum is
-          // undefined, but is okay in Cmd4
-          // Problem occured with hap-nodejs 0.9.2, but not 0.8.5 &&
-          //                      homebridge 1.3.1, but not 1.1.7
-          if ( accTypeEnumIndex == CMD4_ACC_TYPE_ENUM.TransmitPowerMaximum )
              continue;
 
           it( `CMD4_ACC_TYPE_ENUM.properties[ ${ accTypeEnumIndex } ].type should be a string`, ( ) =>
@@ -340,9 +347,13 @@ describe( `Testing INITIALIZED CMD4_ACC_TYPE_ENUM`, ( ) =>
 
 describe( `Testing CMD4_ACC_TYPE_ENUM.indexOfEnum`, ( ) =>
 {
+   // Init the library for all to use
+   let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
+
+
    it('CMD4_ACC_TYPE_ENUM.indexOfEnum should be a function', ( ) =>
    {
-      assert.isFunction(CMD4_ACC_TYPE_ENUM.indexOfEnum, `CMD4_ACC_TYPE_ENUM.indexOfEnum is not a function` );
+      assert.isFunction(CMD4_ACC_TYPE_ENUM.indexOfEnum, `CMD4_DEVICE_TYPE_ENUM.indexOfEnum is not a function` );
    });
 
    it(`Testing CMD4_ACC_TYPE_ENUM.indexOfEnum( "On" )`, ( ) =>
@@ -365,6 +376,9 @@ describe( `Testing CMD4_ACC_TYPE_ENUM.indexOfEnum`, ( ) =>
 
 describe( `Testing CMD4_ACC_TYPE_ENUM stringConversionFunction`, ( ) =>
 {
+   // Init the library for all to use
+   let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
+
    describe( `Testing CMD4_ACC_TYPE_ENUM.properties[].stringConversionFunction`, ( ) =>
    {
       it( 'CMD4_ACC_TYPE_ENUM[ 0 - ${ ACC_EOL } ].stringConversionFunction should be a function', ( ) =>
@@ -666,6 +680,9 @@ describe( `Testing CMD4_ACC_TYPE_ENUM stringConversionFunction`, ( ) =>
 
 describe( `Testing CMD4_ACC_TYPE_ENUM Add Characteristic`, ( ) =>
 {
+   // Init the library for all to use
+   let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
+
    it( `ACC_DATA.add should be a function`, ( ) =>
    {
       assert.isFunction( CMD4_ACC_TYPE_ENUM.add, `.add is not a function` );

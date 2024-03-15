@@ -29,17 +29,19 @@ const settings = require( "./cmd4Settings" );
 const chalk = require( "chalk" );
 
 // The Library files that know all.
-let CMD4_DEVICE_TYPE_ENUM = settings.CMD4_DEVICE_TYPE_ENUM;
-let CMD4_ACC_TYPE_ENUM = settings.CMD4_ACC_TYPE_ENUM;
-let clonedCharacteristic = settings.clonedCharacteristic;
+var CHAR_DATA = require( "./lib/CMD4_CHAR_TYPE_ENUMS" );
+var ACC_DATA = require( "./lib/CMD4_ACC_TYPE_ENUM" );
+var DEVICE_DATA = require( "./lib/CMD4_DEVICE_TYPE_ENUM" );
 
 module.exports =
 {
    default: function ( api )
    {
       // Init the libraries for all to use
-      CMD4_ACC_TYPE_ENUM.init( api.hap );
-      CMD4_DEVICE_TYPE_ENUM.init( api.hap, api.hap.Service );
+      let CMD4_CHAR_TYPE_ENUMS = CHAR_DATA.init( api.hap.Characteristic );
+      let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( api.hap.Characteristic );
+      let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init(
+         CMD4_ACC_TYPE_ENUM, api.hap.Service, api.hap.Characteristic, api.hap.Categories );
 
       api.registerAccessory( settings.PLATFORM_NAME, Cmd4Accessory );
       api.registerPlatform( settings.PLATFORM_NAME, Cmd4Platform );
@@ -48,7 +50,7 @@ module.exports =
 
       // This is not required by homebridge and does not affect it.  I use it for
       // unit testing.
-      return { clonedCharacteristic,
+      return { CMD4_CHAR_TYPE_ENUMS,
                CMD4_ACC_TYPE_ENUM,
                CMD4_DEVICE_TYPE_ENUM,
                api
@@ -56,10 +58,9 @@ module.exports =
    },
    // These would be the uninitialized values,
    // used for unit testing
-   clonedCharacteristic:  clonedCharacteristic, // properties would be { } empty.
-   CMD4_ACC_TYPE_ENUM:    CMD4_ACC_TYPE_ENUM,   // properties would be { } empty.
-   CMD4_DEVICE_TYPE_ENUM: CMD4_DEVICE_TYPE_ENUM // properties would be { } empty.
-
+   CHAR_DATA:   CHAR_DATA,  // properties would be { } empty.
+   ACC_DATA:    ACC_DATA,   // properties would be { } empty.
+   DEVICE_DATA: DEVICE_DATA // properties would be { } empty.
 }
 
 function checkForUpdates( )
@@ -73,11 +74,22 @@ function checkForUpdates( )
 
    ( async( ) =>
    {
-      let lv = await getLatestVersion( );
-
-      if ( isVersionNewerThanPackagedVersion( lv ) )
+      // Fix for #127, constant crash loops when no internet connection
+      // trying to get latest Cmd4 version.
+      // thx nano9g
+      try
       {
-         console.log( chalk.green( `[UPDATE AVAILABLE] ` ) + `Version ${lv} of ${myPkg.name} is available. Any release notes can be found here: ` + chalk.underline( `${myPkg.changelog}` ) );
+         let lv = await getLatestVersion( );
+
+         if ( isVersionNewerThanPackagedVersion( lv ) )
+         {
+            console.log( chalk.green( `[UPDATE AVAILABLE] ` ) + `Version ${lv} of ${myPkg.name} is available. Any release notes can be found here: ` + chalk.underline( `${myPkg.changelog}` ) );
+         }
+
+      }
+      catch( error )
+      {
+         console.log( chalk.yellow( `[UPDATE CHECK FAILED] ` ) + `Could not check for newer versions of ${myPkg.name} due to error ${error.name}: ${error.message}`)
       }
    })( );
 }

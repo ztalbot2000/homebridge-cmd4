@@ -6,11 +6,10 @@ Object.defineProperty(exports, "indexOfEnum", { enumerable: true, get: function 
 let isCmd4Directive = require( "../utils/isCmd4Directive" );
 
 
-var _api = new HomebridgeAPI.HomebridgeAPI; // object we feed to Plugins
+var _api = new HomebridgeAPI(); // object we feed to Plugins
 
 // Init the library for all to use
-CMD4_ACC_TYPE_ENUM.init( _api.hap );
-CMD4_DEVICE_TYPE_ENUM.init( _api.hap, _api.hap.Service );
+let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
 
 
 // ******** QUICK TEST of SETUP *************

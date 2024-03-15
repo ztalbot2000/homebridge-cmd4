@@ -2,7 +2,17 @@
 <base _target="_self">
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
 
+
 ## ChangeLog
+* <a href="#Whats-new-in-7-1-0">**Whats new in 7.1.0**</a>
+* <a href="#Whats-new-in-7-0-3">**Whats new in 7.0.3**</a>
+* <a href="#Whats-new-in-7-0-2">**Whats new in 7.0.2**</a>
+<a name="Whats-new-in-7-0-1">## Whats new in 7.0.0</a>
+#### 7.0.0 (2023-06-11)
+* <a href="#Whats-new-in-7.0.0">**Whats new in 7.0.0**</a>
+* <a href="#Whats-new-in-6-3-0">**Whats new in 6.3.0**</a>
+* <a href="#Whats-new-in-6-2-0">**Whats new in 6.2.0**</a>
+* <a href="#Whats-new-in-6-1-2">**Whats new in 6.1.2**</a>
 * <a href="#Whats-new-in-6-1-1">**Whats new in 6.1.1**</a>
 * <a href="#Whats-new-in-6-1-0">**Whats new in 6.1.0**</a>
 * <a href="#Whats-new-in-6-0-4">**Whats new in 6.0.4**</a>
@@ -80,6 +90,146 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-7-1-0">## Whats new in 7.1.0</a>
+### 7.1.0 (2024-03-04)
+
+##### Documentation Changes
+
+*  Update for newest characteristics ([fccb9ebd](https://github.com/ztalbot2000/homebridge-cmd4/commit/fccb9ebdc18a2cd876b1512e0da2d5d28e8019b0))
+
+##### New Features
+
+*  Add in latest new characteristics and devices ([545112f0](https://github.com/ztalbot2000/homebridge-cmd4/commit/545112f0fa2122abf51d3217707012879db723b7))
+
+
+<a name="Whats-new-in-7-0-3">## Whats new in 7.0.3</a>
+#### 7.0.3 (2024-01-27)
+
+##### Bug Fixes
+
+*  props is already an object. Also test setProps is called for more than one characteristic. Affects only those who change a characteristics property range ([276d0c0d](https://github.com/ztalbot2000/homebridge-cmd4/commit/276d0c0d58b435c59fb3c1fdfd322f55f6b24434))
+
+
+<a name="Whats-new-in-7-1-0">## Whats new in 7.0.2</a>
+### 7.0.2 (2023-12-24)
+
+##### Change affectng AdvAir by their request
+
+*  For AdvAir.sh put accessory name in double quotes so it can contain a single quote ([023e91c0](https://github.com/ztalbot2000/homebridge-cmd4/commit/023e91c0bf1794a64bf0e18dec7d31b178ecb6d1))
+
+
+## ChangeLog
+* <a href="#Whats-new-in-7-0-1">**Whats new in 7.0.1**</a>
+
+
+##### Chores
+
+*  Correct version to 7.0.1 ([62504e68](https://github.com/ztalbot2000/homebridge-cmd4/commit/62504e689a9483a9512a414d994514b04cbadcd5))
+
+##### Bug Fixes
+
+*  bug[#139](https://github.com/ztalbot2000/homebridge-cmd4/pull/139), add in link checkers to documentation ([f4a1ae79](https://github.com/ztalbot2000/homebridge-cmd4/commit/f4a1ae79fd8da2e0dc80181ab98dbc4817da6e78))
+
+<a name="Whats-new-in-7-0-0">## Whats new in 7.0.0</a>
+#### 7.0.0 (2023-03-05)
+
+* The reason for the major version numbering update was to for deprecation warnings to throw an error.
+  These warnings were there for many major versions and are finally removed.
+
+  "queueInterval"         - Never put into production and will now throw an error.
+  "queueMsg"              - Never put into production and will now throw an error.
+  "queueStatMsgInterval"  - Never put into production and will now throw an error.
+  "cmd4_Mode"             - Obsolete for many versions and will now throw an error.
+  "storage"               - Obsolete outside of fakegato definition.
+  "storagePath"           - Obsolete outside of fakegato definition.
+  "folder"                - Obsolete outside of fakegato definition.
+  "keyPath"               - Obsolete outside of fakegato definition.
+  "queueTypes"            - Obsolete inside accessory definition.
+
+
+##### New Features
+
+*  add retries. Also formatting issues ([b8ddf9ce](https://github.com/ztalbot2000/homebridge-cmd4/commit/b8ddf9ceda8ace3a6e820bfad0c4a03c656cf419))
+
+##### Documentation Changes
+
+Beta2
+*  Update documentation for v7.0.0 ([12b6482a](https://github.com/ztalbot2000/homebridge-cmd4/commit/12b6482ac8e6d431e011f6f92c2d6f03a2ebe2ed))
+
+##### Bug Fixes
+
+Beta2
+*  remove unwanted debug message and test so that it cannot reoccur ([97b6b318](https://github.com/ztalbot2000/homebridge-cmd4/commit/97b6b31861ab34d04b798ec409b1f2e8c56244c2))
+*  Homebridge does not like underscores of accessory names. Remove from default config.json ([15f2170b](https://github.com/ztalbot2000/homebridge-cmd4/commit/15f2170be492b6dfb56e4eed5d76da0cd4d74419))
+
+Beta1
+*  retry logging starts from zero, but for user count starts from 1 ([38cdf417](https://github.com/ztalbot2000/homebridge-cmd4/commit/38cdf417feebeef2b75dcfec247e6bdfd4739604))
+*  By nature retryCount should start from zero ([b8e82ffe](https://github.com/ztalbot2000/homebridge-cmd4/commit/b8e82ffe262c092a301636993544be828a7a34a4))
+*  log message in wrong quotes ([6fc555b0](https://github.com/ztalbot2000/homebridge-cmd4/commit/6fc555b0d7bdc20bfc3a38310e3d4f66b968d55d))
+*  retries for WoRm should be zero. Can be overriden ([11351633](https://github.com/ztalbot2000/homebridge-cmd4/commit/1135163319c8d16e3886dbf0a0443ba5ed6c4b99))
+*  Accessory needs to go unresponsive via updateValue with error object ([cdfee1b2](https://github.com/ztalbot2000/homebridge-cmd4/commit/cdfee1b22ea21dc56edc320768ec6ebea1156cb8))
+
+##### Tests
+
+*  put back skipped tests ([0b0781fa](https://github.com/ztalbot2000/homebridge-cmd4/commit/0b0781faec7f94e43d67068e15e9505cc7c96414))
+*  Remove excess debug messages for commit with verify to work ([ea108470](https://github.com/ztalbot2000/homebridge-cmd4/commit/ea108470631f4abe3377f6d582c962dab141be0f))
+*  Don't know why HomeKit does not cause Cmd4 to generate a log that it is trying to reconnect after unavailable ([d45d7c09](https://github.com/ztalbot2000/homebridge-cmd4/commit/d45d7c095d0989c05b88c161a418402711e26677))
+*  Add unit testing to prove fix of bug[#130](https://github.com/ztalbot2000/homebridge-cmd4/pull/130) ([e9a902fc](https://github.com/ztalbot2000/homebridge-cmd4/commit/e9a902fcb01fb2ee7c7cb9f2b60e036d0fd5c0d6))
+
+
+<a name="Whats-new-in-6-3-0">## Whats new in 6.3.0</a>
+### 6.3.0 (2022-04-12)
+
+##### Bug Fixes
+
+*  Bug [#130](https://github.com/ztalbot2000/homebridge-cmd4/pull/130), linked accessories not accesible after restart ([aeab5a40](https://github.com/ztalbot2000/homebridge-cmd4/commit/aeab5a40340631910ae6ac19f9af8453f46faa55))
+
+
+<a name="Whats-new-in-6-2-0">## Whats new in 6.2.0</a>
+## 6.2.0 (2022-02-18)
+
+##### New Features
+
+*  Add new characteristics and device types ([c3560130](https://github.com/ztalbot2000/homebridge-cmd4/commit/c3560130e7092b698d0d750924c548a99c4e20f4))
+
+Characteristics
+---------------
+AssetUpdateReadiness
+SupportedAssetTypes
+ConfigurationState
+NFCAccessControlPoint
+NFCAccessSupportedConfiguration
+SiriEndpointSessionStatus
+ThreadControlPoint
+ThreadNodeCapabilities
+ThreadStatus
+ThreadOpenThreadVersion
+
+Device Types
+------------
+AccessoryMetrics
+AssetUpdate
+Assistant
+AudioStreamManagement
+Battery
+CameraRecordingManagement
+CloudRelay
+DataStreamTransportManagement
+NFCAccess
+SiriEndpoint
+ThreadTransport
+
+Note: While these are now available to use. Some may not be suitable for Cmd4 depending on their complexity.
+
+
+<a name="Whats-new-in-6-1-2">## Whats new in 6.1.2</a>
+#### 6.1.2 (2022-02-12)
+
+##### Bug Fixes
+
+*  bug [#127](https://github.com/ztalbot2000/homebridge-cmd4/pull/127") Resolve crash when no internet connection
+
 
 <a name="Whats-new-in-6-1-1">## Whats new in 6.1.1</a>
 #### 6.1.1 (2022-01-31)

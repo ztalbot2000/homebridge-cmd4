@@ -1,3 +1,10 @@
+<span align="center">
+  
+[![npm](https://badgen.net/npm/v/homebridge-cmd4/latest?icon=npm&label)](https://www.npmjs.com/package/homebridge-cmd4)
+[![npm](https://badgen.net/npm/dt/homebridge-cmd4?label=downloads)](https://www.npmjs.com/package/homebridge-cmd4)
+  
+</span>
+
 # Homebridges-cmd4 - CMD4 Plugin for Homebridge - Supports ~All Accessory Types and now all Characteristics, Custom Characteristics and Priority Queued Polling too!!
 <base _target="_self">
 
@@ -48,7 +55,7 @@
 
 &nbsp;&nbsp;&nbsp; Cmd4 supports Fakegato History and retaining previous state over restarts.
 
-&nbsp;&nbsp;&nbsp; Cmd4 Version 2.0 supported linked Accessories and the latest 3.0 Version supports both Platform plugin and Accessory plugin configurations as documented on [developers.homebridge.io](https://developers.homebridge.io).
+&nbsp;&nbsp;&nbsp; Since version 2.0 Cmd4 has supported linked Accessories and the latest 3.0 Version supports both Platform plugin and Accessory plugin configurations as documented on [developers.homebridge.io](https://developers.homebridge.io).
 
 &nbsp;&nbsp;&nbsp; Cmd4 Version 3.5 adds in support for Custom Characteristics.
 
@@ -151,12 +158,7 @@ Note: For Homebridge-config-ui-x, you only need to write Cmd4 in the Environment
 
 <BR><BR>
 ## Todo
-* [X] Linked characteristics, i.e. a smoke detectors battery is not yet linked.
-* [X] Support for custom characteristics for an accessory. *Warning, May Not possible to be displayed by any GUI*
-* [X] Support multi word device names. (Technically done, but scripting is hard for newbies).
-* [ ] Scripting language to avoid creating new Homebridge modules.
-* [ ] HTTP commands. *Might be just to many options*
-* [ ] Become Homebridge Certified. ( The schema file would be very difficult )
+* [ ] Become Homebridge Certified. ( The schema file for Homebridg-ui  would be very difficult )
 
 <BR><BR>
 ## Contributing
@@ -183,8 +185,8 @@ Based on the best of:
 * [homebridge-cmdswitch2]https://github.com/luisiam/homebridge-cmdswitch2.git
 * [homebridge-real-fake-garage-doors]https://github.com/plasticrake/homebridge-real-fake-garage-doors.git
 * [homebridge-homeseer]https://github.com/jrhubott/homebridge-homeseer.git
-* Thanks to TimofeyK for all his help with fakegato and for suggesting it.
-* Thanks to Mitch Williams for his endless encouragement.
+* Thanks to [TimofeyK](https://github.com/TimofeyK) for all his help with fakegato and for suggesting it.
+* Thanks to [Mitch Williams](https://github.com/mitch7391) for his endless encouragement.
 * Thanks especially to those who continue to work on Homebridge and those who make it better.
 * And most importantly my Wife.
 

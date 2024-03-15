@@ -3,6 +3,12 @@
 
 let Cmd4Storage = require( "../utils/Cmd4Storage" );
 
+var _api = new HomebridgeAPI( ); // object we feed to Plugins
+
+
+// Init the library for all to use
+let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
+
 
 describe(`Basic Cmd4Storage Tests`, ( ) =>
 {

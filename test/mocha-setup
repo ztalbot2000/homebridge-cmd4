@@ -15,7 +15,7 @@ if ( homebridgePath )
 
    console.log( "Found homebridge in path %s", dirname );
    apiPath = `${ dirname }/../lib/node_modules/homebridge/lib/api`;
-   global.HomebridgeAPI = require( apiPath );
+   global.HomebridgeAPI = require( apiPath ).HomebridgeAPI;
 
    if ( ! global.HomebridgeAPI )
    {
@@ -40,17 +40,22 @@ global.assert = require( "chai" ).assert;
 global.expect = require( "chai" ).expect;
 global.sinon  = require( "sinon" );
 
-global.ACC_EOL = 223;
-global.DEVICE_EOL = 66;
+global.ACC_EOL = 255;
+global.DEVICE_EOL = 81;
 global.FORMAT_EOL = 11;
 global.UNITS_EOL = 5;
 global.PERMS_EOL = 9;
 global.ACCESS_EOL = 3;
 
 // These would be the uninitialized values, used for unit testing
-global.CMD4_ACC_TYPE_ENUM = require( '../lib/CMD4_ACC_TYPE_ENUM' );
-global.CMD4_DEVICE_TYPE_ENUM = require( '../lib/CMD4_DEVICE_TYPE_ENUM' );
+global.ACC_DATA = require( '../lib/CMD4_ACC_TYPE_ENUM' );
+global.CMD4_ACC_TYPE_ENUM = ACC_DATA.CMD4_ACC_TYPE_ENUM;
 
+global.DEVICE_DATA = require( '../lib/CMD4_DEVICE_TYPE_ENUM' );
+global.CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.CMD4_DEVICE_TYPE_ENUM;
+
+global.CHAR_DATA = require( `../lib/CMD4_CHAR_TYPE_ENUMS` );
+global.CMD4_CHAR_TYPE_ENUMS = CHAR_DATA.CMD4_CHAR_TYPE_ENUMS;
 
 
 global.Logger = require("../utils/Logger");
@@ -64,6 +69,14 @@ global.sleep = function( secondsToSleep = 1 )
    while( moment ( ).isBefore( sleepUntill ) ) { /* block the process */ }
 }
 
+global.accEnumIndexToC = function( index )
+{
+   return CMD4_ACC_TYPE_ENUM.properties[ index ].type;
+}
+global.devEnumIndexToC = function( index )
+{
+   return CMD4_DEVICE_TYPE_ENUM.properties[ index ].deviceName;
+}
 
 // How it's used
 // sleep( 10 );

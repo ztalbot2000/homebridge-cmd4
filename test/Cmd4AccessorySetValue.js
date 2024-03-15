@@ -8,13 +8,16 @@ let { Cmd4Platform } = require( "../Cmd4Platform" );
 
 
 
-var _api = new HomebridgeAPI.HomebridgeAPI; // object we feed to Plugins
+var _api = new HomebridgeAPI( ); // object we feed to Plugins
 
 
 // Init the library for all to use
 let Characteristic = _api.hap.Characteristic;
-CMD4_ACC_TYPE_ENUM.init( _api.hap );
-CMD4_DEVICE_TYPE_ENUM.init( _api.hap, _api.hap.Service );
+let Service = _api.hap.Service;
+let Categories = _api.hap.Categories;
+let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( Characteristic );
+let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, Service, Characteristic, Categories );
+
 
 let getSetValueScript = "./test/echoScripts/testGetSetValues.js";
 
@@ -54,7 +57,6 @@ describe( "Testing Cmd4Accessory", function( )
          [{
              name:                     "Television",
              type:                     "Television",
-             cmd4_Mode:                "Demo",
              displayName:              "Television",
              category:                 "TELEVISION",
              publishExternally:        true,
@@ -112,13 +114,13 @@ describe( "Testing Cmd4Accessory", function( )
             sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
             brightness:                8,
             closedCaptions:           "DISABLED",
-            polling: [{ characteristic: "ClosedCaptions" }],
+            polling:                  [{ characteristic: "ClosedCaptions" }],
             currentMediaState:        "STOP",
             targetMediaState:         "STOP",
             pictureMode:              "STANDARD",
             remoteKey:                "SELECT",
             state_cmd_suffix:         fn,
-            state_cmd:  `node ${ process.cwd( ) }/${ getSetValueScript }`
+            state_cmd:                `node ${ process.cwd( ) }/${ getSetValueScript }`
          }]
       };
 
@@ -189,7 +191,7 @@ describe( "Testing Cmd4Accessory", function( )
              sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
              brightness:                8,
              closedCaptions:           "DISABLED",
-             polling: [{ characteristic: "ClosedCaptions" }],
+             polling:                  [{ characteristic: "ClosedCaptions" }],
              currentMediaState:        "STOP",
              targetMediaState:         "STOP",
              pictureMode:              "STANDARD",
@@ -383,7 +385,6 @@ describe( "Testing Cmd4Accessory", function( )
          {
             type:                      "Thermostat",
             name:                      "Thermostat",
-            cmd4_Mode:                 "Demo",
             displayName:               "Thermostat",
             temperatureDisplayUnits:   "CELSIUS",
             active:                    "INACTIVE",
@@ -450,7 +451,6 @@ describe( "Testing Cmd4Accessory", function( )
       {
          type:                         "Thermostat",
          name:                         "Thermostat",
-         cmd4_Mode:                    "Demo",
          displayName:                  "Thermostat",
          temperatureDisplayUnits:      "CELSIUS",
          active:                       "INACTIVE",
@@ -514,13 +514,13 @@ describe( "Testing Cmd4Accessory", function( )
          displayName:                  "Thermostat",
          temperatureDisplayUnits:      "CELSIUS",
          active:                       "INACTIVE",
-         currentTemperature:            20.0,
-         targetTemperature:             20.0,
-         currentHeatingCoolingState:    0,
-         targetHeatingCoolingState:     0,
-         stateChangeResponseTime:       1,
-         polling: true,
-         state_cmd: "./Extras/Cmd4Scripts/Examples/AnyDevice"
+         currentTemperature:           20.0,
+         targetTemperature:            20.0,
+         currentHeatingCoolingState:   0,
+         targetHeatingCoolingState:    0,
+         stateChangeResponseTime:      1,
+         polling:                      true,
+         state_cmd:                    "./Extras/Cmd4Scripts/Examples/AnyDevice"
       };
 
       const log = new Logger( );
@@ -573,7 +573,6 @@ describe( "Testing Cmd4Accessory", function( )
       {
          type:                         "Thermostat",
          name:                         "Thermostat",
-         cmd4_Mode:                    "Demo",
          displayName:                  "Thermostat",
          temperatureDisplayUnits:      "CELSIUS",
          active:                       "INACTIVE",
@@ -597,8 +596,8 @@ describe( "Testing Cmd4Accessory", function( )
       assert.equal( 1, log.logLineCount, ` setCachedValue logged lines than one: ${ log.logBuf }` );
       assert.include( log.errBuf, `m**** Adding required characteristic TargetTemperature for Thermostat`, ` setCachedValue incorrect stdout:${ log.errBuf }` );
       assert.include( log.errBuf, `Not defining a required characteristic can be problematic`, ` setCachedValue incorrect stdout: ${ log.errBuf }` );
-      // Hmmmmmm was 2
-      assert.equal( 3, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
+
+      assert.equal( 2, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
 
       let defaultValue = CMD4_DEVICE_TYPE_ENUM.properties[ cmd4Accessory.typeIndex ].requiredCharacteristics.find( key => key.type ===  acc ).defaultValue;
 
@@ -615,7 +614,6 @@ describe( "Testing Cmd4Accessory", function( )
       {
          type:                         "Thermostat",
          name:                         "Thermostat",
-         cmd4_Mode:                    "Demo",
          displayName:                  "Thermostat",
          temperatureDisplayUnits:      "CELSIUS",
          active:                       "INACTIVE",
@@ -639,9 +637,8 @@ describe( "Testing Cmd4Accessory", function( )
       assert.equal( 1, log.logLineCount, ` setCachedValue logged lines than one: ${ log.logBuf }` );
       assert.include( log.errBuf, `**** Adding required characteristic TargetHeatingCoolingState for Thermostat`, ` setCachedValue incorrect stderr: ${ log.errBuf }` );
       assert.include( log.errBuf, `Not defining a required characteristic can be problematic`, ` setCachedValue incorrect stderr: ${ log.errBuf }` );
-      assert.include( log.errBuf, `[33mWarning: cmd4_Mode has been deprecated.`, ` Cmd4Accessory: incorrect stderr: ${ log.errBuf }` );
 
-      assert.equal( 3, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
+      assert.equal( 2, log.errLineCount, ` setCachedValue logged lines than one: ${ log.errBuf }` );
       done( );
    });
 
@@ -655,12 +652,12 @@ describe( "Testing Cmd4Accessory", function( )
          displayName:                  "Thermostat",
          temperatureDisplayUnits:      "CELSIUS",
          active:                       "INACTIVE",
-         currentTemperature:            20.0,
-         targetTemperature:             20.0,
-         currentHeatingCoolingState:    0,
-         // targetHeatingCoolingState:  0,
-         stateChangeResponseTime:       3,
-         polling:                       true,
+         currentTemperature:           20.0,
+         targetTemperature:            20.0,
+         currentHeatingCoolingState:   0,
+         // targetHeatingCoolingState: 0,
+         stateChangeResponseTime:      3,
+         polling:                      true,
          state_cmd:                    "./test/echoScripts/echo_1"
       };
 
@@ -690,7 +687,6 @@ describe( "Testing Cmd4Accessory", function( )
       {
          type:                         "TemperatureSensor",
          name:                         "TemperatureSensor",
-         cmd4_Mode:                    "Demo",
          displayName:                  "TemperatureSensor",
          temperatureDisplayUnits:      "CELSIUS",
          active:                       "INACTIVE",
@@ -748,9 +744,9 @@ describe( "Testing Cmd4Accessory", function( )
          displayName:                  "TemperatureSensor",
          temperatureDisplayUnits:      "CELSIUS",
          active:                       "INACTIVE",
-         currentTemperature:            20.0,
-         polling: true,
-         state_cmd: "./Extras/Cmd4Scripts/Examples/AnyDevice"
+         currentTemperature:           20.0,
+         polling:                      true,
+         state_cmd:                    "./Extras/Cmd4Scripts/Examples/AnyDevice"
       };
 
       const log = new Logger( );
@@ -799,14 +795,14 @@ describe( "Testing Cmd4Accessory", function( )
       // A config file to play with.
       let TVConfig =
       {
-          name:                     "My_Television",
+          name:                     "MyTelevision",
           type:                     "Television",
           category:                 "TELEVISION",
           publishExternally:        true,
           active:                   "ACTIVE",
           activeIdentifier:          1234,
           mute:                     true,
-          configuredName:           "My_Television",
+          configuredName:           "MyTelevision",
           sleepDiscoveryMode:       "ALWAYS_DISCOVERABLE",
           brightness:                8,
           closedCaptions:           "DISABLED",
@@ -814,9 +810,9 @@ describe( "Testing Cmd4Accessory", function( )
           targetMediaState:         "STOP",
           pictureMode:              "STANDARD",
           remoteKey:                "SELECT",
-          timeout:  401,
+          timeout:                  401,
           polling:                  [{ characteristic: "Mute" }],
-          state_cmd: "./test/echoScripts/runToTimeoutRcOf0"
+          state_cmd:                "./test/echoScripts/runToTimeoutRcOf0"
       };
 
       const log = new Logger( );
@@ -835,8 +831,8 @@ describe( "Testing Cmd4Accessory", function( )
 
       setTimeout( ( ) =>
       {
-         assert.include( log.logBuf, `[34mSetting My_Television Mute\u001b[39m 0`, ` setValue output something to stdout: ${ log.logBuf }` );
-         assert.include( log.errBuf, `[31m\u001b[31msetValue Mute function failed for My_Television cmd: ./test/echoScripts/runToTimeoutRcOf0 Set 'My_Television' 'Mute' '0' Failed`, ` setValue incorrect stderr: ${ log.errBuf }` );
+         assert.include( log.logBuf, `[34mSetting MyTelevision Mute\u001b[39m 0`, ` setValue output something to stdout: ${ log.logBuf }` );
+         assert.include( log.errBuf, `[31m\u001b[31msetValue Mute function failed for MyTelevision cmd: ./test/echoScripts/runToTimeoutRcOf0 Set 'MyTelevision' 'Mute' '0' Failed`, ` setValue incorrect stderr: ${ log.errBuf }` );
 
          done( );
       }, 1000 );

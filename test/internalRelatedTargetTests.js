@@ -7,11 +7,11 @@ var Cmd4Platform = require( "../Cmd4Platform" ).Cmd4Platform;
 
 describe( "Initializing our CMD4 Libraries ", ( ) => {});
 
-var _api = new HomebridgeAPI.HomebridgeAPI; // object we feed to Plugins
+var _api = new HomebridgeAPI( ); // object we feed to Plugins
 
  // Init the library for all to use
-CMD4_ACC_TYPE_ENUM.init( _api.hap );
-CMD4_DEVICE_TYPE_ENUM.init( _api.hap, _api.hap.Service );
+let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
+let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, _api.hap.Service, _api.hap.Characteristic, _api.hap.Categories );
 
 
 // ******** QUICK TEST CMD4_ACC_TYPE_ENUM *************
@@ -65,7 +65,7 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
       {
          accessories: [
          {
-            statusMsg:                  true,
+            statusMsg:                 true,
             type:                      "TemperatureSensor",
             displayName:               "TemperatureSensor",
             name:                      "TemperatureSensor",
@@ -158,10 +158,10 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
    {
       let platformConfig =
       {
-         queueTypes:                [{ queue: "A", queueType: "WoRm" }],
+         queueTypes:                   [{ queue: "A", queueType: "WoRm" }],
          accessories: [
          {
-            statusMsg:                  true,
+            statusMsg:                 true,
             type:                      "TemperatureSensor",
             displayName:               "TemperatureSensor",
             name:                      "TemperatureSensor",
@@ -207,10 +207,10 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
    {
       let platformConfig =
       {
-         queueTypes:                [{ queue: "A", queueType: "WoRm" }],
+         queueTypes:                   [{ queue: "A", queueType: "WoRm" }],
          accessories: [
          {
-            statusMsg:                  true,
+            statusMsg:                 true,
             type:                      "CameraControl",
             displayName:               "CameraControl",
             name:                      "CameraControl",
@@ -261,11 +261,11 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
             displayName:               "Door",
             statusMsg:                 true,
             type:                      "Door",
-            currentPosition:            0,
-            targetPosition:             0,
-            positionState:              0,
+            currentPosition:           0,
+            targetPosition:            0,
+            positionState:             0,
             polling:                   [ { characteristic: "currentPosition" },
-                                       // { characteristic: "TargetPosition" },
+                                         // { characteristic: "TargetPosition" },
                                          { characteristic: "positionState" } ],
             state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
          }]

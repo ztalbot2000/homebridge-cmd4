@@ -6,7 +6,6 @@
 
 # My favorite temp backup
 *.[0-9]
-*.[0-9][0-9]
 *.save*
 *_save*
 *_bak*
@@ -20,7 +19,6 @@ npm-debug.log
 .node-version
 
 test/tmp/*
-test/schemaFiles/*
 
 # Not a fan
 package-lock.json

@@ -7,11 +7,11 @@ Object.defineProperty(exports, "indexOfEnum", { enumerable: true, get: function 
 
 describe( "Initializing our plugin module", ( ) => {});
 
-var _api = new HomebridgeAPI.HomebridgeAPI; // object we feed to Plugins
+let _api = new HomebridgeAPI( ); // object we feed to Plugins
 
 // Init the library for all to use
-CMD4_ACC_TYPE_ENUM.init( _api.hap );
-CMD4_DEVICE_TYPE_ENUM.init( _api.hap, _api.hap.Service );
+let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
+let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, _api.hap.Service, _api.hap.Characteristic, _api.hap.Categories );
 
 
 // ******** QUICK TEST CMD4_DEVICE_TYPE_ENUM *************

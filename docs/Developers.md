@@ -7,12 +7,11 @@
 * [**Where to Begin**](#where-to-begin)
 * [**Homebridge API**](#homebridge-api)
 * [**Platform Accessories**](#platform-accessories)
-* [***Television Accessories***](#television-accessories)
+* [**Television Accessories**](#television-accessories)
 * [**Standard Accessories**](#standard-accessories)
 * [**Cmd4 Directives**](#cmd4-directives)
 * [**Cmd4 Devices and Characteristics**](#cmd4-devices-and-characteristics)
 * [**Priority Queued Polling**](#priority-queued-polling)
-* [**Migrating from Homebridge-cmdswitch2**](#migrating-from-homebridge-cmdswitch2)
 * [**Developer Notes**](#developer-notes)
 * [**Adding in Fakegato history**](#adding-in-fakegato-history)
 * [**Unit Testing**](#unit-testing)
@@ -28,7 +27,8 @@
 * [**basic_ping.sh**](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/Extras/Cmd4Scripts/Examples/basic_ping.sh)
 * [**advanced_ping.sh**](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/Extras/Cmd4Scripts/Examples/advanced_ping.sh)
 * [**wakeonlan.sh**](https://github.com/ztalbot2000/homebridge-cmd4/blob/master/Extras/Cmd4Scripts/Examples/wakeonlan.sh)
-* [**cmd4-E-Zone-MyAir**](https://github.com/mitch7391/cmd4-E-Zone-MyAir/blob/master/Temperature%20Sensors/One%20Constant%20Zone/ezone.sh)
+* [**homebridge-cmd4-AdvantageAir**](https://github.com/mitch7391/homebridge-cmd4-AdvantageAir/blob/master/AdvAir.sh)
+* [**cmd4-HisenseTV**](https://github.com/mitch7391/cmd4-HisenseTV/blob/main/HisenseTV.sh)   
 
 ## Homebridge API
 &nbsp;&nbsp;&nbsp; Cmd4 is not possible without Homebridge. Prior to Cmd4 Version 3, Cmd4 just created Standard Plugin Accessories. With Version 3 of Cmd4, Cmd4 follows the Hombridge API as defined on [Homebridge API](https://developers.homebridge.io/#/) to be followed exactly. Both Platform and Accessory Plugins can be created. In fact the examples can be recreated exactly.<BR>
@@ -154,6 +154,8 @@ See the [Cmd4 Developers Guide](https://github.com/ztalbot2000/homebridge-cmd4/b
 
 ## Standard Accessories
 &nbsp;&nbsp;&nbsp;A Standard Accessory does not need a Platform. The Homebridge example given is. [Homebridge Switch](https://developers.homebridge.io/#/api/accessory-plugins). Cmd4 Version 3 can recreate the exact same configuration as:
+<BR>
+For upcoming Cmd4 version 8.0 this will no longer be supported. This is because of <a href="https://developers.homebridge.io/#/">Homebridge deprecated templates</a>.This will also make homebridge-ui easier to implement.
 
 ```json
 {
@@ -201,30 +203,25 @@ Notice that there is no Platform definition. Otherwise everything is the same. Y
 
 &nbsp;&nbsp;&nbsp; Typically polling is pretty much a free for all.  While Cmd4 tries to eleviate this with staggered polling, Cmd4 supports two kinds of Priority Queued Polling; that being "Sequential" and "WoRm" ( Write Once Read Many).  If configured correctly, only one Set characteristic value can be sent or either one or multiple Gets from a device at a time. The priority given to requests from IOS first and background polling second.<BR>
 <BR>
-  Priority Queued Polling is only available when a queue is defined. The default "QueueType" being "WoRm". To configure Priority Queued Polling every characteristic to the device must be configured to be in the same queue. as an Example of the default WoRm is:
+  Priority Queued Polling is only available when a queue is defined. The default "QueueType" being "WoRm". To configure Priority Queued Polling every characteristic to the device must be configured to be in the same queue.<BR>
+  The retries defaults to zero for "Get" commands from homebridge. You can alter this value as you like.<BR>
+For Example of the default WoRm is:
 
 ```json
-"interval": 5,
-"polling": [ { "characteristic": "currentTemperature", "queue": "A" },
-             { "characteristic": "targetTemperature", "queue": "A" }
-           ]
+"queueTypes": [ { "queue": "A", "queueType": "WoRm", "retries": 0 } ],
+"accessories": [
+{
+   "interval": 5,
+   "queue:    "A",
+   "polling": [ { "characteristic": "currentTemperature"  },
+                { "characteristic": "targetTemperature", "interval": 15 }
+              ]
+}
 ```
   The interval of the characteristic is defined through the heirarch of the Platform/Accessory and then the Characteristic, as always.<BR>
-  A simpler solution would be to re-define the queues and the queue characteristics ahead of time and then just specify which accessory is going to use Priority Queue Polling. Example 2:
+Example 2:
 
 ```json
-"queueTypes: [ { "queue": "A" : "queueType": "WoRm"  }
-             ],
-"queue": "A",
-"interval": 10,
-"polling": [ { "characteristic": "currentTemperature" },
-             { "characteristic": "targetTemperature", "interval": 15 }
-           ]
-```
-Example 3:
-
-```json
-"queueTypes: [ { "queue": "A" : "queueType": "WoRm"  }
 "platforms":
  [ { "platform": "Cmd4",
      "interval": "10",
@@ -232,7 +229,6 @@ Example 3:
                     { "queue": "B" : "queueType": "Sequential" }
                     { "queue": "C" } // Defaults to "WoRm"
                   ],
-
      "accessories": [
      {
         "name": "My_Thermostat",
@@ -262,7 +258,8 @@ Example 3:
      {
         "name": "Switch2",
         "type": "Switch",
-        "polling": [ { "characteristic": "on", "queue": "D" } ],   // Defaults to "WoRm"
+        "queue": "D", // Defaults to WoRm
+        "polling": [ { "characteristic": "on" } ],
         ...
      }
 
@@ -292,8 +289,9 @@ Example 3:
                     "manufacturer": "Advantage Air Australia",
                     "model": "e-zone",
                     "serialNumber": "Fujitsu e-zone2",
+                    "queue": "A",
                     "polling": [
-                        { "characteristic": "currentTemperature", "queue": "A"  }
+                        { "characteristic": "currentTemperature" }
                     ],
                     "props": {
                         "currentTemperature": {
@@ -313,8 +311,9 @@ Example 3:
                     "manufacturer": "Advantage Air Australia",
                     "model": "e-zone",
                     "serialNumber": "Fujitsu e-zone2",
+                    "queue": "A",
                     "polling": [
-                        { "characteristic": "On", "queue": "A" }
+                        { "characteristic": "On" }
                     ],
                     "state_cmd": "bash /home/pi/zones.sh",
                     "state_cmd_suffix": "z05"
@@ -327,8 +326,9 @@ Example 3:
                     "manufacturer": "Advantage Air Australia",
                     "model": "e-zone",
                     "serialNumber": "Fujitsu e-zone2",
+                    "queue": "A",
                     "polling": [
-                        { "characteristic": "on", "queue": "A" }
+                        { "characteristic": "on" }
                     ],
                     "stateChangeResponseTime": 1,
                     "state_cmd": "bash /home/pi/ezone.sh"
@@ -384,6 +384,43 @@ Example 3:
 ### Step 4.  Sending constants to your script.
 &nbsp;&nbsp;&nbsp; By placing in your config.json file the tag "outputConstants": true, instead of values, your script will receive constants instead of values (Where Applicable). Homebridge-Cmd4 will except constants or values as input.  See the config.min.json file for the defined constants.
 
+### Step 5. Changing characteristic properties.
+&nbsp;&nbsp;&nbsp; Cmd4 will allow you to change a characteristics property range, However the HomeKit GUI will most likely ignore it. The change is for those who create their own GUI's. For Example:
+```json
+    "platforms": [
+        {
+            "platform": "Cmd4",
+            "debug": false,
+            "outputConstants": false,
+            "timeout": 4000,
+            "stateChangeResponseTime": 3,
+            "accessories": [
+                {
+                    "type": "Thermostat",
+                    "displayName": "MyThermostat",
+                    "name": "MyThermostat",
+                    "currentTemperature": 25,
+                    "targetTemperature": 25,
+                    "props": {
+                        "currentTemperature": {
+                            "maxValue": 32,
+                            "minValue": 16,
+                            "minStep": 1
+                        },
+                        "targetTemperature": {
+                            "maxValue": 32,
+                            "minValue": 16,
+                            "minStep": 1
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
+```
+
+
 ***Important***
 &nbsp;&nbsp;&nbsp; Homebridge-cmd4 just outputs the value to be set.  For whatever reason the lower layers of homebridge set on/off to be "true" and "false" instead of 0 & 1, which is incorrect, but changing it would break others scripts.
 &nbsp;&nbsp;&nbsp;  Homebridge-cmd4 has always recognized either 0/1 or true/false when receiving the devices value.
@@ -433,7 +470,7 @@ The value "0" should be used for any characteristics value which is not possible
 ```
 
 ## Unit Testing
-&nbsp;&nbsp;&nbsp; Unit testing is done using the Mocha framework for Javascript and was introduced in homebridge-cmd4 version 2.1.2. There are 2796 test cases and they all run successfully.  They test the homebridge-Cmd4 module to make sure that all characteristics, services and names are correct. The provided config.json is also tested for proper definitions of all the homebridge-cmd4 config parameters.
+&nbsp;&nbsp;&nbsp; Unit testing is done using the Mocha framework for Javascript and was introduced in homebridge-cmd4 version 2.1.2. There are 11708 test cases and they all run successfully.  They test the homebridge-Cmd4 module to make sure that all characteristics, services and names are correct. The provided config.json is also tested for proper definitions of all the homebridge-cmd4 config parameters.
 
 &nbsp;&nbsp;&nbsp; Unit testing is only possible in a development environment and can be achieved in the following manner.
 

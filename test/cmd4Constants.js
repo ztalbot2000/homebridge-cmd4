@@ -81,6 +81,56 @@ describe( "Testing cmd4Constants", function( )
    });
 
 });
+describe( "Testing cmd4Constants ErrorStrings", function( )
+{
+   it( "All cmd4Constants error Strings should be declared correctly.", function ( done )
+   {
+      let len = Object.keys( constants.ERROR_STRINGS ).length;
+
+      assert.equal( constants.ERROR_STRING_MIN - constants.ERROR_STRING_MAX + 1, len, `Totals do not match` );
+
+      assert.equal( constants.ERROR_STRINGS[ constants.ERROR_STRING_MIN - constants.ERROR_TIMER_EXPIRED ],
+                    "Timer expired contacting accessory",
+                    "ERROR_TIMER_EXPIRED not defined correctly");
+      assert.equal( constants.ERROR_STRINGS[ constants.ERROR_STRING_MIN - constants.ERROR_NULL_REPLY ],
+                    "Reply is NULL",
+                    "ERROR_NULL_REPPLY not defined correctly");
+      done();
+
+   });
+
+   it( "cmd4Constants.errorString should be a function", ( ) =>
+   {
+      assert.isFunction( constants.errorString, "errorString is not a function" );
+   });
+
+   it( "cmd4Constants errorString function works correctly.", function ( done )
+   {
+      assert.equal( constants.errorString( constants.ERROR_TIMER_EXPIRED ),
+                    "Timer expired contacting accessory",
+                    "ERROR_TIMER_EXPIRED not defined correctly" );
+      assert.equal( constants.errorString( constants.ERROR_NO_DATA_REPLY ),
+                    "No data returned from accessory",
+                    "ERROR_NO_DATA_REPLY not defined correctly" );
+
+      done();
+
+   });
+
+   it( "cmd4Constants errorString limits.", function ( done )
+   {
+      assert.equal( constants.errorString( constants.ERROR_STRING_MIN +1  ),
+                    "Device returned its own error; " + ( constants.ERROR_STRING_MIN +1 ),
+                    ".errorString MIN limit error" );
+      assert.equal( constants.errorString( constants.ERROR_STRING_MAX -1  ),
+                    "Device returned its own error; " + ( constants.ERROR_STRING_MAX -1 ),
+                    ".errorString MAX limit error" );
+
+      done();
+
+   });
+});
+
 
 describe( "Testing cmd4Constants - unused", function( )
 {
@@ -92,7 +142,9 @@ describe( "Testing cmd4Constants - unused", function( )
                         "./utils/HV.js",
                         "./index.js",
                         "./lib/CMD4_DEVICE_TYPE_ENUM.js",
-                        "./tools/Cmd4AccDocGenerator"];
+                        "./tools/Cmd4AccDocGenerator",
+                        "./test/cmd4Constants.js",
+                       ];
       // This is the count of the found constants in result
       let foundCount=0;
       let len = Object.keys( constants ).length;
@@ -152,7 +204,7 @@ describe( "Testing cmd4Constants - unused", function( )
       });
 
       console.log( "Total found was %s of %s ", foundCount, len );
-      assert.equal( foundCount, len, `Totals do not match` );
+      assert.equal( foundCount, len , `Totals do not match` );
 
       done( );
    }).timeout(20000);
@@ -168,7 +220,8 @@ describe( "Testing source constants  -  are defined", function( )
                         "./utils/HV.js",
                         "./tools/Cmd4AccDocGenerator",
                         "./lib/CMD4_DEVICE_TYPE_ENUM.js",
-                        "./tools/Cmd4AccDocGenerator"];
+                        "./tools/Cmd4AccDocGenerator"
+                      ];
 
       let totalSourceConstants = 0;
       let foundCount = 0;
@@ -182,6 +235,8 @@ describe( "Testing source constants  -  are defined", function( )
 
          let sourceData = fs.readFileSync( cmd4File, "utf8" );
 
+         // Matches source files with stuff like:
+         // constants.STANDALONE
          var sourceConstantsMatches = sourceData.toString().match(/constants.(\w).*\n/g);
          assert.isNotNull( sourceConstantsMatches, `Fike ${ cmd4File } has no constants and should be removed from this testcase` );
 
@@ -194,23 +249,24 @@ describe( "Testing source constants  -  are defined", function( )
             if ( occurranceCountArray != null )
             {
                for ( let i = 0; i < occurranceCountArray.length; i++ )
-               {
+               { // '{' - Used to cancel RegExp in vim
                   s = s.slice( s.indexOf( "constants." ) + 10 );
 
-                  const reg = new RegExp(`[\\s|,|:|;|}]` );
+                  const reg = new RegExp(`[\\s|,|:|;|}]|\\)|\\(` );
                   let sourceConstantLen = s.search( reg );
                   let sourceConstant = s.substr(0,  sourceConstantLen );
 
                   if ( returningArray.length == 0 )
                   {
-                     // console.log("pushing -->%s<--", sourceConstant );
+                     //console.log("pushing -->%s<--", sourceConstant );
                      returningArray.push( sourceConstant );
                   } else if ( returningArray.find( ( entry ) => entry == sourceConstant ) == -1 )
                   {
-                     // console.log("pushing another  -->%s<--", sourceConstant );
+                     //console.log("pushing another  -->%s<--", sourceConstant );
                      returningArray.push( sourceConstant );
                   } else
                   {
+                     // console.log("Duplicate  X->%s<-X", sourceConstant );
                      // Duplicate
                   }
 
@@ -234,6 +290,7 @@ describe( "Testing source constants  -  are defined", function( )
          {
             item.forEach( ( sourceConstant ) =>
             {
+               // console.log("Unwinding -->%s<--", sourceConstant );
                sourceConstantsArray.push( sourceConstant );
             });
          });
@@ -247,7 +304,7 @@ describe( "Testing source constants  -  are defined", function( )
          {
              let sourceConstant = sourceConstantsArray[ sIndex ];
 
-             //if ( cmd4ConstantsArray.indexOf( sourceConstant ) == -1 )
+             //if ( constants.indexOf( sourceConstant ) == -1 )
              if ( constants[ sourceConstant ] == undefined )
              {
                 console.log( "Not Found from: %s -->%s<--", cmd4File, sourceConstant );
@@ -259,6 +316,9 @@ describe( "Testing source constants  -  are defined", function( )
          }
       }
       console.log( "Total found was %s of %s", foundCount, totalSourceConstants );
+      // If you are off by 1 or 2, check that the code does not
+      // have something like constants.QUEUETYPE_WORM2)
+      // Where the bracket follow the constant without a space
       assert.equal( foundCount, totalSourceConstants, `Totals do not match` );
 
       done( );

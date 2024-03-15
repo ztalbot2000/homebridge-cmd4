@@ -10,7 +10,7 @@ let Logger = require( "./utils/Logger" );
 const { getAccessoryName, getAccessoryDisplayName
       } = require( "./utils/getAccessoryNameFunctions" );
 let getAccessoryUUID = require( "./utils/getAccessoryUUID" );
-const { addQueue, parseAddQueueTypes, queueExists } = require( "./Cmd4PriorityPollingQueue" );
+const { addQueue, queueExists } = require( "./Cmd4PriorityPollingQueue" );
 
 // Hierarchy variables
 let HV = require( "./utils/HV" );
@@ -38,10 +38,8 @@ let isDevDirective = require( "./utils/isDevDirective" );
 var chalk = require( "chalk" );
 
 // These would already be initialized by index.js
-// These would already be initialized by index.js
-let CMD4_DEVICE_TYPE_ENUM = settings.CMD4_DEVICE_TYPE_ENUM;
-let CMD4_ACC_TYPE_ENUM = settings.CMD4_ACC_TYPE_ENUM;
-let clonedCharacteristic = settings.clonedCharacteristic;
+let CMD4_ACC_TYPE_ENUM = require( "./lib/CMD4_ACC_TYPE_ENUM" ).CMD4_ACC_TYPE_ENUM;
+let CMD4_DEVICE_TYPE_ENUM = require( "./lib/CMD4_DEVICE_TYPE_ENUM" ).CMD4_DEVICE_TYPE_ENUM;
 
 const Cmd4Storage = require( "./utils/Cmd4Storage" );
 
@@ -128,6 +126,10 @@ class Cmd4Accessory
       this.linkedAccessories = [ ];
       this.listOfVariables = { };
       this.listOfConstants = { };
+
+      // Determines if the accessory is communicable
+      this.errorValue = 0;
+      this.errorString = "init";
 
       // Used to determine missing related characteristics and
       // to determine if the related characteristic is also polled.
@@ -392,8 +394,7 @@ class Cmd4Accessory
          let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
 
          // No matter what, remove it
-         //if ( format == this.api.hap.Characteristic.Formats.TLV8 && this.hV.allowTLV8 == false )
-         if ( format == clonedCharacteristic.Formats.TLV8 && this.hV.allowTLV8 == false )
+         if ( format == this.api.hap.Characteristic.Formats.TLV8 && this.hV.allowTLV8 == false )
          {
             if ( this.cmd4Storage.getStoredValueForIndex( accTypeEnumIndex ) != null )
             {
@@ -810,17 +811,13 @@ class Cmd4Accessory
              let props = accessory.configHasCharacteristicProps( accTypeEnumIndex );
              if ( props )
              {
-                //if ( settings.cmd4Dbg ) accessory.log.debug( "Overriding characteristic %s props for: %s ", CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, this.displayName );
-                if ( settings.cmd4Dbg ) accessory.log.debug( "Overriding characteristic %s props for: %s ", uCCharacteristicString, this.displayName );
+                if ( settings.cmd4Dbg ) accessory.log.debug( "Overriding characteristic %s props for: %s ", CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, this.displayName );
                   accessory.service.getCharacteristic( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].
                          characteristic )
                   .setProps(
-                  {
-                    // minValue: 18,
-                    // maxValue: 30,
-                    // minStep: 1
-                    props
-                });
+                     // props is an object of name value pairs (characteristics)
+                     props
+                  );
              }
 
              // Get the permissions of characteristic ( Read/Write ... )
@@ -1553,21 +1550,6 @@ class Cmd4Accessory
                   this.statusMsg = "FALSE";
 
                break;
-            case "QueueStatMsgInterval":
-            case "QueueMsg":
-
-               // Never put into production
-               this.log.warn( `Warning: ${ key } has been deprecated. It was never even used.` );
-               this.log.warn( `To remove this message, just remove ${ key } from your config.json` );
-
-               break;
-            case constants.QUEUETYPES:
-               this.log.warn( `Warning: ${ key } will soon been deprecated at the accessory level. Please move it to where "Platform: "Cmd4" is located in your config.json.` );
-               this.log.warn( `This message will disappear when you have done so.` );
-
-               parseAddQueueTypes( this.log, value );
-
-               break;
             case constants.QUEUE:
             {
                let queue = queueExists( value );
@@ -1590,12 +1572,6 @@ class Cmd4Accessory
             case constants.POLLING:
                // Do not parse it yet as characteristics must be set first.
                this.polling = value;
-
-               break;
-            case "Cmd4_Mode":
-            case "cmd4_Mode":
-               this.log.warn( `Warning: ${ key } has been deprecated.` );
-               cmd4Mode = value;
 
                break;
             case constants.INTERVAL:
@@ -1623,34 +1599,6 @@ class Cmd4Accessory
             case constants.STATE_CMD:
                // What this plugin is all about
                this.state_cmd = value;
-
-               break;
-            case constants.STORAGE:
-               this.log.warn( `Warning: ${ key } will soon been deprecated at the Platform level. It was always meant to just be a fakegato config option only.` );
-               this.log.warn( `This message will disappear when you have done so.` );
-
-               this.storage = value;
-
-               break;
-            case constants.STORAGEPATH:
-               this.log.warn( `Warning: ${ key } will soon been deprecated at the Platform level. It was always meant to just be a fakegato config option only.` );
-               this.log.warn( `This message will disappear when you have done so.` );
-
-               this.storagePath = value
-
-               break;
-            case constants.FOLDER:
-               this.log.warn( `Warning: ${ key } will soon been deprecated at the Platform level. It was always meant to just be a fakegato config option only.` );
-               this.log.warn( `This message will disappear when you have done so.` );
-
-               this.folder = value
-
-               break;
-            case constants.KEYPATH:
-               this.log.warn( `Warning: ${ key } will soon been deprecated at the Platform level. It was always meant to just be a fakegato config option only.` );
-               this.log.warn( `This message will disappear when you have done so.` );
-
-               this.keyPath = value
 
                break;
             case constants.FAKEGATO:
@@ -1894,7 +1842,6 @@ class Cmd4Accessory
       let interval = accessory.hV.interval;
       let stateChangeResponseTime = accessory.hV.stateChangeResponseTime;
 
-
       // We need to create the listOfPollingCharacteristics, even in Demo mode because
       // this list is also used to determine if the related characteristic should be set
       // which happens in the Demo mode without polling.
@@ -1951,20 +1898,13 @@ class Cmd4Accessory
                      stateChangeResponseTime = value * 1000;
 
                      break;
-                  case constants.QUEUE:
-                  {
-                     if ( this.queue && this.queue.queueName != value )
-                        throw new Error( chalk.red( `Already defined Priority Polling Queue "${ this.queue.queueName }" for ${ this.displayName } cannot be redefined.` ) );
-
-                     this.log.warn( `Warning: ${ key } will soon been deprecated at the polling level. Please define it for the accessory: ${ this.displayName } as "queue": "${ value }"` );
-                     this.log.warn( `This message will disappear when you have done so.` );
-
-                     this.queue = addQueue( this.log, value, constants.QUEUETYPE_WORM );
-
-                     break;
-                  }
                   case constants.CHARACTERISTIC:
                   {
+                     // The key must be a characteristic property
+                     // but first check if one has already been defined as we can only handle one at a time.
+                     if ( accTypeEnumIndex != -1 )
+                        throw new Error( `For charateristic polling, you can only define one characteristic per array item.\nCannot add "${ key }" as "${ value }" is already defined for: ${ accessory.displayName } ${accTypeEnumIndex}` );
+
                      rcDirective = isAccDirective( value, false );
                      if ( rcDirective.accTypeEnumIndex == null )
                      {
@@ -1982,29 +1922,10 @@ class Cmd4Accessory
 
                      break;
                   }
-                  case constants.QUEUETYPES:
+                  default: // Switching polling key but key is unknown
                   {
-                     // WHY IS THIS HERE AT ALL ??????????
 
-                     this.log.warn( `Warning: ${ key } will soon been deprecated at the accessory level. Please move it to where "Platform: "Cmd4" is located in your config.json.` );
-                     this.log.warn( `This message will disappear when you have done so.` );
-
-                     parseAddQueueTypes( this.log, value );
-                     // This whole record is not a characteristic polling entry
-                     // continue to next ( via return )
-                     return;
-                  }
-                  default:
-                  {
-                     // The key must be a characteristic property
-                     // but first check if one has already been defined as we can only handle one at a time.
-                     if ( accTypeEnumIndex != -1 )
-                        throw new Error( `For charateristic polling, you can only define one characteristic per array item.\nCannot add "${ key }" as "${ characteristicString }" is already defined for: ${ accessory.displayName }` );
-
-                     // This checks both upper and lower case
-                     accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.indexOfEnum( key );
-                     if ( accTypeEnumIndex < 0 )
-                        throw new Error( `No such polling characteristic: "${ key }" for: "${ accessory.displayName }".` );
+                     throw new Error( `No such polling characteristic: "${ key }" for: "${ accessory.displayName }".` );
 
                   }
                }
@@ -2013,12 +1934,16 @@ class Cmd4Accessory
             // Everything now goes through the queue
             if ( this.queue == null )
             {
-               this.queue = addQueue( this.log, "Q:" + this.displayName, constants.QUEUETYPE_STANDARD );
+               this.queue = addQueue( this.log, "Q:" + this.displayName, constants.QUEUETYPE_STANDARD, constants.DEFAULT_STANDARD_QUEUE_RETRY_COUNT );
             }
             // This has to be UC as it gets passed to the getValue cmd string
             let characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToUC( accTypeEnumIndex );
 
             if ( settings.cmd4Dbg ) this.log.debug( `Setting up accessory: ${ accessory.displayName } for polling of: ${ characteristicString } timeout: ${ timeout } interval: ${ interval } queueName: "${ this.queue.queueName }"` );
+
+            if ( timeout == undefined )
+               throw new Error( `determineCharacteristicsToPollForAccessory  Timeout is undefined ` );
+
 
             let record = { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: accTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: interval, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.QUEUE_NAME_lv ]: this.queue.queueName };
 
@@ -2043,7 +1968,7 @@ class Cmd4Accessory
          // which happens in the Demo mode without polling.
          if ( this.queue == null )
          {
-            this.queue = addQueue( this.log, "Q:" + this.displayName, constants.QUEUETYPE_STANDARD );
+            this.queue = addQueue( this.log, "Q:" + this.displayName, constants.QUEUETYPE_STANDARD, constants.DEFAULT_STANDARD_QUEUE_RETRY_COUNT );
          }
 
          // Make sure the defined characteristics will be polled
@@ -2052,6 +1977,7 @@ class Cmd4Accessory
 
             // This has to be UC as it gets passed to the getValue cmd string
             let characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToUC( defaultPollingAccTypeEnumIndex );
+
             let record = { [ constants.ACCESSORY_lv ]: accessory, [ constants.ACC_TYPE_ENUM_INDEX_lv ]: defaultPollingAccTypeEnumIndex, [ constants.CHARACTERISTIC_STRING_lv ]: characteristicString, [ constants.INTERVAL_lv ]: interval, [ constants.TIMEOUT_lv ]: timeout, [ constants.STATE_CHANGE_RESPONSE_TIME_lv ]: stateChangeResponseTime, [ constants.QUEUE_NAME_lv ]: this.queue.queueName };
 
             // Used to determine missing related characteristics and

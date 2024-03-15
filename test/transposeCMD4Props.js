@@ -11,11 +11,11 @@ var { transposeConstantToValidValue,
 
 describe( `Initializing our CMD4 Libraries`, ( ) => { } );
 
-var _api = new HomebridgeAPI.HomebridgeAPI; // object we feed to Plugins
+var _api = new HomebridgeAPI( ); // object we feed to Plugins
 
  // Init the library for all to use
-CMD4_ACC_TYPE_ENUM.init( _api.hap );
-CMD4_DEVICE_TYPE_ENUM.init( _api.hap, _api.hap.Service );
+let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
+let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, _api.hap.Service, _api.hap.Characteristic, _api.hap.Categories );
 
 
 // ******** QUICK TEST CMD4_ACC_TYPE_ENUM *************
@@ -126,6 +126,18 @@ describe( `Testing transposeConstantToValidValue`, ( ) =>
    });
 
    it( `transposeConstantToValidValue should return correct value 1 for constant "TRUE"`, ( ) =>
+   {
+      // has { "FALSE" & "TRUE"} for validValues
+      let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AdministratorOnlyAccess;
+      let constantToBeChecked = "TRUE";
+      let expectedResult = 1;
+
+      let transposed = transposeConstantToValidValue( CMD4_ACC_TYPE_ENUM.properties, accTypeEnumIndex, constantToBeChecked );
+
+      expect( transposed ).to.equal( expectedResult, `transposeConstantToValidValue from ${ constantToBeChecked } returned ${ transposed } instead of ${ expectedResult } for ${ CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type }` );
+   });
+
+   it( `transposeConstantToValidValue should return correct value 4 for constant "INTERUPTED"`, ( ) =>
    {
       // has { "FALSE" & "TRUE"} for validValues
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AdministratorOnlyAccess;

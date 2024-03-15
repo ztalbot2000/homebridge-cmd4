@@ -1,7 +1,7 @@
 'use strict';
 
 // These would already be initialized by index.js
-let CMD4_ACC_TYPE_ENUM = require( "../lib/CMD4_ACC_TYPE_ENUM" );
+let CMD4_ACC_TYPE_ENUM = require( "../lib/CMD4_ACC_TYPE_ENUM" ).CMD4_ACC_TYPE_ENUM;
 
 class Cmd4Storage
 {

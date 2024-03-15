@@ -122,11 +122,9 @@ let ACC_DATA = require('../lib/CMD4_ACC_TYPE_ENUM');
 let DEVICE_DATA = require('../lib/CMD4_DEVICE_TYPE_ENUM');
 
 // Init the library for all to use
-let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap );
-let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( _api.hap, _api.hap.Service );
+let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
+let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, _api.hap.Service, _api.hap.Characteristic, _api.hap.Categories );
 let Characteristic = _api.hap.Characteristic;
-
-
 
 // File System utilities
 let fs = require( "fs" );
@@ -154,6 +152,100 @@ var fid;
 
 var divLevel=0;
 const INDENT = 3;
+
+// Since v6.2 the Accessory characteristics are not sorted. This
+// is because peoples saved status per characteristic is done by index.
+// changing this would mean the values would be mixed up.
+function sortACCByType( )
+{
+   var keysAndIndexes = [];
+   var sorted_obj = { properties: [],
+                      indexOfEnum: CMD4_ACC_TYPE_ENUM.indexOfEnum,
+                      EOL: CMD4_ACC_TYPE_ENUM.EOL
+                    };
+   let characteristicNames = [];
+   let characteristicName = "";
+
+   for ( let accTypeEnumIndex = 0 ; accTypeEnumIndex < CMD4_ACC_TYPE_ENUM.EOL; accTypeEnumIndex++ )
+   {
+      // Set the old characteristic name and value
+      characteristicName = Object.keys(CMD4_ACC_TYPE_ENUM).find(key => CMD4_ACC_TYPE_ENUM[key] === accTypeEnumIndex );
+      characteristicNames.push( characteristicName );
+
+      keysAndIndexes.push( { "key": CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, "index": accTypeEnumIndex }  );
+   }
+
+   // sort the keys ( types )
+   keysAndIndexes.sort( function(a, b)
+   {
+      //return a.key < b.key;
+      if  (a.key < b.key) return -1
+      return a.key > b.key ? 1:0
+   });
+
+   // create new array based on Sorted Keys
+   for ( let index = 0 ; index < keysAndIndexes.length; index++ )
+   {
+      let pair = keysAndIndexes[ index ];
+      let oldIndex = pair.index;
+      sorted_obj.properties[index] = CMD4_ACC_TYPE_ENUM.properties[oldIndex];
+
+      characteristicName = pair.key;
+      // This would be the new index
+      sorted_obj[ characteristicName ] = index;
+   }
+
+   return sorted_obj;
+}
+
+// Since v6.2 the Device names are not sorted. This
+// is because I'm lazy to change any documentation referencing an index
+function sortDevByDeviceName( )
+{
+   var keysAndIndexes = [];
+   var sorted_obj = { properties: [],
+                      indexOfEnum: CMD4_DEVICE_TYPE_ENUM.indexOfEnum,
+                      EOL: CMD4_DEVICE_TYPE_ENUM.EOL
+                    };
+
+   let deviceNames = [];
+   let deviceName = "";
+
+   for ( let devTypeEnumIndex = 0 ; devTypeEnumIndex < CMD4_DEVICE_TYPE_ENUM.EOL; devTypeEnumIndex++ )
+   {
+      // Set the old device name and value
+      deviceName = Object.keys(CMD4_DEVICE_TYPE_ENUM).find(key => CMD4_DEVICE_TYPE_ENUM[key] === devTypeEnumIndex );
+      deviceNames.push( deviceName );
+
+      keysAndIndexes.push( { "key": CMD4_DEVICE_TYPE_ENUM.properties[ devTypeEnumIndex ].deviceName, "index": devTypeEnumIndex }  );
+   }
+
+   // sort the keys ( deviceName )
+   keysAndIndexes.sort( function(a, b)
+   {
+      //return a.key < b.key;
+      if  (a.key < b.key) return -1
+      return a.key > b.key ? 1:0
+   });
+
+   // create new array based on Sorted Keys
+   for ( let index = 0 ; index < keysAndIndexes.length; index++ )
+   {
+      let pair = keysAndIndexes[ index ];
+      let oldIndex = pair.index;
+      sorted_obj.properties[index] = CMD4_DEVICE_TYPE_ENUM.properties[oldIndex];
+
+      deviceName = pair.key;
+      // This would be the new index
+      sorted_obj[ deviceName ] = index;
+   }
+
+   return sorted_obj;
+}
+
+let CMD4_Sorted_ACC = sortACCByType( );
+let CMD4_Sorted_DEV = sortDevByDeviceName( );
+
 
 function createHTMLCmd4AccDocument( )
 {
@@ -632,7 +724,8 @@ function addSideNavDevicesLinks_WithinSideNav( )
 
       for ( let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++)
       {
-         let deviceName = CMD4_DEVICE_TYPE_ENUM.properties[ index ].deviceName;
+         // We just need the index to look sorted
+         let deviceName = CMD4_Sorted_DEV.properties[ index ].deviceName;
 
          wfs( `<a href="#${ deviceName }" onclick="toggleVisibility( '${ deviceName }');">${ deviceName }</a>\n` );
       }
@@ -642,6 +735,7 @@ function addSideNavDevicesLinks_WithinSideNav( )
 function addSideNavIntroductionLinks_WithinSideNav ()
 {
 }
+
 function addSideNavCharacteristicsLinks_WithinSideNav( )
 {
    // Accordion button for Characteristics
@@ -651,10 +745,11 @@ function addSideNavCharacteristicsLinks_WithinSideNav( )
 
 
    wf( "+", `<div class="panel">\n` );
+      // We just need the index to look sorted
       for ( let index=0; index < CMD4_ACC_TYPE_ENUM.EOL; index ++)
       {
          // Lower case characteristic
-         let characteristic = CMD4_ACC_TYPE_ENUM.properties[ index ].sche;
+         let characteristic = CMD4_Sorted_ACC.properties[ index ].sche;
 
          wfs( `<a href="#${ characteristic }" onclick="toggleVisibility( '${ characteristic }');">${ characteristic }</a>\n` );
       }
@@ -698,7 +793,6 @@ function addSideNavCmd4AccessoryDirectivesLinks_WithinSideNav( )
       wfs( `<a href="#${ constants.POLLING }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.POLLING }</a>\n` );
       wfs( `<a href="#${ constants.INTERVAL }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.INTERVAL }</a>\n` );
       wfs( `<a href="#${ constants.TIMEOUT }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.TIMEOUT }</a>\n` );
-      wfs( `<a href="#${ constants.QUEUETYPES }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.QUEUETYPES }</a>\n` );
       wfs( `<a href="#${ constants.QUEUE }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.QUEUE }</a>\n` );
       wfs( `<a href="#${ constants.STATECHANGERESPONSETIME }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.STATECHANGERESPONSETIME }</a>\n` );
       wfs( `<a href="#${ constants.LINKEDTYPES }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.LINKEDTYPES }</a>\n` );
@@ -1084,7 +1178,7 @@ function addCmd4DirectivePages_WithinMain( )
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.TIMEOUT }_D"> ${ constants.TIMEOUT }</a><TD> ${ constants.TIMEOUT } <TD> ${ constants.DEFAULT_TIMEOUT } < msec > <TD> How long before killing the state command of all polled characteristics. See <a href="#${ constants.TIMEOUT }" onclick="toggleVisibility( 'AccessoryDirectives');">${ constants.TIMEOUT }</a> in Accessory Directives for full description as it can also be set per accessory or per characteristic.</TR>\n` );
 
    // QueueTypes - CMD4 Directives
-   wfs( `<TR ALIGN="left"><TD><a name="${ constants.QUEUETYPES }_D"> ${ constants.QUEUETYPES }</a><TD> < Array of < ${ constants.QUEUE }: < "name" >, ${ constants.QUEUETYPE }: < ${ constants.QUEUETYPE_SEQUENTIAL } | ${ constants.QUEUETYPE_WORM } > <TD> none <TD> Pre-defines Queue types. This Directive can also be per queue as noted by its presence as an accessory directive.</TR>\n` );
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.QUEUETYPES }_D"> ${ constants.QUEUETYPES }</a><TD> < Array of { "${ constants.QUEUE }": < "SomeName" >, "${ constants.QUEUETYPE }": < "${ constants.QUEUETYPE_SEQUENTIAL }" | "${ constants.QUEUETYPE_WORM }" > "${ constants.QUEUE_RETRIES}": < ${ constants.DEFAULT_WORM_QUEUE_RETRY_COUNT } > } <TD> none <TD> Pre-defines Queue types. This Directive can also be per queue as noted by its presence as an accessory directive.</TR>\n` );
 
    // Definitions - Custom Characteristics - CMD4 Directives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.DEFINITIONS }_D"> ${ constants.DEFINITIONS }</a><TD> < Array > <TD> <TD> An Array of new Characteristic Objects. See <a href="#CUSTOM_CHARACTERISTICS" onclick="toggleVisibility( 'CustomCharacteristics');">Custom Characteristics, around line 339</a> for more information</TR>\n` );
@@ -1135,9 +1229,6 @@ function addCmd4AccessoryDirectivePages_WithinMain( )
 
    wfs( `<TR><TD><TD COLSPAN=3> or  [{"characteristic" < characteristic >, [ "interval": < sec >, "timeout": < msec > ] }] The timeout and interval override any higher directive.</TR>\n` );
 
-   // QueueTypes - AccessoryDirectives
-   wfs( `<TR ALIGN="left"><TD><a name="${ constants.QUEUETYPES }"> ${ constants.QUEUETYPES }</a><TD> none <TD> < Array of < ${ constants.QUEUE }: < "name" >, ${ constants.QUEUETYPE }: < ${ constants.QUEUETYPE_SEQUENTIAL } | ${ constants.QUEUETYPE_WORM } <TD> none <TD> Pre-defines the Queue types.</TR>\n` );
-
    // Queue - AccessoryDirectives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.QUEUE }"> ${ constants.QUEUE }</a><TD> ${ constants.QUEUE } <TD> < String > <TD> Defines which Queue polled characteristics will be placed.</TR>\n` );
 
@@ -1162,7 +1253,7 @@ function addCmd4AccessoryDirectivePages_WithinMain( )
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.CATEGORY }">${ constants.CATEGORY }</a><TD> < CATEGORY > <TD> <TD> See <a href="https://developers.homebridge.io/#/categories">Homebridge Categories</a> for a complete list of possible categories.  </TR>\n` );
 
    // fakegato - AccessoryDirectives
-   wfs( `<TR ALIGN="left"><TD><a name="${ constants.FAKEGATO }">${ constants.FAKEGATO }</a><TD>  < JSON >  <TD> <TD> See the section, <a href="https://github.com/ztalbot2000/homebridge-cmd4/README.md#fakegatotag"> "Adding in Fakegato history"</a> below.</TR>\n` );
+   wfs( `<TR ALIGN="left"><TD><a name="${ constants.FAKEGATO }">${ constants.FAKEGATO }</a><TD>  < JSON >  <TD> <TD> See the section, <a href="https://github.com/ztalbot2000/homebridge-cmd4/docs/Developers.md#fakegatotag"> "Adding in Fakegato history"</a> below.</TR>\n` );
 
    // linkedTypes - AccessoryDirectives
    wfs( `<TR ALIGN="left"><TD><a name="${ constants.LINKEDTYPES }">${ constants.LINKEDTYPES }</a><TD>  < JSON >  <TD> <TD> Other Cmd4 Accessories like Input Source for HDMI inputs. </TR>\n` );
@@ -1177,7 +1268,7 @@ function addCustomCharacteristicPages_withinMain( )
 {
    wf( "+", `<div id="CustomCharacteristics" class="section">\n` );
 
-   wfs( `<h2><a name="CUSTOMCHARACTERISTICS">Custom Characteristics</a></h2>\n` );
+   wfs( `<h2><a name="CUSTOM_CHARACTERISTICS">Custom Characteristics</a></h2>\n` );
    wfs( `<p>These directives appear within the Cmd4 Platform section</p><BR>\n` );
    wfs( `<p>IMPORTANT - It is unlikely that adding custom characteristics will be supported by any GUI or SIRI<BR>\n` );
    wfs( `<BR><BR>\n` );

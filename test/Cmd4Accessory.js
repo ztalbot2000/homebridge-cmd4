@@ -6,13 +6,11 @@ let settings = require( "../cmd4Settings" );
 const constants = require( "../cmd4Constants" );
 
 
-var _api = new HomebridgeAPI.HomebridgeAPI; // object we feed to Plugins
-
+var _api = new HomebridgeAPI(); // object we feed to Plugins
 
 // Init the library for all to use
-CMD4_ACC_TYPE_ENUM.init( _api.hap );
-CMD4_DEVICE_TYPE_ENUM.init( _api.hap, _api.hap.Service );
-
+let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
+let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, _api.hap.Service, _api.hap.Characteristic, _api.hap.Categories );
 
 var Cmd4Accessory = require( "../Cmd4Accessory" ).Cmd4Accessory;
 let Cmd4Platform = require( "../Cmd4Platform" ).Cmd4Platform;
@@ -159,8 +157,10 @@ describe('Test Cmd4Accessory variables ', ( ) =>
             continue;
          }
 
-         config.name = "My_" + CMD4_DEVICE_TYPE_ENUM.devEnumIndexToC( index );
-         config.type = CMD4_DEVICE_TYPE_ENUM.devEnumIndexToC( index );
+         //config.name = `MY_${ CMD4_DEVICE_TYPE_ENUM.properties[index].deviceName }`;
+         config.name = devEnumIndexToC( index );
+         config.type = CMD4_DEVICE_TYPE_ENUM.properties[index].deviceName;
+
 
          let log = new Logger( );
          log.setOutputEnabled( false );
@@ -361,7 +361,8 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
 
       let accessory = new Cmd4Accessory( log, config, _api, [ ] );
 
-      expect ( ( ) => accessory.cmd4Storage.setStoredValueForIndex( -1, 0 ) ).to.throw(/setStoredValue - Characteristic index: -1 not between 0 and 223\nCheck your config.json file for unknown characteristic./);
+      let errMsg=`setStoredValue - Characteristic index: -1 not between 0 and ${ ACC_EOL }\nCheck your config.json file for unknown characteristic.`;
+      expect ( ( ) => accessory.cmd4Storage.setStoredValueForIndex( -1, 0 ) ).to.throw(errMsg);
 
    });
 
@@ -382,7 +383,8 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
 
       let accessory = new Cmd4Accessory( log, config, _api, [ ] );
 
-      expect ( ( ) => accessory.cmd4Storage.setStoredValueForIndex( CMD4_ACC_TYPE_ENUM.EOL, 0 ) ).to.throw(/setStoredValue - Characteristic index: 223 not between 0 and 223\nCheck your config.json file for unknown characteristic./);
+      let errMsg=`setStoredValue - Characteristic index: ${ ACC_EOL } not between 0 and ${ ACC_EOL }\nCheck your config.json file for unknown characteristic.`;
+      expect ( ( ) => accessory.cmd4Storage.setStoredValueForIndex( CMD4_ACC_TYPE_ENUM.EOL, 0 ) ).to.throw(errMsg);
 
    });
 
@@ -446,7 +448,8 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
 
       let accessory = new Cmd4Accessory( log, config, _api, [ ] );
 
-      expect ( ( ) => accessory.cmd4Storage.getStoredValueForIndex( -1 ) ).to.throw(/getStoredValue - Characteristic index: -1 not between 0 and 223\nCheck your config.json file for unknown characteristic./);
+      let errMsg=`getStoredValue - Characteristic index: -1 not between 0 and ${ ACC_EOL }\nCheck your config.json file for unknown characteristic.`;
+      expect ( ( ) => accessory.cmd4Storage.getStoredValueForIndex( -1 ) ).to.throw(errMsg);
 
    });
 
@@ -466,7 +469,8 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
 
       let accessory = new Cmd4Accessory( log, config, _api, [ ] );
 
-      expect ( ( ) => accessory.cmd4Storage.getStoredValueForIndex( CMD4_ACC_TYPE_ENUM.EOL ) ).to.throw(/getStoredValue - Characteristic index: 223 not between 0 and 223\nCheck your config.json file for unknown characteristic./);
+      let errMsg=`setStoredValue - Characteristic index: ${ ACC_EOL } not between 0 and ${ ACC_EOL }\nCheck your config.json file for unknown characteristic.`;
+      expect ( ( ) => accessory.cmd4Storage.setStoredValueForIndex( CMD4_ACC_TYPE_ENUM.EOL, 0 ) ).to.throw(errMsg);
 
    });
 
@@ -487,7 +491,7 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
 
       let accessory = new Cmd4Accessory( log, config, _api, [ ] );
 
-      let characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToUC( CMD4_ACC_TYPE_ENUM.On );
+      let characteristicString = accEnumIndexToC( CMD4_ACC_TYPE_ENUM.On );
 
       config.On = true;
       let newValue = true;
@@ -1265,8 +1269,8 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
       {
          accessories: [
          {
-            name:                      "My_Door",
-            displayName:               "My_Door",
+            name:                      "MyDoor",
+            displayName:               "MyDoor",
             statusMsg:                 true,
             type:                      "Door",
             currentPosition:            0,
@@ -1537,7 +1541,6 @@ describe('Cmd4Accessory Test determineCharacteristicsToPollOfAccessoryAndItsChil
          {
             platform:                  "Cmd4",
             outputConstants:            false,
-            restartRecover:            true,
             accessories: [
             {
                type:                        "Thermostat",
@@ -1726,8 +1729,8 @@ describe('Test Cmd4Accessory change characteristic Props', ( ) =>
          accessories: [
          {
             type:                            "TemperatureSensor",
-            displayName:                     "My_TemperatureSensor",
-            name:                            "My_TemperatureSensor",
+            displayName:                     "MyTemperatureSensor",
+            name:                            "MyTemperatureSensor",
             currentTemperature:               25,
             statusFault:                     "NO_FAULT",
             props: { CurrentTemperature: { maxValue: 100,
@@ -1755,7 +1758,7 @@ describe('Test Cmd4Accessory change characteristic Props', ( ) =>
       let cmd4Accessory = cmd4Platform.createdCmd4Accessories[0];
       assert.instanceOf( cmd4Accessory , Cmd4Accessory, `Expected cmd4Accessory to be instance of Cmd4Accessory.` );
 
-      assert.include( log.logBuf, `[90mOverriding characteristic CurrentTemperature props for: My_TemperatureSensor`, `Incorrect stdout: ${ log.logBuf }` );
+      assert.include( log.logBuf, `[90mOverriding characteristic CurrentTemperature props for: MyTemperatureSensor`, `Incorrect stdout: ${ log.logBuf }` );
 
       done( );
    });

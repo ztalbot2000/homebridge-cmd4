@@ -78,16 +78,16 @@ describe( "Quick Testing CMD4_DEVICE_TYPE_ENUM EOL", ( ) =>
 {
    it( "CMD4_DEVICE_TYPE_ENUM has EOL", ( ) =>
    {
-      assert.isNotNull( pluginModule.CMD4_DEVICE_TYPE_ENUM.EOL, "EOL is null" );
+      assert.isNotNull( pluginModule.DEVICE_DATA.CMD4_DEVICE_TYPE_ENUM.EOL, "EOL is null" );
    });
 
    it( "CMD4_DEVICE_TYPE_ENUM.EOL = " + DEVICE_EOL, ( ) =>
    {
-      assert.equal( pluginModule.CMD4_DEVICE_TYPE_ENUM.EOL, DEVICE_EOL );
+      assert.equal( pluginModule.DEVICE_DATA.CMD4_DEVICE_TYPE_ENUM.EOL, DEVICE_EOL );
    });
 });
 
-var _api = new HomebridgeAPI.HomebridgeAPI; // object we feed to Plugins
+var _api = new HomebridgeAPI( ); // object we feed to Plugins
 
 describe( "Testing homebridge API", ( ) =>
 {

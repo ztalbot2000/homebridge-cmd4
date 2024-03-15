@@ -22,17 +22,21 @@ let createAccessorysInformationService = require( "./utils/createAccessorysInfor
 // Pretty Colors
 var chalk = require( "chalk" );
 
-// Settings, Globals and Constants
-let settings = require( "./cmd4Settings" );
-const constants = require( "./cmd4Constants" );
-
 // These would already be initialized by index.js
-let CMD4_DEVICE_TYPE_ENUM = settings.CMD4_DEVICE_TYPE_ENUM;
-let CMD4_ACC_TYPE_ENUM = settings.CMD4_ACC_TYPE_ENUM;
-let clonedCharacteristic = settings.clonedCharacteristic;
+let CMD4_CHAR_TYPE_ENUMS = require( "./lib/CMD4_CHAR_TYPE_ENUMS" ).CMD4_CHAR_TYPE_ENUMS;
+let CMD4_DEVICE_TYPE_ENUM = require( "./lib/CMD4_DEVICE_TYPE_ENUM" ).CMD4_DEVICE_TYPE_ENUM;
+let CMD4_ACC_TYPE_ENUM = require( "./lib/CMD4_ACC_TYPE_ENUM" ).CMD4_ACC_TYPE_ENUM;
+
+let CMD4_FORMAT_TYPE_ENUM = CMD4_CHAR_TYPE_ENUMS.CMD4_FORMAT_TYPE_ENUM;
+let CMD4_UNITS_TYPE_ENUM = CMD4_CHAR_TYPE_ENUMS.CMD4_UNIT_TYPE_ENUM;
+let CMD4_PERMS_TYPE_ENUM = CMD4_CHAR_TYPE_ENUMS.CMD4_PERMS_TYPE_ENUM;
 
 // The Cmd4 Classes
 const Cmd4Accessory = require( "./Cmd4Accessory" ).Cmd4Accessory;
+
+// Settings, Globals and Constants
+let settings = require( "./cmd4Settings" );
+const constants = require( "./cmd4Constants" );
 
 // Platform definition
 class Cmd4Platform
@@ -234,68 +238,13 @@ class Cmd4Platform
                this.outputConstants = value;
 
                break;
-            case "RestartRecover":
-               this.log.warn( `Warning: ${ key } has been deprecated. Not having restart recovery could mean your device would turn on/off over a restart; Therefore ${ key } is now always enabled.` );
-               this.log.warn( `To remove this message, just remove ${ key } from your config.json` );
-               break;
             case constants.STATUSMSG:
               if ( value === false )
                  this.statusMsg = "FALSE";
 
                break;
-            case "QueueStatMsgInterval":
-            case "QueueMsg":
-
-               // Never put into production
-               this.log.warn( `Warning: ${ key } has been deprecated. It was never even used.` );
-               this.log.warn( `To remove this message, just remove ${ key } from your config.json` );
-
-               break;
             case constants.QUEUETYPES:
                parseAddQueueTypes( this.log, value );
-
-               break;
-            case "Cmd4_Mode":
-            case "cmd4_Mode":
-               this.log.warn( `Warning: ${ key } has been deprecated.` );
-               if ( value == "Demo" )
-               {
-                  this.log.warn( `Demo mode is achieved when there is not any polling entries in your config.json.` );
-               } else
-               {
-                  this.log.warn( `Cmd4 has been simplified and optimized as per: https://git.io/JtMGR.` );
-               }
-               this.log.warn( `To remove this message, just remove "${ key }" from your config.json` );
-               break;
-            case constants.STORAGE:
-               this.log.warn( `Warning: ${ key } will soon been deprecated at the Platform level. It was always meant to just be a fakegato config option only.` );
-               this.log.warn( `This message will disappear when you have done so.` );
-
-               if ( value == constants.FS || value == constants.GOOGLEDRIVEl )
-                  this.storage = value;
-               else
-                  this.log.warn( chalk.yellow( `WARNING` ) + `: Cmd4 Unknown platform.config.storage:{ this.storage } Expected:${ constants.FS } or ${ constants.GOOGLEDRIVE }` );
-
-               break;
-            case constants.STORAGEPATH:
-               this.log.warn( `Warning: ${ key } will soon been deprecated at the Platform level. It was always meant to just be a fakegato config option only.` );
-               this.log.warn( `This message will disappear when you have done so.` );
-
-               this.storagePath = value;
-
-               break;
-            case constants.FOLDER:
-               this.log.warn( `Warning: ${ key } will soon been deprecated at the Platform level. It was always meant to just be a fakegato config option only.` );
-               this.log.warn( `This message will disappear when you have done so.` );
-
-               this.folder = value;
-
-               break;
-            case constants.KEYPATH:
-               this.log.warn( `Warning: ${ key } will soon been deprecated at the Platform level. It was always meant to just be a fakegato config option only.` );
-               this.log.warn( `This message will disappear when you have done so.` );
-
-               this.keyPath = value;
 
                break;
             case constants.DEFINITIONS:
@@ -352,8 +301,7 @@ class Cmd4Platform
             throw new Error( `definition.props.format at index: ${ definitionIndex } is not a String.` );
 
          // Need to check if format is correct
-         //let formatIndex = CMD4_FORMAT_TYPE_ENUM.properties.indexOfEnum( i => i.type === definition.props.format );
-          let formatIndex = Object.values(clonedCharacteristic.Formats).indexOfEnum( i => i === definition.props.format );
+         let formatIndex = CMD4_FORMAT_TYPE_ENUM.properties.indexOfEnum( i => i.type === definition.props.format );
          if ( formatIndex < 0 )
             throw new Error( `definition.props.format at index: ${ definitionIndex } is not a valid format.` );
 
@@ -364,7 +312,7 @@ class Cmd4Platform
                throw new Error( `definition.props.units at index: ${ definitionIndex } is not a String.` );
 
             // Need to check if units is correct
-            let unitsIndex = Object.values(clonedCharacteristic.Units).indexOfEnum( i => i === definition.props.units );
+            let unitsIndex = CMD4_UNITS_TYPE_ENUM.properties.indexOfEnum( i => i.type === definition.props.units );
             if ( unitsIndex < 0 )
                throw new Error( `definition.props.units at index: ${ definitionIndex } is not a valid unit.` );
 
@@ -390,7 +338,7 @@ class Cmd4Platform
 
          definition.props.perms.forEach( ( perm ) =>
          {
-            let permIndex = Object.values(clonedCharacteristic.Perms).indexOfEnum( i => i === perm );
+            let permIndex = CMD4_PERMS_TYPE_ENUM.properties.indexOfEnum( i => i.type === perm );
             if ( permIndex < 0 )
                throw new Error( `definition.props.perms at index: ${ definitionIndex } ${ perm } is not a valid perm.` );
 
@@ -655,7 +603,9 @@ class Cmd4Platform
          if ( fromExisting == true )
          {
             if ( settings.cmd4Dbg ) this.log.debug( `Platform (AddedAccessory-existing) Step 3, ${ addedAccessory.displayName }.service = accessory.platform.getService( Service.${ devProperties.deviceName }, ${ addedAccessory.name }, ${ addedAccessory.subType }` );
-            addedAccessory.service = addedAccessory.platform.getService( devProperties.service, addedAccessory.name, addedAccessory.subType );
+            // If you have added more than one service of the same type to an accessory, you will need to get the service using the name you defined when adding it.
+            //addedAccessory.service = addedAccessory.platform.getService( devProperties.service, addedAccessory.name, addedAccessory.subType );
+            addedAccessory.service = addedAccessory.platform.getService( addedAccessory.name, addedAccessory.subType );
          } else
          {
 
@@ -694,8 +644,10 @@ class Cmd4Platform
          if ( fromExisting == true )
          {
             if ( settings.cmd4Dbg ) this.log.debug( `Platform (LinkedAccessory-existing) Step 4. ${ linkedAccessory.displayName }.service = ${ cmd4PlatformAccessory.displayName }.getService:( ${ devProperties.deviceName }.service, ${linkedAccessory.name }, ${linkedAccessory.subType } )` );
+            // If you have added more than one service of the same type to an accessory, you will need to get the service using the name you defined when adding it.
 
-            linkedAccessory.service = linkedAccessory.platform.getService( devProperties.service, linkedAccessory.name, linkedAccessory.subType );
+            //linkedAccessory.service = linkedAccessory.platform.getService( devProperties.service, linkedAccessory.name, linkedAccessory.subType );
+            linkedAccessory.service = linkedAccessory.platform.getService( linkedAccessory.name, linkedAccessory.subType );
          } else
          {
             if ( settings.cmd4Dbg ) this.log.debug( `Platform (LinkedAccessory-new) Step 4. ${ linkedAccessory.displayName }.service = ${ cmd4PlatformAccessory.displayName }.addService:( ${ devProperties.deviceName }.service, ${linkedAccessory.name }, ${linkedAccessory.subType } )` );

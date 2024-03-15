@@ -5,11 +5,11 @@ let settings = require( "../cmd4Settings" );
 // Let logger control logs for Unit Testing
 settings.cmd4Dbg = true;
 
-var _api = new HomebridgeAPI.HomebridgeAPI; // object we feed to Plugins
+var _api = new HomebridgeAPI( ); // object we feed to Plugins
 
 // Init the library for all to use
-CMD4_ACC_TYPE_ENUM.init( _api.hap );
-CMD4_DEVICE_TYPE_ENUM.init( _api.hap, _api.hap.Service );
+let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
+let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, _api.hap.Service, _api.hap.Characteristic, _api.hap.Categories );
 
 
 let { Cmd4Accessory } = require( "../Cmd4Accessory" );
@@ -136,8 +136,8 @@ describe('A simple logger Test', ( ) =>
       {
          name:                         "Test Switch",
          type:                         "Switch",
-         on:                            false,
-         polling:                       true,
+         on:                           false,
+         polling:                      true,
          state_cmd:                    "./test/echoScripts/echo_1"
       };
 
@@ -164,8 +164,8 @@ describe('A simple logger Test', ( ) =>
       {
          name:                         "Test Switch",
          type:                         "Switch",
-         on:                            false,
-         polling:                       true,
+         on:                           false,
+         polling:                      true,
          state_cmd:                    "./test/echoScripts/echo_1"
       };
 
