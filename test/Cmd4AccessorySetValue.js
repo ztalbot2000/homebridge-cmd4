@@ -15,7 +15,7 @@ var _api = new HomebridgeAPI( ); // object we feed to Plugins
 let Characteristic = _api.hap.Characteristic;
 let Service = _api.hap.Service;
 let Categories = _api.hap.Categories;
-let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( Characteristic );
+let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic, _api.hap.Formats, _api.hap.Units, _api.hap.Perms );
 let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, Service, Characteristic, Categories );
 
 

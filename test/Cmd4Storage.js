@@ -7,7 +7,7 @@ var _api = new HomebridgeAPI( ); // object we feed to Plugins
 
 
 // Init the library for all to use
-let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
+let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic, _api.hap.Formats, _api.hap.Units, _api.hap.Perms );
 
 
 describe(`Basic Cmd4Storage Tests`, ( ) =>

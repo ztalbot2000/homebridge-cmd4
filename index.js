@@ -38,8 +38,8 @@ module.exports =
    default: function ( api )
    {
       // Init the libraries for all to use
-      let CMD4_CHAR_TYPE_ENUMS = CHAR_DATA.init( api.hap.Characteristic );
-      let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( api.hap.Characteristic );
+      let CMD4_CHAR_TYPE_ENUMS = CHAR_DATA.init( api.hap.Formats, api.hap.Units, api.hap.Perms );
+      let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( api.hap.Characteristic, api.hap.Formats, api.hap.Units, api.hap.Perms );
       let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init(
          CMD4_ACC_TYPE_ENUM, api.hap.Service, api.hap.Characteristic, api.hap.Categories );
 

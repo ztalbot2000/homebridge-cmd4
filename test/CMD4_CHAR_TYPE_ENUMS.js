@@ -91,7 +91,7 @@ describe( "Testing require of CMD4_CHAR_TYPE_ENUMS.js", ( ) =>
 describe( "Testing INITIALIZED CMD4_CHAR_TYPE_ENUMS", ( ) =>
 {
    // Init the library for all to use
-   let CMD4_CHAR_TYPE_ENUMS = CHAR_DATA.init( _api.hap.Characteristic );
+   let CMD4_CHAR_TYPE_ENUMS = CHAR_DATA.init( _api.hap.Formats, _api.hap.Units, _api.hap.Perms );
 
 
    describe("Testing Initialized CMD4_CHAR_TYPE_ENUMS.", ( ) =>

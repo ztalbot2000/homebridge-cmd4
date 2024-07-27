@@ -9,7 +9,7 @@ const constants = require( "../cmd4Constants" );
 var _api = new HomebridgeAPI(); // object we feed to Plugins
 
 // Init the library for all to use
-let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
+let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic, _api.hap.Formats, _api.hap.Units, _api.hap.Perms );
 let CMD4_DEVICE_TYPE_ENUM = DEVICE_DATA.init( CMD4_ACC_TYPE_ENUM, _api.hap.Service, _api.hap.Characteristic, _api.hap.Categories );
 
 var Cmd4Accessory = require( "../Cmd4Accessory" ).Cmd4Accessory;

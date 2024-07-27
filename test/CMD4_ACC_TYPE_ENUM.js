@@ -43,7 +43,7 @@ describe( `Testing require of CMD4_ACC_TYPE_ENUM.js`, ( ) =>
 describe( `Testing INITIALIZED CMD4_ACC_TYPE_ENUM`, ( ) =>
 {
    // Init the library for all to use
-   let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
+   let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic, _api.hap.Formats, _api.hap.Units, _api.hap.Perms );
 
 
    describe(`Testing Initialized CMD4_ACC_TYPE_ENUM.properties[]`, ( ) =>
@@ -348,7 +348,7 @@ describe( `Testing INITIALIZED CMD4_ACC_TYPE_ENUM`, ( ) =>
 describe( `Testing CMD4_ACC_TYPE_ENUM.indexOfEnum`, ( ) =>
 {
    // Init the library for all to use
-   let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
+   let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic, _api.hap.Formats, _api.hap.Units, _api.hap.Perms );
 
 
    it('CMD4_ACC_TYPE_ENUM.indexOfEnum should be a function', ( ) =>
@@ -377,7 +377,7 @@ describe( `Testing CMD4_ACC_TYPE_ENUM.indexOfEnum`, ( ) =>
 describe( `Testing CMD4_ACC_TYPE_ENUM stringConversionFunction`, ( ) =>
 {
    // Init the library for all to use
-   let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
+   let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic, _api.hap.Formats, _api.hap.Units, _api.hap.Perms );
 
    describe( `Testing CMD4_ACC_TYPE_ENUM.properties[].stringConversionFunction`, ( ) =>
    {
@@ -681,7 +681,7 @@ describe( `Testing CMD4_ACC_TYPE_ENUM stringConversionFunction`, ( ) =>
 describe( `Testing CMD4_ACC_TYPE_ENUM Add Characteristic`, ( ) =>
 {
    // Init the library for all to use
-   let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic );
+   let CMD4_ACC_TYPE_ENUM = ACC_DATA.init( _api.hap.Characteristic, _api.hap.Formats, _api.hap.Units, _api.hap.Perms );
 
    it( `ACC_DATA.add should be a function`, ( ) =>
    {
