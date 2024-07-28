@@ -94,6 +94,9 @@ describe( `Testing INITIALIZED CMD4_ACC_TYPE_ENUM`, ( ) =>
           if ( accTypeEnumIndex == CMD4_ACC_TYPE_ENUM.PairingPairings )
              continue;
 
+          if( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].deprecated == true )
+             continue;
+
           it( `CMD4_ACC_TYPE_ENUM.properties[ ${ accTypeEnumIndex } ].type should be a string`, ( ) =>
           {
              assert.isString( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].type, ` type is not a string at index ${ accTypeEnumIndex }` );
