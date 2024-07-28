@@ -101,7 +101,7 @@
 
 ##### Bug Fixes
 *  fix for homebridge v2 where TargetSlateStte and TargetAirQuality are deprecated ([6acfbb2](https://github.com/ztalbot2000/homebridge-cmd4/commit/6acfbb26bf56a355d76f3f96dafabdfefd26bbb6))
-*  Fix for homebridge 2 Formats&Perms&Units only available directly from HAP ([2a9d6e9](https://github.com/ztalbot2000/homebridge-cmd4/commit/2a9d6e976647f1fa7e1a3ee34e5080a3c28eae73))
+*  Fix for homebridge v2 Formats&Perms&Units only available directly from HAP ([2a9d6e9](https://github.com/ztalbot2000/homebridge-cmd4/commit/2a9d6e976647f1fa7e1a3ee34e5080a3c28eae73))
 
 *  Fix lint error ([286dc68](https://github.com/ztalbot2000/homebridge-cmd4/commit/286dc68441c776a93f0f0d913db326fa9ccafeec))
 

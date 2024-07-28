@@ -292,7 +292,7 @@ describe( `Testing INITIALIZED CMD4_ACC_TYPE_ENUM`, ( ) =>
              {
                 // We defined what valid values are for BOOL
                 // so TRUE/FALSE can be a constant.
-                if (hapFormat != _api.hap.Characteristic.Formats.BOOL )
+                if (hapFormat != _api.hap.Formats.BOOL )
                 {
                    // Hap has values defined, but not in valid values. We added them in ours
                    if ( accTypeEnumIndex != CMD4_ACC_TYPE_ENUM.CameraOperatingModeIndicator &&
