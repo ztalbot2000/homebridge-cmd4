@@ -4,6 +4,7 @@
 
 
 ## ChangeLog
+* <a href="#Whats-new-in-8-0-0">**Whats new in 8.0.0**</a>
 * <a href="#Whats-new-in-7-1-0">**Whats new in 7.1.0**</a>
 * <a href="#Whats-new-in-7-0-3">**Whats new in 7.0.3**</a>
 * <a href="#Whats-new-in-7-0-2">**Whats new in 7.0.2**</a>
@@ -90,6 +91,25 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-8-0-0">## Whats new in 8.0.0</a>
+### 8.0.0 (2024-06-28)
+
+
+##### Documentation Changes
+*  Document changes for homebridge v2 where TargetAirQuality and TargetSlatState are deprecated ([80ef143](https://github.com/ztalbot2000/homebridge-cmd4/commit/80ef143fa68ff7abedd6bcf4b715d2dab3ae8451))
+
+##### Bug Fixes
+*  fix for homebridge v2 where TargetSlateStte and TargetAirQuality are deprecated ([6acfbb2](https://github.com/ztalbot2000/homebridge-cmd4/commit/6acfbb26bf56a355d76f3f96dafabdfefd26bbb6))
+*  Fix for homebridge 2 Formats&Perms&Units only available directly from HAP ([2a9d6e9](https://github.com/ztalbot2000/homebridge-cmd4/commit/2a9d6e976647f1fa7e1a3ee34e5080a3c28eae73))
+
+*  Fix lint error ([286dc68](https://github.com/ztalbot2000/homebridge-cmd4/commit/286dc68441c776a93f0f0d913db326fa9ccafeec))
+
+
+##### New Features
+
+*  Support only Platform Accessories as per Homebridge recommendation ([0ee6efc](https://github.com/ztalbot2000/homebridge-cmd4/commit/0ee6efcc09b7c87f346299fb9ccab5940fba7ee0))
+
 
 <a name="Whats-new-in-7-1-0">## Whats new in 7.1.0</a>
 ### 7.1.0 (2024-03-04)
