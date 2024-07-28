@@ -394,7 +394,7 @@ class Cmd4Accessory
          let format = CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].props.format;
 
          // No matter what, remove it
-         if ( format == this.api.hap.Characteristic.Formats.TLV8 && this.hV.allowTLV8 == false )
+         if ( format == this.api.hap.Formats.TLV8 && this.hV.allowTLV8 == false )
          {
             if ( this.cmd4Storage.getStoredValueForIndex( accTypeEnumIndex ) != null )
             {
@@ -843,10 +843,10 @@ class Cmd4Accessory
              // - CurrentTemperature
              // - CurrentHeatingCoolingState
              // - StatusFault
-             if ( perms.indexOf( this.api.hap.Characteristic.Perms.READ ) >= 0 &&
-                  perms.indexOf( this.api.hap.Characteristic.Perms.WRITE ) == -1 ||
-                  perms.indexOf( this.api.hap.Characteristic.Perms.PAIRED_READ ) >= 0 &&
-                  perms.indexOf( this.api.hap.Characteristic.Perms.PAIRED_WRITE ) == -1 )
+             if ( perms.indexOf( this.api.hap.Perms.READ ) >= 0 &&
+                  perms.indexOf( this.api.hap.Perms.WRITE ) == -1 ||
+                  perms.indexOf( this.api.hap.Perms.PAIRED_READ ) >= 0 &&
+                  perms.indexOf( this.api.hap.Perms.PAIRED_WRITE ) == -1 )
              {
              accessory.service.setCharacteristic(
                 CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic,
@@ -860,7 +860,7 @@ class Cmd4Accessory
                     .characteristic ).listeners( "get" ).length == 0 )
              {
                 // Add Read services for characterisitcs, if possible
-                if ( perms.indexOf( this.api.hap.Characteristic.Perms.READ ) != -1 )
+                if ( perms.indexOf( this.api.hap.Perms.READ ) != -1 )
                 {
 
                    // getCachedValue or getValue
@@ -896,7 +896,7 @@ class Cmd4Accessory
                   .characteristic ).listeners( "set" ).length == 0 )
              {
                 // Add Write services for characterisitcs, if possible
-                if ( perms.indexOf( this.api.hap.Characteristic.Perms.WRITE ) != -1 )
+                if ( perms.indexOf( this.api.hap.Perms.WRITE ) != -1 )
                 {
                    // setCachedValue or setValue
                    if ( ! accessory.polling ||

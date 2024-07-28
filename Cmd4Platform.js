@@ -545,7 +545,8 @@ class Cmd4Platform
 
 
          // Just a flag to say we have processed this existing platform accessory.
-         platform.updateReachability( true );
+         // @deprecated homebridge v2
+         //platform.updateReachability( true );
 
 
          // For Unit testing only
