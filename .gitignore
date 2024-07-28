@@ -4,6 +4,9 @@
 # Text editors
 *.swp
 
+# Stupid commits of npm package
+*.tgz
+
 # My favorite temp backup
 *.[0-9]
 *.save*
