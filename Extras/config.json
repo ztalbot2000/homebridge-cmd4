@@ -677,18 +677,6 @@
                "stateChangeResponseTime":   10
             },
             {
-               "type":                     "TimeInformation",
-               "displayName":              "MyTimeInformation",
-               "currentTime":              "11:15",
-               "dayoftheWeek":              1,
-               "timeUpdate":               "TRUE",
-               "name":                     "MyTimeInformation",
-               "manufacturer":             "Somebody",
-               "model":                    "Anything",
-               "serialNumber":             "12345",
-               "stateChangeResponseTime":   3
-            },
-            {
                "type":                     "Valve",
                "displayName":              "MyValve",
                "active":                   "ACTIVE",

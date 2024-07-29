@@ -724,6 +724,9 @@ function addSideNavDevicesLinks_WithinSideNav( )
 
       for ( let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++)
       {
+         if ( CMD4_Sorted_DEV.properties[ index ].deprecated == true)
+            continue;
+
          // We just need the index to look sorted
          let deviceName = CMD4_Sorted_DEV.properties[ index ].deviceName;
 
@@ -748,6 +751,9 @@ function addSideNavCharacteristicsLinks_WithinSideNav( )
       // We just need the index to look sorted
       for ( let index=0; index < CMD4_ACC_TYPE_ENUM.EOL; index ++)
       {
+         if ( CMD4_Sorted_ACC.properties[ index ].deprecated == true)
+            continue;
+
          // Lower case characteristic
          let characteristic = CMD4_Sorted_ACC.properties[ index ].sche;
 
@@ -851,6 +857,9 @@ function addDevicePages_WithinMain( )
 
    for ( let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++)
    {
+      if ( CMD4_DEVICE_TYPE_ENUM.properties[ index ].deprecated == true)
+         continue;
+
       let deviceName = CMD4_DEVICE_TYPE_ENUM.properties[ index ].deviceName;
 
       addSingleDeviceContent( index, deviceName );

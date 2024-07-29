@@ -15,6 +15,7 @@
 
 # Compiled Executables
 jsmin
+a.out
 
 # node
 node_modules
