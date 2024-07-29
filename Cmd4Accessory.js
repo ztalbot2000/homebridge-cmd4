@@ -843,13 +843,14 @@ class Cmd4Accessory
              // - CurrentTemperature
              // - CurrentHeatingCoolingState
              // - StatusFault
-             if ( perms.indexOf( this.api.hap.Perms.READ ) >= 0 &&
-                  perms.indexOf( this.api.hap.Perms.WRITE ) == -1 ||
+             // Homebridge V2 removes Perms.READ && Perms.WRITE
+             if ( //perms.indexOf( this.api.hap.Perms.READ ) >= 0 &&
+                  //perms.indexOf( this.api.hap.Perms.WRITE ) == -1 ||
                   perms.indexOf( this.api.hap.Perms.PAIRED_READ ) >= 0 &&
                   perms.indexOf( this.api.hap.Perms.PAIRED_WRITE ) == -1 )
              {
-             accessory.service.setCharacteristic(
-                CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic,
+                accessory.service.setCharacteristic(
+                   CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].characteristic,
                       this.cmd4Storage.getStoredValueForIndex( accTypeEnumIndex ) );
              }
 
@@ -860,7 +861,9 @@ class Cmd4Accessory
                     .characteristic ).listeners( "get" ).length == 0 )
              {
                 // Add Read services for characterisitcs, if possible
-                if ( perms.indexOf( this.api.hap.Perms.READ ) != -1 )
+                // Homebridge v2 removed Perms.READ
+                if ( // perms.indexOf( this.api.hap.Perms.READ ) != -1 ||
+                     perms.indexOf( this.api.hap.Perms.PAIRED_READ ) != -1 )
                 {
 
                    // getCachedValue or getValue
@@ -896,7 +899,9 @@ class Cmd4Accessory
                   .characteristic ).listeners( "set" ).length == 0 )
              {
                 // Add Write services for characterisitcs, if possible
-                if ( perms.indexOf( this.api.hap.Perms.WRITE ) != -1 )
+                // Homebridge V2 removes Perms.WRITE
+                if ( // perms.indexOf( this.api.hap.Perms.WRITE ) != -1 ||
+                     perms.indexOf( this.api.hap.Perms.PAIRED_WRITE ) != -1 )
                 {
                    // setCachedValue or setValue
                    if ( ! accessory.polling ||
