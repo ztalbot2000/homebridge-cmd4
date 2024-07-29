@@ -400,8 +400,8 @@
                "stateChangeResponseTime":   3
             },
             {
-               "type":                     "BatteryService",
-               "displayName":              "MyBatteryService",
+               "type":                     "Battery",
+               "displayName":              "MyBattery",
                "batteryLevel":              50,
                "chargingState":            "NOT_CHARGING",
                "statusLowBattery":         "BATTERY_LEVEL_NORMAL",
@@ -670,8 +670,8 @@
                "stateChangeResponseTime":   3
             },
             {
-               "type":                     "Relay",
-               "displayName":              "MyRelay",
+               "type":                     "CloudRelay",
+               "displayName":              "MyCloudRelay",
                "relayEnabled":             "FALSE",
                "relayState":                0,
                "stateChangeResponseTime":   10

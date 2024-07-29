@@ -102,8 +102,11 @@
 ##### Bug Fixes
 *  fix for homebridge v2 where TargetSlateStte and TargetAirQuality are deprecated ([6acfbb2](https://github.com/ztalbot2000/homebridge-cmd4/commit/6acfbb26bf56a355d76f3f96dafabdfefd26bbb6))
 *  Fix for homebridge v2 Formats&Perms&Units only available directly from HAP ([2a9d6e9](https://github.com/ztalbot2000/homebridge-cmd4/commit/2a9d6e976647f1fa7e1a3ee34e5080a3c28eae73))
-
 *  Fix lint error ([286dc68](https://github.com/ztalbot2000/homebridge-cmd4/commit/286dc68441c776a93f0f0d913db326fa9ccafeec))
+*  Fix add beta tag ([9b36408](https://github.com/ztalbot2000/homebridge-cmd4/commit/9b364087ec489c5dfda503ceaf1429b626a929c0))
+*  Fix for homebridge v2 where some device types are deprecated ([e483326](https://github.com/ztalbot2000/homebridge-cmd4/commit/e483326d93d447f81be5978f337ce80834798145))
+*  stop committing npm package ([630f4fb](https://github.com/ztalbot2000/homebridge-cmd4/commit/630f4fb6f6cbd876b3fe21ee4689eb40a6adeacc))
+
 
 
 ##### New Features
