@@ -151,6 +151,9 @@ describe('Test Cmd4Accessory variables ', ( ) =>
       let parentInfo = undefined;
       for ( let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++)
       {
+         if ( CMD4_DEVICE_TYPE_ENUM.properties[ index ].deprecated == true )
+               continue;
+
          // Cannot create an accessory information of an accessory information
          if ( index == CMD4_DEVICE_TYPE_ENUM.AccessoryInformation )
          {
@@ -262,6 +265,9 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
 
       for ( let index=0; index < CMD4_ACC_TYPE_ENUM.EOL; index ++)
       {
+         if ( CMD4_ACC_TYPE_ENUM.properties[ index ].deprecated == true )
+             continue;
+
          characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToUC( index );
 
          let value = cmd4Accessory.cmd4Storage.getStoredValueForCharacteristic( characteristicString );
@@ -297,6 +303,9 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
 
       for ( let index=0; index < CMD4_ACC_TYPE_ENUM.EOL; index ++)
       {
+         if ( CMD4_ACC_TYPE_ENUM.properties[ index ].deprecated == true )
+             continue;
+
          characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToLC( index );
 
          let value = cmd4Accessory.cmd4Storage.getStoredValueForCharacteristic( characteristicString );
@@ -331,6 +340,9 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
 
       for ( let index=0; index < CMD4_ACC_TYPE_ENUM.EOL; index ++)
       {
+         if ( CMD4_ACC_TYPE_ENUM.properties[ index ].deprecated == true )
+             continue;
+
          let value = cmd4Accessory.cmd4Storage.getStoredValueForIndex( index );
          if ( index == CMD4_ACC_TYPE_ENUM.On )
          {
@@ -415,6 +427,9 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
 
       for ( let index=0; index < CMD4_ACC_TYPE_ENUM.EOL; index ++)
       {
+         if ( CMD4_ACC_TYPE_ENUM.properties[ index ].deprecated == true )
+             continue;
+
          characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToUC( index );
          value = STORED_DATA_ARRAY[0].cmd4Storage.DATA[ index ];
          if ( index == CMD4_ACC_TYPE_ENUM.On )
@@ -499,6 +514,9 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
 
       for ( let index=0; index < CMD4_ACC_TYPE_ENUM.EOL; index ++)
       {
+         if ( CMD4_ACC_TYPE_ENUM.properties[ index ].deprecated == true )
+             continue;
+
          characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToUC( index );
          let value = accessory.cmd4Storage.testStoredValueForIndex( index );
 

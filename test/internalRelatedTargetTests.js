@@ -106,54 +106,6 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
 
    });
 
-   it('isRelatedTargetCharacteristicInSameDevice returns correctly for CameraControl with no OPTIONAL *Target* Characteristic', ( ) =>
-   {
-      let platformConfig =
-      {
-         accessories: [
-         {
-            statusMsg:                 true,
-            type:                      "CameraControl",
-            displayName:               "CameraControl",
-            name:                      "CameraControl",
-            on:                        "1",
-            currentHorizontalTiltAngle: 12,
-            polling:                   [ { characteristic: "currentHorizontalTiltAngle" } ],
-            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
-         }]
-      };
-
-      let log = new Logger( );
-      log.setBufferEnabled( );
-      log.setOutputEnabled( false );
-      log.setDebugEnabled( true );
-
-
-      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
-
-      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
-
-      cmd4Platform.discoverDevices( );
-
-
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : CameraControl`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCharacteristic polling for: CameraControl`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: CameraControl`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[33mAdding getCachedValue for CameraControl characteristic: Name`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[33mAdding priorityGetValue for CameraControl characteristic: CurrentHorizontalTiltAngle`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mSetting up accessory: CameraControl for polling of: CurrentHorizontalTiltAngle timeout: 60000 interval: 60000`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
-
-      // Not setValue
-      assert.notInclude( log.logBuf, `[33mAdding prioritySetValue for CameraControl characteristic: TargetHorizontalTiltAngle`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
-      // Not polling
-      assert.notInclude( log.logBuf, `[90mSetting up accessory: CameraControl for polling of: TargetHorizontalTiltAngle timeout: 60000 interval: 60000`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
-
-      // No errors
-      assert.equal( log.errBuf, "", ` cmd4Accessory Unexpected stderr: ${ log.errBuf }` );
-
-
-   });
-
    it('isRelatedTargetCharacteristicInSameDevice returns correctly for TemperatureSensor with no REQUIRED *Target* Characteristic With QUEUE', ( done ) =>
    {
       let platformConfig =
@@ -201,54 +153,6 @@ describe('Testing isRelatedTargetCharacteristicInSameDevice', ( ) =>
       assert.equal( log.errBuf, "", ` Cmd4Accessory Unexpected stderr: ${ log.errBuf }` );
 
       done( );
-   });
-
-   it('isRelatedTargetCharacteristicInSameDevice returns correctly for CameraControl with no OPTIONAL *Target* Characteristic with QUEUE', ( ) =>
-   {
-      let platformConfig =
-      {
-         queueTypes:                   [{ queue: "A", queueType: "WoRm" }],
-         accessories: [
-         {
-            statusMsg:                 true,
-            type:                      "CameraControl",
-            displayName:               "CameraControl",
-            name:                      "CameraControl",
-            on:                        "1",
-            queue:                     "A",
-            currentHorizontalTiltAngle: 12,
-            polling:                   [ { characteristic: "currentHorizontalTiltAngle" } ],
-            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
-         }]
-      };
-
-      let log = new Logger( );
-      log.setBufferEnabled( );
-      log.setOutputEnabled( false );
-      log.setDebugEnabled( true );
-
-
-      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
-
-      expect( cmd4Platform ).to.be.a.instanceOf( Cmd4Platform, "cmd4Platform is not an instance of Cmd4Platform" );
-
-      cmd4Platform.discoverDevices( );
-
-
-      assert.include( log.logBuf, `[34mCreating Platform Accessory type for : CameraControl`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCharacteristic polling for: CameraControl`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mCreated platformAccessory: CameraControl`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[33mAdding getCachedValue for CameraControl characteristic: Name`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[33mAdding priorityGetValue for CameraControl characteristic: CurrentHorizontalTiltAngle`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
-      assert.include( log.logBuf, `[90mSetting up accessory: CameraControl for polling of: CurrentHorizontalTiltAngle timeout: 60000 interval: 60000 queueName: "A"`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
-
-      // Not setValue
-      assert.notInclude( log.logBuf,  `[33mAdding prioritySetValue for CameraControl characteristic: TargetHorizontalTiltAngle`, ` Cmd4Accessory Incorrect stdout: ${ log.logBuf }` );
-
-      // No errors
-      assert.equal( log.errBuf, "", ` Cmd4Accessory Unexpected stderr: ${ log.errBuf }` );
-
-
    });
 
    it('Polling complains related polling characteristic is missing', ( done ) =>

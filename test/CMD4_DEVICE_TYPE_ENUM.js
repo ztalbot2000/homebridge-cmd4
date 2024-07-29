@@ -53,6 +53,9 @@ describe( "Testing INITIALIZED CMD4_DEVICE_TYPE_ENUM", ( ) =>
       {
          for (let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++ )
          {
+            if ( CMD4_DEVICE_TYPE_ENUM.properties[ index ].deprecated == true )
+               continue;
+
             let result = CMD4_DEVICE_TYPE_ENUM.properties[ index ].UUID;
 
             // Make sure that the UUID we defined is valid.
@@ -65,6 +68,9 @@ describe( "Testing INITIALIZED CMD4_DEVICE_TYPE_ENUM", ( ) =>
       {
          for (let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++ )
          {
+            if ( CMD4_DEVICE_TYPE_ENUM.properties[ index ].deprecated == true )
+               continue;
+
             let service = CMD4_DEVICE_TYPE_ENUM.properties[ index ].service;
             assert.isNotNull( service, ` CMD4_DEVICE_TYPE_ENUM.properties[${ index } ].service is null` );
             let hapUUID = service.UUID;
@@ -81,6 +87,9 @@ describe( "Testing INITIALIZED CMD4_DEVICE_TYPE_ENUM", ( ) =>
    {
       for (let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++ )
       {
+         if ( CMD4_DEVICE_TYPE_ENUM.properties[ index ].deprecated == true )
+            continue;
+
          describe('Testing CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].service ', ( ) =>
          {
             // Make sure our service is defined
@@ -95,6 +104,9 @@ describe( "Testing INITIALIZED CMD4_DEVICE_TYPE_ENUM", ( ) =>
    {
       for (let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++ )
       {
+         if ( CMD4_DEVICE_TYPE_ENUM.properties[ index ].deprecated == true )
+            continue;
+
          describe('Testing CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].defaultCategory ', ( ) =>
          {
             // Make sure our defaultCategory is defined
@@ -115,6 +127,9 @@ describe( "Testing INITIALIZED CMD4_DEVICE_TYPE_ENUM", ( ) =>
    {
       for (let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++ )
       {
+         if ( CMD4_DEVICE_TYPE_ENUM.properties[ index ].deprecated == true )
+            continue;
+
          describe('Testing CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].publishExternally ', ( ) =>
          {
 
@@ -128,6 +143,9 @@ describe( "Testing INITIALIZED CMD4_DEVICE_TYPE_ENUM", ( ) =>
    {
       for (let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++ )
       {
+         if ( CMD4_DEVICE_TYPE_ENUM.properties[ index ].deprecated == true )
+            continue;
+
          describe('Testing CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].defaultCategory ', ( ) =>
          {
             // Make sure our defaultCategory is defined
@@ -148,6 +166,9 @@ describe( "Testing INITIALIZED CMD4_DEVICE_TYPE_ENUM", ( ) =>
    {
       for (let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++ )
       {
+         if ( CMD4_DEVICE_TYPE_ENUM.properties[ index ].deprecated == true )
+            continue;
+
          describe('Testing CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].publishExternally ', ( ) =>
          {
 
@@ -167,6 +188,9 @@ describe( "Testing INITIALIZED CMD4_DEVICE_TYPE_ENUM", ( ) =>
 
       for (let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++ )
       {
+         if ( CMD4_DEVICE_TYPE_ENUM.properties[ index ].deprecated == true )
+            continue;
+
          it('CMD4_DEVICE_TYPE_ENUM.properties[' + index + '] should not be null ', ( ) =>
          {
              assert.isNotNull(CMD4_DEVICE_TYPE_ENUM.properties[index], 'properties[' +  index + '] is null' );
@@ -214,6 +238,9 @@ describe( "Testing INITIALIZED CMD4_DEVICE_TYPE_ENUM", ( ) =>
    {
       for (let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++ )
       {
+         if ( CMD4_DEVICE_TYPE_ENUM.properties[ index ].deprecated == true )
+            continue;
+
          describe('Testing CMD4_DEVICE_TYPE_ENUM.properties[' + index + '] ', ( ) =>
          {
             let length = CMD4_DEVICE_TYPE_ENUM.properties[index].requiredCharacteristics.length;
@@ -290,6 +317,9 @@ describe( "Testing INITIALIZED CMD4_DEVICE_TYPE_ENUM", ( ) =>
    {
       for (let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++ )
       {
+         if ( CMD4_DEVICE_TYPE_ENUM.properties[ index ].deprecated == true )
+            continue;
+
          describe('Testing CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].optionalCharacteristics ', ( ) =>
          {
             let length = CMD4_DEVICE_TYPE_ENUM.properties[index].optionalCharacteristics.length;
@@ -307,34 +337,37 @@ describe( "Testing INITIALIZED CMD4_DEVICE_TYPE_ENUM", ( ) =>
    // ** TEST CMD4_DEVICE_TYPE_ENUM.properties[].defaultPollingCharacteristic  **
    describe('Testing CMD4_DEVICE_TYPE_ENUM.properties[].defaultPollingCharacteristics', ( ) =>
    {
-      for (let accTypeEnumIndex=0; accTypeEnumIndex < CMD4_DEVICE_TYPE_ENUM.EOL; accTypeEnumIndex ++ )
+      for (let index=0; index < CMD4_DEVICE_TYPE_ENUM.EOL; index ++ )
       {
-         describe('Testing CMD4_DEVICE_TYPE_ENUM.properties[' + accTypeEnumIndex + '].defaultPollingCharacteristics ', ( ) =>
+         if ( CMD4_DEVICE_TYPE_ENUM.properties[ index ].deprecated == true )
+            continue;
+
+         describe('Testing CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].defaultPollingCharacteristics ', ( ) =>
          {
-            let length = CMD4_DEVICE_TYPE_ENUM.properties[accTypeEnumIndex].defaultPollingCharacteristics.length;
+            let length = CMD4_DEVICE_TYPE_ENUM.properties[index].defaultPollingCharacteristics.length;
             for (let rindex=0; rindex < length; rindex ++ )
             {
 
-               let defaultPollingAccTypeEnumIndex = CMD4_DEVICE_TYPE_ENUM.properties[accTypeEnumIndex].defaultPollingCharacteristics[rindex];
+               let defaultPollingAccTypeEnumIndex = CMD4_DEVICE_TYPE_ENUM.properties[index].defaultPollingCharacteristics[rindex];
 
                testCharacteristicIndex(defaultPollingAccTypeEnumIndex, rindex );
 
 
                // Check that polled characteristic is in required characteristics
                let foundInRequiredCharacteristics = false;
-               let dLength = CMD4_DEVICE_TYPE_ENUM.properties[accTypeEnumIndex].requiredCharacteristics.length;
+               let dLength = CMD4_DEVICE_TYPE_ENUM.properties[index].requiredCharacteristics.length;
                for (let dindex=0; dindex < dLength; dindex ++ )
                {
-                   let rCharacteristic = CMD4_DEVICE_TYPE_ENUM.properties[accTypeEnumIndex].requiredCharacteristics[dindex].type;
+                   let rCharacteristic = CMD4_DEVICE_TYPE_ENUM.properties[index].requiredCharacteristics[dindex].type;
                    if (defaultPollingAccTypeEnumIndex == rCharacteristic )
                    {
                       foundInRequiredCharacteristics = true;
                       break;
                    }
-                }
-               it('CMD4_DEVICE_TYPE_ENUM.properties[' + accTypeEnumIndex + '].defaultPollingCharacteristics[' + rindex + '] is in requiredCharacteristics', ( ) =>
+               }
+               it('CMD4_DEVICE_TYPE_ENUM.properties[' + index + '].defaultPollingCharacteristics[' + rindex + '] is in requiredCharacteristics', ( ) =>
                {
-                   assert.isTrue(foundInRequiredCharacteristics, 'Polling characteristic is not in required Characteristics at accTypeEnumIndex:' + accTypeEnumIndex );
+                   assert.isTrue(foundInRequiredCharacteristics, 'Polling characteristic is not in required Characteristics at accTypeEnumIndex:' + index );
                });
             }
          });

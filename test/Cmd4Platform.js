@@ -844,4 +844,35 @@ describe('Testing Cmd4Platform Init', ( ) =>
       done( );
    });
 
+
+   it('CameraControl throws error for deprecated device', ( ) =>
+   {
+      let platformConfig =
+      {
+         accessories: [
+         {
+            statusMsg:                 true,
+            type:                      "CameraControl",
+            displayName:               "CameraControl",
+            name:                      "CameraControl",
+            on:                        "1",
+            currentHorizontalTiltAngle: 12,
+            polling:                   [ { characteristic: "currentHorizontalTiltAngle" } ],
+            state_cmd:                 "node ./Extras/Cmd4Scripts/Examples/AnyDevice"
+         }]
+      };
+
+      let log = new Logger( );
+      log.setBufferEnabled( );
+      log.setOutputEnabled( false );
+      log.setDebugEnabled( true );
+
+
+      let cmd4Platform = new Cmd4Platform( log, platformConfig, _api );
+
+      expect ( ( ) => cmd4Platform.discoverDevices( ) ).to.throw(/Error: device type: "CameraControl" is now deprecated in Homebridge/);
+
+   });
+
+
 });

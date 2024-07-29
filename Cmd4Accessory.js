@@ -1267,6 +1267,12 @@ class Cmd4Accessory
       let characteristicString = rcDirective.type;
       let accTypeEnumIndex = rcDirective.accTypeEnumIndex;
 
+      if ( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].deprecated == true )
+      {
+         this.log.warn( `The config.json characteristic: ${ characteristicString } is deprecated. It will be ignored.\nTo remove this Warning, Please fix your config.json.` );
+         return;
+      }
+
       // Do not update the stored values as it is being restored from cache
       if ( parseConfigShouldUseCharacteristicValues == false )
          return;
@@ -1477,6 +1483,9 @@ class Cmd4Accessory
                   this.type = rcValue.deviceName;
                }
                this.typeIndex = rcValue.devEnumIndex;
+
+               if ( CMD4_DEVICE_TYPE_ENUM.properties[ this.typeIndex ].deprecated == true )
+                  throw new Error( `Error: device type: "${ this.type }" is now deprecated in Homebridge.` );
 
                break;
             }

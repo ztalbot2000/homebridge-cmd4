@@ -2,7 +2,6 @@
 
 var _api = new HomebridgeAPI(); // object we feed to Plugins
 var Service = _api.hap.Service;
-var Characteristic = _api.hap.Characteristic;
 
 
 describe( `Testing require of CMD4_ACC_TYPE_ENUM.js`, ( ) =>
@@ -94,7 +93,7 @@ describe( `Testing INITIALIZED CMD4_ACC_TYPE_ENUM`, ( ) =>
           if ( accTypeEnumIndex == CMD4_ACC_TYPE_ENUM.PairingPairings )
              continue;
 
-          if( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].deprecated == true )
+          if ( CMD4_ACC_TYPE_ENUM.properties[ accTypeEnumIndex ].deprecated == true )
              continue;
 
           it( `CMD4_ACC_TYPE_ENUM.properties[ ${ accTypeEnumIndex } ].type should be a string`, ( ) =>
@@ -211,18 +210,18 @@ describe( `Testing INITIALIZED CMD4_ACC_TYPE_ENUM`, ( ) =>
 
                 switch( hapFormat )
                 {
-                   case Characteristic.Formats.STRING:
-                   case Characteristic.Formats.TLV8:
-                   case Characteristic.Formats.DATA:
+                   case _api.hap.Formats.STRING:
+                   case _api.hap.Formats.TLV8:
+                   case _api.hap.Formats.DATA:
                       assert.equal( 0, accProperties.props.allowedWordCount, `allowedWordCount not 0 at accTypeEnumIndex: ${ accTypeEnumIndex }` );
 
                       break;
-                   case Characteristic.Formats.INT:
-                   case Characteristic.Formats.UINT8:
-                   case Characteristic.Formats.UINT16:
-                   case Characteristic.Formats.UINT32:
-                   case Characteristic.Formats.BOOL:
-                   case Characteristic.Formats.FLOAT:
+                   case _api.hap.Formats.INT:
+                   case _api.hap.Formats.UINT8:
+                   case _api.hap.Formats.UINT16:
+                   case _api.hap.Formats.UINT32:
+                   case _api.hap.Formats.BOOL:
+                   case _api.hap.Formats.FLOAT:
                       assert.equal( 1, accProperties.props.allowedWordCount, `allowedWordCount not 1 at accTypeEnumIndex: ${ accTypeEnumIndex }` );
                       break;
                    default:

@@ -136,6 +136,9 @@ describe( `Testing index.js plugin Initialized variables.`, ( ) =>
 
       for ( let deviceTypeEnumIndex = 0; deviceTypeEnumIndex < DEVICE_EOL; deviceTypeEnumIndex++ )
       {
+         if ( properties[ deviceTypeEnumIndex ].deprecated == true )
+               continue;
+
          assert.isNotNull( properties[ deviceTypeEnumIndex ].service, `service at index: ${ deviceTypeEnumIndex } is null.. found ${ properties[ deviceTypeEnumIndex ].service }` );
       }
    });
