@@ -106,6 +106,9 @@
 *  Fix add beta tag ([9b36408](https://github.com/ztalbot2000/homebridge-cmd4/commit/9b364087ec489c5dfda503ceaf1429b626a929c0))
 *  Fix for homebridge v2 where some device types are deprecated ([e483326](https://github.com/ztalbot2000/homebridge-cmd4/commit/e483326d93d447f81be5978f337ce80834798145))
 *  stop committing npm package ([630f4fb](https://github.com/ztalbot2000/homebridge-cmd4/commit/630f4fb6f6cbd876b3fe21ee4689eb40a6adeacc))
+*  Fix: Update hap perms for homebridge v2 & deprecate devices for name changes ([5eb9ede](https://github.com/ztalbot2000/homebridge-cmd4/commit/5eb9ede93de6b80920defeacf704e7c560ee9bda))
+*  Fix: For homebridge V2 which removed Perms.READ and Perms.WRITE for PAIRED_READ & PAIRED_WRITE ([5e888b0](https://github.com/ztalbot2000/homebridge-cmd4/commit/5e888b09cee178ec722499e5429f2dba4fb5c8a9))
+*  Fix: homebridge V2 requires updated package fakegato-history ([61011e5](https://github.com/ztalbot2000/homebridge-cmd4/commit/61011e58378aff7eab351cc97ce05a167f759ca2))
 
 
 
