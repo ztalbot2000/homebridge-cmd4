@@ -120,18 +120,12 @@ class Cmd4Platform
 
          this.discoverDevices( this.log );
 
-         // @deprecated homebridge v2
-         // Since we iterate over only the config.json accessories during
-         // the discovery, any devices read from cache that were not in
-         // the config.json would never be reallocated or created for the
-         // first time and thus disappear.
-         //
          // Any accessory not reachable must have been removed, find them
-         //this.toBeRestoredPlatforms.forEach( ( accessory ) =>
-         //{
-         //   if ( ! accessory.reachable )
-         //      this.removeAccessory( accessory );
-         //});
+         this.toBeRestoredPlatforms.forEach( ( accessory ) =>
+         {
+            if ( ! accessory.reachable )
+               this.removeAccessory( accessory );
+         });
 
          // Let the Polling Begin
          this.startPolling();
@@ -478,13 +472,14 @@ class Cmd4Platform
             // true = from existing.
             this.createServicesForAccessoriesChildren( accessory, true )
 
+            // Since 'updateReachability()' function and the key 'reachable' are deprecated in
+            // Homebridge_v2, We will define the key 'reachable' and set the locally read in copy
+            // of the value to 'true' explicitly to flag that this accessory is restored from cache.
+            existingAccessory.reachable = true;
 
          } else
          {
-            //
-            // the accessory is in the config.json but does not yet exist,
-            // so we need to create it
-            //
+            // The accessory does not yet exist, so we need to create it.
             this.log.info('Adding new platformAccessory:', displayName);
 
             // Create the new PlatformAccessory
