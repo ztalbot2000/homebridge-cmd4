@@ -4,6 +4,7 @@
 
 
 ## ChangeLog
+* <a href="#Whats-new-in-8-0-3">**Whats new in 8.0.3**</a>
 * <a href="#Whats-new-in-8-0-2">**Whats new in 8.0.2**</a>
 * <a href="#Whats-new-in-8-0-1">**Whats new in 8.0.1**</a>
 * <a href="#Whats-new-in-8-0-0">**Whats new in 8.0.0**</a>
@@ -93,6 +94,14 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-8-0-3">## Whats new in 8.0.3</a>
+#### 8.0.3 (2024-12-11)
+
+##### Bug Fixes
+
+*  Update node requirements to satisfy the current Node.js version of v22.12.0 ([22761c89](https://github.com/ztalbot2000/homebridge-cmd4/commit/22761c8954dfdb6086023585978836b36f531f65))
+
 
 <a name="Whats-new-in-8-0-2">## Whats new in 8.0.2</a>
 #### 8.0.2 (2024-10-20)
