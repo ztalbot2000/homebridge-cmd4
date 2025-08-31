@@ -14,7 +14,7 @@ As of September 2025, I will no longer be supporting Cmd4.<BR>
 Cmd4 was cool in that it allowed me to discover how the Apple Home App can control all the different devices, but there are a number of reasons why I've decided to no longer support Cmd4.<BR>
 <UL>
   <LI>Apple took all the fun away from a lot of the devices.  You can no longer do Apple TV for instance. Trying to keep up with Apple's API changes is a fast moving target. HomeBridge tries to minimize this but I have no interest in keeping up with them.</LI>
-  <LI>When homebridge went to TypeScript I was not a fan.  Personally the code bloat that it offers is not worth the effort as I believe good Unit testing is always a better method. I am also not a fan of Swift for the same reasons. Just try to do a bit shift in Swift.</LI>
+  <LI>When homebridge went to TypeScript I was not a fan.  Personally the code bloat that it offers is not worth the effort as I believe good Unit testing and for javascript, JSLint is always a better method. I am also not a fan of Swift for the same reasons. Just try to do a bit shift in Swift.</LI>
   <LI>Homebridge config-UI-X was always nasty for Cmd4. The latest beta of Config-UI-X has gone on for almost a year and it is probably because they too went to TypeScript.</LI>
   <LI>My health is not what it used to be.  My little time left on this planet has no interest in supporting Cmd4.</LI>
 </UL>
