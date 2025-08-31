@@ -9,6 +9,18 @@
 <base _target="_self">
 
 <BR><BR>
+## Cmd4 No longer supported:
+As of September 2025, I will no longer be supporting Cmd4.<BR>
+Cmd4 was cool in that it allowed me to discover how the Apple Home App can control all the different devices, but there are a number of reasons why I've decided to no longer support Cmd4.<BR>
+<UL>
+  <LI>Apple took all the fun away from a lot of the devices.  You can no longer do Apple TV for instance. Trying to keep up with Apple's API changes is a fast moving target. HomeBridge tries to minimize this but I have no interest in keeping up with them.</LI>
+  <LI>When homebridge went to TypeScript I was not a fan.  Personally the code bloat that it offers is not worth the effort as I believe good Unit testing is always a better method. I am also not a fan of Swift for the same reasons. Just try to do a bit shift in Swift.</LI>
+  <LI>Homebridge config-UI-X was always nasty for Cmd4. The latest beta of Config-UI-X has gone on for almost a year and it is probably because they too went to TypeScript.</LI>
+  <LI>My health is not what it used to be.  My little time left on this planet has no interest in supporting Cmd4.</LI>
+</UL>
+So I did update Cmd4 for the latest Homebridge release which is still in Beta. It is not likely that I will pay any more attention to Cmd4.
+
+<BR><BR>
 ## &nbsp;&nbsp;&nbsp; **Cmd4** is a plugin for [Homebridge] that lets you see what Homebridge and Homekit are all about, without actually owning a single accessory!  For the more advanced user, Cmd4 brings CLI support for all device types (Accessories) and characteristics.
 
 ## Homebridge UI User. Do not click on any inline links. Homebridge UI does not supprt them. Bug#1098
