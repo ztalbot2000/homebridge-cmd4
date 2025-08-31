@@ -6,6 +6,8 @@ labels: enhancement
 assignees: ztalbot2000
 
 ---
+** Cmd4 No longer supported:**
+<!-- As of September 2025, I will no longer be supporting Cmd4. Any issues will most likely go into the bit bucket -->
 
 <!-- Provide a general summary in the Title above -->
 
