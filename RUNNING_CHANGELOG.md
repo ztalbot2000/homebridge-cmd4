@@ -4,6 +4,7 @@
 
 
 ## ChangeLog
+* <a href="#Whats-new-in-8-0-4">**Whats new in 8.0.4**</a>
 * <a href="#Whats-new-in-8-0-3">**Whats new in 8.0.3**</a>
 * <a href="#Whats-new-in-8-0-2">**Whats new in 8.0.2**</a>
 * <a href="#Whats-new-in-8-0-1">**Whats new in 8.0.1**</a>
@@ -94,6 +95,14 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-8-0-4">## Whats new in 8.0.4</a>
+#### 8.0.4 (2026-02-03)
+
+##### Bug Fixes
+
+*  Support Node v24 ([feb476b5](https://github.com/ztalbot2000/homebridge-cmd4/commit/feb476b5bbea98099f7ebaf4a8dcea03572dac82))
+
 
 <a name="Whats-new-in-8-0-3">## Whats new in 8.0.3</a>
 #### 8.0.3 (2024-12-11)
