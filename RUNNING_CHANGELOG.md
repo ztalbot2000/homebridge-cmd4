@@ -4,6 +4,7 @@
 
 
 ## ChangeLog
+* <a href="#Whats-new-in-8-0-6">**Whats new in 8.0.6**</a>
 * <a href="#Whats-new-in-8-0-4">**Whats new in 8.0.4**</a>
 * <a href="#Whats-new-in-8-0-3">**Whats new in 8.0.3**</a>
 * <a href="#Whats-new-in-8-0-2">**Whats new in 8.0.2**</a>
@@ -95,6 +96,14 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-8-0-6">## Whats new in 8.0.6</a>
+#### 8.0.6 (2026-11-08)
+
+##### Bug Fixes
+
+*  Bug [#154](https://github.com/ztalbot2000/homebridge-cmd4/pull/154) NodeJS needs jwa2.0.1 to solve Fakegato startup failure ([eba93e1f](https://github.com/ztalbot2000/homebridge-cmd4/commit/eba93e1fb630573c8872999afb4fc557f2a488c0))
+
 
 <a name="Whats-new-in-8-0-4">## Whats new in 8.0.4</a>
 #### 8.0.4 (2026-02-03)
