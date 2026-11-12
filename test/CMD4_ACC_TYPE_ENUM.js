@@ -392,6 +392,30 @@ describe( `Testing CMD4_ACC_TYPE_ENUM stringConversionFunction`, ( ) =>
       });
    });
 
+
+   it( "Camera boolean-like conversions follow the active HAP format", ( ) =>
+   {
+      for ( const name of [ "CameraOperatingModeIndicator", "ManuallyDisabled" ] )
+      {
+         const entry = CMD4_ACC_TYPE_ENUM.properties[ CMD4_ACC_TYPE_ENUM[ name ] ];
+         const CharacteristicClass = _api.hap.Characteristic[ name ];
+         const format = new CharacteristicClass().props.format;
+         const isBool = format === _api.hap.Formats.BOOL;
+
+         assert.strictEqual(
+            entry.stringConversionFunction( "TRUE" ),
+            isBool ? true : 1,
+            `${ name }: TRUE conversion`
+         );
+
+         assert.strictEqual(
+            entry.stringConversionFunction( "FALSE" ),
+            isBool ? false : 0,
+            `${ name }: FALSE conversion`
+         );
+      }
+   });
+
    it(`stringConversionFunction of AirParticulateSize of UINT8 Number should be Number.`, ( ) =>
    {
       let accTypeEnumIndex = CMD4_ACC_TYPE_ENUM.AirParticulateSize;
