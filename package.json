@@ -21,7 +21,7 @@
       "command-exists": "^1.2.9",
       "fakegato-history": ">=0.6.5",
       "jwa": "^2.0.1",
-      "latest-version": "^5.1.0",
+      "latest-version": "^9.0.0",
       "moment": "*"
    },
    "devDependencies": {
@@ -78,8 +78,8 @@
       "debug": "DEBUG=* homebridge --debug --plugin-path .",
       "pretest": "printf ' test is only done in a development environment\n';sleep 2 ",
       "testDebug": "mocha --require async-dump.js --file test/mocha-setup --ignore test/versionChecker.js",
-      "test": "mocha --file test/mocha-setup --ignore test/versionChecker.js",
-      "singleTest": "mocha --bail --file test/mocha-setup --ignore test/versionChecker.js",
+      "test": "mocha --file test/mocha-setup",
+      "singleTest": "mocha --bail --file test/mocha-setup",
       "allTests": "mocha --bail --file test/mocha-setup $( cat test/allTests )",
       "sanityTests": "mocha --bail --file test/mocha-setup $( cat test/sanityTests )",
       "_Note0": "Excluded from commit as may fail for probing GitHub to much",
@@ -88,7 +88,6 @@
       "commitTests": "npm run test && npm run testMarkDown",
       "_Note": "Excluded only because they sometimes fail, but pass alone.    ",
       "testCmd4Accessory": "mocha --file test/mocha-setup test/Cmd4Accessory.js",
-      "testVersionChecker": "mocha --file test/mocha-setup test/versionChecker.js",
       "lint": "eslint --ext .js *.js utils/*.js lib/*.js tools/* test/*.js",
       "postinstall": "node postinstall.js",
       "_Note01": "Auto change the version based on the commit history.        ",

@@ -36,8 +36,10 @@ describe( `Testing versionChecker functionality`, ( ) =>
 
    it( `getLatestVersion should return an string`, async ( ) =>
    {
-      let result = await getLatestVersion( );
-      assert.isString( result, `getLatestVersion failed: ${ typeof result }` );
+      (async () => {
+         let result = await getLatestVersion();
+         assert.isString( result, `getLatestVersion failed: ${ typeof result }` );
+    })();
    }).timeout(5000);
 
    it( `isVersionNewerThanPackagedVersion should return true for a high version`, ( ) =>
@@ -47,15 +49,19 @@ describe( `Testing versionChecker functionality`, ( ) =>
    });
    it( `isVersionNewerThanPackagedVersion should return false for a lower version`, ( ) =>
    {
-      let result = isVersionNewerThanPackagedVersion( "1.0.0" );
-      assert.isFalse( result, `isVersionNewerThanPackagedVersion expected: false: found: ${ result }` );
+      (async () => {
+         let result = await isVersionNewerThanPackagedVersion( "1.0.0" );
+         assert.isFalse( result, `isVersionNewerThanPackagedVersion expected: false: found: ${ result }` );
+      })();
    });
 
    it( `isVersionNewerThanPackagedVersion should return false for same version`, async ( ) =>
    {
-      let latest = await getLatestVersion( );
-      let result = isVersionNewerThanPackagedVersion( latest );
-      assert.isFalse( result, `isVersionNewerThanPackagedVersion expected: false: found: ${ result }` );
+      (async () => {
+         let latest = await getLatestVersion( );
+         let result = await isVersionNewerThanPackagedVersion( latest );
+         assert.isFalse( result, `isVersionNewerThanPackagedVersion expected: false: found: ${ result }` );
+      })();
    }).timeout(5000);
 
 })
