@@ -40,7 +40,7 @@
       "markdown-link-check": "^3.8.6",
       "mocha": "^8.0.1",
       "node-persist": "^0.0.11",
-      "sinon": "^9.2.4",
+      "sinon": "^22.1.0",
       "which": "^2.0.2"
    },
    "directories": {
