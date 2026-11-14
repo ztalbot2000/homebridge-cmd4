@@ -64,7 +64,7 @@ class Cmd4Storage
       // This version goes from 1-123 and changes to
       // Assoc array so that index changes like this will no longer
       // impact the storage schema as much
-      let i=0;
+      let i;
       for ( i=0; i < CMD4_ACC_TYPE_ENUM.ListPairings; i++ )
       {
          data[ i ] = fromData[ i ];

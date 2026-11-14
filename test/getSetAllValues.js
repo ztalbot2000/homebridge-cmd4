@@ -126,13 +126,12 @@ describe( "Testing State.js Get Characteristics default written data ( " + CMD4_
 
          const ps = child_process.spawnSync( cmd, args );
 
-         var data="not set by me";
 
          if ( ps.status !== 0 )
          {
              assert.equal( ps.status, 0, "Process error stdout: " + ps.stdout + " stderr: " + ps.stderr + " status: " + ps.status + " signal: " + ps.signal );
          } else {
-           data = ps.stdout;
+           var data = ps.stdout;
            assert( data != "", "data returned '" + data + "'" );
 
            assert( data.length != 0, "data returned: " + data.length );
@@ -159,14 +158,12 @@ describe( `Testing State.js Set Characteristics ( ${ CMD4_ACC_TYPE_ENUM.EOL } of
 
       it( accTypeEnumIndex + ": " + cmd + args2 + " should return no data", ( ) =>
       {
-         var data="not set by me";
-
          // console.log( "status is '%s'", ps.status );
          if ( ps.status !== 0 )
          {
             assert.equal( ps.status, 0, "Process error stdout: " + ps.stdout + " stderr: " + ps.stderr + " status: " + ps.status + " signal: " + ps.signal );
          } else {
-           data = ps.stdout;
+           var data = ps.stdout;
            assert( data == "", "No data should be returned: '" + data + "'" );
 
         }
@@ -194,13 +191,11 @@ describe( "Testing State.js Get Characteristics written data ( " + cmd4.CMD4_ACC
       {
          const ps = child_process.spawnSync( cmd, args );
 
-         var data="not set by me";
-
          if ( ps.status !== 0 )
          {
            assert.equal( ps.status, 0, "Process error stdout: " + ps.stdout + " stderr: " + ps.stderr + " status: " + ps.status + " signal: " + ps.signal );
          } else {
-           data = ps.stdout;
+           var data = ps.stdout;
            // fixme ??? assert( data == dummyData, "data returned: '" + data + "'" );
            //  The carriage return is stripped by getValue
            assert( data == dummyDataR, "data returned:" + data );

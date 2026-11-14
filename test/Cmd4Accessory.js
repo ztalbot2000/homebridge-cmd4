@@ -430,7 +430,6 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
          if ( CMD4_ACC_TYPE_ENUM.properties[ index ].deprecated == true )
              continue;
 
-         characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToUC( index );
          value = STORED_DATA_ARRAY[0].cmd4Storage.DATA[ index ];
          if ( index == CMD4_ACC_TYPE_ENUM.On )
             assert.isTrue( value, `Expected accessory.STORED_DATA_ARRAY( ${ index } ) to be False using index ${ index}` );
@@ -506,7 +505,6 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
 
       let accessory = new Cmd4Accessory( log, config, _api, [ ] );
 
-      let characteristicString = accEnumIndexToC( CMD4_ACC_TYPE_ENUM.On );
 
       config.On = true;
       let newValue = true;
@@ -517,7 +515,7 @@ describe('Cmd4Accessory Test get/test/set storedValues', ( ) =>
          if ( CMD4_ACC_TYPE_ENUM.properties[ index ].deprecated == true )
              continue;
 
-         characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToUC( index );
+         let characteristicString = CMD4_ACC_TYPE_ENUM.accEnumIndexToUC( index );
          let value = accessory.cmd4Storage.testStoredValueForIndex( index );
 
          let cvalue = accessory.cmd4Storage.testStoredValueForCharacteristic( characteristicString );
