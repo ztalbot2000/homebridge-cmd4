@@ -14,8 +14,24 @@ if ( homebridgePath )
    let dirname = path.dirname( homebridgePath );
 
    console.log( "Found homebridge in path %s", dirname );
-   apiPath = `${ dirname }/../lib/node_modules/homebridge/lib/api`;
+   const homebridgePkgPath = dirname + "/../lib/node_modules/homebridge/package.json";
+
+   const homebridgePkg = require( homebridgePkgPath );
+   //console.log( "Found homebridgePkg in path %s", homebridgePkg );
+
+   if ( homebridgePkg.version[0] === "1" )
+   {
+      //1.11.4
+      apiPath = `${ dirname }/../lib/node_modules/homebridge/lib/api`;
+   } else
+   {
+      //2 +
+      apiPath = `${ dirname }/../lib/node_modules/homebridge/dist/api`;
+   }
+
+   // console.log( "apiPath = %s", apiPath );
    global.HomebridgeAPI = require( apiPath ).HomebridgeAPI;
+   // console.log( "HomebridgeAPI= %s", global.HomebridgeAPI );
 
    if ( ! global.HomebridgeAPI )
    {
@@ -24,7 +40,16 @@ if ( homebridgePath )
    }
 
    // For serializing/deserializing arrays of accessories
-   let platformAccessoryPath = `${ dirname }/../lib/node_modules/homebridge/lib/platformAccessory`;
+   if ( homebridgePkg.version[0] === "1" )
+   {
+      //1.11.4
+      platformAccessoryPath = `${ dirname }/../lib/node_modules/homebridge/lib/platformAccessory`;
+   } else
+   {
+      //2 +
+      platformAccessoryPath = `${ dirname }/../lib/node_modules/homebridge/dist/platformAccessory`;
+   }
+   // console.log( "platformAccessoryPath= %s", platformAccessoryPath );
    global.platformAccessory_1 = require( platformAccessoryPath );
 
 } else
