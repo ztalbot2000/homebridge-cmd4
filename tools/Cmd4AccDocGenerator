@@ -88,7 +88,22 @@ if ( homebridgePath )
    let dirname = path.dirname( homebridgePath );
 
    console.log( "Found homebridge in path %s", dirname );
-   apiPath = `${ dirname }/../lib/node_modules/homebridge/lib/api`;
+
+   const homebridgePkgPath = dirname + "/../lib/node_modules/homebridge/package.json";
+
+   const homebridgePkg = require( homebridgePkgPath );
+   //console.log( "Found homebridgePkg in path %s", homebridgePkg );
+
+   if ( homebridgePkg.version[0] === "1" )
+   {
+      //1.11.4
+      apiPath = `${ dirname }/../lib/node_modules/homebridge/lib/api`;
+   } else
+   {
+      //2 +
+      apiPath = `${ dirname }/../lib/node_modules/homebridge/dist/api`;
+   }
+
    HomebridgeAPI = require( apiPath ).HomebridgeAPI;
 
    if ( ! HomebridgeAPI )

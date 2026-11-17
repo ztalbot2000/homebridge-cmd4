@@ -192,7 +192,7 @@
                                            "DISARMED",
                "securitySystemTargetState":
                                            "DISARM",
-               "securitySystemAlarmType":   0,
+               "securitySystemAlarmType":   "NO_ALARM",
                "statusFault":              "NO_FAULT",
                "statusTampered":           "NOT_TAMPERED",
                "name":                     "MySecuritySystem",

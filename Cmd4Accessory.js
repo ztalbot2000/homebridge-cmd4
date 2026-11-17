@@ -481,7 +481,7 @@ class Cmd4Accessory
                case constants.CHARACTERISTIC:
                {
                   //2 checkPollingOfUnsetCharacteristics
-                  valueToStore = null;
+                  // linted out valueToStore = null;
 
                   let rcDirective = isAccDirective( value, false );
                   if ( rcDirective.accTypeEnumIndex == null )
@@ -776,7 +776,8 @@ class Cmd4Accessory
    {
        if ( settings.cmd4Dbg ) accessory.log.debug( `Adding All Service Characteristics for: ${ accessory.displayName }` );
 
-       let perms = "";
+       // linted out let perms = "";
+       let perms;
 
        // Check every possible characteristic
        for ( let accTypeEnumIndex = 0; accTypeEnumIndex < CMD4_ACC_TYPE_ENUM.EOL; accTypeEnumIndex++ )

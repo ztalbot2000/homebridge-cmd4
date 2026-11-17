@@ -259,8 +259,6 @@ block-warning a {
          <a href="#Assistant" onclick="toggleVisibility( 'Assistant');">Assistant</a>
          <a href="#AudioStreamManagement" onclick="toggleVisibility( 'AudioStreamManagement');">AudioStreamManagement</a>
          <a href="#Battery" onclick="toggleVisibility( 'Battery');">Battery</a>
-         <a href="#BatteryService" onclick="toggleVisibility( 'BatteryService');">BatteryService</a>
-         <a href="#CameraEventRecordingManagement" onclick="toggleVisibility( 'CameraEventRecordingManagement');">CameraEventRecordingManagement</a>
          <a href="#CameraOperatingMode" onclick="toggleVisibility( 'CameraOperatingMode');">CameraOperatingMode</a>
          <a href="#CameraRTPStreamManagement" onclick="toggleVisibility( 'CameraRTPStreamManagement');">CameraRTPStreamManagement</a>
          <a href="#CameraRecordingManagement" onclick="toggleVisibility( 'CameraRecordingManagement');">CameraRecordingManagement</a>
@@ -297,7 +295,6 @@ block-warning a {
          <a href="#Pairing" onclick="toggleVisibility( 'Pairing');">Pairing</a>
          <a href="#PowerManagement" onclick="toggleVisibility( 'PowerManagement');">PowerManagement</a>
          <a href="#ProtocolInformation" onclick="toggleVisibility( 'ProtocolInformation');">ProtocolInformation</a>
-         <a href="#Relay" onclick="toggleVisibility( 'Relay');">Relay</a>
          <a href="#SecuritySystem" onclick="toggleVisibility( 'SecuritySystem');">SecuritySystem</a>
          <a href="#ServiceLabel" onclick="toggleVisibility( 'ServiceLabel');">ServiceLabel</a>
          <a href="#Siri" onclick="toggleVisibility( 'Siri');">Siri</a>
@@ -318,7 +315,7 @@ block-warning a {
          <a href="#Thermostat" onclick="toggleVisibility( 'Thermostat');">Thermostat</a>
          <a href="#ThreadTransport" onclick="toggleVisibility( 'ThreadTransport');">ThreadTransport</a>
          <a href="#TransferTransportManagement" onclick="toggleVisibility( 'TransferTransportManagement');">TransferTransportManagement</a>
-         <a href="#TunneledBTLEAccessoryService" onclick="toggleVisibility( 'TunneledBTLEAccessoryService');">TunneledBTLEAccessoryService</a>
+         <a href="#Tunnel" onclick="toggleVisibility( 'Tunnel');">Tunnel</a>
          <a href="#Valve" onclick="toggleVisibility( 'Valve');">Valve</a>
          <a href="#WiFiRouter" onclick="toggleVisibility( 'WiFiRouter');">WiFiRouter</a>
          <a href="#WiFiSatellite" onclick="toggleVisibility( 'WiFiSatellite');">WiFiSatellite</a>
@@ -832,84 +829,6 @@ block-warning a {
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- AirQualitySensor -->
-      <div id="BatteryService" class="section">
-         <a name="BatteryService"></a>
-         <header><h1>BatteryService</h1></header>
-         <p>UUID:00000096-0000-1000-8000-0026BB765291</p>
-         <H3>Required Characteristics</H3>
-         <table>
-            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
-            <tr><TD><UL><LI><a href="#batteryLevel">batteryLevel</a></UL></TD><TD> 50 </TD><TD> n/a </TD>
-            <tr><TD><UL><LI><a href="#chargingState">chargingState</a></UL></TD><TD> 0 </TD><TD> NOT_CHARGING </TD>
-            <tr><TD><UL><LI><a href="#statusLowBattery">statusLowBattery</a></UL></TD><TD> 0 </TD><TD> BATTERY_LEVEL_NORMAL </TD>
-         </Table>
-         <H3>Optional Characteristics</H3>
-         <UL>
-            <LI><a href="#name">name</a>
-         </UL>
-         <H3>Default Polling Characteristics</H3>
-         <note> Default polling characteristics are characteristics that would automatically be polled if Accessory Polling is configured ( polling:true ) instead of characteristic polling where each characteristic is set individually.
-         <UL>
-            <LI><a href="#statusLowBattery">statusLowBattery</a>
-         </UL>
-         <H3>Example config.json entry</H3>
-         <pre>
-         {
-            type: BatteryService,
-            name: "MY_BatteryService",
-            displayName: "MY_BatteryService",
-            batteryLevel: "50",
-            chargingState: "0",
-            statusLowBattery: "0",
-            name: "< STRING> ",
-            <a href="#state_cmd">state_cmd</a>: < "STRING" >,
-            <a href="#polling">polling</a>: < POLLING>
-
-         }
-         </pre>
-         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- BatteryService -->
-      <div id="CameraEventRecordingManagement" class="section">
-         <a name="CameraEventRecordingManagement"></a>
-         <header><h1>CameraEventRecordingManagement</h1></header>
-         <p>UUID:00000204-0000-1000-8000-0026BB765291</p>
-         <H3>Required Characteristics</H3>
-         <table>
-            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
-            <tr><TD><UL><LI><a href="#active">active</a></UL></TD><TD> 1 </TD><TD> ACTIVE </TD>
-            <tr><TD><UL><LI><a href="#supportedCameraRecordingConfiguration">supportedCameraRecordingConfiguration</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
-            <tr><TD><UL><LI><a href="#supportedVideoRecordingConfiguration">supportedVideoRecordingConfiguration</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
-            <tr><TD><UL><LI><a href="#supportedAudioRecordingConfiguration">supportedAudioRecordingConfiguration</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
-            <tr><TD><UL><LI><a href="#selectedCameraRecordingConfiguration">selectedCameraRecordingConfiguration</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
-         </Table>
-         <H3>Optional Characteristics</H3>
-         <UL>
-            <LI><a href="#recordingAudioActive">recordingAudioActive</a>
-         </UL>
-         <H3>Default Polling Characteristics</H3>
-         <note> Default polling characteristics are characteristics that would automatically be polled if Accessory Polling is configured ( polling:true ) instead of characteristic polling where each characteristic is set individually.
-         <UL>
-            <LI><a href="#active">active</a>
-         </UL>
-         <H3>Example config.json entry</H3>
-         <pre>
-         {
-            type: CameraEventRecordingManagement,
-            name: "MY_CameraEventRecordingManagement",
-            displayName: "MY_CameraEventRecordingManagement",
-            active: "1",
-            supportedCameraRecordingConfiguration: "0",
-            supportedVideoRecordingConfiguration: "0",
-            supportedAudioRecordingConfiguration: "0",
-            selectedCameraRecordingConfiguration: "0",
-            recordingAudioActive: < UINT8 >,
-            <a href="#state_cmd">state_cmd</a>: < "STRING" >,
-            <a href="#polling">polling</a>: < POLLING>
-
-         }
-         </pre>
-         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- CameraEventRecordingManagement -->
       <div id="CameraRTPStreamManagement" class="section">
          <a name="CameraRTPStreamManagement"></a>
          <header><h1>CameraRTPStreamManagement</h1></header>
@@ -2129,40 +2048,6 @@ block-warning a {
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- ProtocolInformation -->
-      <div id="Relay" class="section">
-         <a name="Relay"></a>
-         <header><h1>Relay</h1></header>
-         <p>UUID:0000005A-0000-1000-8000-0026BB765291</p>
-         <H3>Required Characteristics</H3>
-         <table>
-            <TD> </TD><TD> Default Value </TD><TD> Constant </TD>
-            <tr><TD><UL><LI><a href="#relayEnabled">relayEnabled</a></UL></TD><TD> 1 </TD><TD> TRUE </TD>
-            <tr><TD><UL><LI><a href="#relayState">relayState</a></UL></TD><TD> 1 </TD><TD> n/a </TD>
-            <tr><TD><UL><LI><a href="#relayControlPoint">relayControlPoint</a></UL></TD><TD> 0 </TD><TD> n/a </TD>
-         </Table>
-         <H3>Optional Characteristics</H3>
-         <H3>Default Polling Characteristics</H3>
-         <note> Default polling characteristics are characteristics that would automatically be polled if Accessory Polling is configured ( polling:true ) instead of characteristic polling where each characteristic is set individually.
-         <UL>
-            <LI><a href="#relayEnabled">relayEnabled</a>
-            <LI><a href="#relayState">relayState</a>
-         </UL>
-         <H3>Example config.json entry</H3>
-         <pre>
-         {
-            type: Relay,
-            name: "MY_Relay",
-            displayName: "MY_Relay",
-            relayEnabled: "1",
-            relayState: "1",
-            relayControlPoint: "0",
-            <a href="#state_cmd">state_cmd</a>: < "STRING" >,
-            <a href="#polling">polling</a>: < POLLING>
-
-         }
-         </pre>
-         See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- Relay -->
       <div id="SecuritySystem" class="section">
          <a name="SecuritySystem"></a>
          <header><h1>SecuritySystem</h1></header>
@@ -2806,9 +2691,9 @@ block-warning a {
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
       </DIV>   <!-- TransferTransportManagement -->
-      <div id="TunneledBTLEAccessoryService" class="section">
-         <a name="TunneledBTLEAccessoryService"></a>
-         <header><h1>TunneledBTLEAccessoryService</h1></header>
+      <div id="Tunnel" class="section">
+         <a name="Tunnel"></a>
+         <header><h1>Tunnel</h1></header>
          <p>UUID:00000056-0000-1000-8000-0026BB765291</p>
          <H3>Required Characteristics</H3>
          <table>
@@ -2829,9 +2714,9 @@ block-warning a {
          <H3>Example config.json entry</H3>
          <pre>
          {
-            type: TunneledBTLEAccessoryService,
-            name: "MY_TunneledBTLEAccessoryService",
-            displayName: "MY_TunneledBTLEAccessoryService",
+            type: Tunnel,
+            name: "MY_Tunnel",
+            displayName: "MY_Tunnel",
             name: "My_TunnelB",
             accessoryIdentifier: "TLB",
             tunneledAccessoryStateNumber: "0",
@@ -2844,7 +2729,7 @@ block-warning a {
          }
          </pre>
          See additional <a href="#CMD4 Accessory Directives">CMD4 Accessory Directives</a>
-      </DIV>   <!-- TunneledBTLEAccessoryService -->
+      </DIV>   <!-- Tunnel -->
       <div id="Valve" class="section">
          <a name="Valve"></a>
          <header><h1>Valve</h1></header>
@@ -5585,6 +5470,12 @@ block-warning a {
             <tr><TD> Min Step: </TD><TD>  1</TD></tr>
             <tr><TD> Perms: </TD><TD>  Paired Read, Events</TD></tr>
          </table>
+         <h3>Constants</h3>
+         <table>
+            <TD> Value </TD><TD> String </TD>
+            <tr><TD> 0 </TD><TD> "NO_ALARM" </TD></tr>
+            <tr><TD> 1 </TD><TD> "UNKNOWN" </TD></tr>
+         </table>
       </DIV>   <!-- securitySystemAlarmType -->
       <div id="securitySystemCurrentState" class="section" >
          <a name="securitySystemCurrentState"></a>
@@ -6449,7 +6340,7 @@ block-warning a {
             <tr><TD> Type: </TD><TD> tunnelConnectionTimeout</TD></tr>
             <tr><TD> UUID: </TD><TD> 00000061-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> int</TD></tr>
-            <tr><TD> Perms: </TD><TD>  Paired Write, Paired Read, Events</TD></tr>
+            <tr><TD> Perms: </TD><TD>  Events, Paired Read, Paired Write</TD></tr>
          </table>
       </DIV>   <!-- tunnelConnectionTimeout -->
       <div id="tunneledAccessoryAdvertising" class="section" >
@@ -6477,7 +6368,7 @@ block-warning a {
             <tr><TD> Type: </TD><TD> tunneledAccessoryConnected</TD></tr>
             <tr><TD> UUID: </TD><TD> 00000059-0000-1000-8000-0026BB765291</TD></tr>
             <tr><TD> Format: </TD><TD> bool</TD></tr>
-            <tr><TD> Perms: </TD><TD>  Paired Write, Paired Read, Events</TD></tr>
+            <tr><TD> Perms: </TD><TD>  Paired Read, Paired Write, Events</TD></tr>
          </table>
          <h3>Constants</h3>
          <table>
