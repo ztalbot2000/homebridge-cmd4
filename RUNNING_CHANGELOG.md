@@ -4,6 +4,7 @@
 
 
 ## ChangeLog
+* <a href="#Whats-new-in-8-0-8">**Whats new in 8.0.8**</a>
 * <a href="#Whats-new-in-8-0-7">**Whats new in 8.0.7**</a>
 * <a href="#Whats-new-in-8-0-6">**Whats new in 8.0.6**</a>
 * <a href="#Whats-new-in-8-0-4">**Whats new in 8.0.4**</a>
@@ -97,6 +98,14 @@
 * <a href="#Whats-new-in-2-2">**Whats new in 2.2**</a>
 * <a href="#Whats-new-in-2-1">**Whats new in 2.1**</a>
 * <a href="#Whats-new-in-2-0">**Whats new in 2.0**</a>
+
+<a name="Whats-new-in-8-0-8">## Whats new in 8.0.8</a>
+#### 8.0.8 (2026-11-18)
+
+##### Bug Fixes
+
+*  For bug [#154](https://github.com/ztalbot2000/homebridge-cmd4/pull/154). commonjs and ECM differences for dependency change of latest-version ([43d35384](https://github.com/ztalbot2000/homebridge-cmd4/commit/43d35384cde70275e079c6e224d8b1f8619d4123))
+
 
 <a name="Whats-new-in-8-0-7">## Whats new in 8.0.7</a>
 #### 8.0.7 (2026-11-18)
