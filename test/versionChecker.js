@@ -1,14 +1,9 @@
 'use strict';
 
-const { isUpgrade, getLatestVersion, isVersionNewerThanPackagedVersion, getPackagedVersion } = require( "../utils/versionChecker" );
+const { getLatestVersion, isVersionNewerThanPackagedVersion, getPackagedVersion } = require( "../utils/versionChecker" );
 
 describe( `Testing versionChecker init`, ( ) =>
 {
-   it( `isUpgrade should be a function`, ( ) =>
-   {
-      assert.isFunction( isUpgrade, `isUpgrade is not a function` );
-   });
-
    it( `getLatestVersion should be a function`, ( ) =>
    {
       assert.isFunction( getLatestVersion, `getLatestVersion is not a function` );

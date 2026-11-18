@@ -18,15 +18,22 @@ function splitVersion( version )
    return { "version": parts[ 0 ], "major": parts[ 1 ], "minor": parts[ 2 ] };
 }
 
-// getLatestVersion could just be defined as:
-//     function getLatestVersion ( )
-// However, defining it this way signifies it
-// returns a Promise. In this case the Promise
-// given to us by latestVersion.
-const getLatestVersion = async ( ) =>
+// get latest version of our package
+function getLatestVersion( )
 {
-   return latestVersion( myPkg.name );
+   return (async () => {
+     try {
+       const { default: latestVersion } = await import('latest-version');
+       const result = await latestVersion( myPkg.name );
+       //console.log("result is " + result);
+       return result;
+     } catch (err) {
+       console.error('Error getting latest Version :', err);
+       return null;
+     }
+   })();
 }
+
 
 function getPackagedVersion( )
 {
@@ -59,28 +66,5 @@ function isVersionNewerThanPackagedVersion( version )
 }
 
 
-// Check that there is a possible upgrade out there.
-function isUpgrade( )
-{
-   // Create a new Promise that will be fufilled when we processed the
-   // information provided to us by the Promise of getLatestVersion.
-   // You cannot take an asynchronous call and convert it to a synchronous
-   // call unless you would create a timer and wait forever? for it
-   // to complete, which defeats the purpose of node.js.
-   return new Promise( ( resolve ) =>
-   {
-      // To use the promise of getLatestVersion, it must be in an async function
-      // so put it in one.
-      ( async( ) =>
-      {
-         // Wait for the Promise of getLatestVersion to complete
-         let lv = await getLatestVersion( );
-
-         resolve( isVersionNewerThanPackagedVersion( lv ) );
-      }
-      )( );
-   });
-}
-
 // Export the internal functions we wish to expose.
-module.exports = { isUpgrade, getLatestVersion, isVersionNewerThanPackagedVersion, getPackagedVersion };
+module.exports = { getLatestVersion, isVersionNewerThanPackagedVersion, getPackagedVersion };
