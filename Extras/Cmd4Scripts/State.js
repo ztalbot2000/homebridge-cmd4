@@ -2147,7 +2147,7 @@ switch( io )
 
             break;
          }
-         case "NetworkAccessViolationControl":  // 243
+         case "SelectedDiagnosticsModes":  // 243
          {
             c = readData( device, characteristic );
 
@@ -2155,7 +2155,7 @@ switch( io )
 
             break;
          }
-         case "SelectedDiagnosticsModes":  // 244
+         case "SelectedSleepConfiguration":  // 244
          {
             c = readData( device, characteristic );
 
@@ -2163,7 +2163,7 @@ switch( io )
 
             break;
          }
-         case "SelectedSleepConfiguration":  // 245
+         case "SiriEnable":  // 245
          {
             c = readData( device, characteristic );
 
@@ -2171,7 +2171,7 @@ switch( io )
 
             break;
          }
-         case "SiriEnable":  // 246
+         case "SiriEngineVersion":  // 246
          {
             c = readData( device, characteristic );
 
@@ -2179,7 +2179,7 @@ switch( io )
 
             break;
          }
-         case "SiriEngineVersion":  // 247
+         case "SiriLightOnUse":  // 247
          {
             c = readData( device, characteristic );
 
@@ -2187,7 +2187,7 @@ switch( io )
 
             break;
          }
-         case "SiriLightOnUse":  // 248
+         case "SiriListening":  // 248
          {
             c = readData( device, characteristic );
 
@@ -2195,7 +2195,7 @@ switch( io )
 
             break;
          }
-         case "SiriListening":  // 249
+         case "SiriTouchToUse":  // 249
          {
             c = readData( device, characteristic );
 
@@ -2203,7 +2203,7 @@ switch( io )
 
             break;
          }
-         case "SiriTouchToUse":  // 250
+         case "StagedFirmwareVersion":  // 250
          {
             c = readData( device, characteristic );
 
@@ -2211,7 +2211,7 @@ switch( io )
 
             break;
          }
-         case "StagedFirmwareVersion":  // 251
+         case "SupportedMetrics":  // 251
          {
             c = readData( device, characteristic );
 
@@ -2219,7 +2219,7 @@ switch( io )
 
             break;
          }
-         case "SupportedMetrics":  // 252
+         case "SupportedFirmwareUpdateConfiguration":  // 252
          {
             c = readData( device, characteristic );
 
@@ -2227,7 +2227,7 @@ switch( io )
 
             break;
          }
-         case "SupportedFirmwareUpdateConfiguration":  // 253
+         case "TapType":  // 253
          {
             c = readData( device, characteristic );
 
@@ -2235,7 +2235,7 @@ switch( io )
 
             break;
          }
-         case "TapType":  // 254
+         case "Token":  // 254
          {
             c = readData( device, characteristic );
 
@@ -2243,7 +2243,71 @@ switch( io )
 
             break;
          }
-         case "Token":  // 255
+         case "MatterFirmwareRevisionNumber":  // 255
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "MatterFirmwareUpdateStatus":  // 256
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "MediaAccessControlLevel":  // 257
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "PreferredWiFiList":  // 258
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "ProximityControlEnabled":  // 259
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "SelectedSessionKeepaliveConfigurationList":  // 260
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "SupportedDiagnosticsModes":  // 261
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "SupportedSessionKeepaliveConfigurationList":  // 262
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "SupportedSleepConfiguration":  // 263
          {
             c = readData( device, characteristic );
 
@@ -3939,7 +4003,7 @@ switch( io )
 
             break;
          }
-         case "NetworkAccessViolationControl":  // 243
+         case "SelectedDiagnosticsModes":  // 243
          {
             c = readData( device, characteristic );
 
@@ -3947,7 +4011,7 @@ switch( io )
 
             break;
          }
-         case "SelectedDiagnosticsModes":  // 244
+         case "SelectedSleepConfiguration":  // 244
          {
             c = readData( device, characteristic );
 
@@ -3955,7 +4019,7 @@ switch( io )
 
             break;
          }
-         case "SelectedSleepConfiguration":  // 245
+         case "SiriEnable":  // 245
          {
             c = readData( device, characteristic );
 
@@ -3963,7 +4027,7 @@ switch( io )
 
             break;
          }
-         case "SiriEnable":  // 246
+         case "SiriEngineVersion":  // 246
          {
             c = readData( device, characteristic );
 
@@ -3971,7 +4035,7 @@ switch( io )
 
             break;
          }
-         case "SiriEngineVersion":  // 247
+         case "SiriLightOnUse":  // 247
          {
             c = readData( device, characteristic );
 
@@ -3979,7 +4043,7 @@ switch( io )
 
             break;
          }
-         case "SiriLightOnUse":  // 248
+         case "SiriListening":  // 248
          {
             c = readData( device, characteristic );
 
@@ -3987,7 +4051,7 @@ switch( io )
 
             break;
          }
-         case "SiriListening":  // 249
+         case "SiriTouchToUse":  // 249
          {
             c = readData( device, characteristic );
 
@@ -3995,7 +4059,7 @@ switch( io )
 
             break;
          }
-         case "SiriTouchToUse":  // 250
+         case "StagedFirmwareVersion":  // 250
          {
             c = readData( device, characteristic );
 
@@ -4003,7 +4067,7 @@ switch( io )
 
             break;
          }
-         case "StagedFirmwareVersion":  // 251
+         case "SupportedMetrics":  // 251
          {
             c = readData( device, characteristic );
 
@@ -4011,7 +4075,7 @@ switch( io )
 
             break;
          }
-         case "SupportedMetrics":  // 252
+         case "SupportedFirmwareUpdateConfiguration":  // 252
          {
             c = readData( device, characteristic );
 
@@ -4019,7 +4083,7 @@ switch( io )
 
             break;
          }
-         case "SupportedFirmwareUpdateConfiguration":  // 253
+         case "TapType":  // 253
          {
             c = readData( device, characteristic );
 
@@ -4027,7 +4091,7 @@ switch( io )
 
             break;
          }
-         case "TapType":  // 254
+         case "Token":  // 254
          {
             c = readData( device, characteristic );
 
@@ -4035,7 +4099,71 @@ switch( io )
 
             break;
          }
-         case "Token":  // 255
+         case "MatterFirmwareRevisionNumber":  // 255
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "MatterFirmwareUpdateStatus":  // 256
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "MediaAccessControlLevel":  // 257
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "PreferredWiFiList":  // 258
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "ProximityControlEnabled":  // 259
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "SelectedSessionKeepaliveConfigurationList":  // 260
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "SupportedDiagnosticsModes":  // 261
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "SupportedSessionKeepaliveConfigurationList":  // 262
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "SupportedSleepConfiguration":  // 263
          {
             c = readData( device, characteristic );
 
