@@ -142,7 +142,7 @@ describe( "Testing cmd4Constants - unused", function( )
                         "./utils/HV.js",
                         "./index.js",
                         "./lib/CMD4_DEVICE_TYPE_ENUM.js",
-                        "./tools/Cmd4AccDocGenerator",
+                        "./tools/Cmd4AccDocGenerator.js",
                         "./test/cmd4Constants.js",
                        ];
       // This is the count of the found constants in result
@@ -218,9 +218,8 @@ describe( "Testing source constants  -  are defined", function( )
                         "./Cmd4Accessory.js",
                         "./Cmd4PriorityPollingQueue.js",
                         "./utils/HV.js",
-                        "./tools/Cmd4AccDocGenerator",
-                        "./lib/CMD4_DEVICE_TYPE_ENUM.js",
-                        "./tools/Cmd4AccDocGenerator"
+                        "./tools/Cmd4AccDocGenerator.js",
+                        "./lib/CMD4_DEVICE_TYPE_ENUM.js"
                       ];
 
       let totalSourceConstants = 0;
