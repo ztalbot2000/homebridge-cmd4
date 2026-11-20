@@ -2315,6 +2315,22 @@ switch( io )
 
             break;
          }
+         case "ConnectionHealthMonitor":  // 264
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
+         case "FirmwareUpdateProtocolList":  // 265
+         {
+            c = readData( device, characteristic );
+
+            if ( c == "" ) process.stdout.write( "0" ); else process.stdout.write( `"${ c }"` );
+
+            break;
+         }
          default:
             process.stderr.write( `Unknown Characteristic for: ${ io } Device: ${ device } Characteristic: ${ characteristic }` );
             process.exit( -1 );
@@ -4164,6 +4180,22 @@ switch( io )
             break;
          }
          case "SupportedSleepConfiguration":  // 263
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "ConnectionHealthMonitor":  // 264
+         {
+            c = readData( device, characteristic );
+
+            writeData( device, characteristic, option );
+
+            break;
+         }
+         case "FirmwareUpdateProtocolList":  // 265
          {
             c = readData( device, characteristic );
 
