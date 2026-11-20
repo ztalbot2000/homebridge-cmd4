@@ -1,4 +1,5 @@
 .eslintrc.json
+.eslint.config.mjs
 .gitignore
 .github
 .huskyrc

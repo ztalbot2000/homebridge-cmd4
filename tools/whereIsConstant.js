@@ -16,7 +16,7 @@ var cmd4Files = [ "./Cmd4Platform.js",
                   "./utils/HV.js",
                   "./index.js",
                   "./lib/CMD4_DEVICE_TYPE_ENUM.js",
-                  "./tools/Cmd4AccDocGenerator"];
+                  "./tools/Cmd4AccDocGenerator.js"];
 
 // A nice little getOpt node.js package
 program
@@ -43,11 +43,11 @@ const MAX_FOUND_BEFORE_EXIT = 3
 // https://regex101.com/r/bE3c0x/5
 let reg;
 
-let lookingFor = "";
+let lookingFor;
 
 if ( options.reverse )
 {
-   // WORKS. Ex:   whereIsConstant -r -v -c PUBLISHEXTERNALLY
+   // WORKS. Ex:   tools/whereIsConstant.js -r -v -c PUBLISHEXTERNALLY
    lookingFor = constants[ options.constant ];
    if ( lookingFor == undefined )
    {
@@ -61,7 +61,7 @@ if ( options.reverse )
       console.log( `using regex: ${ reg }` );
 } else
 {
-   // Works. Ex:   whereIsConstant -r -v -c publishExternally
+   // Works. Ex:   tools/whereIsConstant.js -r -v -c publishExternally
    lookingFor = Object.keys( constants ).find(key => constants[ key ] === options.constant );
    if ( lookingFor == undefined )
    {

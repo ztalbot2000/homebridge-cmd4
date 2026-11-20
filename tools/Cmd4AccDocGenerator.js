@@ -179,7 +179,7 @@ function sortACCByType( )
                       EOL: CMD4_ACC_TYPE_ENUM.EOL
                     };
    let characteristicNames = [];
-   let characteristicName = "";
+   let characteristicName;
 
    for ( let accTypeEnumIndex = 0 ; accTypeEnumIndex < CMD4_ACC_TYPE_ENUM.EOL; accTypeEnumIndex++ )
    {
@@ -224,7 +224,7 @@ function sortDevByDeviceName( )
                     };
 
    let deviceNames = [];
-   let deviceName = "";
+   let deviceName;
 
    for ( let devTypeEnumIndex = 0 ; devTypeEnumIndex < CMD4_DEVICE_TYPE_ENUM.EOL; devTypeEnumIndex++ )
    {
