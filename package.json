@@ -92,7 +92,7 @@
       "commitTests": "npm run test && npm run testMarkDown",
       "_Note": "Excluded only because they sometimes fail, but pass alone.    ",
       "testCmd4Accessory": "mocha --file test/mocha-setup test/Cmd4Accessory.js",
-      "lint": "eslint --ext .js *.js utils/*.js lib/*.js tools/* test/*.js",
+      "lint": "eslint --ext .js *.js utils/*.js lib/*.js tools/*.js test/*.js",
       "postinstall": "node postinstall.js",
       "_Note01": "Auto change the version based on the commit history.        ",
       "_Note02": "Where:                                                      ",
@@ -110,11 +110,11 @@
       "_Note14": "   * Bumps the version in package.json                      ",
       "_Note15": "   * Updates CHANGELOG.md                                   ",
       "_Note16": "                                                            ",
-      "release": "tools/generateChangeLog",
+      "release": "tools/generateChangeLog.js",
       "_Note17": "                                                            ",
       "_Note18": "Overide default behaviour with:                             ",
-      "release:patch": "tools/generateChangeLog --type patch --cleanup",
-      "release:minor": "tools/generateChangeLog --type minor --cleanup",
-      "release:major": "tools/generateChangeLog --type major --cleanup"
+      "release:patch": "tools/generateChangeLog.js --type patch --cleanup",
+      "release:minor": "tools/generateChangeLog.js --type minor --cleanup",
+      "release:major": "tools/generateChangeLog.js --type major --cleanup"
    }
 }
