@@ -5,8 +5,6 @@
 // It not only uses Promises but creates Promises
 // and is documented as such.
 
-const latestVersion = require( "latest-version" );
-
 // Retrieve the package information that contains
 // things like the current version.
 const myPkg = require( "../package.json" );
