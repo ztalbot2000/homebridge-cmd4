@@ -1,0 +1,54 @@
+.cmd4-settings {
+  --cmd4-field: #fff;
+  --cmd4-border: #ced4da;
+  --cmd4-help: #59636e;
+}
+
+.cmd4-settings[data-bs-theme="dark"] {
+  color-scheme: dark;
+  color: #fff;
+  --cmd4-field: #242424;
+  --cmd4-border: #242424;
+  --cmd4-help: #b5b5b5;
+}
+
+.cmd4-settings :is(.form-control, .form-select) {
+  background-color: var(--cmd4-field);
+  border-color: var(--cmd4-border);
+  color: inherit;
+  border-radius: .375rem;
+}
+
+.cmd4-settings[data-bs-theme="dark"] .form-select {
+  --bs-form-select-bg-img: none;
+  appearance: auto;
+  padding-right: .75rem;
+  background-image: none;
+}
+
+.cmd4-settings .form-text {
+  color: var(--cmd4-help);
+}
+
+.cmd4-settings .form-label {
+  font-weight: 500;
+}
+
+.cmd4-settings .form-label > :is(input, select) {
+  margin-top: .35rem;
+}
+
+.cmd4-accessory-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  column-gap: 1.25rem;
+}
+
+.cmd4-command {
+  grid-column: 1 / -1;
+}
+
+.cmd4-polling summary {
+  cursor: pointer;
+  font-weight: 600;
+}

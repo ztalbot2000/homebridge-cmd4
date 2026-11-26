@@ -92,7 +92,7 @@
       "commitTests": "npm run test && npm run testMarkDown",
       "_Note": "Excluded only because they sometimes fail, but pass alone.    ",
       "testCmd4Accessory": "mocha --file test/mocha-setup test/Cmd4Accessory.js",
-      "lint": "eslint --ext .js *.js utils/*.js lib/*.js tools/*.js test/*.js",
+      "lint": "eslint --ext .js *.js utils/*.js lib/*.js tools/*.js test/*.js tools/generate-accessory-types.cjs homebridge-ui/public/app.js",
       "postinstall": "node postinstall.js",
       "_Note01": "Auto change the version based on the commit history.        ",
       "_Note02": "Where:                                                      ",
@@ -115,6 +115,8 @@
       "_Note18": "Overide default behaviour with:                             ",
       "release:patch": "tools/generateChangeLog.js --type patch --cleanup",
       "release:minor": "tools/generateChangeLog.js --type minor --cleanup",
-      "release:major": "tools/generateChangeLog.js --type major --cleanup"
+      "release:major": "tools/generateChangeLog.js --type major --cleanup",
+      "generate:accessory-types": "node tools/generate-accessory-types.cjs",
+      "prepare": "npm run generate:accessory-types"
    }
 }

@@ -29,3 +29,6 @@ package-lock.json
 
 # work in progress folder
 local
+
+# Generated for the npm package
+/homebridge-ui/public/accessory-types.js

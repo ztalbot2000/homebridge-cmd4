@@ -57,4 +57,14 @@ export default defineConfig([{
         "no-whitespace-before-property": ["error"],
         "arrow-spacing": ["error"],
     },
+}, {
+    files: ["homebridge-ui/public/app.js"],
+    languageOptions: {
+        sourceType: "script",
+        globals: {
+            ...globals.browser,
+            homebridge: "readonly",
+            cmd4AccessoryTypes: "readonly",
+        },
+    },
 }]);
