@@ -1,0 +1,7 @@
+{
+  "pluginAlias": "Cmd4",
+  "pluginType": "platform",
+  "singular": true,
+  "customUi": true,
+  "schema": { "type": "object" }
+}
