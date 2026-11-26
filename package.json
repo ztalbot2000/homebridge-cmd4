@@ -92,7 +92,7 @@
       "commitTests": "npm run test && npm run testMarkDown",
       "_Note": "Excluded only because they sometimes fail, but pass alone.    ",
       "testCmd4Accessory": "mocha --file test/mocha-setup test/Cmd4Accessory.js",
-      "lint": "eslint --ext .js *.js utils/*.js lib/*.js tools/*.js test/*.js",
+      "lint": "eslint --ext .js *.js utils/*.js lib/*.js tools/*.js test/*.js tools/generate-accessory-types.cjs homebridge-ui/public/app.js",
       "postinstall": "node postinstall.js",
       "_Note01": "Auto change the version based on the commit history.        ",
       "_Note02": "Where:                                                      ",

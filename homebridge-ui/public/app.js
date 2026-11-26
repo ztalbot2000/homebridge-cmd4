@@ -1,4 +1,3 @@
-/* global homebridge, cmd4AccessoryTypes */
 (async () => {
   const app = document.getElementById('app');
   const error = document.getElementById('error');
