@@ -24,15 +24,16 @@
   }
   function field(parent, object, key, title, options = {}) {
     const group = element('div', 'mb-3');
-    const label = element('label', 'form-label', title);
+    const label = element('label', 'form-label d-block', title);
     const input = element('input', 'form-control');
+    if (options.width) label.style.maxWidth = options.width;
     input.type = options.number ? 'number' : 'text';
     if (options.number) { input.min = '0'; input.step = 'any'; }
     input.value = object[key] == null ? '' : object[key];
     input.placeholder = options.placeholder || '';
     label.appendChild(input);
     group.appendChild(label);
-    if (options.help) group.appendChild(element('div', 'form-text', options.help));
+    if (options.help) group.appendChild(element('div', 'form-text text-reset', options.help));
     input.addEventListener('change', () => {
       if (input.value === '') delete object[key];
       else object[key] = options.number ? Number(input.value) : input.value;
@@ -42,7 +43,7 @@
   }
   function render() {
     app.replaceChildren();
-    field(app, block, 'name', 'Platform name', { placeholder: 'Cmd4' });
+    field(app, block, 'name', 'Platform name', { placeholder: 'Cmd4', width: '24rem' });
     const list = element('div');
     block.accessories.forEach((accessory, index) => {
       const card = element('section', 'card mb-3');
@@ -51,6 +52,7 @@
       const typeGroup = element('div', 'mb-3');
       const typeLabel = element('label', 'form-label d-block', 'Accessory type');
       const typeSelect = element('select', 'form-select');
+      typeLabel.style.maxWidth = '26rem';
       const placeholder = element('option', '', 'Choose an accessory type');
       placeholder.value = '';
       placeholder.disabled = true;
@@ -73,12 +75,13 @@
       typeLabel.appendChild(typeSelect);
       typeGroup.appendChild(typeLabel);
       body.appendChild(typeGroup);
-      field(body, accessory, 'displayName', 'Display name', { placeholder: 'ThinkLight' });
+      field(body, accessory, 'displayName', 'Display name', { placeholder: 'ThinkLight', width: '24rem' });
       field(body, accessory, 'state_cmd', 'State command', { placeholder: '/path/to/cmd4.sh', help: 'Command used to get and set the accessory state.' });
-      field(body, accessory, 'timeout', 'Command timeout (milliseconds)', { number: true });
-      field(body, accessory, 'stateChangeResponseTime', 'State change response time (seconds)', { number: true });
+      field(body, accessory, 'timeout', 'Command timeout (milliseconds)', { number: true, width: '18rem' });
+      field(body, accessory, 'stateChangeResponseTime', 'State change response time (seconds)', { number: true, width: '18rem' });
       const group = element('div', 'mb-3');
-      const label = element('label', 'form-label', 'Polling');
+      const label = element('label', 'form-label d-block', 'Polling');
+      label.style.maxWidth = '26rem';
       const select = element('select', 'form-select');
       const modes = [['unset', 'Use default / demo mode'], ['true', 'Enabled'], ['false', 'Disabled']];
       if (Array.isArray(accessory.polling) || (accessory.polling != null && typeof accessory.polling !== 'boolean')) modes.push(['advanced', 'Existing advanced polling (preserved)']);
@@ -90,7 +93,7 @@
         update();
       });
       label.appendChild(select); group.appendChild(label);
-      group.appendChild(element('div', 'form-text', 'Per-characteristic polling can be edited in the JSON configuration.'));
+      group.appendChild(element('div', 'form-text text-reset', 'Per-characteristic polling can be edited in the JSON configuration.'));
       body.appendChild(group);
       const remove = element('button', 'btn btn-outline-danger', 'Remove accessory');
       remove.type = 'button';
