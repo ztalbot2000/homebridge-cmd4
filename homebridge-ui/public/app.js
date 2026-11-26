@@ -39,6 +39,15 @@
     label.appendChild(input);
     group.appendChild(label);
     if (options.help) group.appendChild(element('div', 'form-text', options.help));
+    if (options.protocol) {
+      const hint = element('div', 'form-text', 'Cmd4 passes Get or Set and the accessory name and characteristic as arguments. Set also receives the value. Get returns the value on stdout. ');
+      const link = element('a', '', 'Cmd4 script protocol');
+      link.href = 'https://github.com/ztalbot2000/homebridge-cmd4/blob/master/docs/Developers.md#step-2--the-parameters-to-the-state_cmd';
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      hint.appendChild(link);
+      group.appendChild(hint);
+    }
     input.addEventListener('change', () => {
       if (input.value === '') delete object[key];
       else object[key] = options.number ? Number(input.value) : input.value;
@@ -81,7 +90,7 @@
       typeGroup.appendChild(typeLabel);
       fields.appendChild(typeGroup);
       field(fields, accessory, 'displayName', 'Display name', { placeholder: 'ThinkLight' });
-      field(fields, accessory, 'state_cmd', 'State command', { placeholder: '/path/to/cmd4.sh', fullWidth: true, help: 'Command used to get and set the accessory state.' });
+      field(fields, accessory, 'state_cmd', 'State command', { placeholder: '/path/to/cmd4.sh', fullWidth: true, protocol: true, help: 'Command used to get and set the accessory state.' });
       body.appendChild(fields);
       const polling = element('details', 'cmd4-polling border-top pt-3 mb-3');
       polling.appendChild(element('summary', '', 'Polling and timing'));
