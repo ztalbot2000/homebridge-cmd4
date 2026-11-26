@@ -2,6 +2,11 @@
 (async () => {
   const app = document.getElementById('app');
   const error = document.getElementById('error');
+  if (typeof homebridge.userCurrentLightingMode === 'function') {
+    homebridge.userCurrentLightingMode().then(mode => {
+      document.getElementById('cmd4-settings').dataset.bsTheme = mode;
+    }).catch(() => {});
+  }
   const blocks = await homebridge.getPluginConfig();
   let block = blocks.find(item => item.platform === 'Cmd4');
   if (!block) {
@@ -23,7 +28,7 @@
     return node;
   }
   function field(parent, object, key, title, options = {}) {
-    const group = element('div', 'mb-3');
+    const group = element('div', options.fullWidth ? 'mb-3 cmd4-command' : 'mb-3');
     const label = element('label', 'form-label d-block', title);
     const input = element('input', 'form-control');
     if (options.width) label.style.maxWidth = options.width;
@@ -33,7 +38,7 @@
     input.placeholder = options.placeholder || '';
     label.appendChild(input);
     group.appendChild(label);
-    if (options.help) group.appendChild(element('div', 'form-text text-reset', options.help));
+    if (options.help) group.appendChild(element('div', 'form-text', options.help));
     input.addEventListener('change', () => {
       if (input.value === '') delete object[key];
       else object[key] = options.number ? Number(input.value) : input.value;
@@ -49,10 +54,10 @@
       const card = element('section', 'card mb-3');
       const body = element('div', 'card-body');
       body.appendChild(element('h5', 'card-title', accessory.displayName || `Accessory ${index + 1}`));
+      const fields = element('div', 'cmd4-accessory-fields');
       const typeGroup = element('div', 'mb-3');
       const typeLabel = element('label', 'form-label d-block', 'Accessory type');
       const typeSelect = element('select', 'form-select');
-      typeLabel.style.maxWidth = '26rem';
       const placeholder = element('option', '', 'Choose an accessory type');
       placeholder.value = '';
       placeholder.disabled = true;
@@ -74,14 +79,13 @@
       });
       typeLabel.appendChild(typeSelect);
       typeGroup.appendChild(typeLabel);
-      body.appendChild(typeGroup);
-      field(body, accessory, 'displayName', 'Display name', { placeholder: 'ThinkLight', width: '24rem' });
-      field(body, accessory, 'state_cmd', 'State command', { placeholder: '/path/to/cmd4.sh', help: 'Command used to get and set the accessory state.' });
-      field(body, accessory, 'timeout', 'Command timeout (milliseconds)', { number: true, width: '18rem' });
-      field(body, accessory, 'stateChangeResponseTime', 'State change response time (seconds)', { number: true, width: '18rem' });
+      fields.appendChild(typeGroup);
+      field(fields, accessory, 'displayName', 'Display name', { placeholder: 'ThinkLight' });
+      field(fields, accessory, 'state_cmd', 'State command', { placeholder: '/path/to/cmd4.sh', fullWidth: true, help: 'Command used to get and set the accessory state.' });
+      field(fields, accessory, 'timeout', 'Command timeout (milliseconds)', { number: true });
+      field(fields, accessory, 'stateChangeResponseTime', 'State change response time (seconds)', { number: true });
       const group = element('div', 'mb-3');
       const label = element('label', 'form-label d-block', 'Polling');
-      label.style.maxWidth = '26rem';
       const select = element('select', 'form-select');
       const modes = [['unset', 'Use default / demo mode'], ['true', 'Enabled'], ['false', 'Disabled']];
       if (Array.isArray(accessory.polling) || (accessory.polling != null && typeof accessory.polling !== 'boolean')) modes.push(['advanced', 'Existing advanced polling (preserved)']);
@@ -93,8 +97,9 @@
         update();
       });
       label.appendChild(select); group.appendChild(label);
-      group.appendChild(element('div', 'form-text text-reset', 'Per-characteristic polling can be edited in the JSON configuration.'));
-      body.appendChild(group);
+      group.appendChild(element('div', 'form-text', 'Per-characteristic polling can be edited in the JSON configuration.'));
+      fields.appendChild(group);
+      body.appendChild(fields);
       const remove = element('button', 'btn btn-outline-danger', 'Remove accessory');
       remove.type = 'button';
       remove.addEventListener('click', () => { block.accessories.splice(index, 1); update(); render(); });
