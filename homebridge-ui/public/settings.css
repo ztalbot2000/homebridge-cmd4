@@ -6,8 +6,9 @@
 
 .cmd4-settings[data-bs-theme="dark"] {
   color-scheme: dark;
-  --cmd4-field: #202020;
-  --cmd4-border: #525252;
+  color: #fff;
+  --cmd4-field: #242424;
+  --cmd4-border: #242424;
   --cmd4-help: #b5b5b5;
 }
 
@@ -15,6 +16,7 @@
   background-color: var(--cmd4-field);
   border-color: var(--cmd4-border);
   color: inherit;
+  border-radius: .375rem;
 }
 
 .cmd4-settings[data-bs-theme="dark"] .form-select {
@@ -44,4 +46,9 @@
 
 .cmd4-command {
   grid-column: 1 / -1;
+}
+
+.cmd4-polling summary {
+  cursor: pointer;
+  font-weight: 600;
 }

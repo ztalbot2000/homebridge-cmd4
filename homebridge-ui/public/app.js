@@ -82,8 +82,10 @@
       fields.appendChild(typeGroup);
       field(fields, accessory, 'displayName', 'Display name', { placeholder: 'ThinkLight' });
       field(fields, accessory, 'state_cmd', 'State command', { placeholder: '/path/to/cmd4.sh', fullWidth: true, help: 'Command used to get and set the accessory state.' });
-      field(fields, accessory, 'timeout', 'Command timeout (milliseconds)', { number: true });
-      field(fields, accessory, 'stateChangeResponseTime', 'State change response time (seconds)', { number: true });
+      body.appendChild(fields);
+      const polling = element('details', 'cmd4-polling border-top pt-3 mb-3');
+      polling.appendChild(element('summary', '', 'Polling and timing'));
+      const pollingFields = element('div', 'cmd4-accessory-fields mt-3');
       const group = element('div', 'mb-3');
       const label = element('label', 'form-label d-block', 'Polling');
       const select = element('select', 'form-select');
@@ -98,8 +100,11 @@
       });
       label.appendChild(select); group.appendChild(label);
       group.appendChild(element('div', 'form-text', 'Per-characteristic polling can be edited in the JSON configuration.'));
-      fields.appendChild(group);
-      body.appendChild(fields);
+      pollingFields.appendChild(group);
+      field(pollingFields, accessory, 'timeout', 'Command timeout (milliseconds)', { number: true });
+      field(pollingFields, accessory, 'stateChangeResponseTime', 'State change response time (seconds)', { number: true });
+      polling.appendChild(pollingFields);
+      body.appendChild(polling);
       const remove = element('button', 'btn btn-outline-danger', 'Remove accessory');
       remove.type = 'button';
       remove.addEventListener('click', () => { block.accessories.splice(index, 1); update(); render(); });
